@@ -219,783 +219,196 @@ function GUID()
 
 
 
-/* PARA Clientes */
 
-function insertarClientes($nombrecompleto,$cuil,$dni,$direccion,$telefono,$email,$observaciones) { 
-$sql = "insert into dbclientes(idcliente,nombrecompleto,cuil,dni,direccion,telefono,email,observaciones) 
-values ('','".utf8_decode($nombrecompleto)."','".utf8_decode($cuil)."','".utf8_decode($dni)."','".utf8_decode($direccion)."','".utf8_decode($telefono)."','".utf8_decode($email)."','".utf8_decode($observaciones)."')"; 
-$res = $this->query($sql,1); 
-return $res; 
-} 
+/* PARA Contactos */
 
-
-function modificarClientes($id,$nombrecompleto,$cuil,$dni,$direccion,$telefono,$email,$observaciones) { 
-$sql = "update dbclientes 
-set 
-nombrecompleto = '".utf8_decode($nombrecompleto)."',cuil = '".utf8_decode($cuil)."',dni = '".utf8_decode($dni)."',direccion = '".utf8_decode($direccion)."',telefono = '".utf8_decode($telefono)."',email = '".utf8_decode($email)."',observaciones = '".utf8_decode($observaciones)."' 
-where idcliente =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function insertarContactos($reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico) {
+$sql = "insert into dbcontactos(idcontacto,reftipocontactos,nombre,direccion,localidad,cp,telefono,celular,fax,email,observaciones,publico)
+values ('',".$reftipocontactos.",'".utf8_decode($nombre)."','".utf8_decode($direccion)."','".utf8_decode($localidad)."','".utf8_decode($cp)."','".utf8_decode($telefono)."','".utf8_decode($celular)."','".utf8_decode($fax)."','".utf8_decode($email)."','".utf8_decode($observaciones)."',".$publico.")";
+$res = $this->query($sql,1);
+return $res;
+}
 
 
-function eliminarClientes($id) { 
-$sql = "delete from dbclientes where idcliente =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function modificarContactos($id,$reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico) {
+$sql = "update dbcontactos
+set
+reftipocontactos = ".$reftipocontactos.",nombre = '".utf8_decode($nombre)."',direccion = '".utf8_decode($direccion)."',localidad = '".utf8_decode($localidad)."',cp = '".utf8_decode($cp)."',telefono = '".utf8_decode($telefono)."',celular = '".utf8_decode($celular)."',fax = '".utf8_decode($fax)."',email = '".utf8_decode($email)."',observaciones = '".utf8_decode($observaciones)."',publico = ".$publico."
+where idcontacto =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function traerClientes() { 
-$sql = "select 
-c.idcliente,
-c.nombrecompleto,
-c.cuil,
-c.dni,
+function eliminarContactos($id) {
+$sql = "delete from dbcontactos where idcontacto =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerContactos() {
+$sql = "select
+c.idcontacto,
+tip.tipocontacto,
+c.nombre,
 c.direccion,
+c.localidad,
+c.cp,
 c.telefono,
+c.celular,
+c.fax,
 c.email,
-c.observaciones
-from dbclientes c 
-order by 1"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerClientesPorId($id) { 
-$sql = "select idcliente,nombrecompleto,cuil,dni,direccion,telefono,email,observaciones from dbclientes where idcliente =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-/* Fin */
-/* /* Fin de la Tabla: dbclientes*/
-
-/* PARA Empleados */
-
-function insertarEmpleados($nombre,$apellido,$sexo,$fechanac,$direccion,$telefono,$celular,$email,$dni,$fechaing,$sueldo,$estado) { 
-$sql = "insert into dbempleados(idempleado,nombre,apellido,sexo,fechanac,direccion,telefono,celular,email,dni,fechaing,sueldo,estado) 
-values ('','".utf8_decode($nombre)."','".utf8_decode($apellido)."','".utf8_decode($sexo)."','".utf8_decode($fechanac)."','".utf8_decode($direccion)."','".utf8_decode($telefono)."','".utf8_decode($celular)."','".utf8_decode($email)."','".utf8_decode($dni)."','".utf8_decode($fechaing)."',".$sueldo.",'".utf8_decode($estado)."')";
-$res = $this->query($sql,1); 
-return $res; 
-} 
-
-
-function modificarEmpleados($id,$nombre,$apellido,$sexo,$fechanac,$direccion,$telefono,$celular,$email,$dni,$fechaing,$sueldo,$estado) { 
-$sql = "update dbempleados 
-set 
-nombre = '".utf8_decode($nombre)."',apellido = '".utf8_decode($apellido)."',sexo = '".utf8_decode($sexo)."',fechanac = '".utf8_decode($fechanac)."',direccion = '".utf8_decode($direccion)."',telefono = '".utf8_decode($telefono)."',celular = '".utf8_decode($celular)."',email = '".utf8_decode($email)."',dni = '".utf8_decode($dni)."',fechaing = '".utf8_decode($fechaing)."',sueldo = ".$sueldo.",estado = '".utf8_decode($estado)."' 
-where idempleado =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function eliminarEmpleados($id) { 
-$sql = "delete from dbempleados where idempleado =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerEmpleados() { 
-$sql = "select 
-e.idempleado,
-e.nombre,
-e.apellido,
-e.dni,
-e.sexo,
-e.fechanac,
-e.direccion,
-e.telefono,
-e.celular,
-e.email,
-e.fechaing,
-e.sueldo,
-e.estado
-from dbempleados e 
-order by 1"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerEmpleadosPorId($id) { 
-$sql = "select idempleado,nombre,apellido,sexo,fechanac,direccion,telefono,celular,email,dni,fechaing,sueldo,estado from dbempleados where idempleado =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-/* Fin */
-/* /* Fin de la Tabla: dbempleados*/
-
-
-/* PARA Productos */
-
-function zerofill($valor, $longitud){
- $res = str_pad($valor, $longitud, '0', STR_PAD_LEFT);
- return $res;
+c.publico,
+c.observaciones,
+c.reftipocontactos
+from dbcontactos c
+inner join tbtipocontactos tip ON tip.idtipocontacto = c.reftipocontactos
+order by 1";
+$res = $this->query($sql,0);
+return $res;
 }
 
-function generarCodigo() {
-	$sql = "select idproducto from dbproductos order by idproducto desc limit 1";
-	$res = $this->query($sql,0);
-	if (mysql_num_rows($res)>0) {
-		$c = $this->zerofill(mysql_result($res,0,0)+1,6);
-		return "PRO".$c;
-	}
-	return "PRO000001";
+
+function traerContactosPorId($id) {
+$sql = "select idcontacto,reftipocontactos,nombre,direccion,localidad,cp,telefono,celular,fax,email,observaciones,publico from dbcontactos where idcontacto =".$id;
+$res = $this->query($sql,0);
+return $res;
 }
 
-function existeCodigo($codigo) {
-	$sql = "select idproducto from dbproductos where codigo ='".$codigo."'";
-	$res = $this->query($sql,0);
-	if (mysql_num_rows($res)>0) {
-		return 1;
-	}
-	return 0;
-}
-
-function insertarProductos($codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$utilidad,$estado,$imagen,$refcategorias,$tipoimagen,$unidades) { 
-$sql = "insert into dbproductos(idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,utilidad,estado,imagen,refcategorias,tipoimagen,unidades) 
-values ('','".utf8_decode($codigo)."','".utf8_decode($codigobarra)."','".utf8_decode($nombre)."','".utf8_decode($descripcion)."',".($stock=='' ? 0 : $stock).",".($stockmin == '' ? 0 : $stockmin).",".($preciocosto == '' ?  0 : $preciocosto).",".($precioventa == '' ? 0 : $precioventa).",".$utilidad.",'".utf8_decode($estado)."','".utf8_decode($imagen)."',".$refcategorias.",'".utf8_decode($tipoimagen)."',".($unidades=='' ? 1 : $unidades).")";
-$res = $this->query($sql,1); 
-return $res; 
-} 
-
-
-function modificarProductos($id,$codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$utilidad,$estado,$imagen,$refcategorias,$tipoimagen,$unidades) { 
-$sql = "update dbproductos 
-set 
-codigo = '".utf8_decode($codigo)."',codigobarra = '".utf8_decode($codigobarra)."',nombre = '".utf8_decode($nombre)."',descripcion = '".utf8_decode($descripcion)."',stock = ".$stock.",stockmin = ".$stockmin.",preciocosto = ".$preciocosto.",precioventa = ".$precioventa.",utilidad = ".$utilidad.",estado = '".utf8_decode($estado)."',imagen = '".utf8_decode($imagen)."',refcategorias = ".$refcategorias.",tipoimagen = '".utf8_decode($tipoimagen)."', unidades = ".($unidades=='' ? 1 : $unidades)."
-where idproducto =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function eliminarProductos($id) { 
-$this->eliminarFotoPorObjeto($id);
-$sql = "delete from dbproductos where idproducto =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerProductos() { 
-$sql = "select 
-p.idproducto,
-p.codigo,
-p.codigobarra,
-p.nombre,
-p.descripcion,
-p.stock,
-p.stockmin,
-p.precioventa,
-
-p.imagen,
-cat.descripcion,
-p.unidades,
-p.refcategorias,
-p.estado,
-p.utilidad,
-p.preciocosto,
-p.tipoimagen
-from dbproductos p 
-inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
-order by 1"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerProductosFaltantes() { 
-$sql = "select 
-p.idproducto,
-p.nombre,
-(p.stockmin - p.stock) + p.stockmin as cantidad,
-p.stock,
-p.stockmin,
-p.preciocosto,
-
-p.precioventa,
-p.imagen,
-cat.descripcion,
-p.unidades,
-p.refcategorias,
-p.estado,
-p.utilidad,
-
-p.codigo,
-p.codigobarra,
-p.descripcion,
-p.tipoimagen
-from dbproductos p 
-inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
-where p.stockmin >= p.stock
-order by nombre"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerProductosPorId($id) { 
-$sql = "select idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,utilidad,estado,imagen,refcategorias,tipoimagen from dbproductos where idproducto =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
 /* Fin */
-/* /* Fin de la Tabla: dbproductos*/
+/* /* Fin de la Tabla: dbcontactos*/
 
 
-/* PARA Proveedores */
+/* PARA Countries */
 
-function insertarProveedores($nombre,$cuit,$dni,$direccion,$telefono,$celular,$email,$observacionces) { 
-$sql = "insert into dbproveedores(idproveedor,nombre,cuit,dni,direccion,telefono,celular,email,observacionces) 
-values ('','".utf8_decode($nombre)."','".utf8_decode($cuit)."','".utf8_decode($dni)."','".utf8_decode($direccion)."','".utf8_decode($telefono)."','".utf8_decode($celular)."','".utf8_decode($email)."','".utf8_decode($observacionces)."')";
-$res = $this->query($sql,1); 
-return $res; 
-} 
-
-
-function modificarProveedores($id,$nombre,$cuit,$dni,$direccion,$telefono,$celular,$email,$observacionces) { 
-$sql = "update dbproveedores 
-set 
-nombre = '".utf8_decode($nombre)."',cuit = '".utf8_decode($cuit)."',dni = '".utf8_decode($dni)."',direccion = '".utf8_decode($direccion)."',telefono = '".utf8_decode($telefono)."',celular = '".utf8_decode($celular)."',email = '".utf8_decode($email)."',observacionces = '".utf8_decode($observacionces)."' 
-where idproveedor =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function eliminarProveedores($id) { 
-$sql = "delete from dbproveedores where idproveedor =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerProveedores() { 
-$sql = "select 
-p.idproveedor,
-p.nombre,
-p.cuit,
-p.dni,
-p.direccion,
-p.telefono,
-p.celular,
-p.email,
-p.observacionces
-from dbproveedores p 
-order by 1"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerProveedoresPorId($id) { 
-$sql = "select idproveedor,nombre,cuit,dni,direccion,telefono,celular,email,observacionces from dbproveedores where idproveedor =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-/* Fin */
-/* /* Fin de la Tabla: dbproveedores*/
-
-
-
-/* PARA Detallepedidoaux */
-
-function insertarDetallepedidoaux($refproductos,$cantidad,$precio,$total) {
-$sql = "insert into dbdetallepedidoaux(iddetallepedidoaux,refproductos,cantidad,precio,total)
-values ('',".$refproductos.",".$cantidad.",".$precio.",".$total.")";
+function insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia) {
+$sql = "insert into dbcountries(idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,refcontactos,latitud,longitud,activo,referencia)
+values ('','".utf8_decode($nombre)."','".utf8_decode($cuit)."','".utf8_decode($fechaalta)."','".utf8_decode($fechabaja)."',".$refposiciontributaria.",".$refcontactos.",'".utf8_decode($latitud)."','".utf8_decode($longitud)."',".$activo.",'".utf8_decode($referencia)."')";
 $res = $this->query($sql,1);
 return $res;
 }
 
 
-function modificarDetallepedidoaux($id,$refproductos,$cantidad,$precio,$total) {
-$sql = "update dbdetallepedidoaux
+function modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia) {
+$sql = "update dbcountries
 set
-refproductos = ".$refproductos.",cantidad = ".$cantidad.",precio = ".$precio.",total = ".$total."
-where iddetallepedidoaux =".$id;
+nombre = '".utf8_decode($nombre)."',cuit = '".utf8_decode($cuit)."',fechaalta = '".utf8_decode($fechaalta)."',fechabaja = '".utf8_decode($fechabaja)."',refposiciontributaria = ".$refposiciontributaria.",refcontactos = ".$refcontactos.",latitud = '".utf8_decode($latitud)."',longitud = '".utf8_decode($longitud)."',activo = ".$activo.",referencia = '".utf8_decode($referencia)."'
+where idcountrie =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
 
 
-function eliminarDetallepedidoaux($id) {
-$sql = "delete from dbdetallepedidoaux where iddetallepedidoaux =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
-
-function vaciarDetallepedidoaux() {
-$sql = "delete from dbdetallepedidoaux ";
+function eliminarCountries($id) {
+$sql = "update dbcountries set activo = 0, fechabaja = '".date('Y-m-d')."' where idcountrie =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
 
 
-function traerDetallepedidoaux() {
+function traerCountries() {
 $sql = "select
-d.iddetallepedidoaux,
-d.refproductos,
-p.nombre,
-d.cantidad,
-p.stock,
-p.preciocosto as precio,
-d.total
-from dbdetallepedidoaux d
-inner
-join	dbproductos p
-on		p.idproducto = d.refproductos
+c.idcountrie,
+c.nombre,
+c.cuit,
+c.fechaalta,
+c.fechabaja,
+pos.posiciontributaria,
+con.nombre as contacto,
+c.latitud,
+c.longitud,
+(case when c.activo = 1 then 'Si' else 'No' end) as activo,
+c.referencia,
+c.refposiciontributaria,
+c.refcontactos
+from dbcountries c
+inner join tbposiciontributaria pos ON pos.idposiciontributaria = c.refposiciontributaria
+inner join dbcontactos con ON con.idcontacto = c.refcontactos
+inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos
 order by 1";
 $res = $this->query($sql,0);
 return $res;
 }
 
 
-function traerDetallepedidoauxPorId($id) {
-$sql = "select iddetallepedidoaux,refproductos,cantidad,precio,total from dbdetallepedidoaux where iddetallepedidoaux =".$id;
+function traerCountriesPorId($id) {
+$sql = "select idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,refcontactos,latitud,longitud,activo,referencia from dbcountries where idcountrie =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
 
 /* Fin */
-/* /* Fin de la Tabla: dbdetallepedidoaux*/
+/* /* Fin de la Tabla: dbcountries*/
 
-
-/* PARA Pedidos */
-
-function insertarPedidos($fechasolicitud,$fechaentrega,$total,$refestados,$referencia,$observacion) {
-$sql = "insert into dbpedidos(idpedido,fechasolicitud,fechaentrega,total,refestados,referencia,observacion)
-values ('','".utf8_decode($fechasolicitud)."','".utf8_decode($fechaentrega)."',".$total.",".$refestados.",'".utf8_decode($referencia)."','".utf8_decode($observacion)."')";
-$res = $this->query($sql,1);
-return $res;
-}
-
-
-function modificarPedidos($id,$fechasolicitud,$fechaentrega,$total,$refestados,$referencia,$observacion) {
-$sql = "update dbpedidos
-set
-fechasolicitud = '".utf8_decode($fechasolicitud)."',fechaentrega = '".utf8_decode($fechaentrega)."',total = ".$total.",refestados = ".$refestados.",referencia = '".utf8_decode($referencia)."',observacion = '".utf8_decode($observacion)."'
-where idpedido =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
-
-
-function eliminarPedidos($id) {
-
-$sqlDel = "delete from dbdetallepedido where refpedidos =".$id;	
-$this->query($sqlDel,0);
-
-$sql = "delete from dbpedidos where idpedido =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
-
-
-function traerPedidos() {
-$sql = "select
-p.idpedido,
-p.referencia,
-p.fechasolicitud,
-p.fechaentrega,
-p.total,
-est.estado,
-p.observacion,
-p.refestados
-from dbpedidos p
-inner join tbestados est ON est.idestado = p.refestados
-order by 1";
-$res = $this->query($sql,0);
-return $res;
-}
-
-
-function traerPedidosPorId($id) {
-$sql = "select idpedido,fechasolicitud,fechaentrega,total,refestados,referencia,observacion from dbpedidos where idpedido =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
-
-function finalizarPedido($id) {
-	$sql = "update dbpedidos set refestados = 3 where idpedido =".$id;
-	$res = $this->query($sql,0);
-	return $res;	
-}
-
-/* Fin */
-/* /* Fin de la Tabla: dbpedidos*/
-
-/* PARA Detallepedido */
-
-function insertarDetallepedidoDesdeTemporal($idpedido) {
-	$sql	=	"INSERT INTO dbdetallepedido (iddetallepedido,refpedidos,refproductos,cantidad,precio,total,falto)
-				  SELECT '', ".$idpedido.", d.refproductos, d.cantidad, p.preciocosto, d.cantidad * p.preciocosto, 0
-				  FROM dbdetallepedidoaux  d
-					inner
-					join	dbproductos p
-					on		p.idproducto = d.refproductos;";	
-				  
-	$res = $this->query($sql,1);
-	
-	$sqlUp = "update dbpedidos
-				set total = (SELECT sum(d.cantidad * p.preciocosto)
-				  FROM dbdetallepedidoaux d
-					inner
-					join	dbproductos p
-					on		p.idproducto = d.refproductos)
-			  where idpedido = ".$idpedido;
-	$res2 = $this->query($sqlUp,0);		  
-	
-	return $res;			  
-}
-
-function insertarDetallepedido($refpedidos,$refproductos,$cantidad,$precio,$total,$falto) {
-$sql = "insert into dbdetallepedido(iddetallepedido,refpedidos,refproductos,cantidad,precio,total,falto)
-values ('',".$refpedidos.",".$refproductos.",".$cantidad.",".$precio.",".$total.",".$falto.")";
-$res = $this->query($sql,1);
-return $res;
-}
-
-
-function modificarDetallepedido($id,$refpedidos,$refproductos,$cantidad,$precio,$total,$falto) {
-$sql = "update dbdetallepedido
-set
-refpedidos = ".$refpedidos.",refproductos = ".$refproductos.",cantidad = ".$cantidad.",precio = ".$precio.",total = ".$total.",falto = ".$falto."
-where iddetallepedido =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
-
-
-function eliminarDetallepedido($id) {
-$sql = "delete from dbdetallepedido where iddetallepedido =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
-
-
-function traerDetallepedido() {
-$sql = "select
-d.iddetallepedido,
-pro.nombre,
-d.cantidad,
-d.precio,
-d.total,
-d.falto,
-d.refpedidos,
-d.refproductos,
-from dbdetallepedido d
-inner join dbpedidos ped ON ped.idpedido = d.refpedidos
-inner join tbestados es ON es.idestado = ped.refestados
-inner join dbproductos pro ON pro.idproducto = d.refproductos
-inner join tbcategorias ca ON ca.idcategoria = pro.refcategorias
-order by 1";
-$res = $this->query($sql,0);
-return $res;
-}
-
-function traerDetallepedidoPorPedido($idPedido) {
-$sql = "select
-d.iddetallepedido,
-pro.nombre,
-d.cantidad,
-d.precio,
-d.total,
-d.falto,
-d.refpedidos,
-d.refproductos,
-pro.stock,
-ped.fechasolicitud,
-ped.fechaentrega,
-ped.referencia,
-pro.codigo,
-es.estado,
-es.idestado,
-ped.observacion
-from dbdetallepedido d
-inner join dbpedidos ped ON ped.idpedido = d.refpedidos
-inner join tbestados es ON es.idestado = ped.refestados
-inner join dbproductos pro ON pro.idproducto = d.refproductos
-inner join tbcategorias ca ON ca.idcategoria = pro.refcategorias
-where	ped.idpedido = ".$idPedido."
-order by 1";
-$res = $this->query($sql,0);
-return $res;
-}
-
-function registrarEntradaPorPedidoProducto($iddetallepedido, $cantidad) {
-	$sql = "update dbproductos 
-				set stock = (stock + ".$cantidad.")
-				where idproducto = (select d.refproductos
-						from dbdetallepedido d
-						inner join dbpedidos ped ON ped.idpedido = d.refpedidos
-						where	d.iddetallepedido = ".$iddetallepedido.");";	
-	$res = $this->query($sql,0);
-	return $sql;
-}
-
-function registrarFaltantes($iddetallepedido, $cantidad) {
-	$sql = "update dbdetallepedido
-				set falto = (cantidad - ".$cantidad.")
-						where	iddetallepedido = ".$iddetallepedido;	
-	$res = $this->query($sql,0);
-	return $res;	
-}
-
-function determinarEstado($idpedido) {
-	$sql = 'SELECT sum(falto) FROM dbdetallepedido where refpedidos ='.$idpedido;
-	$res = $this->query($sql,0);
-	if (mysql_result($res,0,0)== 0) {
-		$sqlUpdate = "update dbpedidos
-						set refestados = 3
-						where	idpedido = ".$idpedido;	
-	
-	} else {
-		$sqlUpdate = "update dbpedidos
-						set refestados = 4
-						where	idpedido = ".$idpedido;	
-	}
-	$resUp = $this->query($sqlUpdate,0);
-}
-
-
-function traerDetallepedidoPorId($id) {
-$sql = "select iddetallepedido,refpedidos,refproductos,cantidad,precio,total,falto from dbdetallepedido where iddetallepedido =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
-
-/* Fin */
-/* /* Fin de la Tabla: dbdetallepedido*/
 
 /* PARA Usuarios */
 
-function insertarUsuarios($usuario,$password,$refroles,$email,$nombrecompleto) { 
-$sql = "insert into dbusuarios(idusuario,usuario,password,refroles,email,nombrecompleto) 
-values ('','".utf8_decode($usuario)."','".utf8_decode($password)."',".$refroles.",'".utf8_decode($email)."','".utf8_decode($nombrecompleto)."')"; 
-$res = $this->query($sql,1); 
-return $res; 
-} 
+function insertarUsuarios($usuario,$password,$refroles,$email,$nombrecompleto) {
+$sql = "insert into dbusuarios(idusuario,usuario,password,refroles,email,nombrecompleto)
+values ('','".utf8_decode($usuario)."','".utf8_decode($password)."',".$refroles.",'".utf8_decode($email)."','".utf8_decode($nombrecompleto)."')";
+$res = $this->query($sql,1);
+return $res;
+}
 
 
-function modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto) { 
-$sql = "update dbusuarios 
-set 
-usuario = '".utf8_decode($usuario)."',password = '".utf8_decode($password)."',refroles = ".$refroles.",email = '".utf8_decode($email)."',nombrecompleto = '".utf8_decode($nombrecompleto)."' 
-where idusuario =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto) {
+$sql = "update dbusuarios
+set
+usuario = '".utf8_decode($usuario)."',password = '".utf8_decode($password)."',refroles = ".$refroles.",email = '".utf8_decode($email)."',nombrecompleto = '".utf8_decode($nombrecompleto)."'
+where idusuario =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function eliminarUsuarios($id) { 
-$sql = "delete from dbusuarios where idusuario =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function eliminarUsuarios($id) {
+$sql = "delete from dbusuarios where idusuario =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function traerUsuarios() { 
-$sql = "select 
+function traerUsuarios() {
+$sql = "select
 u.idusuario,
 u.usuario,
 u.password,
 u.refroles,
 u.email,
 u.nombrecompleto
-from dbusuarios u 
-inner join tbroles rol ON rol.idrol = u.refroles 
-order by 1"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+from dbusuarios u
+inner join tbroles rol ON rol.idrol = u.refroles
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function traerUsuariosPorId($id) { 
-$sql = "select idusuario,usuario,password,refroles,email,nombrecompleto from dbusuarios where idusuario =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function traerUsuariosPorId($id) {
+$sql = "select idusuario,usuario,password,refroles,email,nombrecompleto from dbusuarios where idusuario =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
 
 /* Fin */
 /* /* Fin de la Tabla: dbusuarios*/
 
 
-/* PARA Categorias */
-
-function insertarCategorias($descripcion) { 
-$sql = "insert into tbcategorias(idcategoria,descripcion) 
-values ('','".utf8_decode($descripcion)."')"; 
-$res = $this->query($sql,1); 
-return $res; 
-} 
-
-
-function modificarCategorias($id,$descripcion) { 
-$sql = "update tbcategorias 
-set 
-descripcion = '".utf8_decode($descripcion)."' 
-where idcategoria =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function eliminarCategorias($id) { 
-$sql = "delete from tbcategorias where idcategoria =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerCategorias() { 
-$sql = "select 
-c.idcategoria,
-c.descripcion
-from tbcategorias c 
-order by 1"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerCategoriasPorId($id) { 
-$sql = "select idcategoria,descripcion from tbcategorias where idcategoria =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-/* Fin */
-/* /* Fin de la Tabla: tbcategorias*/
-
-
-/* PARA Estados */
-
-function insertarEstados($estado,$icono) { 
-$sql = "insert into tbestados(idestado,estado,icono) 
-values ('','".utf8_decode($estado)."','".utf8_decode($icono)."')"; 
-$res = $this->query($sql,1); 
-return $res; 
-} 
-
-
-function modificarEstados($id,$estado,$icono) { 
-$sql = "update tbestados 
-set 
-estado = '".utf8_decode($estado)."',icono = '".utf8_decode($icono)."' 
-where idestado =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function eliminarEstados($id) { 
-$sql = "delete from tbestados where idestado =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerEstados() { 
-$sql = "select 
-e.idestado,
-e.estado,
-e.icono
-from tbestados e 
-order by 1"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerEstadosPorId($id) { 
-$sql = "select idestado,estado,icono from tbestados where idestado =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-/* Fin */
-/* /* Fin de la Tabla: tbestados*/
-
-
-
-/* PARA Tipopago */
-
-function insertarTipopago($descripcion) { 
-$sql = "insert into tbtipopago(idtipopago,descripcion) 
-values ('','".utf8_decode($descripcion)."')"; 
-$res = $this->query($sql,1); 
-return $res; 
-} 
-
-
-function modificarTipopago($id,$descripcion) { 
-$sql = "update tbtipopago 
-set 
-descripcion = '".utf8_decode($descripcion)."' 
-where idtipopago =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function eliminarTipopago($id) { 
-$sql = "delete from tbtipopago where idtipopago =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerTipopago() { 
-$sql = "select 
-t.idtipopago,
-t.descripcion
-from tbtipopago t 
-order by 1"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-
-function traerTipopagoPorId($id) { 
-$sql = "select idtipopago,descripcion from tbtipopago where idtipopago =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-
-/* Fin */
-/* /* Fin de la Tabla: tbtipopago*/
-
-function estadosFingidos() {
-$sql = "SELECT 'Activo' as estado
-union all
-select 'Inactivo' as estado";
-	$res = $this->query($sql,0); 
-return $res; 
-}
-
-
 /* PARA Predio_menu */
 
-function insertarPredio_menu($url,$icono,$nombre,$Orden,$hover,$permiso) {
-$sql = "insert into predio_menu(idmenu,url,icono,nombre,Orden,hover,permiso)
-values ('','".utf8_decode($url)."','".utf8_decode($icono)."','".utf8_decode($nombre)."',".$Orden.",'".utf8_decode($hover)."','".utf8_decode($permiso)."')";
+function insertarPredio_menu($url,$icono,$nombre,$Orden,$hover,$permiso,$administracion,$torneo,$reportes) {
+$sql = "insert into predio_menu(idmenu,url,icono,nombre,Orden,hover,permiso,administracion,torneo,reportes)
+values ('','".utf8_decode($url)."','".utf8_decode($icono)."','".utf8_decode($nombre)."',".$Orden.",'".utf8_decode($hover)."','".utf8_decode($permiso)."',".$administracion.",".$torneo.",".$reportes.")";
 $res = $this->query($sql,1);
 return $res;
 }
 
 
-function modificarPredio_menu($id,$url,$icono,$nombre,$Orden,$hover,$permiso) {
+function modificarPredio_menu($id,$url,$icono,$nombre,$Orden,$hover,$permiso,$administracion,$torneo,$reportes) {
 $sql = "update predio_menu
 set
-url = '".utf8_decode($url)."',icono = '".utf8_decode($icono)."',nombre = '".utf8_decode($nombre)."',Orden = ".$Orden.",hover = '".utf8_decode($hover)."',permiso = '".utf8_decode($permiso)."'
+url = '".utf8_decode($url)."',icono = '".utf8_decode($icono)."',nombre = '".utf8_decode($nombre)."',Orden = ".$Orden.",hover = '".utf8_decode($hover)."',permiso = '".utf8_decode($permiso)."',administracion = ".$administracion.",torneo = ".$torneo.",reportes = ".$reportes."
 where idmenu =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -1017,7 +430,10 @@ p.icono,
 p.nombre,
 p.Orden,
 p.hover,
-p.permiso
+p.permiso,
+p.administracion,
+p.torneo,
+p.reportes
 from predio_menu p
 order by 1";
 $res = $this->query($sql,0);
@@ -1026,7 +442,7 @@ return $res;
 
 
 function traerPredio_menuPorId($id) {
-$sql = "select idmenu,url,icono,nombre,Orden,hover,permiso from predio_menu where idmenu =".$id;
+$sql = "select idmenu,url,icono,nombre,Orden,hover,permiso,administracion,torneo,reportes from predio_menu where idmenu =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -1034,6 +450,108 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: predio_menu*/
 
+
+/* PARA Canchas */
+
+function insertarCanchas($refcountries,$nombre) {
+$sql = "insert into tbcanchas(idcancha,refcountries,nombre)
+values ('',".$refcountries.",'".utf8_decode($nombre)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarCanchas($id,$refcountries,$nombre) {
+$sql = "update tbcanchas
+set
+refcountries = ".$refcountries.",nombre = '".utf8_decode($nombre)."'
+where idcancha =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarCanchas($id) {
+$sql = "delete from tbcanchas where idcancha =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCanchas() {
+$sql = "select
+c.idcancha,
+cou.nombre as countrie,
+c.nombre,
+c.refcountries
+from tbcanchas c
+inner join dbcountries cou ON cou.idcountrie = c.refcountries
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria
+inner join dbcontactos co ON co.idcontacto = cou.refcontactos
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCanchasPorId($id) {
+$sql = "select idcancha,refcountries,nombre from tbcanchas where idcancha =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbcanchas*/
+
+
+/* PARA Posiciontributaria */
+
+function insertarPosiciontributaria($posiciontributaria,$activo) {
+$sql = "insert into tbposiciontributaria(idposiciontributaria,posiciontributaria,activo)
+values ('','".utf8_decode($posiciontributaria)."',".$activo.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarPosiciontributaria($id,$posiciontributaria,$activo) {
+$sql = "update tbposiciontributaria
+set
+posiciontributaria = '".utf8_decode($posiciontributaria)."',activo = ".$activo."
+where idposiciontributaria =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarPosiciontributaria($id) {
+$sql = "update tbposiciontributaria set activo = 0 where idposiciontributaria =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerPosiciontributaria() {
+$sql = "select
+p.idposiciontributaria,
+p.posiciontributaria,
+(case when p.activo = 1 then 'Si' else 'No' end) as activo
+from tbposiciontributaria p
+where activo = 1
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerPosiciontributariaPorId($id) {
+$sql = "select idposiciontributaria,posiciontributaria,activo from tbposiciontributaria where idposiciontributaria =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbposiciontributaria*/
 
 
 /* PARA Roles */
@@ -1083,6 +601,56 @@ return $res;
 
 /* Fin */
 /* /* Fin de la Tabla: tbroles*/
+
+
+/* PARA Tipocontactos */
+
+function insertarTipocontactos($tipocontacto,$activo) {
+$sql = "insert into tbtipocontactos(idtipocontacto,tipocontacto,activo)
+values ('','".utf8_decode($tipocontacto)."',".$activo.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarTipocontactos($id,$tipocontacto,$activo) {
+$sql = "update tbtipocontactos
+set
+tipocontacto = '".utf8_decode($tipocontacto)."',activo = ".$activo."
+where idtipocontacto =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarTipocontactos($id) {
+$sql = "update tbtipocontactos set activo = 0 where idtipocontacto =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerTipocontactos() {
+$sql = "select
+t.idtipocontacto,
+t.tipocontacto,
+(case when t.activo = 1 then 'Si' else 'No' end) as activo
+from tbtipocontactos t
+where activo = 1
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerTipocontactosPorId($id) {
+$sql = "select idtipocontacto,tipocontacto,activo from tbtipocontactos where idtipocontacto =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbtipocontactos*/
 
 
 

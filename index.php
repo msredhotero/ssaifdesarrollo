@@ -20,7 +20,7 @@ $servicios = new Servicios();
 
 
 
-<title>Acceso Restringido: Sistema Libreria</title>
+<title>Acceso Restringido: Sistema Gestor de Torneos AIF</title>
 
 
 
@@ -171,7 +171,7 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
             </div>
 
             <div align="center">
-            	<img src="imagenes/login-1.png" width="22%">
+            	<img src="imagenes/aif_logo.png" width="22%">
 				<div align="center"><p style="color:#363636; font-size:28px;">Acceso al panel de control</p></div>
                 <br>
             </div>

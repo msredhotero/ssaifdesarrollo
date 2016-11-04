@@ -35,50 +35,35 @@ function query($sql,$accion) {
 
 
 
-$tablasAr	= array("clientes"        => "dbclientes",        
-"empleados"=> "dbempleados",
-"productos"         => "dbproductos",         
-"usuarios"        => "dbusuarios",        
-"proveedores"       => "dbproveedores",       
+$tablasAr	= array("contactos"        => "dbcontactos",        
+"tipocontactos"=> "tbtipocontactos",
+"countries"         => "dbcountries",         
+"usuarios"        => "dbusuarios",            
 "predio_menu"     => "predio_menu",       
-"estados"         => "tbestados",                 
+"canchas"         => "tbcanchas",                 
 "roles"           => "tbroles",          
-"categorias"    => "tbcategorias",
-"compras"       => "dbcompras",
-"pedidos"       => "dbpedidos",
-"detallepedido" => "dbdetallepedido",
-"tipopago"        => "tbtipopago");
+"posiciontributaria"        => "tbposiciontributaria");
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 	
-	$tablasArAux2	= array("clientes"        => "dbclientes",        
-"empleados"=> "dbempleados",
-"productos"         => "dbproductos",         
-"usuarios"        => "dbusuarios",        
-"proveedores"       => "dbproveedores",       
+	$tablasArAux2	= array("contactos"        => "dbcontactos",        
+"tipocontactos"=> "tbtipocontactos",
+"countries"         => "dbcountries",         
+"usuarios"        => "dbusuarios",            
 "predio_menu"     => "predio_menu",       
-"estados"         => "tbestados",                 
+"canchas"         => "tbcanchas",                 
 "roles"           => "tbroles",          
-"categorias"    => "tbcategorias",
-"compras"       => "dbcompras",
-"pedidos"       => "dbpedidos",
-"detallepedido" => "dbdetallepedido",
-"tipopago"        => "tbtipopago");
+"posiciontributaria"        => "tbposiciontributaria");
 
-	$tablasArAux	= array("clientes"        => 1,        
-"empleados"=> 1,
-"productos"         => 3,         
-"usuarios"        => 2,        
-"proveedores"       => 1,       
-"predio_menu"     => 1,       
-"estados"         => 1,                 
+	$tablasArAux	= array("contactos"        => 2,        
+"tipocontactos"=> 1,
+"countries"         => 3,         
+"usuarios"        => 2,            
+"predio_menu"     => 2,       
+"canchas"         => 2,                 
 "roles"           => 1,          
-"categorias"    => 1,
-"compras"       => 3,
-"pedidos"       => 2,
-"detallepedido" => 3,
-"tipopago"        => 1);
+"posiciontributaria"        => 1);
 	
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
@@ -108,7 +93,7 @@ $ajaxFuncionesController = '';
 
 $servicios	= "Referencias";
 
-$sqlMapaer	= "SHOW FULL TABLES FROM sslibreria";
+$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_desa";
 $resMapeo 	=	query($sqlMapaer,0);
 
 $aliasTablaMadre = '';

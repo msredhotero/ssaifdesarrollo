@@ -22,46 +22,53 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Clientes",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Countries",$_SESSION['refroll_predio'],'');
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Cliente";
+$singular = "Country";
 
-$plural = "Clientes";
+$plural = "Countries";
 
-$eliminar = "eliminarClientes";
+$eliminar = "eliminarCountries";
 
-$insertar = "insertarClientes";
+$insertar = "insertarCountries";
 
-$tituloWeb = "Gestión: Libreria";
+$tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbclientes";
+$tabla 			= "dbcountries";
 
-$lblCambio	 	= array("nombrecompleto","fechanacimiento","telefono","direccion");
-$lblreemplazo	= array("Nombre Completo","Fecha Nacimiento","Teléfono","dirección");
+$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria","refcontactos");
+$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Contacto");
 
 
-$cadRef 	= '';
+$resPosTri 	= $serviciosReferencias->traerPosiciontributaria();
+$cadRef 	= $serviciosFunciones->devolverSelectBox($resPosTri,array(1),'');
 
-$refdescripcion = array();
-$refCampo 	=  array();
+$resContacto 	= $serviciosReferencias->traerContactos();
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resContacto,array(1,2),' - ');
+
+$refdescripcion = array(0 => $cadRef, 1=>$cadRef2);
+$refCampo 	=  array("refposiciontributaria","refcontactos");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Apellido</th>
-					<th>Nombre</th>
-					<th>Nro Documento</th>
-					<th>Fecha Nacimiento</th>
-					<th>Dirección</th>
-					<th>Teléfono</th>
-					<th>Email</th>";
+$cabeceras 		= "	<th>Nombre</th>
+					<th>Cuit</th>
+					<th>Fecha Alta</th>
+					<th>Fecha Baja</th>
+					<th>Pos.Tribut.</th>
+					<th>Contacto</th>
+					<th>Latitud</th>
+					<th>Longitud</th>
+					<th>Activo</th>
+					<th>Referencia</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -70,7 +77,7 @@ $cabeceras 		= "	<th>Apellido</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerClientes(),7);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerCountries(),10);
 
 
 
@@ -128,7 +135,7 @@ if ($_SESSION['refroll_predio'] != 1) {
       });
     </script>
     
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY"
   type="text/javascript"></script>
     <style type="text/css">
 		#map
@@ -151,7 +158,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 		var laPlata= {lat: -34.9205283, lng: -57.9531703};
 		var map = new google.maps.Map(mapDiv, {
 			zoom: 13,
-			center: new google.maps.LatLng(-34.9205283, -57.9531703)
+			center: new google.maps.LatLng(-34.604041, -58.3852793)
 		});
 		
 		//var latitud = map.coords.latitude;
@@ -189,7 +196,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 	}
 		
 
- </script>-->
+ </script>
  
 </head>
 
@@ -211,12 +218,12 @@ if ($_SESSION['refroll_predio'] != 1) {
         	<div class="row">
 			<?php echo $formulario; ?>
             </div>
-            <!--
+            
             <div class="row">
             	<div id="map" ></div>
 
             </div>
-            -->
+            
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
                 
@@ -301,6 +308,7 @@ $(document).ready(function(){
 		  }
 	} );
 	
+	$('#activo').prop('checked',true);
 
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");

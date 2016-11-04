@@ -22,59 +22,48 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Vehiculos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Contactos",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerVehiculosPorId($id);
+$resResultado = $serviciosReferencias->traerContactosPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Vehiculo";
+$singular = "Contacto";
 
-$plural = "Vehiculos";
+$plural = "Contactos";
 
-$eliminar = "eliminarVehiculos";
+$eliminar = "eliminarContactos";
 
-$modificar = "modificarVehiculos";
+$modificar = "modificarContactos";
 
-$idTabla = "idvehiculo";
+$idTabla = "idcontacto";
 
-$tituloWeb = "Gestión: Talleres";
+$tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbvehiculos";
+$tabla 			= "dbcontactos";
 
-$lblCambio	 	= array("refmodelo","reftipovehiculo", "anio");
-$lblreemplazo	= array("Marca/Modelo", "Tipo", "Año");
+$lblCambio	 	= array("reftipocontactos","cp");
+$lblreemplazo	= array("Tipo Contacto","Cod. Postal");
 
 
-$resModelo 	= $serviciosReferencias->traerModelo();
-$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resModelo,array(2,1),' - ',mysql_result($resResultado,0,'refmodelo'));
+$resTipoContacto 	= $serviciosReferencias->traerTipocontactos();
+$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resTipoContacto,array(1),'', mysql_result($resResultado,0,'reftipocontactos'));
 
-$resTipo 	= $serviciosReferencias->traerTipovehiculo();
-$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resTipo,array(1),'',mysql_result($resResultado,0,'reftipovehiculo'));
-
-$resClientes= $serviciosReferencias->traerClientes();
-$resVehiculoCliente = $serviciosReferencias->traerClientevehiculosPorVehiculo($id);
-$cadClientes= $serviciosFunciones->devolverSelectBoxActivo($resClientes,array(1,2),' ',mysql_result($resVehiculoCliente,0,'refclientes'));
-
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2);
-$refCampo 	=  array("refmodelo","reftipovehiculo");
+$refdescripcion = array(0 => $cadRef);
+$refCampo 	=  array("reftipocontactos");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
-
-
-
-
 
 
 $formulario 	= $serviciosFunciones->camposTablaModificar($id, $idTabla, $modificar,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
 
-if ($_SESSION['idroll_predio'] != 1) {
+if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
@@ -113,7 +102,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="../../css/chosen.css">
+	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
 	<style type="text/css">
 		
   
@@ -153,19 +142,6 @@ if ($_SESSION['idroll_predio'] != 1) {
 			<?php echo $formulario; ?>
             </div>
             
-            <hr>
-            <h4><span class="glyphicon glyphicon-link"></span> Asignar el vehiculo a un Dueño o Responsable</h4>
-            <div class="row">
-            	<div class="form-group col-md-6">
-                    <label for="refclientes" class="control-label" style="text-align:left"><span class="glyphicon glyphicon-user"></span> Lista de Clientes</label>
-                    <div class="input-group col-md-12">
-                        <select data-placeholder="selecione el cliente..." id="refclientes" name="refclientes" class="chosen-select form-control" style="width:450px;" tabindex="2">
-            				<option value=""></option>
-							<?php echo $cadClientes; ?>
-                		</select>
-                    </div>
-                </div>
-            </div>
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
@@ -212,6 +188,9 @@ if ($_SESSION['idroll_predio'] != 1) {
 </div>
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
+
+<script src="../../js/bootstrap-datetimepicker.min.js"></script>
+<script src="../../js/bootstrap-datetimepicker.es.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -343,19 +322,20 @@ $(document).ready(function(){
 
 });
 </script>
-<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+
 <script type="text/javascript">
-    var config = {
-      '.chosen-select'           : {},
-      '.chosen-select-deselect'  : {allow_single_deselect:true},
-      '.chosen-select-no-single' : {disable_search_threshold:10},
-      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
-      '.chosen-select-width'     : {width:"95%"}
-    }
-    for (var selector in config) {
-      $(selector).chosen(config[selector]);
-    }
-  </script>
+$('.form_date').datetimepicker({
+	language:  'es',
+	weekStart: 1,
+	todayBtn:  1,
+	autoclose: 1,
+	todayHighlight: 1,
+	startView: 2,
+	minView: 2,
+	forceParse: 0,
+	format: 'dd/mm/yyyy'
+});
+</script>
 <?php } ?>
 </body>
 </html>

@@ -22,34 +22,34 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Proveedores",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Posicion Tributaria",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerClientesPorId($id);
+$resResultado = $serviciosReferencias->traerPosiciontributariaPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Proveedor";
+$singular = "Posicion Tributaria";
 
-$plural = "Proveedores";
+$plural = "Posicion Tributaria";
 
-$eliminar = "eliminarProveedores";
+$eliminar = "eliminarPosiciontributaria";
 
-$modificar = "modificarProveedores";
+$modificar = "modificarPosiciontributaria";
 
-$idTabla = "idproveedor";
+$idTabla = "idposiciontributaria";
 
-$tituloWeb = "Gestión: Libreria";
+$tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbproveedores";
+$tabla 			= "tbposiciontributaria";
 
-$lblCambio	 	= array("dni");
-$lblreemplazo	= array("Nro Documento");
+$lblCambio	 	= array("posiciontributaria");
+$lblreemplazo	= array("Posición Tributaria");
 
 
 $cadRef 	= '';

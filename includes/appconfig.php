@@ -7,7 +7,7 @@ class appconfig {
 function conexion() {
 		
 		$hostname = "localhost";
-		$database = "sslibreria";
+		$database = "ssaif_desa";
 		$username = "root";
 		$password = "";
 		

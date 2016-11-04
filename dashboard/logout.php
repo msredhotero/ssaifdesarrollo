@@ -19,7 +19,7 @@ session_destroy();
 
 
 
-<title>Sistema de Talleres</title>
+<title>Sistema Gestor de Torneos AIF</title>
 
 
 

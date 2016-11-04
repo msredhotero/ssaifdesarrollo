@@ -66,7 +66,7 @@ $cabeceras 		= "	<th>Nro</th>
 
 
 
-<title>Gesti&oacute;n: Libreria</title>
+<title>Gesti&oacute;n: AIF</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
@@ -111,42 +111,6 @@ $cabeceras 		= "	<th>Nro</th>
 
 <h3>Bienvenido</h3>
 
-    <div class="boxInfoLargo tile-stats tile-white stat-tile">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ordenes Cargadas</p>
-        	
-        </div>
-    	<div class="cuerpoBox">
-        	<div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
-                
-                </div>
-                <div id='load'>
-                
-                </div>
-            </div>
-    		<?php // echo $lstCargados; ?>
-    	</div>
-    </div>
-    
-    
-    <div class="boxInfoLargo tile-stats tile-white stat-tile">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Mora</p>
-        	
-        </div>
-    	<div class="cuerpoBox">
-        	<div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
-                
-                </div>
-                <div id='load'>
-                
-                </div>
-            </div>
-    		<?php //echo $lstCargadosMora; ?>
-    	</div>
-    </div>
     
     
     
@@ -159,32 +123,7 @@ $cabeceras 		= "	<th>Nro</th>
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Pagos</h4>
-      </div>
-      <div class="modal-body userasignates">
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-<div id="dialog2" title="Eliminar <?php echo $singular; ?>">
-    	<p>
-        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar el <?php echo $singular; ?>?.<span id="proveedorEli"></span>
-        </p>
-        <p><strong>Importante: </strong>Si elimina el <?php echo $singular; ?> se perderan todos los datos de este</p>
-        <input type="hidden" value="" id="idEliminar" name="idEliminar">
-</div>
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script src="../bootstrap/js/dataTables.bootstrap.js"></script>
 

@@ -40,7 +40,7 @@ function menu($usuario,$titulo,$rol,$empresa) {
 	
 	
 	$menu = '
-		<div style="background-color:#012A2A; position:absolute; top:0;left:0; height:35px; width:100%; color:#FFF; padding-top:7px;" align="right">
+		<div style="background-color:#333; position:absolute; top:0;left:0; height:35px; width:100%; color:#FFF; padding-top:7px;" align="right">
 			
 			<ul class="list-inline">
 				<li><span class="glyphicon glyphicon-user"></span> '.$usuario.'</li>
@@ -53,9 +53,6 @@ function menu($usuario,$titulo,$rol,$empresa) {
 		</div> 
 	
 		<div id="navigation" >
-			<div align="center">
-			<img src="../imagenes/dash_logo.png"/ style="padding-bottom:5%;" width="50%">
-			</div>
 				<nav class="nav">
 					<ul>
 						'.utf8_encode($cadmenu).'

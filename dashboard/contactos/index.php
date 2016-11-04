@@ -22,43 +22,50 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Modelos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Contactos",$_SESSION['refroll_predio'],'');
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Modelo";
+$singular = "Contacto";
 
-$plural = "Modelos";
+$plural = "Contactos";
 
-$eliminar = "eliminarModelo";
+$eliminar = "eliminarContactos";
 
-$insertar = "insertarModelo";
+$insertar = "insertarContactos";
 
-$tituloWeb = "Gestión: Talleres";
+$tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbmodelo";
+$tabla 			= "dbcontactos";
 
-$lblCambio	 	= array("refmarca");
-$lblreemplazo	= array("Marca");
+$lblCambio	 	= array("reftipocontactos","cp");
+$lblreemplazo	= array("Tipo Contacto","Cod. Postal");
 
 
-$resMarca 	= $serviciosReferencias->traerMarca();
-$cadRef 	= $serviciosFunciones->devolverSelectBox($resMarca,array(1),'');
+$resTipoContacto 	= $serviciosReferencias->traerTipocontactos();
+$cadRef 	= $serviciosFunciones->devolverSelectBox($resTipoContacto,array(1),'');
 
 $refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("refmarca");
+$refCampo 	=  array("reftipocontactos");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
 
 
-/////////////////////// Opciones para la creacion del view  patente,refmodelo,reftipovehiculo,anio/////////////////////
-$cabeceras 		= "	<th>Modelo</th>
-					<th>Marca</th>
-					<th>Activo</th>";
+/////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
+$cabeceras 		= "	<th>Tipo Contacto</th>
+					<th>Nombre</th>
+					<th>Direccion</th>
+					<th>Localidad</th>
+					<th>Cod.postal</th>
+					<th>Telefono</th>
+					<th>Celular</th>
+					<th>Fax</th>
+					<th>Email</th>
+					<th>Publico</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -67,7 +74,7 @@ $cabeceras 		= "	<th>Modelo</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerModelo(),3);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerContactos(),10);
 
 
 
@@ -110,12 +117,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
-
-	<style type="text/css">
-		
-  
-		
-	</style>
+	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
+	
     
    
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
@@ -128,9 +131,73 @@ if ($_SESSION['refroll_predio'] != 1) {
         $('#navigation').perfectScrollbar();
       });
     </script>
+    
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY"
+  type="text/javascript"></script>
+    <style type="text/css">
+		#map
+		{
+			width: 100%;
+			height: 600px;
+			border: 1px solid #d0d0d0;
+		}
+  
+		
+	</style>
+    <script>
+	/* AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY */
+		var map;
+		var markers = [];
+	 function localize() {
+
+			
+		var mapDiv = document.getElementById('map');
+		var laPlata= {lat: -34.9205283, lng: -57.9531703};
+		var map = new google.maps.Map(mapDiv, {
+			zoom: 13,
+			center: new google.maps.LatLng(-34.9205283, -57.9531703)
+		});
+		
+		//var latitud = map.coords.latitude;
+		//var longitud = map.coords.longitude;
+		/*
+		google.maps.event.addDomListener(mapDiv, 'click', function(e) {
+			window.alert('click en el mapa');
+		});
+		*/
+		map.addListener('click', function(e) {
+			
+			if (markers.length > 0) {
+				clearMarkers();
+			}
+			$('#latitud').val(e.latLng.lat());
+			$('#longitud').val(e.latLng.lng());	
+			placeMarkerAndPanTo(e.latLng, map);
+		});
+	 }
+	 
+		function placeMarkerAndPanTo(latLng, map) {
+			var marker = new google.maps.Marker({
+				position: latLng,
+				map: map
+			});
+			markers.push(marker);
+			map.panTo(latLng);
+			
+		}
+	
+	function clearMarkers() {
+		for (var i = 0; i < markers.length; i++) {
+			markers[i].setMap(null);
+		}
+	}
+		
+
+ </script>-->
+ 
 </head>
 
-<body>
+<body onLoad="localize()">
 
  <?php echo $resMenu; ?>
 
@@ -148,8 +215,12 @@ if ($_SESSION['refroll_predio'] != 1) {
         	<div class="row">
 			<?php echo $formulario; ?>
             </div>
+            <!--
+            <div class="row">
+            	<div id="map" ></div>
 
-            
+            </div>
+            -->
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
                 
@@ -202,11 +273,11 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
+<script src="../../js/bootstrap-datetimepicker.min.js"></script>
+<script src="../../js/bootstrap-datetimepicker.es.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function(){
-	
-	$('#activo').prop('checked',true);
-	
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],
 		"language": {
@@ -234,6 +305,7 @@ $(document).ready(function(){
 		  }
 	} );
 	
+	$('#activo').prop('checked',true);
 
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
@@ -364,6 +436,20 @@ $(document).ready(function(){
 		}
     });
 
+});
+</script>
+
+<script type="text/javascript">
+$('.form_date').datetimepicker({
+	language:  'es',
+	weekStart: 1,
+	todayBtn:  1,
+	autoclose: 1,
+	todayHighlight: 1,
+	startView: 2,
+	minView: 2,
+	forceParse: 0,
+	format: 'dd/mm/yyyy'
 });
 </script>
 <?php } ?>
