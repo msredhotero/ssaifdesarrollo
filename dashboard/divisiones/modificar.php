@@ -22,34 +22,34 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Categorias",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Tipo Contacto",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerClientesPorId($id);
+$resResultado = $serviciosReferencias->traerTipocontactosPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Categoria";
+$singular = "Tipo Contacto";
 
-$plural = "Categorias";
+$plural = "Tipo Contactos";
 
-$eliminar = "eliminarCategorias";
+$eliminar = "eliminarTipocontactos";
 
-$modificar = "modificarCategorias";
+$modificar = "modificarTipocontactos";
 
-$idTabla = "idcategoria";
+$idTabla = "idtipocontacto";
 
-$tituloWeb = "Gestión: Libreria";
+$tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbcategorias";
+$tabla 			= "tbtipocontactos";
 
-$lblCambio	 	= array();
-$lblreemplazo	= array();
+$lblCambio	 	= array("tipocontacto");
+$lblreemplazo	= array("Tipo Contacto");
 
 
 $cadRef 	= '';
