@@ -22,27 +22,27 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Tipo Contacto",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Arbitros",$_SESSION['refroll_predio'],'');
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Tipo Contacto";
+$singular = "Arbitro";
 
-$plural = "Tipo Contactos";
+$plural = "Arbitros";
 
-$eliminar = "eliminarTipocontactos";
+$eliminar = "eliminarArbitros";
 
-$insertar = "insertarTipocontactos";
+$insertar = "insertarArbitros";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbtipocontactos";
+$tabla 			= "dbarbitros";
 
-$lblCambio	 	= array("tipocontacto");
-$lblreemplazo	= array("Tipo Contacto");
+$lblCambio	 	= array("nombrecompleto","telefonoparticular","telefonocelular","telefonolaboral","telefonofamiliar");
+$lblreemplazo	= array("Nombre Completo","Tel. Partarticular","Tel. Celular","Tel. Laboral","Tel. Familiar");
 
 
 $cadRef 	= '';
@@ -55,8 +55,12 @@ $refCampo 	=  array();
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Tipo Contacto</th>
-					<th>Activo</th>";
+$cabeceras 		= "	<th>Nombre Completo</th>
+					<th>Tel. Partarticular</th>
+					<th>Tel. Celular</th>
+					<th>Tel. Laboral</th>
+					<th>Tel. Familiar</th>
+					<th>Email</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -65,7 +69,7 @@ $cabeceras 		= "	<th>Tipo Contacto</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerTipocontactos(),2);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerArbitros(),6);
 
 
 

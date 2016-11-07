@@ -110,6 +110,46 @@ break;
 
 /* Fin */
 
+
+case 'insertarArbitros':
+insertarArbitros($serviciosReferencias);
+break;
+case 'modificarArbitros':
+modificarArbitros($serviciosReferencias);
+break;
+case 'eliminarArbitros':
+eliminarArbitros($serviciosReferencias);
+break; 
+
+case 'insertarCategorias':
+insertarCategorias($serviciosReferencias);
+break;
+case 'modificarCategorias':
+modificarCategorias($serviciosReferencias);
+break;
+case 'eliminarCategorias':
+eliminarCategorias($serviciosReferencias);
+break;
+case 'insertarDivisiones':
+insertarDivisiones($serviciosReferencias);
+break;
+case 'modificarDivisiones':
+modificarDivisiones($serviciosReferencias);
+break;
+case 'eliminarDivisiones':
+eliminarDivisiones($serviciosReferencias);
+break; 
+
+case 'insertarTemporadas':
+insertarTemporadas($serviciosReferencias);
+break;
+case 'modificarTemporadas':
+modificarTemporadas($serviciosReferencias);
+break;
+case 'eliminarTemporadas':
+eliminarTemporadas($serviciosReferencias);
+break; 
+
 }
 
 /* Fin */
@@ -445,6 +485,117 @@ echo $res;
 }
 
 /* Fin */
+
+
+function insertarArbitros($serviciosReferencias) {
+$nombrecompleto = $_POST['nombrecompleto'];
+$telefonoparticular = $_POST['telefonoparticular'];
+$telefonoceleluar = $_POST['telefonoceleluar'];
+$telefonolaboral = $_POST['telefonolaboral'];
+$telefonofamiliar = $_POST['telefonofamiliar'];
+$email = $_POST['email'];
+$res = $serviciosReferencias->insertarArbitros($nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email);
+if ((integer)$res > 0) {
+echo '';
+} else {
+echo 'Huvo un error al insertar datos';
+}
+}
+function modificarArbitros($serviciosReferencias) {
+$id = $_POST['id'];
+$nombrecompleto = $_POST['nombrecompleto'];
+$telefonoparticular = $_POST['telefonoparticular'];
+$telefonoceleluar = $_POST['telefonoceleluar'];
+$telefonolaboral = $_POST['telefonolaboral'];
+$telefonofamiliar = $_POST['telefonofamiliar'];
+$email = $_POST['email'];
+$res = $serviciosReferencias->modificarArbitros($id,$nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarArbitros($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarArbitros($id);
+echo $res;
+} 
+
+function insertarCategorias($serviciosReferencias) {
+$categoria = $_POST['categoria'];
+$res = $serviciosReferencias->insertarCategorias($categoria);
+if ((integer)$res > 0) {
+echo '';
+} else {
+echo 'Huvo un error al insertar datos';
+}
+}
+function modificarCategorias($serviciosReferencias) {
+$id = $_POST['id'];
+$categoria = $_POST['categoria'];
+$res = $serviciosReferencias->modificarCategorias($id,$categoria);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarCategorias($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarCategorias($id);
+echo $res;
+}
+function insertarDivisiones($serviciosReferencias) {
+$division = $_POST['division'];
+$res = $serviciosReferencias->insertarDivisiones($division);
+if ((integer)$res > 0) {
+echo '';
+} else {
+echo 'Huvo un error al insertar datos';
+}
+}
+function modificarDivisiones($serviciosReferencias) {
+$id = $_POST['id'];
+$division = $_POST['division'];
+$res = $serviciosReferencias->modificarDivisiones($id,$division);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarDivisiones($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarDivisiones($id);
+echo $res;
+} 
+
+function insertarTemporadas($serviciosReferencias) {
+$temporada = $_POST['temporada'];
+$res = $serviciosReferencias->insertarTemporadas($temporada);
+if ((integer)$res > 0) {
+echo '';
+} else {
+echo 'Huvo un error al insertar datos';
+}
+}
+function modificarTemporadas($serviciosReferencias) {
+$id = $_POST['id'];
+$temporada = $_POST['temporada'];
+$res = $serviciosReferencias->modificarTemporadas($id,$temporada);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarTemporadas($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarTemporadas($id);
+echo $res;
+} 
+
 ////////////////////////// FIN DE TRAER DATOS ////////////////////////////////////////////////////////////
 
 //////////////////////////  BASICO  /////////////////////////////////////////////////////////////////////////

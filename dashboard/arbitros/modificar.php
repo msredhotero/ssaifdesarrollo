@@ -22,34 +22,34 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Tipo Contacto",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Arbitros",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerTipocontactosPorId($id);
+$resResultado = $serviciosReferencias->traerArbitrosPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Tipo Contacto";
+$singular = "Arbitro";
 
-$plural = "Tipo Contactos";
+$plural = "Arbitros";
 
-$eliminar = "eliminarTipocontactos";
+$eliminar = "eliminarArbitros";
 
-$modificar = "modificarTipocontactos";
+$modificar = "modificarArbitros";
 
-$idTabla = "idtipocontacto";
+$idTabla = "idarbitro";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbtipocontactos";
+$tabla 			= "dbarbitros";
 
-$lblCambio	 	= array("tipocontacto");
-$lblreemplazo	= array("Tipo Contacto");
+$lblCambio	 	= array("nombrecompleto","telefonoparticular","telefonocelular","telefonolaboral","telefonofamiliar");
+$lblreemplazo	= array("Nombre Completo","Tel. Partarticular","Tel. Celular","Tel. Laboral","Tel. Familiar");
 
 
 $cadRef 	= '';

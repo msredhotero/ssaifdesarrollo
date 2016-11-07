@@ -890,7 +890,7 @@ class Servicios {
 													<div class="form-group col-md-6" style="display:'.$lblOculta.'">
 														<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
 														<div class="input-group col-md-12">
-															<input type="text" value="'.(mysql_result($resMod,0,$row[0])).'" class="form-control" id="'.$campo.'" name="'.$campo.'" placeholder="Ingrese el '.$label.'..." required>
+															<input type="text" value="'.htmlentities((mysql_result($resMod,0,$row[0])),ENT_QUOTES).'" class="form-control" id="'.$campo.'" name="'.$campo.'" placeholder="Ingrese el '.$label.'..." required>
 														</div>
 													</div>
 													

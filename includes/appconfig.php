@@ -13,8 +13,8 @@ function conexion() {
 		
 		/*
 		$hostname = "localhost";
-		$database = "u235498999_talle";
-		$username = "u235498999_talle";
+		$database = "u235498999_aifd";
+		$username = "u235498999_aifd";
 		$password = "rhcp7575";
 		//u235498999_kike usuario
 		*/

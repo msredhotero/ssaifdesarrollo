@@ -22,27 +22,27 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Tipo Contacto",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Divisiones",$_SESSION['refroll_predio'],'');
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Tipo Contacto";
+$singular = "Division";
 
-$plural = "Tipo Contactos";
+$plural = "Divisiones";
 
-$eliminar = "eliminarTipocontactos";
+$eliminar = "eliminarDivisiones";
 
-$insertar = "insertarTipocontactos";
+$insertar = "insertarDivisiones";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbtipocontactos";
+$tabla 			= "tbdivisiones";
 
-$lblCambio	 	= array("tipocontacto");
-$lblreemplazo	= array("Tipo Contacto");
+$lblCambio	 	= array("");
+$lblreemplazo	= array("");
 
 
 $cadRef 	= '';
@@ -55,8 +55,7 @@ $refCampo 	=  array();
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Tipo Contacto</th>
-					<th>Activo</th>";
+$cabeceras 		= "	<th>Divisiones</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -65,7 +64,7 @@ $cabeceras 		= "	<th>Tipo Contacto</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerTipocontactos(),2);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerDivisiones(),1);
 
 
 

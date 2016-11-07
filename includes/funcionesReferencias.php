@@ -653,6 +653,255 @@ return $res;
 /* /* Fin de la Tabla: tbtipocontactos*/
 
 
+/* PARA Arbitros */
+
+function insertarArbitros($nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email) {
+$sql = "insert into dbarbitros(idarbitro,nombrecompleto,telefonoparticular,telefonoceleluar,telefonolaboral,telefonofamiliar,email)
+values ('','".utf8_decode($nombrecompleto)."','".utf8_decode($telefonoparticular)."','".utf8_decode($telefonoceleluar)."','".utf8_decode($telefonolaboral)."','".utf8_decode($telefonofamiliar)."','".utf8_decode($email)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarArbitros($id,$nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email) {
+$sql = "update dbarbitros
+set
+nombrecompleto = '".utf8_decode($nombrecompleto)."',telefonoparticular = '".utf8_decode($telefonoparticular)."',telefonoceleluar = '".utf8_decode($telefonoceleluar)."',telefonolaboral = '".utf8_decode($telefonolaboral)."',telefonofamiliar = '".utf8_decode($telefonofamiliar)."',email = '".utf8_decode($email)."'
+where idarbitro =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarArbitros($id) {
+$sql = "delete from dbarbitros where idarbitro =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerArbitros() {
+$sql = "select
+a.idarbitro,
+a.nombrecompleto,
+a.telefonoparticular,
+a.telefonoceleluar,
+a.telefonolaboral,
+a.telefonofamiliar,
+a.email
+from dbarbitros a
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerArbitrosPorId($id) {
+$sql = "select idarbitro,nombrecompleto,telefonoparticular,telefonoceleluar,telefonolaboral,telefonofamiliar,email from dbarbitros where idarbitro =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbarbitros*/
+
+
+/* PARA Countriecanchas */
+
+function insertarCountriecanchas($refcountries,$refcanchas) {
+$sql = "insert into dbcountriecanchas(idcountriecancha,refcountries,refcanchas)
+values ('',".$refcountries.",".$refcanchas.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarCountriecanchas($id,$refcountries,$refcanchas) {
+$sql = "update dbcountriecanchas
+set
+refcountries = ".$refcountries.",refcanchas = ".$refcanchas."
+where idcountriecancha =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarCountriecanchas($id) {
+$sql = "delete from dbcountriecanchas where idcountriecancha =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCountriecanchas() {
+$sql = "select
+c.idcountriecancha,
+c.refcountries,
+c.refcanchas
+from dbcountriecanchas c
+inner join dbcountries cou ON cou.idcountrie = c.refcountries
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria
+inner join dbcontactos co ON co.idcontacto = cou.refcontactos
+inner join tbcanchas can ON can.idcancha = c.refcanchas
+inner join dbcountries co ON co.idcountrie = can.refcountries
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCountriecanchasPorId($id) {
+$sql = "select idcountriecancha,refcountries,refcanchas from dbcountriecanchas where idcountriecancha =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbcountriecanchas*/
+
+
+/* PARA Categorias */
+
+function insertarCategorias($categoria) {
+$sql = "insert into tbcategorias(idtcategoria,categoria)
+values ('','".utf8_decode($categoria)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarCategorias($id,$categoria) {
+$sql = "update tbcategorias
+set
+categoria = '".utf8_decode($categoria)."'
+where idtcategoria =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarCategorias($id) {
+$sql = "delete from tbcategorias where idtcategoria =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCategorias() {
+$sql = "select
+c.idtcategoria,
+c.categoria
+from tbcategorias c
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCategoriasPorId($id) {
+$sql = "select idtcategoria,categoria from tbcategorias where idtcategoria =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbcategorias*/
+
+/* PARA Divisiones */
+
+function insertarDivisiones($division) {
+$sql = "insert into tbdivisiones(iddivision,division)
+values ('','".utf8_decode($division)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarDivisiones($id,$division) {
+$sql = "update tbdivisiones
+set
+division = '".utf8_decode($division)."'
+where iddivision =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarDivisiones($id) {
+$sql = "delete from tbdivisiones where iddivision =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerDivisiones() {
+$sql = "select
+d.iddivision,
+d.division
+from tbdivisiones d
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerDivisionesPorId($id) {
+$sql = "select iddivision,division from tbdivisiones where iddivision =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbdivisiones*/
+
+
+/* PARA Temporadas */
+
+function insertarTemporadas($temporada) {
+$sql = "insert into tbtemporadas(idtemporadas,temporada)
+values ('',".$temporada.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarTemporadas($id,$temporada) {
+$sql = "update tbtemporadas
+set
+temporada = ".$temporada."
+where idtemporadas =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarTemporadas($id) {
+$sql = "delete from tbtemporadas where idtemporadas =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerTemporadas() {
+$sql = "select
+t.idtemporadas,
+t.temporada
+from tbtemporadas t
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerTemporadasPorId($id) {
+$sql = "select idtemporadas,temporada from tbtemporadas where idtemporadas =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbtemporadas*/
+
 
 function query($sql,$accion) {
 		

@@ -41,7 +41,12 @@ $tablasAr	= array("contactos"        => "dbcontactos",
 "usuarios"        => "dbusuarios",            
 "predio_menu"     => "predio_menu",       
 "canchas"         => "tbcanchas",                 
-"roles"           => "tbroles",          
+"roles"           => "tbroles",  
+"categorias"	  => "tbcategorias",
+"divisiones"	  => "tbdivisiones",
+"temporadas"	  => "tbtemporadas",
+"countriecanchas" => "dbcountriecanchas",
+"dbarbitros"	  => "dbarbitros",
 "posiciontributaria"        => "tbposiciontributaria");
 
 
@@ -53,7 +58,12 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "usuarios"        => "dbusuarios",            
 "predio_menu"     => "predio_menu",       
 "canchas"         => "tbcanchas",                 
-"roles"           => "tbroles",          
+"roles"           => "tbroles",  
+"categorias"	  => "tbcategorias",
+"divisiones"	  => "tbdivisiones",
+"temporadas"	  => "tbtemporadas",
+"countriecanchas" => "dbcountriecanchas",
+"dbarbitros"	  => "dbarbitros",        
 "posiciontributaria"        => "tbposiciontributaria");
 
 	$tablasArAux	= array("contactos"        => 2,        
@@ -62,7 +72,12 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "usuarios"        => 2,            
 "predio_menu"     => 2,       
 "canchas"         => 2,                 
-"roles"           => 1,          
+"roles"           => 1, 
+"categorias"	  => 1,
+"divisiones"	  => 1,
+"temporadas"	  => 1,
+"countriecanchas" => 3,
+"dbarbitros"	  => 1,         
 "posiciontributaria"        => 1);
 	
 	$inner= '';

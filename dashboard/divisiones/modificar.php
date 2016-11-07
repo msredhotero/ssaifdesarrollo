@@ -22,34 +22,34 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Tipo Contacto",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Divisiones",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerTipocontactosPorId($id);
+$resResultado = $serviciosReferencias->traerDivisionesPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Tipo Contacto";
+$singular = "Division";
 
-$plural = "Tipo Contactos";
+$plural = "Divisiones";
 
-$eliminar = "eliminarTipocontactos";
+$eliminar = "eliminarDivisiones";
 
-$modificar = "modificarTipocontactos";
+$modificar = "modificarDivisiones";
 
-$idTabla = "idtipocontacto";
+$idTabla = "iddivision";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbtipocontactos";
+$tabla 			= "tbdivisiones";
 
-$lblCambio	 	= array("tipocontacto");
-$lblreemplazo	= array("Tipo Contacto");
+$lblCambio	 	= array("");
+$lblreemplazo	= array("");
 
 
 $cadRef 	= '';
