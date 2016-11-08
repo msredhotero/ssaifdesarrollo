@@ -502,7 +502,7 @@ class Servicios {
 	
 													$form	=	$form.'
 													
-													<div class="row" style="margin-left:25px; margin-right:25px;">
+													<div class="col-md-12 col-xs-12" style="margin-left:-5px; margin-right:0px;">
 														<h4>Agregar Imagen</h4>
 															<p style=" color: #999;">Imagenes / Archivos (tamaño maximo del archivo 2 MB)</p>
 															<div style="height:auto; 
@@ -581,14 +581,14 @@ class Servicios {
 
 	
 	function traerImagenUnica($id) {
-		$sql    =   "select 'galeria',s.idproducto,f.imagen,f.idfoto,f.type
-							from dbproductos s
+		$sql    =   "select 'countries',s.idcountrie,f.imagen,f.idfoto,f.type
+							from dbcountries s
 							
 							inner
 							join images f
-							on	s.idproducto = f.refproyecto
+							on	s.idcountrie = f.refproyecto
 
-							where s.idproducto = ".$id;
+							where s.idcountrie = ".$id;
 		$result =   $this->query($sql, 0);
 		return $result;	
 	}
@@ -839,7 +839,7 @@ class Servicios {
 													}
 													$form	=	$form.'
 													
-													<div class="form-group col-md-6" style="display:'.$lblOculta.'">';
+													<div class="form-group col-md-12" style="display:'.$lblOculta.'">';
 													if (mysql_num_rows($imagen)>0) {
 														$form	=	$form.'<h3>Imagen Cargada</h3>
 														<ul class="list-inline">
@@ -850,7 +850,7 @@ class Servicios {
                             	
 													if ($pos !== false) { 
 								
-                               				 		$form	=	$form.'<img src="../../archivos/'.mysql_result($imagen,0,0).'/'.mysql_result($imagen,0,1).'/'.utf8_encode(mysql_result($imagen,0,2)).'" width="100" height="100">';
+                               				 		$form	=	$form.'<img src="../../archivos/'.mysql_result($imagen,0,0).'/'.mysql_result($imagen,0,1).'/'.utf8_encode(mysql_result($imagen,0,2)).'" width="150" height="150">';
                                 					} else { 
                                 					$form	=	$form.'<img src="../../imagenes/pdf_ico2.jpg" width="100" height="100">'.$imagen["imagen"];
 													

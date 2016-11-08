@@ -209,6 +209,19 @@ if ($_SESSION['refroll_predio'] != 1) {
             </div>
             
             <div class="row">
+                <div class="col-md-12">
+                <ul class="list-inline" style="margin-top:0;">
+                    <li>
+                        <button type="button" class="btn btn-warning" id="vermapa" style="margin-left:0px;"><span class="lblMapa">Cerrar Mapa</span></button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-info" id="vercontactos" style="margin-left:0px;"><span class="lblContactos">Ver Contactos</span></button>
+                    </li>
+                </ul>
+                </div>
+            </div>
+            
+            <div class="row" id="contMapa" style="margin-left:25px; margin-right:25px;">
             	<div id="map" ></div>
 
             </div>
@@ -284,6 +297,21 @@ $(document).ready(function(){
 			alert("Error, vuelva a realizar la acción.");	
 		  }
 	});//fin del boton eliminar
+	
+	$('#vermapa').click(function(e) {
+        if ($('.lblMapa').html() == 'Ver Mapa') {
+			$('.lblMapa').html('Cerrar Mapa');
+			$('#contMapa').show();
+			$('#vermapa').addClass('btn-warning');
+			$('#vermapa').removeClass('btn-info');
+			
+		} else {
+			$('.lblMapa').html('Ver Mapa');
+			$('#contMapa').hide();
+			$('#vermapa').addClass('btn-info');
+			$('#vermapa').removeClass('btn-warning');
+		}
+    });
 
 	 $( "#dialog2" ).dialog({
 		 	
@@ -389,6 +417,22 @@ $(document).ready(function(){
 			});
 		}
     });
+	
+	$('#imagen1').on('change', function(e) {
+	  var Lector,
+		  oFileInput = this;
+	 
+	  if (oFileInput.files.length === 0) {
+		return;
+	  };
+	 
+	  Lector = new FileReader();
+	  Lector.onloadend = function(e) {
+		$('#vistaPrevia1').attr('src', e.target.result);         
+	  };
+	  Lector.readAsDataURL(oFileInput.files[0]);
+	 
+	});
 
 });
 </script>

@@ -224,12 +224,22 @@ $activo = 1;
 $activo = 0;
 }
 $referencia = $_POST['referencia'];
-$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Huvo un error al insertar datos';
-}
+$imagen = ''; 
+
+$errorArchivo = '';
+
+	$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia);
+	
+	if ((integer)$res > 0) {
+		$imagenes = array("imagen" => 'imagen');
+	
+		foreach ($imagenes as $valor) {
+			$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$res,1);
+		}
+		echo ''.$errorArchivo;
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
 }
 function modificarCountries($serviciosReferencias) {
 $id = $_POST['id'];
@@ -247,12 +257,21 @@ $activo = 1;
 $activo = 0;
 }
 $referencia = $_POST['referencia'];
-$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+
+$errorArchivo = '';
+
+	$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia);
+	
+	if ($res == true) {
+		$imagenes = array("imagen" => 'imagen');
+	
+		foreach ($imagenes as $valor) {
+			$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$id,1);
+		}
+		echo ''.$errorArchivo;
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
 }
 function eliminarCountries($serviciosReferencias) {
 $id = $_POST['id'];

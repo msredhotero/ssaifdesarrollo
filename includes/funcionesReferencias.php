@@ -38,8 +38,8 @@ function GUID()
 	}
 	
 	
-	function existeArchivo($id,$nombre,$type) {
-		$sql		=	"select * from images where refproyecto =".$id." and imagen = '".$nombre."' and type = '".$type."'";
+	function existeArchivo($id,$nombre,$type,$idtabla) {
+		$sql		=	"select * from images where reftabla = ".$idtabla." and refproyecto =".$id." and imagen = '".$nombre."' and type = '".$type."'";
 		$resultado  =   $this->query($sql,0);
 			   
 			   if(mysql_num_rows($resultado)>0){
@@ -96,10 +96,23 @@ function GUID()
  
     return $string;
 }
-
-	function subirArchivo($file,$carpeta,$id) {
-		
-		
+	
+	
+	function find_filesize($file)
+	{
+		if(substr(PHP_OS, 0, 3) == "WIN")
+		{
+			exec('for %I in ("'.$file.'") do @echo %~zI', $output);
+			$return = $output[0];
+		}
+		else
+		{
+			$return = filesize($file);
+		}
+		return $return;
+	}
+	
+	function subirArchivo($file,$carpeta,$id,$idtabla) {
 		
 		$dir_destino = '../archivos/'.$carpeta.'/'.$id.'/';
 		$imagen_subida = $dir_destino . $this->sanear_string(str_replace(' ','',basename($_FILES[$file]['name'])));
@@ -119,25 +132,30 @@ function GUID()
 		}	else	{
 			if ($_FILES[$file]['tmp_name'] != '') {
 				if(is_uploaded_file($_FILES[$file]['tmp_name'])){
-					$this->eliminarFotoPorObjeto($id);
-					/*echo "Archivo ". $_FILES['foto']['name'] ." subido con éxtio.\n";
-					echo "Mostrar contenido\n";
-					echo $imagen_subida;*/
-					if (move_uploaded_file($_FILES[$file]['tmp_name'], $imagen_subida)) {
-						
-						$archivo = $this->sanear_string($_FILES[$file]["name"]);
-						$tipoarchivo = $_FILES[$file]["type"];
-						
-						if ($this->existeArchivo($id,$archivo,$tipoarchivo) == 0) {
-							$sql	=	"insert into images(idfoto,refproyecto,imagen,type) values ('',".$id.",'".str_replace(' ','',$archivo)."','".$tipoarchivo."')";
-							$this->query($sql,1);
+					$this->eliminarFotoPorObjeto($id,$carpeta);
+					
+					if ($this->find_filesize($imagen_subida) < 1900000) {
+						/*echo "Archivo ". $_FILES['foto']['name'] ." subido con éxtio.\n";
+						echo "Mostrar contenido\n";
+						echo $imagen_subida;*/
+						if (move_uploaded_file($_FILES[$file]['tmp_name'], $imagen_subida)) {
+							
+							$archivo = $this->sanear_string($_FILES[$file]["name"]);
+							$tipoarchivo = $_FILES[$file]["type"];
+							
+							if ($this->existeArchivo($id,$archivo,$tipoarchivo,$idtabla) == 0) {
+								$sql	=	"insert into images(idfoto,refproyecto,reftabla,imagen,type) values ('',".$id.",".$idtabla.",'".str_replace(' ','',$archivo)."','".$tipoarchivo."')";
+								$this->query($sql,1);
+							}
+							echo "";
+							
+							copy($noentrar, $nuevo_noentrar);
+			
+						} else {
+							echo "Posible ataque de carga de archivos!\n";
 						}
-						echo "";
-						
-						copy($noentrar, $nuevo_noentrar);
-		
 					} else {
-						echo "Posible ataque de carga de archivos!\n";
+						echo "El archivo supera los limites de carga.";
 					}
 				}else{
 					echo "Posible ataque del archivo subido: ";
@@ -149,29 +167,29 @@ function GUID()
 
 
 	
-	function TraerFotosRelacion($id) {
-		$sql    =   "select 'galeria',s.idproducto,f.imagen,f.idfoto,f.type
-							from dbproductos s
+	function TraerFotosRelacion($id, $carpeta) {
+		$sql    =   "select '".$carpeta."',s.idcountrie,f.imagen,f.idfoto,f.type
+							from dbcountries s
 							
 							inner
 							join images f
-							on	s.idproducto = f.refproyecto
+							on	s.idcountrie = f.refproyecto
 
-							where s.idproducto = ".$id;
+							where s.idcountrie = ".$id;
 		$result =   $this->query($sql, 0);
 		return $result;
 	}
 	
 	
-	function eliminarFoto($id)
+	function eliminarFoto($id, $carpeta)
 	{
 		
-		$sql		=	"select concat('galeria','/',s.idproducto,'/',f.imagen) as archivo
-							from dbproductos s
+		$sql		=	"select concat('".$carpeta."','/',s.idcountrie,'/',f.imagen) as archivo
+							from dbcountries s
 							
 							inner
 							join images f
-							on	s.idproducto = f.refproyecto
+							on	s.idcountrie = f.refproyecto
 
 							where f.idfoto =".$id;
 		$resImg		=	$this->query($sql,0);
@@ -189,17 +207,17 @@ function GUID()
 	}
 	
 	
-	function eliminarFotoPorObjeto($id)
+	function eliminarFotoPorObjeto($id, $carpeta)
 	{
 		
-		$sql		=	"select concat('galeria','/',s.idproducto,'/',f.imagen) as archivo,f.idfoto
-							from dbproductos s
+		$sql		=	"select concat('".$carpeta."','/',s.idcountrie,'/',f.imagen) as archivo,f.idfoto
+							from dbcountries s
 							
 							inner
 							join images f
-							on	s.idproducto = f.refproyecto
+							on	s.idcountrie = f.refproyecto
 
-							where s.idproducto =".$id;
+							where s.idcountrie =".$id;
 		$resImg		=	$this->query($sql,0);
 		
 		if (mysql_num_rows($resImg)>0) {
@@ -316,10 +334,10 @@ c.fechaalta,
 c.fechabaja,
 pos.posiciontributaria,
 con.nombre as contacto,
-c.latitud,
-c.longitud,
 (case when c.activo = 1 then 'Si' else 'No' end) as activo,
 c.referencia,
+c.latitud,
+c.longitud,
 c.refposiciontributaria,
 c.refcontactos
 from dbcountries c
