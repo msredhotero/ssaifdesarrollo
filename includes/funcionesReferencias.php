@@ -300,18 +300,18 @@ return $res;
 
 /* PARA Countries */
 
-function insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia) {
-$sql = "insert into dbcountries(idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,refcontactos,latitud,longitud,activo,referencia)
-values ('','".utf8_decode($nombre)."','".utf8_decode($cuit)."','".utf8_decode($fechaalta)."','".utf8_decode($fechabaja)."',".$refposiciontributaria.",".$refcontactos.",'".utf8_decode($latitud)."','".utf8_decode($longitud)."',".$activo.",'".utf8_decode($referencia)."')";
+function insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia) {
+$sql = "insert into dbcountries(idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,latitud,longitud,activo,referencia)
+values ('','".utf8_decode($nombre)."','".utf8_decode($cuit)."','".utf8_decode($fechaalta)."','".utf8_decode($fechabaja)."',".$refposiciontributaria.",'".utf8_decode($latitud)."','".utf8_decode($longitud)."',".$activo.",'".utf8_decode($referencia)."')";
 $res = $this->query($sql,1);
 return $res;
 }
 
 
-function modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia) {
+function modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia) {
 $sql = "update dbcountries
 set
-nombre = '".utf8_decode($nombre)."',cuit = '".utf8_decode($cuit)."',fechaalta = '".utf8_decode($fechaalta)."',fechabaja = '".utf8_decode($fechabaja)."',refposiciontributaria = ".$refposiciontributaria.",refcontactos = ".$refcontactos.",latitud = '".utf8_decode($latitud)."',longitud = '".utf8_decode($longitud)."',activo = ".$activo.",referencia = '".utf8_decode($referencia)."'
+nombre = '".utf8_decode($nombre)."',cuit = '".utf8_decode($cuit)."',fechaalta = '".utf8_decode($fechaalta)."',fechabaja = '".utf8_decode($fechabaja)."',refposiciontributaria = ".$refposiciontributaria.",latitud = '".utf8_decode($latitud)."',longitud = '".utf8_decode($longitud)."',activo = ".$activo.",referencia = '".utf8_decode($referencia)."'
 where idcountrie =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -319,10 +319,10 @@ return $res;
 
 
 function eliminarCountries($id) {
-$sql = "update dbcountries set activo = 0, fechabaja = '".date('Y-m-d')."' where idcountrie =".$id;
+$sql = "delete from dbcountries where idcountrie =".$id;
 $res = $this->query($sql,0);
 return $res;
-}
+} 
 
 
 function traerCountries() {
@@ -333,17 +333,13 @@ c.cuit,
 c.fechaalta,
 c.fechabaja,
 pos.posiciontributaria,
-con.nombre as contacto,
 (case when c.activo = 1 then 'Si' else 'No' end) as activo,
 c.referencia,
 c.latitud,
 c.longitud,
-c.refposiciontributaria,
-c.refcontactos
+c.refposiciontributaria
 from dbcountries c
 inner join tbposiciontributaria pos ON pos.idposiciontributaria = c.refposiciontributaria
-inner join dbcontactos con ON con.idcontacto = c.refcontactos
-inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos
 order by 1";
 $res = $this->query($sql,0);
 return $res;
@@ -351,7 +347,7 @@ return $res;
 
 
 function traerCountriesPorId($id) {
-$sql = "select idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,refcontactos,latitud,longitud,activo,referencia from dbcountries where idcountrie =".$id;
+$sql = "select idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,latitud,longitud,activo,referencia from dbcountries where idcountrie =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -759,9 +755,7 @@ c.refcanchas
 from dbcountriecanchas c
 inner join dbcountries cou ON cou.idcountrie = c.refcountries
 inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria
-inner join dbcontactos co ON co.idcontacto = cou.refcontactos
 inner join tbcanchas can ON can.idcancha = c.refcanchas
-inner join dbcountries co ON co.idcountrie = can.refcountries
 order by 1";
 $res = $this->query($sql,0);
 return $res;
@@ -772,7 +766,7 @@ function traerCountriecanchasPorId($id) {
 $sql = "select idcountriecancha,refcountries,refcanchas from dbcountriecanchas where idcountriecancha =".$id;
 $res = $this->query($sql,0);
 return $res;
-}
+} 
 
 /* Fin */
 /* /* Fin de la Tabla: dbcountriecanchas*/
@@ -919,6 +913,85 @@ return $res;
 
 /* Fin */
 /* /* Fin de la Tabla: tbtemporadas*/
+
+
+/* PARA Countriecontactos */
+
+function insertarCountriecontactos($refcountries,$refcontactos) {
+$sql = "insert into dbcountriecontactos(idcountriecontacto,refcountries,refcontactos)
+values ('',".$refcountries.",".$refcontactos.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarCountriecontactos($id,$refcountries,$refcontactos) {
+$sql = "update dbcountriecontactos
+set
+refcountries = ".$refcountries.",refcontactos = ".$refcontactos."
+where idcountriecontacto =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarCountriecontactos($id) {
+$sql = "delete from dbcountriecontactos where idcountriecontacto =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function eliminarCountriecontactosPorCountrie($id) {
+$sql = "delete from dbcountriecontactos where refcountries =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCountriecontactos() {
+$sql = "select
+c.idcountriecontacto,
+concat(ti.tipocontacto,' - ',con.nombre) as contacto,
+cou.nombre as countrie,
+c.refcountries,
+c.refcontactos
+from dbcountriecontactos c
+inner join dbcountries cou ON cou.idcountrie = c.refcountries
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria
+inner join dbcontactos con ON con.idcontacto = c.refcontactos
+inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos
+order by 2";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCountriecontactosPorId($id) {
+$sql = "select idcountriecontacto,refcountries,refcontactos from dbcountriecontactos where idcountriecontacto =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerCountriecontactosPorCountries($idCountrie) {
+	$sql = "select
+			c.idcountriecontacto,
+			concat(ti.tipocontacto,' - ',con.nombre) as contacto,
+			cou.nombre as countrie,
+			c.refcountries,
+			c.refcontactos
+		from dbcountriecontactos c
+		inner join dbcountries cou ON cou.idcountrie = c.refcountries
+		inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria
+		inner join dbcontactos con ON con.idcontacto = c.refcontactos
+		inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos
+		where cou.idcountrie = ".$idCountrie."
+		order by 2";
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbcountriecontactos*/
 
 
 function query($sql,$accion) {

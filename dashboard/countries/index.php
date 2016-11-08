@@ -49,12 +49,35 @@ $resPosTri 	= $serviciosReferencias->traerPosiciontributaria();
 $cadRef 	= $serviciosFunciones->devolverSelectBox($resPosTri,array(1),'');
 
 $resContacto 	= $serviciosReferencias->traerContactos();
-$cadRef2 	= $serviciosFunciones->devolverSelectBox($resContacto,array(1,2),' - ');
+//$cadRef2 	= $serviciosFunciones->devolverSelectBox($resContacto,array(1,2),' - ');
 
-$refdescripcion = array(0 => $cadRef, 1=>$cadRef2);
-$refCampo 	=  array("refposiciontributaria","refcontactos");
+$refdescripcion = array(0 => $cadRef);
+$refCampo 	=  array("refposiciontributaria");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
+
+/////////////////////// Opciones para la creacion del formulario  /////////////////////
+$tabla2 			= "dbcontactos";
+
+$lblCambio2	 	= array("reftipocontactos","cp");
+$lblreemplazo2	= array("Tipo Contacto","Cod. Postal");
+
+
+$resTipoContacto 	= $serviciosReferencias->traerTipocontactos();
+$cadRef3 	= $serviciosFunciones->devolverSelectBox($resTipoContacto,array(1),'');
+
+$refdescripcion2 = array(0 => $cadRef3);
+$refCampo2 	=  array("reftipocontactos");
+
+$formularioContacto 	= $serviciosFunciones->camposTabla("insertarContactos" ,$tabla2,$lblCambio2,$lblreemplazo2,$refdescripcion2,$refCampo2);
+//////////////////////////////////////////////  FIN de los opciones //////////////////////////
+
+
+$cadRef2 = '<ul class="list-inline">';
+while ($rowFS = mysql_fetch_array($resContacto)) {
+	$cadRef2 = $cadRef2."<li>".'<input id="user'.$rowFS[0].'" class="form-control" type="checkbox" required="" style="width:50px;" name="user'.$rowFS[0].'"><p>'.$rowFS[1].' - '.$rowFS[2].'</p>'."</li>";
+}
+$cadRef2 = $cadRef2."</ul>";
 
 
 
@@ -75,7 +98,7 @@ $cabeceras 		= "	<th>Nombre</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerCountries(),8);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerCountries(),96);
 
 
 
@@ -224,7 +247,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <button type="button" class="btn btn-warning" id="vermapa" style="margin-left:0px;"><span class="lblMapa">Cerrar Mapa</span></button>
                     </li>
                     <li>
-                        <button type="button" class="btn btn-info" id="vercontactos" style="margin-left:0px;"><span class="lblContactos">Ver Contactos</span></button>
+                        <button type="button" class="btn btn-info" id="vercontacto" style="margin-left:0px;"><span class="lblContacto">Ver Contactos</span></button>
                     </li>
                 </ul>
                 </div>
@@ -233,6 +256,18 @@ if ($_SESSION['refroll_predio'] != 1) {
             <div class="row" id="contMapa" style="margin-left:25px; margin-right:25px;">
             	<div id="map" ></div>
 
+            </div>
+            
+            <hr>
+            
+            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
+            	<div class="form-group col-md-12">
+                	<label class="control-label" style="text-align:left" for="fechas">Seleccionar los Contactos</label>
+                    <div class="input-group col-md-12">
+                    	<?php echo $cadRef2; ?>
+                    </div>
+                </div>
+                <button type="button" data-toggle="modal" data-target="#myModal3" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Cargar Contacto</button>
             </div>
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
@@ -284,6 +319,31 @@ if ($_SESSION['refroll_predio'] != 1) {
         <p><strong>Importante: </strong>Si elimina el <?php echo $singular; ?> se perderan todos los datos de este</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <form class="form-inline formulario" role="form">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Crear Contactos</h4>
+      </div>
+      <div class="modal-body">
+        <?php echo $formularioContacto; ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="cargarContacto">Agregar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
@@ -321,6 +381,8 @@ $(document).ready(function(){
 	
 	//$('#contMapa').hide();
 	
+	
+	
 	$('#vermapa').click(function(e) {
         if ($('.lblMapa').html() == 'Ver Mapa') {
 			$('.lblMapa').html('Cerrar Mapa');
@@ -328,11 +390,48 @@ $(document).ready(function(){
 			$('#vermapa').addClass('btn-warning');
 			$('#vermapa').removeClass('btn-info');
 			
+			if ($('.lblContacto').html() == 'Cerrar Contactos') {
+				$('.lblContacto').html('Ver Contactos');
+				$('#contContacto').hide();
+				$('#vercontacto').addClass('btn-info');
+				$('#vercontacto').removeClass('btn-warning');
+			}
+			
 		} else {
 			$('.lblMapa').html('Ver Mapa');
 			$('#contMapa').hide();
 			$('#vermapa').addClass('btn-info');
 			$('#vermapa').removeClass('btn-warning');
+			
+			
+			
+		}
+    });
+	
+	$('#contContacto').hide();
+	
+	$('#vercontacto').click(function(e) {
+        if ($('.lblContacto').html() == 'Ver Contactos') {
+			$('.lblContacto').html('Cerrar Contactos');
+			$('#contContacto').show();
+			$('#vercontacto').addClass('btn-warning');
+			$('#vercontacto').removeClass('btn-info');
+			
+			if ($('.lblMapa').html() == 'Cerrar Mapa') {
+				$('.lblMapa').html('Ver Mapa');
+				$('#contMapa').hide();
+				$('#vermapa').addClass('btn-info');
+				$('#vermapa').removeClass('btn-warning');
+			}
+			
+		} else {
+			$('.lblContacto').html('Ver Contactos');
+			$('#contContacto').hide();
+			$('#vercontacto').addClass('btn-info');
+			$('#vercontacto').removeClass('btn-warning');
+			
+			
+			
 		}
     });
 	
@@ -362,6 +461,19 @@ $(document).ready(function(){
 			alert("Error, vuelva a realizar la acción.");	
 		  }
 	});//fin del boton modificar
+	
+	
+	$("#example").on("click",'.varver', function(){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			
+			url = "ver.php?id=" + usersid;
+			$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton modificar
+	
 
 	 $( "#dialog2" ).dialog({
 		 	
@@ -465,6 +577,65 @@ $(document).ready(function(){
 				}
 			});
 		}
+    });
+	
+	
+	
+	
+	//al enviar el formulario
+    $('#cargarContacto').click(function(){
+		
+			//información del formulario
+			var formData = new FormData($(".formulario")[1]);
+			var message = "";
+			//hacemos la petición ajax  
+			$.ajax({
+				url: '../../ajax/ajax.php',  
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data == '') {
+                                            $(".alert").removeClass("alert-danger");
+											$(".alert").removeClass("alert-info");
+                                            $(".alert").addClass("alert-success");
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Contacto</strong>. ');
+											$(".alert").delay(3000).queue(function(){
+												/*aca lo que quiero hacer 
+												  después de los 2 segundos de retraso*/
+												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+												
+											});
+											$("#load").html('');
+											url = "index.php";
+											$(location).attr('href',url);
+                                            
+											
+                                        } else {
+                                        	$(".alert").removeClass("alert-danger");
+                                            $(".alert").addClass("alert-danger");
+                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                            $("#load").html('');
+                                        }
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+                    $("#load").html('');
+				}
+			});
+		
     });
 	
 	$('#imagen1').on('change', function(e) {

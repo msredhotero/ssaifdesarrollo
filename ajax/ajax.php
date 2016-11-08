@@ -53,6 +53,11 @@ break;
 case 'eliminarCountries':
 eliminarCountries($serviciosReferencias);
 break;
+
+case 'eliminarFoto':
+	eliminarFoto($serviciosReferencias);
+	break;
+	
 case 'insertarUsuarios':
 insertarUsuarios($serviciosReferencias);
 break;
@@ -209,28 +214,40 @@ $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarContactos($id);
 echo $res;
 }
+
+
 function insertarCountries($serviciosReferencias) {
-$nombre = $_POST['nombre'];
-$cuit = $_POST['cuit'];
-$fechaalta = $_POST['fechaalta'];
-$fechabaja = $_POST['fechabaja'];
-$refposiciontributaria = $_POST['refposiciontributaria'];
-$refcontactos = $_POST['refcontactos'];
-$latitud = $_POST['latitud'];
-$longitud = $_POST['longitud'];
-if (isset($_POST['activo'])) {
-$activo = 1;
-} else {
-$activo = 0;
-}
-$referencia = $_POST['referencia'];
-$imagen = ''; 
+	$nombre = $_POST['nombre'];
+	$cuit = $_POST['cuit'];
+	$fechaalta = $_POST['fechaalta'];
+	$fechabaja = $_POST['fechabaja'];
+	$refposiciontributaria = $_POST['refposiciontributaria'];
+	
+	$latitud = $_POST['latitud'];
+	$longitud = $_POST['longitud'];
+	
+	if (isset($_POST['activo'])) {
+		$activo = 1;
+	} else {
+		$activo = 0;
+	}
+	
+	$referencia = $_POST['referencia'];
+	$imagen = ''; 
+	
+	$errorArchivo = '';
 
-$errorArchivo = '';
-
-	$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia);
+	$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia);
 	
 	if ((integer)$res > 0) {
+		$resUser = $serviciosReferencias->traerContactos();
+		$cad = 'user';
+		while ($rowFS = mysql_fetch_array($resUser)) {
+			if (isset($_POST[$cad.$rowFS[0]])) {
+				$serviciosReferencias->insertarCountriecontactos($res,$rowFS[0]);
+			}
+		}
+		
 		$imagenes = array("imagen" => 'imagen');
 	
 		foreach ($imagenes as $valor) {
@@ -248,7 +265,7 @@ $cuit = $_POST['cuit'];
 $fechaalta = $_POST['fechaalta'];
 $fechabaja = $_POST['fechabaja'];
 $refposiciontributaria = $_POST['refposiciontributaria'];
-$refcontactos = $_POST['refcontactos'];
+
 $latitud = $_POST['latitud'];
 $longitud = $_POST['longitud'];
 if (isset($_POST['activo'])) {
@@ -260,9 +277,18 @@ $referencia = $_POST['referencia'];
 
 $errorArchivo = '';
 
-	$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$refcontactos,$latitud,$longitud,$activo,$referencia);
+	$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia);
 	
 	if ($res == true) {
+		$serviciosReferencias->eliminarCountriecontactosPorCountrie($id);
+			$resUser = $serviciosReferencias->traerContactos();
+			$cad = 'user';
+			while ($rowFS = mysql_fetch_array($resUser)) {
+				if (isset($_POST[$cad.$rowFS[0]])) {
+					$serviciosReferencias->insertarCountriecontactos($id,$rowFS[0]);
+				}
+			}
+			
 		$imagenes = array("imagen" => 'imagen');
 	
 		foreach ($imagenes as $valor) {
@@ -278,6 +304,13 @@ $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarCountries($id);
 echo $res;
 }
+
+function eliminarFoto($serviciosReferencias) {
+	$id			=	$_POST['id'];
+	echo $serviciosReferencias->eliminarFoto($id,'countries');
+}
+
+
 function insertarUsuarios($serviciosReferencias) {
 $usuario = $_POST['usuario'];
 $password = $_POST['password'];
