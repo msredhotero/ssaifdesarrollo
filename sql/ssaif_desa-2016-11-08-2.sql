@@ -26,14 +26,21 @@ CREATE TABLE IF NOT EXISTS `tbcategorias` (
   `idtcategoria` int(11) NOT NULL AUTO_INCREMENT,
   `categoria` varchar(120) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`idtcategoria`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
 
 --
 -- Volcado de datos para la tabla `tbcategorias`
 --
 
 INSERT INTO `tbcategorias` (`idtcategoria`, `categoria`) VALUES
-(1, 'JUVENILES');
+(1, 'JUVENILES'),
+(2, 'SUPER MAXI'),
+(3, 'MAYORES MAXI'),
+(4, 'MAYORES SENIOR'),
+(5, 'MAYORES JUNIOR'),
+(6, 'SELECCION'),
+(7, 'CADETES'),
+(8, 'PROMOCIONAL');
 
 -- --------------------------------------------------------
 
@@ -45,14 +52,17 @@ CREATE TABLE IF NOT EXISTS `tbdivisiones` (
   `iddivision` int(11) NOT NULL AUTO_INCREMENT,
   `division` varchar(130) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`iddivision`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
 
 --
 -- Volcado de datos para la tabla `tbdivisiones`
 --
 
 INSERT INTO `tbdivisiones` (`iddivision`, `division`) VALUES
-(1, 'PRIMERA "A"');
+(1, 'PRIMERA "A"'),
+(2, 'PRIMERA "B"'),
+(3, 'PRIMERA "C"'),
+(4, 'PRIMERA "D"');
 
 -- --------------------------------------------------------
 
@@ -72,7 +82,8 @@ CREATE TABLE IF NOT EXISTS `tbposiciontributaria` (
 --
 
 INSERT INTO `tbposiciontributaria` (`idposiciontributaria`, `posiciontributaria`, `activo`) VALUES
-(1, 'General', b'1');
+(1, 'General', b'1'),
+(2, 'Exento', b'1');
 
 -- --------------------------------------------------------
 
@@ -112,7 +123,8 @@ CREATE TABLE IF NOT EXISTS `tbtemporadas` (
 --
 
 INSERT INTO `tbtemporadas` (`idtemporadas`, `temporada`) VALUES
-(1, 2016);
+(1, 2016),
+(2, 2017);
 
 -- --------------------------------------------------------
 
@@ -133,7 +145,8 @@ CREATE TABLE IF NOT EXISTS `tbtipocontactos` (
 
 INSERT INTO `tbtipocontactos` (`idtipocontacto`, `tipocontacto`, `activo`) VALUES
 (1, 'Cliente', b'1'),
-(2, 'Delegado', b'1');
+(2, 'Delegado', b'1'),
+(3, 'Administracion', b'1');
 
 --
 -- Estructura de tabla para la tabla `dbarbitros`
