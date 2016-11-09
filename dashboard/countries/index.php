@@ -87,7 +87,6 @@ $cabeceras 		= "	<th>Nombre</th>
 					<th>Fecha Alta</th>
 					<th>Fecha Baja</th>
 					<th>Pos.Tribut.</th>
-					<th>Contacto</th>
 					<th>Activo</th>
 					<th>Referencia</th>";
 

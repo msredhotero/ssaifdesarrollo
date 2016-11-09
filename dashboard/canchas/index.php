@@ -34,6 +34,10 @@ $eliminar = "eliminarCanchas";
 
 $insertar = "insertarCanchas";
 
+$eliminar2 = "eliminarCanchasuspenciones";
+
+$insertar2 = "insertarCanchasuspenciones";
+
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
@@ -53,12 +57,30 @@ $refCampo 	=  array("refcountries");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
+/////////////////////// Opciones para la creacion del formulario  /////////////////////
+$tabla2 			= "dbcanchasuspenciones";
+
+$lblCambio2	 	= array("vigenciadesde","vigenciahasta");
+$lblreemplazo2	= array("Vigencia Desde","Vigencia Hasta");
+
+
+$resCancha 	= $serviciosReferencias->traerCanchas();
+$cadRef3 	= $serviciosFunciones->devolverSelectBox($resCancha,array(1,2),' - ');
+
+$refdescripcion2 = array(0 => $cadRef3);
+$refCampo2 	=  array("refcanchas");
+//////////////////////////////////////////////  FIN de los opciones //////////////////////////
+
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
 $cabeceras 		= "	<th>Countrie</th>
 					<th>Nombre Cancha</th>";
 
+$cabeceras2 		= "	<th>Countrie</th>
+						<th>Nombre Cancha</th>
+						<th>Vigencia Desde</th>
+						<th>Vigencia Hasta</th>";
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -66,9 +88,11 @@ $cabeceras 		= "	<th>Countrie</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
+$formularioSuspenciones 	= $serviciosFunciones->camposTabla($insertar2 ,$tabla2,$lblCambio2,$lblreemplazo2,$refdescripcion2,$refCampo2);
+
 $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerCanchas(),2);
 
-
+$lstCargados2 	= $serviciosFunciones->camposTablaView($cabeceras2,$serviciosReferencias->traerCanchasuspenciones(),4);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -235,6 +259,43 @@ if ($_SESSION['refroll_predio'] != 1) {
     	</div>
     </div>
     
+    <div class="boxInfoLargo" style="margin-bottom:-15px;">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Carga de Suspenciones de Canchas <span class="glyphicon glyphicon-minus abrir2" style="cursor:pointer; float:right; padding-right:12px;">(Cerrar)</span></p>
+        </div>
+    	<div class="cuerpoBox filt2">
+        	<form class="form-inline formulario" role="form">
+        	<div class="row">
+			<?php echo $formularioSuspenciones; ?>
+            </div>
+            <!--
+            <div class="row">
+            	<div id="map" ></div>
+
+            </div>
+            -->
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <div class='alertcancha alert'>
+                
+                </div>
+                <div id='loadcancha'>
+                
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                <ul class="list-inline" style="margin-top:15px;">
+                    <li>
+                        <button type="button" class="btn btn-primary" id="cargarSuspenciones" style="margin-left:0px;">Guardar</button>
+                    </li>
+                </ul>
+                </div>
+            </div>
+            </form>
+    	</div>
+    </div>
+    
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
@@ -242,6 +303,16 @@ if ($_SESSION['refroll_predio'] != 1) {
         </div>
     	<div class="cuerpoBox">
         	<?php echo $lstCargados; ?>
+    	</div>
+    </div>
+    
+    <div class="boxInfoLargo">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Suspenciones Cargadas</p>
+        	
+        </div>
+    	<div class="cuerpoBox">
+        	<?php echo $lstCargados2; ?>
     	</div>
     </div>
     
@@ -296,6 +367,30 @@ $(document).ready(function(){
 			}
 		  }
 	} );
+	
+	$('.abrir2').click(function() {
+		
+		if ($('.abrir2').text() == '(Abrir)') {
+			$('.filt2').show( "slow" );
+			$('.abrir2').text('(Cerrar)');
+			$('.abrir2').removeClass('glyphicon glyphicon-plus');
+			$('.abrir2').addClass('glyphicon glyphicon-minus');
+		} else {
+			$('.filt2').slideToggle( "slow" );
+			$('.abrir2').text('(Abrir)');
+			$('.abrir2').addClass('glyphicon glyphicon-plus');
+			$('.abrir2').removeClass('glyphicon glyphicon-minus');
+
+		}
+	});
+	
+	$('#usuacrea').attr('id','<?php echo utf8_encode($_SESSION['nombre_predio']); ?>');
+	
+	$('.abrir2').click();
+	
+	$('.abrir2').click(function() {
+		$('.filt2').show();
+	});
 	
 	$('#activo').prop('checked',true);
 
@@ -425,6 +520,65 @@ $(document).ready(function(){
                     $("#load").html('');
 				}
 			});
+		}
+    });
+	
+	
+	//al enviar el formulario
+    $('#cargarSuspenciones').click(function(){
+		
+		if ($('#vigenciadesde').val() != "")
+        {
+			//información del formulario
+			var formData = new FormData($(".formulario")[1]);
+			var message = "";
+			//hacemos la petición ajax  
+			$.ajax({
+				url: '../../ajax/ajax.php',  
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$("#loadcancha").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data == '') {
+                                            $(".alertcancha").removeClass("alert-danger");
+											$(".alertcancha").removeClass("alert-info");
+                                            $(".alertcancha").addClass("alert-success");
+                                            $(".alertcancha").html('<strong>Ok!</strong> Se cargo exitosamente la <strong>Suspencion</strong>. ');
+	
+											$("#loadcancha").html('');
+											url = "index.php";
+											$(location).attr('href',url);
+                                            
+											
+                                        } else {
+                                        	$(".alertcancha").removeClass("alert-danger");
+                                            $(".alertcancha").addClass("alert-danger");
+                                            $(".alertcancha").html('<strong>Error!</strong> '+data);
+                                            $("#loadcancha").html('');
+                                        }
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alertcancha").html('<strong>Error!</strong> Actualice la pagina');
+                    $("#loadcancha").html('');
+				}
+			});
+		} else {
+			$(".alertcancha").removeClass("alert-danger");
+			$(".alertcancha").addClass("alert-danger");
+			$(".alertcancha").html('<strong>Error!</strong> Debe cargar una vigencia desde');
+			$("#loadcancha").html('');
 		}
     });
 

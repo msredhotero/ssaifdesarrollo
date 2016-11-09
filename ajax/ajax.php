@@ -155,6 +155,17 @@ case 'eliminarTemporadas':
 eliminarTemporadas($serviciosReferencias);
 break; 
 
+
+case 'insertarCanchasuspenciones':
+insertarCanchasuspenciones($serviciosReferencias);
+break;
+case 'modificarCanchasuspenciones':
+modificarCanchasuspenciones($serviciosReferencias);
+break;
+case 'eliminarCanchasuspenciones':
+eliminarCanchasuspenciones($serviciosReferencias);
+break; 
+
 }
 
 /* Fin */
@@ -646,6 +657,49 @@ function eliminarTemporadas($serviciosReferencias) {
 $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarTemporadas($id);
 echo $res;
+} 
+
+
+function insertarCanchasuspenciones($serviciosReferencias) {
+	$refcanchas = $_POST['refcanchas'];
+	$vigenciadesde = $_POST['vigenciadesde'];
+	$vigenciahasta = $_POST['vigenciahasta'];
+	$usuacrea = $_POST['usuacrea'];
+	$fechacrea = date('Y-m-d H:i:s');
+	$usuamodi = '';
+	$fechamodi = '';
+	
+	$res = $serviciosReferencias->insertarCanchasuspenciones($refcanchas,$vigenciadesde,$vigenciahasta,$usuacrea,$fechacrea,$usuamodi,$fechamodi);
+	
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
+function modificarCanchasuspenciones($serviciosReferencias) {
+	$id = $_POST['id'];
+	
+	$refcanchas = $_POST['refcanchas'];
+	$vigenciadesde = $_POST['vigenciadesde'];
+	$vigenciahasta = ($_POST['vigenciahasta'] == '' ? 'null' : $_POST['vigenciahasta']);
+	$usuacrea = $_POST['usuacrea'];
+	$fechacrea = $_POST['fechacrea'];
+	$usuamodi = $_POST['usuamodi'];
+	$fechamodi = date('Y-m-d H:i:s');
+	
+	$res = $serviciosReferencias->modificarCanchasuspenciones($id,$refcanchas,$vigenciadesde,$vigenciahasta,$usuacrea,$fechacrea,$usuamodi,$fechamodi);
+	
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+function eliminarCanchasuspenciones($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarCanchasuspenciones($id);
+	echo $res;
 } 
 
 ////////////////////////// FIN DE TRAER DATOS ////////////////////////////////////////////////////////////

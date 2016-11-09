@@ -22,6 +22,119 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `tbcategorias` (
+  `idtcategoria` int(11) NOT NULL AUTO_INCREMENT,
+  `categoria` varchar(120) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`idtcategoria`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `tbcategorias`
+--
+
+INSERT INTO `tbcategorias` (`idtcategoria`, `categoria`) VALUES
+(1, 'JUVENILES');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbdivisiones`
+--
+
+CREATE TABLE IF NOT EXISTS `tbdivisiones` (
+  `iddivision` int(11) NOT NULL AUTO_INCREMENT,
+  `division` varchar(130) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`iddivision`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `tbdivisiones`
+--
+
+INSERT INTO `tbdivisiones` (`iddivision`, `division`) VALUES
+(1, 'PRIMERA "A"');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbposiciontributaria`
+--
+
+CREATE TABLE IF NOT EXISTS `tbposiciontributaria` (
+  `idposiciontributaria` int(11) NOT NULL AUTO_INCREMENT,
+  `posiciontributaria` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `activo` bit(1) NOT NULL DEFAULT b'1',
+  PRIMARY KEY (`idposiciontributaria`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `tbposiciontributaria`
+--
+
+INSERT INTO `tbposiciontributaria` (`idposiciontributaria`, `posiciontributaria`, `activo`) VALUES
+(1, 'General', b'1');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbroles`
+--
+
+CREATE TABLE IF NOT EXISTS `tbroles` (
+  `idrol` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(45) NOT NULL,
+  `activo` bit(1) NOT NULL,
+  PRIMARY KEY (`idrol`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Volcado de datos para la tabla `tbroles`
+--
+
+INSERT INTO `tbroles` (`idrol`, `descripcion`, `activo`) VALUES
+(1, 'Administrador', b'1'),
+(2, 'Empleado', b'1');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbtemporadas`
+--
+
+CREATE TABLE IF NOT EXISTS `tbtemporadas` (
+  `idtemporadas` int(11) NOT NULL AUTO_INCREMENT,
+  `temporada` smallint(6) NOT NULL,
+  PRIMARY KEY (`idtemporadas`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `tbtemporadas`
+--
+
+INSERT INTO `tbtemporadas` (`idtemporadas`, `temporada`) VALUES
+(1, 2016);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbtipocontactos`
+--
+
+CREATE TABLE IF NOT EXISTS `tbtipocontactos` (
+  `idtipocontacto` int(11) NOT NULL AUTO_INCREMENT,
+  `tipocontacto` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
+  `activo` bit(1) NOT NULL DEFAULT b'1',
+  PRIMARY KEY (`idtipocontacto`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=3 ;
+
+--
+-- Volcado de datos para la tabla `tbtipocontactos`
+--
+
+INSERT INTO `tbtipocontactos` (`idtipocontacto`, `tipocontacto`, `activo`) VALUES
+(1, 'Cliente', b'1'),
+(2, 'Delegado', b'1');
+
 --
 -- Estructura de tabla para la tabla `dbarbitros`
 --
@@ -973,42 +1086,9 @@ INSERT INTO `dbcontactos` (`idcontacto`, `reftipocontactos`, `nombre`, `direccio
 
 -- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `dbcountriecanchas`
---
 
-CREATE TABLE IF NOT EXISTS `dbcountriecanchas` (
-  `idcountriecancha` int(11) NOT NULL AUTO_INCREMENT,
-  `refcountries` int(11) NOT NULL,
-  `refcanchas` int(11) NOT NULL,
-  PRIMARY KEY (`idcountriecancha`),
-  KEY `fk_tabla_countries_idx` (`refcountries`),
-  KEY `fk_tabla_canchas_idx` (`refcanchas`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `dbcountriecontactos`
---
-
-CREATE TABLE IF NOT EXISTS `dbcountriecontactos` (
-  `idcountriecontacto` int(11) NOT NULL AUTO_INCREMENT,
-  `refcountries` int(11) NOT NULL,
-  `refcontactos` int(11) NOT NULL,
-  PRIMARY KEY (`idcountriecontacto`),
-  KEY `fk_tabla_countries_idx` (`refcountries`),
-  KEY `fk_tabla2_contactos_idx` (`refcontactos`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=8 ;
-
---
--- Volcado de datos para la tabla `dbcountriecontactos`
---
-
-INSERT INTO `dbcountriecontactos` (`idcountriecontacto`, `refcountries`, `refcontactos`) VALUES
-(3, 2, 6),
-(6, 4, 4),
-(7, 4, 5);
 
 -- --------------------------------------------------------
 
@@ -1042,6 +1122,43 @@ INSERT INTO `dbcountries` (`idcountrie`, `nombre`, `cuit`, `fechaalta`, `fechaba
 (3, 'Daniela', '651684984', '2016-11-12', '0000-00-00', 1, '-34.578712136211195', '-58.401309011969715', b'1', '', NULL),
 (4, 'Tito Tomatino', '30-123654-3', '1975-07-04', '0000-00-00', 1, '-34.49995019905041', '-58.48578929202631', b'1', 'Sebastian', NULL);
 
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `dbcountriecontactos`
+--
+
+CREATE TABLE IF NOT EXISTS `dbcountriecontactos` (
+  `idcountriecontacto` int(11) NOT NULL AUTO_INCREMENT,
+  `refcountries` int(11) NOT NULL,
+  `refcontactos` int(11) NOT NULL,
+  PRIMARY KEY (`idcountriecontacto`),
+  KEY `fk_tabla_countries_idx` (`refcountries`),
+  KEY `fk_tabla2_contactos_idx` (`refcontactos`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=8 ;
+
+--
+-- Volcado de datos para la tabla `dbcountriecontactos`
+--
+
+INSERT INTO `dbcountriecontactos` (`idcountriecontacto`, `refcountries`, `refcontactos`) VALUES
+(3, 2, 6),
+(6, 4, 4),
+(7, 4, 5);
+
+--
+-- Estructura de tabla para la tabla `dbcountriecanchas`
+--
+
+CREATE TABLE IF NOT EXISTS `dbcountriecanchas` (
+  `idcountriecancha` int(11) NOT NULL AUTO_INCREMENT,
+  `refcountries` int(11) NOT NULL,
+  `refcanchas` int(11) NOT NULL,
+  PRIMARY KEY (`idcountriecancha`),
+  KEY `fk_tabla_countries_idx` (`refcountries`),
+  KEY `fk_tabla_canchas_idx` (`refcanchas`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 
 --
@@ -1151,122 +1268,6 @@ INSERT INTO `tbcanchas` (`idcancha`, `refcountries`, `nombre`) VALUES
 
 -- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `tbcategorias`
---
-
-CREATE TABLE IF NOT EXISTS `tbcategorias` (
-  `idtcategoria` int(11) NOT NULL AUTO_INCREMENT,
-  `categoria` varchar(120) COLLATE utf8_spanish_ci NOT NULL,
-  PRIMARY KEY (`idtcategoria`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
-
---
--- Volcado de datos para la tabla `tbcategorias`
---
-
-INSERT INTO `tbcategorias` (`idtcategoria`, `categoria`) VALUES
-(1, 'JUVENILES');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbdivisiones`
---
-
-CREATE TABLE IF NOT EXISTS `tbdivisiones` (
-  `iddivision` int(11) NOT NULL AUTO_INCREMENT,
-  `division` varchar(130) COLLATE utf8_spanish_ci NOT NULL,
-  PRIMARY KEY (`iddivision`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
-
---
--- Volcado de datos para la tabla `tbdivisiones`
---
-
-INSERT INTO `tbdivisiones` (`iddivision`, `division`) VALUES
-(1, 'PRIMERA "A"');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbposiciontributaria`
---
-
-CREATE TABLE IF NOT EXISTS `tbposiciontributaria` (
-  `idposiciontributaria` int(11) NOT NULL AUTO_INCREMENT,
-  `posiciontributaria` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
-  `activo` bit(1) NOT NULL DEFAULT b'1',
-  PRIMARY KEY (`idposiciontributaria`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
-
---
--- Volcado de datos para la tabla `tbposiciontributaria`
---
-
-INSERT INTO `tbposiciontributaria` (`idposiciontributaria`, `posiciontributaria`, `activo`) VALUES
-(1, 'General', b'1');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbroles`
---
-
-CREATE TABLE IF NOT EXISTS `tbroles` (
-  `idrol` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(45) NOT NULL,
-  `activo` bit(1) NOT NULL,
-  PRIMARY KEY (`idrol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
-
---
--- Volcado de datos para la tabla `tbroles`
---
-
-INSERT INTO `tbroles` (`idrol`, `descripcion`, `activo`) VALUES
-(1, 'Administrador', b'1'),
-(2, 'Empleado', b'1');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbtemporadas`
---
-
-CREATE TABLE IF NOT EXISTS `tbtemporadas` (
-  `idtemporadas` int(11) NOT NULL AUTO_INCREMENT,
-  `temporada` smallint(6) NOT NULL,
-  PRIMARY KEY (`idtemporadas`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
-
---
--- Volcado de datos para la tabla `tbtemporadas`
---
-
-INSERT INTO `tbtemporadas` (`idtemporadas`, `temporada`) VALUES
-(1, 2016);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbtipocontactos`
---
-
-CREATE TABLE IF NOT EXISTS `tbtipocontactos` (
-  `idtipocontacto` int(11) NOT NULL AUTO_INCREMENT,
-  `tipocontacto` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
-  `activo` bit(1) NOT NULL DEFAULT b'1',
-  PRIMARY KEY (`idtipocontacto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=3 ;
-
---
--- Volcado de datos para la tabla `tbtipocontactos`
---
-
-INSERT INTO `tbtipocontactos` (`idtipocontacto`, `tipocontacto`, `activo`) VALUES
-(1, 'Cliente', b'1'),
-(2, 'Delegado', b'1');
 
 --
 -- Restricciones para tablas volcadas

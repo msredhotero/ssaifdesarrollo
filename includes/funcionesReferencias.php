@@ -501,7 +501,6 @@ c.refcountries
 from tbcanchas c
 inner join dbcountries cou ON cou.idcountrie = c.refcountries
 inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria
-inner join dbcontactos co ON co.idcontacto = cou.refcontactos
 order by 1";
 $res = $this->query($sql,0);
 return $res;
@@ -993,6 +992,64 @@ function traerCountriecontactosPorCountries($idCountrie) {
 /* Fin */
 /* /* Fin de la Tabla: dbcountriecontactos*/
 
+
+
+/* PARA Canchasuspenciones */
+/*'".($vigenciahasta == '' ? 'NULL' : 'NULL')."'*/
+function insertarCanchasuspenciones($refcanchas,$vigenciadesde,$vigenciahasta,$usuacrea,$fechacrea,$usuamodi,$fechamodi) {
+$sql = "insert into dbcanchasuspenciones(idcanchasuspencion,refcanchas,vigenciadesde,vigenciahasta,usuacrea,fechacrea,usuamodi,fechamodi)
+values ('',".$refcanchas.",'".utf8_decode($vigenciadesde)."',".($vigenciahasta == '' ? 'NULL' : "'".$vigenciahasta."'").",'".utf8_decode($usuacrea)."','".utf8_decode($fechacrea)."','".utf8_decode($usuamodi)."','".utf8_decode($fechamodi)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarCanchasuspenciones($id,$refcanchas,$vigenciadesde,$vigenciahasta,$usuacrea,$fechacrea,$usuamodi,$fechamodi) {
+$sql = "update dbcanchasuspenciones
+set
+refcanchas = ".$refcanchas.",vigenciadesde = '".utf8_decode($vigenciadesde)."',vigenciahasta = '".utf8_decode($vigenciahasta)."',usuacrea = '".utf8_decode($usuacrea)."',fechacrea = '".utf8_decode($fechacrea)."',usuamodi = '".utf8_decode($usuamodi)."',fechamodi = '".utf8_decode($fechamodi)."'
+where idcanchasuspencion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarCanchasuspenciones($id) {
+$sql = "delete from dbcanchasuspenciones where idcanchasuspencion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCanchasuspenciones() {
+$sql = "select
+c.idcanchasuspencion,
+co.nombre as countrie,
+can.nombre as cancha,
+c.vigenciadesde,
+c.vigenciahasta,
+c.usuacrea,
+c.fechacrea,
+c.usuamodi,
+c.fechamodi,
+c.refcanchas
+from dbcanchasuspenciones c
+inner join tbcanchas can ON can.idcancha = c.refcanchas
+inner join dbcountries co ON co.idcountrie = can.refcountries
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCanchasuspencionesPorId($id) {
+$sql = "select idcanchasuspencion,refcanchas,vigenciadesde,vigenciahasta,usuacrea,fechacrea,usuamodi,fechamodi from dbcanchasuspenciones where idcanchasuspencion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbcanchasuspenciones*/
 
 function query($sql,$accion) {
 		

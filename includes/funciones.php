@@ -67,7 +67,7 @@ class Servicios {
 				$idresultados = "resultadosprincipal";
 				break;
 			case 96:
-				$cantidad = 8;
+				$cantidad = 7;
 				$classMod = 'varmodificar';
 				$classVer = 'varver';
 				$lblVer	  = 'Ver';
