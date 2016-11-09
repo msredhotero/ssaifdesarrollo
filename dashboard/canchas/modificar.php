@@ -52,8 +52,9 @@ $lblCambio	 	= array("refcountries");
 $lblreemplazo	= array("Countries");
 
 
+$cadRef		= '<option value="0">Libre</option>';
 $resCountries 	= $serviciosReferencias->traerCountries();
-$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resCountries,array(1),'', mysql_result($resResultado,0,'refcountries'));
+$cadRef 	.= $serviciosFunciones->devolverSelectBoxActivo($resCountries,array(1),'', mysql_result($resResultado,0,'refcountries'));
 
 $refdescripcion = array(0 => $cadRef);
 $refCampo 	=  array("refcountries");

@@ -174,27 +174,36 @@ break;
 /* PARA Tipocontactos */
 
 function insertarContactos($serviciosReferencias) {
-$reftipocontactos = $_POST['reftipocontactos'];
-$nombre = $_POST['nombre'];
-$direccion = $_POST['direccion'];
-$localidad = $_POST['localidad'];
-$cp = $_POST['cp'];
-$telefono = $_POST['telefono'];
-$celular = $_POST['celular'];
-$fax = $_POST['fax'];
-$email = $_POST['email'];
-$observaciones = $_POST['observaciones'];
-if (isset($_POST['publico'])) {
-$publico = 1;
-} else {
-$publico = 0;
-}
-$res = $serviciosReferencias->insertarContactos($reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Huvo un error al insertar datos'.$res;
-}
+	$reftipocontactos = $_POST['reftipocontactos'];
+	$nombre = $_POST['nombre'];
+	$direccion = $_POST['direccion'];
+	$localidad = $_POST['localidad'];
+	$cp = $_POST['cp'];
+	$telefono = $_POST['telefono'];
+	$celular = $_POST['celular'];
+	$fax = $_POST['fax'];
+	$email = $_POST['email'];
+	$observaciones = $_POST['observaciones'];
+	
+	if (isset($_POST['publico'])) {
+		$publico = 1;
+	} else {
+		$publico = 0;
+	}
+	
+	$refCountries	= $_POST['refcountries'];
+	
+	$res = $serviciosReferencias->insertarContactos($reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico);
+	
+	if ((integer)$res > 0) {
+		
+		if ($refCountries != 0) {
+			$serviciosReferencias->insertarCountriecontactos($refCountries,$res);
+		}
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos'.$res;
+	}
 }
 function modificarContactos($serviciosReferencias) {
 $id = $_POST['id'];

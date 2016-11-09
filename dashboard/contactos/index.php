@@ -77,6 +77,10 @@ $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lb
 $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerContactos(),10);
 
 
+$resCountries	=	$serviciosReferencias->traerCountries();
+
+
+
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -132,72 +136,10 @@ if ($_SESSION['refroll_predio'] != 1) {
       });
     </script>
     
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY"
-  type="text/javascript"></script>
-    <style type="text/css">
-		#map
-		{
-			width: 100%;
-			height: 600px;
-			border: 1px solid #d0d0d0;
-		}
-  
-		
-	</style>
-    <script>
-	/* AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY */
-		var map;
-		var markers = [];
-	 function localize() {
-
-			
-		var mapDiv = document.getElementById('map');
-		var laPlata= {lat: -34.9205283, lng: -57.9531703};
-		var map = new google.maps.Map(mapDiv, {
-			zoom: 13,
-			center: new google.maps.LatLng(-34.9205283, -57.9531703)
-		});
-		
-		//var latitud = map.coords.latitude;
-		//var longitud = map.coords.longitude;
-		/*
-		google.maps.event.addDomListener(mapDiv, 'click', function(e) {
-			window.alert('click en el mapa');
-		});
-		*/
-		map.addListener('click', function(e) {
-			
-			if (markers.length > 0) {
-				clearMarkers();
-			}
-			$('#latitud').val(e.latLng.lat());
-			$('#longitud').val(e.latLng.lng());	
-			placeMarkerAndPanTo(e.latLng, map);
-		});
-	 }
-	 
-		function placeMarkerAndPanTo(latLng, map) {
-			var marker = new google.maps.Marker({
-				position: latLng,
-				map: map
-			});
-			markers.push(marker);
-			map.panTo(latLng);
-			
-		}
-	
-	function clearMarkers() {
-		for (var i = 0; i < markers.length; i++) {
-			markers[i].setMap(null);
-		}
-	}
-		
-
- </script>-->
  
 </head>
 
-<body onLoad="localize()">
+<body>
 
  <?php echo $resMenu; ?>
 
@@ -215,12 +157,30 @@ if ($_SESSION['refroll_predio'] != 1) {
         	<div class="row">
 			<?php echo $formulario; ?>
             </div>
-            <!--
-            <div class="row">
-            	<div id="map" ></div>
-
+            
+            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
+            	<div class="alert alert-info">
+                	<p><span class="glyphicon glyphicon-info-sign"></span> No es obligatorio asignarle un Countrie al contacto</p>
+                </div>
+            	<div class="form-group col-md-6">
+                	<label class="control-label" style="text-align:left" for="fechas">Asignar Contacto a un Countries</label>
+                    <div class="input-group col-md-12">
+                    	<select class="form-control" id="refcountries" name="refcountries">
+                        	<option value="0"></option>
+                            <?php
+								while ($rowC = mysql_fetch_array($resCountries)) {
+							?>
+                            	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
+                            <?php
+								}
+							?>
+                        </select>
+                    </div>
+                </div>
+               
             </div>
-            -->
+            
+            
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
                 

@@ -48,9 +48,9 @@ $tabla 			= "tbcanchas";
 $lblCambio	 	= array("refcountries");
 $lblreemplazo	= array("Countries");
 
-
+$cadRef		= '<option value="0">Libre</option>';
 $resCountries 	= $serviciosReferencias->traerCountries();
-$cadRef 	= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
+$cadRef 	.= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
 $refdescripcion = array(0 => $cadRef);
 $refCampo 	=  array("refcountries");
@@ -146,68 +146,7 @@ if ($_SESSION['refroll_predio'] != 1) {
       });
     </script>
     
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY"
-  type="text/javascript"></script>
-    <style type="text/css">
-		#map
-		{
-			width: 100%;
-			height: 600px;
-			border: 1px solid #d0d0d0;
-		}
-  
-		
-	</style>
-    <script>
-	/* AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY */
-		var map;
-		var markers = [];
-	 function localize() {
 
-			
-		var mapDiv = document.getElementById('map');
-		var laPlata= {lat: -34.9205283, lng: -57.9531703};
-		var map = new google.maps.Map(mapDiv, {
-			zoom: 13,
-			center: new google.maps.LatLng(-34.9205283, -57.9531703)
-		});
-		
-		//var latitud = map.coords.latitude;
-		//var longitud = map.coords.longitude;
-		/*
-		google.maps.event.addDomListener(mapDiv, 'click', function(e) {
-			window.alert('click en el mapa');
-		});
-		*/
-		map.addListener('click', function(e) {
-			
-			if (markers.length > 0) {
-				clearMarkers();
-			}
-			$('#latitud').val(e.latLng.lat());
-			$('#longitud').val(e.latLng.lng());	
-			placeMarkerAndPanTo(e.latLng, map);
-		});
-	 }
-	 
-		function placeMarkerAndPanTo(latLng, map) {
-			var marker = new google.maps.Marker({
-				position: latLng,
-				map: map
-			});
-			markers.push(marker);
-			map.panTo(latLng);
-			
-		}
-	
-	function clearMarkers() {
-		for (var i = 0; i < markers.length; i++) {
-			markers[i].setMap(null);
-		}
-	}
-		
-
- </script>-->
  
 </head>
 
@@ -224,7 +163,11 @@ if ($_SESSION['refroll_predio'] != 1) {
         	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
         	
         </div>
+        
     	<div class="cuerpoBox">
+        	<div class="alert alert-info">
+                <p><span class="glyphicon glyphicon-info-sign"></span> La opción "Libre" as solo para las canchas que no pertenecen a un countrie</p>
+            </div>
         	<form class="form-inline formulario" role="form">
         	<div class="row">
 			<?php echo $formulario; ?>
@@ -236,7 +179,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             </div>
             -->
             <div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
+                <div class='alertcanchas alert'>
                 
                 </div>
                 <div id='load'>
@@ -365,7 +308,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#usuacrea').attr('id','<?php echo utf8_encode($_SESSION['nombre_predio']); ?>');
+	$('#usuacrea').val('<?php echo utf8_encode($_SESSION['nombre_predio']); ?>');
 	
 	$('.abrir2').click();
 	
@@ -388,6 +331,18 @@ $(document).ready(function(){
 			alert("Error, vuelva a realizar la acción.");	
 		  }
 	});//fin del boton eliminar
+	
+	
+	$("#example").on("click",'.varversuspendidos', function(){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			
+			url = "suspenciones.php?id=" + usersid;
+			$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton modificar
 	
 	$("#example").on("click",'.varmodificar', function(){
 		  usersid =  $(this).attr("id");
@@ -473,31 +428,26 @@ $(document).ready(function(){
 				success: function(data){
 
 					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
+                                            $(".alertcanchas").removeClass("alert-danger");
+											$(".alertcanchas").removeClass("alert-info");
+                                            $(".alertcanchas").addClass("alert-success");
+                                            $(".alertcanchas").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
+											
 											$("#load").html('');
 											url = "index.php";
 											$(location).attr('href',url);
                                             
 											
                                         } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                        	$(".alertcanchas").removeClass("alert-danger");
+                                            $(".alertcanchas").addClass("alert-danger");
+                                            $(".alertcanchas").html('<strong>Error!</strong> '+data);
                                             $("#load").html('');
                                         }
 				},
 				//si ha ocurrido un error
 				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$(".alertcanchas").html('<strong>Error!</strong> Actualice la pagina');
                     $("#load").html('');
 				}
 			});

@@ -495,12 +495,11 @@ return $res;
 function traerCanchas() {
 $sql = "select
 c.idcancha,
-cou.nombre as countrie,
+coalesce(cou.nombre,'Libre') as countrie,
 c.nombre,
 c.refcountries
 from tbcanchas c
-inner join dbcountries cou ON cou.idcountrie = c.refcountries
-inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria
+left join dbcountries cou ON cou.idcountrie = c.refcountries
 order by 1";
 $res = $this->query($sql,0);
 return $res;
@@ -998,7 +997,7 @@ function traerCountriecontactosPorCountries($idCountrie) {
 /*'".($vigenciahasta == '' ? 'NULL' : 'NULL')."'*/
 function insertarCanchasuspenciones($refcanchas,$vigenciadesde,$vigenciahasta,$usuacrea,$fechacrea,$usuamodi,$fechamodi) {
 $sql = "insert into dbcanchasuspenciones(idcanchasuspencion,refcanchas,vigenciadesde,vigenciahasta,usuacrea,fechacrea,usuamodi,fechamodi)
-values ('',".$refcanchas.",'".utf8_decode($vigenciadesde)."',".($vigenciahasta == '' ? 'NULL' : "'".$vigenciahasta."'").",'".utf8_decode($usuacrea)."','".utf8_decode($fechacrea)."','".utf8_decode($usuamodi)."','".utf8_decode($fechamodi)."')";
+values ('',".$refcanchas.",'".utf8_decode($vigenciadesde)."',".($vigenciahasta == '' ? 'NULL' : "'".$vigenciahasta."'").",'".utf8_decode($usuacrea)."','".utf8_decode($fechacrea)."','".utf8_decode($usuamodi)."','NULL')";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -1024,7 +1023,7 @@ return $res;
 function traerCanchasuspenciones() {
 $sql = "select
 c.idcanchasuspencion,
-co.nombre as countrie,
+coalesce(co.nombre,'Libre') as countrie,
 can.nombre as cancha,
 c.vigenciadesde,
 c.vigenciahasta,
@@ -1035,7 +1034,28 @@ c.fechamodi,
 c.refcanchas
 from dbcanchasuspenciones c
 inner join tbcanchas can ON can.idcancha = c.refcanchas
-inner join dbcountries co ON co.idcountrie = can.refcountries
+left join dbcountries co ON co.idcountrie = can.refcountries
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerCanchasuspencionesPorCancha($idCancha) {
+$sql = "select
+c.idcanchasuspencion,
+coalesce(co.nombre,'Libre') as countrie,
+can.nombre as cancha,
+c.vigenciadesde,
+c.vigenciahasta,
+c.usuacrea,
+c.fechacrea,
+c.usuamodi,
+c.fechamodi,
+c.refcanchas
+from dbcanchasuspenciones c
+inner join tbcanchas can ON can.idcancha = c.refcanchas
+left join dbcountries co ON co.idcountrie = can.refcountries
+where can.idcancha = ".$idCancha."
 order by 1";
 $res = $this->query($sql,0);
 return $res;

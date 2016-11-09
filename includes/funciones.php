@@ -69,10 +69,10 @@ class Servicios {
 				$idresultados = "resultadospredio";
 				break;
 			case 97:
-				$cantidad = 3;
-				$classMod = 'varmodificarprincipal';
-				$classEli = 'varborrarprincipal';
-				$idresultados = "resultadosprincipal";
+				$cantidad = 4;
+				$classMod = 'varmodificarsuspencion';
+				$classEli = 'varborrarsuspencion';
+				$idresultados = "resultadossuspencion";
 				break;
 			case 96:
 				$cantidad = 7;

@@ -99,7 +99,7 @@ $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lb
 
 $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerCountries(),96);
 
-
+$lstContactos	= $serviciosFunciones->devolverSelectBox($serviciosReferencias->traerContactos(),array(1,2),' - ');
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -145,6 +145,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     
    
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
+   <link rel="stylesheet" href="../../css/chosen.css">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
       <script src="../../js/perfect-scrollbar.js"></script>
@@ -248,25 +249,40 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-info" id="vercontacto" style="margin-left:0px;"><span class="lblContacto">Ver Contactos</span></button>
                     </li>
+                    <li>
+                    	<button type="button" data-toggle="modal" data-target="#myModal3" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Cargar Contacto</button>
+                    </li>
                 </ul>
                 </div>
             </div>
             
-            <div class="row" id="contMapa" style="margin-left:25px; margin-right:25px;">
-            	<div id="map" ></div>
-
-            </div>
+            
             
             <hr>
             
-            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
-            	<div class="form-group col-md-12">
-                	<label class="control-label" style="text-align:left" for="fechas">Seleccionar los Contactos</label>
+            <div class="row" id="contContacto" style="margin-left:0px; margin-right:25px;">
+            	<div class="form-group col-md-6" style="display:'.$lblOculta.'">
+                    <label for="buscarcontacto" class="control-label" style="text-align:left">Buscar Contactos</label>
                     <div class="input-group col-md-12">
-                    	<?php echo $cadRef2; ?>
+                        
+                        <select data-placeholder="selecione el Contacto..." id="buscarcontacto" name="buscarcontacto" class="chosen-select" tabindex="2" style="width:300px;">
+                            <option value=""></option>
+                            <?php echo $lstContactos; ?>
+                        </select>
+                        <button type="button" class="btn btn-success" id="asignarContacto"><span class="glyphicon glyphicon-share-alt"></span> Asignar Contacto</button>
                     </div>
                 </div>
-                <button type="button" data-toggle="modal" data-target="#myModal3" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Cargar Contacto</button>
+                
+                <div class="form-group col-md-6">
+                    <label for="contactosasignados" class="control-label" style="text-align:left">Contactos Asignados</label>
+                    <div class="input-group col-md-12">
+                        <ul class="list-inline" id="lstContact">
+                        
+                        </ul>
+                        
+                    </div>
+                </div>
+                
             </div>
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
@@ -286,6 +302,12 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </li>
                 </ul>
                 </div>
+            </div>
+            <hr>
+            
+            <div class="row" id="contMapa" style="margin-left:25px; margin-right:25px;">
+            	<div id="map" ></div>
+
             </div>
             </form>
     	</div>
@@ -379,6 +401,33 @@ $(document).ready(function(){
 	} );
 	
 	//$('#contMapa').hide();
+	
+	$('#asignarContacto').click(function(e) {
+		//alert($('#buscarcontacto option:selected').html());
+		if (existeAsiganado('user'+$('#buscarcontacto').chosen().val()) == 0) {
+			$('#lstContact').prepend('<li class="user'+ $('#buscarcontacto').chosen().val() +'"><input id="user'+ $('#buscarcontacto').chosen().val() +'" class="form-control checkLstContactos" checked type="checkbox" required="" style="width:50px;" name="user'+ $('#buscarcontacto').chosen().val() +'"><p>' + $('#buscarcontacto option:selected').html() + ' </p></li>');
+		}
+	});
+	
+	
+	function existeAsiganado(id) {
+		var existe = 0;	
+		$('#lstContact li input').each(function (index, value) { 
+		  if (id == $(this).attr('id')) {
+			return existe = 1;  
+		  }
+		});
+		
+		return existe;
+	}
+	
+	$("#lstContact").on("click",'.checkLstContactos', function(){
+		usersid =  $(this).attr("id");
+		
+		if  (!($(this).prop('checked'))) {
+			$('.'+usersid).remove();	
+		}
+	});
 	
 	
 	
@@ -669,6 +718,19 @@ $('.form_date').datetimepicker({
 	format: 'dd/mm/yyyy'
 });
 </script>
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+  </script>
 <?php } ?>
 </body>
 </html>
