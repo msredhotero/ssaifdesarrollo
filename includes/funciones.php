@@ -47,6 +47,14 @@ class Servicios {
 		$classFinalizar = '';
 		$classPagar = '';
 		$lblTask = '';
+		
+		$classVar 	= '';
+		$lblVar	 	= '';
+		$classVar2 	= '';
+		$lblVar2	= '';
+		$icoVar		= 'glyphicon-exclamation-sign';
+		$icoVar2	= 'glyphicon-search';
+				
 		switch ($cantidad) {
 			case 99:
 				$cantidad = 6;
@@ -85,13 +93,14 @@ class Servicios {
 				$lblVer = 'Detalle';
 				break;
 			case 94:
-				$cantidad = 8;
+				$cantidad = 2;
 				$classMod = 'varmodificar';
-				$classTask	  = 'varpagos';
+				$classVar = 'varsuspendidos';
+				$lblVar	  = 'Cargar Suspencion';
+				$classVar2 = 'varversuspendidos';
+				$lblVar2	  = 'Ver Suspenciones';
 				$classEli = 'varborrar';
-				$classPagar = 'varpagar';
 				$idresultados = "resultados";
-				$lblTask = 'Pagos';
 				break;
 			default:
 				$classMod = 'varmodificar';
@@ -155,6 +164,19 @@ class Servicios {
 				if ($classTask != '') {
 					$cadRows = $cadRows.'		<li>
 											<a href="javascript:void(0)" class="'.$classTask.'" id="'.$row[0].'" data-toggle="modal" data-target="#myModal2"><span class="glyphicon glyphicon-usd"></span> '.$lblTask.'</a>
+											</li>';	
+				}
+				
+				
+				if ($classVar != '') {
+					$cadRows = $cadRows.'		<li>
+											<a href="javascript:void(0)" class="'.$classVar.'" id="'.$row[0].'"data-toggle="modal" data-target="#myModal3"><span class="glyphicon '.$icoVar.'"></span> '.$lblVar.'</a>
+											</li>';	
+				}
+				
+				if ($classVar2 != '') {
+					$cadRows = $cadRows.'		<li>
+											<a href="javascript:void(0)" class="'.$classVar2.'" id="'.$row[0].'"><span class="glyphicon '.$icoVar2.'"></span> '.$lblVar2.'</a>
 											</li>';	
 				}
 				
@@ -398,7 +420,7 @@ class Servicios {
 														
 										<div class="form-group col-md-6">
 											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-											<div class="input-group col-md-6">
+											<div class="input-group col-md-12">
 												<input class="form-control" type="text" value="" name="'.$campo.'" id="'.$campo.'"/>
 											</div>
 											
@@ -410,7 +432,7 @@ class Servicios {
 										
 										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
 											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-											<div class="input-group date form_date col-md-6" data-date="" data-date-format="dd MM yyyy" data-link-field="'.$campo.'" data-link-format="yyyy-mm-dd">
+											<div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="'.$campo.'" data-link-format="yyyy-mm-dd">
 												<input class="form-control" size="50" type="text" value="" readonly>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 											</div>
