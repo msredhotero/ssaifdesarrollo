@@ -19,7 +19,7 @@ session_destroy();
 
 
 
-<title>Facturación - Cuentas Por Cobrar</title>
+<title>Sistema Gestor de Torneos de Fútbol AIF</title>
 
 
 

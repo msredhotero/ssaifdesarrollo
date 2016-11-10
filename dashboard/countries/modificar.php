@@ -117,6 +117,18 @@ if ($_SESSION['refroll_predio'] != 1) {
 	
 }
 
+if (mysql_result($resResultado,0,'fechaalta') == '0000-00-00') {
+	$fechaalta = '__-__-____';
+} else {
+	$fechaalta = new DateTime("'".mysql_result($resResultado,0,'fechaalta')."'");
+	$fechaalta = $fechaalta->format('d-m-Y');
+}
+if (mysql_result($resResultado,0,'fechabaja') == '0000-00-00') {
+	$fechabaja = '__-__-____';
+} else {
+	$fechabaja = new DateTime("'".mysql_result($resResultado,0,'fechabaja')."'");
+	$fechabaja = $fechabaja->format('d-m-Y');
+}
 
 ?>
 
@@ -188,10 +200,10 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 			
 		var mapDiv = document.getElementById('map');
-		var laPlata= {lat: <?php echo mysql_result($resResultado,0,'latitud'); ?>, lng: <?php echo mysql_result($resResultado,0,'longitud'); ?>};
+		var laPlata= {lat: <?php echo (mysql_result($resResultado,0,'latitud') == '' ? '-34.604041' : mysql_result($resResultado,0,'latitud')); ?>, lng: <?php echo (mysql_result($resResultado,0,'longitud') == '' ? '-58.3852793' : mysql_result($resResultado,0,'longitud')); ?>};
 		var map = new google.maps.Map(mapDiv, {
 			zoom: 13,
-			center: new google.maps.LatLng(<?php echo mysql_result($resResultado,0,'latitud'); ?>, <?php echo mysql_result($resResultado,0,'longitud'); ?>)
+			center: new google.maps.LatLng(<?php echo (mysql_result($resResultado,0,'latitud') == '' ? '-34.604041' : mysql_result($resResultado,0,'latitud')); ?>, <?php echo (mysql_result($resResultado,0,'longitud') == '' ? '-58.3852793' : mysql_result($resResultado,0,'longitud')); ?>)
 		});
 		
 		placeMarkerAndPanTo(laPlata, map);
@@ -365,10 +377,16 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script src="../../js/bootstrap-datetimepicker.min.js"></script>
 <script src="../../js/bootstrap-datetimepicker.es.js"></script>
-
+<script src="../../js/inputmask.js"></script>
+    <script src="../../js/inputmask.date.Extensions.js"></script>
+    <script src="../../js/jquery.inputmask.js"></script>
+    
 <script type="text/javascript">
 $(document).ready(function(){
-
+	
+	$("#fechaalta").inputmask("d/m/y",{ "placeholder": "<?php echo $fechaalta; ?>", "onincomplete": function(){ alert('Debe completar la fecha'); $("#fechaalta").focus(); } });
+	$("#fechabaja").inputmask("d/m/y",{ "placeholder": "<?php echo $fechabaja; ?>", "clearIncomplete": true });
+	
 	$('.volver').click(function(event){
 		 
 		url = "index.php";

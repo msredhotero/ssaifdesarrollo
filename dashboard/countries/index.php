@@ -142,7 +142,9 @@ if ($_SESSION['refroll_predio'] != 1) {
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
 	
-    
+	<script src="../../js/inputmask.js"></script>
+    <script src="../../js/inputmask.date.Extensions.js"></script>
+    <script src="../../js/jquery.inputmask.js"></script>
    
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
    <link rel="stylesheet" href="../../css/chosen.css">
@@ -373,6 +375,11 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+	//$("#fechaalta").inputmask("99/99/9999");
+  	//var initialValue = $("#test").inputmask("getemptymask");
+  	$("#fechaalta").inputmask("d/m/y",{ "placeholder": "__/__/____" });
+	$("#fechabaja").inputmask("d/m/y",{ "placeholder": "__/__/____" });
+	
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],
 		"language": {
@@ -718,6 +725,49 @@ $('.form_date').datetimepicker({
 	format: 'dd/mm/yyyy'
 });
 </script>
+<script>
+/*
+Array.prototype.forEach.call(document.body.querySelectorAll("*[data-mask]"), applyDataMask);
+
+function applyDataMask(field) {
+    var mask = field.dataset.mask.split('');
+    
+    // For now, this just strips everything that's not a number
+    function stripMask(maskedData) {
+        function isDigit(char) {
+            return /\d/.test(char);
+        }
+        return maskedData.split('').filter(isDigit);
+    }
+    
+    // Replace `_` characters with characters from `data`
+    function applyMask(data) {
+        return mask.map(function(char) {
+            if (char != '_') return char;
+            if (data.length == 0) return char;
+            return data.shift();
+        }).join('')
+    }
+    
+    function reapplyMask(data) {
+        return applyMask(stripMask(data));
+    }
+    
+    function changed() {   
+        var oldStart = field.selectionStart;
+        var oldEnd = field.selectionEnd;
+        
+        field.value = reapplyMask(field.value);
+        
+        field.selectionStart = oldStart;
+        field.selectionEnd = oldEnd;
+    }
+    
+    field.addEventListener('click', changed)
+    field.addEventListener('keyup', changed)
+}
+*/
+</script>
 <script src="../../js/chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
     var config = {
@@ -730,6 +780,8 @@ $('.form_date').datetimepicker({
     for (var selector in config) {
       $(selector).chosen(config[selector]);
     }
+	
+	
   </script>
 <?php } ?>
 </body>

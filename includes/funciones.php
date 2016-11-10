@@ -415,13 +415,13 @@ class Servicios {
 									$label = ucwords($label);
 									$campo = strtolower($row[0]);
 									
-									if ($row[0] == "fechapago") {
+									if (($row[0] == "fechabaja") || ($row[0] == "fechaalta")){
 										$form	=	$form.'
 														
 										<div class="form-group col-md-6">
 											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
 											<div class="input-group col-md-12">
-												<input class="form-control" type="text" value="" name="'.$campo.'" id="'.$campo.'"/>
+												<input class="form-control" type="text" name="'.$campo.'" id="'.$campo.'"/>
 											</div>
 											
 										</div>
@@ -755,18 +755,34 @@ class Servicios {
 									$label = ucwords($label);
 									$campo = strtolower($row[0]);
 									
-									$form	=	$form.'
-									
-									<div class="form-group col-md-6" style="display:'.$lblOculta.'">
-										<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-										<div class="input-group date form_date col-md-6" data-date="" data-date-format="dd MM yyyy" data-link-field="'.$campo.'" data-link-format="yyyy-mm-dd">
-											<input class="form-control" value="'.mysql_result($resMod,0,$row[0]).'" size="50" type="text" value="" readonly>
-											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+									if (($row[0] == "fechabaja") || ($row[0] == "fechaalta")){
+																				$form	=	$form.'
+										
+										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
+											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+											<div class="input-group col-md-6">
+												<input class="form-control" name="'.$campo.'" id="'.$campo.'" value="" type="text" value="">
+												
+											</div>
+											
 										</div>
-										<input type="hidden" name="'.$campo.'" id="'.$campo.'" value="'.mysql_result($resMod,0,$row[0]).'" />
-									</div>
-									
-									';
+										
+										';
+
+									} else {
+										$form	=	$form.'
+										
+										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
+											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+											<div class="input-group date form_date col-md-6" data-date="" data-date-format="dd MM yyyy" data-link-field="'.$campo.'" data-link-format="yyyy-mm-dd">
+												<input class="form-control" value="'.mysql_result($resMod,0,$row[0]).'" size="50" type="text" value="" readonly>
+												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+											</div>
+											<input type="hidden" name="'.$campo.'" id="'.$campo.'" value="'.mysql_result($resMod,0,$row[0]).'" />
+										</div>
+										
+										';
+									}
 									
 									/*
 									$form	=	$form.'
