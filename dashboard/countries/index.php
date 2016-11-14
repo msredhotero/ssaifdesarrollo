@@ -377,8 +377,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 $(document).ready(function(){
 	//$("#fechaalta").inputmask("99/99/9999");
   	//var initialValue = $("#test").inputmask("getemptymask");
-  	$("#fechaalta").inputmask("d/m/y",{ "placeholder": "__/__/____" });
-	$("#fechabaja").inputmask("d/m/y",{ "placeholder": "__/__/____" });
+  	//$("#fechaalta").inputmask("date");
+	//$("#fechabaja").inputmask("date");
 	
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],

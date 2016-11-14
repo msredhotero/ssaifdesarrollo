@@ -423,7 +423,7 @@ class Servicios {
 									$label = ucwords($label);
 									$campo = strtolower($row[0]);
 									
-									if (($row[0] == "fechabaja") || ($row[0] == "fechaalta")){
+									if (($row[0] == "fechabaja2") || ($row[0] == "fechaalta2")){
 										$form	=	$form.'
 														
 										<div class="form-group col-md-6">
@@ -764,14 +764,14 @@ class Servicios {
 								if (strpos($row[1],"date") !== false) {
 									$label = ucwords($label);
 									$campo = strtolower($row[0]);
-									
-									if (($row[0] == "fechabaja") || ($row[0] == "fechaalta")){
+									/*
+									if (($row[0] == "fechabaja2") || ($row[0] == "fechaalta2")){
 																				$form	=	$form.'
 										
 										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
 											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
 											<div class="input-group col-md-6">
-												<input class="form-control" value="'.mysql_result($resMod,0,$row[0]).'" name="'.$campo.'" id="'.$campo.'" value="" type="text" value="">
+												<input class="form-control" value="'.mysql_result($resMod,0,$row[0]).'" name="'.$campo.'" id="'.$campo.'" type="text" value="">
 												
 											</div>
 											
@@ -780,6 +780,7 @@ class Servicios {
 										';
 
 									} else {
+										*/
 										$form	=	$form.'
 										
 										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
@@ -792,7 +793,7 @@ class Servicios {
 										</div>
 										
 										';
-									}
+									/*}*/
 									
 									/*
 									$form	=	$form.'

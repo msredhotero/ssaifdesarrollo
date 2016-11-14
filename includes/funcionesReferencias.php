@@ -386,8 +386,8 @@ return $res;
 
 
 function traerCountriesPorId($id) {
-$sql = "select idcountrie,nombre,cuit,DATE_FORMAT(fechaalta, '%d/%m/%Y') as fechaalta,
-    DATE_FORMAT(fechabaja, '%d/%m/%Y') as fechabaja,refposiciontributaria,latitud,longitud,activo,referencia from dbcountries where idcountrie =".$id;
+$sql = "select idcountrie,nombre,cuit,fechaalta,
+    fechabaja,refposiciontributaria,latitud,longitud,activo,referencia from dbcountries where idcountrie =".$id;
 $res = $this->query($sql,0);
 return $res;
 }

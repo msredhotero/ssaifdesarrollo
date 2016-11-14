@@ -405,8 +405,8 @@ if (mysql_result($resResultado,0,'fechabaja') == '0000-00-00') {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	$("#fechaalta").inputmask("d/m/y",{ "placeholder": "<?php echo $fechaalta; ?>"});
-	$("#fechabaja").inputmask("d/m/y",{ "placeholder": "<?php echo $fechabaja; ?>" });
+	//$("#fechaalta").inputmask("d/m/y",{ "placeholder": "<?php //echo $fechaalta; ?>"});
+	//$("#fechabaja").inputmask("d/m/y",{ "placeholder": "<?php //echo $fechabaja; ?>" });
 	
 	$('.volver').click(function(event){
 		 

@@ -316,7 +316,7 @@ function insertarCountries($serviciosReferencias) {
 	$imagen = ''; 
 	
 	$errorArchivo = '';
-	
+	/*
 	if ($fechaalta != '') {
 		$arFechaalta = explode("/",$fechaalta);
 		$fechaalta = $arFechaalta[2]."-".$arFechaalta[1]."-".$arFechaalta[0];
@@ -325,7 +325,7 @@ function insertarCountries($serviciosReferencias) {
 		$arFechabaja = explode("/",$fechabaja);
 		$fechabaja = $arFechabaja[2]."-".$arFechabaja[1]."-".$arFechabaja[0];
 	}
-
+*/
 	$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia);
 	
 	if ((integer)$res > 0) {
@@ -364,6 +364,14 @@ $activo = 0;
 }
 $referencia = $_POST['referencia'];
 
+if (strpos($fechabaja,"00/00/0000") !== false) {
+	$fechabaja = '';
+}
+
+if (strpos($fechaalta,"00/00/0000") !== false) {
+	$fechaalta = '';
+}
+/*
 if (strpos($fechabaja,"_") !== false) {
 	$fechabaja = '';
 }
@@ -380,7 +388,7 @@ if (strpos($fechaalta,"_") !== false) {
 		$arFechabaja = explode("/",$fechabaja);
 		$fechabaja = $arFechabaja[2]."-".$arFechabaja[1]."-".$arFechabaja[0];
 	}
-	
+	*/
 $errorArchivo = '';
 
 	$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia);
