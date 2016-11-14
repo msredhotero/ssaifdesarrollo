@@ -30,7 +30,7 @@
 
 
 
-<title>Gestión: Facturación - Cuentas Por Cobrar</title>
+<title>Gestión: AIF</title>
 
 
 

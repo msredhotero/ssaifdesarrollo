@@ -62,6 +62,7 @@ $refCampo 	=  array("reftipocontactos");
 
 $formulario 	= $serviciosFunciones->camposTablaModificar($id, $idTabla, $modificar,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
+$resCountries	=	$serviciosReferencias->traerCountriesNoAsignadosPorContactos($id);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -142,6 +143,34 @@ if ($_SESSION['refroll_predio'] != 1) {
 			<?php echo $formulario; ?>
             </div>
             
+            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
+            	<div class="alert alert-info">
+                	<p><span class="glyphicon glyphicon-info-sign"></span> No es obligatorio asignarle un Countrie al contacto</p>
+                </div>
+            	<div class="form-group col-md-6">
+                	<label class="control-label" style="text-align:left" for="fechas">Asignar Contacto a un Countries</label>
+                    <div class="input-group col-md-12">
+                    	<select class="form-control" id="refcountries" name="refcountries">
+                        	<option value="0"></option>
+                            <?php
+								while ($rowC = mysql_fetch_array($resCountries)) {
+							?>
+                            	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
+                            <?php
+								}
+							?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                	<label class="control-label" style="text-align:left" for="fechas">Countries Asignados</label>
+                    <div class="input-group col-md-12 lstCountries">
+                    	
+                    </div>
+                </div>
+
+               
+            </div>
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
@@ -214,7 +243,26 @@ $(document).ready(function(){
 			alert("Error, vuelva a realizar la acción.");	
 		  }
 	});//fin del boton eliminar
-
+	
+	function traerCountries() {
+		  
+		  $.ajax({
+				data:  {id: <?php echo $id; ?>, 
+						accion: 'traerCountriesPorContactos'},
+				url:   '../../ajax/ajax.php',
+				type:  'post',
+				beforeSend: function () {
+						
+				},
+				success:  function (response) {
+					$('.lstCountries').html(response);
+				}
+		});
+	}
+	
+	traerCountries();
+	
+	
 	 $( "#dialog2" ).dialog({
 		 	
 			    autoOpen: false,

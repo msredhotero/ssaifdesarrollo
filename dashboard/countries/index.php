@@ -345,7 +345,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <!-- Modal -->
-<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="myModal3" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <form class="form-inline formulario" role="form">

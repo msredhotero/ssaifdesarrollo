@@ -102,6 +102,14 @@ class Servicios {
 				$classEli = 'varborrar';
 				$idresultados = "resultados";
 				break;
+			case 93:
+				$cantidad = 10;
+				$classMod = 'varmodificar';
+				$classVar = 'varcountries';
+				$lblVar	  = 'Countries Asignados';
+				$classEli = 'varborrar';
+				$idresultados = "resultados";
+				break;
 			default:
 				$classMod = 'varmodificar';
 				$classEli = 'varborrar';
@@ -619,8 +627,10 @@ class Servicios {
 	function camposTablaModificar($id,$lblid,$accion,$tabla,$lblcambio,$lblreemplazo,$refdescripcion,$refCampo) {
 		
 		switch ($tabla) {
-			case 'dbtorneos':
-				
+			case 'dbcountries':
+				$sqlMod = "select idcountrie,nombre,cuit,DATE_FORMAT(fechaalta, '%d/%m/%Y') as fechaalta,
+    DATE_FORMAT(fechabaja, '%d/%m/%Y') as fechabaja,refposiciontributaria,latitud,longitud,activo,referencia from dbcountries where idcountrie =".$id;
+				$resMod = $this->query($sqlMod,0);
 				break;
 
 			default:
@@ -761,7 +771,7 @@ class Servicios {
 										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
 											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
 											<div class="input-group col-md-6">
-												<input class="form-control" name="'.$campo.'" id="'.$campo.'" value="" type="text" value="">
+												<input class="form-control" value="'.mysql_result($resMod,0,$row[0]).'" name="'.$campo.'" id="'.$campo.'" value="" type="text" value="">
 												
 											</div>
 											

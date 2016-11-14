@@ -74,7 +74,7 @@ $cabeceras 		= "	<th>Tipo Contacto</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerContactos(),10);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerContactos(),93);
 
 
 $resCountries	=	$serviciosReferencias->traerCountries();
@@ -177,6 +177,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </select>
                     </div>
                 </div>
+
                
             </div>
             
@@ -230,6 +231,26 @@ if ($_SESSION['refroll_predio'] != 1) {
         <p><strong>Importante: </strong>Si elimina el <?php echo $singular; ?> se perderan todos los datos de este</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
+
+<div class="modal fade" id="myModal3" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <form class="form-inline formulario" role="form">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Countries Asociados</h4>
+      </div>
+      <div class="modal-body lstCountries">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
@@ -266,7 +287,40 @@ $(document).ready(function(){
 	} );
 	
 	$('#activo').prop('checked',true);
-
+	
+	$("#example").on("click",'.varcountries', function(){
+		  
+		  $.ajax({
+				data:  {id: $(this).attr("id"), 
+						accion: 'traerCountriesPorContactos'},
+				url:   '../../ajax/ajax.php',
+				type:  'post',
+				beforeSend: function () {
+						
+				},
+				success:  function (response) {
+					$('.lstCountries').html(response);
+				}
+		});
+	});
+	
+	$('#finalizar').click(function(e) {
+        $.ajax({
+				data:  {id: $('.finalizar').attr("id"), 
+						accion: 'finalizarPedido'},
+				url:   '../../ajax/ajax.php',
+				type:  'post',
+				beforeSend: function () {
+						
+				},
+				success:  function (response) {
+					url = "index.php";
+					$(location).attr('href',url);	
+				}
+		});
+    });
+	
+	
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {

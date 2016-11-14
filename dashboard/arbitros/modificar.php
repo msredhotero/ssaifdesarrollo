@@ -48,7 +48,7 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbarbitros";
 
-$lblCambio	 	= array("nombrecompleto","telefonoparticular","telefonocelular","telefonolaboral","telefonofamiliar");
+$lblCambio	 	= array("nombrecompleto","telefonoparticular","telefonoceleluar","telefonolaboral","telefonofamiliar");
 $lblreemplazo	= array("Nombre Completo","Tel. Partarticular","Tel. Celular","Tel. Laboral","Tel. Familiar");
 
 

@@ -44,6 +44,11 @@ break;
 case 'eliminarContactos':
 eliminarContactos($serviciosReferencias);
 break;
+
+case 'traerCountriesPorContactos':
+	traerCountriesPorContactos($serviciosReferencias);
+	break;
+
 case 'insertarCountries':
 insertarCountries($serviciosReferencias);
 break;
@@ -206,33 +211,88 @@ function insertarContactos($serviciosReferencias) {
 	}
 }
 function modificarContactos($serviciosReferencias) {
-$id = $_POST['id'];
-$reftipocontactos = $_POST['reftipocontactos'];
-$nombre = $_POST['nombre'];
-$direccion = $_POST['direccion'];
-$localidad = $_POST['localidad'];
-$cp = $_POST['cp'];
-$telefono = $_POST['telefono'];
-$celular = $_POST['celular'];
-$fax = $_POST['fax'];
-$email = $_POST['email'];
-$observaciones = $_POST['observaciones'];
-if (isset($_POST['publico'])) {
-$publico = 1;
-} else {
-$publico = 0;
-}
-$res = $serviciosReferencias->modificarContactos($id,$reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+	$id = $_POST['id'];
+	$reftipocontactos = $_POST['reftipocontactos'];
+	$nombre = $_POST['nombre'];
+	$direccion = $_POST['direccion'];
+	$localidad = $_POST['localidad'];
+	$cp = $_POST['cp'];
+	$telefono = $_POST['telefono'];
+	$celular = $_POST['celular'];
+	$fax = $_POST['fax'];
+	$email = $_POST['email'];
+	$observaciones = $_POST['observaciones'];
+	
+	if (isset($_POST['publico'])) {
+		$publico = 1;
+	} else {
+		$publico = 0;
+	}
+	
+	$refCountries	= $_POST['refcountries'];
+
+	$res = $serviciosReferencias->modificarContactos($id,$reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico);
+	
+	if ($res == true) {
+		if ($refCountries != 0) {
+			$serviciosReferencias->insertarCountriecontactos($refCountries,$id);
+		}
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
 }
 function eliminarContactos($serviciosReferencias) {
 $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarContactos($id);
 echo $res;
+}
+
+function traerCountriesPorContactos($serviciosReferencias) {
+	$id		=	$_POST['id'];
+	
+	$res	= $serviciosReferencias->traerCountriesPorContactos($id);
+	$cadRows='';
+	$total = 0;
+	
+	while ($row = mysql_fetch_array($res)) {
+			$cadsubRows = '';
+			$cadRows = $cadRows.'
+			
+					<tr class="'.$row[0].'">
+                        	';
+			
+			
+			for ($i=1;$i<=1;$i++) {
+				
+				$cadsubRows = $cadsubRows.'<td><div style="height:20px;overflow:auto;">'.$row[$i].'</div></td>';	
+			}
+			
+			$cadRows = $cadRows.'
+								'.$cadsubRows.'</tr>';
+			
+	}
+			
+	
+	$cad	= '';
+	$cad = $cad.'
+			<table class="table table-striped table-responsive">
+            	<thead>
+                	<tr>
+                        <th>Countries</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                	'.($cadRows).'
+                </tbody>
+            </table>
+			<div style="margin-bottom:85px; margin-right:60px;"></div>
+		
+		';	
+	echo $cad;
+	
+	
 }
 
 
@@ -256,6 +316,15 @@ function insertarCountries($serviciosReferencias) {
 	$imagen = ''; 
 	
 	$errorArchivo = '';
+	
+	if ($fechaalta != '') {
+		$arFechaalta = explode("/",$fechaalta);
+		$fechaalta = $arFechaalta[2]."-".$arFechaalta[1]."-".$arFechaalta[0];
+	}
+	if ($fechabaja != '') {
+		$arFechabaja = explode("/",$fechabaja);
+		$fechabaja = $arFechabaja[2]."-".$arFechabaja[1]."-".$arFechabaja[0];
+	}
 
 	$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia);
 	
@@ -295,6 +364,23 @@ $activo = 0;
 }
 $referencia = $_POST['referencia'];
 
+if (strpos($fechabaja,"_") !== false) {
+	$fechabaja = '';
+}
+
+if (strpos($fechaalta,"_") !== false) {
+	$fechaalta = '';
+}
+
+	if ($fechaalta != '') {
+		$arFechaalta = explode("/",$fechaalta);
+		$fechaalta = $arFechaalta[2]."-".$arFechaalta[1]."-".$arFechaalta[0];
+	}
+	if ($fechabaja != '') {
+		$arFechabaja = explode("/",$fechabaja);
+		$fechabaja = $arFechabaja[2]."-".$arFechabaja[1]."-".$arFechabaja[0];
+	}
+	
 $errorArchivo = '';
 
 	$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia);

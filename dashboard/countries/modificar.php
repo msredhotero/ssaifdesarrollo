@@ -77,7 +77,7 @@ $refCampo2 	=  array("reftipocontactos");
 $formularioContacto 	= $serviciosFunciones->camposTabla("insertarContactos" ,$tabla2,$lblCambio2,$lblreemplazo2,$refdescripcion2,$refCampo2);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-
+$lstContactos	= $serviciosFunciones->devolverSelectBox($serviciosReferencias->traerContactos(),array(1,2),' - ');
 $resContactos = $serviciosReferencias->traerContactos();
 
 $resContactosCountries = $serviciosReferencias->traerCountriecontactosPorCountries($id);
@@ -89,17 +89,18 @@ $resContactosCountries = $serviciosReferencias->traerCountriecontactosPorCountri
 
 
 
-$cadUser = '<ul class="list-inline">';
+$cadUser = '<ul class="list-inline" id="lstContact">';
 while ($rowFS = mysql_fetch_array($resContactos)) {
 	$check = '';
 	if (mysql_num_rows($resContactosCountries)>0) {
 		foreach ($arrayFS as $item) {
 			if (stripslashes($item['refcontactos']) == $rowFS[0]) {
 				$check = 'checked';	
+				$cadUser = $cadUser.'<li class="user'.$rowFS[0].'">'.'<input id="user'.$rowFS[0].'" '.$check.' class="form-control checkLstContactos" type="checkbox" required="" style="width:50px;" name="user'.$rowFS[0].'"><p>'.$rowFS[1]." - ".$rowFS[2].'</p>'."</li>";
 			}
 		}
 	}
-	$cadUser = $cadUser."<li>".'<input id="user'.$rowFS[0].'" '.$check.' class="form-control" type="checkbox" required="" style="width:50px;" name="user'.$rowFS[0].'"><p>'.$rowFS[1]." - ".$rowFS[2].'</p>'."</li>";
+	
 
 
 }
@@ -117,19 +118,21 @@ if ($_SESSION['refroll_predio'] != 1) {
 	
 }
 
+
+$fechaalta = '__-__-____';
+$fechabaja = '__-__-____';
+/*
 if (mysql_result($resResultado,0,'fechaalta') == '0000-00-00') {
 	$fechaalta = '__-__-____';
 } else {
-	$fechaalta = new DateTime("'".mysql_result($resResultado,0,'fechaalta')."'");
-	$fechaalta = $fechaalta->format('d-m-Y');
+	$fechaalta = mysql_result($resResultado,0,'fechaalta');
 }
 if (mysql_result($resResultado,0,'fechabaja') == '0000-00-00') {
 	$fechabaja = '__-__-____';
 } else {
-	$fechabaja = new DateTime("'".mysql_result($resResultado,0,'fechabaja')."'");
-	$fechabaja = $fechabaja->format('d-m-Y');
+	$fechabaja = mysql_result($resResultado,0,'fechabaja');
 }
-
+*/
 ?>
 
 <!DOCTYPE HTML>
@@ -167,7 +170,7 @@ if (mysql_result($resResultado,0,'fechabaja') == '0000-00-00') {
   
 		
 	</style>
-    
+    <link rel="stylesheet" href="../../css/chosen.css">
    
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
@@ -274,26 +277,44 @@ if (mysql_result($resResultado,0,'fechabaja') == '0000-00-00') {
                     <li>
                         <button type="button" class="btn btn-info" id="vercontacto" style="margin-left:0px;"><span class="lblContacto">Ver Contactos</span></button>
                     </li>
+                    <li>
+                    	<button type="button" data-toggle="modal" data-target="#myModal3" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Cargar Contacto</button>
+                    </li>
                 </ul>
                 </div>
+            </div>
+            
+            <hr>
+            
+            <div class="row" id="contContacto" style="margin-left:0px; margin-right:25px;">
+            	<div class="form-group col-md-6" style="display:'.$lblOculta.'">
+                    <label for="buscarcontacto" class="control-label" style="text-align:left">Buscar Contactos</label>
+                    <div class="input-group col-md-12">
+                        
+                        <select data-placeholder="selecione el Contacto..." id="buscarcontacto" name="buscarcontacto" class="chosen-select" tabindex="2" style="width:300px;">
+                            <option value=""></option>
+                            <?php echo $lstContactos; ?>
+                        </select>
+                        <button type="button" class="btn btn-success" id="asignarContacto"><span class="glyphicon glyphicon-share-alt"></span> Asignar Contacto</button>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-6">
+                    <label for="contactosasignados" class="control-label" style="text-align:left">Contactos Asignados</label>
+                    <div class="input-group col-md-12">
+                        <?php echo $cadUser; ?>
+                        
+                    </div>
+                </div>
+                
             </div>
             
             <div class="row" id="contMapa" style="margin-left:25px; margin-right:25px;">
             	<div id="map" ></div>
 
             </div>
+
             
-            <hr>
-            
-            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
-            	<div class="form-group col-md-12">
-                	<label class="control-label" style="text-align:left" for="fechas">Seleccionar los Contactos</label>
-                    <div class="input-group col-md-12">
-                    	<?php echo $cadUser; ?>
-                    </div>
-                </div>
-                <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Cargar Contacto</button>
-            </div>
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
@@ -384,8 +405,8 @@ if (mysql_result($resResultado,0,'fechabaja') == '0000-00-00') {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	$("#fechaalta").inputmask("d/m/y",{ "placeholder": "<?php echo $fechaalta; ?>", "onincomplete": function(){ alert('Debe completar la fecha'); $("#fechaalta").focus(); } });
-	$("#fechabaja").inputmask("d/m/y",{ "placeholder": "<?php echo $fechabaja; ?>", "clearIncomplete": true });
+	$("#fechaalta").inputmask("d/m/y",{ "placeholder": "<?php echo $fechaalta; ?>"});
+	$("#fechabaja").inputmask("d/m/y",{ "placeholder": "<?php echo $fechabaja; ?>" });
 	
 	$('.volver').click(function(event){
 		 
@@ -406,6 +427,34 @@ $(document).ready(function(){
 			alert("Error, vuelva a realizar la acción.");	
 		  }
 	});//fin del boton eliminar
+	
+	
+	$('#asignarContacto').click(function(e) {
+		//alert($('#buscarcontacto option:selected').html());
+		if (existeAsiganado('user'+$('#buscarcontacto').chosen().val()) == 0) {
+			$('#lstContact').prepend('<li class="user'+ $('#buscarcontacto').chosen().val() +'"><input id="user'+ $('#buscarcontacto').chosen().val() +'" class="form-control checkLstContactos" checked type="checkbox" required="" style="width:50px;" name="user'+ $('#buscarcontacto').chosen().val() +'"><p>' + $('#buscarcontacto option:selected').html() + ' </p></li>');
+		}
+	});
+	
+	
+	function existeAsiganado(id) {
+		var existe = 0;	
+		$('#lstContact li input').each(function (index, value) { 
+		  if (id == $(this).attr('id')) {
+			return existe = 1;  
+		  }
+		});
+		
+		return existe;
+	}
+	
+	$("#lstContact").on("click",'.checkLstContactos', function(){
+		usersid =  $(this).attr("id");
+		
+		if  (!($(this).prop('checked'))) {
+			$('.'+usersid).remove();	
+		}
+	});
 	
 	
 	$('.eliminar').click(function(event){
@@ -712,6 +761,21 @@ $('.form_date').datetimepicker({
 	format: 'dd/mm/yyyy'
 });
 </script>
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+	
+	
+  </script>
 <?php } ?>
 </body>
 </html>
