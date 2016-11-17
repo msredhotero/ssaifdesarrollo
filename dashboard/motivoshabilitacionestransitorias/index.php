@@ -32,7 +32,7 @@ $plural = "Motivos de Habilitaciones Transitorias";
 
 $eliminar = "eliminarMotivoshabilitacionestransitorias";
 
-$insertar = "insertarDocumentaciones";
+$insertar = "insertarMotivoshabilitacionestransitorias";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
