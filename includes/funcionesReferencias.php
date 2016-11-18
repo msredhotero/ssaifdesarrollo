@@ -1344,6 +1344,32 @@ return $res;
 } 
 
 
+function traerMotivoshabilitacionestransitoriasDeportivas($id) { 
+$sql = "select 
+m.idmotivoshabilitacionestransitoria,
+(case when m.inhabilita = 1 then 'Si' else 'No' end) as inhabilita,
+m.descripcion
+from tbmotivoshabilitacionestransitorias m 
+where m.descripcion like '".$id."'
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMotivoshabilitacionestransitoriasDocumentaciones($id) { 
+$sql = "select 
+m.idmotivoshabilitacionestransitoria,
+(case when m.inhabilita = 1 then 'Si' else 'No' end) as inhabilita,
+m.descripcion
+from tbmotivoshabilitacionestransitorias m 
+where m.descripcion not like '".$id."'
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 function traerMotivoshabilitacionestransitoriasPorId($id) { 
 $sql = "select idmotivoshabilitacionestransitoria,inhabilita,descripcion from tbmotivoshabilitacionestransitorias where idmotivoshabilitacionestransitoria =".$id; 
 $res = $this->query($sql,0); 

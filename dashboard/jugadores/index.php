@@ -64,14 +64,27 @@ $cabeceras 		= "	<th>Inhabilita</th>
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-$resDocumentaciones	=	$serviciosReferencias->traerDocumentaciones();
+$resDocumentaciones2	=	$serviciosReferencias->traerDocumentaciones();
 
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
 $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerMotivoshabilitacionestransitorias(),2);
 
+$resMotivosHabDeportivas	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDeportivas('Edad');
+$cadRef		=	$serviciosFunciones->devolverSelectBox($resMotivosHabDeportivas,array(2),'');
 
+$resMotivosHabDocumentaciones	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDocumentaciones('Edad');
+$cadRef2	=	$serviciosFunciones->devolverSelectBox($resMotivosHabDocumentaciones,array(2),'');
+
+$resTemporados	=	$serviciosReferencias->traerTemporadas();
+$cadRef3	=	$serviciosFunciones->devolverSelectBox($resTemporados,array(1),'');
+
+$resDocumentaciones	=	$serviciosReferencias->traerDocumentaciones();
+$cadRef4	=	$serviciosFunciones->devolverSelectBox($resDocumentaciones,array(1),'');
+
+$resCategoria		=	$serviciosReferencias->traerCategorias();
+$cadRefCad			=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -162,11 +175,11 @@ if ($_SESSION['refroll_predio'] != 1) {
             <div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">Documentaciones</h3>
-					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
 				</div>
-                <div class="panel-body">
+                <div class="panel-body collapse">
             	<?php
-					while ($row = mysql_fetch_array($resDocumentaciones)) {
+					while ($row = mysql_fetch_array($resDocumentaciones2)) {
 				?>
                     <div class="col-md-4" style="margin-bottom:7px;">
                         <div class="input-group">
@@ -188,6 +201,80 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <?php
 					}
 				?>
+				</div>
+            </div>
+            
+            
+            <div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Equipos</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+                <div class="panel-body collapse">
+            		<p>Falta</p>
+				</div>
+            </div>
+            
+            
+            <div class="panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">Habilitaciones Transitorias (Deportiva)</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+                <div class="panel-body collapse">
+            		<p>Falta</p>
+				</div>
+            </div>
+            
+            <div class="panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">Habilitaciones Transitorias (Documentaciones)</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+                <div class="panel-body collapse">
+            		<div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Temporadas</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef3; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Documentaciones</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef4; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Motivos</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef2; ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="fechanacimiento" class="control-label" style="text-align:left">Fecha Limite</label>
+                        <div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="fechanacimiento" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="50" value="" readonly="" type="text">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        <input name="fechanacimiento" id="fechanacimiento" value="" type="hidden">
+                    </div>
+                    
+                    
+                    <div class="form-group col-md-8" style="display:block">
+                        <label for="observaciones" class="control-label" style="text-align:left">Observaciones</label>
+                        <div class="input-group col-md-12">
+                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required=""></textarea>
+                        </div>
+                        
+                    </div>
+								
 				</div>
             </div>
             
@@ -249,6 +336,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	
 	
 	$(document).on('click', '.panel-heading span.clickable', function(e){
 		var $this = $(this);

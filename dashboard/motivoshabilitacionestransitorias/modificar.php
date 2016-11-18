@@ -48,8 +48,8 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "tbmotivoshabilitacionestransitorias";
 
-$lblCambio	 	= array("");
-$lblreemplazo	= array("");
+$lblCambio	 	= array("inhabilita");
+$lblreemplazo	= array("Inhabilita al vto.");
 
 
 $cadRef 	= '';

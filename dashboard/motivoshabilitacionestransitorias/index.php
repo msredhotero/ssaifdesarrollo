@@ -41,8 +41,8 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "tbmotivoshabilitacionestransitorias";
 
-$lblCambio	 	= array("");
-$lblreemplazo	= array("");
+$lblCambio	 	= array("inhabilita");
+$lblreemplazo	= array("Inhabilita al vto.");
 
 
 $cadRef 	= '';
@@ -55,7 +55,7 @@ $refCampo 	=  array();
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Inhabilita</th>
+$cabeceras 		= "	<th>Inhabilita al vto.</th>
 					<th>Descripcion</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
