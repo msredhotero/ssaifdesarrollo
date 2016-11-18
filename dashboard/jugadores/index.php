@@ -222,7 +222,66 @@ if ($_SESSION['refroll_predio'] != 1) {
 					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
 				</div>
                 <div class="panel-body collapse">
-            		<p>Falta</p>
+            		<div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Temporadas</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef3; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRefCad; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Documentaciones</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef4; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Motivos</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef; ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="fechanacimiento" class="control-label" style="text-align:left">Fecha Limite</label>
+                        <div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="fechanacimiento" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="50" value="" readonly="" type="text">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        <input name="fechanacimiento" id="fechanacimiento" value="" type="hidden">
+                    </div>
+                    
+                    
+                    <div class="form-group col-md-8" style="display:block">
+                        <label for="observaciones" class="control-label" style="text-align:left">Observaciones</label>
+                        <div class="input-group col-md-12">
+                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required=""></textarea>
+                        </div>
+                        
+                    </div>
+                    
 				</div>
             </div>
             
