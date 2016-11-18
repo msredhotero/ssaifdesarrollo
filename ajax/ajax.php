@@ -171,6 +171,66 @@ case 'eliminarCanchasuspenciones':
 eliminarCanchasuspenciones($serviciosReferencias);
 break; 
 
+
+
+case 'insertarJugadores': 
+insertarJugadores($serviciosReferencias); 
+break; 
+case 'modificarJugadores': 
+modificarJugadores($serviciosReferencias); 
+break; 
+case 'eliminarJugadores': 
+eliminarJugadores($serviciosReferencias); 
+break; 
+case 'insertarJugadoresdocumentacion': 
+insertarJugadoresdocumentacion($serviciosReferencias); 
+break; 
+case 'modificarJugadoresdocumentacion': 
+modificarJugadoresdocumentacion($serviciosReferencias); 
+break; 
+case 'eliminarJugadoresdocumentacion': 
+eliminarJugadoresdocumentacion($serviciosReferencias); 
+break; 
+
+
+case 'insertarDocumentaciones': 
+insertarDocumentaciones($serviciosReferencias); 
+break; 
+case 'modificarDocumentaciones': 
+modificarDocumentaciones($serviciosReferencias); 
+break; 
+case 'eliminarDocumentaciones': 
+eliminarDocumentaciones($serviciosReferencias); 
+break; 
+case 'insertarMotivoshabilitacionestransitorias': 
+insertarMotivoshabilitacionestransitorias($serviciosReferencias); 
+break; 
+case 'modificarMotivoshabilitacionestransitorias': 
+modificarMotivoshabilitacionestransitorias($serviciosReferencias); 
+break; 
+case 'eliminarMotivoshabilitacionestransitorias': 
+eliminarMotivoshabilitacionestransitorias($serviciosReferencias); 
+break; 
+
+case 'insertarTipodocumentos': 
+insertarTipodocumentos($serviciosReferencias); 
+break; 
+case 'modificarTipodocumentos': 
+modificarTipodocumentos($serviciosReferencias); 
+break; 
+case 'eliminarTipodocumentos': 
+eliminarTipodocumentos($serviciosReferencias); 
+break; 
+case 'insertarTipojugadores': 
+insertarTipojugadores($serviciosReferencias); 
+break; 
+case 'modificarTipojugadores': 
+modificarTipojugadores($serviciosReferencias); 
+break; 
+case 'eliminarTipojugadores': 
+eliminarTipojugadores($serviciosReferencias); 
+break; 
+
 }
 
 /* Fin */
@@ -805,6 +865,223 @@ function eliminarCanchasuspenciones($serviciosReferencias) {
 	echo $res;
 } 
 
+
+
+
+
+
+function insertarJugadores($serviciosReferencias) { 
+$reftipodocumentos = $_POST['reftipodocumentos']; 
+$nrodocumento = $_POST['nrodocumento']; 
+$apellido = $_POST['apellido']; 
+$nombres = $_POST['nombres']; 
+$email = $_POST['email']; 
+$fechanacimiento = $_POST['fechanacimiento']; 
+$fechaalta = $_POST['fechaalta']; 
+$fechabaja = $_POST['fechabaja']; 
+$refcountries = $_POST['refcountries']; 
+$observaciones = $_POST['observaciones']; 
+$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
+if ((integer)$res > 0) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al insertar datos';	 
+} 
+} 
+function modificarJugadores($serviciosReferencias) { 
+$id = $_POST['id']; 
+$reftipodocumentos = $_POST['reftipodocumentos']; 
+$nrodocumento = $_POST['nrodocumento']; 
+$apellido = $_POST['apellido']; 
+$nombres = $_POST['nombres']; 
+$email = $_POST['email']; 
+$fechanacimiento = $_POST['fechanacimiento']; 
+$fechaalta = $_POST['fechaalta']; 
+$fechabaja = $_POST['fechabaja']; 
+$refcountries = $_POST['refcountries']; 
+$observaciones = $_POST['observaciones']; 
+$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
+if ($res == true) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al modificar datos'; 
+} 
+} 
+function eliminarJugadores($serviciosReferencias) { 
+$id = $_POST['id']; 
+$res = $serviciosReferencias->eliminarJugadores($id); 
+echo $res; 
+} 
+function insertarJugadoresdocumentacion($serviciosReferencias) { 
+$refjugadores = $_POST['refjugadores']; 
+$refdocumentaciones = $_POST['refdocumentaciones']; 
+if (isset($_POST['valor'])) { 
+$valor	= 1; 
+} else { 
+$valor = 0; 
+} 
+if (isset($_POST['habilita'])) { 
+$habilita	= 1; 
+} else { 
+$habilita = 0; 
+} 
+$observaciones = $_POST['observaciones']; 
+$res = $serviciosReferencias->insertarJugadoresdocumentacion($refjugadores,$refdocumentaciones,$valor,$habilita,$observaciones); 
+if ((integer)$res > 0) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al insertar datos';	 
+} 
+} 
+function modificarJugadoresdocumentacion($serviciosReferencias) { 
+$id = $_POST['id']; 
+$refjugadores = $_POST['refjugadores']; 
+$refdocumentaciones = $_POST['refdocumentaciones']; 
+if (isset($_POST['valor'])) { 
+$valor	= 1; 
+} else { 
+$valor = 0; 
+} 
+if (isset($_POST['habilita'])) { 
+$habilita	= 1; 
+} else { 
+$habilita = 0; 
+} 
+$observaciones = $_POST['observaciones']; 
+$res = $serviciosReferencias->modificarJugadoresdocumentacion($id,$refjugadores,$refdocumentaciones,$valor,$habilita,$observaciones); 
+if ($res == true) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al modificar datos'; 
+} 
+} 
+function eliminarJugadoresdocumentacion($serviciosReferencias) { 
+$id = $_POST['id']; 
+$res = $serviciosReferencias->eliminarJugadoresdocumentacion($id); 
+echo $res; 
+} 
+
+function insertarDocumentaciones($serviciosReferencias) { 
+$descripcion = $_POST['descripcion']; 
+if (isset($_POST['obligatoria'])) { 
+$obligatoria	= 1; 
+} else { 
+$obligatoria = 0; 
+} 
+$observaciones = $_POST['observaciones']; 
+$res = $serviciosReferencias->insertarDocumentaciones($descripcion,$obligatoria,$observaciones); 
+if ((integer)$res > 0) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al insertar datos';	 
+} 
+} 
+function modificarDocumentaciones($serviciosReferencias) { 
+$id = $_POST['id']; 
+$descripcion = $_POST['descripcion']; 
+if (isset($_POST['obligatoria'])) { 
+$obligatoria	= 1; 
+} else { 
+$obligatoria = 0; 
+} 
+$observaciones = $_POST['observaciones']; 
+$res = $serviciosReferencias->modificarDocumentaciones($id,$descripcion,$obligatoria,$observaciones); 
+if ($res == true) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al modificar datos'; 
+} 
+} 
+function eliminarDocumentaciones($serviciosReferencias) { 
+$id = $_POST['id']; 
+$res = $serviciosReferencias->eliminarDocumentaciones($id); 
+echo $res; 
+} 
+function insertarMotivoshabilitacionestransitorias($serviciosReferencias) { 
+if (isset($_POST['inhabilita'])) { 
+$inhabilita	= 1; 
+} else { 
+$inhabilita = 0; 
+} 
+$descripcion = $_POST['descripcion']; 
+$res = $serviciosReferencias->insertarMotivoshabilitacionestransitorias($inhabilita,$descripcion); 
+if ((integer)$res > 0) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al insertar datos';	 
+} 
+} 
+function modificarMotivoshabilitacionestransitorias($serviciosReferencias) { 
+$id = $_POST['id']; 
+if (isset($_POST['inhabilita'])) { 
+$inhabilita	= 1; 
+} else { 
+$inhabilita = 0; 
+} 
+$descripcion = $_POST['descripcion']; 
+$res = $serviciosReferencias->modificarMotivoshabilitacionestransitorias($id,$inhabilita,$descripcion); 
+if ($res == true) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al modificar datos'; 
+} 
+} 
+function eliminarMotivoshabilitacionestransitorias($serviciosReferencias) { 
+$id = $_POST['id']; 
+$res = $serviciosReferencias->eliminarMotivoshabilitacionestransitorias($id); 
+echo $res; 
+} 
+
+function insertarTipodocumentos($serviciosReferencias) { 
+$tipodocumento = $_POST['tipodocumento']; 
+$res = $serviciosReferencias->insertarTipodocumentos($tipodocumento); 
+if ((integer)$res > 0) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al insertar datos';	 
+} 
+} 
+function modificarTipodocumentos($serviciosReferencias) { 
+$id = $_POST['id']; 
+$tipodocumento = $_POST['tipodocumento']; 
+$res = $serviciosReferencias->modificarTipodocumentos($id,$tipodocumento); 
+if ($res == true) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al modificar datos'; 
+} 
+} 
+function eliminarTipodocumentos($serviciosReferencias) { 
+$id = $_POST['id']; 
+$res = $serviciosReferencias->eliminarTipodocumentos($id); 
+echo $res; 
+} 
+function insertarTipojugadores($serviciosReferencias) { 
+$tipojugador = $_POST['tipojugador']; 
+$abreviatura = $_POST['abreviatura']; 
+$res = $serviciosReferencias->insertarTipojugadores($tipojugador,$abreviatura); 
+if ((integer)$res > 0) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al insertar datos';	 
+} 
+} 
+function modificarTipojugadores($serviciosReferencias) { 
+$id = $_POST['id']; 
+$tipojugador = $_POST['tipojugador']; 
+$abreviatura = $_POST['abreviatura']; 
+$res = $serviciosReferencias->modificarTipojugadores($id,$tipojugador,$abreviatura); 
+if ($res == true) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al modificar datos'; 
+} 
+} 
+function eliminarTipojugadores($serviciosReferencias) { 
+$id = $_POST['id']; 
+$res = $serviciosReferencias->eliminarTipojugadores($id); 
+echo $res; 
+} 
 ////////////////////////// FIN DE TRAER DATOS ////////////////////////////////////////////////////////////
 
 //////////////////////////  BASICO  /////////////////////////////////////////////////////////////////////////

@@ -22,33 +22,37 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Motivos Habilitaciones Transitorias",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Jugadores",$_SESSION['refroll_predio'],'');
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Motivo de Habilitacion Transitoria";
+$singular = "Jugador";
 
-$plural = "Motivos de Habilitaciones Transitorias";
+$plural = "Jugadores";
 
-$eliminar = "eliminarMotivoshabilitacionestransitorias";
+$eliminar = "eliminarJugadores";
 
-$insertar = "insertarDocumentaciones";
+$insertar = "insertarJugadores";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbmotivoshabilitacionestransitorias";
+$tabla 			= "dbjugadores";
 
-$lblCambio	 	= array("");
-$lblreemplazo	= array("");
+$lblCambio	 	= array("reftipodocumentos","nrodocumento","fechanacimiento","fechaalta","fechabaja","refcountries");
+$lblreemplazo	= array("Tipo Documento","Nro Documento","Fecha Nacimiento","Fecha Alta","Fecha Baja","Countries");
 
 
-$cadRef 	= '';
+$resTipoDoc 	= $serviciosReferencias->traerTipodocumentos();
+$cadRef 	= $serviciosFunciones->devolverSelectBox($resTipoDoc,array(1),'');
 
-$refdescripcion = array();
-$refCampo 	=  array();
+$resCountries 	= $serviciosReferencias->traerCountries();
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2);
+$refCampo 	=  array("reftipodocumentos","refcountries");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -60,7 +64,7 @@ $cabeceras 		= "	<th>Inhabilita</th>
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-
+$resDocumentaciones	=	$serviciosReferencias->traerDocumentaciones();
 
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
@@ -111,7 +115,16 @@ if ($_SESSION['refroll_predio'] != 1) {
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
 	
     
-   
+   <style>
+   	.clickable{
+    cursor: pointer;   
+	}
+	
+	.panel-heading span {
+		margin-top: -20px;
+		font-size: 15px;
+	}
+   </style>
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -123,72 +136,10 @@ if ($_SESSION['refroll_predio'] != 1) {
       });
     </script>
     
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY"
-  type="text/javascript"></script>
-    <style type="text/css">
-		#map
-		{
-			width: 100%;
-			height: 600px;
-			border: 1px solid #d0d0d0;
-		}
-  
-		
-	</style>
-    <script>
-	/* AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY */
-		var map;
-		var markers = [];
-	 function localize() {
-
-			
-		var mapDiv = document.getElementById('map');
-		var laPlata= {lat: -34.9205283, lng: -57.9531703};
-		var map = new google.maps.Map(mapDiv, {
-			zoom: 13,
-			center: new google.maps.LatLng(-34.9205283, -57.9531703)
-		});
-		
-		//var latitud = map.coords.latitude;
-		//var longitud = map.coords.longitude;
-		/*
-		google.maps.event.addDomListener(mapDiv, 'click', function(e) {
-			window.alert('click en el mapa');
-		});
-		*/
-		map.addListener('click', function(e) {
-			
-			if (markers.length > 0) {
-				clearMarkers();
-			}
-			$('#latitud').val(e.latLng.lat());
-			$('#longitud').val(e.latLng.lng());	
-			placeMarkerAndPanTo(e.latLng, map);
-		});
-	 }
-	 
-		function placeMarkerAndPanTo(latLng, map) {
-			var marker = new google.maps.Marker({
-				position: latLng,
-				map: map
-			});
-			markers.push(marker);
-			map.panTo(latLng);
-			
-		}
-	
-	function clearMarkers() {
-		for (var i = 0; i < markers.length; i++) {
-			markers[i].setMap(null);
-		}
-	}
-		
-
- </script>-->
  
 </head>
 
-<body onLoad="localize()">
+<body>
 
  <?php echo $resMenu; ?>
 
@@ -206,12 +157,41 @@ if ($_SESSION['refroll_predio'] != 1) {
         	<div class="row">
 			<?php echo $formulario; ?>
             </div>
-            <!--
-            <div class="row">
-            	<div id="map" ></div>
-
+            <hr>
+            
+            <div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Documentaciones</h3>
+					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+                <div class="panel-body">
+            	<?php
+					while ($row = mysql_fetch_array($resDocumentaciones)) {
+				?>
+                    <div class="col-md-4" style="margin-bottom:7px;">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                            <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
+                            </span>
+                            <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
+                            <span class="input-group-addon">
+                            	<?php
+									if ($row[2] == 'Si') { 
+								?>
+                                	<span class="glyphicon glyphicon-check"></span>
+                                <?php } else { ?>
+                                	<span class="glyphicon glyphicon-remove"></span>
+                                <?php } ?>
+                            </span>
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+                <?php
+					}
+				?>
+				</div>
             </div>
-            -->
+            
+            
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
                 
@@ -269,6 +249,20 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	$(document).on('click', '.panel-heading span.clickable', function(e){
+		var $this = $(this);
+		if(!$this.hasClass('panel-collapsed')) {
+			$this.parents('.panel').find('.panel-body').slideUp();
+			$this.addClass('panel-collapsed');
+			$this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+		} else {
+			$this.parents('.panel').find('.panel-body').slideDown();
+			$this.removeClass('panel-collapsed');
+			$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+		}
+	});
+
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],
 		"language": {

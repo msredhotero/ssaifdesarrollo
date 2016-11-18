@@ -1136,6 +1136,321 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: dbcanchasuspenciones*/
 
+
+
+
+/* PARA Jugadores */
+
+function insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones) { 
+$sql = "insert into dbjugadores(idjugador,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,fechabaja,refcountries,observaciones) 
+values ('',".$reftipodocumentos.",".$nrodocumento.",'".utf8_decode($apellido)."','".utf8_decode($nombres)."','".utf8_decode($email)."','".utf8_decode($fechanacimiento)."','".utf8_decode($fechaalta)."','".utf8_decode($fechabaja)."',".$refcountries.",'".utf8_decode($observaciones)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones) { 
+$sql = "update dbjugadores 
+set 
+reftipodocumentos = ".$reftipodocumentos.",nrodocumento = ".$nrodocumento.",apellido = '".utf8_decode($apellido)."',nombres = '".utf8_decode($nombres)."',email = '".utf8_decode($email)."',fechanacimiento = '".utf8_decode($fechanacimiento)."',fechaalta = '".utf8_decode($fechaalta)."',fechabaja = '".utf8_decode($fechabaja)."',refcountries = ".$refcountries.",observaciones = '".utf8_decode($observaciones)."' 
+where idjugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarJugadores($id) { 
+$sql = "delete from dbjugadores where idjugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadores() { 
+$sql = "select 
+j.idjugador,
+j.reftipodocumentos,
+j.nrodocumento,
+j.apellido,
+j.nombres,
+j.email,
+j.fechanacimiento,
+j.fechaalta,
+j.fechabaja,
+j.refcountries,
+j.observaciones
+from dbjugadores j 
+inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresPorId($id) { 
+$sql = "select idjugador,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,fechabaja,refcountries,observaciones from dbjugadores where idjugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbjugadores*/
+
+
+/* PARA Jugadoresdocumentacion */
+
+function insertarJugadoresdocumentacion($refjugadores,$refdocumentaciones,$valor,$habilita,$observaciones) { 
+$sql = "insert into dbjugadoresdocumentacion(idjugadordocumentacion,refjugadores,refdocumentaciones,valor,habilita,observaciones) 
+values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",".$habilita.",'".utf8_decode($observaciones)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarJugadoresdocumentacion($id,$refjugadores,$refdocumentaciones,$valor,$habilita,$observaciones) { 
+$sql = "update dbjugadoresdocumentacion 
+set 
+refjugadores = ".$refjugadores.",refdocumentaciones = ".$refdocumentaciones.",valor = ".$valor.",habilita = ".$habilita.",observaciones = '".utf8_decode($observaciones)."' 
+where idjugadordocumentacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarJugadoresdocumentacion($id) { 
+$sql = "delete from dbjugadoresdocumentacion where idjugadordocumentacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresdocumentacion() { 
+$sql = "select 
+j.idjugadordocumentacion,
+j.refjugadores,
+j.refdocumentaciones,
+j.valor,
+j.habilita,
+j.observaciones
+from dbjugadoresdocumentacion j 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresdocumentacionPorId($id) { 
+$sql = "select idjugadordocumentacion,refjugadores,refdocumentaciones,valor,habilita,observaciones from dbjugadoresdocumentacion where idjugadordocumentacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbjugadoresdocumentacion*/
+
+
+/* PARA Documentaciones */
+
+function insertarDocumentaciones($descripcion,$obligatoria,$observaciones) { 
+$sql = "insert into tbdocumentaciones(iddocumentacion,descripcion,obligatoria,observaciones) 
+values ('','".utf8_decode($descripcion)."',".$obligatoria.",'".utf8_decode($observaciones)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarDocumentaciones($id,$descripcion,$obligatoria,$observaciones) { 
+$sql = "update tbdocumentaciones 
+set 
+descripcion = '".utf8_decode($descripcion)."',obligatoria = ".$obligatoria.",observaciones = '".utf8_decode($observaciones)."' 
+where iddocumentacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarDocumentaciones($id) { 
+$sql = "delete from tbdocumentaciones where iddocumentacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDocumentaciones() { 
+$sql = "select 
+d.iddocumentacion,
+d.descripcion,
+(case when d.obligatoria = 1 then 'Si' else 'No' end) as obligatoria,
+d.observaciones
+from tbdocumentaciones d 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDocumentacionesPorId($id) { 
+$sql = "select iddocumentacion,descripcion,obligatoria,observaciones from tbdocumentaciones where iddocumentacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbdocumentaciones*/
+
+
+/* PARA Motivoshabilitacionestransitorias */
+
+function insertarMotivoshabilitacionestransitorias($inhabilita,$descripcion) { 
+$sql = "insert into tbmotivoshabilitacionestransitorias(idmotivoshabilitacionestransitoria,inhabilita,descripcion) 
+values ('',".$inhabilita.",'".utf8_decode($descripcion)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarMotivoshabilitacionestransitorias($id,$inhabilita,$descripcion) { 
+$sql = "update tbmotivoshabilitacionestransitorias 
+set 
+inhabilita = ".$inhabilita.",descripcion = '".utf8_decode($descripcion)."' 
+where idmotivoshabilitacionestransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarMotivoshabilitacionestransitorias($id) { 
+$sql = "delete from tbmotivoshabilitacionestransitorias where idmotivoshabilitacionestransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMotivoshabilitacionestransitorias() { 
+$sql = "select 
+m.idmotivoshabilitacionestransitoria,
+(case when m.inhabilita = 1 then 'Si' else 'No' end) as inhabilita,
+m.descripcion
+from tbmotivoshabilitacionestransitorias m 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMotivoshabilitacionestransitoriasPorId($id) { 
+$sql = "select idmotivoshabilitacionestransitoria,inhabilita,descripcion from tbmotivoshabilitacionestransitorias where idmotivoshabilitacionestransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbmotivoshabilitacionestransitorias*/
+
+/* PARA Tipodocumentos */
+
+function insertarTipodocumentos($tipodocumento) { 
+$sql = "insert into tbtipodocumentos(idtipodocumento,tipodocumento) 
+values ('','".utf8_decode($tipodocumento)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarTipodocumentos($id,$tipodocumento) { 
+$sql = "update tbtipodocumentos 
+set 
+tipodocumento = '".utf8_decode($tipodocumento)."' 
+where idtipodocumento =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarTipodocumentos($id) { 
+$sql = "delete from tbtipodocumentos where idtipodocumento =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTipodocumentos() { 
+$sql = "select 
+t.idtipodocumento,
+t.tipodocumento
+from tbtipodocumentos t 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTipodocumentosPorId($id) { 
+$sql = "select idtipodocumento,tipodocumento from tbtipodocumentos where idtipodocumento =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbtipodocumentos*/
+
+
+/* PARA Tipojugadores */
+
+function insertarTipojugadores($tipojugador,$abreviatura) { 
+$sql = "insert into tbtipojugadores(idtipojugador,tipojugador,abreviatura) 
+values ('','".utf8_decode($tipojugador)."','".utf8_decode($abreviatura)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarTipojugadores($id,$tipojugador,$abreviatura) { 
+$sql = "update tbtipojugadores 
+set 
+tipojugador = '".utf8_decode($tipojugador)."',abreviatura = '".utf8_decode($abreviatura)."' 
+where idtipojugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarTipojugadores($id) { 
+$sql = "delete from tbtipojugadores where idtipojugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTipojugadores() { 
+$sql = "select 
+t.idtipojugador,
+t.tipojugador,
+t.abreviatura
+from tbtipojugadores t 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTipojugadoresPorId($id) { 
+$sql = "select idtipojugador,tipojugador,abreviatura from tbtipojugadores where idtipojugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbtipojugadores*/
+
+
+
 function query($sql,$accion) {
 		
 		
