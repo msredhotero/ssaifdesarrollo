@@ -142,6 +142,8 @@ if ($_SESSION['refroll_predio'] != 1) {
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
 	
+    <script src="../../js/jquery.number.min.js"></script>
+    
 	<script src="../../js/inputmask.js"></script>
     <script src="../../js/inputmask.date.Extensions.js"></script>
     <script src="../../js/jquery.inputmask.js"></script>
@@ -386,6 +388,8 @@ $(document).ready(function(){
   	//var initialValue = $("#test").inputmask("getemptymask");
   	//$("#fechaalta").inputmask("date");
 	//$("#fechabaja").inputmask("date");
+	$('#cuit').number( true, 0 , '', '');
+	$("#cuit").attr('maxlength','11');
 	
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],
