@@ -238,6 +238,13 @@ if ($_SESSION['refroll_predio'] != 1) {
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <div class='alert alert-info'>
+                	<span class="glyphicon glyphicon-info-sign"></span> El CUIT cargarlo son "-" o "/" solo numeros
+                </div>
+                
+            </div>
+            
         	<div class="row">
 			<?php echo $formulario; ?>
             </div>
@@ -288,7 +295,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             </div>
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
+                <div class='alert alertCargaU'>
                 
                 </div>
                 <div id='load'>
@@ -603,31 +610,26 @@ $(document).ready(function(){
 				success: function(data){
 
 					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
+                                            $(".alertCargaU").removeClass("alert-danger");
+											$(".alertCargaU").removeClass("alert-info");
+                                            $(".alertCargaU").addClass("alert-success");
+                                            $(".alertCargaU").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
+
 											$("#load").html('');
 											url = "index.php";
 											$(location).attr('href',url);
                                             
 											
                                         } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                        	$(".alertCargaU").removeClass("alert-danger");
+                                            $(".alertCargaU").addClass("alert-danger");
+                                            $(".alertCargaU").html('<strong>Error!</strong> '+data);
                                             $("#load").html('');
                                         }
 				},
 				//si ha ocurrido un error
 				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$(".alertCargaU").html('<strong>Error!</strong> Actualice la pagina');
                     $("#load").html('');
 				}
 			});
