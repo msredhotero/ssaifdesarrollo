@@ -13,6 +13,24 @@ function menu($usuario,$titulo,$rol,$empresa) {
 	$cadmenu = "";
 	$cadhover= "";
 	
+	$js = "<script>
+		$(document).ready(function(){
+			$('#colapsarMenu').click(function() {
+			if ($('#colapsarMenu').attr('class') == 'glyphicon glyphicon-list') {
+			$('#content').css( { marginLeft : '1%' } );
+			$('#navigation').hide();
+			$('#colapsarMenu').removeClass('glyphicon glyphicon-list');
+			$('#colapsarMenu').addClass('glyphicon glyphicon-align-justify');
+			} else {
+			$('#content').css( { marginLeft : '21%' } );
+			$('#navigation').show();			
+			$('#colapsarMenu').removeClass('glyphicon glyphicon-align-justify');
+			$('#colapsarMenu').addClass('glyphicon glyphicon-list');
+			}
+			});
+		});
+		</script>";
+		
 	$cant = 1;
 	while ($row = mysql_fetch_array($res)) {
 		if ($titulo == $row['nombre']) {
@@ -40,10 +58,11 @@ function menu($usuario,$titulo,$rol,$empresa) {
 	
 	
 	$menu = '
-		<div style="background-color:#333; position:absolute; top:0;left:0; height:35px; width:100%; color:#FFF; padding-top:7px;" align="right">
+		<div style="background-color:#333; position:absolute; top:0;left:0; height:35px; width:100%; color:#FFF; padding-top:7px;" >
 			
-			<ul class="list-inline">
-				<li><span class="glyphicon glyphicon-user"></span> '.$usuario.'</li>
+			<ul class="list-inline" style="margin-left:12px;">
+				<li style="margin-left:20%;"><span class="glyphicon glyphicon-list" id="colapsarMenu" style="cursor:pointer;"> </span></li>
+				<li class="navbar-right"><span class="glyphicon glyphicon-user"></span> '.$usuario.'</li>
 
 			</ul>
 		</div>
@@ -62,7 +81,7 @@ function menu($usuario,$titulo,$rol,$empresa) {
 				
 			 </div>
 
-		</div>';
+		</div>'.$js;
 	
 	return $menu;
 	

@@ -1475,6 +1475,56 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: tbtipojugadores*/
 
+/* PARA Valoreshabilitacionestransitorias */
+
+function insertarValoreshabilitacionestransitorias($refmotivoshabilitacionestransitorias,$descripcion,$habilita) { 
+$sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refmotivoshabilitacionestransitorias,descripcion,habilita) 
+values ('',".$refmotivoshabilitacionestransitorias.",'".utf8_decode($descripcion)."',".$habilita.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarValoreshabilitacionestransitorias($id,$refmotivoshabilitacionestransitorias,$descripcion,$habilita) { 
+$sql = "update tbvaloreshabilitacionestransitorias 
+set 
+refmotivoshabilitacionestransitorias = ".$refmotivoshabilitacionestransitorias.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita." 
+where idvalorhabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarValoreshabilitacionestransitorias($id) { 
+$sql = "delete from tbvaloreshabilitacionestransitorias where idvalorhabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerValoreshabilitacionestransitorias() { 
+$sql = "select 
+v.idvalorhabilitaciontransitoria,
+mot.descripcion as motivos,
+v.descripcion,
+(case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
+v.refmotivoshabilitacionestransitorias
+from tbvaloreshabilitacionestransitorias v 
+inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = v.refmotivoshabilitacionestransitorias 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerValoreshabilitacionestransitoriasPorId($id) { 
+$sql = "select idvalorhabilitaciontransitoria,refmotivoshabilitacionestransitorias,descripcion,habilita from tbvaloreshabilitacionestransitorias where idvalorhabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbvaloreshabilitacionestransitorias*/
 
 
 function query($sql,$accion) {

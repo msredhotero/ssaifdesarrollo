@@ -231,6 +231,17 @@ case 'eliminarTipojugadores':
 eliminarTipojugadores($serviciosReferencias); 
 break; 
 
+case 'insertarValoreshabilitacionestransitorias': 
+insertarValoreshabilitacionestransitorias($serviciosReferencias); 
+break; 
+case 'modificarValoreshabilitacionestransitorias': 
+modificarValoreshabilitacionestransitorias($serviciosReferencias); 
+break; 
+case 'eliminarValoreshabilitacionestransitorias': 
+eliminarValoreshabilitacionestransitorias($serviciosReferencias); 
+break; 
+
+
 }
 
 /* Fin */
@@ -1082,6 +1093,47 @@ $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarTipojugadores($id); 
 echo $res; 
 } 
+
+
+
+
+function insertarValoreshabilitacionestransitorias($serviciosReferencias) { 
+$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitorias']; 
+$descripcion = $_POST['descripcion']; 
+if (isset($_POST['habilita'])) { 
+$habilita	= 1; 
+} else { 
+$habilita = 0; 
+} 
+$res = $serviciosReferencias->insertarValoreshabilitacionestransitorias($refmotivoshabilitacionestransitorias,$descripcion,$habilita); 
+if ((integer)$res > 0) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al insertar datos';	 
+} 
+} 
+function modificarValoreshabilitacionestransitorias($serviciosReferencias) { 
+$id = $_POST['id']; 
+$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitorias']; 
+$descripcion = $_POST['descripcion']; 
+if (isset($_POST['habilita'])) { 
+$habilita	= 1; 
+} else { 
+$habilita = 0; 
+} 
+$res = $serviciosReferencias->modificarValoreshabilitacionestransitorias($id,$refmotivoshabilitacionestransitorias,$descripcion,$habilita); 
+if ($res == true) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al modificar datos'; 
+} 
+} 
+function eliminarValoreshabilitacionestransitorias($serviciosReferencias) { 
+$id = $_POST['id']; 
+$res = $serviciosReferencias->eliminarValoreshabilitacionestransitorias($id); 
+echo $res; 
+} 
+
 ////////////////////////// FIN DE TRAER DATOS ////////////////////////////////////////////////////////////
 
 //////////////////////////  BASICO  /////////////////////////////////////////////////////////////////////////
