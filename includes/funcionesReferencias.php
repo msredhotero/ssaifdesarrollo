@@ -1475,6 +1475,21 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: tbtipojugadores*/
 
+//////////  Funciones para la etapa 2  //////////////////
+
+//////// TABLAS ////////////////////////////////////////////
+/*
+dbjugadoresmotivoshabilitacionestransitorias
+dbjugadoresvaloreshabilitacionestransitorias
+tbvaloreshabilitacionestransitorias
+tbtipojugadores
+tbdocumentaciones
+tbmotivoshabilitacionestransitorias
+dbjugadores
+tbtipodocumentos
+
+*/
+
 /* PARA Valoreshabilitacionestransitorias */
 
 function insertarValoreshabilitacionestransitorias($refmotivoshabilitacionestransitorias,$descripcion,$habilita) { 
@@ -1523,9 +1538,604 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
-/* Fin */
+
 /* /* Fin de la Tabla: tbvaloreshabilitacionestransitorias*/
 
+
+//////////  Funciones para la etapa 3 y 4  //////////////////
+
+//////// TABLAS ////////////////////////////////////////////
+/*********************************************************************************
+
+dbtorneos
+dbequipos
+tbpuntobonus
+tbtiposanciones
+tbfechasexcluidas
+tbestadospartidos
+dbdefinicionescategoriastemporadas
+dbdefinicionescategoriastemporadastipojugador
+definicionessancionesacumuladastempordas
+
+**************************************************/
+
+
+/* PARA Torneos */
+
+
+/* PARA Tipotorneo */
+
+function insertarTipotorneo($tipotorneo) { 
+$sql = "insert into tbtipotorneo(idtipotorneo,tipotorneo) 
+values ('','".utf8_decode($tipotorneo)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarTipotorneo($id,$tipotorneo) { 
+$sql = "update tbtipotorneo 
+set 
+tipotorneo = '".utf8_decode($tipotorneo)."' 
+where idtipotorneo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarTipotorneo($id) { 
+$sql = "delete from tbtipotorneo where idtipotorneo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTipotorneo() { 
+$sql = "select 
+t.idtipotorneo,
+t.tipotorneo
+from tbtipotorneo t 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTipotorneoPorId($id) { 
+$sql = "select idtipotorneo,tipotorneo from tbtipotorneo where idtipotorneo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbtipotorneo*/
+
+
+function desactivarTorneos($idTorneo,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones) {
+	$sql = "update dbtorneos set activo = 0 where reftipotorneo=".$reftipotorneo." and reftemporadas=".$reftemporadas." and refcategorias=".$refcategorias." and refdivisiones=".$refdivisiones." and idtorneo <>".$idTorneo;
+	$res = $this->query($sql,0); 
+	return $res; 
+}
+
+function insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo) { 
+$sql = "insert into dbtorneos(idtorneo,descripcion,reftipotorneo,reftemporadas,refcategorias,refdivisiones,cantidadascensos,cantidaddescensos,respetadefiniciontipojugadores,respetadefinicionhabilitacionestransitorias,respetadefinicionsancionesacumuladas,acumulagoleadores,acumulatablaconformada,observaciones,activo) 
+values ('','".utf8_decode($descripcion)."',".$reftipotorneo.",".$reftemporadas.",".$refcategorias.",".$refdivisiones.",".$cantidadascensos.",".$cantidaddescensos.",".$respetadefiniciontipojugadores.",".$respetadefinicionhabilitacionestransitorias.",".$respetadefinicionsancionesacumuladas.",".$acumulagoleadores.",".$acumulatablaconformada.",'".utf8_decode($observaciones)."',".$activo.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarTorneos($id,$descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo) { 
+$sql = "update dbtorneos 
+set 
+descripcion = '".utf8_decode($descripcion)."',reftipotorneo = ".$reftipotorneo.",reftemporadas = ".$reftemporadas.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",cantidadascensos = ".$cantidadascensos.",cantidaddescensos = ".$cantidaddescensos.",respetadefiniciontipojugadores = ".$respetadefiniciontipojugadores.",respetadefinicionhabilitacionestransitorias = ".$respetadefinicionhabilitacionestransitorias.",respetadefinicionsancionesacumuladas = ".$respetadefinicionsancionesacumuladas.",acumulagoleadores = ".$acumulagoleadores.",acumulatablaconformada = ".$acumulatablaconformada.",observaciones = '".utf8_decode($observaciones)."',activo = ".$activo." 
+where idtorneo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarTorneos($id) { 
+$sql = "delete from dbtorneos where idtorneo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTorneos() { 
+$sql = "select 
+t.idtorneo,
+t.descripcion,
+tip.tipotorneo as tipotorneo,
+tem.temporada,
+cat.categoria,
+di.division,
+t.cantidadascensos,
+t.cantidaddescensos,
+t.respetadefiniciontipojugadores,
+t.respetadefinicionhabilitacionestransitorias,
+t.respetadefinicionsancionesacumuladas,
+t.acumulagoleadores,
+t.acumulatablaconformada,
+t.observaciones,
+t.activo,
+t.reftipotorneo,
+t.reftemporadas,
+t.refcategorias,
+t.refdivisiones
+from dbtorneos t 
+inner join tbtipotorneo tip ON tip.idtipotorneo = t.reftipotorneo 
+inner join tbtemporadas tem ON tem.idtemporadas = t.reftemporadas 
+inner join tbcategorias cat ON cat.idtcategoria = t.refcategorias 
+inner join tbdivisiones di ON di.iddivision = t.refdivisiones 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTorneosPorId($id) { 
+$sql = "select idtorneo,descripcion,reftipotorneo,reftemporadas,refcategorias,refdivisiones,cantidadascensos,cantidaddescensos,respetadefiniciontipojugadores,respetadefinicionhabilitacionestransitorias,respetadefinicionsancionesacumuladas,acumulagoleadores,acumulatablaconformada,observaciones,activo from dbtorneos where idtorneo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbtorneos*/
+
+
+/* PARA Equipos */
+
+function insertarEquipos($refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo) { 
+$sql = "insert into dbequipos(idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,activo) 
+values ('',".$refcountries.",'".utf8_decode($nombre)."',".$refcategorias.",".$refdivisiones.",".$refcontactos.",'".utf8_decode($fechaalta)."','".utf8_decode($fachebaja)."',".$activo.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarEquipos($id,$refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo) { 
+$sql = "update dbequipos 
+set 
+refcountries = ".$refcountries.",nombre = '".utf8_decode($nombre)."',refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",refcontactos = ".$refcontactos.",fechaalta = '".utf8_decode($fechaalta)."',fachebaja = '".utf8_decode($fachebaja)."',activo = ".$activo." 
+where idequipo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarEquipos($id) { 
+$sql = "update dbequipos set activo = 0, fachebaja = '".date('Y-m-d')."' where idequipo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerEquipos() { 
+$sql = "select 
+e.idequipo,
+cou.nombre as countrie,
+e.nombre,
+cat.categoria,
+di.division,
+con.nombre as contacto,
+e.fechaalta,
+e.fachebaja,
+(case when e.activo=1 then 'Si' else 'No' end) as activo,
+e.refcountries,
+e.refcategorias,
+e.refdivisiones,
+e.refcontactos
+from dbequipos e 
+inner join dbcountries cou ON cou.idcountrie = e.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias 
+inner join tbdivisiones di ON di.iddivision = e.refdivisiones 
+inner join dbcontactos con ON con.idcontacto = e.refcontactos 
+inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerEquiposPorId($id) { 
+$sql = "select idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,activo from dbequipos where idequipo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbequipos*/
+
+/* PARA Puntobonus */
+
+function insertarPuntobonus($descripcion,$cantidadfechas,$consecutivas,$comparacion,$valoracomparar,$puntosextra) { 
+$sql = "insert into tbpuntobonus(idpuntobonus,descripcion,cantidadfechas,consecutivas,comparacion,valoracomparar,puntosextra) 
+values ('','".utf8_decode($descripcion)."',".$cantidadfechas.",".$consecutivas.",'".$comparacion."',".$valoracomparar.",".$puntosextra.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarPuntobonus($id,$descripcion,$cantidadfechas,$consecutivas,$comparacion,$valoracomparar,$puntosextra) { 
+$sql = "update tbpuntobonus 
+set 
+descripcion = '".utf8_decode($descripcion)."',cantidadfechas = ".$cantidadfechas.",consecutivas = ".$consecutivas.",comparacion = '".$comparacion."',valoracomparar = ".$valoracomparar.",puntosextra = ".$puntosextra." 
+where idpuntobonus =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarPuntobonus($id) { 
+$sql = "delete from tbpuntobonus where idpuntobonus =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerPuntobonus() { 
+$sql = "select 
+p.idpuntobonus,
+p.descripcion,
+p.cantidadfechas,
+(case when p.consecutivas = 1 then 'Si' else 'No' end) as consecutivas,
+p.comparacion,
+p.valoracomparar,
+p.puntosextra
+from tbpuntobonus p 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerPuntobonusPorId($id) { 
+$sql = "select idpuntobonus,descripcion,cantidadfechas,consecutivas,comparacion,valoracomparar,puntosextra from tbpuntobonus where idpuntobonus =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbpuntobonus*/
+
+
+
+/* PARA Tiposanciones */
+
+function insertarTiposanciones($expulsion,$amonestacion,$descripcion,$cantminfechas,$abreviatura,$cantmaxfechas,$cumpletodascategorias,$llevapendiente,$ocultardetallepublico) { 
+$sql = "insert into tbtiposanciones(idtiposancion,expulsion,amonestacion,descripcion,cantminfechas,abreviatura,cantmaxfechas,cumpletodascategorias,llevapendiente,ocultardetallepublico) 
+values ('',".$expulsion.",".$amonestacion.",'".utf8_decode($descripcion)."',".$cantminfechas.",'".utf8_decode($abreviatura)."',".$cantmaxfechas.",".$cumpletodascategorias.",".$llevapendiente.",".$ocultardetallepublico.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarTiposanciones($id,$expulsion,$amonestacion,$descripcion,$cantminfechas,$abreviatura,$cantmaxfechas,$cumpletodascategorias,$llevapendiente,$ocultardetallepublico) { 
+$sql = "update tbtiposanciones 
+set 
+expulsion = ".$expulsion.",amonestacion = ".$amonestacion.",descripcion = '".utf8_decode($descripcion)."',cantminfechas = ".$cantminfechas.",abreviatura = '".utf8_decode($abreviatura)."',cantmaxfechas = ".$cantmaxfechas.",cumpletodascategorias = ".$cumpletodascategorias.",llevapendiente = ".$llevapendiente.",ocultardetallepublico = ".$ocultardetallepublico." 
+where idtiposancion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarTiposanciones($id) { 
+$sql = "delete from tbtiposanciones where idtiposancion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTiposanciones() { 
+$sql = "select 
+t.idtiposancion,
+(case when t.expulsion = 1 then 'Si' else 'No' end) as expulsion,
+(case when t.amonestacion = 1 then 'Si' else 'No' end) as amonestacion,
+t.descripcion,
+t.cantminfechas,
+t.abreviatura,
+t.cantmaxfechas,
+(case when t.cumpletodascategorias = 1 then 'Si' else 'No' end) as cumpletodascategorias,
+(case when t.llevapendiente = 1 then 'Si' else 'No' end) as llevapendiente,
+(case when t.ocultardetallepublico = 1 then 'Si' else 'No' end) as ocultardetallepublico
+from tbtiposanciones t 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTiposancionesPorId($id) { 
+$sql = "select idtiposancion,expulsion,amonestacion,descripcion,cantminfechas,abreviatura,cantmaxfechas,cumpletodascategorias,llevapendiente,ocultardetallepublico from tbtiposanciones where idtiposancion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbtiposanciones*/
+
+
+/* PARA Fechasexcluidas */
+
+function insertarFechasexcluidas($fecha,$descripcion) { 
+$sql = "insert into tbfechasexcluidas(idfechaexcluida,fecha,descripcion) 
+values ('','".utf8_decode($fecha)."','".utf8_decode($descripcion)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarFechasexcluidas($id,$fecha,$descripcion) { 
+$sql = "update tbfechasexcluidas 
+set 
+fecha = '".utf8_decode($fecha)."',descripcion = '".utf8_decode($descripcion)."' 
+where idfechaexcluida =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarFechasexcluidas($id) { 
+$sql = "delete from tbfechasexcluidas where idfechaexcluida =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerFechasexcluidas() { 
+$sql = "select 
+f.idfechaexcluida,
+f.fecha,
+f.descripcion
+from tbfechasexcluidas f 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerFechasexcluidasPorId($id) { 
+$sql = "select idfechaexcluida,fecha,descripcion from tbfechasexcluidas where idfechaexcluida =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbfechasexcluidas*/
+
+
+/* PARA Estadospartidos */
+
+function insertarEstadospartidos($descripcion,$defautomatica,$goleslocalauto,$goleslocalborra,$golesvisitanteauto,$golesvisitanteborra,$puntoslocal,$puntosvisitante,$finalizado,$ocultardetallepublico,$visibleparaarbitros) { 
+$sql = "insert into tbestadospartidos(idestadopartido,descripcion,defautomatica,goleslocalauto,goleslocalborra,golesvisitanteauto,golesvisitanteborra,puntoslocal,puntosvisitante,finalizado,ocultardetallepublico,visibleparaarbitros) 
+values ('','".utf8_decode($descripcion)."',".$defautomatica.",".$goleslocalauto.",".$goleslocalborra.",".$golesvisitanteauto.",".$golesvisitanteborra.",".$puntoslocal.",".$puntosvisitante.",".$finalizado.",".$ocultardetallepublico.",".$visibleparaarbitros.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarEstadospartidos($id,$descripcion,$defautomatica,$goleslocalauto,$goleslocalborra,$golesvisitanteauto,$golesvisitanteborra,$puntoslocal,$puntosvisitante,$finalizado,$ocultardetallepublico,$visibleparaarbitros) { 
+$sql = "update tbestadospartidos 
+set 
+descripcion = '".utf8_decode($descripcion)."',defautomatica = ".$defautomatica.",goleslocalauto = ".$goleslocalauto.",goleslocalborra = ".$goleslocalborra.",golesvisitanteauto = ".$golesvisitanteauto.",golesvisitanteborra = ".$golesvisitanteborra.",puntoslocal = ".$puntoslocal.",puntosvisitante = ".$puntosvisitante.",finalizado = ".$finalizado.",ocultardetallepublico = ".$ocultardetallepublico.",visibleparaarbitros = ".$visibleparaarbitros." 
+where idestadopartido =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarEstadospartidos($id) { 
+$sql = "delete from tbestadospartidos where idestadopartido =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerEstadospartidos() { 
+$sql = "select 
+e.idestadopartido,
+e.descripcion,
+e.defautomatica,
+e.goleslocalauto,
+e.goleslocalborra,
+e.golesvisitanteauto,
+e.golesvisitanteborra,
+e.puntoslocal,
+e.puntosvisitante,
+e.finalizado,
+e.ocultardetallepublico,
+e.visibleparaarbitros
+from tbestadospartidos e 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerEstadospartidosPorId($id) { 
+$sql = "select idestadopartido,descripcion,defautomatica,goleslocalauto,goleslocalborra,golesvisitanteauto,golesvisitanteborra,puntoslocal,puntosvisitante,finalizado,ocultardetallepublico,visibleparaarbitros from tbestadospartidos where idestadopartido =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: tbestadospartidos*/
+
+
+/* PARA Definicionescategoriastemporadas */
+
+function insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$dias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) { 
+$sql = "insert into dbdefinicionescategoriastemporadas(iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,dias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones) 
+values ('',".$refcategorias.",".$reftemporadas.",".$cantmaxjugadores.",".$cantminjugadores.",'".utf8_decode($dias)."','".utf8_decode($hora)."',".$minutospartido.",".$cantidadcambiosporpartido.",".$conreingreso.",'".utf8_decode($observaciones)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$dias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) { 
+$sql = "update dbdefinicionescategoriastemporadas 
+set 
+refcategorias = ".$refcategorias.",reftemporadas = ".$reftemporadas.",cantmaxjugadores = ".$cantmaxjugadores.",cantminjugadores = ".$cantminjugadores.",dias = '".utf8_decode($dias)."',hora = '".utf8_decode($hora)."',minutospartido = ".$minutospartido.",cantidadcambiosporpartido = ".$cantidadcambiosporpartido.",conreingreso = ".$conreingreso.",observaciones = '".utf8_decode($observaciones)."' 
+where iddefinicioncategoriatemporada =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarDefinicionescategoriastemporadas($id) { 
+$sql = "delete from dbdefinicionescategoriastemporadas where iddefinicioncategoriatemporada =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDefinicionescategoriastemporadas() { 
+$sql = "select 
+d.iddefinicioncategoriatemporada,
+d.refcategorias,
+d.reftemporadas,
+d.cantmaxjugadores,
+d.cantminjugadores,
+d.dias,
+d.hora,
+d.minutospartido,
+d.cantidadcambiosporpartido,
+d.conreingreso,
+d.observaciones
+from dbdefinicionescategoriastemporadas d 
+inner join tbcategorias cat ON cat.idtcategoria = d.refcategorias 
+inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDefinicionescategoriastemporadasPorId($id) { 
+$sql = "select iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,dias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones from dbdefinicionescategoriastemporadas where iddefinicioncategoriatemporada =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbdefinicionescategoriastemporadas*/
+
+
+
+/* PARA Definicionescategoriastemporadastipojugador */
+
+function insertarDefinicionescategoriastemporadastipojugador($refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$observaciones) { 
+$sql = "insert into dbdefinicionescategoriastemporadastipojugador(iddefinicionescategoriastemporadastipojugador,refdefinicionescategoriastemporadas,reftipojugadores,edadmaxima,edadminima,observaciones) 
+values ('',".$refdefinicionescategoriastemporadas.",".$reftipojugadores.",".$edadmaxima.",".$edadminima.",'".utf8_decode($observaciones)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarDefinicionescategoriastemporadastipojugador($id,$refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$observaciones) { 
+$sql = "update dbdefinicionescategoriastemporadastipojugador 
+set 
+refdefinicionescategoriastemporadas = ".$refdefinicionescategoriastemporadas.",reftipojugadores = ".$reftipojugadores.",edadmaxima = ".$edadmaxima.",edadminima = ".$edadminima.",observaciones = '".utf8_decode($observaciones)."' 
+where iddefinicionescategoriastemporadastipojugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarDefinicionescategoriastemporadastipojugador($id) { 
+$sql = "delete from dbdefinicionescategoriastemporadastipojugador where iddefinicionescategoriastemporadastipojugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDefinicionescategoriastemporadastipojugador() { 
+$sql = "select 
+d.iddefinicionescategoriastemporadastipojugador,
+d.refdefinicionescategoriastemporadas,
+d.reftipojugadores,
+d.edadmaxima,
+d.edadminima,
+d.observaciones
+from dbdefinicionescategoriastemporadastipojugador d 
+inner join dbdefinicionescategoriastemporadas def ON def.iddefinicioncategoriatemporada = d.refdefinicionescategoriastemporadas 
+inner join tbcategorias ca ON ca.idtcategoria = def.refcategorias 
+inner join tbtemporadas te ON te.idtemporadas = def.reftemporadas 
+inner join tbtipojugadores tip ON tip.idtipojugador = d.reftipojugadores 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDefinicionescategoriastemporadastipojugadorPorId($id) { 
+$sql = "select iddefinicionescategoriastemporadastipojugador,refdefinicionescategoriastemporadas,reftipojugadores,edadmaxima,edadminima,observaciones from dbdefinicionescategoriastemporadastipojugador where iddefinicionescategoriastemporadastipojugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbdefinicionescategoriastemporadastipojugador*/
+
+
+/* PARA Definicionessancionesacumuladastemporadas */
+
+function insertarDefinicionessancionesacumuladastemporadas($reftiposanciones,$reftemporadas,$cantidadacumulada,$cantidadfechasacumplir) { 
+$sql = "insert into dbdefinicionessancionesacumuladastemporadas(iddefinicionessancionesacumuladastemporadas,reftiposanciones,reftemporadas,cantidadacumulada,cantidadfechasacumplir) 
+values ('',".$reftiposanciones.",".$reftemporadas.",".$cantidadacumulada.",".$cantidadfechasacumplir.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarDefinicionessancionesacumuladastemporadas($id,$reftiposanciones,$reftemporadas,$cantidadacumulada,$cantidadfechasacumplir) { 
+$sql = "update dbdefinicionessancionesacumuladastemporadas 
+set 
+reftiposanciones = ".$reftiposanciones.",reftemporadas = ".$reftemporadas.",cantidadacumulada = ".$cantidadacumulada.",cantidadfechasacumplir = ".$cantidadfechasacumplir." 
+where iddefinicionessancionesacumuladastemporadas =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarDefinicionessancionesacumuladastemporadas($id) { 
+$sql = "delete from dbdefinicionessancionesacumuladastemporadas where iddefinicionessancionesacumuladastemporadas =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDefinicionessancionesacumuladastemporadas() { 
+$sql = "select 
+d.iddefinicionessancionesacumuladastemporadas,
+d.reftiposanciones,
+d.reftemporadas,
+d.cantidadacumulada,
+d.cantidadfechasacumplir
+from dbdefinicionessancionesacumuladastemporadas d 
+inner join tbtiposanciones tip ON tip.idtiposancion = d.reftiposanciones 
+inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDefinicionessancionesacumuladastemporadasPorId($id) { 
+$sql = "select iddefinicionessancionesacumuladastemporadas,reftiposanciones,reftemporadas,cantidadacumulada,cantidadfechasacumplir from dbdefinicionessancionesacumuladastemporadas where iddefinicionessancionesacumuladastemporadas =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbdefinicionessancionesacumuladastemporadas*/
+
+
+
+/* Fin */
 
 function query($sql,$accion) {
 		

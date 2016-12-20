@@ -59,10 +59,14 @@ $tablasAr	= array("contactos"        => "dbcontactos",
 "jugadoresvaloreshabilitacionestransitorias"=>"dbjugadoresvaloreshabilitacionestransitorias",
 "tipotorneo"=>"tbtipotorneo",
 "torneos"=>"dbtorneos",
+"equipos"=>"dbequipos",
 "puntobonus"=>"tbpuntobonus",
 "tiposanciones"=>"tbtiposanciones",
 "fechasexcluidas"=>"tbfechasexcluidas",
-"estadospartidos"=>"tbestadospartidos");
+"estadospartidos"=>"tbestadospartidos",
+"definicionescategoriastemporadas"=>"dbdefinicionescategoriastemporadas",
+"definicionescategoriastemporadastipojugador"=>"dbdefinicionescategoriastemporadastipojugador",
+"definicionessancionesacumuladastemporadas"=>"dbdefinicionessancionesacumuladastemporadas");
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
@@ -91,10 +95,14 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresvaloreshabilitacionestransitorias"=>"dbjugadoresvaloreshabilitacionestransitorias",
 "tipotorneo"=>"tbtipotorneo",
 "torneos"=>"dbtorneos",
+"equipos"=>"dbequipos",
 "puntobonus"=>"tbpuntobonus",
 "tiposanciones"=>"tbtiposanciones",
 "fechasexcluidas"=>"tbfechasexcluidas",
-"estadospartidos"=>"tbestadospartidos");
+"estadospartidos"=>"tbestadospartidos",
+"definicionescategoriastemporadas"=>"dbdefinicionescategoriastemporadas",
+"definicionescategoriastemporadastipojugador"=>"dbdefinicionescategoriastemporadastipojugador",
+"definicionessancionesacumuladastemporadas"=>"dbdefinicionessancionesacumuladastemporadas");
 
 	$tablasArAux	= array("contactos"        => 2,        
 "tipocontactos"=> 1,
@@ -120,10 +128,14 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresvaloreshabilitacionestransitorias"=>3,
 "tipotorneo"=>1,
 "torneos"=>5,
+"equipos"=>4,
 "puntobonus"=>1,
 "tiposanciones"=>1,
 "fechasexcluidas"=>1,
-"estadospartidos"=>1);
+"estadospartidos"=>1,
+"definicionescategoriastemporadas"=>4,
+"definicionescategoriastemporadastipojugador"=>3,
+"definicionessancionesacumuladastemporadas"=>3);
 	
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
