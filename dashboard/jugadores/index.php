@@ -57,10 +57,18 @@ $refCampo 	=  array("reftipodocumentos","refcountries");
 
 
 
-
+//tip.tipodocumento,j.nrodocumento,j.apellido,j.nombres,j.email,j.fechanacimiento,j.fechaalta,j.fechabaja,cou.nombre as countrie,j.observaciones
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Inhabilita</th>
-					<th>Descripcion</th>";
+$cabeceras 		= "	<th>Tipo Documento</th>
+					<th>Nro Doc</th>
+					<th>Apellido</th>
+					<th>Nombres</th>
+					<th>Email</th>
+					<th>Fecha Nac.</th>
+					<th>Fecha Alta</th>
+					<th>Fecha Baja</th>
+					<th>Countrie</th>
+					<th>Obs.</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -69,7 +77,7 @@ $resDocumentaciones2	=	$serviciosReferencias->traerDocumentaciones();
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerMotivoshabilitacionestransitorias(),2);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadores(),10);
 
 $resMotivosHabDeportivas	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDeportivas('Edad');
 $cadRef		=	$serviciosFunciones->devolverSelectBox($resMotivosHabDeportivas,array(2),'');
@@ -85,6 +93,17 @@ $cadRef4	=	$serviciosFunciones->devolverSelectBox($resDocumentaciones,array(1),'
 
 $resCategoria		=	$serviciosReferencias->traerCategorias();
 $cadRefCad			=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
+
+$resEquipo			=	$serviciosReferencias->traerEquipos();
+$cadRefEquipo		=	$serviciosFunciones->devolverSelectBox($resEquipo,array(2),'');
+
+$resTipoJugador		=	$serviciosReferencias->traerTipojugadores();
+$cadRefTipoJug		=	$serviciosFunciones->devolverSelectBox($resTipoJugador,array(1),'');
+
+$resCountries		=	$serviciosReferencias->traerCountries();
+$cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
+
+
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -151,7 +170,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     
     <link rel="stylesheet" href="../../css/bootstrap-multiselect.css" type="text/css">
     <script type="text/javascript" src="../../js/bootstrap-multiselect.js"></script>
-	
+	<link rel="stylesheet" href="../../css/chosen.css">
     <script type="text/javascript">
 		$(document).ready(function() {
 			$('#example-post').multiselect({
@@ -274,8 +293,52 @@ if ($_SESSION['refroll_predio'] != 1) {
 					<h3 class="panel-title">Equipos</h3>
 					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
 				</div>
-                <div class="panel-body collapse">
-            		<p>Falta</p>
+                <div class="panel-body" id="primero">
+					<div class="row">
+                    <div class="form-group col-md-3" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Fusión</label>
+                        <div class="input-group col-md-12 fontcheck">
+                            <input type="checkbox" class="form-control" id="equiposRefFusion" name="equiposRefFusion" style="width:50px;" required> <p>Si/No</p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-9" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Countries</label>
+                        <div class="input-group col-md-12">
+                            <select id="equiposRefcountries" name="equiposRefcountries" class="chosen-select" style="width:100%;">
+                            	<?php echo $cadRefCountries; ?>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="equiposRefcategorias" name="equiposRefcategorias">
+                            	<?php echo $cadRefCad; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="equiposRefequipos" name="equiposRefequipos">
+                            	<?php echo $cadRefEquipo; ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Tipo Jugador</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="equiposReftipojugador" name="equiposReftipojugador">
+                            	<?php echo $cadRefTipoJug; ?>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+
 				</div>
             </div>
             
@@ -503,7 +566,40 @@ $(document).ready(function(){
 	} );
 	
 	$('#activo').prop('checked',true);
-
+	
+	function traerEquiposPorCountries(id, contenedor) {
+		$.ajax({
+			data:  {id: id, accion: 'traerEquiposPorCountries'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+			
+			},
+			success:  function (response) {
+				$(contenedor).html(response);
+			}
+		});		
+	}
+	
+	traerEquiposPorCountries($('#refcountries').val(), '#equiposRefequipos');
+	
+	$('#refcountries').change(function() {
+		if  ($('#equiposRefFusion').prop('checked') == false) {
+			traerEquiposPorCountries($(this).val(), '#equiposRefequipos');
+		}
+	});
+	
+	
+	$('#equiposRefcountries').change(function() {
+		if  ($('#equiposRefFusion').prop('checked') == true) {
+			traerEquiposPorCountries($(this).val(), '#equiposRefequipos');
+		}
+	});
+	
+	$('#equiposRefFusion').click(function() {
+		$('#equiposRefequipos').html('');
+	});
+	
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
@@ -632,6 +728,19 @@ $(document).ready(function(){
 			});
 		}
     });
+	
+	var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+	
+	$('#primero').addClass('collapse');
 
 });
 </script>
@@ -649,6 +758,12 @@ $('.form_date').datetimepicker({
 	format: 'dd/mm/yyyy'
 });
 </script>
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    
+	
+	
+  </script>
 <?php } ?>
 </body>
 </html>

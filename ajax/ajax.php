@@ -266,6 +266,10 @@ case 'eliminarEquipos':
 eliminarEquipos($serviciosReferencias); 
 break; 
 
+case 'traerEquiposPorCountries':
+	traerEquiposPorCountries($serviciosFunciones,$serviciosReferencias);
+	break;
+
 case 'insertarPuntobonus': 
 insertarPuntobonus($serviciosReferencias); 
 break; 
@@ -1400,6 +1404,16 @@ function eliminarEquipos($serviciosReferencias) {
 	$res = $serviciosReferencias->eliminarEquipos($id); 
 	echo $res; 
 } 
+
+
+function traerEquiposPorCountries($serviciosFunciones,$serviciosReferencias) {
+	$id = $_POST['id']; 
+	
+	$resEquipo			=	$serviciosReferencias->traerEquiposPorCountries($id);
+	$cadRefEquipo		=	$serviciosFunciones->devolverSelectBox($resEquipo,array(2),'');
+	
+	echo $cadRefEquipo;	
+}
 
 
 
