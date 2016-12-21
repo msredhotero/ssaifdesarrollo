@@ -22,13 +22,13 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Valores Hab.Transt.",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Valores Documentaciones",$_SESSION['refroll_predio'],'');
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Valor Hab.Transt.";
+$singular = "Valor Documentacion";
 
-$plural = "Valores Hab.Transt.";
+$plural = "Valores Documentaciones";
 
 $eliminar = "eliminarValoreshabilitacionestransitorias";
 
@@ -41,21 +41,21 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "tbvaloreshabilitacionestransitorias";
 
-$lblCambio	 	= array("refmotivoshabilitacionestransitorias");
-$lblreemplazo	= array("Motivo de Hab. Transt.");
+$lblCambio	 	= array("refdocumentaciones");
+$lblreemplazo	= array("Documentaciones");
 
-$resMotiHabTrans= $serviciosReferencias->traerMotivoshabilitacionestransitorias();
-$cadRef 	= $serviciosFunciones->devolverSelectBox($resMotiHabTrans,array(2),'');
+$resDocumentaciones= $serviciosReferencias->traerDocumentaciones();
+$cadRef 	= $serviciosFunciones->devolverSelectBox($resDocumentaciones,array(1),'');
 
 $refdescripcion = array(0=>$cadRef);
-$refCampo 	=  array("refmotivoshabilitacionestransitorias");
+$refCampo 	=  array("refdocumentaciones");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Motivo Hab. Transt.</th>
+$cabeceras 		= "	<th>Documentaciones</th>
 					<th>Descripcion</th>
 					<th>Habilita</th>";
 

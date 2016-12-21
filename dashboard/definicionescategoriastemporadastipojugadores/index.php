@@ -22,50 +22,52 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Contactos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Def.Cat.Temp.Tipo Jugador",$_SESSION['refroll_predio'],'');
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Contacto";
+$singular = "Def.Cat.Temp.Tipo Jugador";
 
-$plural = "Contactos";
+$plural = "Def.Cat.Temp.Tipo Jugadores";
 
-$eliminar = "eliminarContactos";
+$eliminar = "eliminarDefinicionescategoriastemporadastipojugador";
 
-$insertar = "insertarContactos";
+$insertar = "insertarDefinicionescategoriastemporadastipojugador";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbcontactos";
-
-$lblCambio	 	= array("reftipocontactos","cp");
-$lblreemplazo	= array("Tipo Contacto","Cod. Postal");
+$tabla 			= "dbdefinicionescategoriastemporadastipojugador";
 
 
-$resTipoContacto 	= $serviciosReferencias->traerTipocontactos();
-$cadRef 	= $serviciosFunciones->devolverSelectBox($resTipoContacto,array(1),'');
+$lblCambio	 	= array("refdefinicionescategoriastemporadas","reftipojugadores","edadmaxima","edadminima","cantjugadoresporequipo","jugadorescancha");
+$lblreemplazo	= array("Def. Categ. Temp.","Tipo Jugadores","Edad Max.","Edad Min.","Cant.Jug. x Equipo","Jug. en Cancha");
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("reftipocontactos");
+
+$resDCT 	= $serviciosReferencias->traerDefinicionescategoriastemporadas();
+$cadRef 	= $serviciosFunciones->devolverSelectBox($resDCT,array(1,2),' - ');
+
+$resTipoJugador 	= $serviciosReferencias->traerTipojugadores();
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resTipoJugador,array(1),'');
+
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2);
+$refCampo 	=  array("refdefinicionescategoriastemporadas","reftipojugadores");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
 
-
+//refdefinicionescategoriastemporadas,reftipojugadores,edadmaxima,edadminima,observaciones
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Tipo Contacto</th>
-					<th>Nombre</th>
-					<th>Direccion</th>
-					<th>Localidad</th>
-					<th>Cod.postal</th>
-					<th>Telefono</th>
-					<th>Celular</th>
-					<th>Fax</th>
-					<th>Email</th>
-					<th>Publico</th>";
+$cabeceras 		= "	<th>Categoria - Temporada</th>
+					<th>Tipo Jugador</th>
+					<th>Edad Max.</th>
+					<th>Edad Min.</th>
+					<th>Cant.Jug. x Equipo</th>
+					<th>Jug. en Cancha</th>
+					<th>Observaciones</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -74,12 +76,7 @@ $cabeceras 		= "	<th>Tipo Contacto</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerContactos(),93);
-
-
-$resCountries	=	$serviciosReferencias->traerCountries();
-
-
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerDefinicionescategoriastemporadastipojugador(),7);
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -157,29 +154,7 @@ if ($_SESSION['refroll_predio'] != 1) {
         	<div class="row">
 			<?php echo $formulario; ?>
             </div>
-            
-            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
-            	<div class="alert alert-info">
-                	<p><span class="glyphicon glyphicon-info-sign"></span> No es obligatorio asignarle un Countrie al contacto</p>
-                </div>
-            	<div class="form-group col-md-6">
-                	<label class="control-label" style="text-align:left" for="fechas">Asignar Contacto a un Countries</label>
-                    <div class="input-group col-md-12">
-                    	<select class="form-control" id="refcountries" name="refcountries">
-                        	<option value="0"></option>
-                            <?php
-								while ($rowC = mysql_fetch_array($resCountries)) {
-							?>
-                            	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
-                            <?php
-								}
-							?>
-                        </select>
-                    </div>
-                </div>
 
-               
-            </div>
             
             
             <div class='row' style="margin-left:25px; margin-right:25px;">

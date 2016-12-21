@@ -1492,18 +1492,18 @@ tbtipodocumentos
 
 /* PARA Valoreshabilitacionestransitorias */
 
-function insertarValoreshabilitacionestransitorias($refmotivoshabilitacionestransitorias,$descripcion,$habilita) { 
-$sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refmotivoshabilitacionestransitorias,descripcion,habilita) 
-values ('',".$refmotivoshabilitacionestransitorias.",'".utf8_decode($descripcion)."',".$habilita.")"; 
+function insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita) { 
+$sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita) 
+values ('',".$refdocumentaciones.",'".utf8_decode($descripcion)."',".$habilita.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
 
 
-function modificarValoreshabilitacionestransitorias($id,$refmotivoshabilitacionestransitorias,$descripcion,$habilita) { 
+function modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita) { 
 $sql = "update tbvaloreshabilitacionestransitorias 
 set 
-refmotivoshabilitacionestransitorias = ".$refmotivoshabilitacionestransitorias.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita." 
+refdocumentaciones = ".$refdocumentaciones.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita." 
 where idvalorhabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1520,12 +1520,12 @@ return $res;
 function traerValoreshabilitacionestransitorias() { 
 $sql = "select 
 v.idvalorhabilitaciontransitoria,
-mot.descripcion as motivos,
+doc.descripcion as documentacion,
 v.descripcion,
 (case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
-v.refmotivoshabilitacionestransitorias
+v.refdocumentaciones
 from tbvaloreshabilitacionestransitorias v 
-inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = v.refmotivoshabilitacionestransitorias 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = v.refdocumentaciones 
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1533,7 +1533,23 @@ return $res;
 
 
 function traerValoreshabilitacionestransitoriasPorId($id) { 
-$sql = "select idvalorhabilitaciontransitoria,refmotivoshabilitacionestransitorias,descripcion,habilita from tbvaloreshabilitacionestransitorias where idvalorhabilitaciontransitoria =".$id; 
+$sql = "select idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita from tbvaloreshabilitacionestransitorias where idvalorhabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerValoreshabilitacionestransitoriasPorDocumentacion($idDocumentacion) { 
+$sql = "select 
+v.idvalorhabilitaciontransitoria,
+doc.descripcion as documentacion,
+v.descripcion,
+(case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
+v.refdocumentaciones
+from tbvaloreshabilitacionestransitorias v 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = v.refdocumentaciones  
+where doc.iddocumentacion = ".$idDocumentacion."
+order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -1995,8 +2011,8 @@ return $res;
 function traerDefinicionescategoriastemporadas() { 
 $sql = "select 
 d.iddefinicioncategoriatemporada,
-d.refcategorias,
-d.reftemporadas,
+cat.categoria,
+tem.temporada,
 d.cantmaxjugadores,
 d.cantminjugadores,
 d.dias,
@@ -2004,7 +2020,9 @@ d.hora,
 d.minutospartido,
 d.cantidadcambiosporpartido,
 d.conreingreso,
-d.observaciones
+d.observaciones,
+d.refcategorias,
+d.reftemporadas
 from dbdefinicionescategoriastemporadas d 
 inner join tbcategorias cat ON cat.idtcategoria = d.refcategorias 
 inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas 
@@ -2027,18 +2045,19 @@ return $res;
 
 /* PARA Definicionescategoriastemporadastipojugador */
 
-function insertarDefinicionescategoriastemporadastipojugador($refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$observaciones) { 
-$sql = "insert into dbdefinicionescategoriastemporadastipojugador(iddefinicionescategoriastemporadastipojugador,refdefinicionescategoriastemporadas,reftipojugadores,edadmaxima,edadminima,observaciones) 
-values ('',".$refdefinicionescategoriastemporadas.",".$reftipojugadores.",".$edadmaxima.",".$edadminima.",'".utf8_decode($observaciones)."')"; 
+
+function insertarDefinicionescategoriastemporadastipojugador($refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones) { 
+$sql = "insert into dbdefinicionescategoriastemporadastipojugador(iddefinicionescategoriastemporadastipojugador,refdefinicionescategoriastemporadas,reftipojugadores,edadmaxima,edadminima,cantjugadoresporequipo,jugadorescancha,observaciones) 
+values ('',".$refdefinicionescategoriastemporadas.",".$reftipojugadores.",".$edadmaxima.",".$edadminima.",".$cantjugadoresporequipo.",".$jugadorescancha.",'".utf8_decode($observaciones)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
 
 
-function modificarDefinicionescategoriastemporadastipojugador($id,$refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$observaciones) { 
+function modificarDefinicionescategoriastemporadastipojugador($id,$refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones) { 
 $sql = "update dbdefinicionescategoriastemporadastipojugador 
 set 
-refdefinicionescategoriastemporadas = ".$refdefinicionescategoriastemporadas.",reftipojugadores = ".$reftipojugadores.",edadmaxima = ".$edadmaxima.",edadminima = ".$edadminima.",observaciones = '".utf8_decode($observaciones)."' 
+refdefinicionescategoriastemporadas = ".$refdefinicionescategoriastemporadas.",reftipojugadores = ".$reftipojugadores.",edadmaxima = ".$edadmaxima.",edadminima = ".$edadminima.",cantjugadoresporequipo = ".$cantjugadoresporequipo.",jugadorescancha = ".$jugadorescancha.",observaciones = '".utf8_decode($observaciones)."' 
 where iddefinicionescategoriastemporadastipojugador =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2055,11 +2074,15 @@ return $res;
 function traerDefinicionescategoriastemporadastipojugador() { 
 $sql = "select 
 d.iddefinicionescategoriastemporadastipojugador,
-d.refdefinicionescategoriastemporadas,
-d.reftipojugadores,
+concat(ca.categoria, ' - ', te.temporada) as definicioncategoriatemporadas,
+tip.tipojugador,
 d.edadmaxima,
 d.edadminima,
-d.observaciones
+d.cantjugadoresporequipo,
+d.jugadorescancha,
+d.observaciones,
+d.refdefinicionescategoriastemporadas,
+d.reftipojugadores
 from dbdefinicionescategoriastemporadastipojugador d 
 inner join dbdefinicionescategoriastemporadas def ON def.iddefinicioncategoriatemporada = d.refdefinicionescategoriastemporadas 
 inner join tbcategorias ca ON ca.idtcategoria = def.refcategorias 
@@ -2072,7 +2095,7 @@ return $res;
 
 
 function traerDefinicionescategoriastemporadastipojugadorPorId($id) { 
-$sql = "select iddefinicionescategoriastemporadastipojugador,refdefinicionescategoriastemporadas,reftipojugadores,edadmaxima,edadminima,observaciones from dbdefinicionescategoriastemporadastipojugador where iddefinicionescategoriastemporadastipojugador =".$id; 
+$sql = "select iddefinicionescategoriastemporadastipojugador,refdefinicionescategoriastemporadas,reftipojugadores,edadmaxima,edadminima,cantjugadoresporequipo,jugadorescancha,observaciones from dbdefinicionescategoriastemporadastipojugador where iddefinicionescategoriastemporadastipojugador =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -2111,10 +2134,12 @@ return $res;
 function traerDefinicionessancionesacumuladastemporadas() { 
 $sql = "select 
 d.iddefinicionessancionesacumuladastemporadas,
-d.reftiposanciones,
-d.reftemporadas,
+tip.descripcion as tiposancion,
+tem.temporada,
 d.cantidadacumulada,
-d.cantidadfechasacumplir
+d.cantidadfechasacumplir,
+d.reftiposanciones,
+d.reftemporadas
 from dbdefinicionessancionesacumuladastemporadas d 
 inner join tbtiposanciones tip ON tip.idtiposancion = d.reftiposanciones 
 inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas 

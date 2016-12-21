@@ -22,47 +22,49 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Contactos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Def.Cat.Temp.",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerContactosPorId($id);
+$resResultado = $serviciosReferencias->traerDefinicionescategoriastemporadasPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Contacto";
+$singular = "Def.Cat.Temp.";
 
-$plural = "Contactos";
+$plural = "Def.Cat.Temp.";
 
-$eliminar = "eliminarContactos";
+$eliminar = "eliminarDefinicionescategoriastemporadas";
 
-$modificar = "modificarContactos";
+$modificar = "modificarDefinicionescategoriastemporadas";
 
-$idTabla = "idcontacto";
+$idTabla = "iddefinicioncategoriatemporada";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbcontactos";
+$tabla 			= "dbdefinicionescategoriastemporadas";
 
-$lblCambio	 	= array("reftipocontactos","cp");
-$lblreemplazo	= array("Tipo Contacto","Cod. Postal");
+$lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso");
+$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reintegros");
 
 
-$resTipoContacto 	= $serviciosReferencias->traerTipocontactos();
-$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resTipoContacto,array(1),'', mysql_result($resResultado,0,'reftipocontactos'));
+$resCategorias 	= $serviciosReferencias->traerCategorias();
+$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resCategorias,array(1),'', mysql_result($resResultado,0,'refcategorias'));
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("reftipocontactos");
+$resTemporadas 	= $serviciosReferencias->traerTemporadas();
+$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resTemporadas,array(1),'', mysql_result($resResultado,0,'reftemporadas'));
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2);
+$refCampo 	=  array("refcategorias","reftemporadas");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
 $formulario 	= $serviciosFunciones->camposTablaModificar($id, $idTabla, $modificar,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$resCountries	=	$serviciosReferencias->traerCountriesNoAsignadosPorContactos($id);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -143,34 +145,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 			<?php echo $formulario; ?>
             </div>
             
-            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
-            	<div class="alert alert-info">
-                	<p><span class="glyphicon glyphicon-info-sign"></span> No es obligatorio asignarle un Countrie al contacto</p>
-                </div>
-            	<div class="form-group col-md-6">
-                	<label class="control-label" style="text-align:left" for="fechas">Asignar Contacto a un Countries</label>
-                    <div class="input-group col-md-12">
-                    	<select class="form-control" id="refcountries" name="refcountries">
-                        	<option value="0"></option>
-                            <?php
-								while ($rowC = mysql_fetch_array($resCountries)) {
-							?>
-                            	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
-                            <?php
-								}
-							?>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group col-md-6">
-                	<label class="control-label" style="text-align:left" for="fechas">Countries Asignados</label>
-                    <div class="input-group col-md-12 lstCountries">
-                    	
-                    </div>
-                </div>
-
-               
-            </div>
+            
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>

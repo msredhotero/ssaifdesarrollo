@@ -149,6 +149,17 @@ if ($_SESSION['refroll_predio'] != 1) {
       });
     </script>
     
+    <link rel="stylesheet" href="../../css/bootstrap-multiselect.css" type="text/css">
+    <script type="text/javascript" src="../../js/bootstrap-multiselect.js"></script>
+	
+    <script type="text/javascript">
+		$(document).ready(function() {
+			$('#example-post').multiselect({
+				includeSelectAllOption: true,
+				enableFiltering: true
+			});
+		});
+	</script>
  
 </head>
 
@@ -180,29 +191,82 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="panel-body collapse">
             	<?php
 					while ($row = mysql_fetch_array($resDocumentaciones2)) {
+						$resValores		=	$serviciosReferencias->traerValoreshabilitacionestransitoriasPorDocumentacion($row[0]);
 				?>
+					<?php
+                        if ($row[2] == 'Si') { 
+                    
+                        $cadA = '<span class="glyphicon glyphicon-check"></span>';
+                     } else { 
+                        $cadA = '<span class="glyphicon glyphicon-remove"></span>';
+                     } ?>
                     <div class="col-md-4" style="margin-bottom:7px;">
-                        <div class="input-group">
+                        
+                            
+                            <?php
+							if (mysql_num_rows($resValores)>0) {
+							?>
+                            	<div class="input-group">
+                            	<span class="input-group-addon">
+                                <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
+                                </span>
+                                <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
+                                <span class="input-group-addon">
+                                    <?php echo $cadA; ?>
+                                </span>
+								</div><!-- /input-group -->
+                                <script type="text/javascript">
+									$(document).ready(function() {
+										$('#example-templates-button').multiselect({
+											buttonContainer: '<div></div>',
+											buttonClass: '',
+											templates: {
+												button: '<span class="multiselect<?php echo $row[0]; ?> dropdown-toggle" data-toggle="dropdown">(Valores)</span>'
+											}
+										});
+									});
+								</script>
+								<style type="text/css">
+									span.multiselect<?php echo $row[0]; ?> {
+										padding: 2px 6px;
+										font-weight: bold;
+										cursor: pointer;
+									}
+								</style>
+								<select id="example-templates-button" multiple="multiple<?php echo $row[0]; ?>">
+									<?php
+										while ($rowV = mysql_fetch_array($resValores)) {
+									?>
+                                    <option value="<?php echo $rowV[0]; ?>"><?php echo $rowV[2]; ?> - Habilita: <?php echo $rowV[3]; ?></option>
+
+                                    <?php
+										}
+									?>
+								</select>
+                            <?php
+							} else {
+							?>
+                            <div class="input-group">
                             <span class="input-group-addon">
                             <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
                             </span>
                             <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
                             <span class="input-group-addon">
-                            	<?php
-									if ($row[2] == 'Si') { 
-								?>
-                                	<span class="glyphicon glyphicon-check"></span>
-                                <?php } else { ?>
-                                	<span class="glyphicon glyphicon-remove"></span>
-                                <?php } ?>
+                            	<?php echo $cadA; ?>
                             </span>
-                        </div><!-- /input-group -->
+                            </div><!-- /input-group -->
+                            <?php
+							} 
+							?>
+                        
                     </div><!-- /.col-lg-6 -->
                 <?php
 					}
 				?>
 				</div>
             </div>
+            
+            
             
             
             <div class="panel panel-primary">
@@ -267,7 +331,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="fechanacimiento" class="control-label" style="text-align:left">Fecha Limite</label>
                         <div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="fechanacimiento" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="50" value="" readonly="" type="text">
+                            <input class="form-control" size="50" value="" readonly type="text">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                         <input name="fechanacimiento" id="fechanacimiento" value="" type="hidden">
@@ -277,7 +341,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-8" style="display:block">
                         <label for="observaciones" class="control-label" style="text-align:left">Observaciones</label>
                         <div class="input-group col-md-12">
-                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required=""></textarea>
+                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required></textarea>
                         </div>
                         
                     </div>
@@ -319,7 +383,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="fechanacimiento" class="control-label" style="text-align:left">Fecha Limite</label>
                         <div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="fechanacimiento" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="50" value="" readonly="" type="text">
+                            <input class="form-control" size="50" value="" readonly type="text">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                         <input name="fechanacimiento" id="fechanacimiento" value="" type="hidden">
@@ -329,7 +393,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-8" style="display:block">
                         <label for="observaciones" class="control-label" style="text-align:left">Observaciones</label>
                         <div class="input-group col-md-12">
-                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required=""></textarea>
+                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required></textarea>
                         </div>
                         
                     </div>

@@ -22,50 +22,46 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Contactos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Def.Sanc.Acum.Temp.",$_SESSION['refroll_predio'],'');
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Contacto";
+$singular = "Def.Sanc.Acum.Temp.";
 
-$plural = "Contactos";
+$plural = "Def.Sanc.Acum.Temp.";
 
-$eliminar = "eliminarContactos";
+$eliminar = "eliminarDefinicionessancionesacumuladastemporadas";
 
-$insertar = "insertarContactos";
+$insertar = "insertarDefinicionessancionesacumuladastemporadas";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbcontactos";
+$tabla 			= "dbdefinicionessancionesacumuladastemporadas";
 
-$lblCambio	 	= array("reftipocontactos","cp");
-$lblreemplazo	= array("Tipo Contacto","Cod. Postal");
+$lblCambio	 	= array("reftiposanciones","reftemporadas","cantidadacumulada","cantidadfechasacumplir");
+$lblreemplazo	= array("Tipo Sanciones","Temporada","Cant. Acumulada","Cant. A Cumplir");
 
 
-$resTipoContacto 	= $serviciosReferencias->traerTipocontactos();
-$cadRef 	= $serviciosFunciones->devolverSelectBox($resTipoContacto,array(1),'');
+$resTipoSanciones 	= $serviciosReferencias->traerTiposanciones();
+$cadRef 	= $serviciosFunciones->devolverSelectBox($resTipoSanciones,array(3),'');
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("reftipocontactos");
+$resTemporadas 	= $serviciosReferencias->traerTemporadas();
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resTemporadas,array(1),'');
+
+
+$refdescripcion = array(0 => $cadRef, 1=> $cadRef2);
+$refCampo 	=  array("reftiposanciones","reftemporadas");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
-
-
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Tipo Contacto</th>
-					<th>Nombre</th>
-					<th>Direccion</th>
-					<th>Localidad</th>
-					<th>Cod.postal</th>
-					<th>Telefono</th>
-					<th>Celular</th>
-					<th>Fax</th>
-					<th>Email</th>
-					<th>Publico</th>";
+$cabeceras 		= "	<th>Tipo Sanciones</th>
+					<th>Temporadas</th>
+					<th>Cantidad Acumulada</th>
+					<th>Cantidad A Cumplir</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -74,12 +70,7 @@ $cabeceras 		= "	<th>Tipo Contacto</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerContactos(),93);
-
-
-$resCountries	=	$serviciosReferencias->traerCountries();
-
-
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerDefinicionessancionesacumuladastemporadas(),4);
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -157,30 +148,7 @@ if ($_SESSION['refroll_predio'] != 1) {
         	<div class="row">
 			<?php echo $formulario; ?>
             </div>
-            
-            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
-            	<div class="alert alert-info">
-                	<p><span class="glyphicon glyphicon-info-sign"></span> No es obligatorio asignarle un Countrie al contacto</p>
-                </div>
-            	<div class="form-group col-md-6">
-                	<label class="control-label" style="text-align:left" for="fechas">Asignar Contacto a un Countries</label>
-                    <div class="input-group col-md-12">
-                    	<select class="form-control" id="refcountries" name="refcountries">
-                        	<option value="0"></option>
-                            <?php
-								while ($rowC = mysql_fetch_array($resCountries)) {
-							?>
-                            	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
-                            <?php
-								}
-							?>
-                        </select>
-                    </div>
-                </div>
 
-               
-            </div>
-            
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>

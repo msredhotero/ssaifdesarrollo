@@ -22,41 +22,45 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Contactos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Def.Sanc.Acum.Temp.",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerContactosPorId($id);
+$resResultado = $serviciosReferencias->traerDefinicionessancionesacumuladastemporadasPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Contacto";
+$singular = "Def.Sanc.Acum.Temp.";
 
-$plural = "Contactos";
+$plural = "Def.Sanc.Acum.Temp.";
 
-$eliminar = "eliminarContactos";
+$eliminar = "eliminarDefinicionessancionesacumuladastemporadas";
 
-$modificar = "modificarContactos";
+$modificar = "modificarDefinicionessancionesacumuladastemporadas";
 
-$idTabla = "idcontacto";
+$idTabla = "iddefinicionessancionesacumuladastemporadas";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbcontactos";
+$tabla 			= "dbdefinicionessancionesacumuladastemporadas";
 
-$lblCambio	 	= array("reftipocontactos","cp");
-$lblreemplazo	= array("Tipo Contacto","Cod. Postal");
+$lblCambio	 	= array("reftiposanciones","reftemporadas","cantidadacumulada","cantidadfechasacumplir");
+$lblreemplazo	= array("Tipo Sanciones","Temporada","Cant. Acumulada","Cant. A Cumplir");
 
 
-$resTipoContacto 	= $serviciosReferencias->traerTipocontactos();
-$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resTipoContacto,array(1),'', mysql_result($resResultado,0,'reftipocontactos'));
+$resTipoSanciones 	= $serviciosReferencias->traerTiposanciones();
+$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resTipoSanciones,array(3),'', mysql_result($resResultado,0,'reftiposanciones'));
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("reftipocontactos");
+$resTemporadas 	= $serviciosReferencias->traerTemporadas();
+$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resTemporadas,array(1),'', mysql_result($resResultado,0,'reftemporadas'));
+
+
+$refdescripcion = array(0 => $cadRef, 1=> $cadRef2);
+$refCampo 	=  array("reftiposanciones","reftemporadas");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -143,34 +147,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 			<?php echo $formulario; ?>
             </div>
             
-            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
-            	<div class="alert alert-info">
-                	<p><span class="glyphicon glyphicon-info-sign"></span> No es obligatorio asignarle un Countrie al contacto</p>
-                </div>
-            	<div class="form-group col-md-6">
-                	<label class="control-label" style="text-align:left" for="fechas">Asignar Contacto a un Countries</label>
-                    <div class="input-group col-md-12">
-                    	<select class="form-control" id="refcountries" name="refcountries">
-                        	<option value="0"></option>
-                            <?php
-								while ($rowC = mysql_fetch_array($resCountries)) {
-							?>
-                            	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
-                            <?php
-								}
-							?>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group col-md-6">
-                	<label class="control-label" style="text-align:left" for="fechas">Countries Asignados</label>
-                    <div class="input-group col-md-12 lstCountries">
-                    	
-                    </div>
-                </div>
-
-               
-            </div>
+            
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>

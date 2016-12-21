@@ -1202,7 +1202,7 @@ echo $res;
 
 
 function insertarValoreshabilitacionestransitorias($serviciosReferencias) { 
-$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitorias']; 
+$refmotivoshabilitacionestransitorias = $_POST['refdocumentaciones']; 
 $descripcion = $_POST['descripcion']; 
 if (isset($_POST['habilita'])) { 
 $habilita	= 1; 
@@ -1218,7 +1218,7 @@ echo 'Huvo un error al insertar datos';
 } 
 function modificarValoreshabilitacionestransitorias($serviciosReferencias) { 
 $id = $_POST['id']; 
-$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitorias']; 
+$refmotivoshabilitacionestransitorias = $_POST['refdocumentaciones']; 
 $descripcion = $_POST['descripcion']; 
 if (isset($_POST['habilita'])) { 
 $habilita	= 1; 
@@ -1774,9 +1774,12 @@ function insertarDefinicionescategoriastemporadastipojugador($serviciosReferenci
 	$reftipojugadores = $_POST['reftipojugadores']; 
 	$edadmaxima = $_POST['edadmaxima']; 
 	$edadminima = $_POST['edadminima']; 
+	$cantjugadoresporequipo = $_POST['cantjugadoresporequipo']; 
+	$jugadorescancha = $_POST['jugadorescancha']; 
 	$observaciones = $_POST['observaciones']; 
 	
-	$res = $serviciosReferencias->insertarDefinicionescategoriastemporadastipojugador($refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$observaciones); 
+	$res = $serviciosReferencias->insertarDefinicionescategoriastemporadastipojugador($refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones); 
+	
 	if ((integer)$res > 0) { 
 		echo ''; 
 	} else { 
@@ -1790,9 +1793,12 @@ function modificarDefinicionescategoriastemporadastipojugador($serviciosReferenc
 	$reftipojugadores = $_POST['reftipojugadores']; 
 	$edadmaxima = $_POST['edadmaxima']; 
 	$edadminima = $_POST['edadminima']; 
+	$cantjugadoresporequipo = $_POST['cantjugadoresporequipo']; 
+	$jugadorescancha = $_POST['jugadorescancha']; 
 	$observaciones = $_POST['observaciones']; 
 	
-	$res = $serviciosReferencias->modificarDefinicionescategoriastemporadastipojugador($id,$refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$observaciones); 
+	$res = $serviciosReferencias->modificarDefinicionescategoriastemporadastipojugador($id,$refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones); 
+	
 	if ($res == true) { 
 		echo ''; 
 	} else { 

@@ -22,41 +22,46 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Contactos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Def.Cat.Temp.Tipo Jugador",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerContactosPorId($id);
+$resResultado = $serviciosReferencias->traerDefinicionescategoriastemporadastipojugadorPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Contacto";
+$singular = "Def.Cat.Temp.Tipo Jugador";
 
-$plural = "Contactos";
+$plural = "Def.Cat.Temp.Tipo Jugadores";
 
-$eliminar = "eliminarContactos";
+$eliminar = "eliminarDefinicionescategoriastemporadastipojugador";
 
-$modificar = "modificarContactos";
+$modificar = "modificarDefinicionescategoriastemporadastipojugador";
 
-$idTabla = "idcontacto";
+$idTabla = "iddefinicionescategoriastemporadastipojugador";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbcontactos";
-
-$lblCambio	 	= array("reftipocontactos","cp");
-$lblreemplazo	= array("Tipo Contacto","Cod. Postal");
+$tabla 			= "dbdefinicionescategoriastemporadastipojugador";
 
 
-$resTipoContacto 	= $serviciosReferencias->traerTipocontactos();
-$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resTipoContacto,array(1),'', mysql_result($resResultado,0,'reftipocontactos'));
+$lblCambio	 	= array("refdefinicionescategoriastemporadas","reftipojugadores","edadmaxima","edadminima","cantjugadoresporequipo","jugadorescancha");
+$lblreemplazo	= array("Def. Categ. Temp.","Tipo Jugadores","Edad Max.","Edad Min.","Cant.Jug. x Equipo","Jug. en Cancha");
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("reftipocontactos");
+
+$resDCT 	= $serviciosReferencias->traerDefinicionescategoriastemporadas();
+$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resDCT,array(1,2),' - ', mysql_result($resResultado,0,'refdefinicionescategoriastemporadas'));
+
+$resTipoJugador 	= $serviciosReferencias->traerTipojugadores();
+$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resTipoJugador,array(1),'', mysql_result($resResultado,0,'reftipojugadores'));
+
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2);
+$refCampo 	=  array("refdefinicionescategoriastemporadas","reftipojugadores");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -142,35 +147,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 			<div class="row">
 			<?php echo $formulario; ?>
             </div>
-            
-            <div class="row" id="contContacto" style="margin-left:25px; margin-right:25px;">
-            	<div class="alert alert-info">
-                	<p><span class="glyphicon glyphicon-info-sign"></span> No es obligatorio asignarle un Countrie al contacto</p>
-                </div>
-            	<div class="form-group col-md-6">
-                	<label class="control-label" style="text-align:left" for="fechas">Asignar Contacto a un Countries</label>
-                    <div class="input-group col-md-12">
-                    	<select class="form-control" id="refcountries" name="refcountries">
-                        	<option value="0"></option>
-                            <?php
-								while ($rowC = mysql_fetch_array($resCountries)) {
-							?>
-                            	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
-                            <?php
-								}
-							?>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group col-md-6">
-                	<label class="control-label" style="text-align:left" for="fechas">Countries Asignados</label>
-                    <div class="input-group col-md-12 lstCountries">
-                    	
-                    </div>
-                </div>
 
-               
-            </div>
+            
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>

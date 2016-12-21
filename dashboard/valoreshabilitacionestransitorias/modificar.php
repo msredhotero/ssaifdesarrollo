@@ -22,40 +22,40 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Valores Hab.Transt.",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Valores Documentaciones",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerMotivoshabilitacionestransitoriasPorId($id);
+$resResultado = $serviciosReferencias->traerValoreshabilitacionestransitoriasPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Motivo de Habilitacion Transitoria";
+$singular = "Valor Documentacion";
 
-$plural = "Motivos de Habilitaciones Transitorias";
+$plural = "Valores Documentaciones";
 
-$eliminar = "eliminarMotivoshabilitacionestransitorias";
+$eliminar = "eliminarValoreshabilitacionestransitorias";
 
-$modificar = "modificarMotivoshabilitacionestransitorias";
+$modificar = "modificarValoreshabilitacionestransitorias";
 
-$idTabla = "idmotivoshabilitacionestransitoria";
+$idTabla = "idvalorhabilitaciontransitoria";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbmotivoshabilitacionestransitorias";
+$tabla 			= "tbvaloreshabilitacionestransitorias";
 
-$lblCambio	 	= array("inhabilita");
-$lblreemplazo	= array("Inhabilita al vto.");
+$lblCambio	 	= array("refdocumentaciones");
+$lblreemplazo	= array("Documentaciones");
 
+$resDocumentaciones= $serviciosReferencias->traerDocumentaciones();
+$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resDocumentaciones,array(1),'', mysql_result($resResultado,0,'refdocumentaciones'));
 
-$cadRef 	= '';
-
-$refdescripcion = array();
-$refCampo 	=  array();
+$refdescripcion = array(0=>$cadRef);
+$refCampo 	=  array("refdocumentaciones");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
