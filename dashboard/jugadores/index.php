@@ -236,7 +236,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 								</div><!-- /input-group -->
                                 <script type="text/javascript">
 									$(document).ready(function() {
-										$('#example-templates-button').multiselect({
+										$('#example-templates-button<?php echo $row[0]; ?>').multiselect({
 											buttonContainer: '<div></div>',
 											buttonClass: '',
 											templates: {
@@ -252,7 +252,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 										cursor: pointer;
 									}
 								</style>
-								<select id="example-templates-button" multiple="multiple<?php echo $row[0]; ?>">
+								<select id="example-templates-button<?php echo $row[0]; ?>">
 									<?php
 										while ($rowV = mysql_fetch_array($resValores)) {
 									?>
