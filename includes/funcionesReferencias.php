@@ -2440,6 +2440,90 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: dbdefinicionessancionesacumuladastemporadas*/
 
+/* PARA Conector */
+
+function insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo) {
+$sql = "insert into dbconector(idconector,refjugadores,reftipojugadores,refequipos,refcountries,refcategorias,esfusion,activo)
+values ('',".$refjugadores.",".$reftipojugadores.",".$refequipos.",".$refcountries.",".$refcategorias.",".$esfusion.",".$activo.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarConector($id,$refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo) {
+$sql = "update dbconector
+set
+refjugadores = ".$refjugadores.",reftipojugadores = ".$reftipojugadores.",refequipos = ".$refequipos.",refcountries = ".$refcountries.",refcategorias = ".$refcategorias.",esfusion = ".$esfusion.",activo = ".$activo."
+where idconector =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarConector($id) {
+$sql = "update dbconector set activo = 0 where idconector =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function eliminarConectorPorJugador($id) {
+$sql = "update dbconector set activo = 0 where refjugadores =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerConector() {
+$sql = "select 
+    c.idconector,
+	cat.categoria,
+	equ.nombre as equipo,
+	co.nombre as countrie,
+	tip.tipojugador,
+	(case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	jug.nrodocumento
+    
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerConectorPorId($id) {
+$sql = "select idconector,refjugadores,reftipojugadores,refequipos,refcountries,refcategorias,esfusion,activo from dbconector where idconector =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbconector*/
 
 
 /************  FUNCIONES PARA LA PARTE ADMINISTRATIVA  *********************/

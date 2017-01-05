@@ -101,7 +101,11 @@ $resDocumentaciones2	=	$serviciosReferencias->traerDocumentaciones();
 $resDocumentaciones	=	$serviciosReferencias->traerDocumentaciones();
 $cadRef4	=	$serviciosFunciones->devolverSelectBox($resDocumentaciones,array(1),'');
 
+$existeDocumentacionCargada = 1;
 
+if (mysql_num_rows($resJugadores)<1) {
+	$existeDocumentacionCargada = 0;
+}
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -446,9 +450,11 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
+                    <?php if ($existeDocumentacionCargada == 1) { ?>
                     <li>
-                        <button type="button" class="btn btn-primary" id="cargarcontinuar" style="margin-left:0px;">Guardar y Continuar</button>
+                        <button type="button" class="btn btn-success" id="equipos" style="margin-left:0px;">Continuar</button>
                     </li>
+                    <?php } ?>
                 </ul>
                 </div>
             </div>
@@ -524,7 +530,11 @@ $(document).ready(function(){
 		  }
 	} );
 	
-	
+	$('#equipos').click(function(event){
+		 
+		url = "equipos.php?id="+<?php echo $id; ?>;
+		$(location).attr('href',url);
+	});//fin del boton equipos
 	
 	function traerEquiposPorCountries(id, contenedor) {
 		$.ajax({

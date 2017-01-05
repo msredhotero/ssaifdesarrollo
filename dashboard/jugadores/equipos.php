@@ -32,9 +32,9 @@ $singular = "Jugador";
 
 $plural = "Jugadores";
 
-$eliminar = "eliminarJugadores";
+$eliminar = "eliminarConector";
 
-$insertar = "insertarJugadores";
+$insertar = "insertarConector";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
@@ -61,16 +61,12 @@ $refCampo 	=  array("reftipodocumentos","refcountries");
 
 //tip.tipodocumento,j.nrodocumento,j.apellido,j.nombres,j.email,j.fechanacimiento,j.fechaalta,j.fechabaja,cou.nombre as countrie,j.observaciones
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Tipo Documento</th>
-					<th>Nro Doc</th>
-					<th>Apellido</th>
-					<th>Nombres</th>
-					<th>Email</th>
-					<th>Fecha Nac.</th>
-					<th>Fecha Alta</th>
-					<th>Fecha Baja</th>
+$cabeceras 		= "	<th>Categoria</th>
+					<th>Equipo</th>
 					<th>Countrie</th>
-					<th>Obs.</th>";
+					<th>Tipo Jugador</th>
+					<th>Es Fusion</th>
+					<th>Activo</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -79,7 +75,7 @@ $resDocumentaciones2	=	$serviciosReferencias->traerDocumentaciones();
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadores(),10);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerConector(),6);
 
 $resMotivosHabDeportivas	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDeportivas('Edad');
 $cadRef		=	$serviciosFunciones->devolverSelectBox($resMotivosHabDeportivas,array(2),'');
@@ -255,13 +251,13 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-3" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Fusión</label>
                         <div class="input-group col-md-12 fontcheck">
-                            <input type="checkbox" class="form-control" id="equiposRefFusion" name="equiposRefFusion" style="width:50px;" required> <p>Si/No</p>
+                            <input type="checkbox" class="form-control" id="esfusion" name="esfusion" style="width:50px;" required> <p>Si/No</p>
                         </div>
                     </div>
                     <div class="form-group col-md-9" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Countries</label>
                         <div class="input-group col-md-12">
-                            <select id="equiposRefcountries" name="equiposRefcountries" class="chosen-select" style="width:100%;">
+                            <select id="refcountriesaux" name="refcountriesaux" class="chosen-select" style="width:100%;">
                             	<?php echo $cadRefCountries; ?>
                             </select>
                         </div>
@@ -272,7 +268,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="equiposRefcategorias" name="equiposRefcategorias">
+                            <select class="form-control" id="refcategorias" name="refcategorias">
                             	<?php echo $cadRefCad; ?>
                             </select>
                         </div>
@@ -280,7 +276,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="equiposRefequipos" name="equiposRefequipos">
+                            <select class="form-control" id="refequipos" name="refequipos">
                             	<?php echo $cadRefEquipo; ?>
                             </select>
                         </div>
@@ -289,7 +285,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Tipo Jugador</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="equiposReftipojugador" name="equiposReftipojugador">
+                            <select class="form-control" id="reftipojugadores" name="reftipojugadores">
                             	<?php echo $cadRefTipoJug; ?>
                             </select>
                         </div>
@@ -356,6 +352,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </ul>
                 </div>
             </div>
+            <input type="hidden" id="accion" name="accion" value="<?php echo $insertar; ?>"/>
+            <input type="hidden" id="refjugadores" name="refjugadores" value="<?php echo $id; ?>"/>
+            <input type="hidden" id="refcountries" name="refcountries" value="<?php echo mysql_result($resResultado,0,'refcountries'); ?>"/>
             </form>
     	
     </div>
@@ -470,33 +469,34 @@ $(document).ready(function(){
 		});	
 	}
 	
-	verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#equiposRefcategorias').val(),$('#equiposReftipojugador').val());
+	verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val());
 	
-	$('#equiposRefcategorias').change(function(e) {
-        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#equiposRefcategorias').val(),$('#equiposReftipojugador').val());
+	$('#refcategorias').change(function(e) {
+        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val());
     });
 	
-	$('#equiposReftipojugador').change(function(e) {
-        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#equiposRefcategorias').val(),$('#equiposReftipojugador').val());
+	$('#reftipojugadores').change(function(e) {
+        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val());
     });
 	
-	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#equiposRefequipos');
+	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
 	
-	$('#refcountries').change(function() {
-		if  ($('#equiposRefFusion').prop('checked') == false) {
-			traerEquiposPorCountries($(this).val(), '#equiposRefequipos');
+	$('#esfusion').click(function() {
+		if  ($('#esfusion').prop('checked') == false) {
+			traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
+		}
+	});
+
+	
+	
+	$('#refcountriesaux').change(function() {
+		if  ($('#esfusion').prop('checked') == true) {
+			traerEquiposPorCountries($(this).val(), '#refequipos');
 		}
 	});
 	
-	
-	$('#equiposRefcountries').change(function() {
-		if  ($('#equiposRefFusion').prop('checked') == true) {
-			traerEquiposPorCountries($(this).val(), '#equiposRefequipos');
-		}
-	});
-	
-	$('#equiposRefFusion').click(function() {
-		$('#equiposRefequipos').html('');
+	$('#esfusion').click(function() {
+		$('#refequipos').html('');
 	});
 	
 	$("#example").on("click",'.varborrar', function(){
@@ -597,27 +597,27 @@ $(document).ready(function(){
 				success: function(data){
 
 					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											url = "index.php";
-											$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
+							$("#erroresCarga").removeClass("alert-danger");
+							$("#erroresCarga").removeClass("alert-info");
+							$("#erroresCarga").addClass("alert-success");
+							$("#erroresCarga").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
+							$("#erroresCarga").delay(3000).queue(function(){
+								/*aca lo que quiero hacer 
+								  después de los 2 segundos de retraso*/
+								$(this).dequeue(); //continúo con el siguiente ítem en la cola
+								
+							});
+							$("#load").html('');
+							url = "equipos.php?id="+<?php echo $id; ?>;
+							$(location).attr('href',url);
+							
+							
+						} else {
+							$("#erroresCarga").removeClass("alert-danger");
+							$("#erroresCarga").addClass("alert-danger");
+							$("#erroresCarga").html('<strong>Error!</strong> '+data);
+							$("#load").html('');
+						}
 				},
 				//si ha ocurrido un error
 				error: function(){

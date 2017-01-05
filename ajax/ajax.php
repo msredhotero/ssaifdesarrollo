@@ -341,6 +341,16 @@ eliminarDefinicionessancionesacumuladastemporadas($serviciosReferencias);
 break; 
 
 
+case 'insertarConector':
+insertarConector($serviciosReferencias);
+break;
+case 'modificarConector':
+modificarConector($serviciosReferencias);
+break;
+case 'eliminarConector':
+eliminarConector($serviciosReferencias);
+break; 
+
 /***************  FIN  ********************************************/
 
 /*****         FUNCIONES       **********/
@@ -1942,6 +1952,72 @@ echo $res;
 
 
 
+function insertarConector($serviciosReferencias) {
+	$refjugadores = $_POST['refjugadores'];
+	$reftipojugadores = $_POST['reftipojugadores'];
+	
+	$refcountries = $_POST['refcountries'];
+	$refcategorias = $_POST['refcategorias'];
+	
+	if (isset($_POST['esfusion'])) {
+		$esfusion = 1;
+		$refcountries = $_POST['refcountriesaux'];
+	} else {
+		$esfusion = 0;
+	}
+	
+	$activo = 1;
+
+	if (!isset($_POST['refequipos'])) {
+		echo 'Debe seleccionar un equipo';	
+	} else {
+		$refequipos = $_POST['refequipos'];
+		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo);
+		
+		if ((integer)$res > 0) {
+			echo '';
+		} else {
+			echo 'Huvo un error al insertar datos';
+		}
+	}
+}
+
+
+function modificarConector($serviciosReferencias) {
+
+	$id = $_POST['id'];
+	$refjugadores = $_POST['refjugadores'];
+	$reftipojugadores = $_POST['reftipojugadores'];
+	$refequipos = $_POST['refequipos'];
+	$refcountries = $_POST['refcountries'];
+	$refcategorias = $_POST['refcategorias'];
+
+	if (isset($_POST['esfusion'])) {
+		$esfusion = 1;
+	} else {
+		$esfusion = 0;
+	}
+	
+	if (isset($_POST['activo'])) {
+		$activo = 1;
+	} else {
+		$activo = 0;
+	}
+	
+	$res = $serviciosReferencias->modificarConector($id,$refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo);
+	
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+
+function eliminarConector($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarConector($id);
+echo $res;
+} 
 
 
 /**************** FIN *********************************************/
