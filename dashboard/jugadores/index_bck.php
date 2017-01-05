@@ -240,13 +240,283 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
-        	
         	<form class="form-inline formulario" role="form">
         	<div class="row">
 			<?php echo $formulario; ?>
             </div>
             <hr>
             
+            <div class="panel panel-primary" style="z-index:-1">
+				<div class="panel-heading">
+					<h3 class="panel-title">Documentaciones</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+                <div class="panel-body collapse">
+            	<?php
+					while ($row = mysql_fetch_array($resDocumentaciones2)) {
+						$resValores		=	$serviciosReferencias->traerValoreshabilitacionestransitoriasPorDocumentacion($row[0]);
+				?>
+					<?php
+                        if ($row[2] == 'Si') { 
+                    
+                        $cadA = '<span class="glyphicon glyphicon-check"></span>';
+                     } else { 
+                        $cadA = '<span class="glyphicon glyphicon-remove"></span>';
+                     } ?>
+                    <div class="col-md-4" style="margin-bottom:7px;">
+                        
+                            
+                            <?php
+							if (mysql_num_rows($resValores)>0) {
+							?>
+                            	<div class="input-group">
+                            	<span class="input-group-addon">
+                                <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
+                                </span>
+                                <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
+                                <span class="input-group-addon">
+                                    <?php echo $cadA; ?>
+                                </span>
+								</div><!-- /input-group -->
+                                <script type="text/javascript">
+									$(document).ready(function() {
+										$('#example-templates-button<?php echo $row[0]; ?>').multiselect({
+											buttonContainer: '<div></div>',
+											buttonClass: '',
+											templates: {
+												button: '<span class="multiselect<?php echo $row[0]; ?> dropdown-toggle" data-toggle="dropdown">(Valores)</span>'
+											}
+										});
+										
+										
+									});
+								</script>
+								<style type="text/css">
+									span.multiselect<?php echo $row[0]; ?> {
+										padding: 2px 6px;
+										font-weight: bold;
+										cursor: pointer;
+										z-index:99999999999999999999999;
+									}
+								</style>
+                                <div class="FixedHeightContainer<?php echo $row[0]; ?>">
+								<select id="example-templates-button<?php echo $row[0]; ?>">
+									<?php
+										while ($rowV = mysql_fetch_array($resValores)) {
+											if ($rowV[3] == 1) {
+												$chequeado = 'selected="selected"';	
+											} else {
+												$chequeado = '';	
+											}
+									?>
+                                    <option value="<?php echo $rowV[0]; ?>" <?php echo $chequeado; ?>><?php echo $rowV[2]; ?> - Habilita: <?php echo $rowV[3]; ?></option>
+
+                                    <?php
+										}
+									?>
+								</select>
+                                </div>
+                            <?php
+							} else {
+							?>
+                            <div class="input-group">
+                            <span class="input-group-addon">
+                            <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
+                            </span>
+                            <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
+                            <span class="input-group-addon">
+                            	<?php echo $cadA; ?>
+                            </span>
+                            </div><!-- /input-group -->
+                            <?php
+							} 
+							?>
+                        
+                    </div><!-- /.col-lg-6 -->
+                <?php
+					}
+				?>
+				</div>
+            </div>
+            
+            
+            
+            
+            <div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Equipos</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+                <div class="panel-body" id="primero">
+					<div class="row">
+                    <div class="form-group col-md-3" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Fusión</label>
+                        <div class="input-group col-md-12 fontcheck">
+                            <input type="checkbox" class="form-control" id="equiposRefFusion" name="equiposRefFusion" style="width:50px;" required> <p>Si/No</p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-9" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Countries</label>
+                        <div class="input-group col-md-12">
+                            <select id="equiposRefcountries" name="equiposRefcountries" class="chosen-select" style="width:100%;">
+                            	<?php echo $cadRefCountries; ?>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="equiposRefcategorias" name="equiposRefcategorias">
+                            	<?php echo $cadRefCad; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="equiposRefequipos" name="equiposRefequipos">
+                            	<?php echo $cadRefEquipo; ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Tipo Jugador</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="equiposReftipojugador" name="equiposReftipojugador">
+                            	<?php echo $cadRefTipoJug; ?>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+
+				</div>
+            </div>
+            
+            
+            <div class="panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">Habilitaciones Transitorias (Deportiva)</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+                <div class="panel-body collapse">
+            		<div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Temporadas</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef3; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRefCad; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Documentaciones</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef4; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Motivos</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef; ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="fechanacimiento" class="control-label" style="text-align:left">Fecha Limite</label>
+                        <div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="fechanacimiento" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="50" value="" readonly type="text">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        <input name="fechanacimiento" id="fechanacimiento" value="" type="hidden">
+                    </div>
+                    
+                    
+                    <div class="form-group col-md-8" style="display:block">
+                        <label for="observaciones" class="control-label" style="text-align:left">Observaciones</label>
+                        <div class="input-group col-md-12">
+                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required></textarea>
+                        </div>
+                        
+                    </div>
+                    
+				</div>
+            </div>
+            
+            <div class="panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">Habilitaciones Transitorias (Documentaciones)</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+                <div class="panel-body collapse">
+            		<div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Temporadas</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef3; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Documentaciones</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef4; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Motivos</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            	<?php echo $cadRef2; ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="fechanacimiento" class="control-label" style="text-align:left">Fecha Limite</label>
+                        <div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="fechanacimiento" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="50" value="" readonly type="text">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        <input name="fechanacimiento" id="fechanacimiento" value="" type="hidden">
+                    </div>
+                    
+                    
+                    <div class="form-group col-md-8" style="display:block">
+                        <label for="observaciones" class="control-label" style="text-align:left">Observaciones</label>
+                        <div class="input-group col-md-12">
+                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required></textarea>
+                        </div>
+                        
+                    </div>
+								
+				</div>
+            </div>
             
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
@@ -263,9 +533,6 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <ul class="list-inline" style="margin-top:15px;">
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
-                    </li>
-                    <li>
-                        <button type="button" class="btn btn-primary" id="cargarcontinuar" style="margin-left:0px;">Guardar y Continuar</button>
                     </li>
                 </ul>
                 </div>
@@ -497,64 +764,6 @@ $(document).ready(function(){
 											});
 											$("#load").html('');
 											url = "index.php";
-											$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
-		}
-    });
-	
-	//al enviar el formulario
-    $('#cargarcontinuar').click(function(){
-		
-		if (validador() == "")
-        {
-			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax  
-			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
-
-					if (!isNaN(data)) {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											url = "documentaciones.php?id="+data;
 											$(location).attr('href',url);
                                             
 											

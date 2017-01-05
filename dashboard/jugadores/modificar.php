@@ -22,40 +22,44 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Motivos Habilitaciones Transitorias",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Jugadores",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerMotivoshabilitacionestransitoriasPorId($id);
+$resResultado = $serviciosReferencias->traerJugadoresPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Motivo de Habilitacion Transitoria";
+$singular = "Jugador";
 
-$plural = "Motivos de Habilitaciones Transitorias";
+$plural = "Jugadores";
 
-$eliminar = "eliminarMotivoshabilitacionestransitorias";
+$eliminar = "eliminarJugadores";
 
-$modificar = "modificarMotivoshabilitacionestransitorias";
+$modificar = "modificarJugadores";
 
-$idTabla = "idmotivoshabilitacionestransitoria";
+$idTabla = "idjugador";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbmotivoshabilitacionestransitorias";
+$tabla 			= "dbjugadores";
 
-$lblCambio	 	= array("");
-$lblreemplazo	= array("");
+$lblCambio	 	= array("reftipodocumentos","nrodocumento","fechanacimiento","fechaalta","fechabaja","refcountries");
+$lblreemplazo	= array("Tipo Documento","Nro Documento","Fecha Nacimiento","Fecha Alta","Fecha Baja","Countries");
 
 
-$cadRef 	= '';
+$resTipoDoc 	= $serviciosReferencias->traerTipodocumentos();
+$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resTipoDoc,array(1),'', mysql_result($resResultado,0,'reftipodocumentos'));
 
-$refdescripcion = array();
-$refCampo 	=  array();
+$resCountries 	= $serviciosReferencias->traerCountries();
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'', mysql_result($resResultado,0,'refcountries'));
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2);
+$refCampo 	=  array("reftipodocumentos","refcountries");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -158,6 +162,15 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <button type="button" class="btn btn-warning" id="cargar" style="margin-left:0px;">Modificar</button>
                     </li>
                     <li>
+                        <button type="button" class="btn btn-success" id="documentaciones" style="margin-left:0px;">Documentaciones</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-success" id="equipos" style="margin-left:0px;">Equipos</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-success" id="habilitaciones" style="margin-left:0px;">Habilitaciones</button>
+                    </li>
+                    <li>
                         <button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
                     </li>
                     <li>
@@ -199,6 +212,26 @@ $(document).ready(function(){
 		url = "index.php";
 		$(location).attr('href',url);
 	});//fin del boton modificar
+	
+	$('#documentaciones').click(function(event){
+		 
+		url = "documentaciones.php?id="+<?php echo $id; ?>;
+		$(location).attr('href',url);
+	});//fin del boton documentaciones
+	
+	
+	$('#equipos').click(function(event){
+		 
+		url = "equipos.php?id="+<?php echo $id; ?>;
+		$(location).attr('href',url);
+	});//fin del boton equipos
+	
+	
+	$('#habilitaciones').click(function(event){
+		 
+		url = "habilitaciones.php?id="+<?php echo $id; ?>;
+		$(location).attr('href',url);
+	});//fin del boton habilitaciones
 	
 	$('.varborrar').click(function(event){
 		  usersid =  $(this).attr("id");

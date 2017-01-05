@@ -25,6 +25,8 @@ $fecha = date('Y-m-d');
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Jugadores",$_SESSION['refroll_predio'],'');
 
 
+$id	= $_GET['id'];
+
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Jugador";
 
@@ -88,8 +90,7 @@ $cadRef2	=	$serviciosFunciones->devolverSelectBox($resMotivosHabDocumentaciones,
 $resTemporados	=	$serviciosReferencias->traerTemporadas();
 $cadRef3	=	$serviciosFunciones->devolverSelectBox($resTemporados,array(1),'');
 
-$resDocumentaciones	=	$serviciosReferencias->traerDocumentaciones();
-$cadRef4	=	$serviciosFunciones->devolverSelectBox($resDocumentaciones,array(1),'');
+$resDocumentaciones	=	$serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($id);
 
 $resCategoria		=	$serviciosReferencias->traerCategorias();
 $cadRefCad			=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
@@ -103,6 +104,7 @@ $cadRefTipoJug		=	$serviciosFunciones->devolverSelectBox($resTipoJugador,array(1
 $resCountries		=	$serviciosReferencias->traerCountries();
 $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
+$resResultado = $serviciosReferencias->traerJugadoresPorId($id);
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -203,21 +205,21 @@ if ($_SESSION['refroll_predio'] != 1) {
 	
 		<div class="row bs-wizard" style="border-bottom:0;margin-left:25px; margin-right:25px;">
                 
-            <div class="col-xs-3 bs-wizard-step active">
+            <div class="col-xs-3 bs-wizard-step complete">
               <div class="text-center bs-wizard-stepnum">Paso 1</div>
               <div class="progress"><div class="progress-bar"></div></div>
-              <a href="#" class="bs-wizard-dot"></a>
+              <a href="modificar.php?id=<?php echo $id; ?>" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center">Carga del jugador (Nro Documento Unico).</div>
             </div>
             
-            <div class="col-xs-3 bs-wizard-step disabled"><!-- complete -->
+            <div class="col-xs-3 bs-wizard-step complete"><!-- complete -->
               <div class="text-center bs-wizard-stepnum">Paso 2</div>
               <div class="progress"><div class="progress-bar"></div></div>
-              <a href="#" class="bs-wizard-dot"></a>
+              <a href="documentaciones.php?id=<?php echo $id; ?>" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center">Carga de la Documentación presentada.</div>
             </div>
             
-            <div class="col-xs-3 bs-wizard-step disabled"><!-- complete -->
+            <div class="col-xs-3 bs-wizard-step active"><!-- complete -->
               <div class="text-center bs-wizard-stepnum">Paso 3</div>
               <div class="progress"><div class="progress-bar"></div></div>
               <a href="#" class="bs-wizard-dot"></a>
@@ -236,21 +238,108 @@ if ($_SESSION['refroll_predio'] != 1) {
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Carga de Equipos</p>
         	
         </div>
     	<div class="cuerpoBox">
-        	
+        	<ul class="list-group">
+              <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> Jugador</li>
+              <li class="list-group-item list-group-item-default">Nombre Completo: <?php echo mysql_result($resResultado,0,'apellido').', '.mysql_result($resResultado,0,'nombres'); ?></li>
+              <li class="list-group-item list-group-item-default">Nro Documento: <?php echo mysql_result($resResultado,0,'nrodocumento'); ?></li>
+              <li class="list-group-item list-group-item-default">Fecha de Nacimiento: <?php echo mysql_result($resResultado,0,'fechanacimiento'); ?></li>
+            </ul>
+            
         	<form class="form-inline formulario" role="form">
         	<div class="row">
-			<?php echo $formulario; ?>
+			
+                    <div class="form-group col-md-3" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Fusión</label>
+                        <div class="input-group col-md-12 fontcheck">
+                            <input type="checkbox" class="form-control" id="equiposRefFusion" name="equiposRefFusion" style="width:50px;" required> <p>Si/No</p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-9" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Countries</label>
+                        <div class="input-group col-md-12">
+                            <select id="equiposRefcountries" name="equiposRefcountries" class="chosen-select" style="width:100%;">
+                            	<?php echo $cadRefCountries; ?>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="equiposRefcategorias" name="equiposRefcategorias">
+                            	<?php echo $cadRefCad; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="equiposRefequipos" name="equiposRefequipos">
+                            	<?php echo $cadRefEquipo; ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Tipo Jugador</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="equiposReftipojugador" name="equiposReftipojugador">
+                            	<?php echo $cadRefTipoJug; ?>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+
             </div>
             <hr>
+            
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <h4 style="text-decoration:underline;">Documentaciones y Habilitaciones</h4>
+                <?php
+					while ($rowD = mysql_fetch_array($resDocumentaciones)) {
+						
+				?>
+                	<div class="col-md-4">
+                    	<?php
+							if ($rowD['valor'] == 'Si') {
+						?>
+                    	<p><span style="color:#3C0;" class="glyphicon glyphicon-ok"></span> <?php echo $rowD['descripcion']; ?></p>
+                        <?php 
+							} else { 
+								if ($rowD['contravalor'] == 'Si') {
+						?>
+                        		<p><span style="color:#3C0;" class="glyphicon glyphicon-ok"></span> <?php echo $rowD['descripcion']; ?></p>
+                        <?php
+								} else {
+						?>
+                    			<p><span style="color:#F00;" class="glyphicon glyphicon-remove"></span> <?php echo $rowD['descripcion']; ?></p>
+                        <?php		
+								}
+							}
+						?>
+                    </div>
+                <?php
+					}
+				?>
+            </div>
+            
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <div class='alert alert-danger' id="erroresEdad">
+                
+                </div>
+
+            </div>
             
             
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
+                <div class='alert' id="erroresCarga">
                 
                 </div>
                 <div id='load'>
@@ -258,20 +347,17 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </div>
             </div>
             
-            <div class="row">
+            <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
-                    <li>
-                        <button type="button" class="btn btn-primary" id="cargarcontinuar" style="margin-left:0px;">Guardar y Continuar</button>
-                    </li>
                 </ul>
                 </div>
             </div>
             </form>
-    	</div>
+    	
     </div>
     
     <div class="boxInfoLargo">
@@ -312,18 +398,6 @@ $(document).ready(function(){
 	
 	
 	
-	$(document).on('click', '.panel-heading span.clickable', function(e){
-		var $this = $(this);
-		if(!$this.hasClass('panel-collapsed')) {
-			$this.parents('.panel').find('.panel-body').slideUp();
-			$this.addClass('panel-collapsed');
-			$this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-		} else {
-			$this.parents('.panel').find('.panel-body').slideDown();
-			$this.removeClass('panel-collapsed');
-			$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-		}
-	});
 
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],
@@ -368,7 +442,45 @@ $(document).ready(function(){
 		});		
 	}
 	
-	traerEquiposPorCountries($('#refcountries').val(), '#equiposRefequipos');
+	function verificaEdadCategoriaJugador(refjugador, refcategoria, tipoJugador) {
+		$.ajax({
+			data:  {refjugador: refjugador,
+					refcategoria: refcategoria,
+					tipoJugador: tipoJugador, 
+					accion: 'verificaEdadCategoriaJugador'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+			
+			},
+			success:  function (response) {
+				if (response == 0) {
+					$("#erroresEdad").removeClass("alert-danger");
+					$("#erroresEdad").addClass("alert-danger");
+					$("#erroresEdad").html('<strong>Error!</strong> El Jugador no tiene la edad para esta categoria y no posee una habilitación transitoria para acreditarlo');
+					$('#cargar').hide();
+				} else {
+					$("#erroresEdad").removeClass("alert-danger");
+					$("#erroresEdad").removeClass("alert-info");
+					$("#erroresEdad").addClass("alert-success");
+					$("#erroresEdad").html('<strong>Correcto!</strong> El Jugador esta en condiciones de ingresar a esta categoria');
+					$('#cargar').show();
+				}
+			}
+		});	
+	}
+	
+	verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#equiposRefcategorias').val(),$('#equiposReftipojugador').val());
+	
+	$('#equiposRefcategorias').change(function(e) {
+        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#equiposRefcategorias').val(),$('#equiposReftipojugador').val());
+    });
+	
+	$('#equiposReftipojugador').change(function(e) {
+        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#equiposRefcategorias').val(),$('#equiposReftipojugador').val());
+    });
+	
+	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#equiposRefequipos');
 	
 	$('#refcountries').change(function() {
 		if  ($('#equiposRefFusion').prop('checked') == false) {
@@ -497,64 +609,6 @@ $(document).ready(function(){
 											});
 											$("#load").html('');
 											url = "index.php";
-											$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
-		}
-    });
-	
-	//al enviar el formulario
-    $('#cargarcontinuar').click(function(){
-		
-		if (validador() == "")
-        {
-			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax  
-			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
-
-					if (!isNaN(data)) {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											url = "documentaciones.php?id="+data;
 											$(location).attr('href',url);
                                             
 											

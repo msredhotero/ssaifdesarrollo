@@ -1203,18 +1203,27 @@ return $res;
 
 /* PARA Jugadoresdocumentacion */
 
-function insertarJugadoresdocumentacion($refjugadores,$refdocumentaciones,$valor,$habilita,$observaciones) { 
-$sql = "insert into dbjugadoresdocumentacion(idjugadordocumentacion,refjugadores,refdocumentaciones,valor,habilita,observaciones) 
-values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",".$habilita.",'".utf8_decode($observaciones)."')"; 
+function existeDocumentacion($refjugadores,$refdocumentaciones) {
+	$sql = "select idjugadordocumentacion from dbjugadoresdocumentacion where refjugadores = ".$refjugadores." and refdocumentaciones = ".$refdocumentaciones;
+	$res = $this->query($sql,0);
+	if (mysql_num_rows($res)>0) {
+		return 1;	
+	}
+	return 0;
+}
+
+function insertarJugadoresdocumentacion($refjugadores,$refdocumentaciones,$valor,$observaciones) { 
+$sql = "insert into dbjugadoresdocumentacion(idjugadordocumentacion,refjugadores,refdocumentaciones,valor,observaciones) 
+values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",'".utf8_decode($observaciones)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
 
 
-function modificarJugadoresdocumentacion($id,$refjugadores,$refdocumentaciones,$valor,$habilita,$observaciones) { 
+function modificarJugadoresdocumentacion($id,$refjugadores,$refdocumentaciones,$valor,$observaciones) { 
 $sql = "update dbjugadoresdocumentacion 
 set 
-refjugadores = ".$refjugadores.",refdocumentaciones = ".$refdocumentaciones.",valor = ".$valor.",habilita = ".$habilita.",observaciones = '".utf8_decode($observaciones)."' 
+refjugadores = ".$refjugadores.",refdocumentaciones = ".$refdocumentaciones.",valor = ".$valor.",observaciones = '".utf8_decode($observaciones)."' 
 where idjugadordocumentacion =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1227,6 +1236,12 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+function eliminarJugadoresdocumentacionPorJugador($idJuagador) { 
+$sql = "delete from dbjugadoresdocumentacion where refjugadores =".$idJuagador; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
 
 function traerJugadoresdocumentacion() { 
 $sql = "select 
@@ -1234,7 +1249,6 @@ j.idjugadordocumentacion,
 j.refjugadores,
 j.refdocumentaciones,
 j.valor,
-j.habilita,
 j.observaciones
 from dbjugadoresdocumentacion j 
 inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
@@ -1248,7 +1262,70 @@ return $res;
 
 
 function traerJugadoresdocumentacionPorId($id) { 
-$sql = "select idjugadordocumentacion,refjugadores,refdocumentaciones,valor,habilita,observaciones from dbjugadoresdocumentacion where idjugadordocumentacion =".$id; 
+$sql = "select idjugadordocumentacion,refjugadores,refdocumentaciones,valor,observaciones from dbjugadoresdocumentacion where idjugadordocumentacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerJugadoresdocumentacionPorJugador($idJugador) { 
+$sql = "select j.refdocumentaciones,
+doc.descripcion,
+(case when doc.obligatoria = 1 then 'Si' else 'No' end) as obligatoria,
+j.valor,
+j.refjugadores,
+j.idjugadordocumentacion,
+j.observaciones
+from dbjugadoresdocumentacion j 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
+where j.refjugadores =".$idJugador; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresdocumentacionPorJugadorValores($idJugador) { 
+$sql = "select
+			r.refdocumentaciones,
+			r.descripcion,
+			r.obligatoria,
+			(case when r.valor = 1 then 'Si' else 'No' end) as valor,
+			(case when coalesce(r.contravalor,0) = 1 then 'Si' else 'No' end) as contravalor,
+			r.refjugadores,
+			r.idjugadordocumentacion,
+			r.observaciones
+			from
+			(
+			SELECT 
+				j.refdocumentaciones,
+				doc.descripcion,
+				(CASE
+					WHEN doc.obligatoria = 1 THEN 'Si'
+					ELSE 'No'
+				END) AS obligatoria,
+				j.valor,
+				(SELECT 
+						v.habilita
+					FROM
+						tbvaloreshabilitacionestransitorias v
+					inner join dbjugadoresvaloreshabilitacionestransitorias vh
+					on v.idvalorhabilitaciontransitoria = vh.refvaloreshabilitacionestransitorias
+					WHERE
+						refdocumentaciones = doc.iddocumentacion and vh.refjugadores = jug.idjugador) AS contravalor,
+				j.refjugadores,
+				j.idjugadordocumentacion,
+				j.observaciones
+			FROM
+				dbjugadoresdocumentacion j
+					INNER JOIN
+				dbjugadores jug ON jug.idjugador = j.refjugadores
+					INNER JOIN
+				tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones
+			WHERE
+				j.refjugadores = ".$idJugador."
+				) as r"; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -1494,18 +1571,171 @@ tbtipodocumentos
 
 /* PARA Valoreshabilitacionestransitorias */
 
-function insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita) { 
-$sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita) 
-values ('',".$refdocumentaciones.",'".utf8_decode($descripcion)."',".$habilita.")"; 
+
+/* PARA Jugadoresmotivoshabilitacionestransitorias */
+
+function insertarJugadoresmotivoshabilitacionestransitorias($refjugadores,$refmotivoshabilitacionestransitorias) { 
+$sql = "insert into dbjugadoresmotivoshabilitacionestransitorias(iddbjugadormotivohabilitaciontransitoria,refjugadores,refmotivoshabilitacionestransitorias) 
+values ('',".$refjugadores.",".$refmotivoshabilitacionestransitorias.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
 
 
-function modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita) { 
+function modificarJugadoresmotivoshabilitacionestransitorias($id,$refjugadores,$refmotivoshabilitacionestransitorias) { 
+$sql = "update dbjugadoresmotivoshabilitacionestransitorias 
+set 
+refjugadores = ".$refjugadores.",refmotivoshabilitacionestransitorias = ".$refmotivoshabilitacionestransitorias." 
+where iddbjugadormotivohabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarJugadoresmotivoshabilitacionestransitorias($id) { 
+$sql = "delete from dbjugadoresmotivoshabilitacionestransitorias where iddbjugadormotivohabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresmotivoshabilitacionestransitorias() { 
+$sql = "select 
+j.iddbjugadormotivohabilitaciontransitoria,
+j.refjugadores,
+j.refmotivoshabilitacionestransitorias
+from dbjugadoresmotivoshabilitacionestransitorias j 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresmotivoshabilitacionestransitoriasPorId($id) { 
+$sql = "select iddbjugadormotivohabilitaciontransitoria,refjugadores,refmotivoshabilitacionestransitorias from dbjugadoresmotivoshabilitacionestransitorias where iddbjugadormotivohabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbjugadoresmotivoshabilitacionestransitorias*/
+
+/* PARA Jugadoresvaloreshabilitacionestransitorias */
+
+
+function insertarJugadoresvaloreshabilitacionestransitorias($refjugadores,$refvaloreshabilitacionestransitorias) { 
+$sql = "insert into dbjugadoresvaloreshabilitacionestransitorias(iddbjugadorvalorhabilitaciontransitoria,refjugadores,refvaloreshabilitacionestransitorias) 
+values ('',".$refjugadores.",".$refvaloreshabilitacionestransitorias.")"; 
+$res = $this->query($sql,1); 
+return $sql; 
+} 
+
+
+function modificarJugadoresvaloreshabilitacionestransitorias($id,$refjugadores,$refvaloreshabilitacionestransitorias) { 
+$sql = "update dbjugadoresvaloreshabilitacionestransitorias 
+set 
+refjugadores = ".$refjugadores.",refvaloreshabilitacionestransitorias = ".$refvaloreshabilitacionestransitorias." 
+where iddbjugadorvalorhabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarJugadoresvaloreshabilitacionestransitorias($id) { 
+$sql = "delete from dbjugadoresvaloreshabilitacionestransitorias where iddbjugadorvalorhabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function eliminarJugadoresvaloreshabilitacionestransitoriasPorJuagador($idJuagador) { 
+$sql = "delete from dbjugadoresvaloreshabilitacionestransitorias where refjugadores =".$idJuagador; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresvaloreshabilitacionestransitorias() { 
+$sql = "select 
+j.iddbjugadorvalorhabilitaciontransitoria,
+j.refjugadores,
+j.refvaloreshabilitacionestransitorias
+from dbjugadoresvaloreshabilitacionestransitorias j 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join tbvaloreshabilitacionestransitorias val ON val.idvalorhabilitaciontransitoria = j.refvaloreshabilitacionestransitorias 
+inner join tbdocumentaciones do ON do.iddocumentacion = val.refdocumentaciones 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresvaloreshabilitacionestransitoriasPorId($id) { 
+$sql = "select iddbjugadorvalorhabilitaciontransitoria,refjugadores,refvaloreshabilitacionestransitorias from dbjugadoresvaloreshabilitacionestransitorias where iddbjugadorvalorhabilitaciontransitoria =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerJugadoresvaloreshabilitacionestransitoriasPorJugador($idJugador) { 
+$sql = "select 
+j.refvaloreshabilitacionestransitorias,
+v.descripcion,
+(case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
+j.iddbjugadorvalorhabilitaciontransitoria,
+j.refjugadores
+from dbjugadoresvaloreshabilitacionestransitorias j 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join tbvaloreshabilitacionestransitorias val ON val.idvalorhabilitaciontransitoria = j.refvaloreshabilitacionestransitorias 
+inner join tbdocumentaciones do ON do.iddocumentacion = val.refdocumentaciones 
+where j.refjugadores = ".$idJugador."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($idJugador, $idDocumentacion) { 
+$sql = "select 
+j.refvaloreshabilitacionestransitorias,
+v.descripcion,
+(case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
+j.iddbjugadorvalorhabilitaciontransitoria,
+j.refjugadores
+from dbjugadoresvaloreshabilitacionestransitorias j 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join tbvaloreshabilitacionestransitorias val ON val.idvalorhabilitaciontransitoria = j.refvaloreshabilitacionestransitorias 
+inner join tbdocumentaciones do ON do.iddocumentacion = val.refdocumentaciones 
+where j.refjugadores = ".$idJugador." and do.iddocumentacion = ".$idDocumentacion."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbjugadoresvaloreshabilitacionestransitorias*/
+
+
+
+function insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$default) { 
+$sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,default) 
+values ('',".$refdocumentaciones.",'".utf8_decode($descripcion)."',".$habilita.",".$default.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita,$default) { 
 $sql = "update tbvaloreshabilitacionestransitorias 
 set 
-refdocumentaciones = ".$refdocumentaciones.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita." 
+refdocumentaciones = ".$refdocumentaciones.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita.",default = ".$default." 
 where idvalorhabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1525,6 +1755,7 @@ v.idvalorhabilitaciontransitoria,
 doc.descripcion as documentacion,
 v.descripcion,
 (case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
+v.default as pordefecto,
 v.refdocumentaciones
 from tbvaloreshabilitacionestransitorias v 
 inner join tbdocumentaciones doc ON doc.iddocumentacion = v.refdocumentaciones 
@@ -1535,7 +1766,7 @@ return $res;
 
 
 function traerValoreshabilitacionestransitoriasPorId($id) { 
-$sql = "select idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita from tbvaloreshabilitacionestransitorias where idvalorhabilitaciontransitoria =".$id; 
+$sql = "select idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,default as pordefecto from tbvaloreshabilitacionestransitorias where idvalorhabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -1547,6 +1778,7 @@ v.idvalorhabilitaciontransitoria,
 doc.descripcion as documentacion,
 v.descripcion,
 (case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
+(case when v.default= 1 then 'Si' else 'No' end) as pordefecto,
 v.refdocumentaciones
 from tbvaloreshabilitacionestransitorias v 
 inner join tbdocumentaciones doc ON doc.iddocumentacion = v.refdocumentaciones  
@@ -1555,6 +1787,24 @@ order by 1";
 $res = $this->query($sql,0); 
 return $res; 
 } 
+
+function traerValoreshabilitacionestransitoriasPorDocumentacionJugadorActivas($idDocumentacion, $idJugador) {
+$sql = "select 
+v.idvalorhabilitaciontransitoria,
+doc.descripcion as documentacion,
+v.descripcion,
+(case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
+coalesce(jvh.iddbjugadorvalorhabilitaciontransitoria,0) as seleccionado,
+v.refdocumentaciones
+from tbvaloreshabilitacionestransitorias v 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = v.refdocumentaciones  
+left join dbjugadoresvaloreshabilitacionestransitorias jvh 
+on jvh.refvaloreshabilitacionestransitorias = v.idvalorhabilitaciontransitoria and jvh.refjugadores = ".$idJugador."
+where doc.iddocumentacion = ".$idDocumentacion."
+order by 1";
+$res = $this->query($sql,0); 
+return $res; 	
+}
 
 
 /* /* Fin de la Tabla: tbvaloreshabilitacionestransitorias*/
@@ -2191,6 +2441,51 @@ return $res;
 /* /* Fin de la Tabla: dbdefinicionessancionesacumuladastemporadas*/
 
 
+
+/************  FUNCIONES PARA LA PARTE ADMINISTRATIVA  *********************/
+
+/****** VERIFICO LA EDAD ******/////
+function verificarEdad($refjugador) {
+	$sql = "select DATE_FORMAT(fechanacimiento, '%Y') as fechanacimiento from dbjugadores where idjugador =".$refjugador;
+	$res = $this->query($sql,0);
+	
+	$fechactual = date('Y');
+	$edadJuagador = mysql_result($res,0,'fechanacimiento');
+	
+	$edad = $fechactual - $edadJuagador;
+	
+	return $edad;	
+}
+/******   FIN   *****///////////////
+
+/******   COMPRUEBO SI PUEDO JUGAR EN ESA CATEGORIA Y TIPO DE JUGADOR POR LA EDAD     *************/
+function verificaEdadCategoriaJugador($refjugador, $refcategoria, $tipoJugador) {
+	
+	$edad = $this->verificarEdad($refjugador);
+	
+	$sql = "SELECT 
+				count(*) as verificado
+			FROM
+				dbdefinicionescategoriastemporadastipojugador dc
+					INNER JOIN
+				(SELECT 
+					iddefinicioncategoriatemporada
+				FROM
+					dbdefinicionescategoriastemporadas ct
+				WHERE
+					ct.refcategorias = ".$refcategoria."
+				ORDER BY iddefinicioncategoriatemporada DESC
+				LIMIT 1) c
+				on c.iddefinicioncategoriatemporada = dc.refdefinicionescategoriastemporadas
+				where dc.reftipojugadores = ".$tipoJugador." and ".$edad." between dc.edadminima and dc.edadmaxima";
+	$res = $this->query($sql,0);
+	
+	return mysql_result($res,0,0);
+}
+
+/***************************           FIN         ******************************/
+
+/************      FIN        **********************************************/
 
 /* Fin */
 

@@ -343,10 +343,39 @@ break;
 
 /***************  FIN  ********************************************/
 
+/*****         FUNCIONES       **********/
+case 'verificarEdad':
+	verificarEdad($serviciosReferencias);
+	break;
+case 'verificaEdadCategoriaJugador':
+	verificaEdadCategoriaJugador($serviciosReferencias);
+	break;
+
+/*****          fin          ************/
+
+
 }
 
 /* Fin */
 /*
+
+
+/*****         FUNCIONES       **********/
+function verificarEdad($serviciosReferencias) {
+	$id	= $_POST['refjugador'];
+	
+	echo $serviciosReferencias->verificarEdad($id);
+}
+
+function verificaEdadCategoriaJugador($serviciosReferencias) {
+	$refjugador		= $_POST['refjugador'];
+	$refcategoria	= $_POST['refcategoria'];
+	$tipoJugador	= $_POST['tipoJugador'];
+	
+	echo $serviciosReferencias->verificaEdadCategoriaJugador($refjugador, $refcategoria, $tipoJugador);
+}
+/*****          fin          ************/
+
 
 /* PARA Tipocontactos */
 
@@ -1031,27 +1060,60 @@ $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarJugadores($id); 
 echo $res; 
 } 
+
 function insertarJugadoresdocumentacion($serviciosReferencias) { 
-$refjugadores = $_POST['refjugadores']; 
-$refdocumentaciones = $_POST['refdocumentaciones']; 
-if (isset($_POST['valor'])) { 
-$valor	= 1; 
-} else { 
-$valor = 0; 
+	$refjugadores = $_POST['refjugadores']; 
+	$observaciones = '';
+	
+	$resDocu = $serviciosReferencias->traerDocumentaciones();
+	$cad = 'docu';
+	while ($rowFS = mysql_fetch_array($resDocu)) {
+		if (isset($_POST[$cad.$rowFS[0]])) {
+		
+			$res = $serviciosReferencias->insertarJugadoresdocumentacion($refjugadores,$rowFS[0],1,$observaciones);
+		} else {
+			$res = $serviciosReferencias->insertarJugadoresdocumentacion($refjugadores,$rowFS[0],0,$observaciones);
+		
+		}
+	}
+	
+	$resV = '';
+	$resValores = $serviciosReferencias->traerValoreshabilitacionestransitorias();
+	$cadV = 'multiselect';
+
+	while ($rowV = mysql_fetch_array($resValores)) {
+		$resV .= $cadV.$rowV[0];
+		if (isset($_POST[$cadV.$rowV[0]])) {
+			$resV .= 'entro';
+			$resV .= $serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($refjugadores,$rowV[0]);
+		}
+	}
+	
+	/*
+	for($i=0;$i<$numero;$i++){
+		$cad .= $tags[$i]." - ";
+		if (strpos($tags[$i],"docu") !== false) {
+			$idDocu		= str_replace("docu","",$tags[$i]);
+			/*
+			if (isset($valores[$i])) {
+				$res = $serviciosReferencias->insertarJugadoresdocumentacion($refjugadores,$idDocu,1,$observaciones);
+			} else {
+				$res = $serviciosReferencias->insertarJugadoresdocumentacion($refjugadores,$idDocu,0,$observaciones);
+			}
+			*//*
+		}
+	}
+	*/
+	 
+	if ((integer)$resV > 0) { 
+		echo ''; 
+	} else { 
+		echo 'Huvo un error al insertar datos'.$resV.' ---- ';	 
+	} 
+	//echo $cad;
 } 
-if (isset($_POST['habilita'])) { 
-$habilita	= 1; 
-} else { 
-$habilita = 0; 
-} 
-$observaciones = $_POST['observaciones']; 
-$res = $serviciosReferencias->insertarJugadoresdocumentacion($refjugadores,$refdocumentaciones,$valor,$habilita,$observaciones); 
-if ((integer)$res > 0) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al insertar datos';	 
-} 
-} 
+
+
 function modificarJugadoresdocumentacion($serviciosReferencias) { 
 $id = $_POST['id']; 
 $refjugadores = $_POST['refjugadores']; 
@@ -1206,30 +1268,45 @@ echo $res;
 
 
 function insertarValoreshabilitacionestransitorias($serviciosReferencias) { 
-$refmotivoshabilitacionestransitorias = $_POST['refdocumentaciones']; 
+$refdocumentaciones = $_POST['refdocumentaciones']; 
 $descripcion = $_POST['descripcion']; 
 if (isset($_POST['habilita'])) { 
 $habilita	= 1; 
 } else { 
 $habilita = 0; 
 } 
-$res = $serviciosReferencias->insertarValoreshabilitacionestransitorias($refmotivoshabilitacionestransitorias,$descripcion,$habilita); 
+
+if (isset($_POST['default'])) { 
+$default	= 1; 
+} else { 
+$default = 0; 
+} 
+
+
+$res = $serviciosReferencias->insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$default); 
 if ((integer)$res > 0) { 
 echo ''; 
 } else { 
 echo 'Huvo un error al insertar datos';	 
 } 
 } 
+
+
 function modificarValoreshabilitacionestransitorias($serviciosReferencias) { 
 $id = $_POST['id']; 
-$refmotivoshabilitacionestransitorias = $_POST['refdocumentaciones']; 
+$refdocumentaciones = $_POST['refdocumentaciones']; 
 $descripcion = $_POST['descripcion']; 
 if (isset($_POST['habilita'])) { 
 $habilita	= 1; 
 } else { 
 $habilita = 0; 
 } 
-$res = $serviciosReferencias->modificarValoreshabilitacionestransitorias($id,$refmotivoshabilitacionestransitorias,$descripcion,$habilita); 
+if (isset($_POST['default'])) { 
+$default	= 1; 
+} else { 
+$default = 0; 
+} 
+$res = $serviciosReferencias->modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita,$default); 
 if ($res == true) { 
 echo ''; 
 } else { 

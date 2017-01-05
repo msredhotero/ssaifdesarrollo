@@ -25,83 +25,81 @@ $fecha = date('Y-m-d');
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Jugadores",$_SESSION['refroll_predio'],'');
 
 
+	
+if (!$_POST){
+	if (!isset($_GET['id'])) {
+		header('Location: index.php');
+	}
+	$id	= $_GET['id'];
+
+} else {
+	if (!isset($_POST['id'])) {
+		header('Location: index.php');
+	}
+	
+	
+	$id	= $_POST['refjugadores'];
+	//die(print_r($_POST));
+	
+	//$refjugadores = $_POST['refjugadores']; 
+	
+	//elimino todo y lo vuelvo a cargar
+	$serviciosReferencias->eliminarJugadoresdocumentacionPorJugador($id);
+	$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJuagador($id);
+	//// fin del eliminar //////
+	
+	$observaciones = '';
+	
+	$resDocu = $serviciosReferencias->traerDocumentaciones();
+	$cad = 'docu';
+	while ($rowFS = mysql_fetch_array($resDocu)) {
+		if (isset($_POST[$cad.$rowFS[0]])) {
+		
+			$res = $serviciosReferencias->insertarJugadoresdocumentacion($id,$rowFS[0],1,$observaciones);
+		} else {
+			$res = $serviciosReferencias->insertarJugadoresdocumentacion($id,$rowFS[0],0,$observaciones);
+		
+		}
+	}
+	
+	$resV = '';
+	$resValores = $serviciosReferencias->traerValoreshabilitacionestransitorias();
+	$cadV = 'multiselect';
+
+	while ($rowV = mysql_fetch_array($resValores)) {
+		$resV .= $cadV.$rowV[0];
+		if (isset($_POST[$cadV.$rowV[0]])) {
+			$resV .= $serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,$_POST[$cadV.$rowV[0]][0]);
+		}
+	}
+	
+}
+
+$resResultado = $serviciosReferencias->traerJugadoresPorId($id);
+
+$resJugadores = $serviciosReferencias->traerJugadoresdocumentacionPorJugador($id);
+
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Jugador";
+$singular = "Documentación del jugador";
 
-$plural = "Jugadores";
+$plural = "Documentaciones del jugador";
 
-$eliminar = "eliminarJugadores";
+$eliminar = "eliminarJugadoresdocumentacion";
 
-$insertar = "insertarJugadores";
+$insertar = "insertarJugadoresdocumentacion";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbjugadores";
-
-$lblCambio	 	= array("reftipodocumentos","nrodocumento","fechanacimiento","fechaalta","fechabaja","refcountries");
-$lblreemplazo	= array("Tipo Documento","Nro Documento","Fecha Nacimiento","Fecha Alta","Fecha Baja","Countries");
-
-
-$resTipoDoc 	= $serviciosReferencias->traerTipodocumentos();
-$cadRef 	= $serviciosFunciones->devolverSelectBox($resTipoDoc,array(1),'');
-
-$resCountries 	= $serviciosReferencias->traerCountries();
-$cadRef2 	= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
-
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2);
-$refCampo 	=  array("reftipodocumentos","refcountries");
-//////////////////////////////////////////////  FIN de los opciones //////////////////////////
-
-
-
-//tip.tipodocumento,j.nrodocumento,j.apellido,j.nombres,j.email,j.fechanacimiento,j.fechaalta,j.fechabaja,cou.nombre as countrie,j.observaciones
-/////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Tipo Documento</th>
-					<th>Nro Doc</th>
-					<th>Apellido</th>
-					<th>Nombres</th>
-					<th>Email</th>
-					<th>Fecha Nac.</th>
-					<th>Fecha Alta</th>
-					<th>Fecha Baja</th>
-					<th>Countrie</th>
-					<th>Obs.</th>";
+$tabla 			= "dbjugadoresdocumentacion";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 $resDocumentaciones2	=	$serviciosReferencias->traerDocumentaciones();
-
-
-$formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
-
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadores(),10);
-
-$resMotivosHabDeportivas	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDeportivas('Edad');
-$cadRef		=	$serviciosFunciones->devolverSelectBox($resMotivosHabDeportivas,array(2),'');
-
-$resMotivosHabDocumentaciones	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDocumentaciones('Edad');
-$cadRef2	=	$serviciosFunciones->devolverSelectBox($resMotivosHabDocumentaciones,array(2),'');
-
-$resTemporados	=	$serviciosReferencias->traerTemporadas();
-$cadRef3	=	$serviciosFunciones->devolverSelectBox($resTemporados,array(1),'');
-
 $resDocumentaciones	=	$serviciosReferencias->traerDocumentaciones();
 $cadRef4	=	$serviciosFunciones->devolverSelectBox($resDocumentaciones,array(1),'');
-
-$resCategoria		=	$serviciosReferencias->traerCategorias();
-$cadRefCad			=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
-
-$resEquipo			=	$serviciosReferencias->traerEquipos();
-$cadRefEquipo		=	$serviciosFunciones->devolverSelectBox($resEquipo,array(2),'');
-
-$resTipoJugador		=	$serviciosReferencias->traerTipojugadores();
-$cadRefTipoJug		=	$serviciosFunciones->devolverSelectBox($resTipoJugador,array(1),'');
-
-$resCountries		=	$serviciosReferencias->traerCountries();
-$cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
 
 
@@ -203,14 +201,14 @@ if ($_SESSION['refroll_predio'] != 1) {
 	
 		<div class="row bs-wizard" style="border-bottom:0;margin-left:25px; margin-right:25px;">
                 
-            <div class="col-xs-3 bs-wizard-step active">
+            <div class="col-xs-3 bs-wizard-step complete">
               <div class="text-center bs-wizard-stepnum">Paso 1</div>
               <div class="progress"><div class="progress-bar"></div></div>
-              <a href="#" class="bs-wizard-dot"></a>
+              <a href="modificar.php?id=<?php echo $id; ?>" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center">Carga del jugador (Nro Documento Unico).</div>
             </div>
             
-            <div class="col-xs-3 bs-wizard-step disabled"><!-- complete -->
+            <div class="col-xs-3 bs-wizard-step active"><!-- complete -->
               <div class="text-center bs-wizard-stepnum">Paso 2</div>
               <div class="progress"><div class="progress-bar"></div></div>
               <a href="#" class="bs-wizard-dot"></a>
@@ -240,12 +238,196 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
-        	
-        	<form class="form-inline formulario" role="form">
+        	<ul class="list-group">
+              <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> Jugador</li>
+              <li class="list-group-item list-group-item-default">Nombre Completo: <?php echo mysql_result($resResultado,0,'apellido').', '.mysql_result($resResultado,0,'nombres'); ?></li>
+              <li class="list-group-item list-group-item-default">Nro Documento: <?php echo mysql_result($resResultado,0,'nrodocumento'); ?></li>
+              <li class="list-group-item list-group-item-default">Fecha de Nacimiento: <?php echo mysql_result($resResultado,0,'fechanacimiento'); ?></li>
+            </ul>
+            
+        	<form class="form-inline formulario" id="formulario" role="form" method="post" action="documentaciones.php">
         	<div class="row">
-			<?php echo $formulario; ?>
+				<?php
+				//***************  defino si entro a modificar o a cargar   ***********************///////////
+				if (mysql_num_rows($resJugadores)<1) {
+					while ($row = mysql_fetch_array($resDocumentaciones2)) {
+						$resValores		=	$serviciosReferencias->traerValoreshabilitacionestransitoriasPorDocumentacion($row[0]);
+				?>
+					<?php
+                        if ($row[2] == 'Si') { 
+                    
+                        $cadA = '<span class="glyphicon glyphicon-check"></span>';
+                     } else { 
+                        $cadA = '<span class="glyphicon glyphicon-remove"></span>';
+                     } ?>
+                    <div class="col-md-4" style="margin-bottom:7px;">
+                        
+                            
+                            <?php
+							if (mysql_num_rows($resValores)>0) {
+							?>
+                            	<div class="input-group">
+                            	<span class="input-group-addon">
+                                <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu[]">
+                                </span>
+                                <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
+                                <span class="input-group-addon">
+                                    <?php echo $cadA; ?>
+                                </span>
+								</div><!-- /input-group -->
+                                <script type="text/javascript">
+									$(document).ready(function() {
+										$('#example-templates-button<?php echo $row[0]; ?>').multiselect({
+											buttonContainer: '<div></div>',
+											buttonClass: '',
+											templates: {
+												button: '<span class="multiselect<?php echo $row[0]; ?> dropdown-toggle" data-toggle="dropdown">(Valores)</span>'
+											}
+										});
+										
+										
+									});
+								</script>
+								<style type="text/css">
+									span.multiselect<?php echo $row[0]; ?> {
+										padding: 2px 6px;
+										font-weight: bold;
+										cursor: pointer;
+										z-index:99999999999999999999999;
+									}
+								</style>
+                                <div class="FixedHeightContainer<?php echo $row[0]; ?>">
+								<select id="example-templates-button<?php echo $row[0]; ?>" name="multiselect<?php echo $row[0]; ?>[]" required>
+									<?php
+										while ($rowV = mysql_fetch_array($resValores)) {
+											if ($rowV[3] == 1) {
+												$chequeado = 'selected="selected"';	
+											} else {
+												$chequeado = '';	
+											}
+									?>
+                                    <option value="<?php echo $rowV[0]; ?>" <?php echo $chequeado; ?>><?php echo $rowV[2]; ?> - Habilita: <?php echo $rowV[3]; ?></option>
+
+                                    <?php
+										}
+									?>
+								</select>
+                                </div>
+                            <?php
+							} else {
+							?>
+                            <div class="input-group">
+                            <span class="input-group-addon">
+                            <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
+                            </span>
+                            <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
+                            <span class="input-group-addon">
+                            	<?php echo $cadA; ?>
+                            </span>
+                            </div><!-- /input-group -->
+                            <?php
+							} 
+							?>
+                        
+                    </div><!-- /.col-lg-6 -->
+                <?php
+					}
+				} else {
+					while ($row = mysql_fetch_array($resJugadores)) {
+						$resValores		=	$serviciosReferencias->traerValoreshabilitacionestransitoriasPorDocumentacionJugadorActivas($row[0],$id);
+				?>
+                	<?php
+						if ($row[3] == 1) { 
+							$check = 'checked';
+						} else {
+							$check = '';
+						}
+						
+                        if ($row[2] == 'Si') { 
+                    
+							$cadA = '<span class="glyphicon glyphicon-check"></span>';
+						 } else { 
+							$cadA = '<span class="glyphicon glyphicon-remove"></span>';
+						 } ?>
+                    <div class="col-md-4" style="margin-bottom:7px;">
+                        
+                            
+                            <?php
+							if (mysql_num_rows($resValores)>0) {
+							?>
+                            	<div class="input-group">
+                            	<span class="input-group-addon">
+                                <input type="checkbox" <?php echo $check; ?> aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
+                                </span>
+                                <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
+                                <span class="input-group-addon">
+                                    <?php echo $cadA; ?>
+                                </span>
+								</div><!-- /input-group -->
+                                <script type="text/javascript">
+									$(document).ready(function() {
+										$('#example-templates-button<?php echo $row[0]; ?>').multiselect({
+											buttonContainer: '<div></div>',
+											buttonClass: '',
+											templates: {
+												button: '<span class="multiselect<?php echo $row[0]; ?> dropdown-toggle" data-toggle="dropdown">(Valores)</span>'
+											}
+										});
+										
+										
+									});
+								</script>
+								<style type="text/css">
+									span.multiselect<?php echo $row[0]; ?> {
+										padding: 2px 6px;
+										font-weight: bold;
+										cursor: pointer;
+										z-index:99999999999999999999999;
+									}
+								</style>
+                                <div class="FixedHeightContainer<?php echo $row[0]; ?>">
+								<select id="example-templates-button<?php echo $row[0]; ?>" name="multiselect<?php echo $row[0]; ?>[]" required>
+									<?php
+										while ($rowV = mysql_fetch_array($resValores)) {
+											if ($rowV[4] > 0) {
+												$chequeado = 'selected="selected"';	
+											} else {
+												$chequeado = '';	
+											}
+									?>
+                                    <option value="<?php echo $rowV[0]; ?>" <?php echo $chequeado; ?>><?php echo $rowV[2]; ?> - Habilita: <?php echo $rowV[3]; ?></option>
+
+                                    <?php
+										}
+									?>
+								</select>
+                                </div>
+                            <?php
+							} else {
+							?>
+                            <div class="input-group">
+                            <span class="input-group-addon">
+                            <input type="checkbox" <?php echo $check; ?> aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
+                            </span>
+                            <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
+                            <span class="input-group-addon">
+                            	<?php echo $cadA; ?>
+                            </span>
+                            </div><!-- /input-group -->
+                            <?php
+							} 
+							?>
+                        
+                    </div><!-- /.col-lg-6 -->
+                
+                
+                <?php
+					}
+				} 
+				?>
             </div>
             <hr>
+            
             
             
             
@@ -270,24 +452,14 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </ul>
                 </div>
             </div>
+            <input type="hidden" id="accion" name="accion" value="<?php echo $insertar; ?>"/>
+            <input type="hidden" id="refjugadores" name="refjugadores" value="<?php echo $id; ?>"/>
+            <input type="hidden" id="id" name="id" value="<?php echo $id; ?>"/>
             </form>
     	</div>
     </div>
     
-    <div class="boxInfoLargo">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
-        	
-        </div>
-    	<div class="cuerpoBox">
-        	<?php echo $lstCargados; ?>
-    	</div>
-    </div>
-    
-    
 
-    
-    
    
 </div>
 
@@ -352,7 +524,7 @@ $(document).ready(function(){
 		  }
 	} );
 	
-	$('#activo').prop('checked',true);
+	
 	
 	function traerEquiposPorCountries(id, contenedor) {
 		$.ajax({
@@ -450,16 +622,13 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 			
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
-	
-	?>
-	
-
 	
 	
+	$('#cargar').click(function(){
+		$('#formulario').submit();		
+	});
 	//al enviar el formulario
-    $('#cargar').click(function(){
+    $('#cargar3').click(function(){
 		
 		if (validador() == "")
         {
@@ -496,66 +665,8 @@ $(document).ready(function(){
 												
 											});
 											$("#load").html('');
-											url = "index.php";
-											$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
-		}
-    });
-	
-	//al enviar el formulario
-    $('#cargarcontinuar').click(function(){
-		
-		if (validador() == "")
-        {
-			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax  
-			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
-
-					if (!isNaN(data)) {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											url = "documentaciones.php?id="+data;
-											$(location).attr('href',url);
+											//url = "documentaciones.php?id="+<?php echo $id; ?>;
+											//$(location).attr('href',url);
                                             
 											
                                         } else {
