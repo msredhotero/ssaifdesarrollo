@@ -296,7 +296,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             <hr>
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
-                <h4 style="text-decoration:underline;">Documentaciones y Habilitaciones</h4>
+                <h4 style="text-decoration:underline;">Documentaciones</h4>
                 <?php
 					while ($rowD = mysql_fetch_array($resDocumentaciones)) {
 						
@@ -323,6 +323,11 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <?php
 					}
 				?>
+            </div>
+            
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <h4 style="text-decoration:underline;">Habilitaciones Transitorias</h4>
+                
             </div>
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
