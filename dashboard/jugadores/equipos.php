@@ -354,6 +354,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
+                    <li>
+                        <button type="button" class="btn btn-success" id="habilitaciones" style="margin-left:0px;">Continuar</button>
+                    </li>
                 </ul>
                 </div>
             </div>
@@ -366,7 +369,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados a Equipos</p>
         	
         </div>
     	<div class="cuerpoBox">
@@ -400,7 +403,11 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	
+	$('#habilitaciones').click(function(event){
+		 
+		url = "habilitaciones.php?id="+<?php echo $id; ?>;
+		$(location).attr('href',url);
+	});//fin del boton habilitaciones
 	
 
 	$('#example').dataTable({

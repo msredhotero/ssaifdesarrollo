@@ -1574,18 +1574,18 @@ tbtipodocumentos
 
 /* PARA Jugadoresmotivoshabilitacionestransitorias */
 
-function insertarJugadoresmotivoshabilitacionestransitorias($refjugadores,$refmotivoshabilitacionestransitorias) { 
-$sql = "insert into dbjugadoresmotivoshabilitacionestransitorias(iddbjugadormotivohabilitaciontransitoria,refjugadores,refmotivoshabilitacionestransitorias) 
-values ('',".$refjugadores.",".$refmotivoshabilitacionestransitorias.")"; 
+function insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones) { 
+$sql = "insert into dbjugadoresmotivoshabilitacionestransitorias(iddbjugadormotivohabilitaciontransitoria,reftemporadas,refjugadores,refdocumentaciones,refmotivoshabilitacionestransitorias,refequipos,refcategorias,fechalimite,observaciones) 
+values ('',".$reftemporadas.",".$refjugadores.",".$refdocumentaciones.",".$refmotivoshabilitacionestransitorias.",".$refequipos.",".$refcategorias.",'".utf8_decode($fechalimite)."','".utf8_decode($observaciones)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
 
 
-function modificarJugadoresmotivoshabilitacionestransitorias($id,$refjugadores,$refmotivoshabilitacionestransitorias) { 
+function modificarJugadoresmotivoshabilitacionestransitorias($id,$reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones) { 
 $sql = "update dbjugadoresmotivoshabilitacionestransitorias 
 set 
-refjugadores = ".$refjugadores.",refmotivoshabilitacionestransitorias = ".$refmotivoshabilitacionestransitorias." 
+reftemporadas = ".$reftemporadas.",refjugadores = ".$refjugadores.",refdocumentaciones = ".$refdocumentaciones.",refmotivoshabilitacionestransitorias = ".$refmotivoshabilitacionestransitorias.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",fechalimite = '".utf8_decode($fechalimite)."',observaciones = '".utf8_decode($observaciones)."' 
 where iddbjugadormotivohabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1602,13 +1602,27 @@ return $res;
 function traerJugadoresmotivoshabilitacionestransitorias() { 
 $sql = "select 
 j.iddbjugadormotivohabilitaciontransitoria,
+j.reftemporadas,
 j.refjugadores,
-j.refmotivoshabilitacionestransitorias
+j.refdocumentaciones,
+j.refmotivoshabilitacionestransitorias,
+j.refequipos,
+j.refcategorias,
+j.fechalimite,
+j.observaciones
 from dbjugadoresmotivoshabilitacionestransitorias j 
+inner join tbtemporadas tem ON tem.idtemporadas = j.reftemporadas 
 inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
 inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
 inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
 inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
+inner join dbequipos equ ON equ.idequipo = j.refequipos 
+inner join dbcountries co ON co.idcountrie = equ.refcountries 
+inner join tbcategorias ca ON ca.idtcategoria = equ.refcategorias 
+inner join tbdivisiones di ON di.iddivision = equ.refdivisiones 
+inner join dbcontactos co ON co.idcontacto = equ.refcontactos 
+inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1616,15 +1630,13 @@ return $res;
 
 
 function traerJugadoresmotivoshabilitacionestransitoriasPorId($id) { 
-$sql = "select iddbjugadormotivohabilitaciontransitoria,refjugadores,refmotivoshabilitacionestransitorias from dbjugadoresmotivoshabilitacionestransitorias where iddbjugadormotivohabilitaciontransitoria =".$id; 
+$sql = "select iddbjugadormotivohabilitaciontransitoria,reftemporadas,refjugadores,refdocumentaciones,refmotivoshabilitacionestransitorias,refequipos,refcategorias,fechalimite,observaciones from dbjugadoresmotivoshabilitacionestransitorias where iddbjugadormotivohabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
 
 /* Fin */
 /* /* Fin de la Tabla: dbjugadoresmotivoshabilitacionestransitorias*/
-
-/* PARA Jugadoresvaloreshabilitacionestransitorias */
 
 
 function insertarJugadoresvaloreshabilitacionestransitorias($refjugadores,$refvaloreshabilitacionestransitorias) { 

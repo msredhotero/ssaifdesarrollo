@@ -24,15 +24,17 @@ $fecha = date('Y-m-d');
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Jugadores",$_SESSION['refroll_predio'],'');
 
+$id	= $_GET['id'];
 
+$resResultado = $serviciosReferencias->traerJugadoresPorId($id);
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Jugador";
 
 $plural = "Jugadores";
 
-$eliminar = "eliminarJugadores";
+$eliminar = "eliminarJugadoresmotivoshabilitacionestransitorias";
 
-$insertar = "insertarJugadores";
+$insertar = "insertarJugadoresmotivoshabilitacionestransitorias";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
@@ -203,28 +205,28 @@ if ($_SESSION['refroll_predio'] != 1) {
 	
 		<div class="row bs-wizard" style="border-bottom:0;margin-left:25px; margin-right:25px;">
                 
-            <div class="col-xs-3 bs-wizard-step active">
+            <div class="col-xs-3 bs-wizard-step complete">
               <div class="text-center bs-wizard-stepnum">Paso 1</div>
               <div class="progress"><div class="progress-bar"></div></div>
               <a href="#" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center">Carga del jugador (Nro Documento Unico).</div>
             </div>
             
-            <div class="col-xs-3 bs-wizard-step disabled"><!-- complete -->
+            <div class="col-xs-3 bs-wizard-step complete"><!-- complete -->
               <div class="text-center bs-wizard-stepnum">Paso 2</div>
               <div class="progress"><div class="progress-bar"></div></div>
-              <a href="#" class="bs-wizard-dot"></a>
+              <a href="documentaciones.php?id=<?php echo $id; ?>" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center">Carga de la Documentación presentada.</div>
             </div>
             
-            <div class="col-xs-3 bs-wizard-step disabled"><!-- complete -->
+            <div class="col-xs-3 bs-wizard-step complete"><!-- complete -->
               <div class="text-center bs-wizard-stepnum">Paso 3</div>
               <div class="progress"><div class="progress-bar"></div></div>
-              <a href="#" class="bs-wizard-dot"></a>
+              <a href="equipos.php?id=<?php echo $id; ?>" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center">Asignar al Jugador a un Equipo.</div>
             </div>
             
-            <div class="col-xs-3 bs-wizard-step disabled"><!-- active -->
+            <div class="col-xs-3 bs-wizard-step active"><!-- active -->
               <div class="text-center bs-wizard-stepnum">Paso 4</div>
               <div class="progress"><div class="progress-bar"></div></div>
               <a href="#" class="bs-wizard-dot"></a>
@@ -240,173 +242,38 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
-        	<form class="form-inline formulario" role="form">
-        	<div class="row">
-			<?php echo $formulario; ?>
-            </div>
-            <hr>
-            
-            <div class="panel panel-primary" style="z-index:-1">
+        	
+        	<div class='row' style="margin-left:25px; margin-right:25px;">
+				<div class="panel panel-success">
 				<div class="panel-heading">
-					<h3 class="panel-title">Documentaciones</h3>
-					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
-				</div>
-                <div class="panel-body collapse">
-            	<?php
-					while ($row = mysql_fetch_array($resDocumentaciones2)) {
-						$resValores		=	$serviciosReferencias->traerValoreshabilitacionestransitoriasPorDocumentacion($row[0]);
-				?>
-					<?php
-                        if ($row[2] == 'Si') { 
-                    
-                        $cadA = '<span class="glyphicon glyphicon-check"></span>';
-                     } else { 
-                        $cadA = '<span class="glyphicon glyphicon-remove"></span>';
-                     } ?>
-                    <div class="col-md-4" style="margin-bottom:7px;">
-                        
-                            
-                            <?php
-							if (mysql_num_rows($resValores)>0) {
-							?>
-                            	<div class="input-group">
-                            	<span class="input-group-addon">
-                                <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
-                                </span>
-                                <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
-                                <span class="input-group-addon">
-                                    <?php echo $cadA; ?>
-                                </span>
-								</div><!-- /input-group -->
-                                <script type="text/javascript">
-									$(document).ready(function() {
-										$('#example-templates-button<?php echo $row[0]; ?>').multiselect({
-											buttonContainer: '<div></div>',
-											buttonClass: '',
-											templates: {
-												button: '<span class="multiselect<?php echo $row[0]; ?> dropdown-toggle" data-toggle="dropdown">(Valores)</span>'
-											}
-										});
-										
-										
-									});
-								</script>
-								<style type="text/css">
-									span.multiselect<?php echo $row[0]; ?> {
-										padding: 2px 6px;
-										font-weight: bold;
-										cursor: pointer;
-										z-index:99999999999999999999999;
-									}
-								</style>
-                                <div class="FixedHeightContainer<?php echo $row[0]; ?>">
-								<select id="example-templates-button<?php echo $row[0]; ?>">
-									<?php
-										while ($rowV = mysql_fetch_array($resValores)) {
-											if ($rowV[3] == 1) {
-												$chequeado = 'selected="selected"';	
-											} else {
-												$chequeado = '';	
-											}
-									?>
-                                    <option value="<?php echo $rowV[0]; ?>" <?php echo $chequeado; ?>><?php echo $rowV[2]; ?> - Habilita: <?php echo $rowV[3]; ?></option>
-
-                                    <?php
-										}
-									?>
-								</select>
-                                </div>
-                            <?php
-							} else {
-							?>
-                            <div class="input-group">
-                            <span class="input-group-addon">
-                            <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
-                            </span>
-                            <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
-                            <span class="input-group-addon">
-                            	<?php echo $cadA; ?>
-                            </span>
-                            </div><!-- /input-group -->
-                            <?php
-							} 
-							?>
-                        
-                    </div><!-- /.col-lg-6 -->
-                <?php
-					}
-				?>
-				</div>
-            </div>
-            
-            
-            
-            
-            <div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">Equipos</h3>
+					<h3 class="panel-title">Habilitaciones Transitorias (Deportiva)</h3>
 					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
 				</div>
                 <div class="panel-body" id="primero">
-					<div class="row">
-                    <div class="form-group col-md-3" style="display:block">
+                	<form class="form-inline formulario" role="form">
+                    <div class="row">
+                    
+                	<div class="form-group col-md-3" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Fusión</label>
                         <div class="input-group col-md-12 fontcheck">
-                            <input type="checkbox" class="form-control" id="equiposRefFusion" name="equiposRefFusion" style="width:50px;" required> <p>Si/No</p>
+                            <input type="checkbox" class="form-control" id="esfusion" name="esfusion" style="width:50px;" required> <p>Si/No</p>
                         </div>
                     </div>
                     <div class="form-group col-md-9" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Countries</label>
                         <div class="input-group col-md-12">
-                            <select id="equiposRefcountries" name="equiposRefcountries" class="chosen-select" style="width:100%;">
+                            <select id="refcountriesaux" name="refcountriesaux" class="chosen-select" style="width:100%;">
                             	<?php echo $cadRefCountries; ?>
                             </select>
                         </div>
                     </div>
                     </div>
                     <hr>
-                    <div class="row">
-                    <div class="form-group col-md-4" style="display:block">
-                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
-                        <div class="input-group col-md-12">
-                            <select class="form-control" id="equiposRefcategorias" name="equiposRefcategorias">
-                            	<?php echo $cadRefCad; ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-4" style="display:block">
-                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
-                        <div class="input-group col-md-12">
-                            <select class="form-control" id="equiposRefequipos" name="equiposRefequipos">
-                            	<?php echo $cadRefEquipo; ?>
-                            </select>
-                        </div>
-                    </div>
                     
-                    <div class="form-group col-md-4" style="display:block">
-                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Tipo Jugador</label>
-                        <div class="input-group col-md-12">
-                            <select class="form-control" id="equiposReftipojugador" name="equiposReftipojugador">
-                            	<?php echo $cadRefTipoJug; ?>
-                            </select>
-                        </div>
-                    </div>
-                    </div>
-
-				</div>
-            </div>
-            
-            
-            <div class="panel panel-success">
-				<div class="panel-heading">
-					<h3 class="panel-title">Habilitaciones Transitorias (Deportiva)</h3>
-					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
-				</div>
-                <div class="panel-body collapse">
             		<div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Temporadas</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            <select class="form-control" id="reftemporadasA" name="reftemporadasA">
                             	<?php echo $cadRef3; ?>
                             </select>
                         </div>
@@ -414,7 +281,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            <select class="form-control" id="refcategoriasA" name="refcategoriasA">
                             	<?php echo $cadRefCad; ?>
                             </select>
                         </div>
@@ -422,16 +289,16 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            <select class="form-control" id="refequiposA" name="refequiposA">
                             	
                             </select>
                         </div>
                     </div>
                     
-                    <div class="form-group col-md-4" style="display:block">
+                    <div class="form-group col-md-4" style="display:none;">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Documentaciones</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            <select class="form-control" id="refdocumentacionesA" name="refdocumentacionesA">
                             	<?php echo $cadRef4; ?>
                             </select>
                         </div>
@@ -439,7 +306,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Motivos</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            <select class="form-control" id="refmotivoshabilitacionestransitoriasA" name="refmotivoshabilitacionestransitoriasA">
                             	<?php echo $cadRef; ?>
                             </select>
                         </div>
@@ -451,17 +318,42 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <input class="form-control" size="50" value="" readonly type="text">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                        <input name="fechanacimiento" id="fechanacimiento" value="" type="hidden">
+                        <input name="fechalimiteA" id="fechalimiteA" value="" type="hidden">
                     </div>
                     
                     
                     <div class="form-group col-md-8" style="display:block">
                         <label for="observaciones" class="control-label" style="text-align:left">Observaciones</label>
                         <div class="input-group col-md-12">
-                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required></textarea>
+                            <textarea type="text" rows="6" cols="6" class="form-control" id="observacionesA" name="observacionesA" placeholder="Ingrese el Observaciones..." required></textarea>
                         </div>
                         
                     </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                        <ul class="list-inline" style="margin-top:15px;">
+                            <li>
+                                <button type="button" class="btn btn-primary" id="cargarHabilitacionesDeportiva" style="margin-left:0px;">Guardar</button>
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+                    
+                    <div class='row' style="margin-left:25px; margin-right:25px;">
+                        <div class='alert' id="errorDepo">
+                        
+                        </div>
+                        <div id='load'>
+                        
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="refjugadores" name="refjugadores" value="<?php echo $id; ?>"/>
+            		<input type="hidden" id="refcountries" name="refcountries" value="<?php echo mysql_result($resResultado,0,'refcountries'); ?>"/>
+                    <input type="hidden" id="accion" name="accion" value="insertarJugadoresmotivoshabilitacionestransitoriasA"/>
+                    
+                    </form>
                     
 				</div>
             </div>
@@ -472,10 +364,11 @@ if ($_SESSION['refroll_predio'] != 1) {
 					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
 				</div>
                 <div class="panel-body collapse">
+                	<form class="form-inline formulario" role="form">
             		<div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Temporadas</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            <select class="form-control" id="reftemporadasB" name="reftemporadasB">
                             	<?php echo $cadRef3; ?>
                             </select>
                         </div>
@@ -483,7 +376,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Documentaciones</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            <select class="form-control" id="refdocumentacionesB" name="refdocumentacionesB">
                             	<?php echo $cadRef4; ?>
                             </select>
                         </div>
@@ -491,7 +384,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Motivos</label>
                         <div class="input-group col-md-12">
-                            <select class="form-control" id="reftipodocumentos" name="reftipodocumentos">
+                            <select class="form-control" id="refmotivoshabilitacionestransitoriasB" name="refmotivoshabilitacionestransitoriasB">
                             	<?php echo $cadRef2; ?>
                             </select>
                         </div>
@@ -503,41 +396,56 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <input class="form-control" size="50" value="" readonly type="text">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                        <input name="fechanacimiento" id="fechanacimiento" value="" type="hidden">
+                        <input name="fechalimiteB" id="fechalimiteB" value="" type="hidden">
                     </div>
                     
                     
                     <div class="form-group col-md-8" style="display:block">
                         <label for="observaciones" class="control-label" style="text-align:left">Observaciones</label>
                         <div class="input-group col-md-12">
-                            <textarea type="text" rows="6" cols="6" class="form-control" id="observaciones" name="observaciones" placeholder="Ingrese el Observaciones..." required></textarea>
+                            <textarea type="text" rows="6" cols="6" class="form-control" id="observacionesB" name="observacionesB" placeholder="Ingrese el Observaciones..." required></textarea>
                         </div>
                         
                     </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                        <ul class="list-inline" style="margin-top:15px;">
+                            <li>
+                                <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+                    
+                    <div class='row' style="margin-left:25px; margin-right:25px;">
+                        <div class='alert' id="errorDocu">
+                        
+                        </div>
+                        <div id='load'>
+                        
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="refjugadores" name="refjugadores" value="<?php echo $id; ?>"/>
+            		<input type="hidden" id="refcountries" name="refcountries" value="<?php echo mysql_result($resResultado,0,'refcountries'); ?>"/>
+                    <input type="hidden" id="accion" name="accion" value="insertarJugadoresmotivoshabilitacionestransitoriasB"/>
+                    </form>
 								
 				</div>
             </div>
-            
-            
-            <div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
-                
-                </div>
-                <div id='load'>
-                
-                </div>
+                 
+                 
             </div>
             
-            <div class="row">
-                <div class="col-md-12">
-                <ul class="list-inline" style="margin-top:15px;">
-                    <li>
-                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
-                    </li>
-                </ul>
-                </div>
-            </div>
-            </form>
+            
+            
+            
+            
+            
+            
+            
+            
     	</div>
     </div>
     
@@ -619,7 +527,6 @@ $(document).ready(function(){
 		  }
 	} );
 	
-	$('#activo').prop('checked',true);
 	
 	function traerEquiposPorCountries(id, contenedor) {
 		$.ajax({
@@ -634,24 +541,27 @@ $(document).ready(function(){
 			}
 		});		
 	}
+
 	
-	traerEquiposPorCountries($('#refcountries').val(), '#equiposRefequipos');
+	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequiposA');
+	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequiposB');
 	
-	$('#refcountries').change(function() {
-		if  ($('#equiposRefFusion').prop('checked') == false) {
-			traerEquiposPorCountries($(this).val(), '#equiposRefequipos');
+	$('#esfusion').click(function() {
+		if  ($('#esfusion').prop('checked') == false) {
+			traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequiposA');
+		}
+	});
+
+	
+	
+	$('#refcountriesaux').change(function() {
+		if  ($('#esfusion').prop('checked') == true) {
+			traerEquiposPorCountries($(this).val(), '#refequiposA');
 		}
 	});
 	
-	
-	$('#equiposRefcountries').change(function() {
-		if  ($('#equiposRefFusion').prop('checked') == true) {
-			traerEquiposPorCountries($(this).val(), '#equiposRefequipos');
-		}
-	});
-	
-	$('#equiposRefFusion').click(function() {
-		$('#equiposRefequipos').html('');
+	$('#esfusion').click(function() {
+		$('#refequiposA').html('');
 	});
 	
 	$("#example").on("click",'.varborrar', function(){
@@ -717,19 +627,13 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 			
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
-	
-	?>
 	
 
 	
 	
 	//al enviar el formulario
-    $('#cargar').click(function(){
-		
-		if (validador() == "")
-        {
+    $('#cargarHabilitacionesDeportiva').click(function(){
+
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
@@ -780,7 +684,62 @@ $(document).ready(function(){
                     $("#load").html('');
 				}
 			});
-		}
+    });
+	
+	
+	//al enviar el formulario
+    $('#cargar').click(function(){
+
+			//información del formulario
+			var formData = new FormData($(".formulario")[1]);
+			var message = "";
+			//hacemos la petición ajax  
+			$.ajax({
+				url: '../../ajax/ajax.php',  
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data == '') {
+                                            $(".alert").removeClass("alert-danger");
+											$(".alert").removeClass("alert-info");
+                                            $(".alert").addClass("alert-success");
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
+											$(".alert").delay(3000).queue(function(){
+												/*aca lo que quiero hacer 
+												  después de los 2 segundos de retraso*/
+												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+												
+											});
+											$("#load").html('');
+											url = "index.php";
+											$(location).attr('href',url);
+                                            
+											
+                                        } else {
+                                        	$(".alert").removeClass("alert-danger");
+                                            $(".alert").addClass("alert-danger");
+                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                            $("#load").html('');
+                                        }
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+                    $("#load").html('');
+				}
+			});
     });
 	
 	var config = {

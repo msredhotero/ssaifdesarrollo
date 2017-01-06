@@ -65,6 +65,7 @@ $refCampo 	=  array("reftipodocumentos","refcountries");
 
 $formulario 	= $serviciosFunciones->camposTablaModificar($id, $idTabla, $modificar,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
+$resJugadores = $serviciosReferencias->traerJugadoresdocumentacionPorJugador($id);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -164,9 +165,11 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-success" id="documentaciones" style="margin-left:0px;">Documentaciones</button>
                     </li>
+                    <?php if (mysql_num_rows($resJugadores)>0) { ?>
                     <li>
                         <button type="button" class="btn btn-success" id="equipos" style="margin-left:0px;">Equipos</button>
                     </li>
+                    <?php } ?>
                     <li>
                         <button type="button" class="btn btn-success" id="habilitaciones" style="margin-left:0px;">Habilitaciones</button>
                     </li>

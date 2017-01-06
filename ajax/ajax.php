@@ -244,6 +244,20 @@ case 'eliminarValoreshabilitacionestransitorias':
 eliminarValoreshabilitacionestransitorias($serviciosReferencias); 
 break; 
 
+case 'insertarJugadoresmotivoshabilitacionestransitoriasA': 
+insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferencias); 
+break; 
+case 'insertarJugadoresmotivoshabilitacionestransitoriasB': 
+insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferencias); 
+break; 
+
+case 'modificarJugadoresmotivoshabilitacionestransitorias': 
+modificarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias); 
+break; 
+case 'eliminarJugadoresmotivoshabilitacionestransitorias': 
+eliminarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias); 
+break; 
+
 
 /**************  ETAPA 3 Y 4 **************************************/
 case 'insertarTorneos': 
@@ -340,16 +354,6 @@ case 'eliminarDefinicionessancionesacumuladastemporadas':
 eliminarDefinicionessancionesacumuladastemporadas($serviciosReferencias); 
 break; 
 
-
-case 'insertarConector':
-insertarConector($serviciosReferencias);
-break;
-case 'modificarConector':
-modificarConector($serviciosReferencias);
-break;
-case 'eliminarConector':
-eliminarConector($serviciosReferencias);
-break; 
 
 /***************  FIN  ********************************************/
 
@@ -1950,74 +1954,70 @@ echo $res;
 /* Fin */
 /* /* Fin de la Tabla: dbtorneos*/
 
-
-
-function insertarConector($serviciosReferencias) {
-	$refjugadores = $_POST['refjugadores'];
-	$reftipojugadores = $_POST['reftipojugadores'];
+function insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferencias) { 
 	
-	$refcountries = $_POST['refcountries'];
-	$refcategorias = $_POST['refcategorias'];
+	$reftemporadas = $_POST['reftemporadasA']; 
+	$refjugadores = $_POST['refjugadores']; 
+	$refdocumentaciones = $_POST['refdocumentacionesA']; 
+	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasA']; 
+	$refequipos = $_POST['refequiposA']; 
+	$refcategorias = $_POST['refcategoriasA']; 
+	$fechalimite = $_POST['fechalimiteA']; 
+	$observaciones = $_POST['observacionesA']; 
 	
-	if (isset($_POST['esfusion'])) {
-		$esfusion = 1;
-		$refcountries = $_POST['refcountriesaux'];
-	} else {
-		$esfusion = 0;
-	}
+	$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
 	
-	$activo = 1;
-
-	if (!isset($_POST['refequipos'])) {
-		echo 'Debe seleccionar un equipo';	
-	} else {
-		$refequipos = $_POST['refequipos'];
-		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo);
-		
-		if ((integer)$res > 0) {
-			echo '';
-		} else {
-			echo 'Huvo un error al insertar datos';
-		}
-	}
-}
-
-
-function modificarConector($serviciosReferencias) {
-
-	$id = $_POST['id'];
-	$refjugadores = $_POST['refjugadores'];
-	$reftipojugadores = $_POST['reftipojugadores'];
-	$refequipos = $_POST['refequipos'];
-	$refcountries = $_POST['refcountries'];
-	$refcategorias = $_POST['refcategorias'];
-
-	if (isset($_POST['esfusion'])) {
-		$esfusion = 1;
-	} else {
-		$esfusion = 0;
-	}
-	
-	if (isset($_POST['activo'])) {
-		$activo = 1;
-	} else {
-		$activo = 0;
-	}
-	
-	$res = $serviciosReferencias->modificarConector($id,$refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo);
-	
-	if ($res == true) {
-		echo '';
-	} else {
-		echo 'Huvo un error al modificar datos';
-	}
-}
-
-function eliminarConector($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarConector($id);
-echo $res;
+	if ((integer)$res > 0) { 
+		echo ''; 
+	} else { 
+		echo 'Huvo un error al insertar datos';	 
+	} 
 } 
+
+function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferencias) { 
+	
+	$reftemporadas = $_POST['reftemporadasB']; 
+	$refjugadores = $_POST['refjugadores']; 
+	$refdocumentaciones = $_POST['refdocumentacionesB']; 
+	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasB']; 
+	$refequipos = $_POST['refequiposB']; 
+	$refcategorias = $_POST['refcategoriasB']; 
+	$fechalimite = $_POST['fechalimiteB']; 
+	$observaciones = $_POST['observacionesB']; 
+	
+	$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
+	
+	if ((integer)$res > 0) { 
+		echo ''; 
+	} else { 
+		echo 'Huvo un error al insertar datos';	 
+	} 
+}
+
+function modificarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias) { 
+$id = $_POST['id']; 
+$reftemporadas = $_POST['reftemporadas']; 
+$refjugadores = $_POST['refjugadores']; 
+$refdocumentaciones = $_POST['refdocumentaciones']; 
+$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitorias']; 
+$refequipos = $_POST['refequipos']; 
+$refcategorias = $_POST['refcategorias']; 
+$fechalimite = $_POST['fechalimite']; 
+$observaciones = $_POST['observaciones']; 
+$res = $serviciosReferencias->modificarJugadoresmotivoshabilitacionestransitorias($id,$reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
+if ($res == true) { 
+echo ''; 
+} else { 
+echo 'Huvo un error al modificar datos'; 
+} 
+} 
+
+function eliminarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias) { 
+$id = $_POST['id']; 
+$res = $serviciosReferencias->eliminarJugadoresmotivoshabilitacionestransitorias($id); 
+echo $res; 
+} 
+
 
 
 /**************** FIN *********************************************/
