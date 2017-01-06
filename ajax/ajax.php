@@ -368,6 +368,13 @@ case 'verificaEdadCategoriaJugador':
 /*****          fin          ************/
 
 
+/*****        BUSQUEDAS        **********/
+case 'buscarJugadores':
+	buscarJugadores($serviciosReferencias);
+	break;
+
+/*****          FIN            ***********/
+
 }
 
 /* Fin */
@@ -390,6 +397,91 @@ function verificaEdadCategoriaJugador($serviciosReferencias) {
 }
 /*****          fin          ************/
 
+
+/**********************     BUSQUEDAS             ********************************************************/
+function buscarJugadores($serviciosReferencias) {
+	$tipobusqueda	=	$_POST['tipobusqueda'];
+	$busqueda		=	$_POST['busqueda'];
+	
+	$res	=	$serviciosReferencias->buscarJugadores($tipobusqueda,$busqueda);
+	
+	$cad3 = '';
+	//////////////////////////////////////////////////////busquedajugadores/////////////////////
+	$cad3 = $cad3.'
+				<div class="col-md-12">
+				<div class="panel panel-info">
+                                <div class="panel-heading">
+                                	<h3 class="panel-title">Resultado de la Busqueda</h3>
+                                	
+                                </div>
+                                <div class="panel-body-predio" style="padding:5px 20px;">
+                                	';
+	$cad3 = $cad3.'
+	<div class="row">
+                	<table id="example" class="table table-responsive table-striped" style="font-size:0.8em; padding:2px;">
+						<thead>
+                        <tr>
+                        	<th>Tipo Documento</th>
+							<th>Nro Doc</th>
+							<th>Apellido</th>
+							<th>Nombres</th>
+							<th>Email</th>
+							<th>Fecha Nac.</th>
+							<th>Fecha Alta</th>
+							<th>Fecha Baja</th>
+							<th>Countrie</th>
+							<th>Obs.</th>
+							<th>Acciones</th>
+                        </tr>
+						</thead>
+						<tbody id="resultadosProd">';
+	while ($rowJ = mysql_fetch_array($res)) {
+		$cad3 .= '<tr>
+					<td>'.($rowJ[1]).'</td>
+					<td>'.($rowJ[2]).'</td>
+					<td>'.utf8_encode($rowJ[3]).'</td>
+					<td>'.utf8_encode($rowJ[4]).'</td>
+					<td>'.($rowJ[5]).'</td>
+					<td>'.($rowJ[6]).'</td>
+					<td>'.($rowJ[7]).'</td>
+					<td>'.($rowJ[8]).'</td>
+					<td>'.($rowJ[9]).'</td>
+					<td>'.($rowJ[10]).'</td>
+					<td>
+								
+							<div class="btn-group">
+								<button class="btn btn-success" type="button">Acciones</button>
+								
+								<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								
+								<ul class="dropdown-menu" role="menu">
+									<li>
+									<a href="jugadores/modificar.php?id='.$rowJ[0].'" class="varmodificarJugador" id="'.$rowJ[0].'"><span class="glyphicon glyphicon-pencil"></span>  Modificar</a>
+									</li>
+									
+								</ul>
+							</div>
+							
+							
+						</td>
+				 </tr>';
+	}
+	
+	$cad3 = $cad3.'</tbody>
+                                </table></div>
+                            </div>
+						</div>';
+						
+	echo $cad3;
+}
+
+
+
+
+/**********************                        FIN                     ***********************************/
 
 /* PARA Tipocontactos */
 

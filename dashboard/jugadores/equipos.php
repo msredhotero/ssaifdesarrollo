@@ -103,6 +103,7 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
 $resResultado = $serviciosReferencias->traerJugadoresPorId($id);
 
 
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -336,7 +337,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </div>
 
             </div>
-            
+
             
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
@@ -468,7 +469,7 @@ $(document).ready(function(){
 				if (response == 0) {
 					$("#erroresEdad").removeClass("alert-danger");
 					$("#erroresEdad").addClass("alert-danger");
-					$("#erroresEdad").html('<strong>Error!</strong> El Jugador no tiene la edad para esta categoria y no posee una habilitación transitoria para acreditarlo');
+					$("#erroresEdad").html('<strong>Error!</strong> El Jugador no tiene la edad para esta categoria o no posee una habilitación transitoria para acreditarlo');
 					$('#cargar').hide();
 				} else {
 					$("#erroresEdad").removeClass("alert-danger");

@@ -1141,6 +1141,80 @@ return $res;
 
 /* PARA Jugadores */
 
+function buscarJugadores($tipobusqueda,$busqueda) {
+		switch ($tipobusqueda) {
+			case '1':
+				$sql = "select 
+							j.idjugador,
+							tip.tipodocumento,
+							j.nrodocumento,
+							j.apellido,
+							j.nombres,
+							j.email,
+							j.fechanacimiento,
+							j.fechaalta,
+							j.fechabaja,
+							cou.nombre as countrie,
+							j.observaciones,
+							j.reftipodocumentos,
+							j.refcountries
+							from dbjugadores j 
+							inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+							inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+							inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+				where cou.nombre like '%".$busqueda."%'
+				order by cou.nombre,j.apellido,j.nombres limit 200";
+				break;
+			case '2':
+				$sql = "select 
+							j.idjugador,
+							tip.tipodocumento,
+							j.nrodocumento,
+							j.apellido,
+							j.nombres,
+							j.email,
+							j.fechanacimiento,
+							j.fechaalta,
+							j.fechabaja,
+							cou.nombre as countrie,
+							j.observaciones,
+							j.reftipodocumentos,
+							j.refcountries
+							from dbjugadores j 
+							inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+							inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+							inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+				where concat(j.apellido, ', ',j.nombres) like '%".$busqueda."%'
+				order by cou.nombre,j.apellido,j.nombres";
+				break;
+			case '3':
+				$sql = "select 
+							j.idjugador,
+							tip.tipodocumento,
+							j.nrodocumento,
+							j.apellido,
+							j.nombres,
+							j.email,
+							j.fechanacimiento,
+							j.fechaalta,
+							j.fechabaja,
+							cou.nombre as countrie,
+							j.observaciones,
+							j.reftipodocumentos,
+							j.refcountries
+							from dbjugadores j 
+							inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+							inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+							inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+				where j.nrodocumento like '%".$busqueda."%'
+				order by cou.nombre,j.apellido,j.nombres";
+				break;
+
+		
+		}
+		return $this->query($sql,0);
+	}
+	
 function insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones) { 
 $sql = "insert into dbjugadores(idjugador,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,fechabaja,refcountries,observaciones) 
 values ('',".$reftipodocumentos.",".$nrodocumento.",'".utf8_decode($apellido)."','".utf8_decode($nombres)."','".utf8_decode($email)."','".utf8_decode($fechanacimiento)."','".utf8_decode($fechaalta)."','".utf8_decode($fechabaja)."',".$refcountries.",'".utf8_decode($observaciones)."')"; 
@@ -1271,7 +1345,7 @@ function traerJugadoresdocumentacionPorJugador($idJugador) {
 $sql = "select j.refdocumentaciones,
 doc.descripcion,
 (case when doc.obligatoria = 1 then 'Si' else 'No' end) as obligatoria,
-j.valor,
+(case when j.valor = 1 then 'Si' else 'No' end) as valor,
 j.refjugadores,
 j.idjugadordocumentacion,
 j.observaciones
@@ -1629,6 +1703,36 @@ return $res;
 } 
 
 
+function traerJugadoresmotivoshabilitacionestransitoriasPorJugador($idJugador) { 
+$sql = "select 
+j.iddbjugadormotivohabilitaciontransitoria,
+tem.temporada,
+doc.descripcion as documentacion,
+mot.descripcion as motivos,
+equ.nombre as equipo,
+cat.categoria,
+j.reftemporadas,
+j.refjugadores,
+j.refdocumentaciones,
+j.refmotivoshabilitacionestransitorias,
+j.refequipos,
+j.refcategorias,
+j.fechalimite,
+j.observaciones
+from dbjugadoresmotivoshabilitacionestransitorias j 
+inner join tbtemporadas tem ON tem.idtemporadas = j.reftemporadas 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
+inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
+inner join dbequipos equ ON equ.idequipo = j.refequipos 
+inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
+where j.refjugadores = ".$idJugador."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 function traerJugadoresmotivoshabilitacionestransitoriasPorId($id) { 
 $sql = "select iddbjugadormotivohabilitaciontransitoria,reftemporadas,refjugadores,refdocumentaciones,refmotivoshabilitacionestransitorias,refequipos,refcategorias,fechalimite,observaciones from dbjugadoresmotivoshabilitacionestransitorias where iddbjugadormotivohabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
@@ -1737,7 +1841,7 @@ return $res;
 
 
 function insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$default) { 
-$sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,default) 
+$sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,`default`) 
 values ('',".$refdocumentaciones.",'".utf8_decode($descripcion)."',".$habilita.",".$default.")"; 
 $res = $this->query($sql,1); 
 return $res; 
@@ -1747,7 +1851,7 @@ return $res;
 function modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita,$default) { 
 $sql = "update tbvaloreshabilitacionestransitorias 
 set 
-refdocumentaciones = ".$refdocumentaciones.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita.",default = ".$default." 
+refdocumentaciones = ".$refdocumentaciones.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita.",`default` = ".$default." 
 where idvalorhabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 

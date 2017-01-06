@@ -341,7 +341,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 						$resValores		=	$serviciosReferencias->traerValoreshabilitacionestransitoriasPorDocumentacionJugadorActivas($row[0],$id);
 				?>
                 	<?php
-						if ($row[3] == 1) { 
+						if ($row[3] == 'Si') { 
 							$check = 'checked';
 						} else {
 							$check = '';

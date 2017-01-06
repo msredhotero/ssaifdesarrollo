@@ -61,16 +61,11 @@ $refCampo 	=  array("reftipodocumentos","refcountries");
 
 //tip.tipodocumento,j.nrodocumento,j.apellido,j.nombres,j.email,j.fechanacimiento,j.fechaalta,j.fechabaja,cou.nombre as countrie,j.observaciones
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Tipo Documento</th>
-					<th>Nro Doc</th>
-					<th>Apellido</th>
-					<th>Nombres</th>
-					<th>Email</th>
-					<th>Fecha Nac.</th>
-					<th>Fecha Alta</th>
-					<th>Fecha Baja</th>
-					<th>Countrie</th>
-					<th>Obs.</th>";
+$cabeceras 		= "	<th>Temporadas</th>
+					<th>Documentaciones</th>
+					<th>Motivos</th>
+					<th>Equipo</th>
+					<th>Categoria</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -79,7 +74,7 @@ $resDocumentaciones2	=	$serviciosReferencias->traerDocumentaciones();
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadores(),10);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugador($id),5);
 
 $resMotivosHabDeportivas	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDeportivas('Edad');
 $cadRef		=	$serviciosFunciones->devolverSelectBox($resMotivosHabDeportivas,array(2),'');
@@ -105,7 +100,7 @@ $cadRefTipoJug		=	$serviciosFunciones->devolverSelectBox($resTipoJugador,array(1
 $resCountries		=	$serviciosReferencias->traerCountries();
 $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
-
+$resCantidadDCTTJ = mysql_num_rows($serviciosReferencias->traerDefinicionescategoriastemporadastipojugador());
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -242,7 +237,13 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
-        	
+        	<ul class="list-group">
+              <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> Jugador</li>
+              <li class="list-group-item list-group-item-default">Nombre Completo: <?php echo mysql_result($resResultado,0,'apellido').', '.mysql_result($resResultado,0,'nombres'); ?></li>
+              <li class="list-group-item list-group-item-default">Nro Documento: <?php echo mysql_result($resResultado,0,'nrodocumento'); ?></li>
+              <li class="list-group-item list-group-item-default">Fecha de Nacimiento: <?php echo mysql_result($resResultado,0,'fechanacimiento'); ?></li>
+            </ul>
+            
         	<div class='row' style="margin-left:25px; margin-right:25px;">
 				<div class="panel panel-success">
 				<div class="panel-heading">
@@ -385,7 +386,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Motivos</label>
                         <div class="input-group col-md-12">
                             <select class="form-control" id="refmotivoshabilitacionestransitoriasB" name="refmotivoshabilitacionestransitoriasB">
-                            	<?php echo $cadRef2; ?>
+                            	<?php echo utf8_decode($cadRef2); ?>
                             </select>
                         </div>
                     </div>
@@ -418,6 +419,8 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </div>
                     </div>
                     
+                     
+            
                     <div class='row' style="margin-left:25px; margin-right:25px;">
                         <div class='alert' id="errorDocu">
                         
@@ -427,6 +430,8 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </div>
                     </div>
                     
+                    
+                    
                     <input type="hidden" id="refjugadores" name="refjugadores" value="<?php echo $id; ?>"/>
             		<input type="hidden" id="refcountries" name="refcountries" value="<?php echo mysql_result($resResultado,0,'refcountries'); ?>"/>
                     <input type="hidden" id="accion" name="accion" value="insertarJugadoresmotivoshabilitacionestransitoriasB"/>
@@ -434,7 +439,22 @@ if ($_SESSION['refroll_predio'] != 1) {
 								
 				</div>
             </div>
-                 
+            
+            
+            <?php
+	
+			if ($resCantidadDCTTJ == 0) {
+			
+			?>
+			<div class='row' style="margin-left:25px; margin-right:25px;">
+				<div class='alert alert-danger' id="erroresRaros">
+					<p>No existen Definiciones Categorias Temporadas Tipo Jugador cargadas</p>
+				</div>
+				
+			</div>
+			<?php
+			}
+			?>     
                  
             </div>
             
@@ -451,7 +471,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Habilitaciones Cargadas para <span style="color: #202020;">(<?php echo mysql_result($resResultado,0,'apellido').', '.mysql_result($resResultado,0,'nombres'); ?>)</span></p>
         	
         </div>
     	<div class="cuerpoBox">

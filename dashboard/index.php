@@ -53,6 +53,8 @@ $cabeceras 		= "	<th>Nro</th>
 //$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerOrdenesActivos(),95);
 //$lstCargadosMora 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerOrdenesMora(),94);
 
+$resCantidadJugadores = mysql_num_rows($serviciosReferencias->traerJugadores());
+
 ?>
 
 <!DOCTYPE HTML>
@@ -111,6 +113,57 @@ $cabeceras 		= "	<th>Nro</th>
 
 <h3>Bienvenido</h3>
 
+	<div class="row" style="margin-right:15px;">
+    <div class="col-md-12">
+    <div class="panel" style="border-color:#006666;">
+				<div class="panel-heading" style="background-color:#006666; color:#FFF; ">
+					<h3 class="panel-title">jugadores <span class="badge"><?php echo $resCantidadJugadores; ?></span></h3>
+					<span class="pull-right clickable panel-collapsed" style="margin-top:-15px; cursor:pointer;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+                    <div class="panel-body">
+                    	<div class="row">
+                        <div class="form-group col-md-6">
+                             <label class="control-label" style="text-align:left" for="torneo">Tipo de Busqueda</label>
+                                <div class="input-group col-md-12">
+                                    <select id="tipobusqueda" class="form-control" name="tipobusqueda">
+                                        <option value="2">Nombre Completo</option>
+                                        <option value="1">Countries</option>
+                                        <option value="3">DNI</option>
+                                        
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="form-group col-md-6">
+                             <label class="control-label" style="text-align:left" for="torneo">Busqueda</label>
+                                <div class="input-group col-md-12">
+                                    <input type="text" name="busqueda" id="busqueda" class="form-control">
+                                </div>
+        
+                            </div>
+                            
+                            <div class="form-group col-md-12">
+                                 <ul class="list-inline" style="margin-top:15px;">
+                                    <li>
+                                     <button id="buscar" class="btn btn-primary" style="margin-left:0px;" type="button">Buscar</button>
+                                    </li>
+                                </ul>
+        
+                            </div>
+                            
+                            <div class="form-group col-md-12">
+                                <div class="cuerpoBox" id="resultadosJuagadores">
+                
+                                </div>
+                            </div>
+					</div><!-- fin del contenedor detalle -->
+                    </div>		
+				</div>
+            </div>
+    
+    </div>
+    </div>
     
     
     
@@ -129,6 +182,38 @@ $cabeceras 		= "	<th>Nro</th>
 
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	$(document).on('click', '.panel-heading span.clickable', function(e){
+		var $this = $(this);
+		if(!$this.hasClass('panel-collapsed')) {
+			$this.parents('.panel').find('.panel-body').slideUp();
+			$this.addClass('panel-collapsed');
+			$this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+		} else {
+			$this.parents('.panel').find('.panel-body').slideDown();
+			$this.removeClass('panel-collapsed');
+			$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+		}
+	});
+	
+	
+	$('#buscar').click(function(e) {
+        $.ajax({
+				data:  {busqueda: $('#busqueda').val(),
+						tipobusqueda: $('#tipobusqueda').val(),
+						accion: 'buscarJugadores'},
+				url:   '../ajax/ajax.php',
+				type:  'post',
+				beforeSend: function () {
+						
+				},
+				success:  function (response) {
+						$('#resultadosJuagadores').html(response);
+						
+				}
+		});
+		
+	});
 	
 	
 	
