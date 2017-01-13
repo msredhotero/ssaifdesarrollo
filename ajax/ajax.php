@@ -2057,13 +2057,17 @@ function insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferenci
 	$fechalimite = $_POST['fechalimiteA']; 
 	$observaciones = $_POST['observacionesA']; 
 	
-	$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
-	
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
+	if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
+		$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
+		
+		if ((integer)$res > 0) { 
+			echo ''; 
+		} else { 
+			echo 'Huvo un error al insertar datos';	 
+		} 
+	} else {
+		echo 'Ya existe esta habilitación';	
+	}
 } 
 
 function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferencias) { 
@@ -2077,13 +2081,17 @@ function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferenci
 	$fechalimite = $_POST['fechalimiteB']; 
 	$observaciones = $_POST['observacionesB']; 
 	
-	$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
-	
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
+	if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
+		$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
+		
+		if ((integer)$res > 0) { 
+			echo ''; 
+		} else { 
+			echo 'Huvo un error al insertar datos';	 
+		} 
+	} else {
+		echo 'Ya existe esta habilitación';	
+	}
 }
 
 function modificarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias) { 

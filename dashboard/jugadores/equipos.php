@@ -102,7 +102,7 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
 
 $resResultado = $serviciosReferencias->traerJugadoresPorId($id);
 
-
+$resCantidadDCTTJ = mysql_num_rows($serviciosReferencias->traerDefinicionescategoriastemporadastipojugador());
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -338,7 +338,20 @@ if ($_SESSION['refroll_predio'] != 1) {
 
             </div>
 
-            
+            <?php
+	
+			if ($resCantidadDCTTJ == 0) {
+			
+			?>
+			<div class='row' style="margin-left:25px; margin-right:25px;">
+				<div class='alert alert-danger' id="erroresRaros">
+					<p>No existen Definiciones Categorias Temporadas Tipo Jugador cargadas</p>
+				</div>
+				
+			</div>
+			<?php
+			}
+			?> 
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert' id="erroresCarga">

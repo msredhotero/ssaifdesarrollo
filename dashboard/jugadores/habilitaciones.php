@@ -382,6 +382,26 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </select>
                         </div>
                     </div>
+                    
+                    <!-- esto no van, les pongo el primero que encuentro -->
+                    <div class="form-group col-md-4" style="display:none">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="refcategoriasB" name="refcategoriasB">
+                            	<?php echo $cadRefCad; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="display:none">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="refequiposB" name="refequiposB">
+                            	
+                            </select>
+                        </div>
+                    </div>
+                    <!-- no van -->
+                    
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Motivos</label>
                         <div class="input-group col-md-12">
@@ -676,25 +696,25 @@ $(document).ready(function(){
 				success: function(data){
 
 					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
+                                            $("#errorDepo").removeClass("alert-danger");
+											$("#errorDepo").removeClass("alert-info");
+                                            $("#errorDepo").addClass("alert-success");
+                                            $("#errorDepo").html('<strong>Ok!</strong> Se cargo exitosamente la <strong>Habilitacion</strong>. ');
+											$("#errorDepo").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/
 												$(this).dequeue(); //continúo con el siguiente ítem en la cola
 												
 											});
 											$("#load").html('');
-											url = "index.php";
+											url = "habilitaciones.php?id="+<?php echo $id; ?>;
 											$(location).attr('href',url);
                                             
 											
                                         } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                        	$("#errorDepo").removeClass("alert-danger");
+                                            $("#errorDepo").addClass("alert-danger");
+                                            $("#errorDepo").html('<strong>Error!</strong> '+data);
                                             $("#load").html('');
                                         }
 				},
@@ -732,25 +752,25 @@ $(document).ready(function(){
 				success: function(data){
 
 					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
+                                            $("#errorDocu").removeClass("alert-danger");
+											$("#errorDocu").removeClass("alert-info");
+                                            $("#errorDocu").addClass("alert-success");
+                                            $("#errorDocu").html('<strong>Ok!</strong> Se cargo exitosamente la <strong>habilitacion</strong>. ');
+											$("#errorDocu").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/
 												$(this).dequeue(); //continúo con el siguiente ítem en la cola
 												
 											});
 											$("#load").html('');
-											url = "index.php";
+											url = "habilitaciones.php?id="+<?php echo $id; ?>;
 											$(location).attr('href',url);
                                             
 											
                                         } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                        	$("#errorDocu").removeClass("alert-danger");
+                                            $("#errorDocu").addClass("alert-danger");
+                                            $("#errorDocu").html('<strong>Error!</strong> '+data);
                                             $("#load").html('');
                                         }
 				},

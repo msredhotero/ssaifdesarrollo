@@ -1648,6 +1648,24 @@ tbtipodocumentos
 
 /* PARA Jugadoresmotivoshabilitacionestransitorias */
 
+function existeJugadoresMotivosHabilitacionesTransitorias($reftemporada, $refcategoria, $refequipo, $refJugador, $refdocumentaciones,$refmotivoshabilitacionestransitorias) {
+	$sql = "select iddbjugadormotivohabilitaciontransitoria 
+				from dbjugadoresmotivoshabilitacionestransitorias 
+				where reftemporadas = ".$reftemporada."
+					  and refcategorias = ".$refcategoria."
+					  and refequipos = ".$refequipo."
+					  and refjugadores = ".$refJugador."
+					  and refdocumentaciones = ".$refdocumentaciones."
+					  and refmotivoshabilitacionestransitorias = ".$refmotivoshabilitacionestransitorias;
+	$res = $this->query($sql,0);
+	
+	if (mysql_num_rows($res)>0) {
+		return 1;
+	}
+	return 0;
+}
+
+
 function insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones) { 
 $sql = "insert into dbjugadoresmotivoshabilitacionestransitorias(iddbjugadormotivohabilitaciontransitoria,reftemporadas,refjugadores,refdocumentaciones,refmotivoshabilitacionestransitorias,refequipos,refcategorias,fechalimite,observaciones) 
 values ('',".$reftemporadas.",".$refjugadores.",".$refdocumentaciones.",".$refmotivoshabilitacionestransitorias.",".$refequipos.",".$refcategorias.",'".utf8_decode($fechalimite)."','".utf8_decode($observaciones)."')"; 
