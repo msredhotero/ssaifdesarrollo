@@ -1214,6 +1214,26 @@ function buscarJugadores($tipobusqueda,$busqueda) {
 		}
 		return $this->query($sql,0);
 	}
+
+function existeJugador($nroDocumento) {
+	$sql = "select idjugador from dbjugadores where nrodocumento = ".$nroDocumento;
+	$res = $this->query($sql,0);
+	
+	if (mysql_num_rows($res)>0) {
+		return 1;	
+	}
+	return 0;
+}
+
+function existeJugadorConIdJugador($nroDocumento, $idJugador) {
+	$sql = "select idjugador from dbjugadores where nrodocumento = ".$nroDocumento." and idjugador <>".$idJugador;
+	$res = $this->query($sql,0);
+	
+	if (mysql_num_rows($res)>0) {
+		return 1;	
+	}
+	return 0;
+}
 	
 function insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones) { 
 $sql = "insert into dbjugadores(idjugador,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,fechabaja,refcountries,observaciones) 

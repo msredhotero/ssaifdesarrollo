@@ -174,7 +174,9 @@ case 'eliminarCanchasuspenciones':
 eliminarCanchasuspenciones($serviciosReferencias);
 break; 
 
-
+case 'existeJugador':
+	existeJugador($serviciosReferencias);
+	break;
 
 case 'insertarJugadores': 
 insertarJugadores($serviciosReferencias); 
@@ -1202,45 +1204,68 @@ function eliminarCanchasuspenciones($serviciosReferencias) {
 
 
 
-
+function existeJugador($serviciosReferencias) {
+	$nrodocumento = $_POST['nrodocumento']; 
+	
+	$res = $serviciosReferencias->existeJugador($nrodocumento);
+	
+	if ($res == 0) {
+		echo '';	
+	} else {
+		echo 'Ya existe este Nro de Documento';	
+	}
+}
 
 
 function insertarJugadores($serviciosReferencias) { 
-$reftipodocumentos = $_POST['reftipodocumentos']; 
-$nrodocumento = $_POST['nrodocumento']; 
-$apellido = $_POST['apellido']; 
-$nombres = $_POST['nombres']; 
-$email = $_POST['email']; 
-$fechanacimiento = $_POST['fechanacimiento']; 
-$fechaalta = $_POST['fechaalta']; 
-$fechabaja = $_POST['fechabaja']; 
-$refcountries = $_POST['refcountries']; 
-$observaciones = $_POST['observaciones']; 
-$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
-if ((integer)$res > 0) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al insertar datos';	 
+	$reftipodocumentos = $_POST['reftipodocumentos']; 
+	$nrodocumento = $_POST['nrodocumento']; 
+	$apellido = $_POST['apellido']; 
+	$nombres = $_POST['nombres']; 
+	$email = $_POST['email']; 
+	$fechanacimiento = $_POST['fechanacimiento']; 
+	$fechaalta = $_POST['fechaalta']; 
+	$fechabaja = $_POST['fechabaja']; 
+	$refcountries = $_POST['refcountries']; 
+	$observaciones = $_POST['observaciones']; 
+	
+	if ($serviciosReferencias->existeJugador($nrodocumento) == 0) {
+		$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
+		
+		if ((integer)$res > 0) { 
+			echo ''; 
+		} else { 
+			echo 'Huvo un error al insertar datos';	 
+		} 
+	} else {
+		echo 'Ya existe ese numero de documento';	
+	}
 } 
-} 
+
 function modificarJugadores($serviciosReferencias) { 
-$id = $_POST['id']; 
-$reftipodocumentos = $_POST['reftipodocumentos']; 
-$nrodocumento = $_POST['nrodocumento']; 
-$apellido = $_POST['apellido']; 
-$nombres = $_POST['nombres']; 
-$email = $_POST['email']; 
-$fechanacimiento = $_POST['fechanacimiento']; 
-$fechaalta = $_POST['fechaalta']; 
-$fechabaja = $_POST['fechabaja']; 
-$refcountries = $_POST['refcountries']; 
-$observaciones = $_POST['observaciones']; 
-$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
-if ($res == true) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al modificar datos'; 
-} 
+	$id = $_POST['id']; 
+	$reftipodocumentos = $_POST['reftipodocumentos']; 
+	$nrodocumento = $_POST['nrodocumento']; 
+	$apellido = $_POST['apellido']; 
+	$nombres = $_POST['nombres']; 
+	$email = $_POST['email']; 
+	$fechanacimiento = $_POST['fechanacimiento']; 
+	$fechaalta = $_POST['fechaalta']; 
+	$fechabaja = $_POST['fechabaja']; 
+	$refcountries = $_POST['refcountries']; 
+	$observaciones = $_POST['observaciones']; 
+	
+	if ($serviciosReferencias->existeJugadorConIdJugador($nrodocumento) == 0) {
+		$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
+		
+		if ($res == true) { 
+			echo ''; 
+		} else { 
+			echo 'Huvo un error al modificar datos'; 
+		} 
+	} else {
+		echo 'Ya existe ese numero de documento';
+	}
 } 
 function eliminarJugadores($serviciosReferencias) { 
 $id = $_POST['id']; 

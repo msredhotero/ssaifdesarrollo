@@ -157,6 +157,12 @@ if ($_SESSION['refroll_predio'] != 1) {
 		font-size: 15px;
 	}
 	
+	.errorNroDoc { 
+		border:1px solid #F00;
+		box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
+		border-radius:2px;
+	}
+	
 	
    </style>
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
@@ -243,6 +249,8 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         	<form class="form-inline formulario" role="form">
         	<div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6 errorDoc"></div>
 			<?php echo $formulario; ?>
             </div>
             <hr>
@@ -367,6 +375,30 @@ $(document).ready(function(){
 			}
 		});		
 	}
+	
+	function existeJugador(nroDocumento) {
+		$.ajax({
+			data:  {nrodocumento: nroDocumento, accion: 'existeJugador'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+				$('.errorDoc').html('');
+			},
+			success:  function (response) {
+				if (response != '') {
+					$('#nrodocumento').addClass('errorNroDoc');	
+					$('.errorDoc').html('<span class="help-block errorDoc">' + response + '.</span>');	
+				} else {
+					$('#nrodocumento').removeClass('errorNroDoc');
+					$('.errorDoc').html('');		
+				}
+			}
+		});	
+	}
+	
+	$('#nrodocumento').focusout(function() {
+		existeJugador($('#nrodocumento').val());
+	});
 	
 	traerEquiposPorCountries($('#refcountries').val(), '#equiposRefequipos');
 	

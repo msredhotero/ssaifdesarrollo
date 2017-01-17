@@ -107,6 +107,9 @@ $resCantidadDCTTJ = mysql_num_rows($serviciosReferencias->traerDefinicionescateg
 
 $resHabilitacionesTransitorias = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugador($id);
 
+
+$noHabilitaDocumentacion = array();
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -303,7 +306,11 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <h4 style="text-decoration:underline;">Documentaciones</h4>
                 <?php
 					while ($rowD = mysql_fetch_array($resDocumentaciones)) {
-						
+					if ($rowD['obligatoria'] == 'Si') {
+						if (($rowD['valor'] == 'No') && ($rowD['contravalor'] == 'No')) {
+							$noHabilitaDocumentacion = array($rowD['refdocumentaciones']=>0);
+						}
+					}
 				?>
                 	<div class="col-md-4">
                     	<?php
@@ -333,7 +340,12 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <h4 style="text-decoration:underline;">Habilitaciones Transitorias</h4>
                 <?php
 					while ($rowD = mysql_fetch_array($resHabilitacionesTransitorias)) {
+					
+					if (array_key_exists((integer)$rowD['refdocumentaciones'], $noHabilitaDocumentacion)) {
 						
+						$noHabilitaDocumentacion = array($rowD['refdocumentaciones']=>1);
+						//die(var_dump($noHabilitaDocumentacion));
+					}
 				?>
                 	<div class="col-md-12">
 					<?php if ($rowD['motivos'] == 'Edad') { ?>
@@ -355,7 +367,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             </div>
 
             <?php
-	
+			
 			if ($resCantidadDCTTJ == 0) {
 			
 			?>
@@ -373,6 +385,17 @@ if ($_SESSION['refroll_predio'] != 1) {
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert alert-info' id="erroresCargos">
                 	<p><strong>Importante!</strong> El jugador esta jugando actualmente para el equipo <strong><?php echo mysql_result($resCantidadConectoresActivos,0,2); ?></strong>, si lo carga un otro equipo este se dara de baja automaticamente.</p>
+                </div>
+                <div id='load'>
+                
+                </div>
+            </div>
+            <?php } ?>
+            
+            <?php if (in_array(0,$noHabilitaDocumentacion)) { ?>
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <div class='alert alert-warning' id="erroresDocumentaciones">
+                	<p><strong>Importante!</strong> El jugador no tiene completa su documentación, si lo carga a un equipo sera inhabilitado.</p>
                 </div>
                 <div id='load'>
                 

@@ -647,7 +647,7 @@ $(document).ready(function(){
 											
 									},
 									success:  function (response) {
-											url = "index.php";
+											url = "habilitaciones.php?id="+<?php echo $id; ?>;
 											$(location).attr('href',url);
 											
 									}
