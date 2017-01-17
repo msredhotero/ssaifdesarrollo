@@ -1751,6 +1751,69 @@ return $res;
 } 
 
 
+function traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($idJugador, $reftemporada, $refcategoria, $refequipos) { 
+$sql = "select 
+j.iddbjugadormotivohabilitaciontransitoria,
+tem.temporada,
+doc.descripcion as documentacion,
+mot.descripcion as motivos,
+equ.nombre as equipo,
+cat.categoria,
+j.reftemporadas,
+j.refjugadores,
+j.refdocumentaciones,
+j.refmotivoshabilitacionestransitorias,
+j.refequipos,
+j.refcategorias,
+j.fechalimite,
+j.observaciones
+from dbjugadoresmotivoshabilitacionestransitorias j 
+inner join tbtemporadas tem ON tem.idtemporadas = j.reftemporadas 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
+inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
+inner join dbequipos equ ON equ.idequipo = j.refequipos 
+inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
+where j.refjugadores = ".$idJugador." and mot.descripcion = 'Edad'
+	  and j.reftemporadas = ".$reftemporada."
+	  and j.refequipos = ".$refequipos."
+	  and j.refcategorias = ".$refcategoria."
+	  and (now() < j.fechalimite or j.fechalimite is null)
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativa($idJugador) { 
+$sql = "select 
+j.iddbjugadormotivohabilitaciontransitoria,
+tem.temporada,
+doc.descripcion as documentacion,
+mot.descripcion as motivos,
+equ.nombre as equipo,
+cat.categoria,
+j.reftemporadas,
+j.refjugadores,
+j.refdocumentaciones,
+j.refmotivoshabilitacionestransitorias,
+j.refequipos,
+j.refcategorias,
+j.fechalimite,
+j.observaciones
+from dbjugadoresmotivoshabilitacionestransitorias j 
+inner join tbtemporadas tem ON tem.idtemporadas = j.reftemporadas 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
+inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
+inner join dbequipos equ ON equ.idequipo = j.refequipos 
+inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
+where j.refjugadores = ".$idJugador." and doc.descripcion = 'Edad'
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 function traerJugadoresmotivoshabilitacionestransitoriasPorId($id) { 
 $sql = "select iddbjugadormotivohabilitaciontransitoria,reftemporadas,refjugadores,refdocumentaciones,refmotivoshabilitacionestransitorias,refequipos,refcategorias,fechalimite,observaciones from dbjugadoresmotivoshabilitacionestransitorias where iddbjugadormotivohabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
@@ -2575,6 +2638,12 @@ return $res;
 /* /* Fin de la Tabla: dbdefinicionessancionesacumuladastemporadas*/
 
 /* PARA Conector */
+function actualizarConectoresPorJugador($refJugador, $idconector) {
+	$sql = "update dbconector set activo = 0 where refjugadores =".$refJugador." and idconector <> ".$idconector;
+	$res = $this->query($sql,0);
+	return $res;
+}
+
 
 function insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo) {
 $sql = "insert into dbconector(idconector,refjugadores,reftipojugadores,refequipos,refcountries,refcategorias,esfusion,activo)
@@ -2607,7 +2676,7 @@ return $res;
 }
 
 
-function traerConector() {
+function traerConector($refJugador) {
 $sql = "select 
     c.idconector,
 	cat.categoria,
@@ -2644,6 +2713,51 @@ from
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
         inner join
     tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	where jug.idjugador = ".$refJugador."
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerConectorActivos($refJugador) {
+$sql = "select 
+    c.idconector,
+	cat.categoria,
+	equ.nombre as equipo,
+	co.nombre as countrie,
+	tip.tipojugador,
+	(case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	jug.nrodocumento
+    
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	where jug.idjugador = ".$refJugador." and c.activo = 1
 order by 1";
 $res = $this->query($sql,0);
 return $res;
@@ -2676,9 +2790,9 @@ function verificarEdad($refjugador) {
 }
 /******   FIN   *****///////////////
 
-/******   COMPRUEBO SI PUEDO JUGAR EN ESA CATEGORIA Y TIPO DE JUGADOR POR LA EDAD     *************/
+/******   COMPRUEBO SI PUEDO JUGAR EN ESA CATEGORIA Y TIPO DE JUGADOR, POR LA EDAD     *************/
 function verificaEdadCategoriaJugador($refjugador, $refcategoria, $tipoJugador) {
-	
+	//## falta chocar contra una temporada
 	$edad = $this->verificarEdad($refjugador);
 	
 	$sql = "SELECT 
@@ -2699,6 +2813,22 @@ function verificaEdadCategoriaJugador($refjugador, $refcategoria, $tipoJugador) 
 	$res = $this->query($sql,0);
 	
 	return mysql_result($res,0,0);
+}
+
+/***************************           FIN         ******************************/
+
+
+/******   COMPRUEBO SI TIENE UNA HABILITACION TEMPORAL ADMINISTRATIVA     *************/
+function verificaHabilitacionDeportiva($refjugador, $refcategoria, $reftemporada, $refequipo) {
+	//## falta chocar contra una temporada
+	
+	$res = $this->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($refjugador, $reftemporada, $refcategoria, $refequipo);
+	
+	if (mysql_num_rows($res)>0) {
+		return 1;	
+	}
+	
+	return 0;
 }
 
 /***************************           FIN         ******************************/

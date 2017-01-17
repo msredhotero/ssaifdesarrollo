@@ -72,10 +72,11 @@ $cabeceras 		= "	<th>Categoria</th>
 
 $resDocumentaciones2	=	$serviciosReferencias->traerDocumentaciones();
 
+$resCantidadConectoresActivos  =	$serviciosReferencias->traerConectorActivos($id);
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerConector(),6);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerConector($id),6);
 
 $resMotivosHabDeportivas	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDeportivas('Edad');
 $cadRef		=	$serviciosFunciones->devolverSelectBox($resMotivosHabDeportivas,array(2),'');
@@ -103,6 +104,8 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
 $resResultado = $serviciosReferencias->traerJugadoresPorId($id);
 
 $resCantidadDCTTJ = mysql_num_rows($serviciosReferencias->traerDefinicionescategoriastemporadastipojugador());
+
+$resHabilitacionesTransitorias = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugador($id);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -328,7 +331,20 @@ if ($_SESSION['refroll_predio'] != 1) {
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <h4 style="text-decoration:underline;">Habilitaciones Transitorias</h4>
-                
+                <?php
+					while ($rowD = mysql_fetch_array($resHabilitacionesTransitorias)) {
+						
+				?>
+                	<div class="col-md-12">
+					<?php if ($rowD['motivos'] == 'Edad') { ?>
+                    	<p><span style="color:#3C0;" class="glyphicon glyphicon-ok"></span> <?php echo 'Documentación: '.$rowD['documentacion'].' - Motivos: '.$rowD['motivos'].' - Temporada: '.$rowD['temporada'].' - Equipo: '.$rowD['equipo'].' - Categoria: '.$rowD['categoria']; ?></p>
+                    <?php } else { ?>
+                    	<p><span style="color:#3C0;" class="glyphicon glyphicon-ok"></span> <?php echo 'Documentación: '.$rowD['documentacion'].' - Motivos: '.$rowD['motivos'].' - Categoria: '.$rowD['categoria']; ?></p>
+                    <?php } ?>
+                    </div>
+                <?php
+					}
+				?>
             </div>
             
             <div class='row' style="margin-left:25px; margin-right:25px;">
@@ -353,6 +369,17 @@ if ($_SESSION['refroll_predio'] != 1) {
 			}
 			?> 
             
+            <?php if (mysql_num_rows($resCantidadConectoresActivos) > 0) { ?>
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <div class='alert alert-info' id="erroresCargos">
+                	<p><strong>Importante!</strong> El jugador esta jugando actualmente para el equipo <strong><?php echo mysql_result($resCantidadConectoresActivos,0,2); ?></strong>, si lo carga un otro equipo este se dara de baja automaticamente.</p>
+                </div>
+                <div id='load'>
+                
+                </div>
+            </div>
+            <?php } ?>
+            
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert' id="erroresCarga">
                 
@@ -362,9 +389,12 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </div>
             </div>
             
+            
+            
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
+                	
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
@@ -467,11 +497,13 @@ $(document).ready(function(){
 		});		
 	}
 	
-	function verificaEdadCategoriaJugador(refjugador, refcategoria, tipoJugador) {
+	function verificaEdadCategoriaJugador(refjugador, refcategoria, tipoJugador, refequipo, reftemporada) {
 		$.ajax({
 			data:  {refjugador: refjugador,
 					refcategoria: refcategoria,
-					tipoJugador: tipoJugador, 
+					tipoJugador: tipoJugador,
+					refequipo: refequipo,
+					reftemporada: reftemporada,
 					accion: 'verificaEdadCategoriaJugador'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
@@ -495,14 +527,14 @@ $(document).ready(function(){
 		});	
 	}
 	
-	verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val());
+	verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),1);
 	
 	$('#refcategorias').change(function(e) {
-        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val());
+        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),1);
     });
 	
 	$('#reftipojugadores').change(function(e) {
-        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val());
+        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),1);
     });
 	
 	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
