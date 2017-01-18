@@ -2482,21 +2482,21 @@ return $res;
 
 /* PARA Definicionescategoriastemporadas */
 
-function insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$dias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) { 
-$sql = "insert into dbdefinicionescategoriastemporadas(iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,dias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones) 
-values ('',".$refcategorias.",".$reftemporadas.",".$cantmaxjugadores.",".$cantminjugadores.",'".utf8_decode($dias)."','".utf8_decode($hora)."',".$minutospartido.",".$cantidadcambiosporpartido.",".$conreingreso.",'".utf8_decode($observaciones)."')"; 
-$res = $this->query($sql,1); 
-return $res; 
-} 
+function insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) {
+$sql = "insert into dbdefinicionescategoriastemporadas(iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,refdias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones)
+values ('',".$refcategorias.",".$reftemporadas.",".$cantmaxjugadores.",".$cantminjugadores.",".$refdias.",'".utf8_decode($hora)."',".$minutospartido.",".$cantidadcambiosporpartido.",".$conreingreso.",'".utf8_decode($observaciones)."')";
+$res = $this->query($sql,1);
+return $res;
+}
 
 
-function modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$dias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) { 
-$sql = "update dbdefinicionescategoriastemporadas 
-set 
-refcategorias = ".$refcategorias.",reftemporadas = ".$reftemporadas.",cantmaxjugadores = ".$cantmaxjugadores.",cantminjugadores = ".$cantminjugadores.",dias = '".utf8_decode($dias)."',hora = '".utf8_decode($hora)."',minutospartido = ".$minutospartido.",cantidadcambiosporpartido = ".$cantidadcambiosporpartido.",conreingreso = ".$conreingreso.",observaciones = '".utf8_decode($observaciones)."' 
-where iddefinicioncategoriatemporada =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
+function modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) {
+$sql = "update dbdefinicionescategoriastemporadas
+set
+refcategorias = ".$refcategorias.",reftemporadas = ".$reftemporadas.",cantmaxjugadores = ".$cantmaxjugadores.",cantminjugadores = ".$cantminjugadores.",refdias = ".$refdias.",hora = '".utf8_decode($hora)."',minutospartido = ".$minutospartido.",cantidadcambiosporpartido = ".$cantidadcambiosporpartido.",conreingreso = ".$conreingreso.",observaciones = '".utf8_decode($observaciones)."'
+where iddefinicioncategoriatemporada =".$id;
+$res = $this->query($sql,0);
+return $res;
 } 
 
 
@@ -2514,17 +2514,19 @@ cat.categoria,
 tem.temporada,
 d.cantmaxjugadores,
 d.cantminjugadores,
-d.dias,
+di.dia,
 d.hora,
 d.minutospartido,
 d.cantidadcambiosporpartido,
 d.conreingreso,
 d.observaciones,
 d.refcategorias,
-d.reftemporadas
+d.reftemporadas,
+d.refdias
 from dbdefinicionescategoriastemporadas d 
 inner join tbcategorias cat ON cat.idtcategoria = d.refcategorias 
 inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas 
+inner join tbdias di ON di.iddia = d.refdias
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2532,7 +2534,7 @@ return $res;
 
 
 function traerDefinicionescategoriastemporadasPorId($id) { 
-$sql = "select iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,dias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones from dbdefinicionescategoriastemporadas where iddefinicioncategoriatemporada =".$id; 
+$sql = "select iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,refdias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones from dbdefinicionescategoriastemporadas where iddefinicioncategoriatemporada =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -2791,6 +2793,24 @@ return $res;
 }
 
 /* Fin */
+
+
+function traerDias() {
+$sql = "select
+d.iddia,
+d.dia
+from tbdias d
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerDiasPorId($id) {
+$sql = "select iddia,dia from tbdias where iddia =".$id;
+$res = $this->query($sql,0);
+return $res;
+} 
 /* /* Fin de la Tabla: dbconector*/
 
 

@@ -145,7 +145,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	
+	<script src="../../js/jquery.maskedinput.min.js" type="text/javascript"></script>
     
    <style>
    	.clickable{
@@ -622,19 +622,7 @@ $(document).ready(function(){
 });
 </script>
 
-<script type="text/javascript">
-$('.form_date').datetimepicker({
-	language:  'es',
-	weekStart: 1,
-	todayBtn:  1,
-	autoclose: 1,
-	todayHighlight: 1,
-	startView: 2,
-	minView: 2,
-	forceParse: 0,
-	format: 'dd/mm/yyyy'
-});
-</script>
+
 <script src="../../js/chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
     

@@ -48,8 +48,8 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbdefinicionescategoriastemporadas";
 
-$lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso");
-$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reintegros");
+$lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso","refdias");
+$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reintegros","Días");
 
 
 $resCategorias 	= $serviciosReferencias->traerCategorias();
@@ -58,8 +58,11 @@ $cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resCategorias,array(1),
 $resTemporadas 	= $serviciosReferencias->traerTemporadas();
 $cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resTemporadas,array(1),'', mysql_result($resResultado,0,'reftemporadas'));
 
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2);
-$refCampo 	=  array("refcategorias","reftemporadas");
+$resDias 	= $serviciosReferencias->traerDias();
+$cadRef3 	= $serviciosFunciones->devolverSelectBoxActivo($resDias,array(1),'', mysql_result($resResultado,0,'refdias'));
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2, 2=>$cadRef3);
+$refCampo 	=  array("refcategorias","reftemporadas","refdias");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -112,7 +115,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 		
 	</style>
     
-   
+   <script src="../../js/jquery.maskedinput.min.js" type="text/javascript"></script>
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -198,7 +201,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-
+	
+	$("#hora").mask("99:99",{placeholder:"hh:mm"});
+	
 	$('.volver').click(function(event){
 		 
 		url = "index.php";

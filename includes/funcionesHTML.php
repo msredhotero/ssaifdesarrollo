@@ -13,7 +13,8 @@ function menu($usuario,$titulo,$rol,$empresa) {
 	$cadmenu = "";
 	$cadhover= "";
 	
-	$js = "<script>
+	$js = "<script src='../../js/jquery.maskedinput.min.js' type='text/javascript'></script>
+		<script>
 		$(document).ready(function(){
 			$('#colapsarMenu').click(function() {
 			if ($('#colapsarMenu').attr('class') == 'glyphicon glyphicon-list') {

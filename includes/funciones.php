@@ -423,7 +423,7 @@ class Servicios {
 									$label = ucwords($label);
 									$campo = strtolower($row[0]);
 									
-									if (($row[0] == "fechabaja2") || ($row[0] == "fechaalta2")){
+									/*if (($row[0] == "fechabaja2") || ($row[0] == "fechaalta2")){*/
 										$form	=	$form.'
 														
 										<div class="form-group col-md-6">
@@ -433,9 +433,14 @@ class Servicios {
 											</div>
 											
 										</div>
-										
+										<script type="text/javascript">
+										$(document).ready(function(){
+											
+											$("#'.$campo.'").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+										});
+										</script>
 										';
-									} else {
+									/*} else {
 										$form	=	$form.'
 										
 										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
@@ -448,7 +453,7 @@ class Servicios {
 										</div>
 										
 										';
-									}
+									}*/
 									
 									/*
 									$form	=	$form.'
@@ -764,23 +769,34 @@ class Servicios {
 								if (strpos($row[1],"date") !== false) {
 									$label = ucwords($label);
 									$campo = strtolower($row[0]);
+									
+									if ((mysql_result($resMod,0,$row[0]) == '') || (mysql_result($resMod,0,$row[0]) == '0000-00-00')) {
+										$fecha = '';	
+									} else {
+										$fecha = date("d/m/Y", strtotime(mysql_result($resMod,0,$row[0])));	
+									}
 									/*
-									if (($row[0] == "fechabaja2") || ($row[0] == "fechaalta2")){
+									if (($row[0] == "fechabaja2") || ($row[0] == "fechaalta2")){*/
 																				$form	=	$form.'
 										
 										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
 											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
 											<div class="input-group col-md-6">
-												<input class="form-control" value="'.mysql_result($resMod,0,$row[0]).'" name="'.$campo.'" id="'.$campo.'" type="text" value="">
-												
+												<input class="form-control" value="'.$fecha.'" name="'.$campo.'" id="'.$campo.'" type="text" value="">
+												<span class="help-block">Fecha Actual: '.$fecha.'</span>
 											</div>
 											
 										</div>
-										
+										<script type="text/javascript">
+										$(document).ready(function(){
+											
+											$("#'.$campo.'").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+										});
+										</script>
 										';
-
+									/*
 									} else {
-										*/
+										
 										$form	=	$form.'
 										
 										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
@@ -792,7 +808,7 @@ class Servicios {
 											<input type="hidden" name="'.$campo.'" id="'.$campo.'" value="'.mysql_result($resMod,0,$row[0]).'" />
 										</div>
 										
-										';
+										';*/
 									/*}*/
 									
 									/*

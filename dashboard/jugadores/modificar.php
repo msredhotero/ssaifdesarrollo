@@ -56,7 +56,7 @@ $resTipoDoc 	= $serviciosReferencias->traerTipodocumentos();
 $cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resTipoDoc,array(1),'', mysql_result($resResultado,0,'reftipodocumentos'));
 
 $resCountries 	= $serviciosReferencias->traerCountries();
-$cadRef2 	= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'', mysql_result($resResultado,0,'refcountries'));
+$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resCountries,array(1),'', mysql_result($resResultado,0,'refcountries'));
 
 $refdescripcion = array(0 => $cadRef,1 => $cadRef2);
 $refCampo 	=  array("reftipodocumentos","refcountries");
@@ -100,7 +100,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+    <script src="../../js/jquery.maskedinput.min.js" type="text/javascript"></script>
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>

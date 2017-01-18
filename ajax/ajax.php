@@ -390,8 +390,17 @@ case 'buscarJugadores':
 }
 
 /* Fin */
-/*
 
+function formatearFechas($fecha) {
+	if ($fecha != '') {
+		$arFecha = explode("/", $fecha);
+		
+		$nuevaFecha = 	$arFecha[2]."/".$arFecha[1]."/".$arFecha[0];
+		
+		return $nuevaFecha;
+	}
+	return $fecha;
+}
 
 /*****         FUNCIONES       **********/
 function verificarEdad($serviciosReferencias) {
@@ -1249,13 +1258,13 @@ function modificarJugadores($serviciosReferencias) {
 	$apellido = $_POST['apellido']; 
 	$nombres = $_POST['nombres']; 
 	$email = $_POST['email']; 
-	$fechanacimiento = $_POST['fechanacimiento']; 
-	$fechaalta = $_POST['fechaalta']; 
-	$fechabaja = $_POST['fechabaja']; 
+	$fechanacimiento = formatearFechas($_POST['fechanacimiento']); 
+	$fechaalta = formatearFechas($_POST['fechaalta']); 
+	$fechabaja = formatearFechas($_POST['fechabaja']); 
 	$refcountries = $_POST['refcountries']; 
 	$observaciones = $_POST['observaciones']; 
 	
-	if ($serviciosReferencias->existeJugadorConIdJugador($nrodocumento) == 0) {
+	if ($serviciosReferencias->existeJugadorConIdJugador($nrodocumento, $id) == 0) {
 		$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
 		
 		if ($res == true) { 
@@ -2013,57 +2022,59 @@ function eliminarEstadospartidos($serviciosReferencias) {
 
 
 
-function insertarDefinicionescategoriastemporadas($serviciosReferencias) { 
-	$refcategorias = $_POST['refcategorias']; 
-	$reftemporadas = $_POST['reftemporadas']; 
-	$cantmaxjugadores = $_POST['cantmaxjugadores']; 
-	$cantminjugadores = $_POST['cantminjugadores']; 
-	$dias = $_POST['dias']; 
-	$hora = $_POST['hora']; 
-	$minutospartido = $_POST['minutospartido']; 
-	$cantidadcambiosporpartido = $_POST['cantidadcambiosporpartido']; 
+function insertarDefinicionescategoriastemporadas($serviciosReferencias) {
+	$refcategorias = $_POST['refcategorias'];
+	$reftemporadas = $_POST['reftemporadas'];
+	$cantmaxjugadores = $_POST['cantmaxjugadores'];
+	$cantminjugadores = $_POST['cantminjugadores'];
+	$refdias = $_POST['refdias'];
+	$hora = $_POST['hora'];
+	$minutospartido = $_POST['minutospartido'];
+	$cantidadcambiosporpartido = $_POST['cantidadcambiosporpartido'];
 	
-	if (isset($_POST['conreingreso'])) { 
-		$conreingreso	= 1; 
-	} else { 
-		$conreingreso = 0; 
-	} 
+	if (isset($_POST['conreingreso'])) {
+		$conreingreso = 1;
+	} else {
+		$conreingreso = 0;
+	}
 	
-	$observaciones = $_POST['observaciones']; 
+	$observaciones = $_POST['observaciones'];
 	
-	$res = $serviciosReferencias->insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$dias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones); 
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
-} 
+	$res = $serviciosReferencias->insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones);
+	
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
 
-function modificarDefinicionescategoriastemporadas($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$refcategorias = $_POST['refcategorias']; 
-	$reftemporadas = $_POST['reftemporadas']; 
-	$cantmaxjugadores = $_POST['cantmaxjugadores']; 
-	$cantminjugadores = $_POST['cantminjugadores']; 
-	$dias = $_POST['dias']; 
-	$hora = $_POST['hora']; 
-	$minutospartido = $_POST['minutospartido']; 
-	$cantidadcambiosporpartido = $_POST['cantidadcambiosporpartido']; 
+function modificarDefinicionescategoriastemporadas($serviciosReferencias) {
+	$id = $_POST['id'];
+	$refcategorias = $_POST['refcategorias'];
+	$reftemporadas = $_POST['reftemporadas'];
+	$cantmaxjugadores = $_POST['cantmaxjugadores'];
+	$cantminjugadores = $_POST['cantminjugadores'];
+	$refdias = $_POST['refdias'];
+	$hora = $_POST['hora'];
+	$minutospartido = $_POST['minutospartido'];
+	$cantidadcambiosporpartido = $_POST['cantidadcambiosporpartido'];
 	
-	if (isset($_POST['conreingreso'])) { 
-		$conreingreso	= 1; 
-	} else { 
-		$conreingreso = 0; 
-	} 
+	if (isset($_POST['conreingreso'])) {
+		$conreingreso = 1;
+	} else {
+		$conreingreso = 0;
+	}
 	
-	$observaciones = $_POST['observaciones']; 
+	$observaciones = $_POST['observaciones'];
 	
-	$res = $serviciosReferencias->modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$dias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones); 
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
+	$res = $serviciosReferencias->modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones);
+	
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
 } 
 
 function eliminarDefinicionescategoriastemporadas($serviciosReferencias) { 

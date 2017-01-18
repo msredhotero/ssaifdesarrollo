@@ -41,8 +41,8 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbdefinicionescategoriastemporadas";
 
-$lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso");
-$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reintegros");
+$lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso","refdias");
+$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reintegros","Días");
 
 
 $resCategorias 	= $serviciosReferencias->traerCategorias();
@@ -51,8 +51,11 @@ $cadRef 	= $serviciosFunciones->devolverSelectBox($resCategorias,array(1),'');
 $resTemporadas 	= $serviciosReferencias->traerTemporadas();
 $cadRef2 	= $serviciosFunciones->devolverSelectBox($resTemporadas,array(1),'');
 
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2);
-$refCampo 	=  array("refcategorias","reftemporadas");
+$resDias 	= $serviciosReferencias->traerDias();
+$cadRef3 	= $serviciosFunciones->devolverSelectBox($resDias,array(1),'');
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2, 2=>$cadRef3);
+$refCampo 	=  array("refcategorias","reftemporadas","refdias");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -119,7 +122,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	
+	<script src="../../js/jquery.maskedinput.min.js" type="text/javascript"></script>
     
    
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
@@ -233,6 +236,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	$("#hora").mask("99:99",{placeholder:"hh:mm"});
+	
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],
 		"language": {
