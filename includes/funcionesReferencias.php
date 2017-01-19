@@ -1291,6 +1291,33 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+
+
+function traerJugadoresPorEquipos($idEquipo) { 
+$sql = "select 
+j.idjugador,
+tip.tipodocumento,
+j.nrodocumento,
+j.apellido,
+j.nombres,
+j.email,
+j.fechanacimiento,
+j.fechaalta,
+j.fechabaja,
+cou.nombre as countrie,
+j.observaciones,
+j.reftipodocumentos,
+j.refcountries
+from dbjugadores j 
+inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+where 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
 /* Fin */
 /* /* Fin de la Tabla: dbjugadores*/
 
@@ -2224,6 +2251,35 @@ return $res;
 } 
 
 
+function traerEquiposPorEquipo($idEquipo) { 
+$sql = "select 
+e.idequipo,
+cou.nombre as countrie,
+e.nombre,
+cat.categoria,
+di.division,
+con.nombre as contacto,
+e.fechaalta,
+e.fachebaja,
+(case when e.activo=1 then 'Si' else 'No' end) as activo,
+e.refcountries,
+e.refcategorias,
+e.refdivisiones,
+e.refcontactos
+from dbequipos e 
+inner join dbcountries cou ON cou.idcountrie = e.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias 
+inner join tbdivisiones di ON di.iddivision = e.refdivisiones 
+inner join dbcontactos con ON con.idcontacto = e.refcontactos 
+inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos 
+where e.idequipo =".$idEquipo." 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 function traerEquiposPorId($id) { 
 $sql = "select idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,activo from dbequipos where idequipo =".$id; 
 $res = $this->query($sql,0); 
@@ -2780,6 +2836,52 @@ from
         inner join
     tbcategorias cat ON cat.idtcategoria = c.refcategorias
 	where jug.idjugador = ".$refJugador." and c.activo = 1
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerConectorActivosPorEquipos($refEquipos) {
+$sql = "select 
+    c.idconector,
+	cat.categoria,
+	equ.nombre as equipo,
+	co.nombre as countrie,
+	tip.tipojugador,
+	(case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	jug.nrodocumento,
+	jug.fechanacimiento,
+	tip.idtipojugador
+    
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	where equ.idequipo = ".$refEquipos." and c.activo = 1
 order by 1";
 $res = $this->query($sql,0);
 return $res;
