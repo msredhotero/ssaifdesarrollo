@@ -2657,6 +2657,18 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+function traerDefinicionesPorTemporadaCategoria($idTemporada, $idCategoria) {
+	$sql = "select
+				max(dct.cantmaxjugadores) as cantmaxjugadores, max(dctj.edadmaxima) as edadmaxima, max(dctj.edadminima) as edadminima, max((dctj.edadmaxima + dctj.edadminima) /2) as promedio
+			from		dbdefinicionescategoriastemporadas dct
+			inner
+			join		dbdefinicionescategoriastemporadastipojugador dctj
+			on			dct.iddefinicioncategoriatemporada = dctj.refdefinicionescategoriastemporadas
+			where		dct.reftemporadas = ".$idTemporada." and refcategorias = ".$idCategoria;
+	$res = $this->query($sql,0); 
+	return $res; 	
+}
+
 /* Fin */
 /* /* Fin de la Tabla: dbdefinicionescategoriastemporadastipojugador*/
 

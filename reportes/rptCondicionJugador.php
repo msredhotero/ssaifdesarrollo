@@ -27,6 +27,8 @@ $equipo		=	$serviciosReferencias->traerEquiposPorEquipo($id);
 
 $idCategoria=	mysql_result($equipo,0,'refcategorias');
 
+$definiciones= $serviciosReferencias->traerDefinicionesPorTemporadaCategoria(1, $idCategoria);
+
 class PDF extends FPDF
 {
 // Cargar los datos
@@ -50,14 +52,14 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	
 	
     // Cabecera
-    $w = array(16,35,25,35,18,35,20,20);
+    $w = array(18,40,25,30,18,35,20,20);
     for($i=0;$i<count($header);$i++) {
-		if (($i == 5) || ($i == 6)) {
-			$this->SetFont('Arial','',8);
+		if (($i == 6) || ($i == 7)) {
+        	$this->SetFont('Arial','',9);
 		} else {
 			$this->SetFont('Arial','',11);
 		}
-        $this->Cell($w[$i],6,$header[$i],1,0,'C',true);
+		$this->Cell($w[$i],6,$header[$i],1,0,'C',true);
 	}
     $this->Ln();
     // Restauración de colores y fuentes
@@ -72,13 +74,28 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	$sumSaldos = 0;
 	$sumAbonos = 0;
 	$cadCumpleEdad = '';
+	$errorDoc = 1;
+	$cadErrorDoc = '';
+	
+	$x = 0;
+	$y = 0;
+	
+	$yInicial = 0;
+	
+	$x = $this->GetX();
+	$y = $this->GetY();
+	$documentaciones = '';
 	
 	$this->SetFont('Arial','',9);
     while ($row = mysql_fetch_array($data))
     {
+		$yInicial = $this->GetY();
+		
 		$edad = $servicios->verificarEdad($row['refjugadores']);
 		
 		$cumpleEdad = $servicios->verificaEdadCategoriaJugador($row['refjugadores'], $refcategoria, $row['idtipojugador']);
+		
+		$documentaciones = $servicios->traerJugadoresdocumentacionPorJugadorValores($row['refjugadores']);
 		
 		if ($cumpleEdad == 1) {
 			$cadCumpleEdad = "Cumple";	
@@ -87,19 +104,72 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$cadCumpleEdad = "No Cumple";	
 		}
 		
-        $this->Cell($w[0],5,$row['nrodocumento'],'LR',0,'C',$fill);
-		$this->Cell($w[1],5,substr($row['nombrecompleto'],0,60),'LR',0,'L',$fill);
-        $this->Cell($w[2],5,$row['fechanacimiento']." (".$edad.")",'LR',0,'C',$fill);
-		$this->Cell($w[3],5,$row['countrie'],'LR',0,'L',$fill);
-		$this->Cell($w[4],5,'','LR',0,'C',$fill);
-		$this->Cell($w[5],5,'','LR',0,'L',$fill);
-		$this->Cell($w[6],5,$cadCumpleEdad,'LR',0,'C',$fill);
-		$this->Cell($w[7],5,'','LR',0,'C',$fill);
-        $this->Ln();
-        
+		if (mysql_num_rows($documentaciones)>0) {
+			while ($rowH = mysql_fetch_array($documentaciones)) {
+				if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
+					$cadErrorDoc .= $rowH['descripcion'].' - ';
+				}
+			}
+			if ($cadErrorDoc == '') {
+				$cadErrorDoc = 'Ok';
+			} else {
+				$cadErrorDoc = substr($cadErrorDoc,0,-3);
+			}
+			
+		} else {
+			$cadErrorDoc = 'Falta Presantar las Documentaciones';
+		}
+		
+		
+		
+		$this->SetXY($x, $y);
+		$yN = $y;
+        $this->MultiCell($w[0],5,$row['nrodocumento'],'','C');
+		if ($this->GetY() > $yN + 5) {
+			$yN = $this->GetY();
+		}
+		$this->SetXY($x + $w[0] , $y);
+		$this->MultiCell($w[1],5,substr($row['nombrecompleto'],0,60),'','L');
+        if ($this->GetY() > $yN + 5) {
+			$yN = $this->GetY();
+		}
+		$this->SetXY($x + $w[0] + $w[1] , $y);
+		$this->MultiCell($w[2],5,$row['fechanacimiento']." (".$edad.")",'','C');
+		if ($this->GetY() > $yN + 5) {
+			$yN = $this->GetY();
+		}
+		$this->SetXY($x + $w[0] + $w[1] + $w[2], $y);
+		$this->MultiCell($w[3],5,'Country: AYRES DE PILAR BARRIO PRIVADO','','L');
+		if ($this->GetY() > $yN + 5) {
+			$yN = $this->GetY();
+		}
+		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3], $y);
+		$this->MultiCell($w[4],5,'','','C');
+		if ($this->GetY() > $yN + 5) {
+			$yN = $this->GetY();
+		}
+		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4], $y);
+		$this->MultiCell($w[5],5,$cadErrorDoc,'','L');
+		if ($this->GetY() > $yN + 5) {
+			$yN = $this->GetY();
+		}
+		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4] + $w[5], $y);
+		$this->MultiCell($w[6],5,$cadCumpleEdad,'','C');
+		if ($this->GetY() > $yN + 5) {
+			$yN = $this->GetY();
+		}
+		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4] + $w[5] + $w[6], $y);
+		$this->MultiCell($w[7],5,'','','C');
+        if ($this->GetY() > $yN + 5) {
+			$yN = $this->GetY();
+		}
+		
 		
 		if ($totalcant == 25) {
 			$this->AddPage();
+			
+			$y = $yInicial;
+			
 			$this->SetFont('Arial','',11);
 			// Colores, ancho de línea y fuente en negrita
 			$this->SetFillColor(255,0,0);
@@ -116,11 +186,18 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$fill = false;
 			$this->SetFont('Arial','',9);
 		}
+		
+		$y = $yN;
+		$documentaciones = '';
+		$cadErrorDoc = '';
+		$this->SetXY($x, $yN);
+		$this->Cell(array_sum($w),0,'','T');
     }
 	
 
 	$fill = !$fill;
     // Línea de cierre
+	$this->SetXY($x, $yN);
     $this->Cell(array_sum($w),0,'','T');
 	$this->SetFont('Arial','',12);
 	$this->Ln();
@@ -158,14 +235,14 @@ $pdf->Ln();
 $pdf->Ln();
 $pdf->SetFont('Arial','',9);
 $pdf->Cell(35,5,'Temporada: 2016',1,0,'L',false);
-$pdf->Cell(55,5,'Country: '.mysql_result($equipo,0,'countrie'),1,0,'L',false);
-$pdf->Cell(55,5,'Categoria: '.mysql_result($equipo,0,'categoria'),1,0,'L',false);
-$pdf->Cell(55,5,'División: '.mysql_result($equipo,0,'division'),1,0,'L',false);
+$pdf->Cell(75,5,'Country: AYRES DE PILAR BARRIO PRIVADO',1,0,'L',false);
+$pdf->Cell(50,5,'Categoria: '.mysql_result($equipo,0,'categoria'),1,0,'L',false);
+$pdf->Cell(45,5,'División: '.mysql_result($equipo,0,'division'),1,0,'L',false);
 $pdf->Ln();
-$pdf->Cell(35,5,'Jugadores: ',1,0,'L',false);
-$pdf->Cell(55,5,'Edad Min.: '.mysql_result($equipo,0,'countrie'),1,0,'L',false);
-$pdf->Cell(55,5,'Edad Max.: '.mysql_result($equipo,0,'categoria'),1,0,'L',false);
-$pdf->Cell(55,5,'Promedio: '.mysql_result($equipo,0,'division'),1,0,'L',false);
+$pdf->Cell(35,5,'Jugadores: '.mysql_result($definiciones,0,'cantmaxjugadores'),1,0,'L',false);
+$pdf->Cell(75,5,'Edad Min.: '.mysql_result($definiciones,0,'edadminima'),1,0,'L',false);
+$pdf->Cell(50,5,'Edad Max.: '.mysql_result($definiciones,0,'edadmaxima'),1,0,'L',false);
+$pdf->Cell(45,5,'Promedio: '.number_format(mysql_result($definiciones,0,'promedio'),2,',','.'),1,0,'L',false);
 
 $pdf->SetFont('Arial','',10);
 
