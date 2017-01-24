@@ -318,7 +318,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	
+	$('#fechaalta').val('<?php echo date('d/m/Y'); ?>');
 	
 	$(document).on('click', '.panel-heading span.clickable', function(e){
 		var $this = $(this);
@@ -516,7 +516,7 @@ $(document).ready(function(){
 				//una vez finalizado correctamente
 				success: function(data){
 
-					if (data == '') {
+					if (!isNaN(data)) {
                                             $(".alert").removeClass("alert-danger");
 											$(".alert").removeClass("alert-info");
                                             $(".alert").addClass("alert-success");

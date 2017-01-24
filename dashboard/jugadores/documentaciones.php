@@ -304,7 +304,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 								<select id="example-templates-button<?php echo $row[0]; ?>" name="multiselect<?php echo $row[0]; ?>[]" required>
 									<?php
 										while ($rowV = mysql_fetch_array($resValores)) {
-											if ($rowV[3] == 1) {
+											if ($rowV['pordefecto'] == 1) {
 												$chequeado = 'selected="selected"';	
 											} else {
 												$chequeado = '';	
@@ -455,6 +455,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <button type="button" class="btn btn-success" id="equipos" style="margin-left:0px;">Continuar</button>
                     </li>
                     <?php } ?>
+                    <li>
+                        <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
+                    </li>
                 </ul>
                 </div>
             </div>
@@ -488,7 +491,11 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	
+	$('.volver').click(function(event){
+		 
+		url = "modificar.php?id="+<?php echo $id; ?>;
+		$(location).attr('href',url);
+	});//fin del boton modificar
 	
 	$(document).on('click', '.panel-heading span.clickable', function(e){
 		var $this = $(this);

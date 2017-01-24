@@ -32,7 +32,7 @@ $eliminar = "eliminarOrdenes";
 
 $insertar = "insertarOrdenes";
 
-$tituloWeb = "Gestión: Talleres";
+$tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
@@ -55,6 +55,13 @@ $cabeceras 		= "	<th>Nro</th>
 
 $resCantidadJugadores = mysql_num_rows($serviciosReferencias->traerJugadores());
 
+$resTraerJugadores = $serviciosReferencias->traerJugadores();
+
+$cadJugadores = '';
+	while ($row = mysql_fetch_array($resTraerJugadores)) {
+		$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
+	}
+		
 ?>
 
 <!DOCTYPE HTML>
@@ -86,10 +93,10 @@ $resCantidadJugadores = mysql_num_rows($serviciosReferencias->traerJugadores());
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <!-- Latest compiled and minified JavaScript -->
     <script src="../bootstrap/js/bootstrap.min.js"></script>
+	
 
 
-
-
+	
     
    
    <link href="../css/perfect-scrollbar.css" rel="stylesheet">
@@ -102,6 +109,17 @@ $resCantidadJugadores = mysql_num_rows($serviciosReferencias->traerJugadores());
         $('#navigation').perfectScrollbar();
       });
     </script>
+    
+    <style>
+		.autocomplete-suggestions { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
+		.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+		.autocomplete-no-suggestion { padding: 2px 5px;}
+		.autocomplete-selected { background: #F0F0F0; }
+		.autocomplete-suggestions strong { font-weight: bold; color: #000; }
+		.autocomplete-group { padding: 2px 5px; }
+		.autocomplete-group strong { font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid #000;}
+		input { font-size: 28px; padding: 10px; border: 1px solid #CCC; display: block; margin: 20px 0; }
+	</style>
 </head>
 
 <body>
@@ -122,33 +140,15 @@ $resCantidadJugadores = mysql_num_rows($serviciosReferencias->traerJugadores());
 				</div>
                     <div class="panel-body">
                     	<div class="row">
-                        <div class="form-group col-md-6">
-                             <label class="control-label" style="text-align:left" for="torneo">Tipo de Busqueda</label>
-                                <div class="input-group col-md-12">
-                                    <select id="tipobusqueda" class="form-control" name="tipobusqueda">
-                                        <option value="2">Nombre Completo</option>
-                                        <option value="1">Countries</option>
-                                        <option value="3">DNI</option>
-                                        
-                                    </select>
-                                </div>
-                                
-                            </div>
-                            
-                            <div class="form-group col-md-6">
-                             <label class="control-label" style="text-align:left" for="torneo">Busqueda</label>
-                                <div class="input-group col-md-12">
-                                    <input type="text" name="busqueda" id="busqueda" class="form-control">
-                                </div>
-        
-                            </div>
+
                             
                             <div class="form-group col-md-12">
-                                 <ul class="list-inline" style="margin-top:15px;">
-                                    <li>
-                                     <button id="buscar" class="btn btn-primary" style="margin-left:0px;" type="button">Buscar</button>
-                                    </li>
-                                </ul>
+                                 <h4>Busqueda por Nombre Completo o Nro Documento</h4>
+                                <div style="position: relative; height: 80px;">
+                                    <input type="text" class="form-control" name="country" id="autocomplete-ajax" style="position: absolute; z-index: 2; background: transparent;"/>
+                                    <input type="text" class="form-control" name="country" id="autocomplete-ajax-x" disabled="disabled" style="color: #CCC; position: absolute; background: transparent; z-index: 1;"/>
+                                </div>
+                                <div id="selction-ajax"></div>
         
                             </div>
                             
@@ -179,9 +179,13 @@ $resCantidadJugadores = mysql_num_rows($serviciosReferencias->traerJugadores());
 
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script src="../bootstrap/js/dataTables.bootstrap.js"></script>
-
+<script type="text/javascript" src="../js/jquery.mockjax.js"></script>
+<script type="text/javascript" src="../js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="../jsh/demo.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	$('#colapsarMenu').click();
 	
 	$(document).on('click', '.panel-heading span.clickable', function(e){
 		var $this = $(this);
@@ -245,6 +249,17 @@ $(document).ready(function(){
 	} );
 	
 
+	$('#selction-ajax').on("click",'.varJugadorModificar', function(){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			
+			url = "jugadores/modificar.php?id=" + usersid;
+			$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton eliminar
+	
 	$('table.table').on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
@@ -394,9 +409,63 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	
+});
+</script>
 
+<script type="text/javascript">
+/*jslint  browser: true, white: true, plusplus: true */
+/*global $, countries */
 
+$(function () {
+    'use strict';
+
+var countries = {
+    <?php echo substr($cadJugadores,0,-1); ?>
+}
+    var countriesArray = $.map(countries, function (value, key) { return { value: value, data: key }; });
+
+    // Setup jQuery ajax mock:
+    $.mockjax({
+        url: '*',
+        responseTime: 2000,
+        response: function (settings) {
+            var query = settings.data.query,
+                queryLowerCase = query.toLowerCase(),
+                re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi'),
+                suggestions = $.grep(countriesArray, function (country) {
+                     // return country.value.toLowerCase().indexOf(queryLowerCase) === 0;
+                    return re.test(country.value);
+                }),
+                response = {
+                    query: query,
+                    suggestions: suggestions
+                };
+
+            this.responseText = JSON.stringify(response);
+        }
+    });
+
+    // Initialize ajax autocomplete:
+    $('#autocomplete-ajax').autocomplete({
+        // serviceUrl: '/autosuggest/service/url',
+        lookup: countriesArray,
+        lookupFilter: function(suggestion, originalQuery, queryLowerCase) {
+            var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+            return re.test(suggestion.value);
+        },
+        onSelect: function(suggestion) {
+            /*$('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);*/
+			$('#selction-ajax').html('<button type="button" class="btn btn-warning varJugadorModificar" id="' + suggestion.data + '" style="margin-left:0px;">Modificar</button>');
+        },
+        onHint: function (hint) {
+            $('#autocomplete-ajax-x').val(hint);
+        },
+        onInvalidateSelection: function() {
+            $('#selction-ajax').html('You selected: none');
+        }
+    });
+
+    
 });
 </script>
 <?php } ?>

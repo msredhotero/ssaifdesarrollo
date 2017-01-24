@@ -41,8 +41,8 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbcountries";
 
-$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria","refcontactos");
-$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Contacto");
+$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria","refcontactos","telefonoadministrativo","telefonocampo");
+$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Contacto","Tel. Administrativo","Tel. Campo");
 
 
 $resPosTri 	= $serviciosReferencias->traerPosiciontributaria();
@@ -169,7 +169,11 @@ if ($_SESSION['refroll_predio'] != 1) {
 			height: 600px;
 			border: 1px solid #d0d0d0;
 		}
-  
+  		.errorNroDoc { 
+			border:1px solid #F00;
+			box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
+			border-radius:2px;
+		}
 		
 	</style>
     <script>
@@ -240,6 +244,7 @@ if ($_SESSION['refroll_predio'] != 1) {
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
+            
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert alert-info'>
                 	<span class="glyphicon glyphicon-info-sign"></span> El CUIT cargarlo son "-" o "/" solo numeros
@@ -248,6 +253,8 @@ if ($_SESSION['refroll_predio'] != 1) {
             </div>
             
         	<div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6 errorDoc"></div>
 			<?php echo $formulario; ?>
             </div>
             
@@ -391,6 +398,8 @@ $(document).ready(function(){
 	$('#cuit').number( true, 0 , '', '');
 	$("#cuit").attr('maxlength','11');
 	
+	$('#fechaalta').val('<?php echo date('d/m/Y'); ?>');
+	
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],
 		"language": {
@@ -419,6 +428,31 @@ $(document).ready(function(){
 	} );
 	
 	//$('#contMapa').hide();
+	
+	function existeCuit(cuit) {
+		$.ajax({
+			data:  {cuit: cuit, accion: 'existeCuit'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+				$('.errorDoc').html('');
+			},
+			success:  function (response) {
+				if (response != '') {
+					$('#cuit').addClass('errorNroDoc');	
+					$('.errorDoc').html('<span class="help-block errorDoc">' + response + '.</span>');	
+				} else {
+					$('#cuit').removeClass('errorNroDoc');
+					$('.errorDoc').html('');		
+				}
+			}
+		});	
+	}
+	
+	$('#cuit').focusout(function() {
+		existeCuit($('#cuit').val());
+	});
+	
 	
 	$('#asignarContacto').click(function(e) {
 		//alert($('#buscarcontacto option:selected').html());

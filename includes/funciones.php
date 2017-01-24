@@ -634,7 +634,7 @@ class Servicios {
 		switch ($tabla) {
 			case 'dbcountries':
 				$sqlMod = "select idcountrie,nombre,cuit,DATE_FORMAT(fechaalta, '%d/%m/%Y') as fechaalta,
-    DATE_FORMAT(fechabaja, '%d/%m/%Y') as fechabaja,refposiciontributaria,latitud,longitud,activo,referencia from dbcountries where idcountrie =".$id;
+    DATE_FORMAT(fechabaja, '%d/%m/%Y') as fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,direccion,telefonoadministrativo,telefonocampo from dbcountries where idcountrie =".$id;
 				$resMod = $this->query($sqlMod,0);
 				break;
 
@@ -1175,7 +1175,7 @@ class Servicios {
 						$form	=	$form.'
 						
 						<div class="form-group col-md-6 col-xs-6">
-							<label for="'.$label.'" class="control-label" style="text-align:left">'.ucwords($label).'</label>
+							<label for="'.$label.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.ucwords($label).'</b></label>
 							<div class="input-group col-md-12">
 								
 								<p>'.mysql_result($resMod,0,$row[0]).'</p>
@@ -1206,7 +1206,7 @@ class Servicios {
 							$form	=	$form.'
 							
 							<div class="form-group col-md-6 col-xs-6">
-								<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+								<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 								<div class="input-group col-md-12">
 									<p>
 										';
@@ -1235,7 +1235,7 @@ class Servicios {
 								$form	=	$form.'
 								
 								<div class="form-group col-md-6 col-xs-6">
-									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+									<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 									<div class="input-group col-md-12">
 										<p>'.$activo.'</p>
 									</div>
@@ -1267,7 +1267,7 @@ class Servicios {
 									$form	=	$form.'
 									
 									<div class="form-group col-md-6 col-xs-6">
-										<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+										<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 										<div class="input-group col-md-6">
 											<p>'.mysql_result($resMod,0,$row[0]).'</p>
 										</div>
@@ -1285,7 +1285,7 @@ class Servicios {
 										$form	=	$form.'
 										
 										<div class="form-group col-md-6 col-xs-6">
-											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+											<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
 											<div class="input-group bootstrap-timepicker col-md-6">
 												<p>'.mysql_result($resMod,0,$row[0]).'</p>
 											</div>
@@ -1302,7 +1302,7 @@ class Servicios {
 											$form	=	$form.'
 											
 											<div class="form-group col-md-6 col-xs-6">
-												<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+												<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 												<div class="input-group col-md-12">
 													<p>'.(htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_HTML5) == '' ? ".............." : htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_HTML5)).'</p>
 												</div>
@@ -1320,7 +1320,7 @@ class Servicios {
 											$form	=	$form.'
 											
 											<div class="form-group col-md-12 col-xs-12">
-												<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+												<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 												<div class="input-group col-md-12 col-xs-12">
 													<p>'.(htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_HTML5) == '' ? ".............." : htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_HTML5)).'</p>
 													
@@ -1351,7 +1351,7 @@ class Servicios {
 													}
 													
 													$form	=	$form.'<div class="form-group col-md-6 col-xs-6">
-														<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+														<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
 														<div class="input-group col-md-12">';
 													
 													if (mysql_num_rows($imagen)>0) {
@@ -1379,7 +1379,7 @@ class Servicios {
 													$form	=	$form.'
 													
 													<div class="form-group col-md-6 col-xs-6">
-														<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+														<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
 														<div class="input-group col-md-12">
 															<p>'.(utf8_encode(mysql_result($resMod,0,$row[0])) == '' ? ".............." : utf8_encode(mysql_result($resMod,0,$row[0]))).'</p>
 														</div>

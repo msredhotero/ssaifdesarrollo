@@ -74,8 +74,11 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	$sumSaldos = 0;
 	$sumAbonos = 0;
 	$cadCumpleEdad = '';
-	$errorDoc = 1;
+	$errorDoc = 'FALTA';
 	$cadErrorDoc = '';
+	$habilitacion= 'INHAB.';
+	$transitoria= '';
+	$valorDocumentacion = 0;
 	
 	$x = 0;
 	$y = 0;
@@ -98,28 +101,40 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		$documentaciones = $servicios->traerJugadoresdocumentacionPorJugadorValores($row['refjugadores']);
 		
 		if ($cumpleEdad == 1) {
-			$cadCumpleEdad = "Cumple";	
+			$cadCumpleEdad = "CUMPLE";	
 		} else {
 			// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
-			$cadCumpleEdad = "No Cumple";	
+			$habilitacionTransitoria = $servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], 1, $refcategoria,mysql_result($equipo,0,'nombre'));
+			if (mysql_num_rows($habilitacionTransitoria)>0) {
+				$cadCumpleEdad = "HAB. TRANS.";	
+			} else {
+				$cadCumpleEdad = "NO CUMPLE";	
+			}
 		}
 		
 		if (mysql_num_rows($documentaciones)>0) {
 			while ($rowH = mysql_fetch_array($documentaciones)) {
 				if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
-					$cadErrorDoc .= $rowH['descripcion'].' - ';
+					if ($rowH['obligatoria'] == 'Si') {
+						$valorDocumentacion += 1;	
+					}
+					$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
 				}
 			}
 			if ($cadErrorDoc == '') {
-				$cadErrorDoc = 'Ok';
+				$cadErrorDoc = 'OK';
+				$errorDoc = 'OK';
 			} else {
 				$cadErrorDoc = substr($cadErrorDoc,0,-3);
 			}
 			
 		} else {
-			$cadErrorDoc = 'Falta Presantar las Documentaciones';
+			$cadErrorDoc = 'FALTA PRESENTAR DOCUMENTACIONES';
 		}
 		
+		if ($valorDocumentacion == 0 && $cadCumpleEdad == 'CUMPLE') {
+			$habilitacion= 'HAB.';	
+		}
 		
 		
 		$this->SetXY($x, $y);
@@ -129,7 +144,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] , $y);
-		$this->MultiCell($w[1],5,substr($row['nombrecompleto'],0,60),'','L');
+		$this->MultiCell($w[1],5,strtoupper(substr($row['nombrecompleto'],0,60)),'','L');
         if ($this->GetY() > $yN + 5) {
 			$yN = $this->GetY();
 		}
@@ -139,12 +154,12 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2], $y);
-		$this->MultiCell($w[3],5,'Country: AYRES DE PILAR BARRIO PRIVADO','','L');
+		$this->MultiCell($w[3],5,strtoupper($row['countrie']),'','L');
 		if ($this->GetY() > $yN + 5) {
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3], $y);
-		$this->MultiCell($w[4],5,'','','C');
+		$this->MultiCell($w[4],5,$errorDoc,'','C');
 		if ($this->GetY() > $yN + 5) {
 			$yN = $this->GetY();
 		}
@@ -159,7 +174,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4] + $w[5] + $w[6], $y);
-		$this->MultiCell($w[7],5,'','','C');
+		$this->MultiCell($w[7],5,$habilitacion,'','C');
         if ($this->GetY() > $yN + 5) {
 			$yN = $this->GetY();
 		}
@@ -235,7 +250,7 @@ $pdf->Ln();
 $pdf->Ln();
 $pdf->SetFont('Arial','',9);
 $pdf->Cell(35,5,'Temporada: 2016',1,0,'L',false);
-$pdf->Cell(75,5,'Country: AYRES DE PILAR BARRIO PRIVADO',1,0,'L',false);
+$pdf->Cell(75,5,'Country: '.mysql_result($equipo,0,'countrie'),1,0,'L',false);
 $pdf->Cell(50,5,'Categoria: '.mysql_result($equipo,0,'categoria'),1,0,'L',false);
 $pdf->Cell(45,5,'División: '.mysql_result($equipo,0,'division'),1,0,'L',false);
 $pdf->Ln();

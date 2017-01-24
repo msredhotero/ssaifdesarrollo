@@ -339,22 +339,43 @@ return $res;
 
 /* PARA Countries */
 
-function insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia) {
-$sql = "insert into dbcountries(idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,latitud,longitud,activo,referencia)
-values ('','".utf8_decode($nombre)."','".utf8_decode($cuit)."',".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'").",".$refposiciontributaria.",'".utf8_decode($latitud)."','".utf8_decode($longitud)."',".$activo.",'".utf8_decode($referencia)."')";
-$res = $this->query($sql,1);
-return $res;
+function existeCountrie($cuit) {
+	$sql = "select idcountrie from dbcountries where cuit = '".$cuit."'";	
+	$res = $this->query($sql,0);
+	
+	if (mysql_num_rows($res)>0) {
+		return 1;	
+	}
+	return 0;
+}
+
+function existeCountriePorId($cuit, $id) {
+	$sql = "select idcountrie from dbcountries where cuit = '".$cuit."' and idcountrie <> ".$id;	
+	$res = $this->query($sql,0);
+	
+	if (mysql_num_rows($res)>0) {
+		return 1;	
+	}
+	return 0;
 }
 
 
-function modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia) {
-$sql = "update dbcountries
-set
-nombre = '".utf8_decode($nombre)."',cuit = '".utf8_decode($cuit)."',fechaalta = ".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",fechabaja = ".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'").",refposiciontributaria = ".$refposiciontributaria.",latitud = '".utf8_decode($latitud)."',longitud = '".utf8_decode($longitud)."',activo = ".$activo.",referencia = '".utf8_decode($referencia)."'
-where idcountrie =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
+function insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo) { 
+$sql = "insert into dbcountries(idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,imagen,direccion,telefonoadministrativo,telefonocampo) 
+values ('','".utf8_decode($nombre)."','".utf8_decode($cuit)."',".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'")."',".$refposiciontributaria.",'".utf8_decode($latitud)."','".utf8_decode($longitud)."',".$activo.",'".utf8_decode($referencia)."','".utf8_decode($imagen)."','".utf8_decode($direccion)."','".utf8_decode($telefonoadministrativo)."','".utf8_decode($telefonocampo)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo) { 
+$sql = "update dbcountries 
+set 
+nombre = '".utf8_decode($nombre)."',cuit = '".utf8_decode($cuit)."',fechaalta = ".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",fechabaja = ".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'")."',refposiciontributaria = ".$refposiciontributaria.",latitud = '".utf8_decode($latitud)."',longitud = '".utf8_decode($longitud)."',activo = ".$activo.",referencia = '".utf8_decode($referencia)."',imagen = '".utf8_decode($imagen)."',direccion = '".utf8_decode($direccion)."',telefonoadministrativo = '".utf8_decode($telefonoadministrativo)."',telefonocampo = '".utf8_decode($telefonocampo)."' 
+where idcountrie =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
 
 
 function eliminarCountries($id) {
@@ -376,7 +397,10 @@ pos.posiciontributaria,
 c.referencia,
 c.latitud,
 c.longitud,
-c.refposiciontributaria
+c.refposiciontributaria,
+c.direccion,
+c.telefonoadministrativo,
+c.telefonocampo
 from dbcountries c
 inner join tbposiciontributaria pos ON pos.idposiciontributaria = c.refposiciontributaria
 order by 1";
@@ -387,7 +411,7 @@ return $res;
 
 function traerCountriesPorId($id) {
 $sql = "select idcountrie,nombre,cuit,fechaalta,
-    fechabaja,refposiciontributaria,latitud,longitud,activo,referencia from dbcountries where idcountrie =".$id;
+    fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,direccion,telefonoadministrativo,telefonocampo from dbcountries where idcountrie =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -1041,7 +1065,9 @@ function traerCountriecontactosPorCountries($idCountrie) {
 			concat(ti.tipocontacto,' - ',con.nombre) as contacto,
 			cou.nombre as countrie,
 			c.refcountries,
-			c.refcontactos
+			c.refcontactos,
+			con.telefono,
+			con.email
 		from dbcountriecontactos c
 		inner join dbcountries cou ON cou.idcountrie = c.refcountries
 		inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria
@@ -1968,18 +1994,18 @@ return $res;
 
 
 
-function insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$default) { 
-$sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,`default`) 
-values ('',".$refdocumentaciones.",'".utf8_decode($descripcion)."',".$habilita.",".$default.")"; 
+function insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$predeterminado) { 
+$sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,predeterminado) 
+values ('',".$refdocumentaciones.",'".utf8_decode($descripcion)."',".$habilita.",".$predeterminado.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
 
 
-function modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita,$default) { 
+function modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita,$predeterminado) { 
 $sql = "update tbvaloreshabilitacionestransitorias 
 set 
-refdocumentaciones = ".$refdocumentaciones.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita.",`default` = ".$default." 
+refdocumentaciones = ".$refdocumentaciones.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita.",predeterminado = ".$predeterminado." 
 where idvalorhabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1999,7 +2025,7 @@ v.idvalorhabilitaciontransitoria,
 doc.descripcion as documentacion,
 v.descripcion,
 (case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
-v.default as pordefecto,
+(case when v.predeterminado= 1 then 'Si' else 'No' end) as pordefecto,
 v.refdocumentaciones
 from tbvaloreshabilitacionestransitorias v 
 inner join tbdocumentaciones doc ON doc.iddocumentacion = v.refdocumentaciones 
@@ -2010,7 +2036,7 @@ return $res;
 
 
 function traerValoreshabilitacionestransitoriasPorId($id) { 
-$sql = "select idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,default as pordefecto from tbvaloreshabilitacionestransitorias where idvalorhabilitaciontransitoria =".$id; 
+$sql = "select idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,predeterminado as pordefecto from tbvaloreshabilitacionestransitorias where idvalorhabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -2022,12 +2048,12 @@ v.idvalorhabilitaciontransitoria,
 doc.descripcion as documentacion,
 v.descripcion,
 (case when v.habilita= 1 then 'Si' else 'No' end) as habilita,
-(case when v.default= 1 then 'Si' else 'No' end) as pordefecto,
+(case when v.predeterminado= 1 then 'Si' else 'No' end) as pordefecto,
 v.refdocumentaciones
 from tbvaloreshabilitacionestransitorias v 
 inner join tbdocumentaciones doc ON doc.iddocumentacion = v.refdocumentaciones  
 where doc.iddocumentacion = ".$idDocumentacion."
-order by 1"; 
+order by v.predeterminado desc"; 
 $res = $this->query($sql,0); 
 return $res; 
 } 

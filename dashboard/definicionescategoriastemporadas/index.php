@@ -42,7 +42,7 @@ $tituloWeb = "Gestión: AIF";
 $tabla 			= "dbdefinicionescategoriastemporadas";
 
 $lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso","refdias");
-$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reintegros","Días");
+$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reingresos","Días");
 
 
 $resCategorias 	= $serviciosReferencias->traerCategorias();

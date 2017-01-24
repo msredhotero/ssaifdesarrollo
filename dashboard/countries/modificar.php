@@ -48,8 +48,8 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbcountries";
 
-$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria");
-$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria");
+$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria","telefonoadministrativo","telefonocampo");
+$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Tel. Administrativo","Tel. Campo");
 
 
 $resPosTri 	= $serviciosReferencias->traerPosiciontributaria();
@@ -286,7 +286,7 @@ if (mysql_result($resResultado,0,'fechabaja') == '0000-00-00') {
                         <button type="button" class="btn btn-info" id="vercontacto" style="margin-left:0px;"><span class="lblContacto">Ver Contactos</span></button>
                     </li>
                     <li>
-                    	<button type="button" data-toggle="modal" data-target="#myModal3" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Cargar Contacto</button>
+                    	<button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Cargar Contacto</button>
                     </li>
                 </ul>
                 </div>

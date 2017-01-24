@@ -48,8 +48,8 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbcountries";
 
-$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria");
-$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria");
+$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria","telefonoadministrativo","telefonocampo");
+$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Tel. Administrativo","Tel. Campo");
 
 
 $resPosTri 	= $serviciosReferencias->traerPosiciontributaria();
@@ -150,7 +150,10 @@ if ($_SESSION['refroll_predio'] != 1) {
 			height: 600px;
 			border: 1px solid #d0d0d0;
 		}
-  
+  		body p {
+			text-decoration:none;
+			font-weight:normal;	
+		}
 		
 	</style>
     <script>
@@ -242,7 +245,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 								while ($rowC = mysql_fetch_array($resContactosCountries)) {
 							
 							?>
-                            	<li><?php echo $rowC[1]; ?></li>
+                            	<li><?php echo $rowC[1].' - Teléfono: '.$rowC['telefono'].' - Email: '.$rowC['email']; ?></li>
                             <?php
 								}
 							?>

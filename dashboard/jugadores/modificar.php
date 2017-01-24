@@ -67,6 +67,8 @@ $formulario 	= $serviciosFunciones->camposTablaModificar($id, $idTabla, $modific
 
 $resJugadores = $serviciosReferencias->traerJugadoresdocumentacionPorJugador($id);
 
+$resDocumentaciones	=	$serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($id);
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {

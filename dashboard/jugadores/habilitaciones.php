@@ -102,6 +102,8 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
 
 $resCantidadDCTTJ = mysql_num_rows($serviciosReferencias->traerDefinicionescategoriastemporadastipojugador());
 
+$resDocumentacionesCargadas	=	$serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($id);
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -243,6 +245,42 @@ if ($_SESSION['refroll_predio'] != 1) {
               <li class="list-group-item list-group-item-default">Nro Documento: <?php echo mysql_result($resResultado,0,'nrodocumento'); ?></li>
               <li class="list-group-item list-group-item-default">Fecha de Nacimiento: <?php echo mysql_result($resResultado,0,'fechanacimiento'); ?></li>
             </ul>
+            
+            <hr>
+            
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <h4 style="text-decoration:underline;">Documentaciones</h4>
+                <?php
+					while ($rowD = mysql_fetch_array($resDocumentacionesCargadas)) {
+					if ($rowD['obligatoria'] == 'Si') {
+						if (($rowD['valor'] == 'No') && ($rowD['contravalor'] == 'No')) {
+							$noHabilitaDocumentacion = array($rowD['refdocumentaciones']=>0);
+						}
+					}
+				?>
+                	<div class="col-md-4">
+                    	<?php
+							if ($rowD['valor'] == 'Si') {
+						?>
+                    	<p><span style="color:#3C0;" class="glyphicon glyphicon-ok"></span> <?php echo $rowD['descripcion']; ?></p>
+                        <?php 
+							} else { 
+								if ($rowD['contravalor'] == 'Si') {
+						?>
+                        		<p><span style="color:#3C0;" class="glyphicon glyphicon-ok"></span> <?php echo $rowD['descripcion']; ?></p>
+                        <?php
+								} else {
+						?>
+                    			<p><span style="color:#F00;" class="glyphicon glyphicon-remove"></span> <?php echo $rowD['descripcion']; ?></p>
+                        <?php		
+								}
+							}
+						?>
+                    </div>
+                <?php
+					}
+				?>
+            </div>
             
         	<div class='row' style="margin-left:25px; margin-right:25px;">
 				<div class="panel panel-success">

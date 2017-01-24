@@ -59,6 +59,9 @@ case 'eliminarCountries':
 eliminarCountries($serviciosReferencias);
 break;
 
+case 'existeCuit':
+	existeCuit($serviciosReferencias);
+	break;
 case 'eliminarFoto':
 	eliminarFoto($serviciosReferencias);
 	break;
@@ -694,16 +697,31 @@ function traerCountriesPorContactos($serviciosReferencias) {
 	
 }
 
+function existeCuit($serviciosReferencias) {
+	$cuit = $_POST['cuit'];	
+	
+	$res = $serviciosReferencias->existeCountrie($cuit);
+	
+	if ($res == 0) {
+		echo '';	
+	} else {
+		echo 'Ya existe este Cuit';	
+	}
+}
 
 function insertarCountries($serviciosReferencias) {
 	$nombre = $_POST['nombre'];
 	$cuit = $_POST['cuit'];
-	$fechaalta = $_POST['fechaalta'];
-	$fechabaja = $_POST['fechabaja'];
+	$fechaalta = formatearFechas($_POST['fechaalta']);
+	$fechabaja = formatearFechas($_POST['fechabaja']);
 	$refposiciontributaria = $_POST['refposiciontributaria'];
 	
 	$latitud = $_POST['latitud'];
 	$longitud = $_POST['longitud'];
+	
+	$direccion = $_POST['direccion']; 
+	$telefonoadministrativo = $_POST['telefonoadministrativo']; 
+	$telefonocampo = $_POST['telefonocampo']; 
 	
 	if (isset($_POST['activo'])) {
 		$activo = 1;
@@ -715,101 +733,81 @@ function insertarCountries($serviciosReferencias) {
 	$imagen = ''; 
 	
 	$errorArchivo = '';
-	/*
-	if ($fechaalta != '') {
-		$arFechaalta = explode("/",$fechaalta);
-		$fechaalta = $arFechaalta[2]."-".$arFechaalta[1]."-".$arFechaalta[0];
-	}
-	if ($fechabaja != '') {
-		$arFechabaja = explode("/",$fechabaja);
-		$fechabaja = $arFechabaja[2]."-".$arFechabaja[1]."-".$arFechabaja[0];
-	}
-*/
-	$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia);
-	
-	if ((integer)$res > 0) {
-		$resUser = $serviciosReferencias->traerContactos();
-		$cad = 'user';
-		while ($rowFS = mysql_fetch_array($resUser)) {
-			if (isset($_POST[$cad.$rowFS[0]])) {
-				$serviciosReferencias->insertarCountriecontactos($res,$rowFS[0]);
-			}
-		}
+
+	if ($serviciosReferencias->existeCountrie($cuit)==0) {
+		$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$direccion,$telefonoadministrativo,$telefonocampo);
 		
-		$imagenes = array("imagen" => 'imagen');
-	
-		foreach ($imagenes as $valor) {
-			$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$res,1);
-		}
-		echo ''.$errorArchivo;
-	} else {
-		echo 'Huvo un error al insertar datos';
-	}
-}
-function modificarCountries($serviciosReferencias) {
-$id = $_POST['id'];
-$nombre = $_POST['nombre'];
-$cuit = $_POST['cuit'];
-$fechaalta = $_POST['fechaalta'];
-$fechabaja = $_POST['fechabaja'];
-$refposiciontributaria = $_POST['refposiciontributaria'];
-
-$latitud = $_POST['latitud'];
-$longitud = $_POST['longitud'];
-if (isset($_POST['activo'])) {
-$activo = 1;
-} else {
-$activo = 0;
-}
-$referencia = $_POST['referencia'];
-
-if (strpos($fechabaja,"00/00/0000") !== false) {
-	$fechabaja = '';
-}
-
-if (strpos($fechaalta,"00/00/0000") !== false) {
-	$fechaalta = '';
-}
-/*
-if (strpos($fechabaja,"_") !== false) {
-	$fechabaja = '';
-}
-
-if (strpos($fechaalta,"_") !== false) {
-	$fechaalta = '';
-}
-
-	if ($fechaalta != '') {
-		$arFechaalta = explode("/",$fechaalta);
-		$fechaalta = $arFechaalta[2]."-".$arFechaalta[1]."-".$arFechaalta[0];
-	}
-	if ($fechabaja != '') {
-		$arFechabaja = explode("/",$fechabaja);
-		$fechabaja = $arFechabaja[2]."-".$arFechabaja[1]."-".$arFechabaja[0];
-	}
-	*/
-$errorArchivo = '';
-
-	$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia);
-	
-	if ($res == true) {
-		$serviciosReferencias->eliminarCountriecontactosPorCountrie($id);
+		if ((integer)$res > 0) {
 			$resUser = $serviciosReferencias->traerContactos();
 			$cad = 'user';
 			while ($rowFS = mysql_fetch_array($resUser)) {
 				if (isset($_POST[$cad.$rowFS[0]])) {
-					$serviciosReferencias->insertarCountriecontactos($id,$rowFS[0]);
+					$serviciosReferencias->insertarCountriecontactos($res,$rowFS[0]);
 				}
 			}
 			
-		$imagenes = array("imagen" => 'imagen');
-	
-		foreach ($imagenes as $valor) {
-			$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$id,1);
+			$imagenes = array("imagen" => 'imagen');
+		
+			foreach ($imagenes as $valor) {
+				$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$res,1);
+			}
+			echo ''.$errorArchivo;
+		} else {
+			echo 'Huvo un error al insertar datos';
 		}
-		echo ''.$errorArchivo;
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Ya existe un Cuit cargado';
+	}
+}
+function modificarCountries($serviciosReferencias) {
+	$id = $_POST['id'];
+	$nombre = $_POST['nombre'];
+	$cuit = $_POST['cuit'];
+	$fechaalta = formatearFechas($_POST['fechaalta']);
+	$fechabaja = formatearFechas($_POST['fechabaja']);
+	$refposiciontributaria = $_POST['refposiciontributaria'];
+	
+	$latitud = $_POST['latitud'];
+	$longitud = $_POST['longitud'];
+	
+	$direccion = $_POST['direccion']; 
+	$telefonoadministrativo = $_POST['telefonoadministrativo']; 
+	$telefonocampo = $_POST['telefonocampo']; 
+	
+	if (isset($_POST['activo'])) {
+		$activo = 1;
+	} else {
+		$activo = 0;
+	}
+	
+	$referencia = $_POST['referencia'];
+
+	$errorArchivo = '';
+	
+	if ($serviciosReferencias->existeCountriePorId($cuit,$id)==0) {
+		$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$direccion,$telefonoadministrativo,$telefonocampo);
+		
+		if ($res == true) {
+			$serviciosReferencias->eliminarCountriecontactosPorCountrie($id);
+				$resUser = $serviciosReferencias->traerContactos();
+				$cad = 'user';
+				while ($rowFS = mysql_fetch_array($resUser)) {
+					if (isset($_POST[$cad.$rowFS[0]])) {
+						$serviciosReferencias->insertarCountriecontactos($id,$rowFS[0]);
+					}
+				}
+				
+			$imagenes = array("imagen" => 'imagen');
+		
+			foreach ($imagenes as $valor) {
+				$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$id,1);
+			}
+			echo ''.$errorArchivo;
+		} else {
+			echo 'Huvo un error al modificar datos';
+		}
+	} else {
+		echo 'Ya existe un Cuit cargado';
 	}
 }
 function eliminarCountries($serviciosReferencias) {
@@ -1232,9 +1230,9 @@ function insertarJugadores($serviciosReferencias) {
 	$apellido = $_POST['apellido']; 
 	$nombres = $_POST['nombres']; 
 	$email = $_POST['email']; 
-	$fechanacimiento = $_POST['fechanacimiento']; 
-	$fechaalta = $_POST['fechaalta']; 
-	$fechabaja = $_POST['fechabaja']; 
+	$fechanacimiento = formatearFechas($_POST['fechanacimiento']); 
+	$fechaalta = formatearFechas($_POST['fechaalta']); 
+	$fechabaja = formatearFechas($_POST['fechabaja']); 
 	$refcountries = $_POST['refcountries']; 
 	$observaciones = $_POST['observaciones']; 
 	
@@ -1242,7 +1240,7 @@ function insertarJugadores($serviciosReferencias) {
 		$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
 		
 		if ((integer)$res > 0) { 
-			echo ''; 
+			echo $res; 
 		} else { 
 			echo 'Huvo un error al insertar datos';	 
 		} 
@@ -1497,7 +1495,7 @@ $habilita	= 1;
 $habilita = 0; 
 } 
 
-if (isset($_POST['default'])) { 
+if (isset($_POST['predeterminado'])) { 
 $default	= 1; 
 } else { 
 $default = 0; 
@@ -1522,7 +1520,7 @@ $habilita	= 1;
 } else { 
 $habilita = 0; 
 } 
-if (isset($_POST['default'])) { 
+if (isset($_POST['predeterminado'])) { 
 $default	= 1; 
 } else { 
 $default = 0; 

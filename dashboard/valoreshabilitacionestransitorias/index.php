@@ -57,7 +57,8 @@ $refCampo 	=  array("refdocumentaciones");
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
 $cabeceras 		= "	<th>Documentaciones</th>
 					<th>Descripcion</th>
-					<th>Habilita</th>";
+					<th>Habilita</th>
+					<th>Predeterminado</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -66,7 +67,7 @@ $cabeceras 		= "	<th>Documentaciones</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerValoreshabilitacionestransitorias(),3);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerValoreshabilitacionestransitorias(),4);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
