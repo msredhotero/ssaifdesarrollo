@@ -2897,7 +2897,8 @@ $sql = "select
 	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
 	jug.nrodocumento,
 	jug.fechanacimiento,
-	tip.idtipojugador
+	tip.idtipojugador,
+	year(now()) - year(jug.fechanacimiento) as edad
     
 from
     dbconector c

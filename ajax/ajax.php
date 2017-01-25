@@ -200,6 +200,12 @@ case 'eliminarJugadoresdocumentacion':
 eliminarJugadoresdocumentacion($serviciosReferencias); 
 break; 
 
+////*** traer datos completos ***////
+case 'traerDatosJugador':
+	traerDatosJugador($serviciosReferencias);
+	break;
+////*** fin    ****//////////////////
+
 
 case 'insertarDocumentaciones': 
 insertarDocumentaciones($serviciosReferencias); 
