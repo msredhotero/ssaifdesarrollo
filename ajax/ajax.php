@@ -550,12 +550,10 @@ function insertarConectorAjax($serviciosReferencias) {
 	} 
 	
 	$activo	= 1; 
-	
-	$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
-	
+
 	$cad = '';
 	
-	//// verifico si el jugador ya fue cargado  /////
+	//// verifico si el jugador ya fue cargado 1=existe, 0=no existe /////
 	$existeJugador = $serviciosReferencias->existeConectorJugadorEquipo($refjugadores, $refequipos);	
 	
 	///  verifico si cumple con la edad 	1=ok, 0=mal	/////
@@ -563,6 +561,7 @@ function insertarConectorAjax($serviciosReferencias) {
 
 	if ($existeJugador == 0) {
 		if ($vEdad == 1) {
+			$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
 			if ((integer)$res > 0) { 
 				
 				$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);

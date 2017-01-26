@@ -280,7 +280,14 @@ tr {
 
             </div>
 
-
+			<div class='row' style="margin-left:25px; margin-right:25px;">
+                <div class='alert'>
+                
+                </div>
+                <div id='load'>
+                
+                </div>
+            </div>
             <hr>
             
             <div class="row" id="contMapa2" style="margin-left:25px; margin-right:25px;">
@@ -331,14 +338,7 @@ tr {
             </div>
 
             
-            <div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
-                
-                </div>
-                <div id='load'>
-                
-                </div>
-            </div>
+            
             
             <div class="row">
                 <div class="col-md-12">
@@ -417,8 +417,22 @@ $(document).ready(function(){
 			
 			},
 			success:  function (response) {
-
-				$('#lstjugadores').prepend(response);	
+				
+				if (response.indexOf('<tr>') != -1)
+				{
+					$('#lstjugadores').prepend(response);	
+					$(".alert").removeClass("alert-danger");
+					$(".alert").removeClass("alert-success");
+					$(".alert").addClass("alert-success");
+					$(".alert").html('Se cargo correctamente el jugador al equipo');
+				} else {
+					$(".alert").removeClass("alert-danger");
+					$(".alert").removeClass("alert-success");
+					$(".alert").addClass("alert-danger");
+					$(".alert").html('<strong>Error!</strong> '+response);
+						
+				}
+				
 				
 			}
 		});	
@@ -506,11 +520,18 @@ $(document).ready(function(){
       <?php echo substr($cadJugadores,0,-1); ?>
     ];
 	
+	$( "#autocomplete-ajax" ).click(function() {
+		$(".alert").html('');
+		$(".alert").removeClass("alert-danger");
+		$(".alert").removeClass("alert-success");
+	});
+	
     $( "#autocomplete-ajax" ).autocomplete({
       minLength: 0,
       source: jugadores,
       focus: function( event, ui ) {
         $( "#project" ).val( ui.item.label );
+		
         return false;
       },
       select: function( event, ui ) {
