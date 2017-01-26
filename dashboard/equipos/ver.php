@@ -68,13 +68,34 @@ $refdescripcion = array(0 => $cadRef,1 => $cadRef2,2 => $cadRef3,3 => $cadRef4);
 $refCampo 	=  array("refcountries","refcontactos","refcategorias","refdivisiones");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
+////////		PARA LOS COMBOS 		//////////////////////////////////////////////////
+$resCountriesT		=	$serviciosReferencias->traerCountries();
+$cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountriesT,array(1),'');
+
+$resCategoria		=	$serviciosReferencias->traerCategoriasPorEquipos($id);
+$cadRefCad			=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
+
+$resTipoJugador		=	$serviciosReferencias->traerTipojugadores();
+$cadRefTipoJug		=	$serviciosFunciones->devolverSelectBox($resTipoJugador,array(1),'');
+///////				FIN						//////////////////////////////////////////////
 
 $resJugadoresEquipos = $serviciosReferencias->traerConectorActivosPorEquipos($id);
 
 
 $formulario 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
+$resTraerJugadores = $serviciosReferencias->traerJugadores();
 
+$cadJugadores = '';
+	while ($row = mysql_fetch_array($resTraerJugadores)) {
+		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
+		$cadJugadores .= '
+		      {
+				id: "'.$row[0].'",
+				label: "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'"
+			  },';
+	}
+	
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -121,7 +142,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 		
 	</style>
     
-   
+   <link rel="stylesheet" href="../../css/chosen.css">
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -174,7 +195,15 @@ tr {
   font-weight:normal;
   text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
 }
-		
+	.autocomplete-suggestions { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
+		.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+		.autocomplete-no-suggestion { padding: 2px 5px;}
+		.autocomplete-selected { background: #F0F0F0; }
+		.autocomplete-suggestions strong { font-weight: bold; color: #000; }
+		.autocomplete-group { padding: 2px 5px; }
+		.autocomplete-group strong { font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid #000;}
+		.autocomplete-group input { font-size: 28px; padding: 10px; border: 1px solid #CCC; display: block; margin: 20px 0; }	
+		.ui-widget-content { color:#a9a9a9; }
 	</style>
    
 </head>
@@ -199,6 +228,60 @@ tr {
 			<?php echo $formulario; ?>
             </div>
             
+            <div class="row" style="border-left:5px solid #099; margin-left:-10px;">
+			
+                    <div class="form-group col-md-3" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Fusión</label>
+                        <div class="input-group col-md-12 fontcheck">
+                            <input type="checkbox" class="form-control" id="esfusion" name="esfusion" style="width:50px;" required> <p>Si/No</p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-9" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Countries</label>
+                        <div class="input-group col-md-12">
+                            <select id="refcountriesaux" name="refcountriesaux" class="chosen-select" style="width:100%;">
+                            	<?php echo $cadRefCountries; ?>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+
+            <div class="row" style="border-left:5px solid #099; margin-left:-10px;">
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="refcategorias" name="refcategorias">
+                            	<?php echo $cadRefCad; ?>
+                            </select>
+                            <p class="help-block infoEdad"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Tipo Jugador</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="reftipojugadores" name="reftipojugadores">
+                            	<?php echo $cadRefTipoJug; ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-4" style="display:block">
+                    	<label for="reftipodocumentos" class="control-label" style="text-align:left"> </label>
+                        <div class="input-group col-md-12">
+                        	<div style="position: relative; height: 80px;">
+                                <input type="text" class="form-control" name="country" id="autocomplete-ajax" style="position: absolute; z-index: 2; background: transparent;"/>
+                                <input type="text" class="form-control" name="country" id="autocomplete-ajax-x" disabled="disabled" style="color: #CCC; position: absolute; background: transparent; z-index: 1;"/>
+                            </div>
+                            <div id="selction-ajax"></div>
+                            
+                        </div>
+                    </div>
+
+            </div>
+
+
+            <hr>
             
             <div class="row" id="contMapa2" style="margin-left:25px; margin-right:25px;">
 
@@ -214,15 +297,15 @@ tr {
                                     <th>Tipo Jugador</th>
                                     <th>Countrie</th>
                                     <th>Edad</th>
-                                    <th style="text-align:center">Ver</th>
                                     <th style="text-align:center">Modificar</th>
                                     <th style="text-align:center">Baja</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="lstjugadores">
 							<?php 
+								$cantidad = 0;
 								while ($rowC = mysql_fetch_array($resJugadoresEquipos)) {
-							
+								$cantidad += 1;
 							?>
                             	<tr>
                             	<td><?php echo $rowC['nombrecompleto']; ?></td>
@@ -230,7 +313,6 @@ tr {
                                 <td><?php echo $rowC['tipojugador']; ?></td>
                                 <td><?php echo $rowC['countrie']; ?></td>
                                 <td><?php echo $rowC['edad']; ?></td>
-                                <td align="center"><img src="../../imagenes/verIco.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" data-toggle="modal" data-target="#myModal" class="varVerDetalle"></td>
 								<td align="center"><img src="../../imagenes/editarIco.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varModificarJugador"></td>
                                 <td align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="<?php echo $rowC['idconector']; ?>" class="varEliminarJugador"></td>
                                 </tr>
@@ -239,8 +321,8 @@ tr {
 							?>
                             </tbody>
                             <tfoot>
-                            	<td colspan="6">Total Jugadores:</td>
-                                <td>0</td>
+                            	<td colspan="6" align="right">Total Jugadores:</td>
+                                <td><?php echo $cantidad; ?></td>
                             </tfoot>
                             </table>
                         </div>
@@ -306,6 +388,8 @@ tr {
 <script src="../../js/bootstrap-datetimepicker.min.js"></script>
 <script src="../../js/bootstrap-datetimepicker.es.js"></script>
 
+
+
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -315,27 +399,67 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});//fin del boton modificar
 	
-	function traerDatosJugador(id) {
+	
+	function agregarJugador(refjugadores, reftipojugadores, refequipos, refcountries, refcategorias, esfusion, refcountriesaux) {
+		
 		$.ajax({
-			data:  {id: idCliente, 
-					accion: 'traerDatosJugador'},
-			url:   '../ajax/ajax.php',
+			data:  {refjugadores: refjugadores, 
+					reftipojugadores: reftipojugadores, 
+					refequipos: refequipos, 
+					refcountries: refcountries, 
+					refcategorias: refcategorias, 
+					esfusion: esfusion, 
+					refcountriesaux: refcountriesaux, 
+					accion: 'insertarConectorAjax'},
+			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-
+			
 			},
 			success:  function (response) {
 
-				$('#detalleJugador').html(response);
-	
+				$('#lstjugadores').prepend(response);	
+				
 			}
 		});	
 	}
 	
-	
-	$(document).on('click', '.varVerDetalle', function(e){
-		  traerDatosJugador($(this).attr("id"));
+	$(document).on('click', '.agregarJugador', function(e){
+		agregarJugador($(this).attr("id"), $('#reftipojugadores').val(), <?php echo $id; ?>, <?php echo mysql_result($resResultado,0,'refcountries'); ?>, $('#refcategorias').val(), $('#refcategorias').prop('checked'), $('#refcountriesaux').val());
 	});//fin del boton modificar
+	
+	function traerDefinicionesPorTemporadaCategoriaTipoJugador(resTemporada, resCategoria, resTipoJugador) {
+		
+		$.ajax({
+			async: false,
+			url:   '../../ajax/ajax.php',
+			data:  {
+				resTemporada: resTemporada, 
+				resCategoria: resCategoria, 
+				resTipoJugador: resTipoJugador, 
+				accion: 'traerDefinicionesPorTemporadaCategoriaTipoJugador'
+			},
+			type:  'post',
+			beforeSend: function () {
+				$('.infoEdad').html('');
+			},
+			success:  function (response) {
+				$('.infoEdad').html(response);	
+				
+			}
+		});	
+	
+	}
+	
+	traerDefinicionesPorTemporadaCategoriaTipoJugador(1,$('#refcategorias').val(),$('#reftipojugadores').val());
+	
+	$('#refcategorias').change(function() {
+		traerDefinicionesPorTemporadaCategoriaTipoJugador(1, $(this).val(), $('#reftipojugadores').val());
+	});
+	
+	$('#reftipojugadores').change(function() {
+		traerDefinicionesPorTemporadaCategoriaTipoJugador(1, $('#refcategorias').val(), $(this).val());
+	});
 	
 	$(document).on('click', '.varModificarJugador', function(e){
 		url = "../jugadores/modificar.php?id="+$(this).attr("id");
@@ -358,7 +482,53 @@ $(document).ready(function(){
 
 });
 </script>
-
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+   var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    } 
+	
+	
+  </script>
+  
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    var jugadores = [
+      <?php echo substr($cadJugadores,0,-1); ?>
+    ];
+	
+    $( "#autocomplete-ajax" ).autocomplete({
+      minLength: 0,
+      source: jugadores,
+      focus: function( event, ui ) {
+        $( "#project" ).val( ui.item.label );
+        return false;
+      },
+      select: function( event, ui ) {
+        $( "#autocomplete-ajax" ).val( ui.item.label );
+		$('#selction-ajax').html('<button type="button" class="btn btn-success agregarJugador" id="' + ui.item.id + '" style="margin-left:0px;">Agregar</button>');
+        return false;
+      }
+    })
+    .autocomplete( "instance" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( "<div>" + item.label + "</div>" )
+        .appendTo( ul );
+    };
+	
+	
+	
+  } );
+  </script>
 
 <?php } ?>
 </body>

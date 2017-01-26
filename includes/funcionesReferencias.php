@@ -20,6 +20,17 @@ function GUID()
 }
 
 
+function existe($sql) {
+
+	$res = $this->query($sql,0);
+	
+	if (mysql_num_rows($res)>0) {
+		return 1;	
+	}
+	return 0;
+}
+
+
 ///**********  PARA SUBIR ARCHIVOS  ***********************//////////////////////////
 	function borrarDirecctorio($dir) {
 		array_map('unlink', glob($dir."/*.*"));	
@@ -899,6 +910,18 @@ return $res;
 
 function traerCategoriasPorId($id) {
 $sql = "select idtcategoria,categoria from tbcategorias where idtcategoria =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerCategoriasPorEquipos($idEquipos) {
+$sql = "select 
+			c.idtcategoria,c.categoria 
+		from tbcategorias c
+		inner
+		join	dbequipos e
+		on		e.refcategorias = c.idtcategoria
+		where idequipo =".$idEquipos;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -2695,6 +2718,18 @@ function traerDefinicionesPorTemporadaCategoria($idTemporada, $idCategoria) {
 	return $res; 	
 }
 
+function traerDefinicionesPorTemporadaCategoriaTipoJugador($idTemporada, $idCategoria, $idTipoJugador) {
+	$sql = "select
+				max(dct.cantmaxjugadores) as cantmaxjugadores, max(dctj.edadmaxima) as edadmaxima, max(dctj.edadminima) as edadminima, max((dctj.edadmaxima + dctj.edadminima) /2) as promedio
+			from		dbdefinicionescategoriastemporadas dct
+			inner
+			join		dbdefinicionescategoriastemporadastipojugador dctj
+			on			dct.iddefinicioncategoriatemporada = dctj.refdefinicionescategoriastemporadas
+			where		dct.reftemporadas = ".$idTemporada." and refcategorias = ".$idCategoria." and reftipojugadores =".$idTipoJugador;
+	$res = $this->query($sql,0); 
+	return $res; 	
+}
+
 /* Fin */
 /* /* Fin de la Tabla: dbdefinicionescategoriastemporadastipojugador*/
 
@@ -2758,6 +2793,16 @@ function actualizarConectoresPorJugador($refJugador, $idconector) {
 	$sql = "update dbconector set activo = 0 where refjugadores =".$refJugador." and idconector <> ".$idconector;
 	$res = $this->query($sql,0);
 	return $res;
+}
+
+function existeConectorJugadorEquipo($refJugador, $refEquipo) {
+	$sql = "select idconector from dbconector where refjugadores =".$refJugador." and refequipos = ".$refEquipo;
+	$res = $this->query($sql,0);
+	
+	if (mysql_num_rows($res)>0) {
+		return 1;	
+	}
+	return 0;
 }
 
 
@@ -2921,6 +2966,54 @@ from
         inner join
     tbcategorias cat ON cat.idtcategoria = c.refcategorias
 	where equ.idequipo = ".$refEquipos." and c.activo = 1
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
+function traerConectorActivosPorConector($id) {
+$sql = "select 
+    c.idconector,
+	cat.categoria,
+	equ.nombre as equipo,
+	co.nombre as countrie,
+	tip.tipojugador,
+	(case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	jug.nrodocumento,
+	jug.fechanacimiento,
+	tip.idtipojugador,
+	year(now()) - year(jug.fechanacimiento) as edad
+    
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	where c.idconector =".$id."
 order by 1";
 $res = $this->query($sql,0);
 return $res;

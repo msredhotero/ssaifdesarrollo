@@ -355,6 +355,11 @@ case 'eliminarDefinicionescategoriastemporadastipojugador':
 eliminarDefinicionescategoriastemporadastipojugador($serviciosReferencias); 
 break; 
 
+case 'traerDefinicionesPorTemporadaCategoriaTipoJugador':
+	traerDefinicionesPorTemporadaCategoriaTipoJugador($serviciosReferencias);
+	break;
+
+
 case 'insertarDefinicionessancionesacumuladastemporadas': 
 insertarDefinicionessancionesacumuladastemporadas($serviciosReferencias); 
 break; 
@@ -368,6 +373,9 @@ break;
 
 case 'insertarConector': 
 insertarConector($serviciosReferencias); 
+break; 
+case 'insertarConectorAjax': 
+insertarConectorAjax($serviciosReferencias); 
 break; 
 case 'modificarConector': 
 modificarConector($serviciosReferencias); 
@@ -527,6 +535,67 @@ function buscarJugadores($serviciosReferencias) {
 
 /**********************          CONECTA JUGADORES CON EQUIPOS *******************************************/
 
+function insertarConectorAjax($serviciosReferencias) { 
+	$refjugadores = $_POST['refjugadores']; 
+	$reftipojugadores = $_POST['reftipojugadores']; 
+	$refequipos = $_POST['refequipos']; 
+	$refcountries = $_POST['refcountries']; 
+	$refcategorias = $_POST['refcategorias']; 
+	
+	if (isset($_POST['esfusion'])) { 
+		$refcountries = $_POST['refcountriesaux'];
+		$esfusion	= 1; 
+	} else { 
+		$esfusion = 0; 
+	} 
+	
+	$activo	= 1; 
+	
+	$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
+	
+	$cad = '';
+	
+	//// verifico si el jugador ya fue cargado  /////
+	$existeJugador = $serviciosReferencias->existeConectorJugadorEquipo($refjugadores, $refequipos);	
+	
+	///  verifico si cumple con la edad 	1=ok, 0=mal	/////
+	$vEdad = $serviciosReferencias->verificaEdadCategoriaJugador($refjugadores, $refcategorias, $reftipojugadores);
+
+	if ($existeJugador == 0) {
+		if ($vEdad == 1) {
+			if ((integer)$res > 0) { 
+				
+				$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
+				
+				$resConector = $serviciosReferencias->traerConectorActivosPorConector($res);
+				
+				
+				$cad = '
+						<tr>
+						<td>'.mysql_result($resConector,0,'nombrecompleto').'</td>
+						<td>'.mysql_result($resConector,0,'nrodocumento').'</td>
+						<td>'.mysql_result($resConector,0,'tipojugador').'</td>
+						<td>'.mysql_result($resConector,0,'countrie').'</td>
+						<td>'.mysql_result($resConector,0,'edad').'</td>
+						<td align="center"><img src="../../imagenes/editarIco.png" style="cursor:pointer;" id="'.mysql_result($resConector,0,'refjugadores').'" class="varModificarJugador"></td>
+						<td align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="'.mysql_result($resConector,0,'idconector').'" class="varEliminarJugador"></td>
+						</tr>
+						';
+				
+				echo $cad; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
+		} else {
+			echo 'El jugador no cumple con la edad';	
+		}
+	} else {
+		echo 'El jugador ya fue cargado en este equipo';	
+	}
+	
+} 
+
+
 function insertarConector($serviciosReferencias) { 
 	$refjugadores = $_POST['refjugadores']; 
 	$reftipojugadores = $_POST['reftipojugadores']; 
@@ -535,6 +604,7 @@ function insertarConector($serviciosReferencias) {
 	$refcategorias = $_POST['refcategorias']; 
 	
 	if (isset($_POST['esfusion'])) { 
+		$refcountries = $_POST['refcountriesaux'];
 		$esfusion	= 1; 
 	} else { 
 		$esfusion = 0; 
@@ -551,6 +621,8 @@ function insertarConector($serviciosReferencias) {
 		echo 'Huvo un error al insertar datos';	 
 	} 
 } 
+
+
 function modificarConector($serviciosReferencias) { 
 $id = $_POST['id']; 
 $refjugadores = $_POST['refjugadores']; 
@@ -2129,6 +2201,24 @@ function eliminarDefinicionescategoriastemporadastipojugador($serviciosReferenci
 	$res = $serviciosReferencias->eliminarDefinicionescategoriastemporadastipojugador($id); 
 	echo $res; 
 } 
+
+function traerDefinicionesPorTemporadaCategoriaTipoJugador($serviciosReferencias) {
+	$idTemporada 	= $_POST['resTemporada'];
+	$idCategoria 	= $_POST['resCategoria'];
+	$idTipoJugador 	= $_POST['resTipoJugador'];
+	
+	$res = $serviciosReferencias->traerDefinicionesPorTemporadaCategoriaTipoJugador($idTemporada, $idCategoria, $idTipoJugador);	
+	$cad = '';
+	
+	if (mysql_num_rows($res)>0) {
+		$cad = 'Edad Minima: '.mysql_result($res,0,'edadminima').' - Edad Maxima: '.mysql_result($res,0,'edadmaxima');
+		echo $cad;
+	} else {
+		echo $cad;	
+	}
+	
+}
+
 
 function insertarDefinicionessancionesacumuladastemporadas($serviciosReferencias) { 
 	$reftiposanciones = $_POST['reftiposanciones']; 

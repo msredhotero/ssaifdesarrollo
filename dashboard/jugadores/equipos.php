@@ -677,7 +677,7 @@ $(document).ready(function(){
 				//una vez finalizado correctamente
 				success: function(data){
 
-					if (data == '') {
+					if (!isNaN(data)) {
 							$("#erroresCarga").removeClass("alert-danger");
 							$("#erroresCarga").removeClass("alert-info");
 							$("#erroresCarga").addClass("alert-success");
