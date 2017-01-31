@@ -2015,7 +2015,11 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: dbjugadoresvaloreshabilitacionestransitorias*/
 
-
+function noPredeterminarTodo($refdocumentaciones) {
+	$sql = "update tbvaloreshabilitacionestransitorias set predeterminado = 0 where refdocumentaciones = ".$refdocumentaciones;	
+	$res = $this->query($sql,0);
+	return $res;
+}
 
 function insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$predeterminado) { 
 $sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,predeterminado) 

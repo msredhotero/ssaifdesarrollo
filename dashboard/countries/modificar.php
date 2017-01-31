@@ -280,7 +280,7 @@ if (mysql_result($resResultado,0,'fechabaja') == '0000-00-00') {
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:0;">
                     <li>
-                        <button type="button" class="btn btn-warning" id="vermapa" style="margin-left:0px;"><span class="lblMapa">Cerrar Mapa</span></button>
+                        <button type="button" class="btn btn-info" id="vermapa" style="margin-left:0px;"><span class="lblMapa">Ver Mapa</span></button>
                     </li>
                     <li>
                         <button type="button" class="btn btn-info" id="vercontacto" style="margin-left:0px;"><span class="lblContacto">Ver Contactos</span></button>
@@ -394,6 +394,7 @@ if (mysql_result($resResultado,0,'fechabaja') == '0000-00-00') {
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="cargarContacto">Agregar</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="hidden" name="refcountries" id="refcountries" value="<?php echo $id; ?>"/>
       </div>
       </form>
     </div>
@@ -733,6 +734,7 @@ $(document).ready(function(){
 		
     });
 	
+	$('#contMapa').hide(1700);
 	
 	$('#imagen1').on('change', function(e) {
 	  var Lector,

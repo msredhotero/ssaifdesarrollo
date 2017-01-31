@@ -81,7 +81,7 @@ $cabeceras 		= "	<th>Countrie</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerEquipos(),8);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerEquipos(),91);
 
 
 
@@ -294,6 +294,17 @@ $(document).ready(function(){
 		  if (!isNaN(usersid)) {
 			
 			url = "modificar.php?id=" + usersid;
+			$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton modificar
+	
+	$("#example").on("click",'.varver', function(){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			
+			url = "ver.php?id=" + usersid;
 			$(location).attr('href',url);
 		  } else {
 			alert("Error, vuelva a realizar la acción.");	

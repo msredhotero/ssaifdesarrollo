@@ -676,7 +676,7 @@ function insertarContactos($serviciosReferencias) {
 	}
 	
 	$refCountries	= $_POST['refcountries'];
-	
+
 	$res = $serviciosReferencias->insertarContactos($reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico);
 	
 	if ((integer)$res > 0) {
@@ -1564,27 +1564,29 @@ echo $res;
 
 
 function insertarValoreshabilitacionestransitorias($serviciosReferencias) { 
-$refdocumentaciones = $_POST['refdocumentaciones']; 
-$descripcion = $_POST['descripcion']; 
-if (isset($_POST['habilita'])) { 
-$habilita	= 1; 
-} else { 
-$habilita = 0; 
-} 
-
-if (isset($_POST['predeterminado'])) { 
-$default	= 1; 
-} else { 
-$default = 0; 
-} 
-
-
-$res = $serviciosReferencias->insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$default); 
-if ((integer)$res > 0) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al insertar datos';	 
-} 
+	$refdocumentaciones = $_POST['refdocumentaciones']; 
+	$descripcion = $_POST['descripcion']; 
+	
+	if (isset($_POST['habilita'])) { 
+		$habilita	= 1; 
+	} else { 
+		$habilita = 0; 
+	} 
+	
+	if (isset($_POST['predeterminado'])) { 
+		$default	= 1; 
+		$serviciosReferencias->noPredeterminarTodo($refdocumentaciones);
+	} else { 
+		$default = 0; 
+	} 
+	
+	
+	$res = $serviciosReferencias->insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$default); 
+	if ((integer)$res > 0) { 
+		echo ''; 
+	} else { 
+		echo 'Huvo un error al insertar datos';	 
+	} 
 } 
 
 
@@ -1599,6 +1601,7 @@ $habilita = 0;
 } 
 if (isset($_POST['predeterminado'])) { 
 $default	= 1; 
+$serviciosReferencias->noPredeterminarTodo($refdocumentaciones);
 } else { 
 $default = 0; 
 } 

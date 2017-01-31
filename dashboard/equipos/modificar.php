@@ -172,6 +172,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
                     </li>
                     <li>
+                        <button type="button" class="btn btn-warning" id="ver" style="margin-left:0px;">Ver</button>
+                    </li>
+                    <li>
                         <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
                     </li>
                 </ul>
@@ -208,6 +211,12 @@ $(document).ready(function(){
 	$('.volver').click(function(event){
 		 
 		url = "index.php";
+		$(location).attr('href',url);
+	});//fin del boton modificar
+	
+	$('#ver').click(function(event){
+		 
+		url = "ver.php?id="+<?php echo $id; ?>;
 		$(location).attr('href',url);
 	});//fin del boton modificar
 	

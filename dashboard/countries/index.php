@@ -206,6 +206,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 			$('#longitud').val(e.latLng.lng());	
 			placeMarkerAndPanTo(e.latLng, map);
 		});
+		
+		
 	 }
 	 
 		function placeMarkerAndPanTo(latLng, map) {
@@ -222,9 +224,10 @@ if ($_SESSION['refroll_predio'] != 1) {
 		for (var i = 0; i < markers.length; i++) {
 			markers[i].setMap(null);
 		}
+		
 	}
 		
-
+	
  </script>
  
 </head>
@@ -262,7 +265,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:0;">
                     <li>
-                        <button type="button" class="btn btn-warning" id="vermapa" style="margin-left:0px;"><span class="lblMapa">Cerrar Mapa</span></button>
+                        <button type="button" class="btn btn-info" id="vermapa" style="margin-left:0px;"><span class="lblMapa">Ver Mapa</span></button>
                     </li>
                     <li>
                         <button type="button" class="btn btn-info" id="vercontacto" style="margin-left:0px;"><span class="lblContacto">Ver Contactos</span></button>
@@ -327,6 +330,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             	<div id="map" ></div>
 
             </div>
+            
             </form>
     	</div>
     </div>
@@ -375,6 +379,7 @@ if ($_SESSION['refroll_predio'] != 1) {
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="cargarContacto">Agregar</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="hidden" name="refcountries" id="refcountries" value="0"/>
       </div>
       </form>
     </div>
@@ -732,6 +737,8 @@ $(document).ready(function(){
 			});
 		
     });
+	
+	$('#contMapa').hide(1700);
 	
 	$('#imagen1').on('change', function(e) {
 	  var Lector,
