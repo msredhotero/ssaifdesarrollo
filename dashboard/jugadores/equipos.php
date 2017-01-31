@@ -263,7 +263,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </div>
                     <div class="form-group col-md-9" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Countries</label>
-                        <div class="input-group col-md-12">
+                        <div class="input-group col-md-12" id="refcountriesauxDiv">
                             <select id="refcountriesaux" name="refcountriesaux" class="chosen-select" style="width:100%;">
                             	<?php echo $cadRefCountries; ?>
                             </select>
@@ -565,6 +565,9 @@ $(document).ready(function(){
 	$('#esfusion').click(function() {
 		if  ($('#esfusion').prop('checked') == false) {
 			traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
+			$('#refcountriesauxDiv').hide();
+		} else {
+			$('#refcountriesauxDiv').show();	
 		}
 	});
 
@@ -719,6 +722,8 @@ $(document).ready(function(){
     for (var selector in config) {
       $(selector).chosen(config[selector]);
     }
+	
+	$('#refcountriesauxDiv').hide();
 	
 	$('#primero').addClass('collapse');
 

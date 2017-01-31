@@ -206,6 +206,9 @@ case 'traerDatosJugador':
 	break;
 ////*** fin    ****//////////////////
 
+case 'traerJugadoresPorCountrie':
+	traerJugadoresPorCountrie($serviciosReferencias);
+	break;
 
 case 'insertarDocumentaciones': 
 insertarDocumentaciones($serviciosReferencias); 
@@ -1356,6 +1359,26 @@ $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarJugadores($id); 
 echo $res; 
 } 
+
+function traerJugadoresPorCountrie($serviciosReferencias) {
+	$id		=	$_POST['refcountries'];
+	
+	$res 	=	$serviciosReferencias->traerJugadoresPorCountrie($id);
+	/*
+	$cadJugadores = '';
+	while ($row = mysql_fetch_array($res)) {
+		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
+		$cadJugadores .= '
+		      {
+				id: "'.$row[0].'",
+				label: "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'"
+			  },';
+	}
+	
+	echo substr($cadJugadores,0,-1);
+	*/
+	echo json_encode(toArray($res));	
+}
 
 function insertarJugadoresdocumentacion($serviciosReferencias) { 
 	$refjugadores = $_POST['refjugadores']; 

@@ -84,7 +84,7 @@ $resJugadoresEquipos = $serviciosReferencias->traerConectorActivosPorEquipos($id
 
 $formulario 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$resTraerJugadores = $serviciosReferencias->traerJugadores();
+$resTraerJugadores = $serviciosReferencias->traerJugadoresPorCountrie(mysql_result($resResultado,0,'refcountries'));
 
 $cadJugadores = '';
 	while ($row = mysql_fetch_array($resTraerJugadores)) {
@@ -238,7 +238,7 @@ tr {
                     </div>
                     <div class="form-group col-md-9" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Countries</label>
-                        <div class="input-group col-md-12">
+                        <div class="input-group col-md-12" id="refcountriesauxDiv">
                             <select id="refcountriesaux" name="refcountriesaux" class="chosen-select" style="width:100%;">
                             	<?php echo $cadRefCountries; ?>
                             </select>
@@ -388,11 +388,62 @@ tr {
 <script src="../../js/bootstrap-datetimepicker.min.js"></script>
 <script src="../../js/bootstrap-datetimepicker.es.js"></script>
 
-
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+   var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    } 
+	
+	
+  </script>
 
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	var jugadores = [
+      <?php echo substr($cadJugadores,0,-1); ?>
+    ];
+	
+	function traerJugadoresPorCountrie(refCountrie) {
 
+		$.ajax({
+			url:   '../../ajax/ajax.php',
+			data:  {
+				refcountries: refCountrie, 
+				accion: 'traerJugadoresPorCountrie'
+			},
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+
+				if(response){
+
+					$.each($.parseJSON(result), function (item, value) {
+				
+							$.each($.parseJSON(value), function (i, object) {
+								alert(i + "=" + object);
+							});
+						
+					});
+					
+				}
+				
+			}
+		});	
+		
+		
+	
+	}
+	
 	$('.volver').click(function(event){
 		 
 		url = "index.php";
@@ -400,6 +451,28 @@ $(document).ready(function(){
 	});//fin del boton modificar
 	
 	
+	$('#esfusion').click(function() {
+		if  ($('#esfusion').prop('checked') == false) {
+			//traer jugadores de este countrie
+			traerJugadoresPorCountrie($('#refcountriesaux').val());
+			$('#refcountriesauxDiv').hide();
+		} else {
+			$('#refcountriesauxDiv').show();
+			jugadores.length=0;	
+		}
+	});
+
+	
+	$('#refcountriesaux').chosen().change(function(event, data) {
+	   // arguments.length === 2
+	   if  ($('#esfusion').prop('checked') == true) {
+			//traer jugadores de este countrie
+			traerJugadoresPorCountrie($('#refcountriesaux').val());
+		}
+	});
+
+
+
 	function agregarJugador(refjugadores, reftipojugadores, refequipos, refcountries, refcategorias, esfusion, refcountriesaux) {
 		
 		$.ajax({
@@ -492,33 +565,7 @@ $(document).ready(function(){
 		  }
 	});//fin del boton modificar
 	
-	
-
-});
-</script>
-<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
-<script type="text/javascript">
-   var config = {
-      '.chosen-select'           : {},
-      '.chosen-select-deselect'  : {allow_single_deselect:true},
-      '.chosen-select-no-single' : {disable_search_threshold:10},
-      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
-      '.chosen-select-width'     : {width:"95%"}
-    }
-    for (var selector in config) {
-      $(selector).chosen(config[selector]);
-    } 
-	
-	
-  </script>
-  
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-  $( function() {
-    var jugadores = [
-      <?php echo substr($cadJugadores,0,-1); ?>
-    ];
+	$('#refcountriesauxDiv').hide();
 	
 	$( "#autocomplete-ajax" ).click(function() {
 		$(".alert").html('');
@@ -546,10 +593,12 @@ $(document).ready(function(){
         .appendTo( ul );
     };
 	
-	
-	
-  } );
-  </script>
+
+});
+</script>
+
+  
+
 
 <?php } ?>
 </body>

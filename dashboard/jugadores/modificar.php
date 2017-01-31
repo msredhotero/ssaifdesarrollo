@@ -69,6 +69,9 @@ $resJugadores = $serviciosReferencias->traerJugadoresdocumentacionPorJugador($id
 
 $resDocumentaciones	=	$serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($id);
 
+$resCantidadConectoresActivos  =	$serviciosReferencias->traerConectorActivos($id);
+
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -110,7 +113,37 @@ if ($_SESSION['refroll_predio'] != 1) {
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
 	<style type="text/css">
+		th {
+		  color:#D5DDE5;;
+		  background:#1b1e24;
+		  border-bottom:4px solid #9ea7af;
+		  border-right: 1px solid #343a45;
+		  font-size:17px;
+		  font-weight: 100;
+		  padding:18px;
+		  text-align:left;
+		  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+		  vertical-align:middle;
+		  font-family: "Roboto", helvetica, arial, sans-serif;
+		}
 		
+		th:first-child {
+		  border-top-left-radius:3px;
+		}
+		 
+		th:last-child {
+		  border-top-right-radius:3px;
+		  border-right:none;
+		}
+		
+		tr {
+		  border-top: 1px solid #C1C3D1;
+		  border-bottom-: 1px solid #C1C3D1;
+		  color:#666B85;
+		  font-size:16px;
+		  font-weight:normal;
+		  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+		}
   
 		
 	</style>
@@ -146,6 +179,86 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
 			<div class="row">
 			<?php echo $formulario; ?>
+                <hr>
+                
+                <div class='row' style="margin-left:25px; margin-right:25px;">
+                    <h4 style="text-decoration:underline;">Documentaciones</h4>
+                    <?php
+                        while ($rowD = mysql_fetch_array($resDocumentaciones)) {
+                        if ($rowD['obligatoria'] == 'Si') {
+                            if (($rowD['valor'] == 'No') && ($rowD['contravalor'] == 'No')) {
+                                $noHabilitaDocumentacion = array($rowD['refdocumentaciones']=>0);
+                            }
+                        }
+                    ?>
+                        <div class="col-md-4">
+                            <?php
+                                if ($rowD['valor'] == 'Si') {
+                            ?>
+                            <p><span style="color:#3C0;" class="glyphicon glyphicon-ok"></span> <?php echo $rowD['descripcion']; ?></p>
+                            <?php 
+                                } else { 
+                                    if ($rowD['contravalor'] == 'Si') {
+                            ?>
+                                    <p><span style="color:#3C0;" class="glyphicon glyphicon-ok"></span> <?php echo $rowD['descripcion']; ?></p>
+                            <?php
+                                    } else {
+                            ?>
+                                    <p><span style="color:#F00;" class="glyphicon glyphicon-remove"></span> <?php echo $rowD['descripcion']; ?></p>
+                            <?php		
+                                    }
+                                }
+                            ?>
+                        </div>
+                    <?php
+                        }
+                    ?>
+                </div>
+                
+                <div class="row" style="margin-left:25px; margin-right:25px;">
+    
+                    <div class="col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="control-label" style="text-align:left; font-size:1.2em; text-decoration:underline; margin-bottom:4px;" for="fechas">Listado de Equipos Activos</label>
+                            <div class="input-group col-md-12">
+                                <table class="table table-bordered table-responsive table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Equipo</th>
+                                        <th>Countries</th>
+                                        <th>Categoria</th>
+                                        <th>Tipo Jugador</th>
+                                        <th style="text-align:center">Modificar</th>
+                                        <th style="text-align:center">Baja</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lstjugadores">
+                                <?php 
+                                    $cantidad = 0;
+                                    while ($rowC = mysql_fetch_array($resCantidadConectoresActivos)) {
+                                    $cantidad += 1;
+                                ?>
+                                    <tr>
+                                    <td><?php echo $rowC['equipo']; ?></td>
+                                    <td><?php echo $rowC['countrie']; ?></td>
+                                    <td><?php echo $rowC['categoria']; ?></td>
+                                    <td><?php echo $rowC['tipojugador']; ?></td>
+                                    <td align="center"><img src="../../imagenes/editarIco.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varModificarJugador"></td>
+                                    <td align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="<?php echo $rowC['idconector']; ?>" class="varEliminarJugador"></td>
+                                    </tr>
+                                <?php
+                                    }
+                                ?>
+                                </tbody>
+                                <tfoot>
+                                    <td colspan="5" align="right">Total Equipos:</td>
+                                    <td><?php echo $cantidad; ?></td>
+                                </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             
