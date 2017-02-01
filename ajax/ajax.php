@@ -387,6 +387,10 @@ case 'eliminarConector':
 eliminarConector($serviciosReferencias); 
 break; 
 
+case 'eliminarConectorDefinitivamente': 
+eliminarConectorDefinitivamente($serviciosReferencias); 
+break; 
+
 /***************  FIN  ********************************************/
 
 /*****         FUNCIONES       **********/
@@ -653,6 +657,17 @@ function eliminarConector($serviciosReferencias) {
 $id = $_POST['id']; 
 $res = $serviciosReferencias->eliminarConector($id); 
 echo $res; 
+} 
+
+
+
+function eliminarConectorDefinitivamente($serviciosReferencias) { 
+	$id = $_POST['id']; 
+	
+	//verifico que no esta cargado en ningun fixture sino le doy una baja logica  //eliminarConector
+	
+	$res = $serviciosReferencias->eliminarConectorDefinitivamente($id); 
+	echo $res; 
 } 
 
 /**********************                        FIN                     ***********************************/

@@ -289,6 +289,10 @@ tr {
                 <div class="col-md-12">
                 	<div class="form-group col-md-12">
                         <label class="control-label" style="text-align:left; font-size:1.2em; text-decoration:underline; margin-bottom:4px;" for="fechas">Lista de Jugadores</label>
+                        <div>
+                        <div style="float:left; width:15px; height:15px; background-color:#FE2E2E; margin-right:10px; margin-bottom:8px; margin-top:1px;"></div>
+                        <p>Jugadores Inhabilitados por falta de Documentacion o Habilitaciones Transitorias</p>
+                        </div>
                         <div class="input-group col-md-12">
                             <table class="table table-bordered table-responsive table-striped">
                             <thead>
@@ -298,6 +302,7 @@ tr {
                                     <th>Tipo Jugador</th>
                                     <th>Countrie</th>
                                     <th>Edad</th>
+                                    <th>Activo</th>
                                     <th style="text-align:center">Modificar</th>
                                     <th style="text-align:center">Baja</th>
                                 </tr>
@@ -305,17 +310,74 @@ tr {
                             <tbody id="lstjugadores">
 							<?php 
 								$cantidad = 0;
+								
 								while ($rowC = mysql_fetch_array($resJugadoresEquipos)) {
+									$cadCumpleEdad = '';
+									$errorDoc = 'FALTA';
+									$cadErrorDoc = '';
+									$habilitacion= 'INHAB.';
+									$transitoria= '';
+									$valorDocumentacion = 0;
+									
+									$edad = $serviciosReferencias->verificarEdad($rowC['refjugadores']);
+		
+									$cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowC['refjugadores'], $rowC['refcategorias'], $rowC['idtipojugador']);
+									
+									$documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($rowC['refjugadores']);
+									
+									if ($cumpleEdad == 1) {
+										$cadCumpleEdad = "CUMPLE";	
+									} else {
+										// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
+										$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowC['refjugadores'], 1, $refcategoria,$id);
+										if (mysql_num_rows($habilitacionTransitoria)>0) {
+											$cadCumpleEdad = "HAB. TRANS.";	
+										} else {
+											$cadCumpleEdad = "NO CUMPLE";	
+										}
+									}
+									
+									if (mysql_num_rows($documentaciones)>0) {
+										while ($rowH = mysql_fetch_array($documentaciones)) {
+											if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
+												if ($rowH['obligatoria'] == 'Si') {
+													$valorDocumentacion += 1;	
+												}
+												$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+											}
+										}
+										if ($cadErrorDoc == '') {
+											$cadErrorDoc = 'OK';
+											$errorDoc = 'OK';
+										} else {
+											$cadErrorDoc = substr($cadErrorDoc,0,-3);
+										}
+										
+									} else {
+										$cadErrorDoc = 'FALTA PRESENTAR DOCUMENTACIONES';
+									}
+									
+									if ($valorDocumentacion == 0 && $cadCumpleEdad == 'CUMPLE') {
+										$habilitacion= 'HAB.';	
+									}
 								$cantidad += 1;
 							?>
-                            	<tr>
-                            	<td><?php echo $rowC['nombrecompleto']; ?></td>
-                                <td><?php echo $rowC['nrodocumento']; ?></td>
-                                <td><?php echo $rowC['tipojugador']; ?></td>
-                                <td><?php echo $rowC['countrie']; ?></td>
-                                <td><?php echo $rowC['edad']; ?></td>
-								<td align="center"><img src="../../imagenes/editarIco.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varModificarJugador"></td>
-                                <td align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="<?php echo $rowC['idconector']; ?>" class="varEliminarJugador"></td>
+                            	<?php 
+									if ($habilitacion == 'HAB.') { 
+                            			$color = '';		
+                                 	} else { 
+                                		$color = 'style="background-color: #FE2E2E; color: #FFF;"';
+                                 	} 
+								?>
+                                <tr>
+                            	<td <?php echo $color; ?>><?php echo $rowC['nombrecompleto'].$habilitacion; ?></td>
+                                <td align="right" <?php echo $color; ?>><?php echo $rowC['nrodocumento']; ?></td>
+                                <td align="center" <?php echo $color; ?>><?php echo $rowC['tipojugador']; ?></td>
+                                <td <?php echo $color; ?>><?php echo $rowC['countrie']; ?></td>
+                                <td align="center" <?php echo $color; ?>><?php echo $rowC['edad']; ?></td>
+                                <td align="center" <?php echo $color; ?>><?php echo $rowC['activo']; ?></td>
+								<td <?php echo $color; ?> align="center"><img src="../../imagenes/editarIco.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varModificarJugador"></td>
+                                <td <?php echo $color; ?> align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="<?php echo $rowC['idconector']; ?>" class="varEliminarJugador"></td>
                                 </tr>
                             <?php
 								}
@@ -378,6 +440,16 @@ tr {
     </div>
   </div>
 </div>
+
+<div id="dialog2" title="Quitar al jugador del Equipo">
+    	<p>
+        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            ¿Esta seguro que desea quitar el jugador?.<span id="proveedorEli"></span>
+        </p>
+        <p><strong>Importante: </strong>Si quitará el jugador del equipo pero no perderan todos los datos de este</p>
+        <input type="hidden" value="" id="idEliminar" name="idEliminar">
+</div>
+
 
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
@@ -521,6 +593,59 @@ $(document).ready(function(){
 		url = "../jugadores/modificar.php?id="+$(this).attr("id");
 		$(location).attr('href',url);
 	});//fin del boton modificar
+	
+	$(document).on('click', '.varEliminarJugador', function(e){
+
+		  if (!isNaN($(this).attr("id"))) {
+			$("#idEliminar").val($(this).attr("id"));
+			$("#dialog2").dialog("open");
+
+			
+			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
+			//$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton eliminar
+	
+	$( "#dialog2" ).dialog({
+	
+		autoOpen: false,
+		resizable: false,
+		width:600,
+		height:240,
+		modal: true,
+		buttons: {
+			"Eliminar": function() {
+
+				$.ajax({
+							data:  {id: $('#idEliminar').val(), accion: 'eliminarConectorDefinitivamente'},
+							url:   '../../ajax/ajax.php',
+							type:  'post',
+							beforeSend: function () {
+									
+							},
+							success:  function (response) {
+									url = "ver.php?id=" + <?php echo $id; ?>;
+									$(location).attr('href',url);
+									
+							}
+					});
+				$( this ).dialog( "close" );
+				$( this ).dialog( "close" );
+					$('html, body').animate({
+						scrollTop: '1000px'
+					},
+					1500);
+			},
+			Cancelar: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+ 
+ 
+	}); //fin del dialogo para eliminar
+			
 
 	$('.modificar').click(function(event){
 		 
@@ -541,27 +666,7 @@ $(document).ready(function(){
 		$(".alert").removeClass("alert-danger");
 		$(".alert").removeClass("alert-success");
 	});
-	/*
-    $( "#autocomplete-ajax" ).autocomplete({
-      minLength: 0,
-      source: jugadores,
-      focus: function( event, ui ) {
-        $( "#project" ).val( ui.item.label );
-		
-        return false;
-      },
-      select: function( event, ui ) {
-        $( "#autocomplete-ajax" ).val( ui.item.label );
-		$('#selction-ajax').html('<button type="button" class="btn btn-success agregarJugador" id="' + ui.item.id + '" style="margin-left:0px;">Agregar</button>');
-        return false;
-      }
-    })
-    .autocomplete( "instance" )._renderItem = function( ul, item ) {
-      return $( "<li>" )
-        .append( "<div>" + item.label + "</div>" )
-        .appendTo( ul );
-    };
-	*/
+
 	
 	var options = {
 

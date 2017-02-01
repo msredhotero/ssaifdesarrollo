@@ -228,7 +228,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                                         <th>Countries</th>
                                         <th>Categoria</th>
                                         <th>Tipo Jugador</th>
-                                        <th style="text-align:center">Modificar</th>
+                                        <th>Activo</th>
                                         <th style="text-align:center">Baja</th>
                                     </tr>
                                 </thead>
@@ -243,7 +243,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                                     <td><?php echo $rowC['countrie']; ?></td>
                                     <td><?php echo $rowC['categoria']; ?></td>
                                     <td><?php echo $rowC['tipojugador']; ?></td>
-                                    <td align="center"><img src="../../imagenes/editarIco.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varModificarJugador"></td>
+                                    <td><?php echo $rowC['activo']; ?></td>
                                     <td align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="<?php echo $rowC['idconector']; ?>" class="varEliminarJugador"></td>
                                     </tr>
                                 <?php
@@ -251,7 +251,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                                 ?>
                                 </tbody>
                                 <tfoot>
-                                    <td colspan="5" align="right">Total Equipos:</td>
+                                    <td colspan="4" align="right">Total Equipos:</td>
                                     <td><?php echo $cantidad; ?></td>
                                 </tfoot>
                                 </table>
@@ -316,6 +316,17 @@ if ($_SESSION['refroll_predio'] != 1) {
         <p><strong>Importante: </strong>Si elimina el equipo se perderan todos los datos de este</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
+
+<div id="dialog3" title="Quitar al jugador del Equipo">
+    	<p>
+        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            ¿Esta seguro que desea quitar el jugador?.<span id="proveedorEli"></span>
+        </p>
+        <p><strong>Importante: </strong>Si quitará el jugador del equipo pero no perderan todos los datos de este</p>
+        <input type="hidden" value="" id="idEliminar3" name="idEliminar3">
+</div>
+
+
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
@@ -367,42 +378,94 @@ $(document).ready(function(){
 
 	 $( "#dialog2" ).dialog({
 		 	
-			    autoOpen: false,
-			 	resizable: false,
-				width:600,
-				height:240,
-				modal: true,
-				buttons: {
-				    "Eliminar": function() {
+		autoOpen: false,
+		resizable: false,
+		width:600,
+		height:240,
+		modal: true,
+		buttons: {
+			"Eliminar": function() {
+
+				$.ajax({
+							data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
+							url:   '../../ajax/ajax.php',
+							type:  'post',
+							beforeSend: function () {
+									
+							},
+							success:  function (response) {
+									url = "index.php";
+									$(location).attr('href',url);
+									
+							}
+					});
+				$( this ).dialog( "close" );
+				$( this ).dialog( "close" );
+					$('html, body').animate({
+						scrollTop: '1000px'
+					},
+					1500);
+			},
+			Cancelar: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+ 
+ 
+	}); //fin del dialogo para eliminar
 	
-						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
-									url:   '../../ajax/ajax.php',
-									type:  'post',
-									beforeSend: function () {
-											
-									},
-									success:  function (response) {
-											url = "index.php";
-											$(location).attr('href',url);
-											
-									}
-							});
-						$( this ).dialog( "close" );
-						$( this ).dialog( "close" );
-							$('html, body').animate({
-	           					scrollTop: '1000px'
-	       					},
-	       					1500);
-				    },
-				    Cancelar: function() {
-						$( this ).dialog( "close" );
-				    }
-				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
 	
+	$(document).on('click', '.varEliminarJugador', function(e){
+
+		  if (!isNaN($(this).attr("id"))) {
+			$("#idEliminar3").val($(this).attr("id"));
+			$("#dialog3").dialog("open");
+
+			
+			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
+			//$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton eliminar
+	
+	$( "#dialog3" ).dialog({
+	
+		autoOpen: false,
+		resizable: false,
+		width:600,
+		height:240,
+		modal: true,
+		buttons: {
+			"Eliminar": function() {
+
+				$.ajax({
+							data:  {id: $('#idEliminar3').val(), accion: 'eliminarConectorDefinitivamente'},
+							url:   '../../ajax/ajax.php',
+							type:  'post',
+							beforeSend: function () {
+									
+							},
+							success:  function (response) {
+									url = "modificar.php?id=" + <?php echo $id; ?>;
+									$(location).attr('href',url);
+									
+							}
+					});
+				$( this ).dialog( "close" );
+				$( this ).dialog( "close" );
+					$('html, body').animate({
+						scrollTop: '1000px'
+					},
+					1500);
+			},
+			Cancelar: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+ 
+ 
+	}); //fin del dialogo para eliminar
 	
 	<?php 
 		echo $serviciosHTML->validacion($tabla);

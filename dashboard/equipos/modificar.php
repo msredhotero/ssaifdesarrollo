@@ -199,6 +199,9 @@ if ($_SESSION['refroll_predio'] != 1) {
         <p><strong>Importante: </strong>Si elimina el equipo se perderan todos los datos de este</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
+
+
+
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
@@ -255,41 +258,43 @@ $(document).ready(function(){
 	
 	 $( "#dialog2" ).dialog({
 		 	
-			    autoOpen: false,
-			 	resizable: false,
-				width:600,
-				height:240,
-				modal: true,
-				buttons: {
-				    "Eliminar": function() {
+		autoOpen: false,
+		resizable: false,
+		width:600,
+		height:240,
+		modal: true,
+		buttons: {
+			"Eliminar": function() {
+
+				$.ajax({
+							data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
+							url:   '../../ajax/ajax.php',
+							type:  'post',
+							beforeSend: function () {
+									
+							},
+							success:  function (response) {
+									url = "index.php";
+									$(location).attr('href',url);
+									
+							}
+					});
+				$( this ).dialog( "close" );
+				$( this ).dialog( "close" );
+					$('html, body').animate({
+						scrollTop: '1000px'
+					},
+					1500);
+			},
+			Cancelar: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+ 
+ 
+	}); //fin del dialogo para eliminar
 	
-						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
-									url:   '../../ajax/ajax.php',
-									type:  'post',
-									beforeSend: function () {
-											
-									},
-									success:  function (response) {
-											url = "index.php";
-											$(location).attr('href',url);
-											
-									}
-							});
-						$( this ).dialog( "close" );
-						$( this ).dialog( "close" );
-							$('html, body').animate({
-	           					scrollTop: '1000px'
-	       					},
-	       					1500);
-				    },
-				    Cancelar: function() {
-						$( this ).dialog( "close" );
-				    }
-				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
+	
 	
 	
 	<?php 

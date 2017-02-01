@@ -2860,6 +2860,14 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function eliminarConectorDefinitivamente($id) {
+$sql = "delete from dbconector where idconector =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
 function eliminarConectorPorJugador($id) {
 $sql = "update dbconector set activo = 0 where refjugadores =".$id;
 $res = $this->query($sql,0);

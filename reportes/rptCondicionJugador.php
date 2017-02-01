@@ -104,7 +104,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$cadCumpleEdad = "CUMPLE";	
 		} else {
 			// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
-			$habilitacionTransitoria = $servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], 1, $refcategoria,mysql_result($equipo,0,'nombre'));
+			$habilitacionTransitoria = $servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], 1, $refcategoria, $id);
 			if (mysql_num_rows($habilitacionTransitoria)>0) {
 				$cadCumpleEdad = "HAB. TRANS.";	
 			} else {
