@@ -73,12 +73,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	$totalcant = 0;
 	$sumSaldos = 0;
 	$sumAbonos = 0;
-	$cadCumpleEdad = '';
-	$errorDoc = 'FALTA';
-	$cadErrorDoc = '';
-	$habilitacion= 'INHAB.';
-	$transitoria= '';
-	$valorDocumentacion = 0;
+	
 	
 	$x = 0;
 	$y = 0;
@@ -87,11 +82,19 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	
 	$x = $this->GetX();
 	$y = $this->GetY();
-	$documentaciones = '';
+	
 	
 	$this->SetFont('Arial','',9);
     while ($row = mysql_fetch_array($data))
     {
+		$cadCumpleEdad = '';
+		$errorDoc = 'FALTA';
+		$cadErrorDoc = '';
+		$habilitacion= 'INHAB.';
+		$transitoria= '';
+		$valorDocumentacion = 0;
+		$documentaciones = '';
+	
 		$yInicial = $this->GetY();
 		
 		$edad = $servicios->verificarEdad($row['refjugadores']);
