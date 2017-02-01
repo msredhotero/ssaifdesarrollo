@@ -154,8 +154,10 @@ if ($_SESSION['refroll_predio'] != 1) {
       });
     </script>
     
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzxyoH5wuPmahQIZLUBjPfDuu_cUHUBQY"
-  type="text/javascript"></script>
+    <!-- CSS file -->
+<link rel="stylesheet" href="../../css/easy-autocomplete.min.css">
+<link rel="stylesheet" href="../../css/easy-autocomplete.themes.min.css"> 
+
     <style type="text/css">
 		#map
 		{
@@ -163,7 +165,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 			height: 600px;
 			border: 1px solid #d0d0d0;
 		}
-  		
+
 		th {
   color:#D5DDE5;;
   background:#1b1e24;
@@ -195,15 +197,7 @@ tr {
   font-weight:normal;
   text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
 }
-	.autocomplete-suggestions { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
-		.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
-		.autocomplete-no-suggestion { padding: 2px 5px;}
-		.autocomplete-selected { background: #F0F0F0; }
-		.autocomplete-suggestions strong { font-weight: bold; color: #000; }
-		.autocomplete-group { padding: 2px 5px; }
-		.autocomplete-group strong { font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid #000;}
-		.autocomplete-group input { font-size: 28px; padding: 10px; border: 1px solid #CCC; display: block; margin: 20px 0; }	
-		.ui-widget-content { color:#a9a9a9; }
+
 	</style>
    
 </head>
@@ -270,8 +264,8 @@ tr {
                     	<label for="reftipodocumentos" class="control-label" style="text-align:left"> </label>
                         <div class="input-group col-md-12">
                         	<div style="position: relative; height: 80px;">
-                                <input type="text" class="form-control" name="country" id="autocomplete-ajax" style="position: absolute; z-index: 2; background: transparent;"/>
-                                <input type="text" class="form-control" name="country" id="autocomplete-ajax-x" disabled="disabled" style="color: #CCC; position: absolute; background: transparent; z-index: 1;"/>
+                                
+                                <input id="round" class="countrie" style="widows:100%;"/>
                             </div>
                             <div id="selction-ajax"></div>
                             
@@ -335,6 +329,8 @@ tr {
                         </div>
                     </div>
                 </div>
+                
+                
             </div>
 
             
@@ -352,6 +348,7 @@ tr {
                 </ul>
                 </div>
             </div>
+            <input type="hidden" id="countrieID" name="countrieID" value="<?php echo mysql_result($resResultado,0,'refcountries'); ?>" />
             </form>
     	</div>
     </div>
@@ -404,45 +401,15 @@ tr {
 	
   </script>
 
+<!-- JS file -->
+<script src="../../js/jquery.easy-autocomplete.min.js"></script> 
+
+
+
+
 <script type="text/javascript">
 $(document).ready(function(){
-	
-	var jugadores = [
-      <?php echo substr($cadJugadores,0,-1); ?>
-    ];
-	
-	function traerJugadoresPorCountrie(refCountrie) {
 
-		$.ajax({
-			url:   '../../ajax/ajax.php',
-			data:  {
-				refcountries: refCountrie, 
-				accion: 'traerJugadoresPorCountrie'
-			},
-			type:  'post',
-			beforeSend: function () {
-
-			},
-			success:  function (response) {
-
-				if(response){
-
-					$.each($.parseJSON(result), function (item, value) {
-				
-							$.each($.parseJSON(value), function (i, object) {
-								alert(i + "=" + object);
-							});
-						
-					});
-					
-				}
-				
-			}
-		});	
-		
-		
-	
-	}
 	
 	$('.volver').click(function(event){
 		 
@@ -452,13 +419,14 @@ $(document).ready(function(){
 	
 	
 	$('#esfusion').click(function() {
+		$('#round').val('');
+		$('#selction-ajax').html('');
 		if  ($('#esfusion').prop('checked') == false) {
-			//traer jugadores de este countrie
-			traerJugadoresPorCountrie($('#refcountriesaux').val());
+			$('#countrieID').val(<?php echo mysql_result($resResultado,0,'refcountries'); ?>);
 			$('#refcountriesauxDiv').hide();
 		} else {
 			$('#refcountriesauxDiv').show();
-			jugadores.length=0;	
+			
 		}
 	});
 
@@ -466,8 +434,9 @@ $(document).ready(function(){
 	$('#refcountriesaux').chosen().change(function(event, data) {
 	   // arguments.length === 2
 	   if  ($('#esfusion').prop('checked') == true) {
-			//traer jugadores de este countrie
-			traerJugadoresPorCountrie($('#refcountriesaux').val());
+		   $('#selction-ajax').html('');
+		   $('#countrieID').val($('#refcountriesaux').chosen().val());
+		   $('#round').val('');
 		}
 	});
 
@@ -572,7 +541,7 @@ $(document).ready(function(){
 		$(".alert").removeClass("alert-danger");
 		$(".alert").removeClass("alert-success");
 	});
-	
+	/*
     $( "#autocomplete-ajax" ).autocomplete({
       minLength: 0,
       source: jugadores,
@@ -592,7 +561,47 @@ $(document).ready(function(){
         .append( "<div>" + item.label + "</div>" )
         .appendTo( ul );
     };
+	*/
 	
+	var options = {
+
+	  url: function(phrase) {
+		return "../../json/jugadoresPorEquipos.php?countrie="+$('#countrieID').val();
+	  },
+	
+	  getValue: function(element) {
+		return element.name;
+	  },
+	
+	  ajaxSettings: {
+		dataType: "json",
+		method: "GET",
+		data: {
+		  dataType: "json"
+		}
+	  },
+	
+	  preparePostData: function(data) {
+		data.phrase = $("#round").val();
+		return data;
+	  },
+	  
+	  list: {
+			onClickEvent: function() {
+				var value = $("#round").getSelectedItemData().id;
+	
+				$('#selction-ajax').html('<button type="button" class="btn btn-success agregarJugador" id="' + value + '" style="margin-left:0px;">Agregar</button>');
+			},
+			
+			match: {
+				enabled: true
+			}
+	  },
+	  theme: "round",
+	  requestDelay: 100
+	};
+	
+	$("#round").easyAutocomplete(options);
 
 });
 </script>

@@ -1971,7 +1971,7 @@ function eliminarTiposanciones($serviciosReferencias) {
 
 
 function insertarFechasexcluidas($serviciosReferencias) { 
-	$fecha = $_POST['fecha']; 
+	$fecha = formatearFechas($_POST['fecha']); 
 	$descripcion = $_POST['descripcion']; 
 	
 	$res = $serviciosReferencias->insertarFechasexcluidas($fecha,$descripcion); 
@@ -1984,7 +1984,7 @@ function insertarFechasexcluidas($serviciosReferencias) {
 
 function modificarFechasexcluidas($serviciosReferencias) { 
 	$id = $_POST['id']; 
-	$fecha = $_POST['fecha']; 
+	$fecha = formatearFechas($_POST['fecha']); 
 	$descripcion = $_POST['descripcion']; 
 	
 	$res = $serviciosReferencias->modificarFechasexcluidas($id,$fecha,$descripcion); 
