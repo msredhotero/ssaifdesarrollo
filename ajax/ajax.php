@@ -430,7 +430,7 @@ function formatearFechas($fecha) {
 		if (checkdate($arFecha[1],$arFecha[0],$arFecha[2])) {
 			return $nuevaFecha;
 		} else {
-			return 0;	
+			return '***';	
 		}
 	}
 	return $fecha;
@@ -872,13 +872,17 @@ function insertarCountries($serviciosReferencias) {
 	$referencia = $_POST['referencia'];
 	$imagen = ''; 
 	
+	$email = $_POST['email'];
+	$localidad = $_POST['localidad'];
+	$codigopostal = $_POST['codigopostal']; 
+	
 	$errorArchivo = '';
 	
-	if (($fechaalta == 0) || ($fechabaja == 0)) {
+	if (($fechaalta == '***') || ($fechabaja == '***')) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeCountrie($cuit)==0) {
-			$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo);
+			$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal);
 			
 			if ((integer)$res > 0) {
 				$resUser = $serviciosReferencias->traerContactos();
@@ -926,13 +930,17 @@ function modificarCountries($serviciosReferencias) {
 	
 	$referencia = $_POST['referencia'];
 	$imagen = ''; 
+	$email = $_POST['email'];
+	$localidad = $_POST['localidad'];
+	$codigopostal = $_POST['codigopostal']; 
+	
 	$errorArchivo = '';
 	
-	if (($fechaalta == 0) || ($fechabaja == 0)) {
+	if (($fechaalta == '***') || ($fechabaja == '***')) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeCountriePorId($cuit,$id)==0) {
-			$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo);
+			$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal);
 			
 			if ($res == true) {
 				$serviciosReferencias->eliminarCountriecontactosPorCountrie($id);
@@ -1384,7 +1392,7 @@ function insertarJugadores($serviciosReferencias) {
 	$refcountries = $_POST['refcountries']; 
 	$observaciones = $_POST['observaciones']; 
 	
-	if (($fechaalta == 0) || ($fechabaja == 0) || ($fechanacimiento == 0)) {
+	if (($fechaalta == '***') || ($fechabaja == '***') || ($fechanacimiento == '***')) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugador($nrodocumento) == 0) {
@@ -1414,7 +1422,7 @@ function modificarJugadores($serviciosReferencias) {
 	$refcountries = $_POST['refcountries']; 
 	$observaciones = $_POST['observaciones']; 
 	
-	if (($fechaalta == 0) || ($fechabaja == 0) || ($fechanacimiento == 0)) {
+	if (($fechaalta == '***') || ($fechabaja == '***') || ($fechanacimiento == '***')) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugadorConIdJugador($nrodocumento, $id) == 0) {
@@ -2057,7 +2065,7 @@ function insertarFechasexcluidas($serviciosReferencias) {
 	$fecha = formatearFechas($_POST['fecha']); 
 	$descripcion = $_POST['descripcion']; 
 	
-	if ($fecha == 0) {
+	if ($fecha == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		$res = $serviciosReferencias->insertarFechasexcluidas($fecha,$descripcion); 
@@ -2074,7 +2082,7 @@ function modificarFechasexcluidas($serviciosReferencias) {
 	$fecha = formatearFechas($_POST['fecha']); 
 	$descripcion = $_POST['descripcion']; 
 	
-	if ($fecha == 0) {
+	if ($fecha == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		$res = $serviciosReferencias->modificarFechasexcluidas($id,$fecha,$descripcion); 
@@ -2384,7 +2392,7 @@ function insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferenci
 	$fechalimite = formatearFechas($_POST['fechalimiteA']); 
 	$observaciones = $_POST['observacionesA']; 
 	
-	if ($fechalimite == 0) {
+	if ($fechalimite == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
@@ -2412,7 +2420,7 @@ function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferenci
 	$fechalimite = formatearFechas($_POST['fechalimiteB']); 
 	$observaciones = $_POST['observacionesB']; 
 	
-	if ($fechalimite == 0) {
+	if ($fechalimite == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
@@ -2440,7 +2448,7 @@ $refcategorias = $_POST['refcategorias'];
 $fechalimite = formatearFechas($_POST['fechalimite']); 
 $observaciones = $_POST['observaciones']; 
 	
-	if ($fechalimite == 0) {
+	if ($fechalimite == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		$res = $serviciosReferencias->modificarJugadoresmotivoshabilitacionestransitorias($id,$reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 

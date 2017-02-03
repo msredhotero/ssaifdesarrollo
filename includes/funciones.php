@@ -642,7 +642,7 @@ class Servicios {
 		switch ($tabla) {
 			case 'dbcountries':
 				$sqlMod = "select idcountrie,nombre,cuit,DATE_FORMAT(fechaalta, '%d/%m/%Y') as fechaalta,
-    DATE_FORMAT(fechabaja, '%d/%m/%Y') as fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,direccion,telefonoadministrativo,telefonocampo from dbcountries where idcountrie =".$id;
+    DATE_FORMAT(fechabaja, '%d/%m/%Y') as fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,direccion,telefonoadministrativo,telefonocampo,email,localidad,codigopostal from dbcountries where idcountrie =".$id;
 				$resMod = $this->query($sqlMod,0);
 				break;
 
