@@ -875,7 +875,7 @@ function insertarCountries($serviciosReferencias) {
 	$errorArchivo = '';
 	
 	if (($fechaalta == 0) || ($fechabaja == 0)) {
-		echo 'Formata de fecha incorrecto';
+		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeCountrie($cuit)==0) {
 			$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo);
@@ -929,7 +929,7 @@ function modificarCountries($serviciosReferencias) {
 	$errorArchivo = '';
 	
 	if (($fechaalta == 0) || ($fechabaja == 0)) {
-		echo 'Formata de fecha incorrecto';
+		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeCountriePorId($cuit,$id)==0) {
 			$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo);
@@ -1385,7 +1385,7 @@ function insertarJugadores($serviciosReferencias) {
 	$observaciones = $_POST['observaciones']; 
 	
 	if (($fechaalta == 0) || ($fechabaja == 0) || ($fechanacimiento == 0)) {
-		echo 'Formata de fecha incorrecto';
+		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugador($nrodocumento) == 0) {
 			$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
@@ -1415,7 +1415,7 @@ function modificarJugadores($serviciosReferencias) {
 	$observaciones = $_POST['observaciones']; 
 	
 	if (($fechaalta == 0) || ($fechabaja == 0) || ($fechanacimiento == 0)) {
-		echo 'Formata de fecha incorrecto';
+		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugadorConIdJugador($nrodocumento, $id) == 0) {
 			$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
@@ -2058,7 +2058,7 @@ function insertarFechasexcluidas($serviciosReferencias) {
 	$descripcion = $_POST['descripcion']; 
 	
 	if ($fecha == 0) {
-		echo 'Formata de fecha incorrecto';
+		echo 'Formato de fecha incorrecto';
 	} else {
 		$res = $serviciosReferencias->insertarFechasexcluidas($fecha,$descripcion); 
 		if ((integer)$res > 0) { 
@@ -2075,7 +2075,7 @@ function modificarFechasexcluidas($serviciosReferencias) {
 	$descripcion = $_POST['descripcion']; 
 	
 	if ($fecha == 0) {
-		echo 'Formata de fecha incorrecto';
+		echo 'Formato de fecha incorrecto';
 	} else {
 		$res = $serviciosReferencias->modificarFechasexcluidas($id,$fecha,$descripcion); 
 		if ($res == true) { 
@@ -2385,7 +2385,7 @@ function insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferenci
 	$observaciones = $_POST['observacionesA']; 
 	
 	if ($fechalimite == 0) {
-		echo 'Formata de fecha incorrecto';
+		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
 			$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
@@ -2413,7 +2413,7 @@ function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferenci
 	$observaciones = $_POST['observacionesB']; 
 	
 	if ($fechalimite == 0) {
-		echo 'Formata de fecha incorrecto';
+		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
 			$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
@@ -2441,7 +2441,7 @@ $fechalimite = formatearFechas($_POST['fechalimite']);
 $observaciones = $_POST['observaciones']; 
 	
 	if ($fechalimite == 0) {
-		echo 'Formata de fecha incorrecto';
+		echo 'Formato de fecha incorrecto';
 	} else {
 		$res = $serviciosReferencias->modificarJugadoresmotivoshabilitacionestransitorias($id,$reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
 		if ($res == true) { 
