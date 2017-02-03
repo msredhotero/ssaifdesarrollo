@@ -216,7 +216,7 @@ $(document).ready(function(){
 
 	$('.volver').click(function(event){
 		 
-		url = "index.php";
+		url = "habilitaciones.php?id="+<?php echo $idJugador; ?>;
 		$(location).attr('href',url);
 	});//fin del boton modificar
 	

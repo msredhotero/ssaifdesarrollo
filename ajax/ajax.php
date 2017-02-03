@@ -38,6 +38,9 @@ switch ($accion) {
 case 'insertarContactos':
 insertarContactos($serviciosReferencias);
 break;
+case 'insertarContactosId':
+insertarContactosId($serviciosReferencias);
+break;
 case 'modificarContactos':
 modificarContactos($serviciosReferencias);
 break;
@@ -297,6 +300,9 @@ break;
 case 'traerEquiposPorCountries':
 	traerEquiposPorCountries($serviciosFunciones,$serviciosReferencias);
 	break;
+case 'traerCategoriaPorEquipo':
+	traerCategoriaPorEquipo($serviciosFunciones,$serviciosReferencias);
+	break;
 
 case 'insertarPuntobonus': 
 insertarPuntobonus($serviciosReferencias); 
@@ -421,7 +427,11 @@ function formatearFechas($fecha) {
 		
 		$nuevaFecha = 	$arFecha[2]."/".$arFecha[1]."/".$arFecha[0];
 		
-		return $nuevaFecha;
+		if (checkdate($arFecha[1],$arFecha[0],$arFecha[2])) {
+			return $nuevaFecha;
+		} else {
+			return 0;	
+		}
 	}
 	return $fecha;
 }
@@ -707,6 +717,41 @@ function insertarContactos($serviciosReferencias) {
 		echo 'Huvo un error al insertar datos'.$res;
 	}
 }
+
+
+function insertarContactosId($serviciosReferencias) {
+	$reftipocontactos = $_POST['reftipocontactos'];
+	$nombre = $_POST['nombre'];
+	$direccion = $_POST['direccion'];
+	$localidad = $_POST['localidad'];
+	$cp = $_POST['cp'];
+	$telefono = $_POST['telefono'];
+	$celular = $_POST['celular'];
+	$fax = $_POST['fax'];
+	$email = $_POST['email'];
+	$observaciones = $_POST['observaciones'];
+	
+	if (isset($_POST['publico'])) {
+		$publico = 1;
+	} else {
+		$publico = 0;
+	}
+	
+	$refCountries	= $_POST['refcountries'];
+
+	$res = $serviciosReferencias->insertarContactos($reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico);
+	
+	if ((integer)$res > 0) {
+		
+		if ($refCountries != 0) {
+			$serviciosReferencias->insertarCountriecontactos($refCountries,$res);
+		}
+		echo $res;
+	} else {
+		echo 'Huvo un error al insertar datos'.$res;
+	}
+}
+
 function modificarContactos($serviciosReferencias) {
 	$id = $_POST['id'];
 	$reftipocontactos = $_POST['reftipocontactos'];
@@ -828,30 +873,34 @@ function insertarCountries($serviciosReferencias) {
 	$imagen = ''; 
 	
 	$errorArchivo = '';
-
-	if ($serviciosReferencias->existeCountrie($cuit)==0) {
-		$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$direccion,$telefonoadministrativo,$telefonocampo);
-		
-		if ((integer)$res > 0) {
-			$resUser = $serviciosReferencias->traerContactos();
-			$cad = 'user';
-			while ($rowFS = mysql_fetch_array($resUser)) {
-				if (isset($_POST[$cad.$rowFS[0]])) {
-					$serviciosReferencias->insertarCountriecontactos($res,$rowFS[0]);
-				}
-			}
-			
-			$imagenes = array("imagen" => 'imagen');
-		
-			foreach ($imagenes as $valor) {
-				$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$res,1);
-			}
-			echo ''.$errorArchivo;
-		} else {
-			echo 'Huvo un error al insertar datos';
-		}
+	
+	if (($fechaalta == 0) || ($fechabaja == 0)) {
+		echo 'Formata de fecha incorrecto';
 	} else {
-		echo 'Ya existe un Cuit cargado';
+		if ($serviciosReferencias->existeCountrie($cuit)==0) {
+			$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo);
+			
+			if ((integer)$res > 0) {
+				$resUser = $serviciosReferencias->traerContactos();
+				$cad = 'user';
+				while ($rowFS = mysql_fetch_array($resUser)) {
+					if (isset($_POST[$cad.$rowFS[0]])) {
+						$serviciosReferencias->insertarCountriecontactos($res,$rowFS[0]);
+					}
+				}
+				
+				$imagenes = array("imagen" => 'imagen');
+			
+				foreach ($imagenes as $valor) {
+					$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$res,1);
+				}
+				echo ''.$errorArchivo;
+			} else {
+				echo 'Huvo un error al insertar datos';
+			}
+		} else {
+			echo 'Ya existe un Cuit cargado';
+		}
 	}
 }
 function modificarCountries($serviciosReferencias) {
@@ -876,33 +925,37 @@ function modificarCountries($serviciosReferencias) {
 	}
 	
 	$referencia = $_POST['referencia'];
-
+	$imagen = ''; 
 	$errorArchivo = '';
 	
-	if ($serviciosReferencias->existeCountriePorId($cuit,$id)==0) {
-		$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$direccion,$telefonoadministrativo,$telefonocampo);
-		
-		if ($res == true) {
-			$serviciosReferencias->eliminarCountriecontactosPorCountrie($id);
-				$resUser = $serviciosReferencias->traerContactos();
-				$cad = 'user';
-				while ($rowFS = mysql_fetch_array($resUser)) {
-					if (isset($_POST[$cad.$rowFS[0]])) {
-						$serviciosReferencias->insertarCountriecontactos($id,$rowFS[0]);
-					}
-				}
-				
-			$imagenes = array("imagen" => 'imagen');
-		
-			foreach ($imagenes as $valor) {
-				$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$id,1);
-			}
-			echo ''.$errorArchivo;
-		} else {
-			echo 'Huvo un error al modificar datos';
-		}
+	if (($fechaalta == 0) || ($fechabaja == 0)) {
+		echo 'Formata de fecha incorrecto';
 	} else {
-		echo 'Ya existe un Cuit cargado';
+		if ($serviciosReferencias->existeCountriePorId($cuit,$id)==0) {
+			$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo);
+			
+			if ($res == true) {
+				$serviciosReferencias->eliminarCountriecontactosPorCountrie($id);
+					$resUser = $serviciosReferencias->traerContactos();
+					$cad = 'user';
+					while ($rowFS = mysql_fetch_array($resUser)) {
+						if (isset($_POST[$cad.$rowFS[0]])) {
+							$serviciosReferencias->insertarCountriecontactos($id,$rowFS[0]);
+						}
+					}
+					
+				$imagenes = array("imagen" => 'imagen');
+			
+				foreach ($imagenes as $valor) {
+					$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$id,1);
+				}
+				echo ''.$errorArchivo;
+			} else {
+				echo 'Huvo un error al modificar datos';
+			}
+		} else {
+			echo 'Ya existe un Cuit cargado';
+		}
 	}
 }
 function eliminarCountries($serviciosReferencias) {
@@ -1331,16 +1384,20 @@ function insertarJugadores($serviciosReferencias) {
 	$refcountries = $_POST['refcountries']; 
 	$observaciones = $_POST['observaciones']; 
 	
-	if ($serviciosReferencias->existeJugador($nrodocumento) == 0) {
-		$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
-		
-		if ((integer)$res > 0) { 
-			echo $res; 
-		} else { 
-			echo 'Huvo un error al insertar datos';	 
-		} 
+	if (($fechaalta == 0) || ($fechabaja == 0) || ($fechanacimiento == 0)) {
+		echo 'Formata de fecha incorrecto';
 	} else {
-		echo 'Ya existe ese numero de documento';	
+		if ($serviciosReferencias->existeJugador($nrodocumento) == 0) {
+			$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
+			
+			if ((integer)$res > 0) { 
+				echo $res; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
+		} else {
+			echo 'Ya existe ese numero de documento';	
+		}
 	}
 } 
 
@@ -1357,16 +1414,20 @@ function modificarJugadores($serviciosReferencias) {
 	$refcountries = $_POST['refcountries']; 
 	$observaciones = $_POST['observaciones']; 
 	
-	if ($serviciosReferencias->existeJugadorConIdJugador($nrodocumento, $id) == 0) {
-		$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
-		
-		if ($res == true) { 
-			echo ''; 
-		} else { 
-			echo 'Huvo un error al modificar datos'; 
-		} 
+	if (($fechaalta == 0) || ($fechabaja == 0) || ($fechanacimiento == 0)) {
+		echo 'Formata de fecha incorrecto';
 	} else {
-		echo 'Ya existe ese numero de documento';
+		if ($serviciosReferencias->existeJugadorConIdJugador($nrodocumento, $id) == 0) {
+			$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
+			
+			if ($res == true) { 
+				echo ''; 
+			} else { 
+				echo 'Huvo un error al modificar datos'; 
+			} 
+		} else {
+			echo 'Ya existe ese numero de documento';
+		}
 	}
 } 
 function eliminarJugadores($serviciosReferencias) { 
@@ -1829,7 +1890,14 @@ function traerEquiposPorCountries($serviciosFunciones,$serviciosReferencias) {
 	echo $cadRefEquipo;	
 }
 
-
+function traerCategoriaPorEquipo($serviciosFunciones,$serviciosReferencias) {
+	$id = $_POST['id']; 
+	
+	$resCategoria		=	$serviciosReferencias->traerCategoriaPorEquipo($id);
+	$cadRefCategoria	=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
+	
+	echo $cadRefCategoria;	
+}
 
 
 
@@ -1989,12 +2057,16 @@ function insertarFechasexcluidas($serviciosReferencias) {
 	$fecha = formatearFechas($_POST['fecha']); 
 	$descripcion = $_POST['descripcion']; 
 	
-	$res = $serviciosReferencias->insertarFechasexcluidas($fecha,$descripcion); 
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
+	if ($fecha == 0) {
+		echo 'Formata de fecha incorrecto';
+	} else {
+		$res = $serviciosReferencias->insertarFechasexcluidas($fecha,$descripcion); 
+		if ((integer)$res > 0) { 
+			echo ''; 
+		} else { 
+			echo 'Huvo un error al insertar datos';	 
+		} 
+	}
 } 
 
 function modificarFechasexcluidas($serviciosReferencias) { 
@@ -2002,12 +2074,16 @@ function modificarFechasexcluidas($serviciosReferencias) {
 	$fecha = formatearFechas($_POST['fecha']); 
 	$descripcion = $_POST['descripcion']; 
 	
-	$res = $serviciosReferencias->modificarFechasexcluidas($id,$fecha,$descripcion); 
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
+	if ($fecha == 0) {
+		echo 'Formata de fecha incorrecto';
+	} else {
+		$res = $serviciosReferencias->modificarFechasexcluidas($id,$fecha,$descripcion); 
+		if ($res == true) { 
+			echo ''; 
+		} else { 
+			echo 'Huvo un error al modificar datos'; 
+		} 
+	}
 } 
 function eliminarFechasexcluidas($serviciosReferencias) { 
 	$id = $_POST['id']; 
@@ -2305,19 +2381,23 @@ function insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferenci
 	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasA']; 
 	$refequipos = $_POST['refequiposA']; 
 	$refcategorias = $_POST['refcategoriasA']; 
-	$fechalimite = $_POST['fechalimiteA']; 
+	$fechalimite = formatearFechas($_POST['fechalimiteA']); 
 	$observaciones = $_POST['observacionesA']; 
 	
-	if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
-		$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
-		
-		if ((integer)$res > 0) { 
-			echo ''; 
-		} else { 
-			echo 'Huvo un error al insertar datos';	 
-		} 
+	if ($fechalimite == 0) {
+		echo 'Formata de fecha incorrecto';
 	} else {
-		echo 'Ya existe esta habilitación';	
+		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
+			$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
+			
+			if ((integer)$res > 0) { 
+				echo ''; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
+		} else {
+			echo 'Ya existe esta habilitación';	
+		}
 	}
 } 
 
@@ -2329,19 +2409,23 @@ function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferenci
 	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasB']; 
 	$refequipos = $_POST['refequiposB']; 
 	$refcategorias = $_POST['refcategoriasB']; 
-	$fechalimite = $_POST['fechalimiteB']; 
+	$fechalimite = formatearFechas($_POST['fechalimiteB']); 
 	$observaciones = $_POST['observacionesB']; 
 	
-	if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
-		$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
-		
-		if ((integer)$res > 0) { 
-			echo ''; 
-		} else { 
-			echo 'Huvo un error al insertar datos';	 
-		} 
+	if ($fechalimite == 0) {
+		echo 'Formata de fecha incorrecto';
 	} else {
-		echo 'Ya existe esta habilitación';	
+		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
+			$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
+			
+			if ((integer)$res > 0) { 
+				echo ''; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
+		} else {
+			echo 'Ya existe esta habilitación';	
+		}
 	}
 }
 
@@ -2353,14 +2437,19 @@ $refdocumentaciones = $_POST['refdocumentaciones'];
 $refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitorias']; 
 $refequipos = $_POST['refequipos']; 
 $refcategorias = $_POST['refcategorias']; 
-$fechalimite = $_POST['fechalimite']; 
+$fechalimite = formatearFechas($_POST['fechalimite']); 
 $observaciones = $_POST['observaciones']; 
-$res = $serviciosReferencias->modificarJugadoresmotivoshabilitacionestransitorias($id,$reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
-if ($res == true) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al modificar datos'; 
-} 
+	
+	if ($fechalimite == 0) {
+		echo 'Formata de fecha incorrecto';
+	} else {
+		$res = $serviciosReferencias->modificarJugadoresmotivoshabilitacionestransitorias($id,$reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
+		if ($res == true) { 
+			echo ''; 
+		} else { 
+			echo 'Huvo un error al modificar datos'; 
+		} 
+	}
 } 
 
 function eliminarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias) { 

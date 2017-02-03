@@ -300,7 +300,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </div>
                     <div class="form-group col-md-9" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Countries</label>
-                        <div class="input-group col-md-12">
+                        <div class="input-group col-md-12" id="refcountriesauxDiv">
                             <select id="refcountriesaux" name="refcountriesaux" class="chosen-select" style="width:100%;">
                             	<?php echo $cadRefCountries; ?>
                             </select>
@@ -353,11 +353,11 @@ if ($_SESSION['refroll_predio'] != 1) {
                     
                     <div class="form-group col-md-4" style="display:block">
                         <label for="fechanacimiento" class="control-label" style="text-align:left">Fecha Limite</label>
-                        <div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="fechanacimiento" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="50" value="" readonly type="text">
+                        <div class="input-group col-md-12">
+                            <input class="form-control" name="fechalimiteA" id="fechalimiteA" type="text">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                        <input name="fechalimiteA" id="fechalimiteA" value="" type="hidden">
+                        
                     </div>
                     
                     
@@ -451,11 +451,10 @@ if ($_SESSION['refroll_predio'] != 1) {
                     
                     <div class="form-group col-md-4" style="display:block">
                         <label for="fechanacimiento" class="control-label" style="text-align:left">Fecha Limite</label>
-                        <div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="fechanacimiento" data-link-format="yyyy-mm-dd">
-                            <input class="form-control" size="50" value="" readonly type="text">
+                        <div class="input-group col-md-12">
+                            <input class="form-control" name="fechalimiteB" id="fechalimiteB" type="text">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                        <input name="fechalimiteB" id="fechalimiteB" value="" type="hidden">
                     </div>
                     
                     
@@ -563,7 +562,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	
+	$("#fechalimiteA").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+	$("#fechalimiteB").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 	
 	$(document).on('click', '.panel-heading span.clickable', function(e){
 		var $this = $(this);
@@ -625,8 +625,12 @@ $(document).ready(function(){
 	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequiposB');
 	
 	$('#esfusion').click(function() {
+		$('#refequiposA').html('');
 		if  ($('#esfusion').prop('checked') == false) {
+			$('#refcountriesauxDiv').hide();
 			traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequiposA');
+		} else {
+			$('#refcountriesauxDiv').show();	
 		}
 	});
 
@@ -638,9 +642,6 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#esfusion').click(function() {
-		$('#refequiposA').html('');
-	});
 	
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
@@ -830,7 +831,7 @@ $(document).ready(function(){
     for (var selector in config) {
       $(selector).chosen(config[selector]);
     }
-	
+	$('#refcountriesauxDiv').hide();
 	$('#primero').addClass('collapse');
 
 });

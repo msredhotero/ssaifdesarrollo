@@ -253,7 +253,7 @@ function existe($sql) {
 
 function insertarContactos($reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico) {
 $sql = "insert into dbcontactos(idcontacto,reftipocontactos,nombre,direccion,localidad,cp,telefono,celular,fax,email,observaciones,publico)
-values ('',".$reftipocontactos.",'".utf8_decode($nombre)."','".utf8_decode($direccion)."','".utf8_decode($localidad)."','".utf8_decode($cp)."','".utf8_decode($telefono)."','".utf8_decode($celular)."','".utf8_decode($fax)."','".utf8_decode($email)."','".utf8_decode($observaciones)."',".$publico.")";
+values ('',".$reftipocontactos.",'".($nombre)."','".($direccion)."','".($localidad)."','".($cp)."','".($telefono)."','".($celular)."','".($fax)."','".($email)."','".($observaciones)."',".$publico.")";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -262,7 +262,7 @@ return $res;
 function modificarContactos($id,$reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico) {
 $sql = "update dbcontactos
 set
-reftipocontactos = ".$reftipocontactos.",nombre = '".utf8_decode($nombre)."',direccion = '".utf8_decode($direccion)."',localidad = '".utf8_decode($localidad)."',cp = '".utf8_decode($cp)."',telefono = '".utf8_decode($telefono)."',celular = '".utf8_decode($celular)."',fax = '".utf8_decode($fax)."',email = '".utf8_decode($email)."',observaciones = '".utf8_decode($observaciones)."',publico = ".$publico."
+reftipocontactos = ".$reftipocontactos.",nombre = '".($nombre)."',direccion = '".($direccion)."',localidad = '".($localidad)."',cp = '".($cp)."',telefono = '".($telefono)."',celular = '".($celular)."',fax = '".($fax)."',email = '".($email)."',observaciones = '".($observaciones)."',publico = ".$publico."
 where idcontacto =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -373,7 +373,7 @@ function existeCountriePorId($cuit, $id) {
 
 function insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo) { 
 $sql = "insert into dbcountries(idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,imagen,direccion,telefonoadministrativo,telefonocampo) 
-values ('','".utf8_decode($nombre)."','".utf8_decode($cuit)."',".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'")."',".$refposiciontributaria.",'".utf8_decode($latitud)."','".utf8_decode($longitud)."',".$activo.",'".utf8_decode($referencia)."','".utf8_decode($imagen)."','".utf8_decode($direccion)."','".utf8_decode($telefonoadministrativo)."','".utf8_decode($telefonocampo)."')"; 
+values ('','".($nombre)."','".($cuit)."',".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'").",".$refposiciontributaria.",'".($latitud)."','".($longitud)."',".$activo.",'".($referencia)."','".($imagen)."','".($direccion)."','".($telefonoadministrativo)."','".($telefonocampo)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -382,7 +382,7 @@ return $res;
 function modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo) { 
 $sql = "update dbcountries 
 set 
-nombre = '".utf8_decode($nombre)."',cuit = '".utf8_decode($cuit)."',fechaalta = ".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",fechabaja = ".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'")."',refposiciontributaria = ".$refposiciontributaria.",latitud = '".utf8_decode($latitud)."',longitud = '".utf8_decode($longitud)."',activo = ".$activo.",referencia = '".utf8_decode($referencia)."',imagen = '".utf8_decode($imagen)."',direccion = '".utf8_decode($direccion)."',telefonoadministrativo = '".utf8_decode($telefonoadministrativo)."',telefonocampo = '".utf8_decode($telefonocampo)."' 
+nombre = '".($nombre)."',cuit = '".($cuit)."',fechaalta = ".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",fechabaja = ".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'").",refposiciontributaria = ".$refposiciontributaria.",latitud = '".($latitud)."',longitud = '".($longitud)."',activo = ".$activo.",referencia = '".($referencia)."',imagen = '".($imagen)."',direccion = '".($direccion)."',telefonoadministrativo = '".($telefonoadministrativo)."',telefonocampo = '".($telefonocampo)."' 
 where idcountrie =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -460,7 +460,7 @@ return $res;
 
 function insertarUsuarios($usuario,$password,$refroles,$email,$nombrecompleto) {
 $sql = "insert into dbusuarios(idusuario,usuario,password,refroles,email,nombrecompleto)
-values ('','".utf8_decode($usuario)."','".utf8_decode($password)."',".$refroles.",'".utf8_decode($email)."','".utf8_decode($nombrecompleto)."')";
+values ('','".($usuario)."','".($password)."',".$refroles.",'".($email)."','".($nombrecompleto)."')";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -469,7 +469,7 @@ return $res;
 function modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto) {
 $sql = "update dbusuarios
 set
-usuario = '".utf8_decode($usuario)."',password = '".utf8_decode($password)."',refroles = ".$refroles.",email = '".utf8_decode($email)."',nombrecompleto = '".utf8_decode($nombrecompleto)."'
+usuario = '".($usuario)."',password = '".($password)."',refroles = ".$refroles.",email = '".($email)."',nombrecompleto = '".($nombrecompleto)."'
 where idusuario =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -513,7 +513,7 @@ return $res;
 
 function insertarPredio_menu($url,$icono,$nombre,$Orden,$hover,$permiso,$administracion,$torneo,$reportes) {
 $sql = "insert into predio_menu(idmenu,url,icono,nombre,Orden,hover,permiso,administracion,torneo,reportes)
-values ('','".utf8_decode($url)."','".utf8_decode($icono)."','".utf8_decode($nombre)."',".$Orden.",'".utf8_decode($hover)."','".utf8_decode($permiso)."',".$administracion.",".$torneo.",".$reportes.")";
+values ('','".($url)."','".($icono)."','".($nombre)."',".$Orden.",'".($hover)."','".($permiso)."',".$administracion.",".$torneo.",".$reportes.")";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -522,7 +522,7 @@ return $res;
 function modificarPredio_menu($id,$url,$icono,$nombre,$Orden,$hover,$permiso,$administracion,$torneo,$reportes) {
 $sql = "update predio_menu
 set
-url = '".utf8_decode($url)."',icono = '".utf8_decode($icono)."',nombre = '".utf8_decode($nombre)."',Orden = ".$Orden.",hover = '".utf8_decode($hover)."',permiso = '".utf8_decode($permiso)."',administracion = ".$administracion.",torneo = ".$torneo.",reportes = ".$reportes."
+url = '".($url)."',icono = '".($icono)."',nombre = '".($nombre)."',Orden = ".$Orden.",hover = '".($hover)."',permiso = '".($permiso)."',administracion = ".$administracion.",torneo = ".$torneo.",reportes = ".$reportes."
 where idmenu =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -569,7 +569,7 @@ return $res;
 
 function insertarCanchas($refcountries,$nombre) {
 $sql = "insert into tbcanchas(idcancha,refcountries,nombre)
-values ('',".$refcountries.",'".utf8_decode($nombre)."')";
+values ('',".$refcountries.",'".($nombre)."')";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -578,7 +578,7 @@ return $res;
 function modificarCanchas($id,$refcountries,$nombre) {
 $sql = "update tbcanchas
 set
-refcountries = ".$refcountries.",nombre = '".utf8_decode($nombre)."'
+refcountries = ".$refcountries.",nombre = '".($nombre)."'
 where idcancha =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -620,7 +620,7 @@ return $res;
 
 function insertarPosiciontributaria($posiciontributaria,$activo) {
 $sql = "insert into tbposiciontributaria(idposiciontributaria,posiciontributaria,activo)
-values ('','".utf8_decode($posiciontributaria)."',".$activo.")";
+values ('','".($posiciontributaria)."',".$activo.")";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -629,7 +629,7 @@ return $res;
 function modificarPosiciontributaria($id,$posiciontributaria,$activo) {
 $sql = "update tbposiciontributaria
 set
-posiciontributaria = '".utf8_decode($posiciontributaria)."',activo = ".$activo."
+posiciontributaria = '".($posiciontributaria)."',activo = ".$activo."
 where idposiciontributaria =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -670,7 +670,7 @@ return $res;
 
 function insertarRoles($descripcion,$activo) {
 $sql = "insert into tbroles(idrol,descripcion,activo)
-values ('','".utf8_decode($descripcion)."',".$activo.")";
+values ('','".($descripcion)."',".$activo.")";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -679,7 +679,7 @@ return $res;
 function modificarRoles($id,$descripcion,$activo) {
 $sql = "update tbroles
 set
-descripcion = '".utf8_decode($descripcion)."',activo = ".$activo."
+descripcion = '".($descripcion)."',activo = ".$activo."
 where idrol =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -719,7 +719,7 @@ return $res;
 
 function insertarTipocontactos($tipocontacto,$activo) {
 $sql = "insert into tbtipocontactos(idtipocontacto,tipocontacto,activo)
-values ('','".utf8_decode($tipocontacto)."',".$activo.")";
+values ('','".($tipocontacto)."',".$activo.")";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -728,7 +728,7 @@ return $res;
 function modificarTipocontactos($id,$tipocontacto,$activo) {
 $sql = "update tbtipocontactos
 set
-tipocontacto = '".utf8_decode($tipocontacto)."',activo = ".$activo."
+tipocontacto = '".($tipocontacto)."',activo = ".$activo."
 where idtipocontacto =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -769,7 +769,7 @@ return $res;
 
 function insertarArbitros($nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email) {
 $sql = "insert into dbarbitros(idarbitro,nombrecompleto,telefonoparticular,telefonoceleluar,telefonolaboral,telefonofamiliar,email)
-values ('','".utf8_decode($nombrecompleto)."','".utf8_decode($telefonoparticular)."','".utf8_decode($telefonoceleluar)."','".utf8_decode($telefonolaboral)."','".utf8_decode($telefonofamiliar)."','".utf8_decode($email)."')";
+values ('','".($nombrecompleto)."','".($telefonoparticular)."','".($telefonoceleluar)."','".($telefonolaboral)."','".($telefonofamiliar)."','".($email)."')";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -778,7 +778,7 @@ return $res;
 function modificarArbitros($id,$nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email) {
 $sql = "update dbarbitros
 set
-nombrecompleto = '".utf8_decode($nombrecompleto)."',telefonoparticular = '".utf8_decode($telefonoparticular)."',telefonoceleluar = '".utf8_decode($telefonoceleluar)."',telefonolaboral = '".utf8_decode($telefonolaboral)."',telefonofamiliar = '".utf8_decode($telefonofamiliar)."',email = '".utf8_decode($email)."'
+nombrecompleto = '".($nombrecompleto)."',telefonoparticular = '".($telefonoparticular)."',telefonoceleluar = '".($telefonoceleluar)."',telefonolaboral = '".($telefonolaboral)."',telefonofamiliar = '".($telefonofamiliar)."',email = '".($email)."'
 where idarbitro =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -874,7 +874,7 @@ return $res;
 
 function insertarCategorias($categoria) {
 $sql = "insert into tbcategorias(idtcategoria,categoria)
-values ('','".utf8_decode($categoria)."')";
+values ('','".($categoria)."')";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -883,7 +883,7 @@ return $res;
 function modificarCategorias($id,$categoria) {
 $sql = "update tbcategorias
 set
-categoria = '".utf8_decode($categoria)."'
+categoria = '".($categoria)."'
 where idtcategoria =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -933,7 +933,7 @@ return $res;
 
 function insertarDivisiones($division) {
 $sql = "insert into tbdivisiones(iddivision,division)
-values ('','".utf8_decode($division)."')";
+values ('','".($division)."')";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -942,7 +942,7 @@ return $res;
 function modificarDivisiones($id,$division) {
 $sql = "update tbdivisiones
 set
-division = '".utf8_decode($division)."'
+division = '".($division)."'
 where iddivision =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -1010,6 +1010,17 @@ t.idtemporadas,
 t.temporada
 from tbtemporadas t
 order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerUltimaTemporada() {
+$sql = "select
+t.idtemporadas,
+t.temporada
+from tbtemporadas t
+order by 1 desc
+limit 1";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -1111,7 +1122,7 @@ function traerCountriecontactosPorCountries($idCountrie) {
 /*'".($vigenciahasta == '' ? 'NULL' : 'NULL')."'*/
 function insertarCanchasuspenciones($refcanchas,$vigenciadesde,$vigenciahasta,$usuacrea,$fechacrea,$usuamodi,$fechamodi) {
 $sql = "insert into dbcanchasuspenciones(idcanchasuspencion,refcanchas,vigenciadesde,vigenciahasta,usuacrea,fechacrea,usuamodi,fechamodi)
-values ('',".$refcanchas.",'".utf8_decode($vigenciadesde)."',".($vigenciahasta == '' ? 'NULL' : "'".$vigenciahasta."'").",'".utf8_decode($usuacrea)."','".utf8_decode($fechacrea)."','".utf8_decode($usuamodi)."','NULL')";
+values ('',".$refcanchas.",'".($vigenciadesde)."',".($vigenciahasta == '' ? 'NULL' : "'".$vigenciahasta."'").",'".($usuacrea)."','".($fechacrea)."','".($usuamodi)."','NULL')";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -1120,7 +1131,7 @@ return $res;
 function modificarCanchasuspenciones($id,$refcanchas,$vigenciadesde,$vigenciahasta,$usuacrea,$fechacrea,$usuamodi,$fechamodi) {
 $sql = "update dbcanchasuspenciones
 set
-refcanchas = ".$refcanchas.",vigenciadesde = '".utf8_decode($vigenciadesde)."',vigenciahasta = '".utf8_decode($vigenciahasta)."',usuacrea = '".utf8_decode($usuacrea)."',fechacrea = '".utf8_decode($fechacrea)."',usuamodi = '".utf8_decode($usuamodi)."',fechamodi = '".utf8_decode($fechamodi)."'
+refcanchas = ".$refcanchas.",vigenciadesde = '".($vigenciadesde)."',vigenciahasta = '".($vigenciahasta)."',usuacrea = '".($usuacrea)."',fechacrea = '".($fechacrea)."',usuamodi = '".($usuamodi)."',fechamodi = '".($fechamodi)."'
 where idcanchasuspencion =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -1286,7 +1297,7 @@ function existeJugadorConIdJugador($nroDocumento, $idJugador) {
 	
 function insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones) { 
 $sql = "insert into dbjugadores(idjugador,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,fechabaja,refcountries,observaciones) 
-values ('',".$reftipodocumentos.",".$nrodocumento.",'".utf8_decode($apellido)."','".utf8_decode($nombres)."','".utf8_decode($email)."','".utf8_decode($fechanacimiento)."','".utf8_decode($fechaalta)."','".utf8_decode($fechabaja)."',".$refcountries.",'".utf8_decode($observaciones)."')"; 
+values ('',".$reftipodocumentos.",".$nrodocumento.",'".($apellido)."','".($nombres)."','".($email)."','".($fechanacimiento)."','".($fechaalta)."','".($fechabaja)."',".$refcountries.",'".($observaciones)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -1295,7 +1306,7 @@ return $res;
 function modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones) { 
 $sql = "update dbjugadores 
 set 
-reftipodocumentos = ".$reftipodocumentos.",nrodocumento = ".$nrodocumento.",apellido = '".utf8_decode($apellido)."',nombres = '".utf8_decode($nombres)."',email = '".utf8_decode($email)."',fechanacimiento = '".utf8_decode($fechanacimiento)."',fechaalta = '".utf8_decode($fechaalta)."',fechabaja = '".utf8_decode($fechabaja)."',refcountries = ".$refcountries.",observaciones = '".utf8_decode($observaciones)."' 
+reftipodocumentos = ".$reftipodocumentos.",nrodocumento = ".$nrodocumento.",apellido = '".($apellido)."',nombres = '".($nombres)."',email = '".($email)."',fechanacimiento = '".($fechanacimiento)."',fechaalta = '".($fechaalta)."',fechabaja = '".($fechabaja)."',refcountries = ".$refcountries.",observaciones = '".($observaciones)."' 
 where idjugador =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1410,7 +1421,7 @@ function existeDocumentacion($refjugadores,$refdocumentaciones) {
 
 function insertarJugadoresdocumentacion($refjugadores,$refdocumentaciones,$valor,$observaciones) { 
 $sql = "insert into dbjugadoresdocumentacion(idjugadordocumentacion,refjugadores,refdocumentaciones,valor,observaciones) 
-values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",'".utf8_decode($observaciones)."')"; 
+values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",'".($observaciones)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -1419,7 +1430,7 @@ return $res;
 function modificarJugadoresdocumentacion($id,$refjugadores,$refdocumentaciones,$valor,$observaciones) { 
 $sql = "update dbjugadoresdocumentacion 
 set 
-refjugadores = ".$refjugadores.",refdocumentaciones = ".$refdocumentaciones.",valor = ".$valor.",observaciones = '".utf8_decode($observaciones)."' 
+refjugadores = ".$refjugadores.",refdocumentaciones = ".$refdocumentaciones.",valor = ".$valor.",observaciones = '".($observaciones)."' 
 where idjugadordocumentacion =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1491,7 +1502,8 @@ $sql = "select
 			(case when coalesce(r.contravalor,0) = 1 then 'Si' else 'No' end) as contravalor,
 			r.refjugadores,
 			r.idjugadordocumentacion,
-			r.observaciones
+			r.observaciones,
+            coalesce(r.contravalordesc,'') as contravalordesc
 			from
 			(
 			SELECT 
@@ -1510,6 +1522,14 @@ $sql = "select
 					on v.idvalorhabilitaciontransitoria = vh.refvaloreshabilitacionestransitorias
 					WHERE
 						refdocumentaciones = doc.iddocumentacion and vh.refjugadores = jug.idjugador) AS contravalor,
+				(SELECT 
+						v.descripcion
+					FROM
+						tbvaloreshabilitacionestransitorias v
+					inner join dbjugadoresvaloreshabilitacionestransitorias vh
+					on v.idvalorhabilitaciontransitoria = vh.refvaloreshabilitacionestransitorias
+					WHERE
+						refdocumentaciones = doc.iddocumentacion and vh.refjugadores = jug.idjugador) AS contravalordesc,
 				j.refjugadores,
 				j.idjugadordocumentacion,
 				j.observaciones
@@ -1534,7 +1554,7 @@ return $res;
 
 function insertarDocumentaciones($descripcion,$obligatoria,$observaciones) { 
 $sql = "insert into tbdocumentaciones(iddocumentacion,descripcion,obligatoria,observaciones) 
-values ('','".utf8_decode($descripcion)."',".$obligatoria.",'".utf8_decode($observaciones)."')"; 
+values ('','".($descripcion)."',".$obligatoria.",'".($observaciones)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -1543,7 +1563,7 @@ return $res;
 function modificarDocumentaciones($id,$descripcion,$obligatoria,$observaciones) { 
 $sql = "update tbdocumentaciones 
 set 
-descripcion = '".utf8_decode($descripcion)."',obligatoria = ".$obligatoria.",observaciones = '".utf8_decode($observaciones)."' 
+descripcion = '".($descripcion)."',obligatoria = ".$obligatoria.",observaciones = '".($observaciones)."' 
 where iddocumentacion =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1584,7 +1604,7 @@ return $res;
 
 function insertarMotivoshabilitacionestransitorias($inhabilita,$descripcion) { 
 $sql = "insert into tbmotivoshabilitacionestransitorias(idmotivoshabilitacionestransitoria,inhabilita,descripcion) 
-values ('',".$inhabilita.",'".utf8_decode($descripcion)."')"; 
+values ('',".$inhabilita.",'".($descripcion)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -1593,7 +1613,7 @@ return $res;
 function modificarMotivoshabilitacionestransitorias($id,$inhabilita,$descripcion) { 
 $sql = "update tbmotivoshabilitacionestransitorias 
 set 
-inhabilita = ".$inhabilita.",descripcion = '".utf8_decode($descripcion)."' 
+inhabilita = ".$inhabilita.",descripcion = '".($descripcion)."' 
 where idmotivoshabilitacionestransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1658,7 +1678,7 @@ return $res;
 
 function insertarTipodocumentos($tipodocumento) { 
 $sql = "insert into tbtipodocumentos(idtipodocumento,tipodocumento) 
-values ('','".utf8_decode($tipodocumento)."')"; 
+values ('','".($tipodocumento)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -1667,7 +1687,7 @@ return $res;
 function modificarTipodocumentos($id,$tipodocumento) { 
 $sql = "update tbtipodocumentos 
 set 
-tipodocumento = '".utf8_decode($tipodocumento)."' 
+tipodocumento = '".($tipodocumento)."' 
 where idtipodocumento =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1706,7 +1726,7 @@ return $res;
 
 function insertarTipojugadores($tipojugador,$abreviatura) { 
 $sql = "insert into tbtipojugadores(idtipojugador,tipojugador,abreviatura) 
-values ('','".utf8_decode($tipojugador)."','".utf8_decode($abreviatura)."')"; 
+values ('','".($tipojugador)."','".($abreviatura)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -1715,7 +1735,7 @@ return $res;
 function modificarTipojugadores($id,$tipojugador,$abreviatura) { 
 $sql = "update tbtipojugadores 
 set 
-tipojugador = '".utf8_decode($tipojugador)."',abreviatura = '".utf8_decode($abreviatura)."' 
+tipojugador = '".($tipojugador)."',abreviatura = '".($abreviatura)."' 
 where idtipojugador =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1790,7 +1810,7 @@ function existeJugadoresMotivosHabilitacionesTransitorias($reftemporada, $refcat
 
 function insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones) { 
 $sql = "insert into dbjugadoresmotivoshabilitacionestransitorias(iddbjugadormotivohabilitaciontransitoria,reftemporadas,refjugadores,refdocumentaciones,refmotivoshabilitacionestransitorias,refequipos,refcategorias,fechalimite,observaciones) 
-values ('',".$reftemporadas.",".$refjugadores.",".$refdocumentaciones.",".$refmotivoshabilitacionestransitorias.",".$refequipos.",".$refcategorias.",'".utf8_decode($fechalimite)."','".utf8_decode($observaciones)."')"; 
+values ('',".$reftemporadas.",".$refjugadores.",".$refdocumentaciones.",".$refmotivoshabilitacionestransitorias.",".$refequipos.",".$refcategorias.",'".($fechalimite)."','".($observaciones)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -1799,7 +1819,7 @@ return $res;
 function modificarJugadoresmotivoshabilitacionestransitorias($id,$reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones) { 
 $sql = "update dbjugadoresmotivoshabilitacionestransitorias 
 set 
-reftemporadas = ".$reftemporadas.",refjugadores = ".$refjugadores.",refdocumentaciones = ".$refdocumentaciones.",refmotivoshabilitacionestransitorias = ".$refmotivoshabilitacionestransitorias.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",fechalimite = '".utf8_decode($fechalimite)."',observaciones = '".utf8_decode($observaciones)."' 
+reftemporadas = ".$reftemporadas.",refjugadores = ".$refjugadores.",refdocumentaciones = ".$refdocumentaciones.",refmotivoshabilitacionestransitorias = ".$refmotivoshabilitacionestransitorias.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",fechalimite = '".($fechalimite)."',observaciones = '".($observaciones)."' 
 where iddbjugadormotivohabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2049,7 +2069,7 @@ function noPredeterminarTodo($refdocumentaciones) {
 
 function insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$predeterminado) { 
 $sql = "insert into tbvaloreshabilitacionestransitorias(idvalorhabilitaciontransitoria,refdocumentaciones,descripcion,habilita,predeterminado) 
-values ('',".$refdocumentaciones.",'".utf8_decode($descripcion)."',".$habilita.",".$predeterminado.")"; 
+values ('',".$refdocumentaciones.",'".($descripcion)."',".$habilita.",".$predeterminado.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2058,7 +2078,7 @@ return $res;
 function modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita,$predeterminado) { 
 $sql = "update tbvaloreshabilitacionestransitorias 
 set 
-refdocumentaciones = ".$refdocumentaciones.",descripcion = '".utf8_decode($descripcion)."',habilita = ".$habilita.",predeterminado = ".$predeterminado." 
+refdocumentaciones = ".$refdocumentaciones.",descripcion = '".($descripcion)."',habilita = ".$habilita.",predeterminado = ".$predeterminado." 
 where idvalorhabilitaciontransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2158,7 +2178,7 @@ definicionessancionesacumuladastempordas
 
 function insertarTipotorneo($tipotorneo) { 
 $sql = "insert into tbtipotorneo(idtipotorneo,tipotorneo) 
-values ('','".utf8_decode($tipotorneo)."')"; 
+values ('','".($tipotorneo)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2167,7 +2187,7 @@ return $res;
 function modificarTipotorneo($id,$tipotorneo) { 
 $sql = "update tbtipotorneo 
 set 
-tipotorneo = '".utf8_decode($tipotorneo)."' 
+tipotorneo = '".($tipotorneo)."' 
 where idtipotorneo =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2210,7 +2230,7 @@ function desactivarTorneos($idTorneo,$reftipotorneo,$reftemporadas,$refcategoria
 
 function insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo) { 
 $sql = "insert into dbtorneos(idtorneo,descripcion,reftipotorneo,reftemporadas,refcategorias,refdivisiones,cantidadascensos,cantidaddescensos,respetadefiniciontipojugadores,respetadefinicionhabilitacionestransitorias,respetadefinicionsancionesacumuladas,acumulagoleadores,acumulatablaconformada,observaciones,activo) 
-values ('','".utf8_decode($descripcion)."',".$reftipotorneo.",".$reftemporadas.",".$refcategorias.",".$refdivisiones.",".$cantidadascensos.",".$cantidaddescensos.",".$respetadefiniciontipojugadores.",".$respetadefinicionhabilitacionestransitorias.",".$respetadefinicionsancionesacumuladas.",".$acumulagoleadores.",".$acumulatablaconformada.",'".utf8_decode($observaciones)."',".$activo.")"; 
+values ('','".($descripcion)."',".$reftipotorneo.",".$reftemporadas.",".$refcategorias.",".$refdivisiones.",".$cantidadascensos.",".$cantidaddescensos.",".$respetadefiniciontipojugadores.",".$respetadefinicionhabilitacionestransitorias.",".$respetadefinicionsancionesacumuladas.",".$acumulagoleadores.",".$acumulatablaconformada.",'".($observaciones)."',".$activo.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2219,7 +2239,7 @@ return $res;
 function modificarTorneos($id,$descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo) { 
 $sql = "update dbtorneos 
 set 
-descripcion = '".utf8_decode($descripcion)."',reftipotorneo = ".$reftipotorneo.",reftemporadas = ".$reftemporadas.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",cantidadascensos = ".$cantidadascensos.",cantidaddescensos = ".$cantidaddescensos.",respetadefiniciontipojugadores = ".$respetadefiniciontipojugadores.",respetadefinicionhabilitacionestransitorias = ".$respetadefinicionhabilitacionestransitorias.",respetadefinicionsancionesacumuladas = ".$respetadefinicionsancionesacumuladas.",acumulagoleadores = ".$acumulagoleadores.",acumulatablaconformada = ".$acumulatablaconformada.",observaciones = '".utf8_decode($observaciones)."',activo = ".$activo." 
+descripcion = '".($descripcion)."',reftipotorneo = ".$reftipotorneo.",reftemporadas = ".$reftemporadas.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",cantidadascensos = ".$cantidadascensos.",cantidaddescensos = ".$cantidaddescensos.",respetadefiniciontipojugadores = ".$respetadefiniciontipojugadores.",respetadefinicionhabilitacionestransitorias = ".$respetadefinicionhabilitacionestransitorias.",respetadefinicionsancionesacumuladas = ".$respetadefinicionsancionesacumuladas.",acumulagoleadores = ".$acumulagoleadores.",acumulatablaconformada = ".$acumulatablaconformada.",observaciones = '".($observaciones)."',activo = ".$activo." 
 where idtorneo =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2279,7 +2299,7 @@ return $res;
 
 function insertarEquipos($refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo) { 
 $sql = "insert into dbequipos(idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,activo) 
-values ('',".$refcountries.",'".utf8_decode($nombre)."',".$refcategorias.",".$refdivisiones.",".$refcontactos.",'".utf8_decode($fechaalta)."','".utf8_decode($fachebaja)."',".$activo.")"; 
+values ('',".$refcountries.",'".($nombre)."',".$refcategorias.",".$refdivisiones.",".$refcontactos.",'".($fechaalta)."','".($fachebaja)."',".$activo.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2288,7 +2308,7 @@ return $res;
 function modificarEquipos($id,$refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo) { 
 $sql = "update dbequipos 
 set 
-refcountries = ".$refcountries.",nombre = '".utf8_decode($nombre)."',refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",refcontactos = ".$refcontactos.",fechaalta = '".utf8_decode($fechaalta)."',fachebaja = '".utf8_decode($fachebaja)."',activo = ".$activo." 
+refcountries = ".$refcountries.",nombre = '".($nombre)."',refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",refcontactos = ".$refcontactos.",fechaalta = '".($fechaalta)."',fachebaja = '".($fachebaja)."',activo = ".$activo." 
 where idequipo =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2395,6 +2415,19 @@ return $res;
 } 
 
 
+function traerCategoriaPorEquipo($idEquipo) { 
+$sql = "select 
+e.idequipo,
+cat.categoria
+from dbequipos e 
+inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias 
+where e.idequipo = ".$idEquipo."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 /* Fin */
 /* /* Fin de la Tabla: dbequipos*/
 
@@ -2402,7 +2435,7 @@ return $res;
 
 function insertarPuntobonus($descripcion,$cantidadfechas,$consecutivas,$comparacion,$valoracomparar,$puntosextra) { 
 $sql = "insert into tbpuntobonus(idpuntobonus,descripcion,cantidadfechas,consecutivas,comparacion,valoracomparar,puntosextra) 
-values ('','".utf8_decode($descripcion)."',".$cantidadfechas.",".$consecutivas.",'".$comparacion."',".$valoracomparar.",".$puntosextra.")"; 
+values ('','".($descripcion)."',".$cantidadfechas.",".$consecutivas.",'".$comparacion."',".$valoracomparar.",".$puntosextra.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2411,7 +2444,7 @@ return $res;
 function modificarPuntobonus($id,$descripcion,$cantidadfechas,$consecutivas,$comparacion,$valoracomparar,$puntosextra) { 
 $sql = "update tbpuntobonus 
 set 
-descripcion = '".utf8_decode($descripcion)."',cantidadfechas = ".$cantidadfechas.",consecutivas = ".$consecutivas.",comparacion = '".$comparacion."',valoracomparar = ".$valoracomparar.",puntosextra = ".$puntosextra." 
+descripcion = '".($descripcion)."',cantidadfechas = ".$cantidadfechas.",consecutivas = ".$consecutivas.",comparacion = '".$comparacion."',valoracomparar = ".$valoracomparar.",puntosextra = ".$puntosextra." 
 where idpuntobonus =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2456,7 +2489,7 @@ return $res;
 
 function insertarTiposanciones($expulsion,$amonestacion,$descripcion,$cantminfechas,$abreviatura,$cantmaxfechas,$cumpletodascategorias,$llevapendiente,$ocultardetallepublico) { 
 $sql = "insert into tbtiposanciones(idtiposancion,expulsion,amonestacion,descripcion,cantminfechas,abreviatura,cantmaxfechas,cumpletodascategorias,llevapendiente,ocultardetallepublico) 
-values ('',".$expulsion.",".$amonestacion.",'".utf8_decode($descripcion)."',".$cantminfechas.",'".utf8_decode($abreviatura)."',".$cantmaxfechas.",".$cumpletodascategorias.",".$llevapendiente.",".$ocultardetallepublico.")"; 
+values ('',".$expulsion.",".$amonestacion.",'".($descripcion)."',".$cantminfechas.",'".($abreviatura)."',".$cantmaxfechas.",".$cumpletodascategorias.",".$llevapendiente.",".$ocultardetallepublico.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2465,7 +2498,7 @@ return $res;
 function modificarTiposanciones($id,$expulsion,$amonestacion,$descripcion,$cantminfechas,$abreviatura,$cantmaxfechas,$cumpletodascategorias,$llevapendiente,$ocultardetallepublico) { 
 $sql = "update tbtiposanciones 
 set 
-expulsion = ".$expulsion.",amonestacion = ".$amonestacion.",descripcion = '".utf8_decode($descripcion)."',cantminfechas = ".$cantminfechas.",abreviatura = '".utf8_decode($abreviatura)."',cantmaxfechas = ".$cantmaxfechas.",cumpletodascategorias = ".$cumpletodascategorias.",llevapendiente = ".$llevapendiente.",ocultardetallepublico = ".$ocultardetallepublico." 
+expulsion = ".$expulsion.",amonestacion = ".$amonestacion.",descripcion = '".($descripcion)."',cantminfechas = ".$cantminfechas.",abreviatura = '".($abreviatura)."',cantmaxfechas = ".$cantmaxfechas.",cumpletodascategorias = ".$cumpletodascategorias.",llevapendiente = ".$llevapendiente.",ocultardetallepublico = ".$ocultardetallepublico." 
 where idtiposancion =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2512,7 +2545,7 @@ return $res;
 
 function insertarFechasexcluidas($fecha,$descripcion) { 
 $sql = "insert into tbfechasexcluidas(idfechaexcluida,fecha,descripcion) 
-values ('','".utf8_decode($fecha)."','".utf8_decode($descripcion)."')"; 
+values ('','".($fecha)."','".($descripcion)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2521,7 +2554,7 @@ return $res;
 function modificarFechasexcluidas($id,$fecha,$descripcion) { 
 $sql = "update tbfechasexcluidas 
 set 
-fecha = '".utf8_decode($fecha)."',descripcion = '".utf8_decode($descripcion)."' 
+fecha = '".($fecha)."',descripcion = '".($descripcion)."' 
 where idfechaexcluida =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2561,7 +2594,7 @@ return $res;
 
 function insertarEstadospartidos($descripcion,$defautomatica,$goleslocalauto,$goleslocalborra,$golesvisitanteauto,$golesvisitanteborra,$puntoslocal,$puntosvisitante,$finalizado,$ocultardetallepublico,$visibleparaarbitros) { 
 $sql = "insert into tbestadospartidos(idestadopartido,descripcion,defautomatica,goleslocalauto,goleslocalborra,golesvisitanteauto,golesvisitanteborra,puntoslocal,puntosvisitante,finalizado,ocultardetallepublico,visibleparaarbitros) 
-values ('','".utf8_decode($descripcion)."',".$defautomatica.",".$goleslocalauto.",".$goleslocalborra.",".$golesvisitanteauto.",".$golesvisitanteborra.",".$puntoslocal.",".$puntosvisitante.",".$finalizado.",".$ocultardetallepublico.",".$visibleparaarbitros.")"; 
+values ('','".($descripcion)."',".$defautomatica.",".$goleslocalauto.",".$goleslocalborra.",".$golesvisitanteauto.",".$golesvisitanteborra.",".$puntoslocal.",".$puntosvisitante.",".$finalizado.",".$ocultardetallepublico.",".$visibleparaarbitros.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2570,7 +2603,7 @@ return $res;
 function modificarEstadospartidos($id,$descripcion,$defautomatica,$goleslocalauto,$goleslocalborra,$golesvisitanteauto,$golesvisitanteborra,$puntoslocal,$puntosvisitante,$finalizado,$ocultardetallepublico,$visibleparaarbitros) { 
 $sql = "update tbestadospartidos 
 set 
-descripcion = '".utf8_decode($descripcion)."',defautomatica = ".$defautomatica.",goleslocalauto = ".$goleslocalauto.",goleslocalborra = ".$goleslocalborra.",golesvisitanteauto = ".$golesvisitanteauto.",golesvisitanteborra = ".$golesvisitanteborra.",puntoslocal = ".$puntoslocal.",puntosvisitante = ".$puntosvisitante.",finalizado = ".$finalizado.",ocultardetallepublico = ".$ocultardetallepublico.",visibleparaarbitros = ".$visibleparaarbitros." 
+descripcion = '".($descripcion)."',defautomatica = ".$defautomatica.",goleslocalauto = ".$goleslocalauto.",goleslocalborra = ".$goleslocalborra.",golesvisitanteauto = ".$golesvisitanteauto.",golesvisitanteborra = ".$golesvisitanteborra.",puntoslocal = ".$puntoslocal.",puntosvisitante = ".$puntosvisitante.",finalizado = ".$finalizado.",ocultardetallepublico = ".$ocultardetallepublico.",visibleparaarbitros = ".$visibleparaarbitros." 
 where idestadopartido =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2619,7 +2652,7 @@ return $res;
 
 function insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) {
 $sql = "insert into dbdefinicionescategoriastemporadas(iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,refdias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones)
-values ('',".$refcategorias.",".$reftemporadas.",".$cantmaxjugadores.",".$cantminjugadores.",".$refdias.",'".utf8_decode($hora)."',".$minutospartido.",".$cantidadcambiosporpartido.",".$conreingreso.",'".utf8_decode($observaciones)."')";
+values ('',".$refcategorias.",".$reftemporadas.",".$cantmaxjugadores.",".$cantminjugadores.",".$refdias.",'".($hora)."',".$minutospartido.",".$cantidadcambiosporpartido.",".$conreingreso.",'".($observaciones)."')";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -2628,7 +2661,7 @@ return $res;
 function modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) {
 $sql = "update dbdefinicionescategoriastemporadas
 set
-refcategorias = ".$refcategorias.",reftemporadas = ".$reftemporadas.",cantmaxjugadores = ".$cantmaxjugadores.",cantminjugadores = ".$cantminjugadores.",refdias = ".$refdias.",hora = '".utf8_decode($hora)."',minutospartido = ".$minutospartido.",cantidadcambiosporpartido = ".$cantidadcambiosporpartido.",conreingreso = ".$conreingreso.",observaciones = '".utf8_decode($observaciones)."'
+refcategorias = ".$refcategorias.",reftemporadas = ".$reftemporadas.",cantmaxjugadores = ".$cantmaxjugadores.",cantminjugadores = ".$cantminjugadores.",refdias = ".$refdias.",hora = '".($hora)."',minutospartido = ".$minutospartido.",cantidadcambiosporpartido = ".$cantidadcambiosporpartido.",conreingreso = ".$conreingreso.",observaciones = '".($observaciones)."'
 where iddefinicioncategoriatemporada =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -2684,7 +2717,7 @@ return $res;
 
 function insertarDefinicionescategoriastemporadastipojugador($refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones) { 
 $sql = "insert into dbdefinicionescategoriastemporadastipojugador(iddefinicionescategoriastemporadastipojugador,refdefinicionescategoriastemporadas,reftipojugadores,edadmaxima,edadminima,cantjugadoresporequipo,jugadorescancha,observaciones) 
-values ('',".$refdefinicionescategoriastemporadas.",".$reftipojugadores.",".$edadmaxima.",".$edadminima.",".$cantjugadoresporequipo.",".$jugadorescancha.",'".utf8_decode($observaciones)."')"; 
+values ('',".$refdefinicionescategoriastemporadas.",".$reftipojugadores.",".$edadmaxima.",".$edadminima.",".$cantjugadoresporequipo.",".$jugadorescancha.",'".($observaciones)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2693,7 +2726,7 @@ return $res;
 function modificarDefinicionescategoriastemporadastipojugador($id,$refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones) { 
 $sql = "update dbdefinicionescategoriastemporadastipojugador 
 set 
-refdefinicionescategoriastemporadas = ".$refdefinicionescategoriastemporadas.",reftipojugadores = ".$reftipojugadores.",edadmaxima = ".$edadmaxima.",edadminima = ".$edadminima.",cantjugadoresporequipo = ".$cantjugadoresporequipo.",jugadorescancha = ".$jugadorescancha.",observaciones = '".utf8_decode($observaciones)."' 
+refdefinicionescategoriastemporadas = ".$refdefinicionescategoriastemporadas.",reftipojugadores = ".$reftipojugadores.",edadmaxima = ".$edadmaxima.",edadminima = ".$edadminima.",cantjugadoresporequipo = ".$cantjugadoresporequipo.",jugadorescancha = ".$jugadorescancha.",observaciones = '".($observaciones)."' 
 where iddefinicionescategoriastemporadastipojugador =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -3005,6 +3038,38 @@ from
     tbcategorias cat ON cat.idtcategoria = c.refcategorias
 	where equ.idequipo = ".$refEquipos." and c.activo = 1
 order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerConectorActivosPorEquiposEdades($refEquipos) {
+$sql = "select 
+    min(year(now()) - year(jug.fechanacimiento)) as edadMinima,
+    max(year(now()) - year(jug.fechanacimiento)) as edadMaxima,
+    count(*) as cantidadJugadores,
+    round((max(year(now()) - year(jug.fechanacimiento)) + min(year(now()) - year(jug.fechanacimiento)))/2,2) as edadPromedio 
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	where equ.idequipo = ".$refEquipos." and c.activo = 1";
 $res = $this->query($sql,0);
 return $res;
 }

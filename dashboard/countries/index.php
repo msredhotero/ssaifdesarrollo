@@ -69,7 +69,7 @@ $cadRef3 	= $serviciosFunciones->devolverSelectBox($resTipoContacto,array(1),'')
 $refdescripcion2 = array(0 => $cadRef3);
 $refCampo2 	=  array("reftipocontactos");
 
-$formularioContacto 	= $serviciosFunciones->camposTabla("insertarContactos" ,$tabla2,$lblCambio2,$lblreemplazo2,$refdescripcion2,$refCampo2);
+$formularioContacto 	= $serviciosFunciones->camposTabla("insertarContactosId" ,$tabla2,$lblCambio2,$lblreemplazo2,$refdescripcion2,$refCampo2);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -374,7 +374,7 @@ if ($_SESSION['refroll_predio'] != 1) {
         <h4 class="modal-title" id="myModalLabel">Crear Contactos</h4>
       </div>
       <div class="modal-body">
-        <?php echo $formularioContacto; ?>
+        <?php echo str_replace('id="nombre"','id="nombre1"',$formularioContacto); ?>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="cargarContacto">Agregar</button>
@@ -705,29 +705,32 @@ $(document).ready(function(){
 				},
 				//una vez finalizado correctamente
 				success: function(data){
-
-					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Contacto</strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											url = "index.php";
-											$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
+					
+					if (!isNaN(data)) {
+						$(".alert").removeClass("alert-danger");
+						$(".alert").removeClass("alert-info");
+						$(".alert").addClass("alert-success");
+						$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Contacto</strong>. ');
+						$(".alert").delay(3000).queue(function(){
+							/*aca lo que quiero hacer 
+							  después de los 2 segundos de retraso*/
+							$(this).dequeue(); //continúo con el siguiente ítem en la cola
+							
+						});
+						$("#load").html('');
+						//url = "index.php";
+						//$(location).attr('href',url);
+						//alert('<option value="' + data.toString() + '">' + $('#reftipocontactos option:selected').text() + ', ' + $('#nombre1').val() + '</option>');
+						$('#buscarcontacto').prepend('<option value="' + data.toString() + '">' + $('#reftipocontactos option:selected').text() + ' - ' + $('#nombre1').val() + '</option>');
+						$('#buscarcontacto').trigger("chosen:updated");
+						
+						
+					} else {
+						$(".alert").removeClass("alert-danger");
+						$(".alert").addClass("alert-danger");
+						$(".alert").html('<strong>Error!</strong> '+data);
+						$("#load").html('');
+					}
 				},
 				//si ha ocurrido un error
 				error: function(){

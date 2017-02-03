@@ -19,15 +19,27 @@ require('fpdf.php');
 
 //$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
 
+$refTemporada = $serviciosReferencias->traerUltimaTemporada();
+
+if (mysql_num_rows($refTemporada)>0) {
+	$idTemporada = mysql_result($refTemporada,0,0);	
+} else {
+	$idTemporada = 0;
+}
+
 $id				=	$_GET['id'];
 
 $datos		=	$serviciosReferencias->traerConectorActivosPorEquipos($id);
+
+$datosEdades=	$serviciosReferencias->traerConectorActivosPorEquiposEdades($id);
 
 $equipo		=	$serviciosReferencias->traerEquiposPorEquipo($id);
 
 $idCategoria=	mysql_result($equipo,0,'refcategorias');
 
-$definiciones= $serviciosReferencias->traerDefinicionesPorTemporadaCategoria(1, $idCategoria);
+$definiciones=  $serviciosReferencias->traerDefinicionesPorTemporadaCategoria($idTemporada, $idCategoria);
+
+
 
 class PDF extends FPDF
 {
@@ -37,7 +49,7 @@ class PDF extends FPDF
 
 
 // Tabla coloreada
-function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refcategoria)
+function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refcategoria, $idTemporada)
 {
 
 	$this->Ln();
@@ -107,7 +119,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$cadCumpleEdad = "CUMPLE";	
 		} else {
 			// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
-			$habilitacionTransitoria = $servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], 1, $refcategoria, $id);
+			$habilitacionTransitoria = $servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], $idTemporada, $refcategoria, $row['refequipos']);
 			if (mysql_num_rows($habilitacionTransitoria)>0) {
 				$cadCumpleEdad = "HAB. TRANS.";	
 			} else {
@@ -121,7 +133,11 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 					if ($rowH['obligatoria'] == 'Si') {
 						$valorDocumentacion += 1;	
 					}
-					$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+					if ($rowH['contravalordesc'] == '') {
+						$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+					} else {
+						$cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
+					}
 				}
 			}
 			if ($cadErrorDoc == '') {
@@ -257,14 +273,14 @@ $pdf->Cell(75,5,'Country: '.mysql_result($equipo,0,'countrie'),1,0,'L',false);
 $pdf->Cell(50,5,'Categoria: '.mysql_result($equipo,0,'categoria'),1,0,'L',false);
 $pdf->Cell(45,5,'División: '.mysql_result($equipo,0,'division'),1,0,'L',false);
 $pdf->Ln();
-$pdf->Cell(35,5,'Jugadores: '.mysql_result($definiciones,0,'cantmaxjugadores'),1,0,'L',false);
-$pdf->Cell(75,5,'Edad Min.: '.mysql_result($definiciones,0,'edadminima'),1,0,'L',false);
-$pdf->Cell(50,5,'Edad Max.: '.mysql_result($definiciones,0,'edadmaxima'),1,0,'L',false);
-$pdf->Cell(45,5,'Promedio: '.number_format(mysql_result($definiciones,0,'promedio'),2,',','.'),1,0,'L',false);
+$pdf->Cell(35,5,'Jugadores: '.mysql_result($datosEdades,0,'cantidadJugadores'),1,0,'L',false);
+$pdf->Cell(75,5,'Edad Min.: '.mysql_result($datosEdades,0,'edadMinima'),1,0,'L',false);
+$pdf->Cell(50,5,'Edad Max.: '.mysql_result($datosEdades,0,'edadMaxima'),1,0,'L',false);
+$pdf->Cell(45,5,'Promedio: '.number_format(mysql_result($datosEdades,0,'edadPromedio'),2,',','.'),1,0,'L',false);
 
 $pdf->SetFont('Arial','',10);
 
-$pdf->ingresosFacturacion($headerFacturacion,$datos,$TotalFacturacion,$serviciosReferencias, $idCategoria);
+$pdf->ingresosFacturacion($headerFacturacion,$datos,$TotalFacturacion,$serviciosReferencias, $idCategoria, $idTemporada);
 
 $pdf->Ln();
 

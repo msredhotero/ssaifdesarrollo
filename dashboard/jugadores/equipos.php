@@ -27,6 +27,15 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Jugador
 
 $id	= $_GET['id'];
 
+
+$refTemporada = $serviciosReferencias->traerUltimaTemporada();
+
+if (mysql_num_rows($refTemporada)>0) {
+	$idTemporada = mysql_result($refTemporada,0,0);	
+} else {
+	$idTemporada = 0;
+}
+
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Jugador";
 
@@ -519,9 +528,26 @@ $(document).ready(function(){
 			},
 			success:  function (response) {
 				$(contenedor).html(response);
+				traerCategoriaPorEquipo($('#refequipos option:selected').val(), '#refcategorias');
 			}
 		});		
 	}
+	
+	function traerCategoriaPorEquipo(id, contenedor) {
+		$.ajax({
+			data:  {id: id, accion: 'traerCategoriaPorEquipo'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+			
+			},
+			success:  function (response) {
+				$(contenedor).html(response);
+			}
+		});		
+	}
+	
+	traerCategoriaPorEquipo($('#refequipos').val(), '#refcategorias');
 	
 	function verificaEdadCategoriaJugador(refjugador, refcategoria, tipoJugador, refequipo, reftemporada) {
 		$.ajax({
@@ -553,25 +579,35 @@ $(document).ready(function(){
 		});	
 	}
 	
-	verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),1);
+	verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
 	
 	$('#refcategorias').change(function(e) {
-        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),1);
+        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
     });
 	
 	$('#reftipojugadores').change(function(e) {
-        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),1);
+        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
     });
+	
+	$('#refequipos').change(function(e) {
+		traerCategoriaPorEquipo($(this).val(), '#refcategorias');
+	});
 	
 	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
 	
+	
+	
 	$('#esfusion').click(function() {
+		
 		if  ($('#esfusion').prop('checked') == false) {
+			
 			traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
 			$('#refcountriesauxDiv').hide();
 		} else {
+			traerCategoriaPorEquipo(0, '#refcategorias');
 			$('#refcountriesauxDiv').show();	
 		}
+		
 	});
 
 	
@@ -652,10 +688,62 @@ $(document).ready(function(){
 	
 	
 			
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
+				$("#refequipos").click(function(event) {
+					$("#refequipos").removeClass("alert-danger");
+					if ($(this).val() == "") {
+						$("#refequipos").attr("value","");
+						$("#refequipos").attr("placeholder","Ingrese el Equipo...");
+					}
+				});
+			
+				$("#refequipos").change(function(event) {
+					$("#refequipos").removeClass("alert-danger");
+					$("#refequipos").attr("placeholder","Ingrese el Equipo");
+				});
 	
-	?>
+			
+				$("#refcategorias").click(function(event) {
+					$("#refcategorias").removeClass("alert-danger");
+					if ($(this).val() == "") {
+						$("#refcategorias").attr("value","");
+						$("#refcategorias").attr("placeholder","Ingrese el categorias...");
+					}
+				});
+			
+				$("#refcategorias").change(function(event) {
+					$("#refcategorias").removeClass("alert-danger");
+					$("#refcategorias").attr("placeholder","Ingrese el categorias");
+				});
+						
+						
+			function validador(){
+
+					$error = "";
+			
+			
+				
+				
+			
+					
+			
+					if ($("#refcategorias").val() == null) {
+						$error = "Es obligatorio el campo categorias.";
+						alert($error);
+						$("#refcategorias").addClass("alert-danger");
+						$("#refcategorias").attr("placeholder",$error);
+					}
+					
+					
+					if ($("#refequipos").val() == null) {
+						$error = "Es obligatorio el campo Equipo.";
+						alert($error);
+						$("#refequipos").addClass("alert-danger");
+						$("#refequipos").attr("placeholder",$error);
+					}
+						
+						
+					return $error;
+			}
 	
 
 	

@@ -29,6 +29,13 @@ $id = $_GET['id'];
 
 $resResultado = $serviciosReferencias->traerEquiposPorId($id);
 
+$refTemporada = $serviciosReferencias->traerUltimaTemporada();
+
+if (mysql_num_rows($refTemporada)>0) {
+	$idTemporada = mysql_result($refTemporada,0,0);	
+} else {
+	$idTemporada = 0;
+}
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Equipo";
@@ -329,7 +336,7 @@ tr {
 										$cadCumpleEdad = "CUMPLE";	
 									} else {
 										// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
-										$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowC['refjugadores'], 1, $refcategoria,$id);
+										$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowC['refjugadores'], $idTemporada, $rowC['refcategorias'],$id);
 										if (mysql_num_rows($habilitacionTransitoria)>0) {
 											$cadCumpleEdad = "HAB. TRANS.";	
 										} else {
@@ -370,7 +377,7 @@ tr {
                                  	} 
 								?>
                                 <tr>
-                            	<td <?php echo $color; ?>><?php echo $rowC['nombrecompleto'].$habilitacion; ?></td>
+                            	<td <?php echo $color; ?>><?php echo $rowC['nombrecompleto']; ?></td>
                                 <td align="right" <?php echo $color; ?>><?php echo $rowC['nrodocumento']; ?></td>
                                 <td align="center" <?php echo $color; ?>><?php echo $rowC['tipojugador']; ?></td>
                                 <td <?php echo $color; ?>><?php echo $rowC['countrie']; ?></td>
@@ -579,14 +586,14 @@ $(document).ready(function(){
 	
 	}
 	
-	traerDefinicionesPorTemporadaCategoriaTipoJugador(1,$('#refcategorias').val(),$('#reftipojugadores').val());
+	traerDefinicionesPorTemporadaCategoriaTipoJugador(<?php echo $idTemporada; ?>,$('#refcategorias').val(),$('#reftipojugadores').val());
 	
 	$('#refcategorias').change(function() {
-		traerDefinicionesPorTemporadaCategoriaTipoJugador(1, $(this).val(), $('#reftipojugadores').val());
+		traerDefinicionesPorTemporadaCategoriaTipoJugador(<?php echo $idTemporada; ?>, $(this).val(), $('#reftipojugadores').val());
 	});
 	
 	$('#reftipojugadores').change(function() {
-		traerDefinicionesPorTemporadaCategoriaTipoJugador(1, $('#refcategorias').val(), $(this).val());
+		traerDefinicionesPorTemporadaCategoriaTipoJugador(<?php echo $idTemporada; ?>, $('#refcategorias').val(), $(this).val());
 	});
 	
 	$(document).on('click', '.varModificarJugador', function(e){
