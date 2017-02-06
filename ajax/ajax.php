@@ -35,6 +35,17 @@ switch ($accion) {
 
 /* PARA Tipocontactos */
 
+case 'insertarFixture':
+insertarFixture($serviciosReferencias);
+break;
+case 'modificarFixture':
+modificarFixture($serviciosReferencias);
+break;
+case 'eliminarFixture':
+eliminarFixture($serviciosReferencias);
+break; 
+
+
 case 'insertarContactos':
 insertarContactos($serviciosReferencias);
 break;
@@ -678,6 +689,93 @@ function eliminarConectorDefinitivamente($serviciosReferencias) {
 	
 	$res = $serviciosReferencias->eliminarConectorDefinitivamente($id); 
 	echo $res; 
+} 
+
+
+
+
+function insertarFixture($serviciosReferencias) {
+	$reftorneos = $_POST['reftorneos'];
+	$reffechas = $_POST['reffechas'];
+	$refconectorlocal = $_POST['refconectorlocal'];
+	$refconectorvisitante = $_POST['refconectorvisitante'];
+	$refarbitros = $_POST['refarbitros'];
+	$juez1 = $_POST['juez1'];
+	$juez2 = $_POST['juez2'];
+	$refcanchas = $_POST['refcanchas'];
+	$fecha = formatearFechas($_POST['fecha']);
+	$hora = $_POST['hora'];
+	$refestadospartidos = $_POST['refestadospartidos'];
+	$calificacioncancha = $_POST['calificacioncancha'];
+	$puntoslocal = $_POST['puntoslocal'];
+	$puntosvisita = $_POST['puntosvisita'];
+	$goleslocal = $_POST['goleslocal'];
+	$golesvisitantes = $_POST['golesvisitantes'];
+	$observaciones = $_POST['observaciones'];
+	
+	if (isset($_POST['publicar'])) {
+		$publicar = 1;
+	} else {
+		$publicar = 0;
+	}
+	
+	if ($fecha == '***') {
+		$res = $serviciosReferencias->insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
+		
+		if ((integer)$res > 0) {
+			echo '';
+		} else {
+			echo 'Huvo un error al insertar datos';
+		}
+	} else {
+		echo 'Formato de fecha erroneo';	
+	}
+}
+
+
+function modificarFixture($serviciosReferencias) {
+	$id = $_POST['id'];
+	$reftorneos = $_POST['reftorneos'];
+	$reffechas = $_POST['reffechas'];
+	$refconectorlocal = $_POST['refconectorlocal'];
+	$refconectorvisitante = $_POST['refconectorvisitante'];
+	$refarbitros = $_POST['refarbitros'];
+	$juez1 = $_POST['juez1'];
+	$juez2 = $_POST['juez2'];
+	$refcanchas = $_POST['refcanchas'];
+	$fecha = formatearFechas($_POST['fecha']);
+	$hora = $_POST['hora'];
+	$refestadospartidos = $_POST['refestadospartidos'];
+	$calificacioncancha = $_POST['calificacioncancha'];
+	$puntoslocal = $_POST['puntoslocal'];
+	$puntosvisita = $_POST['puntosvisita'];
+	$goleslocal = $_POST['goleslocal'];
+	$golesvisitantes = $_POST['golesvisitantes'];
+	$observaciones = $_POST['observaciones'];
+	
+	if (isset($_POST['publicar'])) {
+		$publicar = 1;
+	} else {
+		$publicar = 0;
+	}
+	
+	if ($fecha == '***') {
+		$res = $serviciosReferencias->modificarFixture($id,$reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
+		
+		if ($res == true) {
+			echo '';
+		} else {
+			echo 'Huvo un error al modificar datos';
+		}
+	} else {
+		echo 'Formato de fecha erroneo';	
+	}
+}
+
+function eliminarFixture($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarFixture($id);
+	echo $res;
 } 
 
 /**********************                        FIN                     ***********************************/

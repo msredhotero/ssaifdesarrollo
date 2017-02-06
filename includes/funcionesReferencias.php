@@ -2854,6 +2854,56 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: dbdefinicionessancionesacumuladastemporadas*/
 
+
+
+/* PARA Fechas */
+
+function insertarFechas($fecha) {
+$sql = "insert into tbfechas(idfecha,fecha)
+values ('','".utf8_decode($fecha)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarFechas($id,$fecha) {
+$sql = "update tbfechas
+set
+fecha = '".utf8_decode($fecha)."'
+where idfecha =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarFechas($id) {
+$sql = "delete from tbfechas where idfecha =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerFechas() {
+$sql = "select
+f.idfecha,
+f.fecha
+from tbfechas f
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerFechasPorId($id) {
+$sql = "select idfecha,fecha from tbfechas where idfecha =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbfechas*/
+
+
 /* PARA Conector */
 function actualizarConectoresPorJugador($refJugador, $idconector) {
 	$sql = "update dbconector set activo = 0 where refjugadores =".$refJugador." and idconector <> ".$idconector;
@@ -2993,6 +3043,96 @@ from
         inner join
     tbcategorias cat ON cat.idtcategoria = c.refcategorias
 	where jug.idjugador = ".$refJugador." and c.activo = 1
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
+function traerConectorCategoriasActivos($refCategorias) {
+$sql = "select 
+    c.idconector,
+	cat.categoria,
+	equ.nombre as equipo,
+	co.nombre as countrie,
+	tip.tipojugador,
+	(case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	jug.nrodocumento
+    
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	where cat.idtcategoria = ".$refCategorias." and c.activo = 1
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
+function traerConectorTodosActivos() {
+$sql = "select 
+    c.idconector,
+	cat.categoria,
+	equ.nombre as equipo,
+	co.nombre as countrie,
+	tip.tipojugador,
+	(case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	jug.nrodocumento
+    
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	where c.activo = 1
 order by 1";
 $res = $this->query($sql,0);
 return $res;
@@ -3152,6 +3292,132 @@ $res = $this->query($sql,0);
 return $res;
 } 
 /* /* Fin de la Tabla: dbconector*/
+
+
+
+/* PARA Fixture */
+
+function insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar) {
+$sql = "insert into dbfixture(idfixture,reftorneos,reffechas,refconectorlocal,refconectorvisitante,refarbitros,juez1,juez2,refcanchas,fecha,hora,refestadospartidos,calificacioncancha,puntoslocal,puntosvisita,goleslocal,golesvisitantes,observaciones,publicar)
+values ('',".$reftorneos.",".$reffechas.",".$refconectorlocal.",".$refconectorvisitante.",".$refarbitros.",'".utf8_decode($juez1)."','".utf8_decode($juez2)."',".$refcanchas.",'".utf8_decode($fecha)."',".$hora.",".$refestadospartidos.",".$calificacioncancha.",".$puntoslocal.",".$puntosvisita.",".$goleslocal.",".$golesvisitantes.",'".utf8_decode($observaciones)."',".$publicar.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarFixture($id,$reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar) {
+$sql = "update dbfixture
+set
+reftorneos = ".$reftorneos.",reffechas = ".$reffechas.",refconectorlocal = ".$refconectorlocal.",refconectorvisitante = ".$refconectorvisitante.",refarbitros = ".$refarbitros.",juez1 = '".utf8_decode($juez1)."',juez2 = '".utf8_decode($juez2)."',refcanchas = ".$refcanchas.",fecha = '".utf8_decode($fecha)."',hora = ".$hora.",refestadospartidos = ".$refestadospartidos.",calificacioncancha = ".$calificacioncancha.",puntoslocal = ".$puntoslocal.",puntosvisita = ".$puntosvisita.",goleslocal = ".$goleslocal.",golesvisitantes = ".$golesvisitantes.",observaciones = '".utf8_decode($observaciones)."',publicar = ".$publicar."
+where idfixture =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarFixture($id) {
+$sql = "delete from dbfixture where idfixture =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerFixture() {
+$sql = "select
+f.idfixture,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refarbitros,
+f.juez1,
+f.juez2,
+f.refcanchas,
+f.fecha,
+f.hora,
+f.refestadospartidos,
+f.calificacioncancha,
+f.puntoslocal,
+f.puntosvisita,
+f.goleslocal,
+f.golesvisitantes,
+f.observaciones,
+f.publicar
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbconector conl ON conl.idconector = f.refconectorlocal
+inner join dbconector conv ON conv.idconector = f.refconectorvisitante
+inner join dbarbitros arb ON arb.idarbitro = f.refarbitros
+inner join tbcanchas can ON can.idcancha = f.refcanchas
+inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerFixtureTodo() {
+$sql = "select
+f.idfixture,
+el.nombre as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+ev.nombre as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.juez1,
+f.juez2,
+can.nombre as canchas,
+fec.fecha,
+f.fecha,
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.goleslocal,
+f.golesvisitantes,
+f.observaciones,
+f.publicar,
+f.refcanchas,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refestadospartidos,
+f.refarbitros
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbconector conl ON conl.idconector = f.refconectorlocal
+inner join dbequipos el ON el.idequipo = conl.refequipos
+inner join dbconector conv ON conv.idconector = f.refconectorvisitante
+inner join dbequipos ev ON ev.idequipo = conv.refequipos
+inner join dbarbitros arb ON arb.idarbitro = f.refarbitros
+inner join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerFixturePorId($id) {
+$sql = "select idfixture,reftorneos,reffechas,refconectorlocal,refconectorvisitante,refarbitros,juez1,juez2,refcanchas,fecha,hora,refestadospartidos,calificacioncancha,puntoslocal,puntosvisita,goleslocal,golesvisitantes,observaciones,publicar from dbfixture where idfixture =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbfixture*/
+
 
 
 /************  FUNCIONES PARA LA PARTE ADMINISTRATIVA  *********************/
