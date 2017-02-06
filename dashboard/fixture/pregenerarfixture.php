@@ -8,28 +8,21 @@ if (!isset($_SESSION['usua_predio']))
 } else {
 
 
-include ('../../includes/funcionesUsuarios.php');
 include ('../../includes/funciones.php');
+include ('../../includes/funcionesUsuarios.php');
 include ('../../includes/funcionesHTML.php');
-include ('../../includes/funcionesJugadores.php');
-include ('../../includes/funcionesEquipos.php');
-include ('../../includes/funcionesGrupos.php');
-include ('../../includes/funcionesZonasEquipos.php');
+include ('../../includes/funcionesReferencias.php');
 include ('../../includes/generadorfixturefijo.php');
 
-$serviciosUsuario 	= new ServiciosUsuarios();
-$serviciosHTML 		= new ServiciosHTML();
-$serviciosFunciones = new Servicios();
-$serviciosJugadores = new ServiciosJ();
-$serviciosEquipos	= new ServiciosE();
-$serviciosGrupos	= new ServiciosG();
-$serviciosZonasEquipos	= new ServiciosZonasEquipos();
-$Generar = new GenerarFixture();
+$serviciosFunciones 	= new Servicios();
+$serviciosUsuario 		= new ServiciosUsuarios();
+$serviciosHTML 			= new ServiciosHTML();
+$serviciosReferencias 	= new ServiciosReferencias();
 
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_predio'],"Fixture",$_SESSION['refroll_predio'],$_SESSION['torneo_predio']);
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
 
 
 $serviciosFunciones->modificarTodasLetra();
@@ -38,71 +31,54 @@ $serviciosFunciones->modificarTodasLetra();
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbfixture";
 
-$lblCambio	 	= array("reftorneoge_a","resultado_a","reftorneoge_b","resultado_b","fechajuego","refFecha","cancha");
-$lblreemplazo	= array("Zona-Equipo 1","Resultado 1","Zona-Equipo 2","Resultado 2","Fecha Juego","Fecha","Cancha");
+$lblCambio	 	= array("refconectorlocal","goleslocal","refconectorvisitante","golesvisitantes","fecha","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos");
+$lblreemplazo	= array("Equipo Local","Resultado 1","Equipo Visitante","Resultado 2","Fecha Juego","Fecha","Cancha","Arbitros","Estados Partidos","Torneo");
 
-$resZonasEquipos 	= $serviciosZonasEquipos->TraerEquiposZonasPorZonas($_GET['idzona']);
-$resZonasEquipos2 	= $serviciosZonasEquipos->TraerEquiposZonasPorZonas($_GET['idzona']);
+$resConectorL	=	$serviciosReferencias->traerEquipos();
+$cadRef			=	$serviciosFunciones->devolverSelectBox($resConectorL,array(1,2)," - ");
 
-$cadRef = '';
-while ($rowTT = mysql_fetch_array($resZonasEquipos)) {
-	$cadRef = $cadRef.'<option value="'.$rowTT[0].'">'.$rowTT[1].' - '.$rowTT[2].'</option>';
-	
-}
+$resFechas		=	$serviciosReferencias->traerFechas();
+$cadRef2		=	$serviciosFunciones->devolverSelectBox($resFechas,array(1),'');
 
+$resCanchas		=	$serviciosReferencias->traerCanchas();
+$cadRef3		=	$serviciosFunciones->devolverSelectBox($resCanchas,array(1),'');
 
-$resFechas 	= $serviciosFunciones->TraerFecha();
+$resArbitros	=	$serviciosReferencias->traerArbitros();
+$cadRef4		=	$serviciosFunciones->devolverSelectBox($resArbitros,array(1),'');
 
-$cadRef2 = '';
-while ($rowZ = mysql_fetch_array($resFechas)) {
-	$cadRef2 = $cadRef2.'<option value="'.$rowZ[0].'">'.$rowZ[1].'</option>';
-	
-}
+$resEstadosP	=	$serviciosReferencias->traerEstadospartidos();
+$cadRef5		=	'<option value="">-- seleccionar --</option>';
+$cadRef5		.=	$serviciosFunciones->devolverSelectBox($resEstadosP,array(1),'');
 
-$resCanchas 	= $serviciosFunciones->TraerCanchas();
+$resTorneos		=	$serviciosReferencias->traerTorneos();
+$cadRef6		=	$serviciosFunciones->devolverSelectBox($resTorneos,array(1,2),' - ');
 
-$cadRef3 = '';
-while ($rowC = mysql_fetch_array($resCanchas)) {
-	$cadRef3 = $cadRef3.'<option value="'.$rowC[0].'">'.$rowC[1].'</option>';
-	
-}
-
-
-$resHorarios 	= $serviciosFunciones->TraerHorarios($_SESSION['idtorneo_predio']);
-
-$cadRef4 = '';
-if (mysql_num_rows($resHorarios)>0) {
-
-while ($rowH = mysql_fetch_array($resHorarios)) {
-	$cadRef4 = $cadRef4.'<option value="'.$rowH[0].'">'.$rowH[1].'</option>';
-	
-}
-} else {
-	$cadRef4 = $cadRef4.'<option value=""></option>';
-}
-
-
-$refdescripcion = array(0 => $cadRef,1=>$cadRef,2=>$cadRef2,3=>$cadRef3,4=>$cadRef4);
-$refCampo	 	= array("reftorneoge_a","reftorneoge_b","refFecha","cancha","Hora"); 
+$refdescripcion = array(0 => $cadRef,1=>$cadRef,2=>$cadRef2,3=>$cadRef3,4=>$cadRef4,5=>$cadRef5,6=>$cadRef6);
+$refCampo	 	= array("refconectorlocal","refconectorvisitante","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos"); 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
 
 
 /////////////////////// Opciones para la creacion del view  /////////////////////
-$cabeceras 		= "	<th>Equipo 1</th>
-				<th>Resultado 1</th>
-				<th>Resultado 2</th>
-				<th>Equipo 2</th>
-				<th>Zona</th>
+$cabeceras 		= "	<th>Equipo Local</th>
+				<th>Resultado Local</th>
+				<th>Resultado Visitante</th>
+				<th>Equipo Visitante</th>
+				<th>Categoria</th>
+				<th>Arbitros</th>
+				<th>Juez 1</th>
+				<th>Juez 2</th>
+				<th>Cancha</th>
 				<th>Fecha Juego</th>
 				<th>Fecha</th>
-				<th>Hora</th>";
+				<th>Hora</th>
+				<th>Estado</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosZonasEquipos->TraerTodoFixture(),8);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerFixtureTodo(),13);
 
 $fixtureGenerardo = $Generar->Generar360($_GET['idtorneo'],$_GET['idzona']);
 
