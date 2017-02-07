@@ -569,6 +569,7 @@ function insertarConectorAjax($serviciosReferencias) {
 	$refequipos = $_POST['refequipos']; 
 	$refcountries = $_POST['refcountries']; 
 	$refcategorias = $_POST['refcategorias']; 
+	$reftemporada = $_POST['reftemporada']; 
 	
 	if (isset($_POST['esfusion'])) { 
 		$refcountries = $_POST['refcountriesaux'];
@@ -586,9 +587,12 @@ function insertarConectorAjax($serviciosReferencias) {
 	
 	///  verifico si cumple con la edad 	1=ok, 0=mal	/////
 	$vEdad = $serviciosReferencias->verificaEdadCategoriaJugador($refjugadores, $refcategorias, $reftipojugadores);
-
+	
+	// Verifico si tiene una hab. transitoria
+	$vHabTrns = $serviciosReferencias->verificaHabilitacionDeportiva($refjugadores, $refcategorias, $reftemporada, $refequipos);
+	
 	if ($existeJugador == 0) {
-		if ($vEdad == 1) {
+		if (($vEdad == 1) || ($vHabTrns == 1)) {
 			$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
 			if ((integer)$res > 0) { 
 				

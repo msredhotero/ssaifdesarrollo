@@ -370,7 +370,7 @@ tr {
 								$cantidad += 1;
 							?>
                             	<?php 
-									if ($habilitacion == 'HAB.') { 
+									if (($habilitacion == 'HAB.') || ($cadCumpleEdad == 'HAB. TRANS.')) { 
                             			$color = '';		
                                  	} else { 
                                 		$color = 'style="background-color: #FE2E2E; color: #FFF;"';
@@ -521,7 +521,7 @@ $(document).ready(function(){
 
 
 
-	function agregarJugador(refjugadores, reftipojugadores, refequipos, refcountries, refcategorias, esfusion, refcountriesaux) {
+	function agregarJugador(refjugadores, reftipojugadores, refequipos, refcountries, refcategorias, esfusion, refcountriesaux, reftemporada) {
 		
 		$.ajax({
 			data:  {refjugadores: refjugadores, 
@@ -531,6 +531,7 @@ $(document).ready(function(){
 					refcategorias: refcategorias, 
 					esfusion: esfusion, 
 					refcountriesaux: refcountriesaux, 
+					reftemporada: reftemporada,
 					accion: 'insertarConectorAjax'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
@@ -560,7 +561,7 @@ $(document).ready(function(){
 	}
 	
 	$(document).on('click', '.agregarJugador', function(e){
-		agregarJugador($(this).attr("id"), $('#reftipojugadores').val(), <?php echo $id; ?>, <?php echo mysql_result($resResultado,0,'refcountries'); ?>, $('#refcategorias').val(), $('#refcategorias').prop('checked'), $('#refcountriesaux').val());
+		agregarJugador($(this).attr("id"), $('#reftipojugadores').val(), <?php echo $id; ?>, <?php echo mysql_result($resResultado,0,'refcountries'); ?>, $('#refcategorias').val(), $('#refcategorias').prop('checked'), $('#refcountriesaux').val(), <?php echo $idTemporada; ?>);
 	});//fin del boton modificar
 	
 	function traerDefinicionesPorTemporadaCategoriaTipoJugador(resTemporada, resCategoria, resTipoJugador) {
