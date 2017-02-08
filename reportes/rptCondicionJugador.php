@@ -122,6 +122,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$habilitacionTransitoria = $servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], $idTemporada, $refcategoria, $row['refequipos']);
 			if (mysql_num_rows($habilitacionTransitoria)>0) {
 				$cadCumpleEdad = "HAB. TRANS.";	
+				$habilitacion= 'HAB.';	
 			} else {
 				$cadCumpleEdad = "NO CUMPLE";	
 			}
@@ -131,7 +132,12 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			while ($rowH = mysql_fetch_array($documentaciones)) {
 				if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
 					if ($rowH['obligatoria'] == 'Si') {
-						$valorDocumentacion += 1;	
+						$valorDocumentacion += 1;
+						if (mysql_num_rows($servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($row['refjugadores'],$rowH['refdocumentaciones']))>0) {
+							$habilitacion= 'HAB.';	
+						} else {
+							$habilitacion= 'INHAB.';	
+						}
 					}
 					if ($rowH['contravalordesc'] == '') {
 						$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';

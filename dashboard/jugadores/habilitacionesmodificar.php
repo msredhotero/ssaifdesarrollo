@@ -220,6 +220,26 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});//fin del boton modificar
 	
+	function traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion(idDocumentacion,contenedor) {
+		$.ajax({
+			data:  {id: idDocumentacion, accion: 'traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+			
+			},
+			success:  function (response) {
+				$(contenedor).html(response);
+			}
+		});	
+	}
+	
+	traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion( $('#refdocumentaciones').val() ,'#refmotivoshabilitacionestransitorias' );
+
+	$('#refdocumentaciones').change(function() {
+		traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($(this).val(),'#refmotivoshabilitacionestransitorias');
+	});
+	
 	$('#documentaciones').click(function(event){
 		 
 		url = "documentaciones.php?id="+<?php echo $id; ?>;

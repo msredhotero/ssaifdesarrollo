@@ -243,6 +243,10 @@ case 'eliminarMotivoshabilitacionestransitorias':
 eliminarMotivoshabilitacionestransitorias($serviciosReferencias); 
 break; 
 
+case 'traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion':
+	traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($serviciosReferencias,$serviciosFunciones);
+	break;
+	
 case 'insertarTipodocumentos': 
 insertarTipodocumentos($serviciosReferencias); 
 break; 
@@ -311,8 +315,8 @@ break;
 case 'traerEquiposPorCountries':
 	traerEquiposPorCountries($serviciosFunciones,$serviciosReferencias);
 	break;
-case 'traerCategoriaPorEquipo':
-	traerCategoriaPorEquipo($serviciosFunciones,$serviciosReferencias);
+case 'traerEquipoPorCategoria':
+	traerEquipoPorCategoria($serviciosFunciones,$serviciosReferencias);
 	break;
 
 case 'insertarPuntobonus': 
@@ -445,6 +449,13 @@ function formatearFechas($fecha) {
 		}
 	}
 	return $fecha;
+}
+
+function formatearEntero($entero) {
+	if ($entero == '') {
+		return 'NULL';	
+	}
+	return $entero;
 }
 
 /*****         FUNCIONES       **********/
@@ -1690,7 +1701,9 @@ $inhabilita	= 1;
 $inhabilita = 0; 
 } 
 $descripcion = $_POST['descripcion']; 
-$res = $serviciosReferencias->insertarMotivoshabilitacionestransitorias($inhabilita,$descripcion); 
+$refdocumentaciones = $_POST['refdocumentaciones'];
+$res = $serviciosReferencias->insertarMotivoshabilitacionestransitorias($inhabilita,$descripcion,$refdocumentaciones); 
+
 if ((integer)$res > 0) { 
 echo ''; 
 } else { 
@@ -1705,7 +1718,8 @@ $inhabilita	= 1;
 $inhabilita = 0; 
 } 
 $descripcion = $_POST['descripcion']; 
-$res = $serviciosReferencias->modificarMotivoshabilitacionestransitorias($id,$inhabilita,$descripcion); 
+$refdocumentaciones = $_POST['refdocumentaciones'];
+$res = $serviciosReferencias->modificarMotivoshabilitacionestransitorias($id,$inhabilita,$descripcion,$refdocumentaciones); 
 if ($res == true) { 
 echo ''; 
 } else { 
@@ -1717,6 +1731,15 @@ $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarMotivoshabilitacionestransitorias($id); 
 echo $res; 
 } 
+
+function traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($serviciosReferencias,$serviciosFunciones) {
+	$id = 	$_POST['id']; 
+	$res =  $serviciosReferencias->traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($id);
+	$cadRef = $serviciosFunciones->devolverSelectBox($res,array(2,1),' - inhabilita:');
+	
+	echo $cadRef;
+	
+}
 
 function insertarTipodocumentos($serviciosReferencias) { 
 $tipodocumento = $_POST['tipodocumento']; 
@@ -2000,10 +2023,11 @@ function traerEquiposPorCountries($serviciosFunciones,$serviciosReferencias) {
 	echo $cadRefEquipo;	
 }
 
-function traerCategoriaPorEquipo($serviciosFunciones,$serviciosReferencias) {
+function traerEquipoPorCategoria($serviciosFunciones,$serviciosReferencias) {
 	$id = $_POST['id']; 
+	$idCountrie = $_POST['idCountrie']; 
 	
-	$resCategoria		=	$serviciosReferencias->traerCategoriaPorEquipo($id);
+	$resCategoria		=	$serviciosReferencias->traerEquipoPorCategoriaCountrie($id, $idCountrie);
 	$cadRefCategoria	=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
 	
 	echo $cadRefCategoria;	
@@ -2517,7 +2541,7 @@ function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferenci
 	$refjugadores = $_POST['refjugadores']; 
 	$refdocumentaciones = $_POST['refdocumentacionesB']; 
 	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasB']; 
-	$refequipos = $_POST['refequiposB']; 
+	$refequipos = formatearEntero(''); 
 	$refcategorias = $_POST['refcategoriasB']; 
 	$fechalimite = formatearFechas($_POST['fechalimiteB']); 
 	$observaciones = $_POST['observacionesB']; 

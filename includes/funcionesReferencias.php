@@ -1605,22 +1605,24 @@ return $res;
 
 /* PARA Motivoshabilitacionestransitorias */
 
-function insertarMotivoshabilitacionestransitorias($inhabilita,$descripcion) { 
-$sql = "insert into tbmotivoshabilitacionestransitorias(idmotivoshabilitacionestransitoria,inhabilita,descripcion) 
-values ('',".$inhabilita.",'".($descripcion)."')"; 
-$res = $this->query($sql,1); 
-return $res; 
-} 
+
+function insertarMotivoshabilitacionestransitorias($inhabilita,$descripcion,$refdocumentaciones) {
+$sql = "insert into tbmotivoshabilitacionestransitorias(idmotivoshabilitacionestransitoria,inhabilita,descripcion,refdocumentaciones)
+values ('',".$inhabilita.",'".($descripcion)."',".$refdocumentaciones.")";
+$res = $this->query($sql,1);
+return $res;
+}
 
 
-function modificarMotivoshabilitacionestransitorias($id,$inhabilita,$descripcion) { 
-$sql = "update tbmotivoshabilitacionestransitorias 
-set 
-inhabilita = ".$inhabilita.",descripcion = '".($descripcion)."' 
-where idmotivoshabilitacionestransitoria =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function modificarMotivoshabilitacionestransitorias($id,$inhabilita,$descripcion,$refdocumentaciones) {
+$sql = "update tbmotivoshabilitacionestransitorias
+set
+inhabilita = ".$inhabilita.",descripcion = '".($descripcion)."',refdocumentaciones = ".$refdocumentaciones."
+where idmotivoshabilitacionestransitoria =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
 
 
 function eliminarMotivoshabilitacionestransitorias($id) { 
@@ -1634,8 +1636,11 @@ function traerMotivoshabilitacionestransitorias() {
 $sql = "select 
 m.idmotivoshabilitacionestransitoria,
 (case when m.inhabilita = 1 then 'Si' else 'No' end) as inhabilita,
-m.descripcion
+m.descripcion,
+doc.descripcion as documentacion,
+m.refdocumentaciones
 from tbmotivoshabilitacionestransitorias m 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = m.refdocumentaciones 
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -1646,7 +1651,8 @@ function traerMotivoshabilitacionestransitoriasDeportivas($id) {
 $sql = "select 
 m.idmotivoshabilitacionestransitoria,
 (case when m.inhabilita = 1 then 'Si' else 'No' end) as inhabilita,
-m.descripcion
+m.descripcion,
+m.refdocumentaciones
 from tbmotivoshabilitacionestransitorias m 
 where m.descripcion like '".$id."'
 order by 1"; 
@@ -1668,8 +1674,21 @@ return $res;
 } 
 
 
+function traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($idDocumentacion) { 
+$sql = "select 
+m.idmotivoshabilitacionestransitoria,
+(case when m.inhabilita = 1 then 'Si' else 'No' end) as inhabilita,
+m.descripcion
+from tbmotivoshabilitacionestransitorias m 
+where m.refdocumentaciones = ".$idDocumentacion." 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 function traerMotivoshabilitacionestransitoriasPorId($id) { 
-$sql = "select idmotivoshabilitacionestransitoria,inhabilita,descripcion from tbmotivoshabilitacionestransitorias where idmotivoshabilitacionestransitoria =".$id; 
+$sql = "select idmotivoshabilitacionestransitoria,inhabilita,descripcion,refdocumentaciones from tbmotivoshabilitacionestransitorias where idmotivoshabilitacionestransitoria =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -1854,7 +1873,7 @@ inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
 inner join dbcountries co ON co.idcountrie = jug.refcountries 
 inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
 inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
-inner join dbequipos equ ON equ.idequipo = j.refequipos 
+left join dbequipos equ ON equ.idequipo = j.refequipos 
 inner join dbcountries co ON co.idcountrie = equ.refcountries 
 inner join tbcategorias ca ON ca.idtcategoria = equ.refcategorias 
 inner join tbdivisiones di ON di.iddivision = equ.refdivisiones 
@@ -1887,7 +1906,7 @@ inner join tbtemporadas tem ON tem.idtemporadas = j.reftemporadas
 inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
 inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
 inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
-inner join dbequipos equ ON equ.idequipo = j.refequipos 
+left join dbequipos equ ON equ.idequipo = j.refequipos 
 inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
 where j.refjugadores = ".$idJugador."
 order by 1"; 
@@ -1950,13 +1969,44 @@ inner join tbtemporadas tem ON tem.idtemporadas = j.reftemporadas
 inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
 inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
 inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
-inner join dbequipos equ ON equ.idequipo = j.refequipos 
+left join dbequipos equ ON equ.idequipo = j.refequipos 
 inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
-where j.refjugadores = ".$idJugador." and doc.descripcion = 'Edad'
+where j.refjugadores = ".$idJugador." and doc.descripcion <> 'Edad'
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
+
+
+
+function traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($idJugador, $idDocumentacion) { 
+$sql = "select 
+j.iddbjugadormotivohabilitaciontransitoria,
+tem.temporada,
+doc.descripcion as documentacion,
+mot.descripcion as motivos,
+equ.nombre as equipo,
+cat.categoria,
+j.reftemporadas,
+j.refjugadores,
+j.refdocumentaciones,
+j.refmotivoshabilitacionestransitorias,
+j.refequipos,
+j.refcategorias,
+j.fechalimite,
+j.observaciones
+from dbjugadoresmotivoshabilitacionestransitorias j 
+inner join tbtemporadas tem ON tem.idtemporadas = j.reftemporadas 
+inner join dbjugadores jug ON jug.idjugador = j.refjugadores 
+inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
+inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
+left join dbequipos equ ON equ.idequipo = j.refequipos 
+inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
+where j.refjugadores = ".$idJugador." and doc.descripcion <> 'Edad' and doc.iddocumentacion = ".$idDocumentacion."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+}
 
 
 function traerJugadoresmotivoshabilitacionestransitoriasPorId($id) { 
@@ -2425,6 +2475,19 @@ cat.categoria
 from dbequipos e 
 inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias 
 where e.idequipo = ".$idEquipo."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerEquipoPorCategoriaCountrie($idCategoria, $idCountrie) { 
+$sql = "select 
+e.idequipo,
+e.nombre
+from dbequipos e 
+inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias 
+where cat.idtcategoria = ".$idCategoria." and e.refcountries = ".$idCountrie."
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 

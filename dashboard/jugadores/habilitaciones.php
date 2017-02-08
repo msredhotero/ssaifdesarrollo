@@ -619,7 +619,26 @@ $(document).ready(function(){
 			}
 		});		
 	}
+	
+	function traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion(idDocumentacion,contenedor) {
+		$.ajax({
+			data:  {id: idDocumentacion, accion: 'traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+			
+			},
+			success:  function (response) {
+				$(contenedor).html(response);
+			}
+		});	
+	}
+	
+	traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion( $('#refdocumentacionesB').val() ,'#refmotivoshabilitacionestransitoriasB' );
 
+	$('#refdocumentacionesB').change(function() {
+		traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($(this).val(),'#refmotivoshabilitacionestransitoriasB');
+	});
 	
 	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequiposA');
 	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequiposB');

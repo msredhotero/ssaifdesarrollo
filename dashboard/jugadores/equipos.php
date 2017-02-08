@@ -528,14 +528,13 @@ $(document).ready(function(){
 			},
 			success:  function (response) {
 				$(contenedor).html(response);
-				traerCategoriaPorEquipo($('#refequipos option:selected').val(), '#refcategorias');
 			}
 		});		
 	}
 	
-	function traerCategoriaPorEquipo(id, contenedor) {
+	function traerEquipoPorCategoria(id, contenedor, idCountrie) {
 		$.ajax({
-			data:  {id: id, accion: 'traerCategoriaPorEquipo'},
+			data:  {id: id,idCountrie: idCountrie, accion: 'traerEquipoPorCategoria'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
@@ -547,7 +546,7 @@ $(document).ready(function(){
 		});		
 	}
 	
-	traerCategoriaPorEquipo($('#refequipos').val(), '#refcategorias');
+	traerEquipoPorCategoria($('#refcategorias').val(), '#refequipos', <?php echo mysql_result($resResultado,0,'refcountries'); ?>);
 	
 	function verificaEdadCategoriaJugador(refjugador, refcategoria, tipoJugador, refequipo, reftemporada) {
 		$.ajax({
@@ -583,15 +582,17 @@ $(document).ready(function(){
 	
 	$('#refcategorias').change(function(e) {
         verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
+		if  ($('#esfusion').prop('checked') == false) {
+			traerEquipoPorCategoria($(this).val(), '#refequipos', <?php echo mysql_result($resResultado,0,'refcountries'); ?>);
+		} else {
+			traerEquipoPorCategoria($(this).val(), '#refequipos', $('#refcountriesaux').val());
+		}
     });
 	
 	$('#reftipojugadores').change(function(e) {
         verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
     });
 	
-	$('#refequipos').change(function(e) {
-		traerCategoriaPorEquipo($(this).val(), '#refcategorias');
-	});
 	
 	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
 	
@@ -604,7 +605,7 @@ $(document).ready(function(){
 			traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
 			$('#refcountriesauxDiv').hide();
 		} else {
-			traerCategoriaPorEquipo(0, '#refcategorias');
+			traerEquipoPorCategoria($(this).val(), '#refequipos', $('#refcountriesaux').val());
 			$('#refcountriesauxDiv').show();	
 		}
 		

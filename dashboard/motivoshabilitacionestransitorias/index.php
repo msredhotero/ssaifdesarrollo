@@ -41,14 +41,14 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "tbmotivoshabilitacionestransitorias";
 
-$lblCambio	 	= array("inhabilita");
-$lblreemplazo	= array("Inhabilita al vto.");
+$lblCambio	 	= array("inhabilita","refdocumentaciones");
+$lblreemplazo	= array("Inhabilita al vto.","Documentacion");
 
+$resoDoc 	= $serviciosReferencias->traerDocumentaciones();
+$cadRef 	= $serviciosFunciones->devolverSelectBox($resoDoc,array(1),'');
 
-$cadRef 	= '';
-
-$refdescripcion = array();
-$refCampo 	=  array();
+$refdescripcion = array(0=>$cadRef);
+$refCampo 	=  array("refdocumentaciones");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -56,7 +56,8 @@ $refCampo 	=  array();
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
 $cabeceras 		= "	<th>Inhabilita al vto.</th>
-					<th>Descripcion</th>";
+					<th>Descripcion</th>
+					<th>Documentacion</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -65,7 +66,7 @@ $cabeceras 		= "	<th>Inhabilita al vto.</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerMotivoshabilitacionestransitorias(),2);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerMotivoshabilitacionestransitorias(),3);
 
 
 

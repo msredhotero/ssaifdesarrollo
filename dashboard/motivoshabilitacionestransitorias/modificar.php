@@ -48,14 +48,14 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "tbmotivoshabilitacionestransitorias";
 
-$lblCambio	 	= array("inhabilita");
-$lblreemplazo	= array("Inhabilita al vto.");
+$lblCambio	 	= array("inhabilita","refdocumentaciones");
+$lblreemplazo	= array("Inhabilita al vto.","Documentacion");
 
+$resoDoc 	= $serviciosReferencias->traerDocumentaciones();
+$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resoDoc,array(1),'', mysql_result($resResultado,0,'refdocumentaciones'));
 
-$cadRef 	= '';
-
-$refdescripcion = array();
-$refCampo 	=  array();
+$refdescripcion = array(0=>$cadRef);
+$refCampo 	=  array("refdocumentaciones");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
