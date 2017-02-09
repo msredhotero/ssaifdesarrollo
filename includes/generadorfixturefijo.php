@@ -40,28 +40,18 @@ function traerEquipoPorId($id) {
 	return 0;
 }
 
-
-function traerEquipos($idtorneo, $idZona) {
+//acordar de pasarle la division
+function traerEquipos($idtorneo) {
 
 		$sql		=	"
-			select 
-				concat(g.nombre,' - ', e.nombre)as nombreEquipo,tge.idtorneoge, g.nombre, e.nombre, t.nombre, tge.prioridad
-			from
-				dbequipos e
-					inner join
-				dbtorneoge tge ON tge.refequipo = e.idequipo
-					inner join
-				dbgrupos g ON g.idgrupo = tge.refgrupo
-					inner join
-				dbtorneos t ON t.idtorneo = tge.reftorneo
-				inner
-								join		tbtipotorneo tp
-								on			tp.idtipotorneo = t.reftipotorneo
-				inner join tbletras l on l.id = tge.idtorneoge	
-					where	t.idtorneo = ".$idtorneo." and tge.refgrupo = ".$idZona." and t.activo = 1
-					
-			   order by l.letra
-				";
+			select
+				e.nombre, e.idequipo
+			from		dbtorneos t
+			inner
+			join		dbequipos e
+			on			t.refcategorias = e.refcategorias and t.refdivisiones = e.refdivisiones
+			where		t.activo = 1 and e.activo = 1 and t.reftemporadas = 1 and t.idtorneo = ".$idtorneo." 
+			order by e.nombre";
 
 	
 	$res2 = $this->query($sql,0);
@@ -69,8 +59,9 @@ function traerEquipos($idtorneo, $idZona) {
 	return $res2;
 }
 
-function devolverCantFilas($idtorneo, $idZona) {
-	$equipo = $this->traerEquipos($idtorneo, $idZona);
+//acordar de pasarle la division
+function devolverCantFilas($idtorneo) {
+	$equipo = $this->traerEquipos($idtorneo);
 	
 	$cadFixture = '';
 	$arEquipos = array();
@@ -103,110 +94,57 @@ function devolverCantFilas($idtorneo, $idZona) {
 }
 
 
-
-function TraerTodoFixture($idtorneo, $idZona) {
-		$sql = "select 
-			fi.idfixture,
-			(select e.nombre 
-			        from dbtorneoge tge
-			        inner 
-			        join dbtorneos t
-			        on tge.reftorneo = t.idtorneo and t.activo = true
-			        inner 
-			        join dbequipos e
-			        on e.idequipo = tge.refequipo
-			        inner 
-			        join dbgrupos g
-			        on g.idgrupo = tge.refgrupo
-			        where tge.idtorneoge = fi.reftorneoge_a) as equipoa,
-					(case when fi.resultado_a is null then (select
-												(case when sum(gg.goles) is null then (case when fi.chequeado = 1 then 0 else null end) else sum(gg.goles) end)
-												from		tbgoleadores gg
-												where gg.reffixture = fi.idfixture and gg.refequipo = (select tge.refequipo 
-																										from dbtorneoge tge
-																										inner 
-																										join dbtorneos t
-																										on tge.reftorneo = t.idtorneo and t.activo = true
-																										inner 
-																										join dbequipos e
-																										on e.idequipo = tge.refequipo
-																										inner 
-																										join dbgrupos g
-																										on g.idgrupo = tge.refgrupo
-																										where tge.idtorneoge = fi.reftorneoge_a))
-				else fi.resultado_a end) as resultadoa,
-					(case when fi.resultado_b is null then (select
-															(case when sum(gg.goles) is null then (case when fi.chequeado = 1 then 0 else null end) else sum(gg.goles) end)
-															from		tbgoleadores gg
-															where gg.reffixture = fi.idfixture and gg.refequipo = (select tge.refequipo 
-						from dbtorneoge tge
-						inner 
-						join dbtorneos t
-						on tge.reftorneo = t.idtorneo and t.activo = true
-						inner 
-						join dbequipos e
-						on e.idequipo = tge.refequipo
-						inner 
-						join dbgrupos g
-						on g.idgrupo = tge.refgrupo
-						where tge.idtorneoge = fi.reftorneoge_b))
-							else fi.resultado_b end) as resultadob,
-			(select e.nombre 
-			        from dbtorneoge tge
-			        inner 
-			        join dbtorneos t
-			        on tge.reftorneo = t.idtorneo and t.activo = true
-			        inner 
-			        join dbequipos e
-			        on e.idequipo = tge.refequipo
-			        inner 
-			        join dbgrupos g
-			        on g.idgrupo = tge.refgrupo
-			        where tge.idtorneoge = fi.reftorneoge_b) as equipob,
-			
-			(select g.nombre
-			        from dbtorneoge tge
-			        inner 
-			        join dbtorneos t
-			        on tge.reftorneo = t.idtorneo and t.activo = true
-			        inner 
-			        join dbequipos e
-			        on e.idequipo = tge.refequipo
-			        inner 
-			        join dbgrupos g
-			        on g.idgrupo = tge.refgrupo
-			        where tge.idtorneoge = fi.reftorneoge_b) as zona,   
-			fi.fechajuego,
-			f.tipofecha as fecha,
-			fi.hora,
-			g.nombre
-					from dbfixture as fi
-					        inner 
-					        join tbfechas AS f
-					        on fi.reffecha = f.idfecha
-					        inner 
-					        join dbtorneoge tge
-					        on tge.idtorneoge = fi.reftorneoge_b
-					        inner 
-					        join dbtorneos t
-					        on tge.reftorneo = t.idtorneo and t.activo = true
-							inner
-							join		tbtipotorneo tp
-							on			tp.idtipotorneo = t.reftipotorneo
-					        inner 
-					        join dbgrupos g
-					        on g.idgrupo = tge.refgrupo
-							
-							where	t.idtorneo = ".$idtorneo." and tge.refgrupo = ".$idZona."
-							
-					 order by g.nombre,f.tipofecha,fi.hora";
+//acordar de pasar la division
+function TraerTodoFixture($idtorneo) {
+		$sql = "select
+					f.idfixture,
+					el.nombre as equipolocal,
+					f.puntoslocal,
+					f.puntosvisita,
+					ev.nombre as equipovisitante,
+					ca.categoria,
+					arb.nombrecompleto as arbitro,
+					f.juez1,
+					f.juez2,
+					can.nombre as canchas,
+					fec.fecha,
+					f.fecha,
+					f.hora,
+					est.descripcion as estado,
+					f.calificacioncancha,
+					f.goleslocal,
+					f.golesvisitantes,
+					f.observaciones,
+					f.publicar,
+					f.refcanchas,
+					f.reftorneos,
+					f.reffechas,
+					f.refconectorlocal,
+					f.refconectorvisitante,
+					f.refestadospartidos,
+					f.refarbitros
+				from dbfixture f
+				inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+				inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+				inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+				inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+				inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+				inner join tbfechas fec ON fec.idfecha = f.reffechas
+				inner join dbconector conl ON conl.idconector = f.refconectorlocal
+				inner join dbequipos el ON el.idequipo = conl.refequipos
+				inner join dbconector conv ON conv.idconector = f.refconectorvisitante
+				inner join dbequipos ev ON ev.idequipo = conv.refequipos
+				inner join dbarbitros arb ON arb.idarbitro = f.refarbitros
+				inner join tbcanchas can ON can.idcancha = f.refcanchas
+				left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+				where tor.idtorneo =".$idtorneo;
 		 return $this-> query($sql,0);
 	}
 
-function Generar($idtorneo, $idZona) {
-	$equipo = $this->traerEquipos($idtorneo, $idZona);
-
-	$res = $this->TraerTodoFixture($idtorneo,$idZona);
+function Generar($idtorneo) {
+	$equipo = $this->traerEquipos($idtorneo);
+	//acordar de pasarle la division
+	$res = $this->TraerTodoFixture($idtorneo);
 
 $cadFixture = '';
 $arEquipos = array();
@@ -231,10 +169,12 @@ if ((mysql_num_rows($equipo)%2) == 1) {
 //die(var_dump($arEquiposId));
 //die(var_dump($cantidadEquipos));
 
-
+/*
 $columnas	= $cantidadEquipos - 1;
 $filas		= $cantidadEquipos / 2;
-
+*/
+$columnas	= 5;
+$filas		= 3;
 //die(var_dump($columnas."-".$filas));
 
 $fixture = array();
@@ -298,10 +238,10 @@ return $fixture;
 
 
 
-function Generar360($idtorneo, $idZona) {
-	$equipo = $this->traerEquipos($idtorneo, $idZona);
+function Generar360($idtorneo) {
+	$equipo = $this->traerEquipos($idtorneo);
 
-	$res = $this->TraerTodoFixture($idtorneo,$idZona);
+	$res = $this->TraerTodoFixture($idtorneo);
 
 $cadFixture = '';
 $arEquipos = array();

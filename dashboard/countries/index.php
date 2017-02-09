@@ -724,6 +724,8 @@ $(document).ready(function(){
 						$('#buscarcontacto').prepend('<option value="' + data.toString() + '">' + $('#reftipocontactos option:selected').text() + ' - ' + $('#nombre1').val() + '</option>');
 						$('#buscarcontacto').trigger("chosen:updated");
 						
+						$('#lstContact').prepend('<li class="user'+ data.toString() +'"><input id="user'+ data.toString() +'" class="form-control checkLstContactos" checked type="checkbox" required="" style="width:50px;" name="user'+ data.toString() +'"><p>' + $('#reftipocontactos option:selected').text() + ' - ' + $('#nombre1').val() + ' </p></li>');
+						
 						
 					} else {
 						$(".alert").removeClass("alert-danger");

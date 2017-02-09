@@ -254,6 +254,8 @@ $(document).ready(function(){
 	
 	$('#activo').prop('checked',true);
 	
+	$('#fechaalta').val('<?php echo date('d/m/Y'); ?>');
+	
 	function traerContactosPorCountries(id) {
 		$.ajax({
 				data:  {id: id, 

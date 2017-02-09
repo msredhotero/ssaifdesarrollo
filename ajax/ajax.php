@@ -1895,13 +1895,21 @@ function insertarTorneos($serviciosReferencias) {
 	} else { 
 		$activo = 0; 
 	} 
-	$res = $serviciosReferencias->insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo); 
-	if ((integer)$res > 0) { 
-		$serviciosReferencias->desactivarTorneos($res,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
+	
+	$fechaingreso = $_POST['fechaingreso'];
+	$fechaingreso = formatearFechas($fechaingreso);
+	
+	if ($fechaingreso != '***') {
+		$res = $serviciosReferencias->insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo); 
+		if ((integer)$res > 0) { 
+			$serviciosReferencias->desactivarTorneos($res,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);
+			echo $res; 
+		} else { 
+			echo 'Huvo un error al insertar datos';	 
+		} 
+	} else {
+		echo 'Formato de fecha incorrecto';	
+	}
 } 
 
 function modificarTorneos($serviciosReferencias) { 

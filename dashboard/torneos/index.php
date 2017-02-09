@@ -165,7 +165,21 @@ if ($_SESSION['refroll_predio'] != 1) {
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
         	<div class="row">
+            
 			<?php echo $formulario; ?>
+            <div class="col-md-6">
+            	<label class="control-label">Fecha de Inicio</label>
+                <div class="input-group col-md-12">
+                	<input type="text" name="fechainicio" id="fechainicio" class="form-control"/>
+                    <script type="text/javascript">
+					$(document).ready(function(){
+						
+						$("#fechainicio").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+					});
+					</script>
+                </div>
+            </div>
+            
             </div>
             
             
@@ -375,28 +389,29 @@ $(document).ready(function(){
 				//una vez finalizado correctamente
 				success: function(data){
 
-					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											url = "index.php";
-											$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
+
+					if (!isNaN(data)) {	
+						$(".alert").removeClass("alert-danger");
+						$(".alert").removeClass("alert-info");
+						$(".alert").addClass("alert-success");
+						$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
+						$(".alert").delay(3000).queue(function(){
+							/*aca lo que quiero hacer 
+							  después de los 2 segundos de retraso*/
+							$(this).dequeue(); //continúo con el siguiente ítem en la cola
+							
+						});
+						$("#load").html('');
+						url = "../fixture/generarfixture.php?id="+data+"&fechainicio="+$('#fechainicio').val();
+						$(location).attr('href',url);
+						
+						
+					} else {
+						$(".alert").removeClass("alert-danger");
+						$(".alert").addClass("alert-danger");
+						$(".alert").html('<strong>Error!</strong> '+data);
+						$("#load").html('');
+					}
 				},
 				//si ha ocurrido un error
 				error: function(){

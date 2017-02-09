@@ -134,9 +134,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 					if ($rowH['obligatoria'] == 'Si') {
 						$valorDocumentacion += 1;
 						if (mysql_num_rows($servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($row['refjugadores'],$rowH['refdocumentaciones']))>0) {
-							$habilitacion= 'HAB.';	
-						} else {
-							$habilitacion= 'INHAB.';	
+							$valorDocumentacion -= 1;	
 						}
 					}
 					if ($rowH['contravalordesc'] == '') {
@@ -157,8 +155,10 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$cadErrorDoc = 'FALTA PRESENTAR DOCUMENTACIONES';
 		}
 		
-		if ($valorDocumentacion == 0 && $cadCumpleEdad == 'CUMPLE') {
+		if ($valorDocumentacion <= 0 && $cadCumpleEdad == 'CUMPLE') {
 			$habilitacion= 'HAB.';	
+		} else {
+			$habilitacion= 'INHAB.';
 		}
 		
 		
