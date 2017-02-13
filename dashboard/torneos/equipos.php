@@ -24,7 +24,11 @@ $fecha = date('Y-m-d');
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Torneos",$_SESSION['refroll_predio'],'');
 
+$id = $_GET['id'];
 
+$fechainicio = $_GET['fechainicio'];
+
+$resResultado = $serviciosReferencias->traerTorneosPorId($id);
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Torneo";
 
@@ -41,56 +45,65 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbtorneos";
 
-$lblCambio	 	= array("reftipotorneo","reftemporadas","refcategorias","refdivisiones","cantidadascensos","cantidaddescensos","respetadefiniciontipojugadores","respetadefinicionhabilitacionestransitorias","respetadefinicionsancionesacumuladas","acumulagoleadores","acumulatablaconformada");
-$lblreemplazo	= array("Tipo Torneo","Temporada","Categoria","Division","Cant.Ascensos","Cant.Descensos","Respet.Def. Tipo Jugador","Respet.Def. Hab.Transt.","Respet.Def. Sansiones Acum.","Acum.Goleadores","Acum.Tabla Conformada");
-
-
-$resTipoTorneo 	= $serviciosReferencias->traerTipotorneo();
-$cadRef 	= $serviciosFunciones->devolverSelectBox($resTipoTorneo,array(1),'');
-
-$resTemporadas 	= $serviciosReferencias->traerTemporadas();
-$cadRef2 	= $serviciosFunciones->devolverSelectBox($resTemporadas,array(1),'');
-
-$resCategorias 	= $serviciosReferencias->traerCategorias();
-$cadRef3 	= $serviciosFunciones->devolverSelectBox($resCategorias,array(1),'');
-
-$resDivisiones 	= $serviciosReferencias->traerDivisiones();
-$cadRef4 	= $serviciosFunciones->devolverSelectBox($resDivisiones,array(1),'');
-
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2,2 => $cadRef3,3 => $cadRef4);
-$refCampo 	=  array("reftipotorneo","reftemporadas","refcategorias","refdivisiones");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
+$resEquipos = $serviciosReferencias->traerEquipoPorTorneo($id);
 
+$idCategoria = mysql_result($resResultado,0,'refcategorias');
 
+$idTemporada = mysql_result($serviciosReferencias->traerUltimaTemporada(),0,0);
 
-/////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Descripción</th>
-					<th>Tipo Torneo</th>
-					<th>Temporadas</th>
-					<th>Categorias</th>
-					<th>Divisiones</th>
-					<th>Cant.Ascensos</th>
-					<th>Cant.Descensos</th>
-					<th>Respet.Def. Tipo Jugador</th>
-					<th>Respet.Def. Hab.Transt.</th>
-					<th>Respet.Def. Sansiones Acum.</th>
-					<th>Acum.Goleadores</th>
-					<th>Acum.Tabla Conformada</th>
-					<th>Obs.</th>
-					<th>Activo</th>";
+// dia que se juega los partidos
+$resDias = $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria);
 
-//////////////////////////////////////////////  FIN de los opciones //////////////////////////
+// dia que ponen para comenzar el torneo
+$numeroDia = date('w', strtotime($fechainicio));
 
+switch ($numeroDia) {
+	case 0:
+		$numeroDia = 7;
+		break;
+	case 1:
+		$numeroDia = 1;
+		break;
+	case 2:
+		$numeroDia = 2;
+		break;
+	case 3:
+		$numeroDia = 3;
+		break;
+	case 4:
+		$numeroDia = 4;
+		break;
+	case 5:
+		$numeroDia = 5;
+		break;
+	case 6:
+		$numeroDia = 6;
+		break;	
+}
+//die(var_dump($numeroDia));
 
+$fechaNueva = date_create($fechainicio);
 
-
-$formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
-
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerTorneos(),14);
-
-
-
+if (mysql_num_rows($resDias)>0) {
+	if ($numeroDia > mysql_result($resDias,0,'refdias')) {
+		$nuevoNumero = 7 - $numeroDia + mysql_result($resDias,0,'refdias');
+		
+		date_add($fechaNueva, date_interval_create_from_date_string($nuevoNumero.' days'));
+	} else {
+		if ($numeroDia == mysql_result($resDias,0,'refdias')) {
+			$fechaNueva = $fechaNueva;
+		} else {
+			$nuevoNumero = mysql_result($resDias,0,'refdias') - $numeroDia;
+		
+			date_add($fechaNueva, date_interval_create_from_date_string('-'.$nuevoNumero.' days'));
+		}
+	}
+	//die(var_dump($numeroDia));
+} else {
+	$fechaNueva = $fechainicio;	
+}
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -159,26 +172,47 @@ if ($_SESSION['refroll_predio'] != 1) {
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Seleccionar equipos</p>
         	
         </div>
     	<div class="cuerpoBox">
-        	<form class="form-inline formulario" role="form">
+        	<form class="form-inline formulario" role="form" method="post" action="../fixture/generarfixture.php">
         	<div class="row">
             
-			<?php echo $formulario; ?>
-            <div class="col-md-6">
-            	<label class="control-label">Fecha de Inicio</label>
-                <div class="input-group col-md-12">
-                	<input type="text" name="fechainicio" id="fechainicio" class="form-control"/>
-                    <script type="text/javascript">
-					$(document).ready(function(){
-						
-						$("#fechainicio").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
-					});
-					</script>
+			<div class="col-md-12">
+            	<p>Fecha de inicio: <?php echo $fechaNueva->format('Y-m-d'); ?></p>
+				<table class="table table-bordered table-responsive table-striped">
+                <thead>
+                	<th style="text-align:center">Seleccionar</th>
+                    <th>Equipo</th>
+                    <th>Activo</th>
+                    
+                </thead>
+                <tbody>
+				<?php
+					$cantidad = 0;
+					while ($row = mysql_fetch_array($resEquipos)) {
+						$cantidad += 1;
+				?>
+                	<tr>
+                	<td align="center">
+                    <?php 
+						if ($row[2] =='Si') {
+					?>
+                    <input class="form-control tildar" checked type="checkbox" name="equipo<?php echo $row[0]; ?>" id="equipo<?php echo $row[0]; ?>"/>
+                    <?php
+						}
+					?>
+                    </td>
+                    <td><?php echo $row[1]; ?></td>
+                    <td><?php echo $row[2]; ?></td>
+                    </tr>
+                <?php
+					}
+				?>
+                </tbody>
+                </table>
                 </div>
-            </div>
             
             </div>
             
@@ -198,61 +232,25 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
                     <li>
-                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
+                        <button type="submit" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
                 </ul>
                 </div>
             </div>
+            <input type="hidden" id="fechainicio" name="fechainicio" value="<?php echo $fechaNueva->format('Y-m-d'); ?>"/>
+            <input type="hidden" id="idtorneo" name="idtorneo" value="<?php echo $id; ?>"/>
             </form>
     	</div>
     </div>
-    
-    <div class="boxInfoLargo">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
-        	
-        </div>
-    	<div class="cuerpoBox">
-        	<?php echo $lstCargados; ?>
-    	</div>
-    </div>
-    
-    
 
-    
     
    
 </div>
 
 
 </div>
-<div id="dialog2" title="Eliminar <?php echo $singular; ?>">
-    	<p>
-        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar el <?php echo $singular; ?>?.<span id="proveedorEli"></span>
-        </p>
-        <p><strong>Importante: </strong>Si elimina el <?php echo $singular; ?> se perderan todos los datos de este</p>
-        <input type="hidden" value="" id="idEliminar" name="idEliminar">
-</div>
 
-<div class="modal fade" id="myModal3" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <form class="form-inline formulario" role="form">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Countries Asociados</h4>
-      </div>
-      <div class="modal-body lstCountries">
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
+
 
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
@@ -355,72 +353,7 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 			
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
 	
-	?>
-	
-
-	
-	
-	//al enviar el formulario
-    $('#cargar').click(function(){
-		
-		if (validador() == "")
-        {
-			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax  
-			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
-
-
-					if (!isNaN(data)) {	
-						$(".alert").removeClass("alert-danger");
-						$(".alert").removeClass("alert-info");
-						$(".alert").addClass("alert-success");
-						$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-						$(".alert").delay(3000).queue(function(){
-							/*aca lo que quiero hacer 
-							  después de los 2 segundos de retraso*/
-							$(this).dequeue(); //continúo con el siguiente ítem en la cola
-							
-						});
-						$("#load").html('');
-						url = "equipos.php?id="+data+"&fechainicio="+$('#fechainicio').val();
-						$(location).attr('href',url);
-						
-						
-					} else {
-						$(".alert").removeClass("alert-danger");
-						$(".alert").addClass("alert-danger");
-						$(".alert").html('<strong>Error!</strong> '+data);
-						$("#load").html('');
-					}
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
-		}
-    });
 
 });
 </script>

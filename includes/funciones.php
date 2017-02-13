@@ -8,6 +8,21 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class Servicios {
 	
+	function formatearFechas($fecha) {
+		if ($fecha != '') {
+			$arFecha = explode("/", $fecha);
+			
+			$nuevaFecha = 	$arFecha[2]."/".$arFecha[1]."/".$arFecha[0];
+			
+			if (checkdate($arFecha[1],$arFecha[0],$arFecha[2])) {
+				return $nuevaFecha;
+			} else {
+				return '***';	
+			}
+		}
+		return $fecha;
+	}
+
 	function devolverSelectBox($datos, $ar, $delimitador) {
 		
 		$cad		= ''; 

@@ -2283,7 +2283,7 @@ function desactivarTorneos($idTorneo,$reftipotorneo,$reftemporadas,$refcategoria
 
 function insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo) { 
 $sql = "insert into dbtorneos(idtorneo,descripcion,reftipotorneo,reftemporadas,refcategorias,refdivisiones,cantidadascensos,cantidaddescensos,respetadefiniciontipojugadores,respetadefinicionhabilitacionestransitorias,respetadefinicionsancionesacumuladas,acumulagoleadores,acumulatablaconformada,observaciones,activo) 
-values ('','".($descripcion)."',".$reftipotorneo.",".$reftemporadas.",".$refcategorias.",".$refdivisiones.",".$cantidadascensos.",".$cantidaddescensos.",".$respetadefiniciontipojugadores.",".$respetadefinicionhabilitacionestransitorias.",".$respetadefinicionsancionesacumuladas.",".$acumulagoleadores.",".$acumulatablaconformada.",'".($observaciones)."',".$activo.")"; 
+values ('','".($descripcion)."',".$reftipotorneo.",".$reftemporadas.",".$refcategorias.",".$refdivisiones.",".($cantidadascensos == '' ? 0 : $cantidadascensos).",".($cantidaddescensos == '' ? 0 : $cantidaddescensos).",".$respetadefiniciontipojugadores.",".$respetadefinicionhabilitacionestransitorias.",".$respetadefinicionsancionesacumuladas.",".$acumulagoleadores.",".$acumulatablaconformada.",'".($observaciones)."',".$activo.")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -2292,7 +2292,7 @@ return $res;
 function modificarTorneos($id,$descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo) { 
 $sql = "update dbtorneos 
 set 
-descripcion = '".($descripcion)."',reftipotorneo = ".$reftipotorneo.",reftemporadas = ".$reftemporadas.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",cantidadascensos = ".$cantidadascensos.",cantidaddescensos = ".$cantidaddescensos.",respetadefiniciontipojugadores = ".$respetadefiniciontipojugadores.",respetadefinicionhabilitacionestransitorias = ".$respetadefinicionhabilitacionestransitorias.",respetadefinicionsancionesacumuladas = ".$respetadefinicionsancionesacumuladas.",acumulagoleadores = ".$acumulagoleadores.",acumulatablaconformada = ".$acumulatablaconformada.",observaciones = '".($observaciones)."',activo = ".$activo." 
+descripcion = '".($descripcion)."',reftipotorneo = ".$reftipotorneo.",reftemporadas = ".$reftemporadas.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",cantidadascensos = ".($cantidadascensos == '' ? 0 : $cantidadascensos).",cantidaddescensos = ".($cantidaddescensos == '' ? 0 : $cantidaddescensos).",respetadefiniciontipojugadores = ".$respetadefiniciontipojugadores.",respetadefinicionhabilitacionestransitorias = ".$respetadefinicionhabilitacionestransitorias.",respetadefinicionsancionesacumuladas = ".$respetadefinicionsancionesacumuladas.",acumulagoleadores = ".$acumulagoleadores.",acumulatablaconformada = ".$acumulatablaconformada.",observaciones = '".($observaciones)."',activo = ".$activo." 
 where idtorneo =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -2335,13 +2335,13 @@ inner join tbdivisiones di ON di.iddivision = t.refdivisiones
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
-} 
+}  
 
 
 function traerTorneosPorId($id) { 
 $sql = "select idtorneo,descripcion,reftipotorneo,reftemporadas,refcategorias,refdivisiones,cantidadascensos,cantidaddescensos,respetadefiniciontipojugadores,respetadefinicionhabilitacionestransitorias,respetadefinicionsancionesacumuladas,acumulagoleadores,acumulatablaconformada,observaciones,activo from dbtorneos where idtorneo =".$id; 
 $res = $this->query($sql,0); 
-return $res; 
+return $res;
 } 
 
 /* Fin */
@@ -2492,6 +2492,20 @@ order by 1";
 $res = $this->query($sql,0); 
 return $res; 
 } 
+
+
+function traerEquipoPorTorneo($idTorneo) { 
+$sql = "select 
+e.idequipo,
+e.nombre,
+(case when e.activo = 1 then 'Si' else 'No' end) as activo
+from dbequipos e 
+inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
+where t.idtorneo = ".$idTorneo."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+}
 
 
 /* Fin */
@@ -2762,6 +2776,32 @@ inner join tbcategorias cat ON cat.idtcategoria = d.refcategorias
 inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas 
 inner join tbdias di ON di.iddia = d.refdias
 order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria) { 
+$sql = "select 
+d.iddefinicioncategoriatemporada,
+cat.categoria,
+tem.temporada,
+d.cantmaxjugadores,
+d.cantminjugadores,
+di.dia,
+d.hora,
+d.minutospartido,
+d.cantidadcambiosporpartido,
+d.conreingreso,
+d.observaciones,
+d.refcategorias,
+d.reftemporadas,
+d.refdias
+from dbdefinicionescategoriastemporadas d 
+inner join tbcategorias cat ON cat.idtcategoria = d.refcategorias 
+inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas 
+inner join tbdias di ON di.iddia = d.refdias 
+where cat.idtcategoria = ".$idCategoria." and tem.idtemporadas = ".$idTemporada; 
 $res = $this->query($sql,0); 
 return $res; 
 } 

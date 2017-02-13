@@ -27,7 +27,30 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture
 
 
 
-
+	$numero = count($_POST);
+	$tags = array_keys($_POST);// obtiene los nombres de las varibles
+	$valores = array_values($_POST);// obtiene los valores de las varibles
+	$cantEncontrados = 0;
+	$cantidad = 1;
+	$idEquipos = 0;
+	
+	$cadWhere = array();
+	$cantEquipos = array();
+	
+	for($i=0;$i<$numero;$i++){
+		
+		if (strpos($tags[$i],"equipo") !== false) {
+			
+			if (isset($valores[$i])) {
+				
+				$idEquipos = str_replace("equipo","",$tags[$i]);
+				
+				array_push($cadWhere,$idEquipos);
+				array_push($cantEquipos,$cantidad);
+				$cantidad += 1;
+			}
+		}
+	}
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbfixture";
@@ -78,15 +101,16 @@ $cabeceras 		= "	<th>Equipo Local</th>
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-$idTorneo = $_GET['idtorneo'];
-$fechainicio = $_GET['fechainicio'];
+$idTorneo = $_POST['idtorneo'];
+$fechainicio = $_POST['fechainicio'];
 
 $formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
 $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerFixtureTodo(),13);
 
-$fixtureGenerardo = $Generar->Generar360($idTorneo);
+$fixtureGenerardo = $Generar->generarAIF($idTorneo, $cantEquipos);
 
+die(print_r($fixtureGenerardo));
 //die(var_dump($fixtureGenerardo));
 /*
 if ((mysql_num_rows($resZonasEquipos) % 2)==0) {
@@ -95,10 +119,10 @@ if ((mysql_num_rows($resZonasEquipos) % 2)==0) {
 	$cantFechas = mysql_num_rows($resZonasEquipos);
 }
 */
-$cantFechas = 3;
-$array = $Generar->devolverCantFilas($idTorneo);
+$cantFechas = 5;
+//$array = $Generar->devolverCantFilas($idTorneo);
 
-$filas = $array["filas"] * $array["columnas"];
+$filas = 5;
 //die(var_dump($fixtureGenerardo));
 ?>
 
@@ -215,15 +239,7 @@ $filas = $array["filas"] * $array["columnas"];
     	<div class="cuerpoBox">
     		<form class="form-inline formulario" role="form" method="post" action="finalizar.php">
             <div class="row" style="margin-left:5px; margin-right:5px; min-width:800px;">
-            	<div class="form-group col-md-12">
-                	<label class="control-label">Seleccione si el tipo de campeonato es Ida o Ida/Vuelta: </label>
-                    <select id="idavuelta" name="idavuelta" class="form-control">
-                    	<option value="0">Ida</option>
-                        <option value="1">Ida - Vuelta
-                    </select>
-                    <bt>
-                    <hr>
-                </div>
+
     		<?php 
 			//die(var_dump($fixtureGenerardo[0][0]));
 			$total = 1;
@@ -234,7 +250,7 @@ $filas = $array["filas"] * $array["columnas"];
 						<h3>Fecha '.($i + 1).'</h3>
 
 					  <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212;">
-					  	<label>Equipo A</label>
+					  	<label>Equipo Local</label>
 					  </div>
 					  <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212;">
 					  	<label>Horario</label>
@@ -243,16 +259,16 @@ $filas = $array["filas"] * $array["columnas"];
 					  	<label>Cancha</label>
 					  </div>
 					  <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212;">
-					  	<label>Equipo B</label>
+					  	<label>Equipo Visitante</label>
 					  </div>';
-			for ($k=0;$k<$array["filas"];$k++) {
+			for ($k=0;$k<5;$k++) {
 				$lstEquipos = explode("***",$fixtureGenerardo[$i][$k]);
 				
 				echo '
 					  	<div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
 						<select id="equipoa'.$total.'" name="equipoa'.$total.'" class="form-control letraChica">
                                 
-                                <option value="'.$lstEquipos[1].'">'.$lstEquipos[0].'</option>
+                                <option value="'.$lstEquipos[0].'">'.$lstEquipos[0].'</option>
                                 '.$cadRef.'
                          </select>
 						 </div>
@@ -274,7 +290,7 @@ $filas = $array["filas"] * $array["columnas"];
 						 
 						 <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
 						<select id="equipob'.$total.'" name="equipob'.$total.'" class="form-control letraChica">
-                                <option value="'.$lstEquipos[3].'">'.$lstEquipos[2].'</option>
+                                <option value="'.$lstEquipos[1].'">'.$lstEquipos[1].'</option>
                                 '.$cadRef.' 
                          </select>
 						 </div>';
@@ -292,7 +308,6 @@ $filas = $array["filas"] * $array["columnas"];
 			echo '<input type="hidden" id="cantfechas" name="cantfechas" value="'.($i + 1).'" />';
 			echo '<input type="hidden" id="total" name="total" value="'.$total.'" />';
 			echo '<input type="hidden" id="idtorneo" name="idtorneo" value="'.$_POST['idtorneo'].'" />';
-			echo '<input type="hidden" id="idzona" name="idzona" value="'.$_POST['idzona'].'" />';
 	
 			} else {
 				echo '<h2>Ya fue Cargado el Fixture completo para este torneo';	

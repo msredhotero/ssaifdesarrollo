@@ -1896,10 +1896,10 @@ function insertarTorneos($serviciosReferencias) {
 		$activo = 0; 
 	} 
 	
-	$fechaingreso = $_POST['fechaingreso'];
-	$fechaingreso = formatearFechas($fechaingreso);
+	$fechainicio = $_POST['fechainicio'];
+	$fechainicio = formatearFechas($fechainicio);
 	
-	if ($fechaingreso != '***') {
+	if ($fechainicio != '***') {
 		$res = $serviciosReferencias->insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo); 
 		if ((integer)$res > 0) { 
 			$serviciosReferencias->desactivarTorneos($res,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);

@@ -114,7 +114,32 @@ for ($k=0; $k< (count($equipos)/2); $k++) {
 		}
 }
 
-print_r($resultado);
+//print_r($resultado);
 
+$fechainicio = '2017-02-23';
+// dia que se juega los partidos
+$resDias = 2;
+
+// dia que ponen para comenzar el torneo
+$numeroDia = 4;
+/*
+if (mysql_num_rows($resDias)>0) {
+	if ($numeroDia >= mysql_result($resDias,0,'refdias')) {
+		$nuevoNumero = 7 - $numeroDia + $resDias;
+	}
+}
+*/
+
+$fecha = date_create('2017-02-23');
+
+
+
+	if ($numeroDia >= $resDias) {
+		$nuevoNumero = 7 - $numeroDia + $resDias;
+		
+		date_add($fecha, date_interval_create_from_date_string('-'.$nuevoNumero.' days'));
+	}
+	
+echo date_format($fecha, 'Y-m-d');
 
 ?>
