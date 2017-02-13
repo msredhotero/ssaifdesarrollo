@@ -57,7 +57,10 @@ $idTemporada = mysql_result($serviciosReferencias->traerUltimaTemporada(),0,0);
 $resDias = $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria);
 
 // dia que ponen para comenzar el torneo
+$fechainicio = $serviciosFunciones->formatearFechas($fechainicio);
 $numeroDia = date('w', strtotime($fechainicio));
+
+//die(var_dump($serviciosFunciones->formatearFechas($fechainicio)));
 
 switch ($numeroDia) {
 	case 0:
@@ -105,6 +108,8 @@ if (mysql_num_rows($resDias)>0) {
 	$fechaNueva = $fechainicio;	
 }
 
+$hora = mysql_result($resDias,0,'hora');
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -112,6 +117,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 	
 }
 
+//die(var_dump($numeroDia));
 
 ?>
 
@@ -239,6 +245,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             </div>
             <input type="hidden" id="fechainicio" name="fechainicio" value="<?php echo $fechaNueva->format('Y-m-d'); ?>"/>
             <input type="hidden" id="idtorneo" name="idtorneo" value="<?php echo $id; ?>"/>
+            <input type="hidden" id="hora" name="hora" value="<?php echo $hora; ?>"/>
             </form>
     	</div>
     </div>

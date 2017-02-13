@@ -2432,6 +2432,35 @@ return $res;
 } 
 
 
+function traerEquiposPorEquipoIn($lstEquipo) { 
+$sql = "select 
+e.idequipo,
+cou.nombre as countrie,
+e.nombre,
+cat.categoria,
+di.division,
+con.nombre as contacto,
+e.fechaalta,
+e.fachebaja,
+(case when e.activo=1 then 'Si' else 'No' end) as activo,
+e.refcountries,
+e.refcategorias,
+e.refdivisiones,
+e.refcontactos
+from dbequipos e 
+inner join dbcountries cou ON cou.idcountrie = e.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias 
+inner join tbdivisiones di ON di.iddivision = e.refdivisiones 
+inner join dbcontactos con ON con.idcontacto = e.refcontactos 
+inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos 
+where e.idequipo in (".$lstEquipo.") 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 function traerEquiposPorId($id) { 
 $sql = "select idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,activo from dbequipos where idequipo =".$id; 
 $res = $this->query($sql,0); 

@@ -34,7 +34,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture
 	$cantidad = 1;
 	$idEquipos = 0;
 	
-	$cadWhere = array();
+	$cadWhere = '';
 	$cantEquipos = array();
 	
 	for($i=0;$i<$numero;$i++){
@@ -45,12 +45,19 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture
 				
 				$idEquipos = str_replace("equipo","",$tags[$i]);
 				
-				array_push($cadWhere,$idEquipos);
+				$cadWhere .= $idEquipos.",";
 				array_push($cantEquipos,$cantidad);
 				$cantidad += 1;
 			}
 		}
 	}
+	
+	if (($cantidad%2)==0) {
+		array_push($cadWhere,0);
+		array_push($cantEquipos,$cantidad);
+	}
+	
+	//die(var_dump($cantEquipos));
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbfixture";
@@ -81,6 +88,7 @@ $refdescripcion = array(0 => $cadRef,1=>$cadRef,2=>$cadRef2,3=>$cadRef3,4=>$cadR
 $refCampo	 	= array("refconectorlocal","refconectorvisitante","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos"); 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
+$lstEquipos		=	$serviciosReferencias->traerEquiposPorEquipoIn(substr($cadWhere,0,-1));
 
 
 
@@ -103,6 +111,7 @@ $cabeceras 		= "	<th>Equipo Local</th>
 
 $idTorneo = $_POST['idtorneo'];
 $fechainicio = $_POST['fechainicio'];
+$hora = $_POST['hora'];
 
 $formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
@@ -110,7 +119,7 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosRefere
 
 $fixtureGenerardo = $Generar->generarAIF($idTorneo, $cantEquipos);
 
-die(print_r($fixtureGenerardo));
+//die(print_r($fixtureGenerardo));
 //die(var_dump($fixtureGenerardo));
 /*
 if ((mysql_num_rows($resZonasEquipos) % 2)==0) {
@@ -124,6 +133,9 @@ $cantFechas = 5;
 
 $filas = 5;
 //die(var_dump($fixtureGenerardo));
+
+$fechaNueva = date_create($fechainicio);
+
 ?>
 
 <!DOCTYPE HTML>
@@ -239,7 +251,44 @@ $filas = 5;
     	<div class="cuerpoBox">
     		<form class="form-inline formulario" role="form" method="post" action="finalizar.php">
             <div class="row" style="margin-left:5px; margin-right:5px; min-width:800px;">
-
+            	<div class="col-md-6">
+            	<table class="table table-bordered table-responsive">
+                	<thead>
+                    	<tr>
+                            <th>
+                                Numero de Equipo
+                            </th>
+                            <th>
+                                Equipo
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	<?php
+							$canE = 1;
+							while ($row = mysql_fetch_array($lstEquipos)) {
+						?>
+                    	<tr>
+                        	<td>
+                            	<input class="form-control" style="text-align:center;" type="text" id="modulo<?php echo $canE; ?>" name="modulo<?php echo $canE; ?>" value="<?php echo $canE; ?>"/>
+                            </td>
+                            <td>
+                            	<select class="form-control" id="equipoModulo<?php echo $canE; ?>" name="equipoModulo<?php echo $canE; ?>">
+                            		<option value="<?php echo $row[0]; ?>"><?php echo $row[2]; ?></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <?php
+							$canE += 1;
+							}
+						?>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            
+            <div class="row" style="margin-left:5px; margin-right:5px; min-width:800px;">
+				<input type="button" class="btn btn-info" id="invertir" value="Invertir Local - Visitante" />
     		<?php 
 			//die(var_dump($fixtureGenerardo[0][0]));
 			$total = 1;
@@ -261,28 +310,28 @@ $filas = 5;
 					  <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212;">
 					  	<label>Equipo Visitante</label>
 					  </div>';
-			for ($k=0;$k<5;$k++) {
-				$lstEquipos = explode("***",$fixtureGenerardo[$i][$k]);
+			for ($k=0;$k<3;$k++) {
+				//$lstEquipos = explode("***",$fixtureGenerardo[$i][$k]);
 				
 				echo '
 					  	<div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
 						<select id="equipoa'.$total.'" name="equipoa'.$total.'" class="form-control letraChica">
                                 
-                                <option value="'.$lstEquipos[0].'">'.$lstEquipos[0].'</option>
-                                '.$cadRef.'
+                                <option value="'.$fixtureGenerardo['Local'][$total-1].'">'.$fixtureGenerardo['Local'][$total-1].'</option>
+								
                          </select>
+						 Equipo: <span id="equia'.$total.'" class="lbl'.$fixtureGenerardo['Local'][$total-1].'"></span>
 						 </div>
 						 
 						 <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212; padding:5px;">
-						<select id="horario'.$total.'" name="horario'.$total.'" class="form-control letraChica">
-                                
-                                '.$cadRef4.'    
-                         </select>
+						 <input type="text" id="horario'.$total.'" name="horario'.$total.'" class="form-control letraChica" style="width:80%;" value="'.$hora.' ">
+
 						 </div>
 						 
 						 
-						  <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212; padding:5px;">
-						<select id="cancha'.$total.'" name="cancha'.$total.'" class="form-control letraChica">
+						 <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212; padding:5px;">
+						 <select id="cancha'.$total.'" name="cancha'.$total.'" class="form-control letraChica">
+						 	<option value="">-- Seleccionar --</option>
                                 '.$cadRef3.'
                          </select>
 						 </div>
@@ -290,19 +339,22 @@ $filas = 5;
 						 
 						 <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
 						<select id="equipob'.$total.'" name="equipob'.$total.'" class="form-control letraChica">
-                                <option value="'.$lstEquipos[1].'">'.$lstEquipos[1].'</option>
-                                '.$cadRef.' 
+                                <option value="'.$fixtureGenerardo['Visitante'][$total-1].'">'.$fixtureGenerardo['Visitante'][$total-1].'</option>
+								
                          </select>
+						 Equipo: <span id="equib'.$total.'" class="lbl'.$fixtureGenerardo['Visitante'][$total-1].'"></span>
 						 </div>';
 						 $total += 1;
 			}
 			echo '
 				
 				
-				Fecha Juego '.($i + 1).' <input type="text" class="form-control" id="datepicker'.($i + 1).'" name="datepicker'.($i + 1).'" value="'.date('d/m/Y').'" />
+				Fecha Juego '.($i + 1).' <input type="text" class="form-control" id="datepicker'.($i + 1).'" name="datepicker'.($i + 1).'" value="'.$fechainicio.'" />
 				
 		
 					';
+				$fechainicio = strtotime ( '+7 day' , strtotime ( $fechainicio ) ) ;
+				$fechainicio = date ( 'Y-m-d' , $fechainicio );
 				echo "<hr><br>";
 			}
 			echo '<input type="hidden" id="cantfechas" name="cantfechas" value="'.($i + 1).'" />';
@@ -373,10 +425,69 @@ $(document).ready(function(){
 		showMeridian: false,
 		defaultTime: false
 		});
-	 <?php 
-		echo $serviciosHTML->validacion($tabla);
+
+
+	function invertirLocalVisitante() {
+		var local = 0;
+		var visitante = 0;
+		for (i=1; i <= <?php echo $total; ?>; i++) {
+			
+			local 		= $('#equipoa'+i+' option:selected').val();
+			visitante 	= $('#equipob'+i+' option:selected').val();
+			
+			$("#equipoa"+ i +" option[value='" + local + "']").remove();
+			$("#equipob"+ i +" option[value='" + visitante + "']").remove();
+			
+			$("#equipob"+ i).append($('<option>', {
+				value: local,
+				text: local
+			}));
+			
+			$("#equipoa"+ i).append($('<option>', {
+				value: visitante,
+				text: visitante
+			}));
+			
+			$("#equia"+i).attr("class","lbl"+visitante); 
+			$("#equib"+i).attr("class","lbl"+local); 
+			
+		}
+	}
 	
+	$('#invertir').click(function() {
+		invertirLocalVisitante();
+		actualizarEquipos();
+		//$("#equipoa1 option[value='1']").remove();
+	});
+	
+	function actualizarEquipos() {
+		var a = 0;
+	<?php
+		for ($m=1;$m <= count($cantEquipos); $m++) {
 	?>
+		a = $('#modulo'+<?php echo $m; ?>).val();
+		$('.lbl'+<?php echo $m; ?>).html($('#equipoModulo'+a+' option:selected').text());
+	<?php
+		}
+	?>
+	}
+	
+	
+	<?php
+		for ($m=1;$m <= count($cantEquipos); $m++) {
+	?>
+		$('#modulo'+<?php echo $m; ?>).change(function() {
+			if ($(this).val() != '') {
+				actualizarEquipos();	
+			}
+		});
+
+	<?php
+		}
+	?>
+	
+	
+	actualizarEquipos();
 	
 	$('#chequearF').click( function() {
 		url = "chequear.php";
