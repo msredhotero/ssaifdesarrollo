@@ -53,7 +53,6 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture
 	}
 	
 	if (($cantidad%2)==0) {
-		array_push($cadWhere,0);
 		array_push($cantEquipos,$cantidad);
 	}
 	
@@ -466,11 +465,12 @@ $(document).ready(function(){
 		for ($m=1;$m <= count($cantEquipos); $m++) {
 	?>
 		a = $('#modulo'+<?php echo $m; ?>).val();
-		$('.lbl'+<?php echo $m; ?>).html($('#equipoModulo'+a+' option:selected').text());
+		$('.lbl'+a).html($('#equipoModulo'+<?php echo $m; ?>+' option:selected').text());
 	<?php
 		}
 	?>
 	}
+	
 	
 	
 	<?php

@@ -133,6 +133,14 @@ class Servicios {
 				$classEli = 'varborrar';
 				$idresultados = "resultados";
 				break;
+			case 90:
+				$cantidad = 14;
+				$classMod = 'varmodificar';
+				$classVer = 'varver';
+				$lblVer	  = 'Generar Fixture';
+				$classEli = 'varborrar';
+				$idresultados = "resultados";
+				break;
 			default:
 				$classMod = 'varmodificar';
 				$classEli = 'varborrar';

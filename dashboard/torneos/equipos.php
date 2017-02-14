@@ -26,7 +26,11 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Torneos
 
 $id = $_GET['id'];
 
-$fechainicio = $_GET['fechainicio'];
+if (isset($_GET['fechainicio'])) {
+	$fechainicio = $_GET['fechainicio'];
+} else {
+	$fechainicio = date('d/m/Y');
+}
 
 $resResultado = $serviciosReferencias->traerTorneosPorId($id);
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
@@ -186,7 +190,20 @@ if ($_SESSION['refroll_predio'] != 1) {
         	<div class="row">
             
 			<div class="col-md-12">
-            	<p>Fecha de inicio: <?php echo $fechaNueva->format('Y-m-d'); ?></p>
+            	<div class="col-md-6" style="margin-bottom:10px;">
+                    <label class="control-label">Fecha de Inicio</label>
+                    <div class="input-group col-md-12">
+                        <input type="text" name="fechainicio" id="fechainicio" class="form-control" value="<?php echo $fechaNueva->format('d/m/Y'); ?>"/>
+                        <script type="text/javascript">
+                        $(document).ready(function(){
+                            
+                            $("#fechainicio").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+                        });
+                        </script>
+                    </div>
+                </div>
+                
+
 				<table class="table table-bordered table-responsive table-striped">
                 <thead>
                 	<th style="text-align:center">Seleccionar</th>
