@@ -3431,7 +3431,7 @@ return $res;
 
 function insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar) {
 $sql = "insert into dbfixture(idfixture,reftorneos,reffechas,refconectorlocal,refconectorvisitante,refarbitros,juez1,juez2,refcanchas,fecha,hora,refestadospartidos,calificacioncancha,puntoslocal,puntosvisita,goleslocal,golesvisitantes,observaciones,publicar)
-values ('',".$reftorneos.",".$reffechas.",".$refconectorlocal.",".$refconectorvisitante.",".$refarbitros.",'".utf8_decode($juez1)."','".utf8_decode($juez2)."',".$refcanchas.",'".utf8_decode($fecha)."',".$hora.",".$refestadospartidos.",".$calificacioncancha.",".$puntoslocal.",".$puntosvisita.",".$goleslocal.",".$golesvisitantes.",'".utf8_decode($observaciones)."',".$publicar.")";
+values ('',".$reftorneos.",".$reffechas.",".$refconectorlocal.",".$refconectorvisitante.",".$refarbitros.",'".utf8_decode($juez1)."','".utf8_decode($juez2)."',".($refcanchas == '' ? 'NULL' : $refcanchas).",'".($fecha)."','".$hora."',".$refestadospartidos.",".$calificacioncancha.",".$puntoslocal.",".$puntosvisita.",".$goleslocal.",".$golesvisitantes.",'".utf8_decode($observaciones)."',".$publicar.")";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -3440,7 +3440,7 @@ return $res;
 function modificarFixture($id,$reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar) {
 $sql = "update dbfixture
 set
-reftorneos = ".$reftorneos.",reffechas = ".$reffechas.",refconectorlocal = ".$refconectorlocal.",refconectorvisitante = ".$refconectorvisitante.",refarbitros = ".$refarbitros.",juez1 = '".utf8_decode($juez1)."',juez2 = '".utf8_decode($juez2)."',refcanchas = ".$refcanchas.",fecha = '".utf8_decode($fecha)."',hora = ".$hora.",refestadospartidos = ".$refestadospartidos.",calificacioncancha = ".$calificacioncancha.",puntoslocal = ".$puntoslocal.",puntosvisita = ".$puntosvisita.",goleslocal = ".$goleslocal.",golesvisitantes = ".$golesvisitantes.",observaciones = '".utf8_decode($observaciones)."',publicar = ".$publicar."
+reftorneos = ".$reftorneos.",reffechas = ".$reffechas.",refconectorlocal = ".$refconectorlocal.",refconectorvisitante = ".$refconectorvisitante.",refarbitros = ".$refarbitros.",juez1 = '".utf8_decode($juez1)."',juez2 = '".utf8_decode($juez2)."',refcanchas = ".($refcanchas == '' ? 'NULL' : $refcanchas).",fecha = '".utf8_decode($fecha)."',hora = '".$hora."',refestadospartidos = ".$refestadospartidos.",calificacioncancha = ".$calificacioncancha.",puntoslocal = ".$puntoslocal.",puntosvisita = ".$puntosvisita.",goleslocal = ".$goleslocal.",golesvisitantes = ".$golesvisitantes.",observaciones = '".utf8_decode($observaciones)."',publicar = ".$publicar."
 where idfixture =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -3528,12 +3528,10 @@ inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
 inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
 inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
 inner join tbfechas fec ON fec.idfecha = f.reffechas
-inner join dbconector conl ON conl.idconector = f.refconectorlocal
-inner join dbequipos el ON el.idequipo = conl.refequipos
-inner join dbconector conv ON conv.idconector = f.refconectorvisitante
-inner join dbequipos ev ON ev.idequipo = conv.refequipos
-inner join dbarbitros arb ON arb.idarbitro = f.refarbitros
-inner join tbcanchas can ON can.idcancha = f.refcanchas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 order by 1";
 $res = $this->query($sql,0);

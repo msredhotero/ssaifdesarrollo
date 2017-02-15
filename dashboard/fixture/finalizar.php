@@ -23,10 +23,10 @@ $Generar = new GenerarFixture();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_predio'],"Fixture",$_SESSION['refroll_predio'],'');
 
 
-
+/////////////////  resuelvo todo lo enviado   //////////////////////////////////////////
 	$numero = count($_POST);
 	$tags = array_keys($_POST);// obtiene los nombres de las varibles
 	$valores = array_values($_POST);// obtiene los valores de las varibles
@@ -34,29 +34,130 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture
 	$cantidad = 1;
 	$idEquipos = 0;
 	
-	$cadWhere = '';
-	$cantEquipos = array();
+	$arModulo = array();
+	$arEquipos = array();
+	
+	$arLocal = array();
+	$arVisitante = array();
+	
+	$arCancha = array();
+	$arFecha  = array();
+	$arHora	  = array();
 	
 	for($i=0;$i<$numero;$i++){
 		
-		if (strpos($tags[$i],"equipo") !== false) {
+		if (strpos($tags[$i],"equipoModulo") !== false) {
+			
+			if (isset($valores[$i])) {
+
+				array_push($arEquipos,$valores[$i]);
+			}
+		}
+		
+		if (strpos($tags[$i],"modulo") !== false) {
+			
+			if (isset($valores[$i])) {
+
+				array_push($arModulo,$valores[$i]);
+			}
+		}
+		
+		if (strpos($tags[$i],"equipoa") !== false) {
+			
+			if (isset($valores[$i])) {
+
+				array_push($arLocal,$valores[$i]);
+			}
+		}
+		
+		if (strpos($tags[$i],"equipob") !== false) {
+			
+			if (isset($valores[$i])) {
+
+				array_push($arVisitante,$valores[$i]);
+			}
+		}
+		
+		if (strpos($tags[$i],"cancha") !== false) {
 			
 			if (isset($valores[$i])) {
 				
-				$idEquipos = str_replace("equipo","",$tags[$i]);
+				array_push($arCancha,$valores[$i]);
+			}
+		}
+		
+		if (strpos($tags[$i],"horario") !== false) {
+			
+			if (isset($valores[$i])) {
 				
-				$cadWhere .= $idEquipos.",";
-				array_push($cantEquipos,$cantidad);
-				$cantidad += 1;
+				array_push($arHora,$valores[$i]);
 			}
 		}
 	}
 	
-	if (($cantidad%2)==0) {
-		array_push($cantEquipos,$cantidad);
-	}
+	$reftorneos			=	$_POST['idtorneo'];
+	$calificacioncancha	= 'NULL';
+	$puntoslocal		= 'NULL';
+	$puntosvisita		= 'NULL';
+	$goleslocal			= 'NULL';
+	$golesvisitantes	= 'NULL';
+	$observaciones		= '';
+	$publicar			= 0;
 	
-	//die(var_dump($cantEquipos));
+	$refestadospartidos = 'NULL';
+	
+	$refarbitros		= 'NULL';
+	
+	/////// calculo las fechas ///////
+	$fechas = $_POST['cantfechas'];
+	
+	$juez1	= '';
+	$juez2	= '';
+	
+	$res = '';
+	
+	$total = 0;	
+	
+	$valorLocal 	= 0;
+	$valorVisitante = 0;
+	
+	$refconectorlocal 		= 0; 
+	$refconectorvisitante 	= 0; 
+	
+	for ($i=0;$i<count($arEquipos)-1;$i++) {
+		$fecha 		= $_POST['datepicker'.($i + 1)];
+		$reffechas 	= $i+1;
+		
+		$valorLocal 	= 0;
+		$valorVisitante = 0;
+		
+		$refconectorlocal 		= 0; 
+		$refconectorvisitante 	= 0; 
+		
+		for ($k=0;$k<count($arEquipos)/2;$k++) {
+			
+			$valorLocal 	= $arLocal[$total];
+			$valorVisitante = $arVisitante[$total];
+			
+			$refconectorlocal 		= $arEquipos[array_search($valorLocal, $arModulo)]; 
+			$refconectorvisitante 	= $arEquipos[array_search($valorVisitante, $arModulo)]; 
+			
+			//die(var_dump($refconectorlocal));
+			
+			$refcanchas		= $arCancha[$total];
+			$hora			= $arHora[$total];
+			
+			$res .= $serviciosReferencias->insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
+			
+			$total += 1;
+		}
+	}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbfixture";
@@ -87,7 +188,6 @@ $refdescripcion = array(0 => $cadRef,1=>$cadRef,2=>$cadRef2,3=>$cadRef3,4=>$cadR
 $refCampo	 	= array("refconectorlocal","refconectorvisitante","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos"); 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-$lstEquipos		=	$serviciosReferencias->traerEquiposPorEquipoIn(substr($cadWhere,0,-1));
 
 
 
@@ -108,40 +208,39 @@ $cabeceras 		= "	<th>Equipo Local</th>
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-$idTorneo = $_POST['idtorneo'];
-$fechainicio = $_POST['fechainicio'];
-$hora = $_POST['hora'];
 
-$formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+
+/*
+$fixtureGenerardo = $Generar->Generar360($_POST['idtorneo'],$_POST['idzona']);
+
+$array = $Generar->devolverCantFilas($_POST['idtorneo'],$_POST['idzona']);
+
+$filas = $array["filas"] * $array["columnas"];
+//echo $array["filas"];
+$fecha = 1;
+for ($i=1; $i<=$filas;$i++) {
+	
+	$date = explode("/",$_POST["datepicker".$fecha]);
+	$nuevaFecha = $date[2]."-".$date[1]."-".$date[0];
+	$serviciosZonasEquipos->insertarFixture($_POST["equipoa".$i],"",$_POST["equipob".$i],"",$nuevaFecha,22+$fecha,$_POST["horario".$i],$_POST["cancha".$i]);
+	//echo "aaaaaaaaaaaaaaaaaaaaaaa".$nuevaFecha;
+	if (($i % $array["filas"]) == 0) {
+		$fecha += 1;
+	}
+}
+*/
+
 
 $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerFixtureTodo(),13);
 
-$fixtureGenerardo = $Generar->generarAIF($idTorneo, $cantEquipos);
-
-//die(print_r($fixtureGenerardo));
-//die(var_dump($fixtureGenerardo));
-
-if ((count($cantEquipos) % 2)==0) {
-	$cantFechas = count($cantEquipos)-1;
-} else {
-	$cantFechas = count($cantEquipos);
-}
-
-//$array = $Generar->devolverCantFilas($idTorneo);
-
-$filas = count($cantEquipos)/2;
-//die(var_dump($fixtureGenerardo));
-
-$fechaNueva = date_create($fechainicio);
-
+///header('Location: generarfixture.php?idtorneo='.$_POST['idtorneo'].'&idzona='.$_POST['idzona']);
 ?>
-
 <!DOCTYPE HTML>
 <html>
 
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF8" />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -151,10 +250,10 @@ $fechaNueva = date_create($fechainicio);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-<!--<link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">-->
+<link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
     
 
-    <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
+    
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
@@ -168,7 +267,11 @@ $fechaNueva = date_create($fechainicio);
 	<!--<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="../../css/bootstrap-timepicker.css">-->
     <script src="../../js/bootstrap-timepicker.min.js"></script>
-	
+	<style type="text/css">
+		
+  
+		
+	</style>
     
    
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
@@ -221,12 +324,6 @@ $fechaNueva = date_create($fechainicio);
 	$( "#datepicker12" ).datepicker({ minDate: "", maxDate: "+13M +10D" });
 	$( "#datepicker13" ).datepicker({ minDate: "", maxDate: "+14M +10D" });
 	$( "#datepicker14" ).datepicker({ minDate: "", maxDate: "+15M +10D" });
-	$( "#datepicker15" ).datepicker({ minDate: "", maxDate: "+16M +10D" });
-	$( "#datepicker16" ).datepicker({ minDate: "", maxDate: "+17M +10D" });
-	$( "#datepicker17" ).datepicker({ minDate: "", maxDate: "+18M +10D" });
-	$( "#datepicker18" ).datepicker({ minDate: "", maxDate: "+19M +10D" });
-	$( "#datepicker19" ).datepicker({ minDate: "", maxDate: "+20M +10D" });
-	$( "#datepicker20" ).datepicker({ minDate: "", maxDate: "+21M +10D" });
   });
   </script>
 
@@ -247,157 +344,7 @@ $fechaNueva = date_create($fechainicio);
         	
         </div>
     	<div class="cuerpoBox">
-    		<form class="form-inline formulario" role="form" method="post" action="finalizar.php">
-            <div class="row" style="margin-left:5px; margin-right:5px; min-width:800px;">
-            	<div class="col-md-6">
-            	<table class="table table-bordered table-responsive">
-                	<thead>
-                    	<tr>
-                            <th>
-                                Numero de Equipo
-                            </th>
-                            <th>
-                                Equipo
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    	<?php
-							$canE = 1;
-							while ($row = mysql_fetch_array($lstEquipos)) {
-						?>
-                    	<tr>
-                        	<td>
-                            	<input class="form-control" style="text-align:center;" type="text" id="modulo<?php echo $canE; ?>" name="modulo<?php echo $canE; ?>" value="<?php echo $canE; ?>"/>
-                            </td>
-                            <td>
-                            	<select class="form-control" id="equipoModulo<?php echo $canE; ?>" name="equipoModulo<?php echo $canE; ?>">
-                            		<option value="<?php echo $row[0]; ?>"><?php echo $row[2]; ?></option>
-                                </select>
-                            </td>
-                        </tr>
-                        <?php
-							$canE += 1;
-							}
-							
-							if (($cantidad%2)==0) {
-						?>
-                        	<tr>
-                                <td>
-                                    <input class="form-control" style="text-align:center;" type="text" id="modulo<?php echo $canE; ?>" name="modulo<?php echo $canE; ?>" value="<?php echo $canE; ?>"/>
-                                </td>
-                                <td>
-                                    <select class="form-control" id="equipoModulo<?php echo $canE; ?>" name="equipoModulo<?php echo $canE; ?>">
-                                        <option value="0">Vacio</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        <?php		
-							}
-						?>
-                    </tbody>
-                </table>
-                </div>
-            </div>
-            
-            <div class="row" style="margin-left:5px; margin-right:5px; min-width:800px;">
-				<input type="button" class="btn btn-info" id="invertir" value="Invertir Local - Visitante" />
-    		<?php 
-			//die(var_dump($fixtureGenerardo[0][0]));
-			$total = 1;
-			if (count($fixtureGenerardo)>0) {
-			for ($i=0;$i<$cantFechas;$i++) {
-			echo '
-
-						<h3>Fecha '.($i + 1).'</h3>
-
-					  <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212;">
-					  	<label>Equipo Local</label>
-					  </div>
-					  <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212;">
-					  	<label>Horario</label>
-					  </div>
-					  <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212;">
-					  	<label>Cancha</label>
-					  </div>
-					  <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212;">
-					  	<label>Equipo Visitante</label>
-					  </div>';
-			for ($k=0;$k<$filas;$k++) {
-				//$lstEquipos = explode("***",$fixtureGenerardo[$i][$k]);
-				
-				echo '
-					  	<div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
-						<select id="equipoa'.$total.'" name="equipoa'.$total.'" class="form-control letraChica">
-                                
-                                <option value="'.$fixtureGenerardo['Local'][$total-1].'">'.$fixtureGenerardo['Local'][$total-1].'</option>
-								
-                         </select>
-						 Equipo: <span id="equia'.$total.'" class="lbl'.$fixtureGenerardo['Local'][$total-1].'"></span>
-						 </div>
-						 
-						 <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212; padding:5px;">
-						 <input type="text" id="horario'.$total.'" name="horario'.$total.'" class="form-control letraChica" style="width:80%;" value="'.$hora.'">
-
-						 </div>
-						 
-						 
-						 <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212; padding:5px;">
-						 <select id="cancha'.$total.'" name="cancha'.$total.'" class="form-control letraChica">
-						 	<option value="">-- Seleccionar --</option>
-                                '.$cadRef3.'
-                         </select>
-						 </div>
-						 
-						 
-						 <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
-						<select id="equipob'.$total.'" name="equipob'.$total.'" class="form-control letraChica">
-                                <option value="'.$fixtureGenerardo['Visitante'][$total-1].'">'.$fixtureGenerardo['Visitante'][$total-1].'</option>
-								
-                         </select>
-						 Equipo: <span id="equib'.$total.'" class="lbl'.$fixtureGenerardo['Visitante'][$total-1].'"></span>
-						 </div>';
-						 $total += 1;
-			}
-			echo '
-				
-				
-				Fecha Juego '.($i + 1).' <input type="text" class="form-control" id="datepicker'.($i + 1).'" name="datepicker'.($i + 1).'" value="'.$fechainicio.'" />
-				
-		
-					';
-				$fechainicio = strtotime ( '+7 day' , strtotime ( $fechainicio ) ) ;
-				$fechainicio = date ( 'Y-m-d' , $fechainicio );
-				echo "<hr><br>";
-			}
-			echo '<input type="hidden" id="cantfechas" name="cantfechas" value="'.($i + 1).'" />';
-			echo '<input type="hidden" id="total" name="total" value="'.$total.'" />';
-			echo '<input type="hidden" id="idtorneo" name="idtorneo" value="'.$_POST['idtorneo'].'" />';
-	
-			} else {
-				echo '<h2>Ya fue Cargado el Fixture completo para este torneo';	
-			}
-			?>
-            </div>
-            
-            <div class="row" style="margin-left:25px; margin-right:25px;">
-                <div class="alert"> </div>
-                <div id="load"> </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                <ul class="list-inline" style="margin-top:15px;">
-                    <li>
-                    	<?php if (count($fixtureGenerardo)>0) { ?>
-                        <button type="submit" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
-                        <?php } ?>
-                        <button type="button" class="btn btn-default" id="volver" style="margin-left:0px;">Volver</button>
-                    </li>
-
-                </ul>
-                </div>
-            </div>
-            </form>
+    		<h1>Fixture Generado Correctamente <?php //echo $res; ?></h1>
     	</div>
     </div>
 
@@ -438,78 +385,13 @@ $(document).ready(function(){
 		showMeridian: false,
 		defaultTime: false
 		});
-
-
-	function invertirLocalVisitante() {
-		var local = 0;
-		var visitante = 0;
-		for (i=1; i <= <?php echo $total; ?>; i++) {
-			
-			local 		= $('#equipoa'+i+' option:selected').val();
-			visitante 	= $('#equipob'+i+' option:selected').val();
-			
-			$("#equipoa"+ i +" option[value='" + local + "']").remove();
-			$("#equipob"+ i +" option[value='" + visitante + "']").remove();
-			
-			$("#equipob"+ i).append($('<option>', {
-				value: local,
-				text: local
-			}));
-			
-			$("#equipoa"+ i).append($('<option>', {
-				value: visitante,
-				text: visitante
-			}));
-			
-			$("#equia"+i).attr("class","lbl"+visitante); 
-			$("#equib"+i).attr("class","lbl"+local); 
-			
-		}
-	}
+	 <?php 
+		echo $serviciosHTML->validacion($tabla);
 	
-	$('#invertir').click(function() {
-		invertirLocalVisitante();
-		actualizarEquipos();
-		//$("#equipoa1 option[value='1']").remove();
-	});
-	
-	function actualizarEquipos() {
-		var a = 0;
-	<?php
-		for ($m=1;$m <= count($cantEquipos); $m++) {
 	?>
-		a = $('#modulo'+<?php echo $m; ?>).val();
-		$('.lbl'+a).html($('#equipoModulo'+<?php echo $m; ?>+' option:selected').text());
-	<?php
-		}
-	?>
-	}
-	
-	
-	
-	<?php
-		for ($m=1;$m <= count($cantEquipos); $m++) {
-	?>
-		$('#modulo'+<?php echo $m; ?>).change(function() {
-			if ($(this).val() != '') {
-				actualizarEquipos();	
-			}
-		});
-
-	<?php
-		}
-	?>
-	
-	
-	actualizarEquipos();
 	
 	$('#chequearF').click( function() {
 		url = "chequear.php";
-		$(location).attr('href',url);
-	});
-	
-	$('#volver').click( function() {
-		url = "index.php";
 		$(location).attr('href',url);
 	});
 	
@@ -583,7 +465,7 @@ $(document).ready(function(){
 	
 	
 	//al enviar el formulario
-    $('#cargar2').click(function(){
+    $('#cargar').click(function(){
 		
 		if (validador() == "")
         {
@@ -655,6 +537,32 @@ $(document).ready(function(){
 
 });
 </script>
+<script type="text/javascript">
+	$(".form_date1").datetimepicker({
+		language:  "es",
+		weekStart: 1,
+		todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0,
+		format: "dd/mm/yyyy"
+	});
+	</script>
+    <script type="text/javascript">
+	$(".form_date2").datetimepicker({
+		language:  "es",
+		weekStart: 1,
+		todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0,
+		format: "dd/mm/yyyy"
+	});
+	</script>
 
 
 
