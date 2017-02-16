@@ -168,35 +168,12 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosRefere
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
-                    <li>
-                        <button type="button" class="btn btn-success" id="chequearF" style="margin-left:0px;">Chequear Fixture</button>
-                    </li>
-                    <li>
-                        <button type="button" class="btn btn-success" id="conductaF" style="margin-left:0px;">Cargar Conducta al Fixture</button>
-                    </li>
-                    <li>
-                        <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
-                    </li>
+
                 </ul>
                 </div>
             </div>
             
-            <div class="row" align="center">
-            	<ul class="list-inline">
-                	<li>
-                    	Seleccione una zona para cargar datos de los jugadores y los equipos
-                    </li>
-                </ul>
-            </div>
-            <div class="row" align="center">
-                <ul class="list-inline">
-                	<?php while ($row = mysql_fetch_array($resZonasTorneos)) { ?>
-                	<li>
-                    	<a href="pregenerarfixture.php?idtorneo=<?php echo $row[2]; ?>&idzona=<?php echo $row[0]; ?>"><button type="button" class="btn btn-primary" style="margin-left:0px;"><?php echo $row[1]; ?> Generar Fixture</button></a>
-                    </li>
-					<?php } ?>
-                </ul>
-            </div>
+            
             </form>
     	</div>
     </div>

@@ -268,7 +268,7 @@ $fechaNueva = date_create($fechainicio);
 						?>
                     	<tr>
                         	<td>
-                            	<input class="form-control" style="text-align:center;" type="text" id="modulo<?php echo $canE; ?>" name="modulo<?php echo $canE; ?>" value="<?php echo $canE; ?>"/>
+                            	<input style="text-align:center;" type="text" id="modulo<?php echo $canE; ?>" name="modulo<?php echo $canE; ?>" value="<?php echo $canE; ?>"/>
                             </td>
                             <td>
                             	<select class="form-control" id="equipoModulo<?php echo $canE; ?>" name="equipoModulo<?php echo $canE; ?>">
