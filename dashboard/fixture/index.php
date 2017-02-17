@@ -60,7 +60,7 @@ $refCampo	 	= array("refconectorlocal","refconectorvisitante","reffechas","refca
 
 
 /////////////////////// Opciones para la creacion del view  /////////////////////
-$cabeceras 		= "	<th>Equipo Local</th>
+$cabeceras2 		= "	<th>Equipo Local</th>
 				<th>Resultado Local</th>
 				<th>Resultado Visitante</th>
 				<th>Equipo Visitante</th>
@@ -73,6 +73,21 @@ $cabeceras 		= "	<th>Equipo Local</th>
 				<th>Fecha</th>
 				<th>Hora</th>
 				<th>Estado</th>";
+				
+$cabeceras 		= "	<th>Descripción</th>
+					<th>Tipo Torneo</th>
+					<th>Temporadas</th>
+					<th>Categorias</th>
+					<th>Divisiones</th>
+					<th>Cant.Ascensos</th>
+					<th>Cant.Descensos</th>
+					<th>Respet.Def. Tipo Jugador</th>
+					<th>Respet.Def. Hab.Transt.</th>
+					<th>Respet.Def. Sansiones Acum.</th>
+					<th>Acum.Goleadores</th>
+					<th>Acum.Tabla Conformada</th>
+					<th>Obs.</th>
+					<th>Activo</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -81,9 +96,8 @@ $cabeceras 		= "	<th>Equipo Local</th>
 
 $formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerFixtureTodo(),13);
-//$lstCargados2 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosZonasEquipos->TraerTodoFixtureSinEquipo(),98);
-
+$refTorneos		=	$serviciosReferencias->traerTorneos();
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$refTorneos,90);
 
 ?>
 
@@ -168,25 +182,50 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosRefere
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
+<<<<<<< .mine
+                    
+||||||| .r70
+                    <li>
+                        <button type="button" class="btn btn-success" id="chequearF" style="margin-left:0px;">Chequear Fixture</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-success" id="conductaF" style="margin-left:0px;">Cargar Conducta al Fixture</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
+                    </li>
+=======
 
+>>>>>>> .r72
                 </ul>
                 </div>
             </div>
             
+<<<<<<< .mine
+||||||| .r70
+            <div class="row" align="center">
+            	<ul class="list-inline">
+                	<li>
+                    	Seleccione una zona para cargar datos de los jugadores y los equipos
+                    </li>
+                </ul>
+            </div>
+            <div class="row" align="center">
+                <ul class="list-inline">
+                	<?php while ($row = mysql_fetch_array($resZonasTorneos)) { ?>
+                	<li>
+                    	<a href="pregenerarfixture.php?idtorneo=<?php echo $row[2]; ?>&idzona=<?php echo $row[0]; ?>"><button type="button" class="btn btn-primary" style="margin-left:0px;"><?php echo $row[1]; ?> Generar Fixture</button></a>
+                    </li>
+					<?php } ?>
+                </ul>
+            </div>
+=======
             
+>>>>>>> .r72
             </form>
     	</div>
     </div>
 
-    <div class="boxInfoLargo">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Fixture Cargados</p>
-        	
-        </div>
-    	<div class="cuerpoBox">
-        	<?php echo $lstCargados; ?>
-    	</div>
-    </div>
     
    
 </div>
