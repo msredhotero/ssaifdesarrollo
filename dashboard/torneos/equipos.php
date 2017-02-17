@@ -33,6 +33,8 @@ if (isset($_GET['fechainicio'])) {
 }
 
 $resResultado = $serviciosReferencias->traerTorneosPorId($id);
+
+$resFixture	= $serviciosReferencias->traerFixtureTodoPorTorneo($id);
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Torneo";
 
@@ -186,7 +188,30 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
-        	<form class="form-inline formulario" role="form" method="post" action="../fixture/generarfixture.php">
+        <?php
+			if (mysql_num_rows($resFixture)>0) {
+		?>
+        	<h4>Ya existe un fixture creado</h4>
+            <div class="row">
+                <div class="col-md-12">
+                <ul class="list-inline" style="margin-top:15px;">
+                	<li>
+                        <button type="button" class="btn btn-primary varver" id="<?php echo $id; ?>" style="margin-left:0px;">Ver Fixture</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-default volver" id="volver" style="margin-left:0px;">Volver</button>
+                    </li>
+                </ul>
+                </div>
+            </div>
+        	
+            <?php
+			} else {
+				
+			?>
+            
+            
+            <form class="form-inline formulario" role="form" method="post" action="../fixture/generarfixture.php">
         	<div class="row">
             
 			<div class="col-md-12">
@@ -217,19 +242,21 @@ if ($_SESSION['refroll_predio'] != 1) {
 					while ($row = mysql_fetch_array($resEquipos)) {
 						$cantidad += 1;
 				?>
-                	<tr>
-                	<td align="center">
-                    <?php 
+                	<?php 
 						if ($row[2] =='Si') {
 					?>
+                	<tr>
+                	<td align="center">
+                    
                     <input class="form-control tildar" checked type="checkbox" name="equipo<?php echo $row[0]; ?>" id="equipo<?php echo $row[0]; ?>"/>
-                    <?php
-						}
-					?>
+                    
                     </td>
                     <td><?php echo $row[1]; ?></td>
                     <td><?php echo $row[2]; ?></td>
                     </tr>
+                    <?php
+						}
+					?>
                 <?php
 					}
 				?>
@@ -257,6 +284,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="submit" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
+                    <li>
+                        <button type="button" class="btn btn-default volver" id="volver" style="margin-left:0px;">Volver</button>
+                    </li>
                 </ul>
                 </div>
             </div>
@@ -264,6 +294,9 @@ if ($_SESSION['refroll_predio'] != 1) {
             <input type="hidden" id="idtorneo" name="idtorneo" value="<?php echo $id; ?>"/>
             <input type="hidden" id="hora" name="hora" value="<?php echo $hora; ?>"/>
             </form>
+            <?php
+			}
+			?>
     	</div>
     </div>
 
@@ -284,98 +317,26 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#example').dataTable({
-		"order": [[ 0, "asc" ]],
-		"language": {
-			"emptyTable":     "No hay datos cargados",
-			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
-			"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
-			"infoFiltered":   "(filtrados del total de _MAX_ filas)",
-			"infoPostFix":    "",
-			"thousands":      ",",
-			"lengthMenu":     "Mostrar _MENU_ filas",
-			"loadingRecords": "Cargando...",
-			"processing":     "Procesando...",
-			"search":         "Buscar:",
-			"zeroRecords":    "No se encontraron resultados",
-			"paginate": {
-				"first":      "Primero",
-				"last":       "Ultimo",
-				"next":       "Siguiente",
-				"previous":   "Anterior"
-			},
-			"aria": {
-				"sortAscending":  ": activate to sort column ascending",
-				"sortDescending": ": activate to sort column descending"
-			}
-		  }
-	} );
 	
-	$('#activo').prop('checked',true);
-
 	
-	$("#example").on("click",'.varborrar', function(){
+	$('.varver').click(function(event){	
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
-			$("#idEliminar").val(usersid);
-			$("#dialog2").dialog("open");
 
-			
-			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
-			//$(location).attr('href',url);
+			url = "../fixture/ver.php?id=" + usersid;
+			$(location).attr('href',url);
 		  } else {
 			alert("Error, vuelva a realizar la acción.");	
 		  }
 	});//fin del boton eliminar
 	
-	$("#example").on("click",'.varmodificar', function(){
-		  usersid =  $(this).attr("id");
-		  if (!isNaN(usersid)) {
-			
-			url = "modificar.php?id=" + usersid;
-			$(location).attr('href',url);
-		  } else {
-			alert("Error, vuelva a realizar la acción.");	
-		  }
+	$('.volver').click(function(event){
+		 
+		url = "index.php";
+		$(location).attr('href',url);
 	});//fin del boton modificar
 
-	 $( "#dialog2" ).dialog({
-		 	
-			    autoOpen: false,
-			 	resizable: false,
-				width:600,
-				height:240,
-				modal: true,
-				buttons: {
-				    "Eliminar": function() {
-	
-						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
-									url:   '../../ajax/ajax.php',
-									type:  'post',
-									beforeSend: function () {
-											
-									},
-									success:  function (response) {
-											url = "index.php";
-											$(location).attr('href',url);
-											
-									}
-							});
-						$( this ).dialog( "close" );
-						$( this ).dialog( "close" );
-							$('html, body').animate({
-	           					scrollTop: '1000px'
-	       					},
-	       					1500);
-				    },
-				    Cancelar: function() {
-						$( this ).dialog( "close" );
-				    }
-				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
+
 			
 	
 

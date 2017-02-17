@@ -235,24 +235,7 @@ if ($_SESSION['refroll_predio'] != 1) {
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
-<div class="modal fade" id="myModal3" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <form class="form-inline formulario" role="form">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Countries Asociados</h4>
-      </div>
-      <div class="modal-body lstCountries">
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
+
 
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
@@ -318,7 +301,7 @@ $(document).ready(function(){
 	});//fin del boton modificar
 	
 	
-	$("#example").on("click",'.varver', function(){
+	$("#example").on("click",'.vargenerar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			

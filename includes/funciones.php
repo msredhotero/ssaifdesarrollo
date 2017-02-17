@@ -137,9 +137,12 @@ class Servicios {
 				$cantidad = 14;
 				$classMod = 'varmodificar';
 				$classVer = 'varver';
-				$lblVer	  = 'Generar Fixture';
+				$lblVer	  = 'Ver Fixture';
 				$classEli = 'varborrar';
 				$idresultados = "resultados";
+				$classVar = 'vargenerar';
+				$lblVar	  = 'Generar Fixture';
+				$icoVar		= 'glyphicon glyphicon-calendar';
 				break;
 			default:
 				$classMod = 'varmodificar';
@@ -509,15 +512,20 @@ class Servicios {
 										
 										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
 											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-											<div class="input-group bootstrap-timepicker col-md-6">
-												<input id="timepicker2" name="'.$campo.'" class="form-control">
+											<div class="input-group col-md-6">
+												<input id="'.$campo.'" name="'.$campo.'" class="form-control">
 												<span class="input-group-addon">
 <span class="glyphicon glyphicon-time"></span>
 </span>
 											</div>
 											
 										</div>
-										
+										<script type="text/javascript">
+										$(document).ready(function(){
+											
+											$("#'.$campo.'").mask("99:99",{placeholder:"hh:mm"});
+										});
+										</script>
 										';
 										
 									} else {
@@ -865,15 +873,20 @@ class Servicios {
 										
 										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
 											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-											<div class="input-group bootstrap-timepicker col-md-6">
-												<input id="timepicker2" value="'.mysql_result($resMod,0,$row[0]).'" name="'.$campo.'" class="form-control">
+											<div class="input-group col-md-6">
+												<input id="'.$campo.'" value="'.mysql_result($resMod,0,$row[0]).'" name="'.$campo.'" class="form-control">
 												<span class="input-group-addon">
 <span class="glyphicon glyphicon-time"></span>
 </span>
 											</div>
 											
 										</div>
-										
+										<script type="text/javascript">
+										$(document).ready(function(){
+											
+											$("#'.$campo.'").mask("99:99",{placeholder:"hh:mm"});
+										});
+										</script>
 										';
 										
 									} else {
@@ -1317,7 +1330,7 @@ class Servicios {
 										
 										<div class="form-group col-md-6 col-xs-6">
 											<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
-											<div class="input-group bootstrap-timepicker col-md-6">
+											<div class="input-group col-md-6">
 												<p>'.mysql_result($resMod,0,$row[0]).'</p>
 											</div>
 											
