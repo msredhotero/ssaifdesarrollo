@@ -825,7 +825,20 @@ padding-bottom: 10px;
 
 
 			}
-			
+	.boxInfoLargoEstadisticas {
+		width: 1300px;; 
+				height: auto; 
+				margin-top:30px;
+				margin-bottom:30px;
+				min-width: 800px;
+				padding-right:10px;
+				float:left; 
+				background:#fff; 
+				z-index:-1;
+				/*overflow: hidden; */
+				position: relative; 
+				margin-right:15px;
+	}
 	.boxInfoLargo{ 
 				width: auto; 
 				height: auto; 
@@ -838,6 +851,7 @@ padding-bottom: 10px;
 				/*overflow: hidden; */
 				position: relative; 
 				margin-right:15px;
+				
 				/*opacity: 0.9;
   				filter:  alpha(opacity=90);
 				box-shadow: 2px 2px 5px #0e6390;
@@ -852,7 +866,7 @@ padding-bottom: 10px;
 
 			}
 			
-	.boxInfo .cuerpoBox,.boxInfoLargo .cuerpoBox {
+	.boxInfo .cuerpoBox,.boxInfoLargo .cuerpoBox,.boxInfoLargoEstadisticas .cuerpoBox {
 		padding:10px;
 	}
 

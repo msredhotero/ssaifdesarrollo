@@ -3585,7 +3585,6 @@ $res = $this->query($sql,0);
 return $res;
 }
 
-
 function traerFixturePorId($id) {
 $sql = "select idfixture,reftorneos,reffechas,refconectorlocal,refconectorvisitante,refarbitros,juez1,juez2,refcanchas,fecha,hora,refestadospartidos,calificacioncancha,puntoslocal,puntosvisita,goleslocal,golesvisitantes,observaciones,publicar from dbfixture where idfixture =".$id;
 $res = $this->query($sql,0);
@@ -3596,7 +3595,436 @@ return $res;
 /* /* Fin de la Tabla: dbfixture*/
 
 
+/********************  nuevos tablas 20/02/2017 para las ESTADISTICAS ************//////
 
+/* PARA Mejorjugador */
+
+function existeFixturePorMejorJugador($idJugador, $idFixture) {
+	$sql = "select * from dbmejorjugador where refjugadores =".$idJugador." and reffixture =".$idFixture;
+	
+	return $this->existe($sql);	
+}
+
+
+function insertarMejorjugador($refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones) { 
+$sql = "insert into dbmejorjugador(idmejorjugador,refjugadores,reffixture,refequipos,refcategorias,refdivisiones) 
+values ('',".$refjugadores.",".$reffixture.",".$refequipos.",".$refcategorias.",".$refdivisiones.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarMejorjugador($id,$refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones) { 
+$sql = "update dbmejorjugador 
+set 
+refjugadores = ".$refjugadores.",reffixture = ".$reffixture.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones." 
+where idmejorjugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarMejorjugador($id) { 
+$sql = "delete from dbmejorjugador where idmejorjugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMejorjugador() { 
+$sql = "select 
+p.idmejorjugador,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones
+from dbmejorjugador p 
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMejorjugadorPorJugadorFixture($idJugador, $idFixture) { 
+$sql = "select 
+p.idmejorjugador,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones
+from dbmejorjugador p 
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+where p.refjugadores = ".$idJugador." and p.reffixture =".$idFixture; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMejorjugadorPorId($id) { 
+$sql = "select idmejorjugador,refjugadores,reffixture,refequipos,refcategorias,refdivisiones from dbmejorjugador where idmejorjugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbmejorjugador*/
+
+
+/* PARA Minutosjugados */
+
+function existeFixturePorMinutosJugados($idJugador, $idFixture) {
+	$sql = "select * from dbminutosjugados where refjugadores =".$idJugador." and reffixture =".$idFixture;
+	
+	return $this->existe($sql);	
+}
+
+function insertarMinutosjugados($refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$minutos) { 
+$sql = "insert into dbminutosjugados(idminutojugado,refjugadores,reffixture,refequipos,refcategorias,refdivisiones,minutos) 
+values ('',".$refjugadores.",".$reffixture.",".$refequipos.",".$refcategorias.",".$refdivisiones.",".$minutos.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarMinutosjugados($id,$refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$minutos) { 
+$sql = "update dbminutosjugados 
+set 
+refjugadores = ".$refjugadores.",reffixture = ".$reffixture.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",minutos = ".$minutos." 
+where idminutojugado =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarMinutosjugados($id) { 
+$sql = "delete from dbminutosjugados where idminutojugado =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMinutosjugados() { 
+$sql = "select 
+p.idminutojugado,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones,
+p.minutos
+from dbminutosjugados p 
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerMinutosjugadosPorJugadorFixture($idJugador, $idFixture) { 
+$sql = "select 
+p.idminutojugado,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones,
+p.minutos
+from dbminutosjugados p 
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+where p.refjugadores = ".$idJugador." and p.reffixture =".$idFixture; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMinutosjugadosPorId($id) { 
+$sql = "select idminutojugado,refjugadores,reffixture,refequipos,refcategorias,refdivisiones,minutos from dbminutosjugados where idminutojugado =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbminutosjugados*/
+
+
+/* PARA Penalesjugadores */
+
+function existeFixturePorPenalesJugador($idJugador, $idFixture) {
+	$sql = "select * from dbpenalesjugadores where refjugadores =".$idJugador." and reffixture =".$idFixture;
+	
+	return $this->existe($sql);	
+}
+
+function insertarPenalesjugadores($refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$penalconvertido,$penalerrado,$penalatajado) { 
+$sql = "insert into dbpenalesjugadores(idpenaljugador,refjugadores,reffixture,refequipos,refcategorias,refdivisiones,penalconvertido,penalerrado,penalatajado) 
+values ('',".$refjugadores.",".$reffixture.",".$refequipos.",".$refcategorias.",".$refdivisiones.",".$penalconvertido.",".$penalerrado.",".$penalatajado.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarPenalesjugadores($id,$refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$penalconvertido,$penalerrado,$penalatajado) { 
+$sql = "update dbpenalesjugadores 
+set 
+refjugadores = ".$refjugadores.",reffixture = ".$reffixture.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",penalconvertido = ".$penalconvertido.",penalerrado = ".$penalerrado.",penalatajado = ".$penalatajado." 
+where idpenaljugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarPenalesjugadores($id) { 
+$sql = "delete from dbpenalesjugadores where idpenaljugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerPenalesjugadores() { 
+$sql = "select 
+p.idpenaljugador,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones,
+p.penalconvertido,
+p.penalerrado,
+p.penalatajado
+from dbpenalesjugadores p 
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerPenalesjugadoresPorJugadorFixture($idJugador, $idFixture) { 
+$sql = "select 
+p.idpenaljugador,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones,
+p.penalconvertido,
+p.penalerrado,
+p.penalatajado
+from dbpenalesjugadores p 
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+where p.refjugadores = ".$idJugador." and p.reffixture =".$idFixture;
+$res = $this->query($sql,0); 
+return $res; 
+} 
+ 
+
+function traerPenalesjugadoresPorId($id) { 
+$sql = "select idpenaljugador,refjugadores,reffixture,refequipos,refcategorias,refdivisiones,penalconvertido,penalerrado,penalatajado from dbpenalesjugadores where idpenaljugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbpenalesjugadores*/
+
+
+
+
+/* PARA Sancionesfallos */
+
+function insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones) {
+$sql = "insert into dbsancionesfallos(idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones)
+values ('',".$refsancionesjugadores.",".$cantidadfechas.",'".utf8_decode($fechadesde)."','".utf8_decode($fechahasta)."',".$fechascumplidas.",".$pendientescumplimientos.",".$pendientesfallo.",".$generadaporacumulacion.",'".utf8_decode($observaciones)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarSancionesfallos($id,$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones) {
+$sql = "update dbsancionesfallos
+set
+refsancionesjugadores = ".$refsancionesjugadores.",cantidadfechas = ".$cantidadfechas.",fechadesde = '".utf8_decode($fechadesde)."',fechahasta = '".utf8_decode($fechahasta)."',fechascumplidas = ".$fechascumplidas.",pendientescumplimientos = ".$pendientescumplimientos.",pendientesfallo = ".$pendientesfallo.",generadaporacumulacion = ".$generadaporacumulacion.",observaciones = '".utf8_decode($observaciones)."'
+where idsancionfallo =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarSancionesfallos($id) {
+$sql = "delete from dbsancionesfallos where idsancionfallo =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerSancionesfallos() {
+$sql = "select
+s.idsancionfallo,
+s.refsancionesjugadores,
+s.cantidadfechas,
+s.fechadesde,
+s.fechahasta,
+s.fechascumplidas,
+s.pendientescumplimientos,
+s.pendientesfallo,
+s.generadaporacumulacion,
+s.observaciones
+from dbsancionesfallos s
+inner join dbsancionesjugadores san ON san.idsancionjugador = s.refsancionesjugadores
+inner join tbtiposanciones ti ON ti.idtiposancion = san.reftiposanciones
+inner join dbjugadores ju ON ju.idjugador = san.refjugadores
+inner join dbequipos eq ON eq.idequipo = san.refequipos
+inner join dbfixture fi ON fi.idfixture = san.reffixture
+inner join tbcategorias ca ON ca.idtcategoria = san.refcategorias
+inner join tbdivisiones di ON di.iddivision = san.refdivisiones
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerSancionesfallosPorId($id) {
+$sql = "select idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones from dbsancionesfallos where idsancionfallo =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbsancionesfallos*/
+
+
+/* PARA Sancionesjugadores */
+
+function insertarSancionesjugadores($reftiposanciones,$refjugadores,$refequipos,$reffixture,$fecha,$cantidad,$refcategorias,$refdivisiones,$refsancionesfallos) {
+$sql = "insert into dbsancionesjugadores(idsancionjugador,reftiposanciones,refjugadores,refequipos,reffixture,fecha,cantidad,refcategorias,refdivisiones,refsancionesfallos)
+values ('',".$reftiposanciones.",".$refjugadores.",".$refequipos.",".$reffixture.",'".utf8_decode($fecha)."',".$cantidad.",".$refcategorias.",".$refdivisiones.",".$refsancionesfallos.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarSancionesjugadores($id,$reftiposanciones,$refjugadores,$refequipos,$reffixture,$fecha,$cantidad,$refcategorias,$refdivisiones,$refsancionesfallos) {
+$sql = "update dbsancionesjugadores
+set
+reftiposanciones = ".$reftiposanciones.",refjugadores = ".$refjugadores.",refequipos = ".$refequipos.",reffixture = ".$reffixture.",fecha = '".utf8_decode($fecha)."',cantidad = ".$cantidad.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",refsancionesfallos = ".$refsancionesfallos."
+where idsancionjugador =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarSancionesjugadores($id) {
+
+$sql = "delete from dbsancionesjugadores where idsancionjugador =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerSancionesjugadores() {
+$sql = "select
+p.idsancionjugador,
+p.reftiposanciones,
+p.refjugadores,
+p.refequipos,
+p.reffixture,
+p.fecha,
+p.cantidad,
+p.refcategorias,
+p.refdivisiones,
+p.refsancionesfallos
+from dbsancionesjugadores p
+inner join tbtiposanciones tip ON tip.idtiposancion = p.reftiposanciones
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerSancionesjugadoresPorId($id) {
+$sql = "select idsancionjugador,reftiposanciones,refjugadores,refequipos,reffixture,fecha,cantidad,refcategorias,refdivisiones,refsancionesfallos from dbsancionesjugadores where idsancionjugador =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbsancionesjugadores*/
+
+
+/***************************************** Fin *****************************************/
 /************  FUNCIONES PARA LA PARTE ADMINISTRATIVA  *********************/
 
 /****** VERIFICO LA EDAD ******/////

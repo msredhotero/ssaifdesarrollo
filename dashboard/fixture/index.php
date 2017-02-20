@@ -97,7 +97,6 @@ $cabeceras 		= "	<th>Descripción</th>
 $formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
 $refTorneos		=	$serviciosReferencias->traerTorneos();
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$refTorneos,90);
 
 ?>
 
@@ -182,10 +181,7 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$refTorneos,90);
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
-<<<<<<< .mine
-                    
-||||||| .r70
-                    <li>
+                   <!-- <li>
                         <button type="button" class="btn btn-success" id="chequearF" style="margin-left:0px;">Chequear Fixture</button>
                     </li>
                     <li>
@@ -193,35 +189,29 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$refTorneos,90);
                     </li>
                     <li>
                         <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
-                    </li>
-=======
+                    </li>-->
 
->>>>>>> .r72
                 </ul>
                 </div>
             </div>
-            
-<<<<<<< .mine
-||||||| .r70
+
             <div class="row" align="center">
             	<ul class="list-inline">
                 	<li>
-                    	Seleccione una zona para cargar datos de los jugadores y los equipos
+                    	Seleccione un torneo para generar el fixture
                     </li>
                 </ul>
             </div>
             <div class="row" align="center">
                 <ul class="list-inline">
-                	<?php while ($row = mysql_fetch_array($resZonasTorneos)) { ?>
+                	<?php while ($row = mysql_fetch_array($refTorneos)) { ?>
                 	<li>
-                    	<a href="pregenerarfixture.php?idtorneo=<?php echo $row[2]; ?>&idzona=<?php echo $row[0]; ?>"><button type="button" class="btn btn-primary" style="margin-left:0px;"><?php echo $row[1]; ?> Generar Fixture</button></a>
+                    	<a href="../torneos/equipos.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-primary" style="margin-left:0px;"><?php echo $row[3]; ?> | <?php echo $row[1]; ?> | <?php echo $row[4]; ?> | <?php echo $row[1]; ?> -> Generar Fixture</button></a>
                     </li>
 					<?php } ?>
                 </ul>
             </div>
-=======
-            
->>>>>>> .r72
+
             </form>
     	</div>
     </div>

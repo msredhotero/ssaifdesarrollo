@@ -68,7 +68,14 @@ $tablasAr	= array("contactos"        => "dbcontactos",
 "estadospartidos"=>"tbestadospartidos",
 "definicionescategoriastemporadas"=>"dbdefinicionescategoriastemporadas",
 "definicionescategoriastemporadastipojugador"=>"dbdefinicionescategoriastemporadastipojugador",
-"definicionessancionesacumuladastemporadas"=>"dbdefinicionessancionesacumuladastemporadas");
+"definicionessancionesacumuladastemporadas"=>"dbdefinicionessancionesacumuladastemporadas",
+"sancionesfallos"=>"dbsancionesfallos",
+"sancionesjugadores"=>"dbsancionesjugadores",
+"goleadores"=>"dbgoleadores",
+"mejorjugador"=>"dbmejorjugador",
+"minutosjugados"=>"dbminutosjugados",
+"penalesjugadores"=>"dbpenalesjugadores",
+"sancionesfallos"=>"dbsancionesfallos");
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
@@ -106,7 +113,14 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "estadospartidos"=>"tbestadospartidos",
 "definicionescategoriastemporadas"=>"dbdefinicionescategoriastemporadas",
 "definicionescategoriastemporadastipojugador"=>"dbdefinicionescategoriastemporadastipojugador",
-"definicionessancionesacumuladastemporadas"=>"dbdefinicionessancionesacumuladastemporadas");
+"definicionessancionesacumuladastemporadas"=>"dbdefinicionessancionesacumuladastemporadas",
+"sancionesfallos"=>"dbsancionesfallos",
+"sancionesjugadores"=>"dbsancionesjugadores",
+"goleadores"=>"dbgoleadores",
+"mejorjugador"=>"dbmejorjugador",
+"minutosjugados"=>"dbminutosjugados",
+"penalesjugadores"=>"dbpenalesjugadores",
+"sancionesfallos"=>"dbsancionesfallos");
 
 	$tablasArAux	= array("contactos"        => 2,        
 "tipocontactos"=> 1,
@@ -141,7 +155,14 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "estadospartidos"=>1,
 "definicionescategoriastemporadas"=>4,
 "definicionescategoriastemporadastipojugador"=>3,
-"definicionessancionesacumuladastemporadas"=>3);
+"definicionessancionesacumuladastemporadas"=>3,
+"sancionesfallos"=>1,
+"sancionesjugadores"=>7,
+"goleadores"=>5,
+"mejorjugador"=>5,
+"minutosjugados"=>5,
+"penalesjugadores"=>5,
+"sancionesfallos"=>5);
 	
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
