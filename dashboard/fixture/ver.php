@@ -95,7 +95,7 @@ $cabeceras 		= "	<th>Descripción</th>
 
 $resTorneo = $serviciosReferencias->traerTorneosPorId($id);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras2,$resResult,13);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras2,$resResult,89);
 
 ?>
 
@@ -233,6 +233,17 @@ $(document).ready(function(){
 			
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton eliminar
+	
+	$('.varver').click(function(event){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+
+			url = "../estadisticas/estadisticas.php?id=" + usersid;
+			$(location).attr('href',url);
 		  } else {
 			alert("Error, vuelva a realizar la acción.");	
 		  }

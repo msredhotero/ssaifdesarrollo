@@ -144,6 +144,14 @@ class Servicios {
 				$lblVar	  = 'Generar Fixture';
 				$icoVar		= 'glyphicon glyphicon-calendar';
 				break;
+			case 89:
+				$cantidad = 13;
+				$classMod = 'varmodificar';
+				$classVer = 'varver';
+				$lblVer	  = 'Estadisticas';
+				$classEli = 'varborrar';
+				$idresultados = "resultados";
+				break;
 			default:
 				$classMod = 'varmodificar';
 				$classEli = 'varborrar';

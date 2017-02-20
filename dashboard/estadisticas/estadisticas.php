@@ -38,6 +38,27 @@ $resultadoB = mysql_result($resFix,0,'puntosvisita');
 $equipoA = mysql_result($serviciosReferencias->traerEquiposPorId($equipoLocal),0,'nombre');
 $equipoB = mysql_result($serviciosReferencias->traerEquiposPorId($equipoVisitante),0,'nombre');
 
+$resTorneo	=	$serviciosReferencias->traerTorneosPorId(mysql_result($resFix,0,'reftorneos'));
+
+$idCategoria	=	mysql_result($resTorneo,0,'refcategorias');
+$idDivisiones	=	mysql_result($resTorneo,0,'refdivisiones');
+
+///////////////   traigo la utima temporada  ///////////////////
+$refTemporada = $serviciosReferencias->traerUltimaTemporada();
+
+if (mysql_num_rows($refTemporada)>0) {
+	$idTemporada = mysql_result($refTemporada,0,0);	
+} else {
+	$idTemporada = 0;
+}
+////////////////// fin  ////////////////////////////////////////
+
+/////////////		traigo los minutos del partido   ////////////////
+$resDefCategTemp		=	$serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria);
+
+$minutos				=	mysql_result($resDefCategTemp,0,'minutospartido');
+/////////////			fin				/////////////////////////////
+
 /////////////////////// Opciones de la pagina  ////////////////////
 
 $lblTitulosingular	= "Estadistica";
@@ -205,7 +226,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="number" class="form-control input-sm" name="minitos<?php echo $row[0]; ?>" id="minitos<?php echo $row[0]; ?>" style="width:55px;" value=""/>
+                                	<input type="number" class="form-control input-sm" name="minitos<?php echo $row[0]; ?>" id="minitos<?php echo $row[0]; ?>" style="width:55px;" value="<?php echo $minutos; ?>"/>
                                 </div>
                             </th>
                             <th>
@@ -315,7 +336,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="number" class="form-control input-sm" name="minitos<?php echo $rowB[0]; ?>" id="minitos<?php echo $rowB[0]; ?>" style="width:55px;" value=""/>
+                                	<input type="number" class="form-control input-sm" name="minitos<?php echo $rowB[0]; ?>" id="minitos<?php echo $rowB[0]; ?>" style="width:55px;" value="<?php echo $minutos; ?>"/>
                                 </div>
                             </th>
                             <th>
@@ -392,7 +413,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             </div>
 			
             
-            <div class="row">
+            <div class="row" style="margin-left:15px; margin-right:15px;">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
 

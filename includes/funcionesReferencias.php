@@ -4024,6 +4024,64 @@ return $res;
 /* /* Fin de la Tabla: dbsancionesjugadores*/
 
 
+function traerEstadisticaPorFixtureJugadorCategoriaDivision($idJugador, $idFixture, $idCategoria, $idDivision) {
+	$sql = "select 
+    c.idconector,
+	cat.categoria,
+	equ.nombre as equipo,
+	co.nombre as countrie,
+	tip.tipojugador,
+	(case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	jug.nrodocumento,
+	coalesce(minj.minutos,0) as minutosjugados,
+	(case when coalesce(mj.idmejorjugador,0) = 1 then 'Si' else 'No' end) as mejorjugador,
+	coalesce(gol.goles,0) as goles,
+	coalesce(gol.encontra,0) as encontra,
+	coalesce(pen.penalconvertido,0) as penalconvertido,
+	coalesce(pen.penalerrado,0) as penalerrado,
+	coalesce(pen.penalatajado,0) as penalatajado    
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+		inner join
+	dbfixture fix ON fix.refconectorlocal = equ.idequipo
+		left join
+	dbmejorjugador mj ON mj.reffixture = fix.idfixture
+		left join
+	dbminutosjugados minj ON minj.reffixture = fix.idfixture
+		left join
+	dbgoleadores gol ON gol.reffixture = fix.idfixture
+		left join
+	dbpenalesjugadores pen ON pen.reffixture = fix.idfixture
+	where jug.idjugador = 6 and fix.idfixture = 1";
+	$res = $this->query($sql,0);
+	return $res;	
+}
+
 /***************************************** Fin *****************************************/
 /************  FUNCIONES PARA LA PARTE ADMINISTRATIVA  *********************/
 
