@@ -317,7 +317,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-	
+	$('#colapsarMenu').click();
 	$('#fechaalta').val('<?php echo date('d/m/Y'); ?>');
 	
 	$(document).on('click', '.panel-heading span.clickable', function(e){

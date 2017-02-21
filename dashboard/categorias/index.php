@@ -67,7 +67,6 @@ $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lb
 $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerCategorias(),1);
 
 
-
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {

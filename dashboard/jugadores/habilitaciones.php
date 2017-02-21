@@ -244,6 +244,8 @@ if ($_SESSION['refroll_predio'] != 1) {
               <li class="list-group-item list-group-item-default">Nombre Completo: <?php echo mysql_result($resResultado,0,'apellido').', '.mysql_result($resResultado,0,'nombres'); ?></li>
               <li class="list-group-item list-group-item-default">Nro Documento: <?php echo mysql_result($resResultado,0,'nrodocumento'); ?></li>
               <li class="list-group-item list-group-item-default">Fecha de Nacimiento: <?php echo mysql_result($resResultado,0,'fechanacimiento'); ?></li>
+              <li class="list-group-item list-group-item-default">Countrie: <?php echo mysql_result($serviciosReferencias->traerCountriesPorId(mysql_result($resResultado,0,'refcountries')),0,'nombre'); ?></li>
+              
             </ul>
             
             <hr>

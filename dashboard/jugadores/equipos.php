@@ -259,6 +259,7 @@ if ($_SESSION['refroll_predio'] != 1) {
               <li class="list-group-item list-group-item-default">Nombre Completo: <?php echo mysql_result($resResultado,0,'apellido').', '.mysql_result($resResultado,0,'nombres'); ?></li>
               <li class="list-group-item list-group-item-default">Nro Documento: <?php echo mysql_result($resResultado,0,'nrodocumento'); ?></li>
               <li class="list-group-item list-group-item-default">Fecha de Nacimiento: <?php echo mysql_result($resResultado,0,'fechanacimiento'); ?></li>
+              <li class="list-group-item list-group-item-default">Countrie: <?php echo mysql_result($serviciosReferencias->traerCountriesPorId(mysql_result($resResultado,0,'refcountries')),0,'nombre'); ?></li>
             </ul>
             
         	<form class="form-inline formulario" role="form">
@@ -438,6 +439,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             </div>
             <input type="hidden" id="accion" name="accion" value="<?php echo $insertar; ?>"/>
             <input type="hidden" id="refjugadores" name="refjugadores" value="<?php echo $id; ?>"/>
+            <input type="hidden" id="reftemporada" name="reftemporada" value="<?php echo $idTemporada; ?>"/>
             <input type="hidden" id="refcountries" name="refcountries" value="<?php echo mysql_result($resResultado,0,'refcountries'); ?>"/>
             </form>
     	
@@ -528,6 +530,7 @@ $(document).ready(function(){
 			},
 			success:  function (response) {
 				$(contenedor).html(response);
+				verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
 			}
 		});		
 	}
@@ -542,11 +545,12 @@ $(document).ready(function(){
 			},
 			success:  function (response) {
 				$(contenedor).html(response);
+				verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
 			}
 		});		
 	}
 	
-	traerEquipoPorCategoria($('#refcategorias').val(), '#refequipos', <?php echo mysql_result($resResultado,0,'refcountries'); ?>);
+	
 	
 	function verificaEdadCategoriaJugador(refjugador, refcategoria, tipoJugador, refequipo, reftemporada) {
 		$.ajax({
@@ -578,24 +582,30 @@ $(document).ready(function(){
 		});	
 	}
 	
-	verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
+	
 	
 	$('#refcategorias').change(function(e) {
-        verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
+        
 		if  ($('#esfusion').prop('checked') == false) {
 			traerEquipoPorCategoria($(this).val(), '#refequipos', <?php echo mysql_result($resResultado,0,'refcountries'); ?>);
 		} else {
 			traerEquipoPorCategoria($(this).val(), '#refequipos', $('#refcountriesaux').val());
 		}
+		
+		verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
     });
 	
 	$('#reftipojugadores').change(function(e) {
         verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
     });
 	
+	$('#refequipos').change(function() {
+		verificaEdadCategoriaJugador(<?php echo $id; ?>, $('#refcategorias').val(),$('#reftipojugadores').val(), $('#refequipos').val(),<?php echo $idTemporada; ?>);
+	});
 	
-	traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
 	
+	//traerEquiposPorCountries(<?php echo mysql_result($resResultado,0,'refcountries'); ?>, '#refequipos');
+	traerEquipoPorCategoria($('#refcategorias').val(), '#refequipos', <?php echo mysql_result($resResultado,0,'refcountries'); ?>);
 	
 	
 	$('#esfusion').click(function() {
@@ -608,6 +618,7 @@ $(document).ready(function(){
 			traerEquipoPorCategoria($(this).val(), '#refequipos', $('#refcountriesaux').val());
 			$('#refcountriesauxDiv').show();	
 		}
+		
 		
 	});
 
@@ -666,7 +677,7 @@ $(document).ready(function(){
 									
 							},
 							success:  function (response) {
-									url = "index.php";
+									url = "equipos.php?id="+<?php echo $id; ?>;
 									$(location).attr('href',url);
 									
 							}
@@ -821,6 +832,8 @@ $(document).ready(function(){
 	$('#refcountriesauxDiv').hide();
 	
 	$('#primero').addClass('collapse');
+	
+	
 
 });
 </script>

@@ -432,6 +432,16 @@ case 'buscarJugadores':
 
 /*****          FIN            ***********/
 
+
+/*****		ESTADISTICAS        **********/
+case 'insertarEstadisticaMasiva':
+	insertarEstadisticaMasiva($serviciosReferencias);
+	break;
+case 'buscarPartido':
+	buscarPartido($serviciosReferencias);
+	break;
+
+/*****			FIN				**********/
 }
 
 /* Fin */
@@ -457,6 +467,25 @@ function formatearEntero($entero) {
 	}
 	return $entero;
 }
+
+
+/*****		ESTADISTICAS        **********/
+
+function buscarPartido($serviciosReferencias) {
+	$id = $_POST['id'];
+	
+	$res = $serviciosReferencias->traerFixturePorId($id);
+	
+	if (mysql_num_rows($res)>0) {
+		echo $id;	
+	} else {
+		echo 0;	
+	}
+}
+
+
+/*****			FIN				**********/
+
 
 /*****         FUNCIONES       **********/
 function verificarEdad($serviciosReferencias) {
@@ -645,6 +674,8 @@ function insertarConector($serviciosReferencias) {
 	$refcountries = $_POST['refcountries']; 
 	$refcategorias = $_POST['refcategorias']; 
 	
+	$reftemporada = $_POST['reftemporada'];
+	
 	if (isset($_POST['esfusion'])) { 
 		$refcountries = $_POST['refcountriesaux'];
 		$esfusion	= 1; 
@@ -654,14 +685,26 @@ function insertarConector($serviciosReferencias) {
 	
 	$activo	= 1; 
 	
-	$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
+	// Verifico si tiene una hab. transitoria
+	$vHabTrns = $serviciosReferencias->verificaHabilitacionDeportiva($refjugadores, $refcategorias, $reftemporada, $refequipos);
 	
-	if ((integer)$res > 0) { 
-		$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
+	$existe = $serviciosReferencias->existeConectorJugadorEquipo($refjugadores, $refequipos);
+	
+	if ($existe == 1) {
+		echo 'Ya cargo a este jugador en el equipo';	 
+	} else {
+		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
+		
+		if ((integer)$res > 0) { 
+			//si voy a cargar al agente y ademas posee otro conector y esta activo, pero esta carga viene de un habilitacion deportiva
+			if ($vHabTrns != 1) {
+				$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
+			}
+			echo ''; 
+		} else { 
+			echo 'Huvo un error al insertar datos';	 
+		} 
+	}
 } 
 
 

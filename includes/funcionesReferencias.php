@@ -30,6 +30,16 @@ function existe($sql) {
 	return 0;
 }
 
+function existeDevuelveId($sql) {
+
+	$res = $this->query($sql,0);
+	
+	if (mysql_num_rows($res)>0) {
+		return mysql_result($res,0,0);	
+	}
+	return 0;
+}
+
 
 ///**********  PARA SUBIR ARCHIVOS  ***********************//////////////////////////
 	function borrarDirecctorio($dir) {
@@ -3038,13 +3048,25 @@ return $res;
 
 /* PARA Conector */
 function actualizarConectoresPorJugador($refJugador, $idconector) {
-	$sql = "update dbconector set activo = 0 where refjugadores =".$refJugador." and idconector <> ".$idconector;
+	$sqlNoActualizar = "SELECT idconector FROM dbconector c
+					inner
+					join 	dbjugadoresmotivoshabilitacionestransitorias jm
+					on		c.refjugadores = jm.refjugadores and c.refequipos = jm.refequipos and c.refcategorias = jm.refcategorias
+					where	c.refjugadores = ".$refJugador." and c.activo = 1";
+	
+	$resConHab = $this->query($sqlNoActualizar,0);
+	
+	while ($row = mysql_fetch_array($resConHab)){
+		$idconector .= ",".$row[0];
+	}
+	
+	$sql = "update dbconector set activo = 0 where refjugadores =".$refJugador." and idconector not in (".$idconector.")";
 	$res = $this->query($sql,0);
 	return $res;
 }
 
 function existeConectorJugadorEquipo($refJugador, $refEquipo) {
-	$sql = "select idconector from dbconector where refjugadores =".$refJugador." and refequipos = ".$refEquipo;
+	$sql = "select idconector from dbconector where refjugadores =".$refJugador." and refequipos = ".$refEquipo." and activo = 1";
 	$res = $this->query($sql,0);
 	
 	if (mysql_num_rows($res)>0) {
@@ -3117,7 +3139,7 @@ from
         inner join
     tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
         inner join
-    dbcountries co ON co.idcountrie = jug.refcountries
+    dbcountries co ON co.idcountrie = c.refcountries
         inner join
     tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
         inner join
@@ -3312,6 +3334,53 @@ from
         inner join
     tbcategorias cat ON cat.idtcategoria = c.refcategorias
 	where equ.idequipo = ".$refEquipos." and c.activo = 1
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerConectorActivosPorEquiposCategorias($refEquipos, $idCategoria) {
+$sql = "select 
+    c.idconector,
+	cat.categoria,
+	equ.nombre as equipo,
+	co.nombre as countrie,
+	tip.tipojugador,
+	(case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	jug.nrodocumento,
+	jug.fechanacimiento,
+	tip.idtipojugador,
+	year(now()) - year(jug.fechanacimiento) as edad
+    
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	where equ.idequipo = ".$refEquipos." and c.activo = 1 and c.refcategorias = ".$idCategoria."
 order by 1";
 $res = $this->query($sql,0);
 return $res;
@@ -3602,7 +3671,7 @@ return $res;
 function existeFixturePorMejorJugador($idJugador, $idFixture) {
 	$sql = "select * from dbmejorjugador where refjugadores =".$idJugador." and reffixture =".$idFixture;
 	
-	return $this->existe($sql);	
+	return $this->existeDevuelveId($sql);	
 }
 
 
@@ -3626,6 +3695,12 @@ return $res;
 
 function eliminarMejorjugador($id) { 
 $sql = "delete from dbmejorjugador where idmejorjugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function eliminarMejorjugadorMasivo($reffixture) { 
+$sql = "delete from dbmejorjugador where reffixture = ".$reffixture; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -3698,7 +3773,7 @@ return $res;
 function existeFixturePorMinutosJugados($idJugador, $idFixture) {
 	$sql = "select * from dbminutosjugados where refjugadores =".$idJugador." and reffixture =".$idFixture;
 	
-	return $this->existe($sql);	
+	return $this->existeDevuelveId($sql);	
 }
 
 function insertarMinutosjugados($refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$minutos) { 
@@ -3794,7 +3869,7 @@ return $res;
 function existeFixturePorPenalesJugador($idJugador, $idFixture) {
 	$sql = "select * from dbpenalesjugadores where refjugadores =".$idJugador." and reffixture =".$idFixture;
 	
-	return $this->existe($sql);	
+	return $this->existeDevuelveId($sql);	
 }
 
 function insertarPenalesjugadores($refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$penalconvertido,$penalerrado,$penalatajado) { 
@@ -4024,6 +4099,106 @@ return $res;
 /* /* Fin de la Tabla: dbsancionesjugadores*/
 
 
+/* PARA Goleadores */
+
+
+function existeFixturePorGoleadores($idJugador, $idFixture) {
+	$sql = "select * from dbgoleadores where refjugadores =".$idJugador." and reffixture =".$idFixture;
+	
+	return $this->existeDevuelveId($sql);	
+}
+
+
+function insertarGoleadores($refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$goles,$encontra) { 
+$sql = "insert into dbgoleadores(idgoleador,refjugadores,reffixture,refequipos,refcategorias,refdivisiones,goles,encontra) 
+values ('',".$refjugadores.",".$reffixture.",".$refequipos.",".$refcategorias.",".$refdivisiones.",".$goles.",".$encontra.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarGoleadores($id,$refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$goles,$encontra) { 
+$sql = "update dbgoleadores 
+set 
+refjugadores = ".$refjugadores.",reffixture = ".$reffixture.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",goles = ".$goles.",encontra = ".$encontra." 
+where idgoleador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarGoleadores($id) { 
+$sql = "delete from dbgoleadores where idgoleador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerGoleadores() { 
+$sql = "select 
+p.idgoleador,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones,
+p.goles,
+p.encontra
+from dbgoleadores p
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerGoleadoresPorJugadorFixture($idJugador, $idFixture) { 
+$sql = "select 
+p.idgoleador,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones,
+p.goles,
+p.encontra
+from dbgoleadores p
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+where p.refjugadores = ".$idJugador." and p.reffixture =".$idFixture;
+$res = $this->query($sql,0); 
+return $res; 
+}
+
+
+function traerGoleadoresPorId($id) { 
+$sql = "select idgoleador,refjugadores,reffixture,refequipos,refcategorias,refdivisiones,goles,encontra from dbgoleadores where idgoleador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbgoleadores*/
+
 function traerEstadisticaPorFixtureJugadorCategoriaDivision($idJugador, $idFixture, $idCategoria, $idDivision) {
 	$sql = "select 
     c.idconector,
@@ -4040,8 +4215,8 @@ function traerEstadisticaPorFixtureJugadorCategoriaDivision($idJugador, $idFixtu
     c.refcategorias,
 	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
 	jug.nrodocumento,
-	coalesce(minj.minutos,0) as minutosjugados,
-	(case when coalesce(mj.idmejorjugador,0) = 1 then 'Si' else 'No' end) as mejorjugador,
+	coalesce(minj.minutos,-1) as minutosjugados,
+	(case when coalesce(mj.idmejorjugador,0) > 0 then 'Si' else 'No' end) as mejorjugador,
 	coalesce(gol.goles,0) as goles,
 	coalesce(gol.encontra,0) as encontra,
 	coalesce(pen.penalconvertido,0) as penalconvertido,
@@ -4070,14 +4245,108 @@ from
 		inner join
 	dbfixture fix ON fix.refconectorlocal = equ.idequipo
 		left join
-	dbmejorjugador mj ON mj.reffixture = fix.idfixture
+	dbmejorjugador mj 
+    ON 	mj.reffixture = fix.idfixture 
+		and mj.refjugadores = jug.idjugador
+        and mj.refcategorias = cat.idtcategoria
+        and mj.refdivisiones = di.iddivision
+        LEFT JOIN
+    dbminutosjugados minj 
+    ON 	minj.reffixture = fix.idfixture
+		and minj.refjugadores = jug.idjugador
+        and minj.refcategorias = cat.idtcategoria
+        and minj.refdivisiones = di.iddivision
+        LEFT JOIN
+    dbgoleadores gol 
+    ON 	gol.reffixture = fix.idfixture
+		and gol.refjugadores = jug.idjugador
+        and gol.refcategorias = cat.idtcategoria
+        and gol.refdivisiones = di.iddivision
+        LEFT JOIN
+    dbpenalesjugadores pen 
+    ON 	pen.reffixture = fix.idfixture
+		and pen.refjugadores = jug.idjugador
+        and pen.refcategorias = cat.idtcategoria
+        and pen.refdivisiones = di.iddivision
+	where jug.idjugador = ".$idJugador." and fix.idfixture = ".$idFixture." and c.refcategorias = ".$idCategoria." and di.iddivision = ".$idDivision;
+	$res = $this->query($sql,0);
+
+	
+	return $res;
+		
+}
+
+
+function traerEstadisticaPorFixtureJugadorCategoriaDivisionVisitante($idJugador, $idFixture, $idCategoria, $idDivision) {
+	$sql = "select 
+    c.idconector,
+	cat.categoria,
+	equ.nombre as equipo,
+	co.nombre as countrie,
+	tip.tipojugador,
+	(case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+	concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	jug.nrodocumento,
+	coalesce(minj.minutos,-1) as minutosjugados,
+	(case when coalesce(mj.idmejorjugador,0) > 0 then 'Si' else 'No' end) as mejorjugador,
+	coalesce(gol.goles,0) as goles,
+	coalesce(gol.encontra,0) as encontra,
+	coalesce(pen.penalconvertido,0) as penalconvertido,
+	coalesce(pen.penalerrado,0) as penalerrado,
+	coalesce(pen.penalatajado,0) as penalatajado    
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+		inner join
+	dbfixture fix ON fix.refconectorvisitante = equ.idequipo
 		left join
-	dbminutosjugados minj ON minj.reffixture = fix.idfixture
-		left join
-	dbgoleadores gol ON gol.reffixture = fix.idfixture
-		left join
-	dbpenalesjugadores pen ON pen.reffixture = fix.idfixture
-	where jug.idjugador = 6 and fix.idfixture = 1";
+	dbmejorjugador mj 
+    ON 	mj.reffixture = fix.idfixture 
+		and mj.refjugadores = jug.idjugador
+        and mj.refcategorias = cat.idtcategoria
+        and mj.refdivisiones = di.iddivision
+        LEFT JOIN
+    dbminutosjugados minj 
+    ON 	minj.reffixture = fix.idfixture
+		and minj.refjugadores = jug.idjugador
+        and minj.refcategorias = cat.idtcategoria
+        and minj.refdivisiones = di.iddivision
+        LEFT JOIN
+    dbgoleadores gol 
+    ON 	gol.reffixture = fix.idfixture
+		and gol.refjugadores = jug.idjugador
+        and gol.refcategorias = cat.idtcategoria
+        and gol.refdivisiones = di.iddivision
+        LEFT JOIN
+    dbpenalesjugadores pen 
+    ON 	pen.reffixture = fix.idfixture
+		and pen.refjugadores = jug.idjugador
+        and pen.refcategorias = cat.idtcategoria
+        and pen.refdivisiones = di.iddivision
+	where jug.idjugador = ".$idJugador." and fix.idfixture = ".$idFixture." and c.refcategorias = ".$idCategoria." and di.iddivision = ".$idDivision;
 	$res = $this->query($sql,0);
 	return $res;	
 }
@@ -4169,6 +4438,7 @@ function query($sql,$accion) {
 		if ($accion && $result) {
 			$result = mysql_insert_id();
 		}
+		
 		if(!$result){
 			$error=1;
 		}
@@ -4180,6 +4450,8 @@ function query($sql,$accion) {
 			mysql_query("COMMIT");
 			return $result;
 		}
+		
+
 		
 	}
 

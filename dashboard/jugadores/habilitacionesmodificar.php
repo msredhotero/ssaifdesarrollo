@@ -66,7 +66,7 @@ $resMot 	= $serviciosReferencias->traerMotivoshabilitacionestransitorias();
 $cadRef4 	= $serviciosFunciones->devolverSelectBoxActivo($resMot,array(2,1),' - inhabilita:', mysql_result($resResultado,0,'refmotivoshabilitacionestransitorias'));
 
 $resEqui 	= $serviciosReferencias->traerEquipos();
-$cadRef5 	= $serviciosFunciones->devolverSelectBoxActivo($resEqui,array(1),'', mysql_result($resResultado,0,'refequipos'));
+$cadRef5 	= $serviciosFunciones->devolverSelectBoxActivo($resEqui,array(1,2),' - ', mysql_result($resResultado,0,'refequipos'));
 
 $resCat 	= $serviciosReferencias->traerCategorias();
 $cadRef6 	= $serviciosFunciones->devolverSelectBoxActivo($resCat,array(1),' - ', mysql_result($resResultado,0,'refcategorias'));

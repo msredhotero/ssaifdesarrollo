@@ -23,7 +23,7 @@ $fecha = date('Y-m-d');
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
 
-$idFixture = $_GET['id'];
+$idFixture = $_POST['idfixture'];
 
 $resFix = $serviciosReferencias->TraerFixturePorId($idFixture);
 
@@ -59,6 +59,129 @@ $resDefCategTemp		=	$serviciosReferencias->traerDefinicionescategoriastemporadas
 $minutos				=	mysql_result($resDefCategTemp,0,'minutospartido');
 /////////////			fin				/////////////////////////////
 
+
+$numero = count($_POST);
+	$tags = array_keys($_POST);// obtiene los nombres de las varibles
+	$valores = array_values($_POST);// obtiene los valores de las varibles
+	$cantEncontrados = 0;
+	$cantidad = 1;
+	$idEquipos = 0;
+	
+	$cadWhere = '';
+	$cantEquipos = array();
+	
+	for($i=0;$i<$numero;$i++){
+		
+		
+		/////////////////////			EQUIPO LOCAL				////////////////////////////////////////////////
+		if (strpos($tags[$i],"goles") !== false) {
+
+			$idJugador = str_replace("goles","",$tags[$i]);
+
+			//////////////		logica GOLEADORES		///////////////////////////////////////////////////////
+			$existeGoleadores = $serviciosReferencias->existeFixturePorGoleadores($idJugador, $idFixture);
+			
+			if ($existeGoleadores == 0) {
+				//inserto
+				$serviciosReferencias->insertarGoleadores($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$valores[$i], $_POST['encontra'.$idJugador]);
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarGoleadores($existeGoleadores, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$valores[$i], $_POST['encontra'.$idJugador]);
+			}
+			//////////////			fin logica			/////////////////////////////////////////////////////////
+			
+			//////////////		logica MINUTOS		///////////////////////////////////////////////////////
+			$existeMinutos = $serviciosReferencias->existeFixturePorMinutosJugados($idJugador, $idFixture);
+			
+			if ($existeMinutos == 0) {
+				//inserto
+				$serviciosReferencias->insertarMinutosjugados($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones, $_POST['minutos'.$idJugador]);
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarMinutosjugados($existeMinutos, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['minutos'.$idJugador]);
+			}
+			//////////////			fin logica			/////////////////////////////////////////////////////////
+
+		
+		}
+		
+		if (strpos($tags[$i],"mejorjugador") !== false) {
+			if (isset($valores[$i])) {
+				//////////////		logica mejor jugador		///////////////////////////////////////////////////////
+				$existeMejorJugador = $serviciosReferencias->existeFixturePorMejorJugador($idJugador, $idFixture);
+				
+				if ($existeGoleadores == 0) {
+					//borro los anteriores y cargos el nuevo
+					$serviciosReferencias->eliminarMejorjugadorMasivo($idFixture);
+					//inserto
+					$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones);
+				}
+				//////////////			fin logica			/////////////////////////////////////////////////////////	
+			}
+		}
+		
+		////********************		FIN EQUIPO LOCAL		*************************************************//////
+		
+		
+		
+		/////////////////////			EQUIPO VISITANTE				////////////////////////////////////////////////
+		if (strpos($tags[$i],"gobles") !== false) {
+			
+			if (isset($valores[$i])) {
+				
+				$idJugador = str_replace("gobles","",$tags[$i]);
+
+				//////////////		logica GOLEADORES		///////////////////////////////////////////////////////
+				$existeGoleadores = $serviciosReferencias->existeFixturePorGoleadores($idJugador, $idFixture);
+				
+				if ($existeGoleadores == 0) {
+					//inserto
+					$serviciosReferencias->insertarGoleadores($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$valores[$i], $_POST['enbcontra'.$idJugador]);
+				} else {
+					//modifico	
+					
+					$serviciosReferencias->modificarGoleadores($existeGoleadores, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$valores[$i], $_POST['enbcontra'.$idJugador]);
+				}
+				//////////////			fin logica			/////////////////////////////////////////////////////////
+				
+				//////////////		logica MINUTOS		///////////////////////////////////////////////////////
+				$existeMinutos = $serviciosReferencias->existeFixturePorMinutosJugados($idJugador, $idFixture);
+				
+				if ($existeMinutos == 0) {
+					//inserto
+					$serviciosReferencias->insertarMinutosjugados($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones, $_POST['minbutos'.$idJugador]);
+				} else {
+					//modifico	
+					
+					$serviciosReferencias->modificarMinutosjugados($existeMinutos, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['minbutos'.$idJugador]);
+				}
+				//////////////			fin logica			/////////////////////////////////////////////////////////
+
+			}
+		}
+		
+		if (strpos($tags[$i],"mejorbjugador") !== false) {
+			if (isset($valores[$i])) {
+				//////////////		logica mejor jugador		///////////////////////////////////////////////////////
+				$existeMejorJugador = $serviciosReferencias->existeFixturePorMejorJugador($idJugador, $idFixture);
+				
+				if ($existeGoleadores == 0) {
+					//borro los anteriores y cargos el nuevo
+					$serviciosReferencias->eliminarMejorjugadorMasivo($idFixture);
+					//inserto
+					$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones);
+				}
+				//////////////			fin logica			/////////////////////////////////////////////////////////	
+			}
+		}
+		
+		////********************		FIN EQUIPO LOCAL		*************************************************//////
+		
+	}
+	
+	
 /////////////////////// Opciones de la pagina  ////////////////////
 
 $lblTitulosingular	= "Estadistica";
@@ -556,7 +679,7 @@ $(document).ready(function(){
 	} );
 	
 	$('.volver').click(function(e) {
-        url = "index.php";
+        url = "estadisticas.php?id="+<?php echo $idFixture; ?>;
 		$(location).attr('href',url);
     });
 	
