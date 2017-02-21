@@ -233,6 +233,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <thead>
                 	<th style="text-align:center">Seleccionar</th>
                     <th>Equipo</th>
+                    <th>Id</th>
                     <th>Activo</th>
                     
                 </thead>
@@ -252,6 +253,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     
                     </td>
                     <td><?php echo $row[1]; ?></td>
+                    <td><?php echo $row[0]; ?></td>
                     <td><?php echo $row[2]; ?></td>
                     </tr>
                     <?php
