@@ -333,16 +333,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     	<div class="cuerpoBox" style="padding-right:10px;">
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
         	<div class="row">
-				<div align="center">
-                <ul class="list-inline">
-                	<li>
-                    	<input type="text" class="form-control" name="filtro" id="filtro"/>
-                	</li>
-                    <li>
-                    	<button type="button" class="btn btn-info buscar" style="margin-left:0px;">Filtrar</button>
-                    </li>
-                </ul>
-                </div>
+
                 <div style="margin-left:5px;padding-left:10px; border-left:12px solid #0C0; border-bottom:1px solid #eee;border-top:1px solid #CCC; margin-right:5px;">
                 <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
                 

@@ -23,6 +23,8 @@ $fecha = date('Y-m-d');
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadisticas",$_SESSION['refroll_predio'],'');
 
+$resFixture		=	$serviciosReferencias->traerFixtureTodo();
+$cadFix			=	$serviciosFunciones->devolverSelectBox($resFixture,array(0,1,4,5,10),' - ');
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -107,9 +109,21 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <label class="control-label">Ingrese el Numero de Partido</label>
                     <div class="input-group">
                         <input class="form-control" type="text" name="buscar" id="buscar"/>
+                        <button type="button" class="btn btn-success" id="busqueda">Buscar</button>
+                    </div>
+                </div>
+
+				<div class="col-md-6">
+                    <label class="control-label">Ingrese el Numero de Partido</label>
+                    <div class="input-group">
+                        <select class="form-control" id="fixture" name="fixture">
+                        	<?php echo $cadFix; ?>	
+                        </select>
+                        <button type="button" class="btn btn-success" id="ir">Ir</button>
                     </div>
                 </div>
             </div>
+            
             <div class='row' style="margin-left:15px; margin-right:15px;">
                 <div class='alert'>
                 	
@@ -122,18 +136,6 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </div>
             </div>
 			
-            
-            <div class="row">
-                <div class="col-md-12">
-                <ul class="list-inline" style="margin-top:15px;">
-
-					<li>
-                        <button type="button" class="btn btn-success" id="busqueda">Buscar</button>
-                    </li>
-
-                </ul>
-                </div>
-            </div>
 
             </form>
     	</div>
@@ -176,6 +178,11 @@ $(document).ready(function(){
 			}
 		});
     });
+	
+	$('#ir').click(function() {
+		url = "estadisticas.php?id="+ $('#fixture').val();
+		$(location).attr('href',url);
+	});
 
 });
 </script>
