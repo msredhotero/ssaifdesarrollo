@@ -77,7 +77,6 @@ $resDocumentaciones2	=	$serviciosReferencias->traerDocumentaciones();
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadores(),10);
 
 $resMotivosHabDeportivas	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDeportivas('Edad');
 $cadRef		=	$serviciosFunciones->devolverSelectBox($resMotivosHabDeportivas,array(2),'');
@@ -199,6 +198,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 	
 	
    </style>
+   
+
 </head>
 
 <body>
@@ -288,7 +289,43 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
-        	<?php echo $lstCargados; ?>
+        	<form class="form-inline formulario" role="form">
+            	
+                <div class="row">
+
+                    
+                    <div class="form-group col-md-6">
+                     <label class="control-label" style="text-align:left" for="torneo">Busqueda</label>
+                        <div class="input-group col-md-12">
+                            <input type="text" name="busqueda" id="busqueda" class="form-control">
+                        </div>
+
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                    	 <ul class="list-inline" style="margin-top:15px;">
+                            <li>
+                             <button id="buscar" class="btn btn-primary" style="margin-left:0px;" type="button">Buscar</button>
+                            </li>
+                        </ul>
+
+                    </div>
+                    
+                    <div class="form-group col-md-12">
+                    	<div class="cuerpoBox" id="resultados">
+        
+       		 			</div>
+					</div>
+                
+                </div>
+                
+                <div class="row">
+                    <div class="alert"> </div>
+                    <div id="load"> </div>
+                </div>
+
+            
+            </form>
     	</div>
     </div>
     
@@ -319,6 +356,25 @@ if ($_SESSION['refroll_predio'] != 1) {
 $(document).ready(function(){
 	$('#colapsarMenu').click();
 	$('#fechaalta').val('<?php echo date('d/m/Y'); ?>');
+	
+	
+	$('#buscar').click(function(e) {
+        $.ajax({
+				data:  {busqueda: $('#busqueda').val(),
+						accion: 'buscarJugadoresFiltro'},
+				url:   '../../ajax/ajax.php',
+				type:  'post',
+				beforeSend: function () {
+						
+				},
+				success:  function (response) {
+						$('#resultados').html(response);
+						
+				}
+		});
+		
+	});
+	
 	
 	$(document).on('click', '.panel-heading span.clickable', function(e){
 		var $this = $(this);
@@ -623,12 +679,8 @@ $(document).ready(function(){
 </script>
 
 
-<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
-<script type="text/javascript">
+ 
     
-	
-	
-  </script>
 <?php } ?>
 </body>
 </html>
