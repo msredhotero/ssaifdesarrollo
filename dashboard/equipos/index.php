@@ -46,7 +46,8 @@ $lblreemplazo	= array("Countrie","Contacto","Categoria","Division","Fecha Alta",
 
 
 $resCountries 	= $serviciosReferencias->traerCountries();
-$cadRef 	= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
+$cadRef		= '<option value="0">-- Seleccionar --</option>';
+$cadRef 	.= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
 $resContactos 	= $serviciosReferencias->traerContactos();
 $cadRef2 	= $serviciosFunciones->devolverSelectBox($resContactos,array(1),'');
