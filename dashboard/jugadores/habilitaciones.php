@@ -567,6 +567,27 @@ $(document).ready(function(){
 	$("#fechalimiteA").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 	$("#fechalimiteB").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 	
+	function traerEquipoPorCategoria(id, contenedor, idCountrie) {
+		$.ajax({
+			data:  {id: id,idCountrie: idCountrie, accion: 'traerEquipoPorCategoria'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+			
+			},
+			success:  function (response) {
+				$(contenedor).html(response);
+				
+			}
+		});		
+	}
+	
+	traerEquipoPorCategoria($('#refcategoriasA').val(), '#refequiposA', <?php echo mysql_result($resResultado,0,'refcountries'); ?>);
+	
+	$('#refcategoriasA').change(function(e) {
+        traerEquipoPorCategoria($(this).val(), '#refequiposA', <?php echo mysql_result($resResultado,0,'refcountries'); ?>);
+    });
+	
 	$(document).on('click', '.panel-heading span.clickable', function(e){
 		var $this = $(this);
 		if(!$this.hasClass('panel-collapsed')) {
