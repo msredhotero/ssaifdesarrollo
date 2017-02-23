@@ -82,7 +82,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
     $fill = false;
 	
 	$total = 0;
-	$totalcant = 0;
+	$totalcant = 1;
 	$sumSaldos = 0;
 	$sumAbonos = 0;
 	
@@ -95,6 +95,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	$x = $this->GetX();
 	$y = $this->GetY();
 	
+	$aumentoNombre = 0;
 	
 	$this->SetFont('Arial','',9);
     while ($row = mysql_fetch_array($data))
@@ -195,6 +196,9 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4], $y);
 		$this->MultiCell($w[5],5,$cadErrorDoc,'','L');
 		if ($this->GetY() >= $yN + 5) {
+			
+			$totalcant = $yN;
+
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4] + $w[5], $y);
@@ -209,10 +213,10 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		}
 		
 		
-		if ($totalcant == 25) {
+		if ($totalcant >= 250) {
 			$this->AddPage();
 			
-			$y = $yInicial;
+			
 			
 			$this->SetFont('Arial','',11);
 			// Colores, ancho de línea y fuente en negrita
@@ -229,13 +233,20 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			// Datos
 			$fill = false;
 			$this->SetFont('Arial','',9);
+			$this->SetXY(5, 20);
+			$y = 22;
+			$x=3;
+			$yN=11;
+			$totalcant = 1;
 		}
 		
+		$aumentoNombre = 0;
 		$y = $yN;
 		$documentaciones = '';
 		$cadErrorDoc = '';
 		$this->SetXY($x, $yN);
 		$this->Cell(array_sum($w),0,'','T');
+		
     }
 	
 
@@ -298,7 +309,7 @@ $pdf->SetFont('Arial','',9);
 
 $nombreTurno = "rptCondicionJugador-".$fecha.".pdf";
 
-$pdf->Output($nombreTurno,'D');
+$pdf->Output($nombreTurno,'I');
 
 
 ?>

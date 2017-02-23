@@ -652,7 +652,7 @@ $(document).ready(function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			
-			url = "modificar.php?id=" + usersid;
+			url = "modificar.php?id=" + <?php echo $id; ?>;
 			$(location).attr('href',url);
 		  } else {
 			alert("Error, vuelva a realizar la acción.");	

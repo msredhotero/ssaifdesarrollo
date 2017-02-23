@@ -2505,7 +2505,7 @@ return $res;
 
 
 function traerEquiposPorId($id) { 
-$sql = "select idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,activo from dbequipos where idequipo =".$id; 
+$sql = "select idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,(case when activo = 1 then 'Si' else 'No' end) as activo from dbequipos where idequipo =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 

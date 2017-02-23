@@ -2145,9 +2145,13 @@ function modificarEquipos($serviciosReferencias) {
 	$fechaalta = formatearFechas($_POST['fechaalta']); 
 	$fachebaja = formatearFechas($_POST['fachebaja']);
 	if (isset($_POST['activo'])) { 
-		$activo	= 1; 
+		$activo	= 1;
+		$fachebaja = '';
 	} else { 
 		$activo = 0; 
+		if ($fachebaja == '') {
+			$fachebaja = date('Y-m-d');
+		}
 	} 
 	
 	if (($fechaalta == '***') || ($fachebaja == '***')) {

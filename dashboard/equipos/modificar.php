@@ -210,7 +210,13 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-
+	
+	if ('<?php echo mysql_result($resResultado,0,'activo'); ?>' == 'Si') {
+		$('#activo').prop('checked',true);
+	} else {
+		$('#activo').prop('checked',false);
+	}
+	
 	$('.volver').click(function(event){
 		 
 		url = "index.php";
