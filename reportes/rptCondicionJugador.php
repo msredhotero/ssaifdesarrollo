@@ -89,7 +89,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	
 	$x = 0;
 	$y = 0;
-	
+	$yN = 0;
 	$yInicial = 0;
 	
 	$x = $this->GetX();
@@ -152,11 +152,15 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			}
 			
 		} else {
-			$cadErrorDoc = 'FALTA PRESENTAR DOCUMENTACIONES';
+			$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
 		}
 		
-		if ($valorDocumentacion <= 0 && $cadCumpleEdad == 'CUMPLE') {
-			$habilitacion= 'HAB.';	
+		if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+			if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+				$habilitacion= 'INHAB.';	
+			} else {
+				$habilitacion= 'HAB.';	
+			}
 		} else {
 			$habilitacion= 'INHAB.';
 		}
@@ -190,7 +194,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4], $y);
 		$this->MultiCell($w[5],5,$cadErrorDoc,'','L');
-		if ($this->GetY() > $yN + 5) {
+		if ($this->GetY() >= $yN + 5) {
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4] + $w[5], $y);

@@ -26,7 +26,7 @@ $fecha = date('Y-m-d');
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Reportes",$_SESSION['refroll_predio'],'');
 
 $resEquipos = $serviciosReferencias->traerEquipos();
-$cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2),' - ');
+$cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2,3),' - ');
 
 
 ?>

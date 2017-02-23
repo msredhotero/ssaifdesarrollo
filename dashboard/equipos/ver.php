@@ -365,7 +365,11 @@ tr {
 									}
 									
 									if ($valorDocumentacion == 0 && $cadCumpleEdad == 'CUMPLE') {
-										$habilitacion= 'HAB.';	
+										if ($cadErrorDoc ==  'FALTA PRESENTAR DOCUMENTACIONES') {
+											$habilitacion= 'INHAB.';	
+										} else {
+											$habilitacion= 'HAB.';	
+										}
 									}
 								$cantidad += 1;
 							?>

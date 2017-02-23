@@ -2109,20 +2109,30 @@ function insertarEquipos($serviciosReferencias) {
 	$nombre = $_POST['nombre']; 
 	$refcategorias = $_POST['refcategorias']; 
 	$refdivisiones = $_POST['refdivisiones']; 
-	$refcontactos = $_POST['refcontactos']; 
-	$fechaalta = $_POST['fechaalta']; 
-	$fachebaja = $_POST['fachebaja']; 
+	
+	$fechaalta = formatearFechas($_POST['fechaalta']); 
+	$fachebaja = formatearFechas($_POST['fachebaja']); 
 	if (isset($_POST['activo'])) { 
 		$activo	= 1; 
 	} else { 
 		$activo = 0; 
 	} 
-	$res = $serviciosReferencias->insertarEquipos($refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo); 
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
+	
+	if (($fechaalta == '***') || ($fachebaja == '***')) {
+		echo 'Formato de fecha incorrecto';	
+	} else {
+		if (!isset($_POST['refcontactos'])) {
+			echo 'Debe seleccionar un contacto o cargarle uno al countrie';
+		} else {
+			$refcontactos = $_POST['refcontactos'];
+			$res = $serviciosReferencias->insertarEquipos($refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo); 
+			if ((integer)$res > 0) { 
+				echo ''; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
+		}
+	}
 } 
 
 function modificarEquipos($serviciosReferencias) { 
@@ -2132,19 +2142,25 @@ function modificarEquipos($serviciosReferencias) {
 	$refcategorias = $_POST['refcategorias']; 
 	$refdivisiones = $_POST['refdivisiones']; 
 	$refcontactos = $_POST['refcontactos']; 
-	$fechaalta = $_POST['fechaalta']; 
-	$fachebaja = $_POST['fachebaja']; 
+	$fechaalta = formatearFechas($_POST['fechaalta']); 
+	$fachebaja = formatearFechas($_POST['fachebaja']);
 	if (isset($_POST['activo'])) { 
 		$activo	= 1; 
 	} else { 
 		$activo = 0; 
 	} 
-	$res = $serviciosReferencias->modificarEquipos($id,$refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo); 
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
+	
+	if (($fechaalta == '***') || ($fachebaja == '***')) {
+		echo 'Formato de fecha incorrecto';	
+	} else {
+		$res = $serviciosReferencias->modificarEquipos($id,$refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo); 
+		if ($res == true) { 
+			echo ''; 
+		} else { 
+			echo 'Huvo un error al modificar datos'; 
+		} 
+	}
+	
 } 
 
 function eliminarEquipos($serviciosReferencias) { 

@@ -2440,7 +2440,7 @@ inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias
 inner join tbdivisiones di ON di.iddivision = e.refdivisiones 
 inner join dbcontactos con ON con.idcontacto = e.refcontactos 
 inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos 
-order by 1"; 
+order by e.nombre"; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
