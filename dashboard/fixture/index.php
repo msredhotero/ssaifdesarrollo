@@ -96,7 +96,7 @@ $cabeceras 		= "	<th>Descripción</th>
 
 $formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$refTorneos		=	$serviciosReferencias->traerTorneos();
+$refTorneos		=	$serviciosReferencias->traerTorneosActivos();
 
 ?>
 
@@ -133,7 +133,37 @@ $refTorneos		=	$serviciosReferencias->traerTorneos();
     <link rel="stylesheet" href="../../css/bootstrap-timepicker.css">
     <script src="../../js/bootstrap-timepicker.min.js"></script>
 	<style type="text/css">
-		
+			th {
+			  color:#D5DDE5;;
+			  background:#1b1e24;
+			  border-bottom:4px solid #9ea7af;
+			  border-right: 1px solid #343a45;
+			  font-size:17px;
+			  font-weight: 100;
+			  padding:18px;
+			  text-align:left;
+			  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+			  vertical-align:middle;
+			  font-family: "Roboto", helvetica, arial, sans-serif;
+			}
+			
+			th:first-child {
+			  border-top-left-radius:3px;
+			}
+			 
+			th:last-child {
+			  border-top-right-radius:3px;
+			  border-right:none;
+			}
+			
+			tr {
+			  border-top: 1px solid #C1C3D1;
+			  border-bottom-: 1px solid #C1C3D1;
+			  color:#666B85;
+			  font-size:16px;
+			  font-weight:normal;
+			  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+			}
   
 		
 	</style>
@@ -195,21 +225,56 @@ $refTorneos		=	$serviciosReferencias->traerTorneos();
                 </div>
             </div>
 
-            <div class="row" align="center">
-            	<ul class="list-inline">
-                	<li>
-                    	Seleccione un torneo para generar el fixture
-                    </li>
-                </ul>
-            </div>
-            <div class="row" align="center">
-                <ul class="list-inline">
-                	<?php while ($row = mysql_fetch_array($refTorneos)) { ?>
-                	<li>
-                    	<a href="../torneos/equipos.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-primary" style="margin-left:0px;"><?php echo $row[3]; ?> | <?php echo $row[1]; ?> | <?php echo $row[4]; ?> | <?php echo $row[1]; ?> -> Generar Fixture</button></a>
-                    </li>
-					<?php } ?>
-                </ul>
+            <hr>
+            
+            <div class="row" id="contMapa2" style="margin-left:25px; margin-right:25px;">
+
+                <div class="col-md-12">
+                	<div class="form-group col-md-12">
+                        <label class="control-label" style="text-align:left; font-size:1.2em; text-decoration:underline; margin-bottom:4px;" for="fechas">Lista de Torneos</label>
+                        <div>
+                        <div class="input-group col-md-12">
+                            <table class="table table-bordered table-responsive table-striped">
+                            <thead>
+                            	<tr>
+                                	<th>Nombre</th>
+                                    <th>Temporada</th>
+                                    <th>Categoria</th>
+                                    <th>División</th>
+                                    <th style="text-align:center">Ver</th>
+                                    <th style="text-align:center">Generar Fixture</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lstjugadores">
+							<?php 
+								$cantidad = 0;
+								
+								while ($rowC = mysql_fetch_array($refTorneos)) {
+							?>
+                            	<tr>
+                                	<td><?php echo $rowC['descripcion']; ?></td>
+                                    <td><?php echo $rowC['temporada']; ?></td>
+                                    <td><?php echo $rowC['categoria']; ?></td>
+                                    <td><?php echo $rowC['division']; ?></td>
+                                    <td align="center"><img src="../../imagenes/verIco.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varver"></td>
+                                    <td align="center"><img src="../../imagenes/Icon_Calendar.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="vargenerar"></td>
+                                    
+                                </tr>
+                            <?php
+								$cantidad += 1;
+								}
+							?>
+                            </tbody>
+                            <tfoot>
+                            	<td colspan="5" align="right">Total Torneos Activos:</td>
+                                <td><?php echo $cantidad; ?></td>
+                            </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                
             </div>
 
             </form>
@@ -259,8 +324,13 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});
 	
-	$('#generar').click( function() {
-		url = "generarfixture.php";
+	$('.vargenerar').click( function() {
+		url = "../torneos/equipos.php?id="+$(this).attr("id");
+		$(location).attr('href',url);
+	});
+	
+	$('.varver').click( function() {
+		url = "ver.php?id="+$(this).attr("id");
 		$(location).attr('href',url);
 	});
 	

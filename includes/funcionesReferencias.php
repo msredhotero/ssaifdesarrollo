@@ -2348,6 +2348,39 @@ return $res;
 }  
 
 
+function traerTorneosActivos() { 
+$sql = "select 
+t.idtorneo,
+t.descripcion,
+tip.tipotorneo as tipotorneo,
+tem.temporada,
+cat.categoria,
+di.division,
+t.cantidadascensos,
+t.cantidaddescensos,
+t.respetadefiniciontipojugadores,
+t.respetadefinicionhabilitacionestransitorias,
+t.respetadefinicionsancionesacumuladas,
+t.acumulagoleadores,
+t.acumulatablaconformada,
+t.observaciones,
+t.activo,
+t.reftipotorneo,
+t.reftemporadas,
+t.refcategorias,
+t.refdivisiones
+from dbtorneos t 
+inner join tbtipotorneo tip ON tip.idtipotorneo = t.reftipotorneo 
+inner join tbtemporadas tem ON tem.idtemporadas = t.reftemporadas 
+inner join tbcategorias cat ON cat.idtcategoria = t.refcategorias 
+inner join tbdivisiones di ON di.iddivision = t.refdivisiones 
+where t.activo = 1
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+}  
+
+
 function traerTorneosPorId($id) { 
 $sql = "select idtorneo,descripcion,reftipotorneo,reftemporadas,refcategorias,refdivisiones,cantidadascensos,cantidaddescensos,respetadefiniciontipojugadores,respetadefinicionhabilitacionestransitorias,respetadefinicionsancionesacumuladas,acumulagoleadores,acumulatablaconformada,observaciones,activo from dbtorneos where idtorneo =".$id; 
 $res = $this->query($sql,0); 
