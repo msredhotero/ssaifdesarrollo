@@ -68,8 +68,8 @@ $cabeceras2 		= "	<th>Equipo Local</th>
 				<th>Equipo Visitante</th>
 				<th>Categoria</th>
 				<th>Arbitros</th>
-				<th>Juez 1</th>
-				<th>Juez 2</th>
+				<th>Goles Local</th>
+				<th>Goles Vist.</th>
 				<th>Cancha</th>
 				<th>Fecha Juego</th>
 				<th>Fecha</th>

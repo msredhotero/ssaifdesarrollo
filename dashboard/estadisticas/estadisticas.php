@@ -548,7 +548,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             
             <div class='row' style="margin-left:15px; margin-right:15px;">
             	<div class="form-group col-md-4" style="display:block">
-                    <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
+                    <label for="reftipodocumentos" class="control-label" style="text-align:left">Estado Partido</label>
                     <div class="input-group col-md-12">
                         <select class="form-control" id="refestadospartidos" name="refestadospartidos">
                         	<option value="0">-- Seleccionar --</option>

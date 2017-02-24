@@ -9,6 +9,107 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+
+function Posiciones($refTorneo) {
+	$sql = "select
+
+p.equipo,
+sum(p.puntos) as puntos,
+p.categoria,
+p.arbitro,
+sum(p.goles) as goles,
+p.canchas,
+p.fecha,
+p.fechajuego,
+p.hora,
+p.calificacioncancha,
+p.juez1,
+p.juez2,
+p.observaciones,
+p.publicar
+
+
+from (
+select
+f.idfixture,
+el.nombre as equipo,
+f.puntoslocal as puntos,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.goleslocal as goles,
+can.nombre as canchas,
+fec.fecha,
+date_format(f.fecha,'%d/%m/%Y') as fechajuego,
+f.hora,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.observaciones,
+f.publicar
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where tor.idtorneo = ".$refTorneo."
+
+union all
+
+select
+f.idfixture,
+ev.nombre as equipo,
+f.puntosvisita as puntos,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.golesvisitantes as goles,
+can.nombre as canchas,
+fec.fecha,
+date_format(f.fecha,'%d/%m/%Y') as fechajuego,
+f.hora,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.observaciones,
+f.publicar
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where tor.idtorneo = ".$refTorneo."
+) p
+group by p.equipo,
+p.categoria,
+p.arbitro,
+p.canchas,
+p.fecha,
+p.fechajuego,
+p.hora,
+p.calificacioncancha,
+p.juez1,
+p.juez2,
+p.observaciones,
+p.publicar
+order by sum(p.puntos) desc
+
+";	
+}
+
+
+
+
 function GUID()
 {
     if (function_exists('com_create_guid') === true)
@@ -2783,6 +2884,7 @@ e.puntosvisitante,
 e.finalizado,
 e.ocultardetallepublico,
 e.visibleparaarbitros
+,e.contabilizalocal,e.contabilizavisitante
 from tbestadospartidos e 
 order by 1"; 
 $res = $this->query($sql,0); 
@@ -2791,7 +2893,7 @@ return $res;
 
 
 function traerEstadospartidosPorId($id) { 
-$sql = "select idestadopartido,descripcion,defautomatica,goleslocalauto,goleslocalborra,golesvisitanteauto,golesvisitanteborra,puntoslocal,puntosvisitante,finalizado,ocultardetallepublico,visibleparaarbitros from tbestadospartidos where idestadopartido =".$id; 
+$sql = "select idestadopartido,descripcion,defautomatica,goleslocalauto,goleslocalborra,golesvisitanteauto,golesvisitanteborra,puntoslocal,puntosvisitante,finalizado,ocultardetallepublico,visibleparaarbitros,contabilizalocal,contabilizavisitante from tbestadospartidos where idestadopartido =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -3548,6 +3650,15 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function modificarFixturePorEstados($id,$refestadospartidos,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$publicar) {
+$sql = "update dbfixture
+set
+refestadospartidos = ".$refestadospartidos.",puntoslocal = ".$puntoslocal.",puntosvisita = ".$puntosvisita.",goleslocal = ".$goleslocal.",golesvisitantes = ".$golesvisitantes.",publicar = ".$publicar."
+where idfixture =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
 
 function eliminarFixture($id) {
 $sql = "delete from dbfixture where idfixture =".$id;
@@ -3604,16 +3715,17 @@ f.puntosvisita,
 ev.nombre as equipovisitante,
 ca.categoria,
 arb.nombrecompleto as arbitro,
-f.juez1,
-f.juez2,
+f.goleslocal,
+f.golesvisitantes,
+
 can.nombre as canchas,
 fec.fecha,
-f.fecha,
+date_format(f.fecha,'%d/%m/%Y'),
 f.hora,
 est.descripcion as estado,
 f.calificacioncancha,
-f.goleslocal,
-f.golesvisitantes,
+f.juez1,
+f.juez2,
 f.observaciones,
 f.publicar,
 f.refcanchas,
@@ -3650,16 +3762,16 @@ f.puntosvisita,
 ev.nombre as equipovisitante,
 ca.categoria,
 arb.nombrecompleto as arbitro,
-f.juez1,
-f.juez2,
+f.goleslocal,
+f.golesvisitantes,
 can.nombre as canchas,
 fec.fecha,
-f.fecha,
+date_format(f.fecha,'%d/%m/%Y'),
 f.hora,
 est.descripcion as estado,
 f.calificacioncancha,
-f.goleslocal,
-f.golesvisitantes,
+f.juez1,
+f.juez2,
 f.observaciones,
 f.publicar,
 f.refcanchas,

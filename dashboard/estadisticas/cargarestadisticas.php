@@ -59,6 +59,8 @@ $resDefCategTemp		=	$serviciosReferencias->traerDefinicionescategoriastemporadas
 $minutos				=	mysql_result($resDefCategTemp,0,'minutospartido');
 /////////////			fin				/////////////////////////////
 
+$error = '';
+$lblerror = '';
 
 $numero = count($_POST);
 	$tags = array_keys($_POST);// obtiene los nombres de las varibles
@@ -70,6 +72,9 @@ $numero = count($_POST);
 	$cadWhere = '';
 	$cantEquipos = array();
 	
+	$golesRealesLocal 		= 0;
+	$golesRealesVisitantes	= 0;
+	
 	for($i=0;$i<$numero;$i++){
 		
 		
@@ -80,6 +85,9 @@ $numero = count($_POST);
 
 			//////////////		logica GOLEADORES		///////////////////////////////////////////////////////
 			$existeGoleadores = $serviciosReferencias->existeFixturePorGoleadores($idJugador, $idFixture);
+			
+			$golesRealesLocal += $valores[$i];
+			$golesRealesVisitantes += $_POST['encontra'.$idJugador];
 			
 			if ($existeGoleadores == 0) {
 				//inserto
@@ -132,7 +140,9 @@ $numero = count($_POST);
 			if (isset($valores[$i])) {
 				
 				$idJugador = str_replace("gobles","",$tags[$i]);
-
+				
+				$golesRealesLocal += $_POST['enbcontra'.$idJugador];
+				$golesRealesVisitantes += $valores[$i];
 				//////////////		logica GOLEADORES		///////////////////////////////////////////////////////
 				$existeGoleadores = $serviciosReferencias->existeFixturePorGoleadores($idJugador, $idFixture);
 				
@@ -180,7 +190,90 @@ $numero = count($_POST);
 		////********************		FIN EQUIPO LOCAL		*************************************************//////
 		
 	}
+
+
+
+///////////////////////  CALCULA SEGUN EL ESTADO DEL PARTIDO	////////////////////////////
+$refEstadoPartido		=		$_POST['refestadospartidos'];
+
+//calculo
+$defAutomatica			= 0;
+
+$golesLocalAuto			= 0;
+$golesLocalBorra		= 0;
+
+$golesvisitanteauto		= 0;
+$golesvisitanteborra	= 0;
+
+$puntosLocal			= 0;
+$puntosVisitante		= 0;
+
+$finalizado				= 0;
+
+$ocultaDetallePublico	= 0;
+
+$visibleParaArbitros	= 0;
+
+$contabilizaLocal		= 0;
+$contabilizaVisitante	= 0;
+
+if	($refEstadoPartido != 0) {
+	$resEstados		= $serviciosReferencias->traerEstadospartidos();
+	$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+
+	$estadoPartido	=	$serviciosReferencias->traerEstadospartidosPorId($refEstadoPartido);
 	
+	$defAutomatica			= mysql_result($estadoPartido,0,'defautomatica');
+
+	$golesLocalAuto			= mysql_result($estadoPartido,0,'goleslocalauto');
+	$golesLocalBorra		= mysql_result($estadoPartido,0,'goleslocalborra');
+	
+	$golesvisitanteauto		= mysql_result($estadoPartido,0,'golesvisitanteauto');
+	$golesvisitanteborra	= mysql_result($estadoPartido,0,'golesvisitanteborra');
+	
+	$puntosLocal			= mysql_result($estadoPartido,0,'puntoslocal');
+	$puntosVisitante		= mysql_result($estadoPartido,0,'puntosvisitante');
+	
+	$finalizado				= mysql_result($estadoPartido,0,'finalizado');
+	
+	$ocultaDetallePublico	= mysql_result($estadoPartido,0,'ocultardetallepublico');
+	
+	$visibleParaArbitros	= mysql_result($estadoPartido,0,'visibleparaarbitros');
+	
+	$contabilizaLocal		= mysql_result($estadoPartido,0,'contabilizalocal');
+	$contabilizaVisitante	= mysql_result($estadoPartido,0,'contabilizavisitante');
+	
+	// caso de ganado, perdido, empatado
+	if (($defAutomatica == 0) && ($finalizado == 1) && ($visibleParaArbitros == 0)) {
+		if (($golesRealesLocal > $golesRealesVisitantes) && (($puntosLocal == 0) || ($puntosLocal == 1))) {
+			$error = "Error: El equipo local deberia ganar";	
+			$lblerror = "alert-danger";
+		}
+		
+		if (($golesRealesLocal < $golesRealesVisitantes) && (($puntosVisitante == 0) || ($puntosVisitante == 1))) {
+			$error = "Error: El equipo visitante deberia ganar";
+			$lblerror = "alert-danger";	
+		}
+		
+		if (($golesRealesLocal == $golesRealesVisitantes) && ($puntosVisitante != $puntosLocal)) {
+			$error = "Error: El partido deberia ser un empate";	
+			$lblerror = "alert-danger";
+		}
+		
+		if ($error == '') {
+			$lblerror = "alert-success";
+			$error = "Ok: Se cargo correctamente";	
+			$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 1);
+		}
+	}
+} else {
+	$resEstados		= $serviciosReferencias->traerEstadospartidos();
+	$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');	
+}
+
+
+
+///////////////////////				FIN							////////////////////////////	
 	
 /////////////////////// Opciones de la pagina  ////////////////////
 
@@ -567,11 +660,23 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class='alert'>
                 
                 </div>
-                <div class='alert alert2'>
-                
+                <div class='alert <?php echo $lblerror; ?>'>
+                	<p><?php echo $error; ?></p>
                 </div>
                 <div id='load'>
                 
+                </div>
+            </div>
+            
+            <div class='row' style="margin-left:15px; margin-right:15px;">
+            	<div class="form-group col-md-4" style="display:block">
+                    <label for="reftipodocumentos" class="control-label" style="text-align:left">Estado Partido</label>
+                    <div class="input-group col-md-12">
+                        <select class="form-control" id="refestadospartidos" name="refestadospartidos">
+                        	<option value="0">-- Seleccionar --</option>
+                            <?php echo $cadEstados; ?>
+                        </select>    
+                    </div>
                 </div>
             </div>
 			
