@@ -21,11 +21,12 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadisticas",$_SESSION['refroll_predio'],'');
 
 $idFixture = $_GET['id'];
 
 $resFix = $serviciosReferencias->TraerFixturePorId($idFixture);
+$resFixDetalle	= $serviciosReferencias->traerFixtureDetallePorId($idFixture);
 
 $equipoLocal		=	mysql_result($resFix,0,'refconectorlocal');
 $equipoVisitante	=	mysql_result($resFix,0,'refconectorvisitante');
@@ -56,7 +57,11 @@ if (mysql_num_rows($refTemporada)>0) {
 /////////////		traigo los minutos del partido   ////////////////
 $resDefCategTemp		=	$serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria);
 
-$minutos				=	mysql_result($resDefCategTemp,0,'minutospartido');
+if (mysql_num_rows($resDefCategTemp)>0) {
+	$minutos				=	mysql_result($resDefCategTemp,0,'minutospartido');
+} else {
+	$minutos				=	80;
+}
 /////////////			fin				/////////////////////////////
 
 /////////////////////// Opciones de la pagina  ////////////////////
@@ -89,7 +94,8 @@ $cabeceras2 		= "<th>Nombre</th>
 $resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoLocal, $idCategoria);
 $resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoVisitante, $idCategoria);
 
-
+$resEstados		= $serviciosReferencias->traerEstadospartidos();
+$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -200,8 +206,6 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <div id="content">
 
-<h3>Estadisticas</h3>
-
     <div class="boxInfoLargoEstadisticas">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Cargar Estadisticas</p>
@@ -210,9 +214,114 @@ if ($_SESSION['refroll_predio'] != 1) {
     	<div class="cuerpoBox" style="padding-right:10px;">
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
         	<div class="row">
+                <div class="col-md-3">
+                	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
+                </div>
+
+                <div class="col-md-3">
+                	<p>Tipo Torneo: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'tipotorneo'); ?></span></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Temporadas: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'temporada'); ?></span></p>
+                </div>
+
+                <div class="col-md-3">
+                	<p>Categorias: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'categoria'); ?></span></p>
+                </div>
+
+                <div class="col-md-3">
+                	<p>Divisiones: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'division'); ?></span></p>
+                </div>
+
+                <div class="col-md-3">
+                	<p>Resp.Def. Tipo Jugadores <?php if (mysql_result($resFixDetalle,0,'respetadefiniciontipojugadores') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?>
+					
+					</p>
+                </div>
+                <div class="col-md-3">
+                	<p>Resp.Def. Habilitaciones Trans.<?php if (mysql_result($resFixDetalle,0,'respetadefinicionhabilitacionestransitorias') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Resp.Def. Sanciones Acumuladas<?php if (mysql_result($resFixDetalle,0,'respetadefinicionsancionesacumuladas') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Acumula Goleadores<?php if (mysql_result($resFixDetalle,0,'acumulagoleadores') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Acumula Tabla Conformada<?php if (mysql_result($resFixDetalle,0,'acumulatablaconformada') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?></p>
+                </div>
+				<div class="col-md-3">
+                	<p>Arbitro: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'arbitro'); ?></span></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Cancha: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'canchas'); ?></span></p>
+                </div>
+                
+                <div class="col-md-6">
+                	<p style="font-size:2.2em">Resultado Local: <?php echo mysql_result($resFixDetalle,0,'goleslocal'); ?></p>
+                </div>
+                <div class="col-md-6">
+                	<p style="font-size:2.2em">Resultado Visitante: <?php echo mysql_result($resFixDetalle,0,'golesvisitantes'); ?></p>
+                </div>
+                	
+                </div>
+            
+            <div class="row">
 
                 <div style="margin-left:5px;padding-left:10px; border-left:12px solid #0C0; border-bottom:1px solid #eee;border-top:1px solid #CCC; margin-right:5px;">
                 <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
+                
+                <!--		detalles del partido			---->
+                
+                <!--		detalles fin			---->
+                
+                
+                
                 
                 <table class="table table-striped table-bordered table-responsive" id="example">
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Local: <?php echo $equipoA; ?></caption>
@@ -327,7 +436,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 
                 <hr>
                 
-                <div style="margin-left:5px;padding-left:10px;border-left:12px solid #0C0; border-bottom:1px solid #eee; border-top:1px solid #CCC;margin-right:5px;">
+                <div style="margin-left:5px;padding-left:10px;border-left:12px solid #C00; border-bottom:1px solid #eee; border-top:1px solid #CCC;margin-right:5px;">
                 <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
                 <table class="table table-striped table-bordered table-responsive" id="example2">
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
@@ -437,7 +546,17 @@ if ($_SESSION['refroll_predio'] != 1) {
                 
             
             
-            
+            <div class='row' style="margin-left:15px; margin-right:15px;">
+            	<div class="form-group col-md-4" style="display:block">
+                    <label for="reftipodocumentos" class="control-label" style="text-align:left">Categorias</label>
+                    <div class="input-group col-md-12">
+                        <select class="form-control" id="refestadospartidos" name="refestadospartidos">
+                        	<option value="0">-- Seleccionar --</option>
+                            <?php echo $cadEstados; ?>
+                        </select>    
+                    </div>
+                </div>
+            </div>
             
             
             <div class='row' style="margin-left:15px; margin-right:15px;">
@@ -492,6 +611,7 @@ $(document).ready(function(){
 	/*var table = $('#example dataTables_filter input');*/
 	
 	var table = $('#example').dataTable({
+		"lengthMenu": [[30, 60 -1], [30, 60, "All"]],
 		"order": [[ 0, "asc" ]],
 		"language": {
 			"emptyTable":     "No hay datos cargados",

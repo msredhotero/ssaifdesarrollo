@@ -110,11 +110,12 @@ if (mysql_num_rows($resDias)>0) {
 		}
 	}
 	//die(var_dump($numeroDia));
+	$hora = mysql_result($resDias,0,'hora');
 } else {
-	$fechaNueva = $fechainicio;	
+	$hora = '15:30';
 }
 
-$hora = mysql_result($resDias,0,'hora');
+
 
 if ($_SESSION['refroll_predio'] != 1) {
 

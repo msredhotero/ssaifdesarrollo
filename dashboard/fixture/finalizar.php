@@ -96,6 +96,9 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_predio'],"Fixture",$_SESSION['
 	}
 	
 	$reftorneos			=	$_POST['idtorneo'];
+	
+	$idavuelta			=	mysql_result($serviciosReferencias->traerTorneosPorId($reftorneos),0,'reftipotorneo');
+	
 	$calificacioncancha	= 'NULL';
 	$puntoslocal		= 'NULL';
 	$puntosvisita		= 'NULL';
@@ -124,36 +127,88 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_predio'],"Fixture",$_SESSION['
 	$refconectorlocal 		= 0; 
 	$refconectorvisitante 	= 0; 
 	
-	for ($i=0;$i<count($arEquipos)-1;$i++) {
-		$fecha 		= $_POST['datepicker'.($i + 1)];
-		$reffechas 	= $i+1;
-		
-		$valorLocal 	= 0;
-		$valorVisitante = 0;
-		
-		$refconectorlocal 		= 0; 
-		$refconectorvisitante 	= 0; 
-		
-		for ($k=0;$k<count($arEquipos)/2;$k++) {
+	$fechaVuelta	= '';
+	$reffechaVuelta = 0;
+	
+	$dias = 0;
+	
+	$hay = $serviciosReferencias->traerFixtureTodoPorTorneo($reftorneos);
+	
+	if (mysql_num_rows($hay)<1) {
+	if ($idavuelta != 2) {
+		for ($i=0;$i<count($arEquipos)-1;$i++) {
+			$fecha 		= $_POST['datepicker'.($i + 1)];
+			$reffechas 	= $i+1;
 			
-			$valorLocal 	= $arLocal[$total];
-			$valorVisitante = $arVisitante[$total];
+			$valorLocal 	= 0;
+			$valorVisitante = 0;
 			
-			$refconectorlocal 		= $arEquipos[array_search($valorLocal, $arModulo)]; 
-			$refconectorvisitante 	= $arEquipos[array_search($valorVisitante, $arModulo)]; 
+			$refconectorlocal 		= 0; 
+			$refconectorvisitante 	= 0; 
 			
-			//die(var_dump($refconectorlocal));
-			
-			$refcanchas		= $arCancha[$total];
-			$hora			= $arHora[$total];
-			
-			$res .= $serviciosReferencias->insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
-			
-			$total += 1;
+			for ($k=0;$k<count($arEquipos)/2;$k++) {
+				
+				$valorLocal 	= $arLocal[$total];
+				$valorVisitante = $arVisitante[$total];
+				
+				$refconectorlocal 		= $arEquipos[array_search($valorLocal, $arModulo)]; 
+				$refconectorvisitante 	= $arEquipos[array_search($valorVisitante, $arModulo)]; 
+				
+				//die(var_dump($refconectorlocal));
+				
+				$refcanchas		= $arCancha[$total];
+				$hora			= $arHora[$total];
+				
+				
+				$res .= $serviciosReferencias->insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
+				
+				$total += 1;
+			}
 		}
+	} else {
+		for ($i=0;$i<count($arEquipos)-1;$i++) {
+			$fecha 		= $_POST['datepicker'.($i + 1)];
+			
+			$reffechas 	= $i+1;
+			$reffechaVuelta = $reffechas + (count($arEquipos)-1);
+			
+			$dias = 7 * ((count($arEquipos)-1));
+				
+			$fechaVuelta = strtotime ( '+'.$dias.' day' , strtotime ( $fecha ) ) ;
+			$fechaVuelta = date ( 'Y-m-d' , $fechaVuelta );
+
+			$valorLocal 	= 0;
+			$valorVisitante = 0;
+			
+			$refconectorlocal 		= 0; 
+			$refconectorvisitante 	= 0; 
+			
+			for ($k=0;$k<count($arEquipos)/2;$k++) {
+				
+				$valorLocal 	= $arLocal[$total];
+				$valorVisitante = $arVisitante[$total];
+				
+				$refconectorlocal 		= $arEquipos[array_search($valorLocal, $arModulo)]; 
+				$refconectorvisitante 	= $arEquipos[array_search($valorVisitante, $arModulo)]; 
+				
+				//die(var_dump($refconectorlocal));
+				
+				$refcanchas		= $arCancha[$total];
+				$hora			= $arHora[$total];
+				
+				
+				$res .= $serviciosReferencias->insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
+				
+				
+				$res .= $serviciosReferencias->insertarFixture($reftorneos,$reffechaVuelta,$refconectorvisitante,$refconectorlocal,$refarbitros,$juez1,$juez2,$refcanchas,$fechaVuelta,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
+				
+				$total += 1;
+			}
+		}
+		
 	}
 
-
+	}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -231,7 +286,7 @@ for ($i=1; $i<=$filas;$i++) {
 */
 
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerFixtureTodo(),13);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerFixtureTodoPorTorneo($reftorneos),13);
 
 ///header('Location: generarfixture.php?idtorneo='.$_POST['idtorneo'].'&idzona='.$_POST['idzona']);
 ?>

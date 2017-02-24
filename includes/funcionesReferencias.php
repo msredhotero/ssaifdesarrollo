@@ -3682,7 +3682,7 @@ left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 where tor.idtorneo = ".$idTorneo."
-order by 1";
+order by f.reffechas, f.idfixture";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -3692,6 +3692,64 @@ $sql = "select idfixture,reftorneos,reffechas,refconectorlocal,refconectorvisita
 $res = $this->query($sql,0);
 return $res;
 }
+
+
+function traerFixtureDetallePorId($idFixture) {
+$sql = "select
+f.idfixture,
+el.nombre as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+ev.nombre as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.juez1,
+f.juez2,
+can.nombre as canchas,
+fec.fecha,
+f.fecha,
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.goleslocal,
+f.golesvisitantes,
+f.observaciones,
+f.publicar,
+ti.tipotorneo,
+te.temporada,
+di.division,
+f.refcanchas,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refestadospartidos,
+f.refarbitros,
+(case when tor.respetadefiniciontipojugadores = 1 then 'Si' else 'No' end) as respetadefiniciontipojugadores,
+(case when tor.respetadefinicionhabilitacionestransitorias = 1 then 'Si' else 'No' end) as respetadefinicionhabilitacionestransitorias,
+(case when tor.respetadefinicionsancionesacumuladas = 1 then 'Si' else 'No' end) as respetadefinicionsancionesacumuladas,
+(case when tor.acumulagoleadores = 1 then 'Si' else 'No' end) as acumulagoleadores,
+(case when tor.acumulatablaconformada = 1 then 'Si' else 'No' end) as acumulatablaconformada,
+tor.descripcion
+
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where f.idfixture = ".$idFixture;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
 
 /* Fin */
 /* /* Fin de la Tabla: dbfixture*/
