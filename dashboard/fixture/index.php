@@ -242,6 +242,7 @@ $refTorneos		=	$serviciosReferencias->traerTorneosActivos();
                                     <th>Categoria</th>
                                     <th>División</th>
                                     <th style="text-align:center">Ver</th>
+                                    <th style="text-align:center">Posiciones</th>
                                     <th style="text-align:center">Generar Fixture</th>
                                 </tr>
                             </thead>
@@ -257,6 +258,7 @@ $refTorneos		=	$serviciosReferencias->traerTorneosActivos();
                                     <td><?php echo $rowC['categoria']; ?></td>
                                     <td><?php echo $rowC['division']; ?></td>
                                     <td align="center"><img src="../../imagenes/verIco.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varver"></td>
+                                    <td align="center"><img src="../../imagenes/posicionesfix.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varposiciones"></td>
                                     <td align="center"><img src="../../imagenes/Icon_Calendar.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="vargenerar"></td>
                                     
                                 </tr>
