@@ -23,8 +23,9 @@ $fecha = date('Y-m-d');
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Posiciones",$_SESSION['refroll_predio'],'');
 
-$resFixture		=	$serviciosReferencias->traerFixtureTodo();
-$cadFix			=	$serviciosFunciones->devolverSelectBox($resFixture,array(0,1,4,5,10),' - ');
+$idTorneo		=	$_GET['id'];
+
+$resFixture		=	$serviciosReferencias->Posiciones($idTorneo);
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -105,23 +106,27 @@ if ($_SESSION['refroll_predio'] != 1) {
     	<div class="cuerpoBox" style="padding-right:10px;">
     		<form class="form-inline formulario" role="form">
         	<div class="row">
-				<div class="col-md-6">
-                    <label class="control-label">Ingrese el Numero de Partido</label>
-                    <div class="input-group">
-                        <input class="form-control" type="text" name="buscar" id="buscar"/>
-                        <button type="button" class="btn btn-success" id="busqueda">Buscar</button>
-                    </div>
+				<div class="col-md-12">
+                    <table class="table table-bordered table-responsive">
+                    	<thead>
+                        	<th>Posicion</th>
+                            <th>Equipos</th>
+                            <th>PJ</th>
+                            <th>PG</th>
+                            <th>PP</th>
+                            <th>PE</th>
+                            <th>Goles</th>
+                            <th>Puntos</th>
+                        </thead>
+                        <tbody>
+                        	<?
+							
+							?>
+                        </tbody>
+                    </table>
                 </div>
 
-				<div class="col-md-6">
-                    <label class="control-label">Ingrese el Numero de Partido</label>
-                    <div class="input-group">
-                        <select class="form-control" id="fixture" name="fixture">
-                        	<?php echo $cadFix; ?>	
-                        </select>
-                        <button type="button" class="btn btn-success" id="ir">Ir</button>
-                    </div>
-                </div>
+				
             </div>
             
             <div class='row' style="margin-left:15px; margin-right:15px;">
