@@ -336,6 +336,11 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});
 	
+	$('.varposiciones').click( function() {
+		url = "../posiciones/posiciones.php?id="+$(this).attr("id");
+		$(location).attr('href',url);
+	});
+	
 	$('#conductaF').click( function() {
 		url = "conductafixture.php";
 		$(location).attr('href',url);

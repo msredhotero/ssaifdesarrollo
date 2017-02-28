@@ -26,7 +26,11 @@ p.calificacioncancha,
 p.juez1,
 p.juez2,
 p.observaciones,
-p.publicar
+p.publicar,
+p.pj,
+p.pg,
+p.pp,
+p.pe
 
 
 from (
@@ -45,7 +49,11 @@ f.calificacioncancha,
 f.juez1,
 f.juez2,
 f.observaciones,
-f.publicar
+f.publicar,
+count(el.idequipo) as pj,
+sum(case when f.puntoslocal = 3 then 1 else 0 end) as pg,
+sum(case when f.puntoslocal = 0 then 1 else 0 end) as pp,
+sum(case when f.puntoslocal = 1 then 1 else 0 end) as pe 
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
@@ -76,7 +84,11 @@ f.calificacioncancha,
 f.juez1,
 f.juez2,
 f.observaciones,
-f.publicar
+f.publicar,
+count(ev.idequipo) as pj,
+sum(case when f.puntosvisita = 3 then 1 else 0 end) as pg,
+sum(case when f.puntosvisita = 0 then 1 else 0 end) as pp,
+sum(case when f.puntosvisita = 1 then 1 else 0 end) as pe
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
@@ -101,10 +113,17 @@ p.calificacioncancha,
 p.juez1,
 p.juez2,
 p.observaciones,
-p.publicar
+p.publicar,
+p.pj,
+p.pg,
+p.pp,
+p.pe
 order by sum(p.puntos) desc
 
 ";	
+	$res = $this->query($sql,0);
+	return $res;
+
 }
 
 

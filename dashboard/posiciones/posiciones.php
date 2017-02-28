@@ -25,7 +25,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Posicio
 
 $idTorneo		=	$_GET['id'];
 
-$resFixture		=	$serviciosReferencias->Posiciones($idTorneo);
+$resPosiciones		=	$serviciosReferencias->Posiciones($idTorneo);
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -69,7 +69,37 @@ if ($_SESSION['refroll_predio'] != 1) {
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<style type="text/css">
-		
+			th {
+			  color:#D5DDE5;;
+			  background:#1b1e24;
+			  border-bottom:4px solid #9ea7af;
+			  border-right: 1px solid #343a45;
+			  font-size:17px;
+			  font-weight: 100;
+			  padding:18px;
+			  text-align:left;
+			  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+			  vertical-align:middle;
+			  font-family: "Roboto", helvetica, arial, sans-serif;
+			}
+			
+			th:first-child {
+			  border-top-left-radius:3px;
+			}
+			 
+			th:last-child {
+			  border-top-right-radius:3px;
+			  border-right:none;
+			}
+			
+			tr {
+			  border-top: 1px solid #C1C3D1;
+			  border-bottom-: 1px solid #C1C3D1;
+			  color:#666B85;
+			  font-size:16px;
+			  font-weight:normal;
+			  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+			}
   
 		
 	</style>
@@ -100,7 +130,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Buscar Partido</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Tabla de Posiciones</p>
         	
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
@@ -119,8 +149,23 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <th>Puntos</th>
                         </thead>
                         <tbody>
-                        	<?
-							
+                        	<?php
+								$cant = 1;
+								while ($row = mysql_fetch_array($resPosiciones)) {
+							?>
+                            <tr>
+                            	<td><?php echo $cant; ?></td>
+                                <td><?php echo $row['equipo']; ?></td>
+                                <td><?php echo $row['pj']; ?></td>
+                                <td><?php echo $row['pg']; ?></td>
+                                <td><?php echo $row['pp']; ?></td>
+                                <td><?php echo $row['pe']; ?></td>
+                                <td><?php echo $row['goles']; ?></td>
+                                <td><?php echo $row['puntos']; ?></td>
+                            </tr>
+                            <?php
+								$cant += 1;
+								}
 							?>
                         </tbody>
                     </table>
@@ -141,7 +186,25 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </div>
             </div>
 			
+			<div class="row">
+                <div class="col-md-12">
+                <ul class="list-inline" style="margin-top:15px;">
+                    <li>
+                        <button type="button" class="btn btn-default" id="volver" style="margin-left:0px;">volver</button>
+                    </li>
+                   <!-- <li>
+                        <button type="button" class="btn btn-success" id="chequearF" style="margin-left:0px;">Chequear Fixture</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-success" id="conductaF" style="margin-left:0px;">Cargar Conducta al Fixture</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
+                    </li>-->
 
+                </ul>
+                </div>
+            </div>
             </form>
     	</div>
     </div>
@@ -186,6 +249,11 @@ $(document).ready(function(){
 	
 	$('#ir').click(function() {
 		url = "estadisticas.php?id="+ $('#fixture').val();
+		$(location).attr('href',url);
+	});
+	
+	$('#volver').click( function() {
+		url = "../fixture/index.php";
 		$(location).attr('href',url);
 	});
 
