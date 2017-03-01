@@ -24,8 +24,9 @@ $fecha = date('Y-m-d');
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
 
 $idFixture = $_POST['idfixture'];
-
+//die(var_dump($idFixture));
 $resFix = $serviciosReferencias->TraerFixturePorId($idFixture);
+
 
 $equipoLocal		=	mysql_result($resFix,0,'refconectorlocal');
 $equipoVisitante	=	mysql_result($resFix,0,'refconectorvisitante');
@@ -111,24 +112,20 @@ $numero = count($_POST);
 				$serviciosReferencias->modificarMinutosjugados($existeMinutos, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['minutos'.$idJugador]);
 			}
 			//////////////			fin logica			/////////////////////////////////////////////////////////
+			
+			
+			//////////////  mejor jugador //////////////
+			// siempre lo borro a lo primero
+			$serviciosReferencias->eliminarMejorjugadorPorJugadorFixture($idJugador, $idFixture);
+			if (isset($_POST['mejorjugador'.$idJugador])) {
+				
+				$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones);
+			}
 
 		
 		}
 		
-		if (strpos($tags[$i],"mejorjugador") !== false) {
-			if (isset($valores[$i])) {
-				//////////////		logica mejor jugador		///////////////////////////////////////////////////////
-				$existeMejorJugador = $serviciosReferencias->existeFixturePorMejorJugador($idJugador, $idFixture);
-				
-				if ($existeGoleadores == 0) {
-					//borro los anteriores y cargos el nuevo
-					$serviciosReferencias->eliminarMejorjugadorMasivo($idFixture);
-					//inserto
-					$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones);
-				}
-				//////////////			fin logica			/////////////////////////////////////////////////////////	
-			}
-		}
+		
 		
 		////********************		FIN EQUIPO LOCAL		*************************************************//////
 		
@@ -168,26 +165,22 @@ $numero = count($_POST);
 					$serviciosReferencias->modificarMinutosjugados($existeMinutos, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['minbutos'.$idJugador]);
 				}
 				//////////////			fin logica			/////////////////////////////////////////////////////////
+				
+				
+				//////////////  mejor jugador //////////////
+				// siempre lo borro a lo primero
+				$serviciosReferencias->eliminarMejorjugadorPorJugadorFixture($idJugador, $idFixture);
+				if (isset($_POST['mejorbjugador'.$idJugador])) {
+					
+					$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones);
+				}
 
 			}
 		}
 		
-		if (strpos($tags[$i],"mejorbjugador") !== false) {
-			if (isset($valores[$i])) {
-				//////////////		logica mejor jugador		///////////////////////////////////////////////////////
-				$existeMejorJugador = $serviciosReferencias->existeFixturePorMejorJugador($idJugador, $idFixture);
-				
-				if ($existeGoleadores == 0) {
-					//borro los anteriores y cargos el nuevo
-					$serviciosReferencias->eliminarMejorjugadorMasivo($idFixture);
-					//inserto
-					$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones);
-				}
-				//////////////			fin logica			/////////////////////////////////////////////////////////	
-			}
-		}
 		
-		////********************		FIN EQUIPO LOCAL		*************************************************//////
+		
+		////********************		FIN EQUIPO VISITANTE		*************************************************//////
 		
 	}
 
@@ -218,8 +211,7 @@ $contabilizaLocal		= 0;
 $contabilizaVisitante	= 0;
 
 if	($refEstadoPartido != 0) {
-	$resEstados		= $serviciosReferencias->traerEstadospartidos();
-	$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+	
 
 	$estadoPartido	=	$serviciosReferencias->traerEstadospartidosPorId($refEstadoPartido);
 	
@@ -244,7 +236,7 @@ if	($refEstadoPartido != 0) {
 	$contabilizaVisitante	= mysql_result($estadoPartido,0,'contabilizavisitante');
 	
 	// caso de ganado, perdido, empatado
-	if (($defAutomatica == 0) && ($finalizado == 1) && ($visibleParaArbitros == 0)) {
+	if (($defAutomatica == 'No') && ($finalizado == 'Si') && ($visibleParaArbitros == 'No')) {
 		if (($golesRealesLocal > $golesRealesVisitantes) && (($puntosLocal == 0) || ($puntosLocal == 1))) {
 			$error = "Error: El equipo local deberia ganar";	
 			$lblerror = "alert-danger";
@@ -260,15 +252,42 @@ if	($refEstadoPartido != 0) {
 			$lblerror = "alert-danger";
 		}
 		
+		
+		
 		if ($error == '') {
 			$lblerror = "alert-success";
 			$error = "Ok: Se cargo correctamente";	
 			$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 1);
+			$resEstados		= $serviciosReferencias->traerEstadospartidos();
+			$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+		} else {
+			$resM = $serviciosReferencias->modificarFixturePorEstados($idFixture, 'NULL', $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 0);
+			$resEstados		= $serviciosReferencias->traerEstadospartidos();
+			$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+			
+		}
+		
+		
+	} else {
+		// estados donde los partidos los define el estado como W.O. Local, Perdida de puntos a Ambos, Suspendido Finalizado
+		if (($defAutomatica == 'Si') && ($finalizado == 'Si') && ($visibleParaArbitros == 'No')) {	
+			if ($golesLocalBorra == 'Si') {
+				$serviciosReferencias->modificaGoleadoresPorFixtureMasivo($idFixture, $equipoLocal);
+			}
+			
+			if ($golesvisitanteborra == 'Si') {
+				$serviciosReferencias->modificaGoleadoresPorFixtureMasivo($idFixture, $equipoVisitante);
+			}
+			
+			$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
+			$resEstados		= $serviciosReferencias->traerEstadospartidos();
+			$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
 		}
 	}
 } else {
 	$resEstados		= $serviciosReferencias->traerEstadospartidos();
 	$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');	
+	
 }
 
 
@@ -305,7 +324,7 @@ $cabeceras2 		= "<th>Nombre</th>
 $resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoLocal, $idCategoria);
 $resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoVisitante, $idCategoria);
 
-
+$resFixDetalle	= $serviciosReferencias->traerFixtureDetallePorId($idFixture);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -416,8 +435,6 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <div id="content">
 
-<h3>Estadisticas</h3>
-
     <div class="boxInfoLargoEstadisticas">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Cargar Estadisticas</p>
@@ -425,6 +442,105 @@ if ($_SESSION['refroll_predio'] != 1) {
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
+            
+            <div class="row">
+                <div class="col-md-3">
+                	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
+                </div>
+
+                <div class="col-md-3">
+                	<p>Tipo Torneo: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'tipotorneo'); ?></span></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Temporadas: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'temporada'); ?></span></p>
+                </div>
+
+                <div class="col-md-3">
+                	<p>Categorias: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'categoria'); ?></span></p>
+                </div>
+
+                <div class="col-md-3">
+                	<p>Divisiones: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'division'); ?></span></p>
+                </div>
+
+                <div class="col-md-3">
+                	<p>Resp.Def. Tipo Jugadores <?php if (mysql_result($resFixDetalle,0,'respetadefiniciontipojugadores') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?>
+					
+					</p>
+                </div>
+                <div class="col-md-3">
+                	<p>Resp.Def. Habilitaciones Trans.<?php if (mysql_result($resFixDetalle,0,'respetadefinicionhabilitacionestransitorias') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Resp.Def. Sanciones Acumuladas<?php if (mysql_result($resFixDetalle,0,'respetadefinicionsancionesacumuladas') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Acumula Goleadores<?php if (mysql_result($resFixDetalle,0,'acumulagoleadores') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Acumula Tabla Conformada<?php if (mysql_result($resFixDetalle,0,'acumulatablaconformada') == 'Si') { 
+								?>
+										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
+								<?php
+										} else {
+								?>
+										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
+								<?php		
+										}
+								?></p>
+                </div>
+				<div class="col-md-3">
+                	<p>Arbitro: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'arbitro'); ?></span></p>
+                </div>
+                <div class="col-md-3">
+                	<p>Cancha: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'canchas'); ?></span></p>
+                </div>
+                
+                <div class="col-md-6">
+                	<p style="font-size:2.2em">Resultado Local: <?php echo mysql_result($resFixDetalle,0,'goleslocal'); ?></p>
+                </div>
+                <div class="col-md-6">
+                	<p style="font-size:2.2em">Resultado Visitante: <?php echo mysql_result($resFixDetalle,0,'golesvisitantes'); ?></p>
+                </div>
+                	
+           </div>
+                
         	<div class="row">
 
                 <div style="margin-left:5px;padding-left:10px; border-left:12px solid #0C0; border-bottom:1px solid #eee;border-top:1px solid #CCC; margin-right:5px;">
@@ -720,6 +836,7 @@ $(document).ready(function(){
 	/*var table = $('#example dataTables_filter input');*/
 	
 	var table = $('#example').dataTable({
+		"lengthMenu": [[30, 60 -1], [30, 60, "All"]],
 		"order": [[ 0, "asc" ]],
 		"language": {
 			"emptyTable":     "No hay datos cargados",
@@ -748,6 +865,7 @@ $(document).ready(function(){
 	
 	
 	var table2 = $('#example2').dataTable({
+		"lengthMenu": [[30, 60 -1], [30, 60, "All"]],
 		"order": [[ 0, "asc" ]],
 		"language": {
 			"emptyTable":     "No hay datos cargados",

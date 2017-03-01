@@ -35,7 +35,6 @@ p.pe
 
 from (
 select
-f.idfixture,
 el.nombre as equipo,
 f.puntoslocal as puntos,
 ca.categoria,
@@ -66,11 +65,25 @@ left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 where tor.idtorneo = ".$refTorneo."
+group by el.nombre,
+            f.puntoslocal,
+            ca.categoria,
+            arb.nombrecompleto,
+            f.goleslocal,
+            can.nombre,
+            fec.fecha,
+            f.fecha,
+            f.hora,
+            f.calificacioncancha,
+            f.juez1,
+            f.juez2,
+            f.observaciones,
+            f.publicar 
 
 union all
 
 select
-f.idfixture,
+
 ev.nombre as equipo,
 f.puntosvisita as puntos,
 ca.categoria,
@@ -101,6 +114,20 @@ left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 where tor.idtorneo = ".$refTorneo."
+group by ev.nombre,
+            f.puntosvisita,
+            ca.categoria,
+            arb.nombrecompleto,
+            f.golesvisitantes,
+            can.nombre,
+            fec.fecha,
+            f.fecha,
+            f.hora,
+            f.calificacioncancha,
+            f.juez1,
+            f.juez2,
+            f.observaciones,
+            f.publicar
 ) p
 group by p.equipo,
 p.categoria,
@@ -2912,7 +2939,19 @@ return $res;
 
 
 function traerEstadospartidosPorId($id) { 
-$sql = "select idestadopartido,descripcion,defautomatica,goleslocalauto,goleslocalborra,golesvisitanteauto,golesvisitanteborra,puntoslocal,puntosvisitante,finalizado,ocultardetallepublico,visibleparaarbitros,contabilizalocal,contabilizavisitante from tbestadospartidos where idestadopartido =".$id; 
+$sql = "select idestadopartido,descripcion,
+(case when defautomatica = 1 then 'Si' else 'No' end) as defautomatica,
+goleslocalauto,
+(case when goleslocalborra = 1 then 'Si' else 'No' end) as goleslocalborra,
+golesvisitanteauto,
+(case when golesvisitanteborra = 1 then 'Si' else 'No' end) as golesvisitanteborra,
+puntoslocal,
+puntosvisitante,
+(case when finalizado = 1 then 'Si' else 'No' end) as finalizado,
+(case when ocultardetallepublico = 1 then 'Si' else 'No' end) as ocultardetallepublico,
+(case when visibleparaarbitros = 1 then 'Si' else 'No' end) as visibleparaarbitros,
+contabilizalocal,
+contabilizavisitante from tbestadospartidos where idestadopartido =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -3679,6 +3718,7 @@ return $res;
 }
 
 
+
 function eliminarFixture($id) {
 $sql = "delete from dbfixture where idfixture =".$id;
 $res = $this->query($sql,0);
@@ -3915,8 +3955,16 @@ return $res;
 } 
 
 
+
 function eliminarMejorjugador($id) { 
 $sql = "delete from dbmejorjugador where idmejorjugador =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+}
+
+
+function eliminarMejorjugadorPorJugadorFixture($idJugador, $idFixture) { 
+$sql = "delete from dbmejorjugador where refjugadores = ".$idJugador." and reffixture = ".$idFixture; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -4354,6 +4402,12 @@ $sql = "delete from dbgoleadores where idgoleador =".$id;
 $res = $this->query($sql,0); 
 return $res; 
 } 
+
+function modificaGoleadoresPorFixtureMasivo($idfixture, $idEquipo) {
+	$sql	=	"update dbgoleadores set goles = 0, encontra = 0 where reffixture =".$idfixture." and refequipos = ".$idEquipo;
+	$res = $this->query($sql,0); 
+	return $res; 
+}
 
 
 function traerGoleadores() { 

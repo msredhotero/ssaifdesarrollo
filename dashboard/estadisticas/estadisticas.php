@@ -94,9 +94,15 @@ $cabeceras2 		= "<th>Nombre</th>
 $resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoLocal, $idCategoria);
 $resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoVisitante, $idCategoria);
 
-$resEstados		= $serviciosReferencias->traerEstadospartidos();
-$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+$existe			= $serviciosReferencias->existe( "select refestadospartidos from dbfixture where refestadospartidos is not null and idfixture = ".$idFixture);
 
+if ($existe == 0) {
+	$resEstados		= $serviciosReferencias->traerEstadospartidos();
+	$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+} else {
+	$resEstados		= $serviciosReferencias->traerEstadospartidos();
+	$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', mysql_result($resFix,0,'refestadospartidos'));
+}
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -164,12 +170,94 @@ if ($_SESSION['refroll_predio'] != 1) {
 				/*
 				$('#goles3').number( true, 2 );
 				$('#goles3').number( true, 2 );*/
-				$('.goles').each(function(intIndex){
+				$('.golesEB').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
 				
-				$('.golescontra').each(function(intIndex){
+				$('.golescontraEB').each(function(intIndex){
 					$(this).number( true, 0 );
+				});
+				
+				$('.golesEA').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.golescontraEA').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.golesEA').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				$('.golescontraEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				$('.golesEA').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				$('.golescontraEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				
+				
+				
+				$('.golesEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoB').html(acumulado);
+				});
+				
+				
+				$('.golescontraEA').change(function(e) {
+					var acumulado = 0;
+					$('.golesEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoB').html(acumulado);
 				});
 				
 				$('.minutos').each(function(intIndex){
@@ -303,10 +391,10 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </div>
                 
                 <div class="col-md-6">
-                	<p style="font-size:2.2em">Resultado Local: <?php echo mysql_result($resFixDetalle,0,'goleslocal'); ?></p>
+                	<p style="font-size:2.2em">Resultado Local: <span class="resultadoA"><?php echo mysql_result($resFixDetalle,0,'goleslocal'); ?></span></p>
                 </div>
                 <div class="col-md-6">
-                	<p style="font-size:2.2em">Resultado Visitante: <?php echo mysql_result($resFixDetalle,0,'golesvisitantes'); ?></p>
+                	<p style="font-size:2.2em">Resultado Visitante: <span class="resultadoB"><?php echo mysql_result($resFixDetalle,0,'golesvisitantes'); ?></span></p>
                 </div>
                 	
                 </div>
@@ -361,12 +449,12 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm goles" name="goles<?php echo $row['refjugadores']; ?>" id="goles<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'goles'); ?>"/>
+                                	<input type="text" class="form-control input-sm golesEA" name="goles<?php echo $row['refjugadores']; ?>" id="goles<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'goles'); ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm golescontra" name="encontra<?php echo $row['refjugadores']; ?>" id="encontra<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'encontra'); ?>"/>
+                                	<input type="text" class="form-control input-sm golescontraEA" name="encontra<?php echo $row['refjugadores']; ?>" id="encontra<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'encontra'); ?>"/>
                                 </div>
                             </th>
                             <th>
@@ -475,12 +563,12 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm goles" name="gobles<?php echo $rowB['refjugadores']; ?>" id="gobles<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'goles'); ?>"/>
+                                	<input type="text" class="form-control input-sm golesEB" name="gobles<?php echo $rowB['refjugadores']; ?>" id="gobles<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'goles'); ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm golescontra" name="enbcontra<?php echo $rowB['refjugadores']; ?>" id="enbcontra<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'encontra'); ?>"/>
+                                	<input type="text" class="form-control input-sm golescontraEB" name="enbcontra<?php echo $rowB['refjugadores']; ?>" id="enbcontra<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'encontra'); ?>"/>
                                 </div>
                             </th>
                             <th>
@@ -640,6 +728,7 @@ $(document).ready(function(){
 	
 	
 	var table2 = $('#example2').dataTable({
+		"lengthMenu": [[30, 60 -1], [30, 60, "All"]],
 		"order": [[ 0, "asc" ]],
 		"language": {
 			"emptyTable":     "No hay datos cargados",
