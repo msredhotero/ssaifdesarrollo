@@ -4302,6 +4302,13 @@ return $res;
 
 /* PARA Sancionesjugadores */
 
+function existeFixturePorSanciones($idJugador, $idTipoSancion, $idFixture) {
+	$sql = "select * from dbsancionesjugadores where refjugadores =".$idJugador." and reffixture =".$idFixture." and reftiposanciones =".$idTipoSancion;
+	
+	return $this->existeDevuelveId($sql);	
+}
+
+
 function insertarSancionesjugadores($reftiposanciones,$refjugadores,$refequipos,$reffixture,$fecha,$cantidad,$refcategorias,$refdivisiones,$refsancionesfallos) {
 $sql = "insert into dbsancionesjugadores(idsancionjugador,reftiposanciones,refjugadores,refequipos,reffixture,fecha,cantidad,refcategorias,refdivisiones,refsancionesfallos)
 values ('',".$reftiposanciones.",".$refjugadores.",".$refequipos.",".$reffixture.",'".utf8_decode($fecha)."',".$cantidad.",".$refcategorias.",".$refdivisiones.",".$refsancionesfallos.")";
@@ -4365,9 +4372,127 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function traerSancionesjugadoresPorJugadorConValor($idJugador, $idFixture, $idCategorias, $idDivision, $idTipoSancion) {
+	$sql = "select idsancionjugador,reftiposanciones,refjugadores,refequipos,reffixture,fecha,cantidad,refcategorias,refdivisiones,refsancionesfallos from dbsancionesjugadores where refjugadores =".$idJugador." and reffixture =".$idFixture." and refcategorias = ".$idCategorias." and refdivisiones =".$idDivision." and reftiposanciones =".$idTipoSancion;
+	
+	$res = $this->query($sql,0);
+	if (mysql_num_rows($res)>0) {
+		return mysql_result($res,0,'cantidad');
+	}
+
+	return 0;
+}
+
+function traerSancionesjugadoresPorJugador($idJugador, $idFixture, $idCategorias, $idDivision, $idTipoSancion) {
+	$sql = "select idsancionjugador,reftiposanciones,refjugadores,refequipos,reffixture,fecha,cantidad,refcategorias,refdivisiones,refsancionesfallos from dbsancionesjugadores where refjugadores =".$idJugador." and reffixture =".$idFixture." and refcategorias = ".$idCategorias." and refdivisiones =".$idDivision." and reftiposanciones =".$idTipoSancion;
+	
+	$res = $this->query($sql,0);
+	if (mysql_num_rows($res)>0) {
+		return mysql_result($res,0,'cantidad');
+	}
+
+	return 0;
+}
+
+
+function traerSancionesjugadoresSinFallos() {
+$sql = "select
+p.idsancionjugador,
+concat(jug.apellido, ', ', jug.nombres) as jugador,
+jug.nrodocumento,
+equ.nombre as equipo,
+p.fecha,
+tip.descripcion as tiposancion,
+p.cantidad,
+p.reftiposanciones,
+p.refjugadores,
+p.refequipos,
+p.reffixture,
+p.refcategorias,
+p.refdivisiones,
+p.refsancionesfallos
+from dbsancionesjugadores p
+inner join tbtiposanciones tip ON tip.idtiposancion = p.reftiposanciones
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+where p.cantidad >0 and p.refsancionesfallos is null";
+$res = $this->query($sql,0);
+return $res;
+}
+
 /* Fin */
 /* /* Fin de la Tabla: dbsancionesjugadores*/
 
+
+
+/* PARA Movimientosanciones */
+
+
+function insertarMovimientosanciones($refsancionesjugadores,$reffechas,$reffixture,$cumplidas,$finalizo) { 
+$sql = "insert into dbmovimientosanciones(idmovimientosancion,refsancionesjugadores,reffechas,reffixture,cumplidas,finalizo) 
+values ('',".$refsancionesjugadores.",".$reffechas.",".$reffixture.",".$cumplidas.",".$finalizo.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarMovimientosanciones($id,$refsancionesjugadores,$reffechas,$reffixture,$cumplidas,$finalizo) { 
+$sql = "update dbmovimientosanciones 
+set 
+refsancionesjugadores = ".$refsancionesjugadores.",reffechas = ".$reffechas.",reffixture = ".$reffixture.",cumplidas = ".$cumplidas.",finalizo = ".$finalizo." 
+where idmovimientosancion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarMovimientosanciones($id) { 
+$sql = "delete from dbmovimientosanciones where idmovimientosancion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMovimientosanciones() { 
+$sql = "select 
+m.idmovimientosancion,
+m.refsancionesjugadores,
+m.reffechas,
+m.reffixture,
+m.cumplidas,
+m.finalizo
+from dbmovimientosanciones m 
+inner join dbsancionesjugadores san ON san.idsancionjugador = m.refsancionesjugadores 
+inner join tbtiposanciones ti ON ti.idtiposancion = san.reftiposanciones 
+inner join dbjugadores ju ON ju.idjugador = san.refjugadores 
+inner join dbequipos eq ON eq.idequipo = san.refequipos 
+inner join tbfechas fec ON fec.idfecha = m.reffechas 
+inner join dbfixture fix ON fix.idfixture = m.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerMovimientosancionesPorId($id) { 
+$sql = "select idmovimientosancion,refsancionesjugadores,reffechas,reffixture,cumplidas,finalizo from dbmovimientosanciones where idmovimientosancion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbmovimientosanciones*/
 
 /* PARA Goleadores */
 

@@ -121,8 +121,93 @@ $numero = count($_POST);
 				
 				$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones);
 			}
+			/////////////		FIN MEJOR JUGADOR		/////////////////////////////////////////////////////////
+			
+			
+			
+			/***********		AMARILLAS			*************************************************************/
+			$existeAmarillas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,1,$idFixture);
+			
+			if ($existeAmarillas == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaLrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+				//*****			calculo amarillas acumuladas ********/
+				
+				//*****				fin							*****/
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeAmarillas,1,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaLrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			
+			/***********		FIN					*************************************************************/
 
+
+
+			/***********		ROJAS			*************************************************************/
+			$existeRojas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,2,$idFixture);
+			
+			if ($existeRojas == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(2,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['roLjas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeRojas,2,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['roLjas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			/***********		FIN					*************************************************************/
+
+
+
+			/***********		INFORMADOS			*************************************************************/
+			$existeInformados	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,3,$idFixture);
+			
+			if ($existeInformados == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(3,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['inforLmados'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeInformados,3,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['inforLmados'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			/***********		FIN					*************************************************************/
 		
+
+
+			/***********		DOBLE AMARILLAS			*************************************************************/
+			$existeDobleAmarillas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,4,$idFixture);
+			
+			if ($existeDobleAmarillas == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(4,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleLamarilla'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeDobleAmarillas,4,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleLamarilla'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			/***********		FIN					*************************************************************/
+
+
+
+			/***********		CD TD			*************************************************************/
+			$existeCDTD	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,5,$idFixture);
+			
+			if ($existeCDTD == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(5,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['cdLtd'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeCDTD,5,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['cdLtd'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			/***********		FIN					*************************************************************/
+
 		}
 		
 		
@@ -174,6 +259,91 @@ $numero = count($_POST);
 					
 					$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones);
 				}
+				
+				/**************  fin 			**********************************************************************/
+				
+				/***********		AMARILLAS			*************************************************************/
+			$existeAmarillas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,1,$idFixture);
+			
+			if ($existeAmarillas == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+				//*****			calculo amarillas acumuladas ********/
+				
+				//*****				fin							*****/
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeAmarillas,1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			
+			/***********		FIN					*************************************************************/
+
+
+
+			/***********		ROJAS			*************************************************************/
+			$existeRojas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,2,$idFixture);
+			
+			if ($existeRojas == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(2,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['roVjas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeRojas,2,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['roVjas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			/***********		FIN					*************************************************************/
+
+
+
+			/***********		INFORMADOS			*************************************************************/
+			$existeInformados	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,3,$idFixture);
+			
+			if ($existeInformados == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(3,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['inforVmados'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeInformados,3,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['inforVmados'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			/***********		FIN					*************************************************************/
+		
+
+
+			/***********		DOBLE AMARILLAS			*************************************************************/
+			$existeDobleAmarillas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,4,$idFixture);
+			
+			if ($existeDobleAmarillas == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(4,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleVamarilla'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeDobleAmarillas,4,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleVamarilla'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			/***********		FIN					*************************************************************/
+
+
+
+			/***********		CD TD			*************************************************************/
+			$existeCDTD	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,5,$idFixture);
+			
+			if ($existeCDTD == 0) {
+				//inserto
+				$idsancion = $serviciosReferencias->insertarSancionesjugadores(5,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['cdVtd'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+				
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarSancionesjugadores($existeCDTD,5,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['cdVtd'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+			}
+			/***********		FIN					*************************************************************/
 
 			}
 		}
@@ -571,6 +741,17 @@ if ($_SESSION['refroll_predio'] != 1) {
 							
 							while ($row = mysql_fetch_array($resJugadoresA)) {
 								$estadisticas = $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivision($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
+								
+								
+								$sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
+								
+								$sancionRoja			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 2);
+								
+								$sancionInformados		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 3);
+								
+								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
+								
+								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
 
 								
 						?>
@@ -619,27 +800,27 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="amarillas<?php echo $row['refjugadores']; ?>" id="amarillas<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm amarillas" name="amaLrillas<?php echo $row['refjugadores']; ?>" id="amaLrillas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="rojas<?php echo $row['refjugadores']; ?>" id="rojas<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm rojas" name="roLjas<?php echo $row['refjugadores']; ?>" id="roLjas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="informados<?php echo $row['refjugadores']; ?>" id="informados<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm informados" name="inforLmados<?php echo $row['refjugadores']; ?>" id="inforLmados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="dobleamarilla<?php echo $row['refjugadores']; ?>" id="dobleamarilla<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm dobleamarilla" name="dobleLamarilla<?php echo $row['refjugadores']; ?>" id="dobleLamarilla<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="cdtd<?php echo $row['refjugadores']; ?>" id="cdtd<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm cdtd" name="cdLtd<?php echo $row['refjugadores']; ?>" id="cdLtd<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
                                 </div>
                             </th>
                             
@@ -687,6 +868,16 @@ if ($_SESSION['refroll_predio'] != 1) {
 							
 							while ($rowB = mysql_fetch_array($resJugadoresB)) {
 								$estadisticasB = $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivisionVisitante($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
+								
+								$sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
+								
+								$sancionRoja			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 2);
+								
+								$sancionInformados		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 3);
+								
+								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
+								
+								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
 						?>
                         <tr class="<?php echo $row[0]; ?>">
 
@@ -733,27 +924,27 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="amarillas<?php echo $rowB['refjugadores']; ?>" id="amarillas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm amarillas" name="amaVrillas<?php echo $rowB['refjugadores']; ?>" id="amaVrillas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="rojas<?php echo $rowB['refjugadores']; ?>" id="rojas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm rojas" name="roVjas<?php echo $rowB['refjugadores']; ?>" id="roVjas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="informados<?php echo $rowB['refjugadores']; ?>" id="informados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm informados" name="inforVmados<?php echo $rowB['refjugadores']; ?>" id="inforVmados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="dobleamarilla<?php echo $rowB['refjugadores']; ?>" id="dobleamarilla<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm dobleamarilla" name="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" id="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="cdtd<?php echo $rowB['refjugadores']; ?>" id="cdtd<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm cdtd" name="cdVtd<?php echo $rowB['refjugadores']; ?>" id="cdVtd<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
                                 </div>
                             </th>
                         </tr>

@@ -152,6 +152,14 @@ class Servicios {
 				$classEli = 'varborrar';
 				$idresultados = "resultados";
 				break;
+			case 88:
+				$cantidad = 6;
+				$classMod = 'varmodificar';
+				$classVer = 'varver';
+				$lblVer	  = 'Fallar';
+				$classEli = 'varborrar';
+				$idresultados = "resultados";
+				break;
 			default:
 				$classMod = 'varmodificar';
 				$classEli = 'varborrar';

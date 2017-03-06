@@ -186,6 +186,26 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$(this).number( true, 0 );
 				});
 				
+				$('.amarillas').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.rojas').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.informados').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.dobleamarilla').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.cdtd').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
 				$('.golesEA').change(function(e) {
 					var acumulado = 0;
 					$('.golesEA').each(function(intIndex){
@@ -265,6 +285,69 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$(this).change( function() {
 						if ($(this).val() > <?php echo $minutos; ?>) {
 							$(this).val(<?php echo $minutos; ?>);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.amarillas').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 2) {
+							$(this).val(2);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.rojas').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.informados').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.dobleamarilla').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.cdtd').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
 						}
 					});
 				});
@@ -435,7 +518,17 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	<?php 
 							
 							while ($row = mysql_fetch_array($resJugadoresA)) {
-								$estadisticas = $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivision($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
+								$estadisticas	= $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivision($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
+								
+								$sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
+								
+								$sancionRoja			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 2);
+								
+								$sancionInformados		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 3);
+								
+								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
+								
+								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
 
 								
 						?>
@@ -484,27 +577,27 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="amarillas<?php echo $row['refjugadores']; ?>" id="amarillas<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm amarillas" name="amaLrillas<?php echo $row['refjugadores']; ?>" id="amaLrillas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="rojas<?php echo $row['refjugadores']; ?>" id="rojas<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm rojas" name="roLjas<?php echo $row['refjugadores']; ?>" id="roLjas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="informados<?php echo $row['refjugadores']; ?>" id="informados<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm informados" name="inforLmados<?php echo $row['refjugadores']; ?>" id="inforLmados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="dobleamarilla<?php echo $row['refjugadores']; ?>" id="dobleamarilla<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm dobleamarilla" name="dobleLamarilla<?php echo $row['refjugadores']; ?>" id="dobleLamarilla<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="cdtd<?php echo $row['refjugadores']; ?>" id="cdtd<?php echo $row['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm cdtd" name="cdLtd<?php echo $row['refjugadores']; ?>" id="cdLtd<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
                                 </div>
                             </th>
                             
@@ -552,6 +645,16 @@ if ($_SESSION['refroll_predio'] != 1) {
 							
 							while ($rowB = mysql_fetch_array($resJugadoresB)) {
 								$estadisticasB = $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivisionVisitante($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
+								
+								$sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
+								
+								$sancionRoja			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 2);
+								
+								$sancionInformados		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 3);
+								
+								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
+								
+								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
 						?>
                         <tr class="<?php echo $row[0]; ?>">
 
@@ -598,27 +701,27 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="amarillas<?php echo $rowB['refjugadores']; ?>" id="amarillas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm amarillas" name="amaVrillas<?php echo $rowB['refjugadores']; ?>" id="amaVrillas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="rojas<?php echo $rowB['refjugadores']; ?>" id="rojas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm rojas" name="roVjas<?php echo $rowB['refjugadores']; ?>" id="roVjas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="informados<?php echo $rowB['refjugadores']; ?>" id="informados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm informados" name="inforVmados<?php echo $rowB['refjugadores']; ?>" id="inforVmados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="dobleamarilla<?php echo $rowB['refjugadores']; ?>" id="dobleamarilla<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm dobleamarilla" name="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" id="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm" name="cdtd<?php echo $rowB['refjugadores']; ?>" id="cdtd<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value=""/>
+                                	<input type="text" class="form-control input-sm cdtd" name="cdVtd<?php echo $rowB['refjugadores']; ?>" id="cdVtd<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
                                 </div>
                             </th>
                         </tr>
