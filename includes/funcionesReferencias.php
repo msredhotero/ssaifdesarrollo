@@ -4372,6 +4372,40 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function traerSancionesjugadoresPorIdDetalles($id) {
+$sql = "select
+p.idsancionjugador,
+concat(jug.apellido, ', ', jug.nombres) as jugador,
+jug.nrodocumento,
+equ.nombre as equipo,
+p.fecha,
+tip.descripcion as tiposancion,
+p.cantidad,
+p.reftiposanciones,
+p.refjugadores,
+p.refequipos,
+p.reffixture,
+p.refcategorias,
+p.refdivisiones,
+p.refsancionesfallos
+from dbsancionesjugadores p
+inner join tbtiposanciones tip ON tip.idtiposancion = p.reftiposanciones
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones  
+where idsancionjugador =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
 function traerSancionesjugadoresPorJugadorConValor($idJugador, $idFixture, $idCategorias, $idDivision, $idTipoSancion) {
 	$sql = "select idsancionjugador,reftiposanciones,refjugadores,refequipos,reffixture,fecha,cantidad,refcategorias,refdivisiones,refsancionesfallos from dbsancionesjugadores where refjugadores =".$idJugador." and reffixture =".$idFixture." and refcategorias = ".$idCategorias." and refdivisiones =".$idDivision." and reftiposanciones =".$idTipoSancion;
 	
@@ -4424,7 +4458,38 @@ inner join dbequipos equ ON equ.idequipo = p.refequipos
 inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
 inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
 inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
-where p.cantidad >0 and p.refsancionesfallos is null";
+where p.cantidad >0 and p.refsancionesfallos is null and tip.idtiposancion <> 1
+union all
+select
+p.idsancionjugador,
+concat(jug.apellido, ', ', jug.nombres) as jugador,
+jug.nrodocumento,
+equ.nombre as equipo,
+p.fecha,
+tip.descripcion as tiposancion,
+p.cantidad,
+p.reftiposanciones,
+p.refjugadores,
+p.refequipos,
+p.reffixture,
+p.refcategorias,
+p.refdivisiones,
+p.refsancionesfallos
+from dbsancionesjugadores p
+inner join tbtiposanciones tip ON tip.idtiposancion = p.reftiposanciones
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+inner join dbcountries co ON co.idcountrie = jug.refcountries 
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+where p.cantidad >1 and p.refsancionesfallos is null and tip.idtiposancion = 1
+";
 $res = $this->query($sql,0);
 return $res;
 }

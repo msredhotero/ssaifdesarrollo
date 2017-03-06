@@ -451,7 +451,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </div>
                     </div>
                     
-                    <div class="form-group col-md-4" style="display:none">
+                    <div class="form-group col-md-4">
                         <label for="fechanacimiento" class="control-label" style="text-align:left">Fecha Limite</label>
                         <div class="input-group col-md-12">
                             <input class="form-control" name="fechalimiteB" id="fechalimiteB" type="text">

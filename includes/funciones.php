@@ -154,11 +154,12 @@ class Servicios {
 				break;
 			case 88:
 				$cantidad = 6;
-				$classMod = 'varmodificar';
+				$classMod = '';
 				$classVer = 'varver';
 				$lblVer	  = 'Fallar';
-				$classEli = 'varborrar';
+				$classEli = '';
 				$idresultados = "resultados";
+				$icoVar	  = "glyphicon-check";
 				break;
 			default:
 				$classMod = 'varmodificar';
@@ -266,7 +267,7 @@ class Servicios {
 								<td>
 									
 									<div class="btn-group">
-										<button class="btn btn-success" type="button">Action</button>
+										<button class="btn btn-success" type="button">Acciones</button>
 										
 										<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
 										<span class="caret"></span>
@@ -276,7 +277,7 @@ class Servicios {
 										<ul class="dropdown-menu" role="menu">
 										
 											<li>
-											<a href="javascript:void(0)" class="'.$classEli.'" id="'.$row[0].'">Delete</a>
+											<a href="javascript:void(0)" class="'.$classVer.'" id="'.$row[0].'"><span class="glyphicon '.$icoVar.'"></span> '.$lblVer.'</a>
 											</li>
 											
 										</ul>
