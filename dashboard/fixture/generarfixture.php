@@ -114,6 +114,7 @@ $hora = $_POST['hora'];
 
 $formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
+$idavuelta			=	mysql_result($serviciosReferencias->traerTorneosPorId($idTorneo),0,'reftipotorneo');
 
 $fixtureGenerardo = $Generar->generarAIF($idTorneo, $cantEquipos);
 
@@ -1049,6 +1050,7 @@ padding-bottom: 10px;
                     <tbody>
                     	<?php
 							$canE = 1;
+							
 							while ($row = mysql_fetch_array($lstEquipos)) {
 						?>
                     	<tr>
@@ -1090,8 +1092,18 @@ padding-bottom: 10px;
     		<?php 
 			//die(var_dump($fixtureGenerardo[0][0]));
 			$total = 1;
+			$darVuelta = 1;
+			$valorModuloIdaVuelta = 0;
+			if ($idavuelta == 2) {
+				$valorModuloIdaVuelta = 2;
+			} else {
+				$valorModuloIdaVuelta = 1;	
+			}
+			
+			$cantidadFinal = $cantFechas * $filas;
+			
 			if (count($fixtureGenerardo)>0) {
-			for ($i=0;$i<$cantFechas;$i++) {
+			for ($i=0;$i<$cantFechas * $valorModuloIdaVuelta;$i++) {
 			echo '
 
 						<h3>Fecha '.($i + 1).'</h3>
@@ -1111,7 +1123,8 @@ padding-bottom: 10px;
 			for ($k=0;$k<$filas;$k++) {
 				//$lstEquipos = explode("***",$fixtureGenerardo[$i][$k]);
 				
-				echo '
+				if ($darVuelta == 1) {
+					echo '
 					  	<div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
 						<select id="equipoa'.$total.'" name="equipoa'.$total.'" class="form-control letraChica">
                                 
@@ -1142,8 +1155,43 @@ padding-bottom: 10px;
                          </select>
 						 Equipo: <span id="equib'.$total.'" class="lbl'.$fixtureGenerardo['Visitante'][$total-1].'"></span>
 						 </div>';
-						 $total += 1;
-			}
+				} else {
+					echo '
+					  	<div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
+						<select id="equipoa'.$total.'" name="equipoa'.$total.'" class="form-control letraChica">
+                                
+								<option value="'.$fixtureGenerardo['Visitante'][$total-1].'">'.$fixtureGenerardo['Visitante'][$total-1].'</option>
+								
+                         </select>
+						 Equipo: <span id="equib'.$total.'" class="lbl'.$fixtureGenerardo['Visitante'][$total-1].'"></span>
+						 </div>
+						 
+						 <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212; padding:5px;">
+						 <input type="text" id="horario'.$total.'" name="horario'.$total.'" class="form-control letraChica" style="width:80%;" value="'.$hora.'">
+
+						 </div>
+						 
+						 
+						 <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212; padding:5px;">
+						 <select id="cancha'.$total.'" name="cancha'.$total.'" class="form-control letraChica">
+						 	<option value="">-- Seleccionar --</option>
+                                '.$cadRef3.'
+                         </select>
+						 </div>
+						 
+						 
+						 <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
+						<select id="equipob'.$total.'" name="equipob'.$total.'" class="form-control letraChica">
+						
+                                <option value="'.$fixtureGenerardo['Local'][$total-1].'">'.$fixtureGenerardo['Local'][$total-1].'</option>
+								
+                         </select>
+						 Equipo: <span id="equia'.$total.'" class="lbl'.$fixtureGenerardo['Local'][$total-1].'"></span>
+						 
+						 </div>';
+				}
+				$total += 1;
+			} //fin del for
 			echo '
 				
 				
@@ -1151,9 +1199,19 @@ padding-bottom: 10px;
 				
 		
 					';
+
+				if ($idavuelta 	== 2) {
+					if ($cantidadFinal == $total - 1) {
+						
+						$total = 1;
+						$darVuelta = 2;
+					}
+				}
 				$fechainicio = strtotime ( '+7 day' , strtotime ( $fechainicio ) ) ;
 				$fechainicio = date ( 'Y-m-d' , $fechainicio );
 				echo "<hr><br>";
+				
+				
 			}
 			echo '<input type="hidden" id="cantfechas" name="cantfechas" value="'.($i + 1).'" />';
 			echo '<input type="hidden" id="total" name="total" value="'.$total.'" />';

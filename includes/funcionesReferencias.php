@@ -15,22 +15,11 @@ function Posiciones($refTorneo) {
 
 p.equipo,
 sum(p.puntos) as puntos,
-p.categoria,
-p.arbitro,
 sum(p.goles) as goles,
-p.canchas,
-p.fecha,
-p.fechajuego,
-p.hora,
-p.calificacioncancha,
-p.juez1,
-p.juez2,
-p.observaciones,
-p.publicar,
-p.pj,
-p.pg,
-p.pp,
-p.pe
+sum(p.pj) as pj,
+sum(p.pg) as pg,
+sum(p.pp) as pp,
+sum(p.pe) as pe
 
 
 from (
@@ -129,22 +118,7 @@ group by ev.nombre,
             f.observaciones,
             f.publicar
 ) p
-group by p.equipo,
-p.categoria,
-p.arbitro,
-p.canchas,
-p.fecha,
-p.fechajuego,
-p.hora,
-p.calificacioncancha,
-p.juez1,
-p.juez2,
-p.observaciones,
-p.publicar,
-p.pj,
-p.pg,
-p.pp,
-p.pe
+group by p.equipo
 order by sum(p.puntos) desc
 
 ";	

@@ -166,7 +166,9 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_predio'],"Fixture",$_SESSION['
 			}
 		}
 	} else {
-		for ($i=0;$i<count($arEquipos)-1;$i++) {
+		die(var_dump(count($arLocal)));
+		
+		for ($i=0;$i<((count($arEquipos) -1) * 2);$i++) {
 			$fecha 		= $_POST['datepicker'.($i + 1)];
 			
 			$reffechas 	= $i+1;
@@ -200,10 +202,18 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_predio'],"Fixture",$_SESSION['
 				$res .= $serviciosReferencias->insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
 				
 				
-				$res .= $serviciosReferencias->insertarFixture($reftorneos,$reffechaVuelta,$refconectorvisitante,$refconectorlocal,$refarbitros,$juez1,$juez2,$refcanchas,$fechaVuelta,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
+				//$res .= $serviciosReferencias->insertarFixture($reftorneos,$reffechaVuelta,$refconectorvisitante,$refconectorlocal,$refarbitros,$juez1,$juez2,$refcanchas,$fechaVuelta,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
 				
 				$total += 1;
 			}
+			
+
+			if (13 == $total - 1) {
+				
+				$total = 1;
+
+			}
+			
 		}
 		
 	}
