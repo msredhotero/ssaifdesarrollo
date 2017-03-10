@@ -4213,22 +4213,22 @@ return $res;
 
 /* PARA Sancionesfallos */
 
-function insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones) {
-$sql = "insert into dbsancionesfallos(idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones)
-values ('',".$refsancionesjugadores.",".$cantidadfechas.",'".utf8_decode($fechadesde)."','".utf8_decode($fechahasta)."',".$fechascumplidas.",".$pendientescumplimientos.",".$pendientesfallo.",".$generadaporacumulacion.",'".utf8_decode($observaciones)."')";
-$res = $this->query($sql,1);
-return $res;
-}
+function insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones) { 
+$sql = "insert into dbsancionesfallos(idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,amarillas,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones) 
+values ('',".$refsancionesjugadores.",".$cantidadfechas.",'".utf8_decode($fechadesde)."','".utf8_decode($fechahasta)."',".$amarillas.",".$fechascumplidas.",".$pendientescumplimientos.",".$pendientesfallo.",".$generadaporacumulacion.",'".utf8_decode($observaciones)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
 
 
-function modificarSancionesfallos($id,$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones) {
-$sql = "update dbsancionesfallos
-set
-refsancionesjugadores = ".$refsancionesjugadores.",cantidadfechas = ".$cantidadfechas.",fechadesde = '".utf8_decode($fechadesde)."',fechahasta = '".utf8_decode($fechahasta)."',fechascumplidas = ".$fechascumplidas.",pendientescumplimientos = ".$pendientescumplimientos.",pendientesfallo = ".$pendientesfallo.",generadaporacumulacion = ".$generadaporacumulacion.",observaciones = '".utf8_decode($observaciones)."'
-where idsancionfallo =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
+function modificarSancionesfallos($id,$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones) { 
+$sql = "update dbsancionesfallos 
+set 
+refsancionesjugadores = ".$refsancionesjugadores.",cantidadfechas = ".$cantidadfechas.",fechadesde = '".utf8_decode($fechadesde)."',fechahasta = '".utf8_decode($fechahasta)."',amarillas = ".$amarillas.",fechascumplidas = ".$fechascumplidas.",pendientescumplimientos = ".$pendientescumplimientos.",pendientesfallo = ".$pendientesfallo.",generadaporacumulacion = ".$generadaporacumulacion.",observaciones = '".utf8_decode($observaciones)."' 
+where idsancionfallo =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
 
 
 function eliminarSancionesfallos($id) {
@@ -4245,6 +4245,7 @@ s.refsancionesjugadores,
 s.cantidadfechas,
 s.fechadesde,
 s.fechahasta,
+s.amarillas,
 s.fechascumplidas,
 s.pendientescumplimientos,
 s.pendientesfallo,
@@ -4265,7 +4266,7 @@ return $res;
 
 
 function traerSancionesfallosPorId($id) {
-$sql = "select idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones from dbsancionesfallos where idsancionfallo =".$id;
+$sql = "select idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,amarillas,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones from dbsancionesfallos where idsancionfallo =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -4295,6 +4296,15 @@ function modificarSancionesjugadores($id,$reftiposanciones,$refjugadores,$refequ
 $sql = "update dbsancionesjugadores
 set
 reftiposanciones = ".$reftiposanciones.",refjugadores = ".$refjugadores.",refequipos = ".$refequipos.",reffixture = ".$reffixture.",fecha = '".utf8_decode($fecha)."',cantidad = ".$cantidad.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",refsancionesfallos = ".$refsancionesfallos."
+where idsancionjugador =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function modificarSancionesjugadoresFalladas($id,$refsancionesfallos) {
+$sql = "update dbsancionesjugadores
+set
+refsancionesfallos = ".$refsancionesfallos."
 where idsancionjugador =".$id;
 $res = $this->query($sql,0);
 return $res;

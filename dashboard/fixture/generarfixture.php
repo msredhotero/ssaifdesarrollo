@@ -1093,6 +1093,7 @@ padding-bottom: 10px;
 			//die(var_dump($fixtureGenerardo[0][0]));
 			$total = 1;
 			$darVuelta = 1;
+			$totalGral = 1;
 			$valorModuloIdaVuelta = 0;
 			if ($idavuelta == 2) {
 				$valorModuloIdaVuelta = 2;
@@ -1158,22 +1159,22 @@ padding-bottom: 10px;
 				} else {
 					echo '
 					  	<div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
-						<select id="equipoa'.$total.'" name="equipoa'.$total.'" class="form-control letraChica">
+						<select id="equipoa'.$totalGral.'" name="equipoa'.$totalGral.'" class="form-control letraChica">
                                 
 								<option value="'.$fixtureGenerardo['Visitante'][$total-1].'">'.$fixtureGenerardo['Visitante'][$total-1].'</option>
 								
                          </select>
-						 Equipo: <span id="equib'.$total.'" class="lbl'.$fixtureGenerardo['Visitante'][$total-1].'"></span>
+						 Equipo: <span id="equib'.$totalGral.'" class="lbl'.$fixtureGenerardo['Visitante'][$total-1].'"></span>
 						 </div>
 						 
 						 <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212; padding:5px;">
-						 <input type="text" id="horario'.$total.'" name="horario'.$total.'" class="form-control letraChica" style="width:80%;" value="'.$hora.'">
+						 <input type="text" id="horario'.$totalGral.'" name="horario'.$totalGral.'" class="form-control letraChica" style="width:80%;" value="'.$hora.'">
 
 						 </div>
 						 
 						 
 						 <div class="form-group col-md-2 col-sm-2" style="border:1px solid #121212; padding:5px;">
-						 <select id="cancha'.$total.'" name="cancha'.$total.'" class="form-control letraChica">
+						 <select id="cancha'.$totalGral.'" name="cancha'.$totalGral.'" class="form-control letraChica">
 						 	<option value="">-- Seleccionar --</option>
                                 '.$cadRef3.'
                          </select>
@@ -1181,16 +1182,17 @@ padding-bottom: 10px;
 						 
 						 
 						 <div class="form-group col-md-4 col-sm-4" style="border:1px solid #121212; padding:5px;">
-						<select id="equipob'.$total.'" name="equipob'.$total.'" class="form-control letraChica">
+						<select id="equipob'.$totalGral.'" name="equipob'.$totalGral.'" class="form-control letraChica">
 						
                                 <option value="'.$fixtureGenerardo['Local'][$total-1].'">'.$fixtureGenerardo['Local'][$total-1].'</option>
 								
                          </select>
-						 Equipo: <span id="equia'.$total.'" class="lbl'.$fixtureGenerardo['Local'][$total-1].'"></span>
+						 Equipo: <span id="equia'.$totalGral.'" class="lbl'.$fixtureGenerardo['Local'][$total-1].'"></span>
 						 
 						 </div>';
 				}
 				$total += 1;
+				$totalGral += 1;
 			} //fin del for
 			echo '
 				

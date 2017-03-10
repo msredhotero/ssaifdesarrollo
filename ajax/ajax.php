@@ -445,6 +445,12 @@ case 'buscarPartido':
 	break;
 
 /*****			FIN				**********/
+
+/*****		TODO FALLOS        **********/
+case 'insertarFalloPorFecha':
+	insertarFalloPorFecha($serviciosReferencias);
+	break;
+/*****			FIN				**********/
 }
 
 /* Fin */
@@ -690,6 +696,72 @@ function buscarJugadores($serviciosReferencias) {
 
 /**********************                        FIN                     ***********************************/
 
+
+/**********************		TODO FALLOS        *********************************************/
+
+
+/**********************                        FIN                     ***********************************/
+function insertarFalloPorFecha($serviciosReferencias) {
+	$refsancionesjugadores = $_POST['refsancionesjugadores']; 
+	
+	if (isset($_POST['elegir'])) { 
+		$valor	= $_POST['elegir']; 
+	} else { 
+		$valor = 0; 
+	} 
+	
+	$pendientescumplimientos = 0; //verificar
+	
+	switch ($valor) {
+		case 'fallocantidad':	
+			$cantidadfechas = $_POST['cantidadfechas']; 
+			$fechadesde = ''; 
+			$fechahasta = ''; 
+			$amarillas = 0; 
+			$pendientesfallo = 0; 
+			break;
+		case 'fallofechas':
+			$cantidadfechas = 0; 
+			$fechadesde = formatearFechas($_POST['fechadesde']); 
+			$fechahasta = formatearFechas($_POST['fechahasta']); 
+			$pendientescumplimientos = 1; //verificar
+			$amarillas = 0; 
+			$pendientesfallo = 0; 
+			break;
+		case 'falloamarillas':
+			$cantidadfechas = 0; 
+			$fechadesde = ''; 
+			$fechahasta = ''; 
+			$amarillas = $_POST['amarillas']; 
+			$pendientesfallo = 0; 
+			break;
+		case 'pendientesfallo':
+			$cantidadfechas = 0; 
+			$fechadesde = ''; 
+			$fechahasta = ''; 
+			$amarillas = 0; 
+			$pendientesfallo = 1; 
+			break;
+	}
+	
+	
+	$fechascumplidas = 0; 
+	
+	$generadaporacumulacion = 0; //solo cuando cumple con 5 amarillas
+	
+	
+	$observaciones = $_POST['observaciones']; 	
+	
+	$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+	
+	if ((integer)$res > 0) { 
+		//actualizo la referencia
+		$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
+		echo ''; 
+	} else { 
+		echo 'Huvo un error al insertar datos';	 
+	} 
+}
 /**********************          CONECTA JUGADORES CON EQUIPOS *******************************************/
 
 function insertarConectorAjax($serviciosReferencias) { 

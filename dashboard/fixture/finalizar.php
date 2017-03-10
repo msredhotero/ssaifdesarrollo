@@ -166,7 +166,7 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_predio'],"Fixture",$_SESSION['
 			}
 		}
 	} else {
-		die(var_dump(count($arLocal)));
+		//die(var_dump(count($arLocal)));
 		
 		for ($i=0;$i<((count($arEquipos) -1) * 2);$i++) {
 			$fecha 		= $_POST['datepicker'.($i + 1)];

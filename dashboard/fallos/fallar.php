@@ -108,7 +108,7 @@ if ($_SESSION['refroll_predio'] != 1) {
  
 </head>
 
-<body onLoad="localize()">
+<body>
 
  <?php echo $resMenu; ?>
 
@@ -137,7 +137,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fallo Por Fechas</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" name="elegir" id="btnFechas"/>
+                        <input type="radio" class="form-control" name="elegir" id="btnFechas" value="fallocantidad"/>
                     </div>
                 </div>
                 <div class="form-group col-md-4" style="display:block">
@@ -152,7 +152,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fallo Por Días</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" name="elegir" id="btnDias"/>
+                        <input type="radio" class="form-control" name="elegir" id="btnDias" value="fallofechas"/>
                     </div>
                 </div>
                 <div class="form-group col-md-4" style="display:block">
@@ -179,13 +179,13 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fallo Por Amarillas</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" name="elegir" id="btnAmarillas"/>
+                        <input type="radio" class="form-control" name="elegir" id="btnAmarillas" value="falloamarillas"/>
                     </div>
                 </div>
                 <div class="form-group col-md-4" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Cantidad de Amarillas</label>
                     <div class="input-group col-md-12">
-                        <input type="text" class="form-control" name="cantidadamarillas" id="cantidadamarillas" value="2" readonly/>
+                        <input type="text" class="form-control" name="amarillas" id="amarillas" value="2" readonly/>
                     </div>
                 </div>
              </div>  
@@ -195,7 +195,16 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Dejar Pendiente de Fallo</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" name="elegir" id="btnPendiente"/>
+                        <input type="radio" class="form-control" name="elegir" id="btnPendiente" value="pendientesfallo"/>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-12" style="display:block">
+                    <label for="reftipodocumentos" class="control-label" style="text-align:left">Observaciones</label>
+                    <div class="input-group col-md-12">
+                        <textarea name="observaciones" id="observaciones" class="form-control" rows="10" cols="20">
+                        
+                        </textarea>
                     </div>
                 </div>
 			</div>
@@ -313,60 +322,58 @@ $(document).ready(function(){
 	
 	//al enviar el formulario
     $('#cargar').click(function(){
-		
-		if (validador() == "")
-        {
-			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax  
-			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
 
-					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											url = "index.php";
-											$(location).attr('href',url);
-                                            
+		//información del formulario
+		var formData = new FormData($(".formulario")[0]);
+		var message = "";
+		//hacemos la petición ajax  
+		$.ajax({
+			url: '../../ajax/ajax.php',  
+			type: 'POST',
+			// Form data
+			//datos del formulario
+			data: formData,
+			//necesario para subir archivos via ajax
+			cache: false,
+			contentType: false,
+			processData: false,
+			//mientras enviamos el archivo
+			beforeSend: function(){
+				$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+			},
+			//una vez finalizado correctamente
+			success: function(data){
+
+				if (data == '') {
+										$(".alert").removeClass("alert-danger");
+										$(".alert").removeClass("alert-info");
+										$(".alert").addClass("alert-success");
+										$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
+										$(".alert").delay(3000).queue(function(){
+											/*aca lo que quiero hacer 
+											  después de los 2 segundos de retraso*/
+											$(this).dequeue(); //continúo con el siguiente ítem en la cola
 											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
-		}
+										});
+										$("#load").html('');
+										url = "../prefallos/index.php";
+										$(location).attr('href',url);
+										
+										
+									} else {
+										$(".alert").removeClass("alert-danger");
+										$(".alert").addClass("alert-danger");
+										$(".alert").html('<strong>Error!</strong> '+data);
+										$("#load").html('');
+									}
+			},
+			//si ha ocurrido un error
+			error: function(){
+				$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+				$("#load").html('');
+			}
+		});
+		
     });
 
 });
