@@ -757,6 +757,12 @@ function insertarFalloPorFecha($serviciosReferencias) {
 	if ((integer)$res > 0) { 
 		//actualizo la referencia
 		$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
+		if ($valor == 'fallocantidad') {
+
+			/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
+			
+			/********** fin ******/
+		}
 		echo ''; 
 	} else { 
 		echo 'Huvo un error al insertar datos';	 
