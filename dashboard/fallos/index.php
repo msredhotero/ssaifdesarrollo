@@ -22,29 +22,29 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Tipos Sanciones",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fallos",$_SESSION['refroll_predio'],'');
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Tipo Sancion";
+$singular = "Fallo";
 
-$plural = "Tipos Sanciones";
+$plural = "Fallos";
 
 $eliminar = "eliminarTiposanciones";
 
-$insertar = "insertarTiposanciones";
+$insertar = "insertarSancionesfallos";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbtiposanciones";
+$tabla 			= "dbsancionesfallos";
 
-$lblCambio	 	= array("cantminfechas","cantmaxfechas","cumpletodascategorias","llevapendiente","ocultardetallepublico");
-$lblreemplazo	= array("Cant. Min. Fechas","Cant. Max. Fechas","Cumple Todas las Categ.","Lleva Pendiente","Ocultar Al Publico");
+$lblCambio	 	= array("refsancionesjugadores","cantidadfechas","fechadesde","fechahasta","fechascumplidas","pendientescumplimientos","pendientesfallo","generadaporacumulacion");
+$lblreemplazo	= array("Jugador","Cant. Fechas","Fechas Desde","Fecha Hasta","Fechas Cumplidas","Pend. Cumplimiento","Pend. Fallo","Generada x Acumu.");
 
-
+$refSancionJugador	=	$serviciosReferencias->traerSancionesjugadores();
 $cadRef 	= '';
 
 $refdescripcion = array();
@@ -55,15 +55,21 @@ $refCampo 	=  array();
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Expulsión</th>
-					<th>Amonestación</th>
-					<th>Descripción</th>
-					<th>Cant. Min. Fechas</th>
-					<th>Abreviatura</th>
-					<th>Cant. Max. Fechas</th>
-					<th>Cumple Todas Las Categ.</th>
-					<th>Lleva Pendiente</th>
-					<th>Ocultar Al Publico</th>";
+$cabeceras 		= "	<th>Jugador</th>
+					<th>Nro Documento</th>
+					<th>Equipo</th>
+					<th>Fecha</th>
+					<th>Tipo Sanción</th>
+					<th>Cantidad</th>
+					<th>Fallo</th>
+					<th>Cant. Fechas</th>
+					<th>Fecha Desde</th>
+					<th>Fecha Hasta</th>
+					<th>Amarillas</th>
+					<th>Pend. de Cumplimiento</th>
+					<th>Pend. de Fallo</th>
+					<th>Generada x Acumu.</th>
+					<th>Obs.</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
