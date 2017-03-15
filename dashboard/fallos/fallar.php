@@ -97,6 +97,26 @@ if ($_SESSION['refroll_predio'] != 1) {
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
       <script src="../../js/perfect-scrollbar.js"></script>
+      <script src="../../js/jquery.number.min.js"></script>
+      <script type="text/javascript">
+			
+		$(function(){
+
+			$('#cantidadfechas').each(function(intIndex){
+				$(this).number( true, 0 );
+				$(this).change( function() {
+					if ($(this).val() > 100) {
+						$(this).val(2);
+					}
+					if ($(this).val() < 1) {
+						$(this).val(1);
+					}
+				});
+			});
+
+
+		});
+		</script>
       <script>
       jQuery(document).ready(function ($) {
         "use strict";
@@ -143,7 +163,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-4" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Cantidad de Fechas</label>
                     <div class="input-group col-md-12">
-                        <input type="text" class="form-control" name="cantidadfechas" id="cantidadfechas"/>
+                        <input type="text" class="form-control" name="cantidadfechas" id="cantidadfechas" value="1"/>
                     </div>
                 </div>
              </div>  

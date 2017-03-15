@@ -710,7 +710,17 @@ function insertarFalloPorFecha($serviciosReferencias) {
 		$valor = 0; 
 	} 
 	
+	//traigo la sancion del jugador para poder acceder a la fecha//
+	$resSancionesJugadores	=	$serviciosReferencias->traerSancionesjugadoresPorId($refsancionesjugadores);
+	$refFixture				=	mysql_result($resSancionesJugadores,0,'reffixture');
+	
+	$resFixture				=	$serviciosReferencias->traerFixturePorId($refFixture);
+	$refFecha				=	mysql_result($resFixture,0,'reffechas');
+	
+	
 	$pendientescumplimientos = 0; //verificar
+	
+	$errores	=	"";
 	
 	switch ($valor) {
 		case 'fallocantidad':	
@@ -727,6 +737,9 @@ function insertarFalloPorFecha($serviciosReferencias) {
 			$pendientescumplimientos = 1; //verificar
 			$amarillas = 0; 
 			$pendientesfallo = 0; 
+			if (($fechadesde == '***') || ($fechahasta == '***')) {
+				$errores = 'Formato de fecha incorrecto';
+			}
 			break;
 		case 'falloamarillas':
 			$cantidadfechas = 0; 
@@ -742,31 +755,42 @@ function insertarFalloPorFecha($serviciosReferencias) {
 			$amarillas = 0; 
 			$pendientesfallo = 1; 
 			break;
+		default:
+			$amarillas = -1;
 	}
 	
-	
-	$fechascumplidas = 0; 
-	
-	$generadaporacumulacion = 0; //solo cuando cumple con 5 amarillas
-	
-	
-	$observaciones = $_POST['observaciones']; 	
-	
-	$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
-	
-	if ((integer)$res > 0) { 
-		//actualizo la referencia
-		$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
-		if ($valor == 'fallocantidad') {
-
-			/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
+	if ($errores != '') {
+		echo $errores;
+	} else {
+		if ($amarillas == -1) {
+			echo 'Debe seleccionar una opción.';
+		} else {
+			$fechascumplidas = 0; 
 			
-			/********** fin ******/
+			$generadaporacumulacion = 0; //solo cuando cumple con 5 amarillas
+			
+			
+			$observaciones = $_POST['observaciones']; 	
+			
+			$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			
+			if ((integer)$res > 0) { 
+				//actualizo la referencia
+				$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
+				if ($valor == 'fallocantidad') {
+		
+					/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
+					for ($i=1;$i<= $cantidadfechas;$i++) {
+						$serviciosReferencias->insertarMovimientosanciones($refsancionesjugadores,$refFecha + $i,$refFixture,0,0);	
+					}
+					/********** fin ******/
+				}
+				echo ''; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
 		}
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
+	}
 }
 /**********************          CONECTA JUGADORES CON EQUIPOS *******************************************/
 
