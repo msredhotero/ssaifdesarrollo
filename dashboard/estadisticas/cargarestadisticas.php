@@ -63,6 +63,9 @@ $minutos				=	mysql_result($resDefCategTemp,0,'minutospartido');
 $error = '';
 $lblerror = '';
 
+
+$serviciosReferencias->modificarFixturePorCancha($idFixture, $_POST['refcanchas']);
+
 $numero = count($_POST);
 	$tags = array_keys($_POST);// obtiene los nombres de las varibles
 	$valores = array_values($_POST);// obtiene los valores de las varibles
@@ -496,6 +499,13 @@ $resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategorias
 
 $resFixDetalle	= $serviciosReferencias->traerFixtureDetallePorId($idFixture);
 
+$refCanchas		=	$serviciosReferencias->traerCanchas();
+if (mysql_result($resFixDetalle,0,'refcanchas') == '') {
+	$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(1),'');	
+} else {
+	$cadCanchas	=	$serviciosFunciones->devolverSelectBoxActivo($refCanchas,array(1),'',mysql_result($resFixDetalle,0,'refcanchas'));
+}
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -528,7 +538,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+    <link rel="stylesheet" href="../../css/chosen.css">
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -699,7 +709,10 @@ if ($_SESSION['refroll_predio'] != 1) {
                 	<p>Arbitro: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'arbitro'); ?></span></p>
                 </div>
                 <div class="col-md-3">
-                	<p>Cancha: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'canchas'); ?></span></p>
+                	<p>Cancha: <select data-placeholder="selecione la cancha..." id="refcanchas" name="refcanchas" class="chosen-select" tabindex="2" style="width:190px;">
+            								<option value=""></option>
+											<?php echo $cadCanchas; ?>
+                                            </select></p>
                 </div>
                 
                 <div class="col-md-6">
@@ -753,7 +766,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 								
 								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
 
-								
+								$suspendido				=	$serviciosReferencias->traerSancionesJugadoresConFallosPorJugador($row['refjugadores'], $refFecha);
+
+						if ($suspendido == 0) {
 						?>
                         <tr class="<?php echo $row[0]; ?>">
 
@@ -827,9 +842,57 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </tr>
                         
                         <?php
-							
-							
-							$goles = 0;
+							/* else del suspendidos */	
+							} else {
+						?>
+                        <tr class="<?php echo $row[0]; ?>">
+
+                        	<th style="background-color:#F00;">
+								<?php echo $row['nombrecompleto']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+								<?php echo $row['nrodocumento']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                        </tr>
+                        <?php
+								}
+								$goles = 0;
 							}
 						?>
                     </tbody>
@@ -878,8 +941,12 @@ if ($_SESSION['refroll_predio'] != 1) {
 								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
 								
 								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
+								
+								$suspendidoB				=	$serviciosReferencias->traerSancionesJugadoresConFallosPorJugador($rowB['refjugadores'], $refFecha);
+								
+						if ($suspendidoB == 0) {
 						?>
-                        <tr class="<?php echo $row[0]; ?>">
+                        <tr class="<?php echo $rowB[0]; ?>">
 
                         	<th>
 								<?php echo $rowB['nombrecompleto']; ?>
@@ -950,7 +1017,56 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </tr>
                         
                         <?php
+							/* else del suspendidos */	
+							} else {
+						?>
+                        <tr class="<?php echo $rowB[0]; ?>">
 
+                        	<th style="background-color:#F00;">
+								<?php echo $rowB['nombrecompleto']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+								<?php echo $rowB['nrodocumento']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                        </tr>
+                        <?php
+								}
 							}
 						?>
                     </tbody>
@@ -1166,6 +1282,22 @@ $(document).ready(function(){
 
 });
 </script>
+
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+	
+	
+  </script>
 <?php } ?>
 </body>
 </html>

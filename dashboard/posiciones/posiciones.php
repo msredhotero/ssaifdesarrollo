@@ -147,6 +147,8 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <th>PE</th>
                             <th>Goles</th>
                             <th>Puntos</th>
+                            <th>Amarillas</th>
+                            <th>Rojas</th>
                         </thead>
                         <tbody>
                         	<?php
@@ -162,6 +164,8 @@ if ($_SESSION['refroll_predio'] != 1) {
                                 <td><?php echo $row['pe']; ?></td>
                                 <td><?php echo $row['goles']; ?></td>
                                 <td><?php echo $row['puntos']; ?></td>
+                                <td><?php echo $row['amarillas']; ?></td>
+                                <td><?php echo $row['rojas']; ?></td>
                             </tr>
                             <?php
 								$cant += 1;

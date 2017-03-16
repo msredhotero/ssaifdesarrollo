@@ -55,21 +55,21 @@ $refCampo 	=  array();
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Jugador</th>
-					<th>Nro Documento</th>
-					<th>Equipo</th>
-					<th>Fecha</th>
-					<th>Tipo Sanción</th>
-					<th>Cantidad</th>
-					<th>Fallo</th>
-					<th>Cant. Fechas</th>
-					<th>Fecha Desde</th>
-					<th>Fecha Hasta</th>
-					<th>Amarillas</th>
-					<th>Pend. de Cumplimiento</th>
-					<th>Pend. de Fallo</th>
-					<th>Generada x Acumu.</th>
-					<th>Obs.</th>";
+$cabeceras 		= "	<th bgcolor='#E0ECF8'>Jugador</th>
+					<th bgcolor='#E0ECF8'>Nro Documento</th>
+					<th bgcolor='#E0ECF8'>Equipo</th>
+					<th bgcolor='#E0ECF8'>Fecha</th>
+					<th bgcolor='#E0ECF8'>Tipo Sanción</th>
+					<th bgcolor='#E0ECF8'>Cantidad</th>
+					<th bgcolor='#E0ECF8'>Cant. Fechas</th>
+					<th bgcolor='#E0ECF8'>Fecha Desde</th>
+					<th bgcolor='#E0ECF8'>Fecha Hasta</th>
+					<th bgcolor='#E0ECF8'>Amarillas</th>
+					<th bgcolor='#E0ECF8'>Fechas Cumplidas</th>
+					<th bgcolor='#E0ECF8'>Pend. de Cumplimiento</th>
+					<th bgcolor='#E0ECF8'>Pend. de Fallo</th>
+					<th bgcolor='#E0ECF8'>Generada x Acumu.</th>
+					<th bgcolor='#E0ECF8'>Obs.</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -78,7 +78,7 @@ $cabeceras 		= "	<th>Jugador</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerTiposanciones(),9);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerSancionesJugadoresConFallos(),15);
 
 
 
@@ -165,7 +165,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 		//var latitud = map.coords.latitude;
 		//var longitud = map.coords.longitude;
 		/*
-		google.maps.event.addDomListener(mapDiv, 'click', function(e) {
+		google.maps.event.aE0ECF8omListener(mapDiv, 'click', function(e) {
 			window.alert('click en el mapa');
 		});
 		*/

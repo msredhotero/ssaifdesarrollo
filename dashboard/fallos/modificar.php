@@ -29,6 +29,8 @@ $id		=	$_GET['id'];
 
 $resResultado	=	$serviciosReferencias->traerSancionesjugadoresPorId($id);
 $resDetalles	=	$serviciosReferencias->traerSancionesjugadoresPorIdDetalles($id);
+
+$resFallo		=	$serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($id);
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Fallo";
 
@@ -48,6 +50,29 @@ $tabla 			= "dbsancionesfallos";
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
+
+$fallo	= '';
+
+$amarillas		=	mysql_result($resFallo,0,'amarillas');
+$cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
+$fechadesde		=	mysql_result($resFallo,0,'fechadesde');
+$fechahasta		=	mysql_result($resFallo,0,'fechahasta');
+$pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
+$observaciones	=	mysql_result($resFallo,0,'observaciones');
+
+if ($amarillas > 0) {
+	$fallo = 'Amarillas';
+} else {
+	if ($fechadesde != '00/00/0000') {
+		$fallo = 'Dias';
+	} else {
+		if ($pendiente == 'Si') {
+			$fallo = 'Pendiente';
+		} else {
+			$fallo = 'Cantidad';	
+		}
+	}
+}
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -137,13 +162,13 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fallo Por Fechas</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" name="elegir" id="btnFechas" value="fallocantidad"/>
+                        <input type="radio" class="form-control" <?php if ($fallo == 'Cantidad') echo 'checked=""'; ?> name="elegir" id="btnFechas" value="fallocantidad"/>
                     </div>
                 </div>
                 <div class="form-group col-md-4" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Cantidad de Fechas</label>
                     <div class="input-group col-md-12">
-                        <input type="text" class="form-control" name="cantidadfechas" id="cantidadfechas"/>
+                        <input type="text" class="form-control" value="<?php echo $cantidadfechas; ?>" name="cantidadfechas" id="cantidadfechas"/>
                     </div>
                 </div>
              </div>  
@@ -152,13 +177,13 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fallo Por Días</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" name="elegir" id="btnDias" value="fallofechas"/>
+                        <input type="radio" class="form-control" <?php if ($fallo == 'Dias') echo 'checked=""'; ?> name="elegir" id="btnDias" value="fallofechas"/>
                     </div>
                 </div>
                 <div class="form-group col-md-4" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fecha Desde</label>
                     <div class="input-group col-md-10">
-                        <input type="text" class="form-control" name="fechadesde" id="fechadesde"/>
+                        <input type="text" class="form-control" value="<?php echo $fechadesde; ?>" name="fechadesde" id="fechadesde"/>
                     </div>
                     
                 </div>
@@ -166,7 +191,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-4" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fecha Hasta</label>
                     <div class="input-group col-md-10">
-                        <input type="text" class="form-control" name="fechahasta" id="fechahasta"/>
+                        <input type="text" class="form-control" value="<?php echo $fechahasta; ?>" name="fechahasta" id="fechahasta"/>
                     </div>
                     
                 </div>
@@ -179,7 +204,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fallo Por Amarillas</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" name="elegir" id="btnAmarillas" value="falloamarillas"/>
+                        <input type="radio" class="form-control" name="elegir" <?php if ($fallo == 'Amarillas') echo 'checked=""'; ?> id="btnAmarillas" value="falloamarillas"/>
                     </div>
                 </div>
                 <div class="form-group col-md-4" style="display:block">
@@ -195,7 +220,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Dejar Pendiente de Fallo</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" name="elegir" id="btnPendiente" value="pendientesfallo"/>
+                        <input type="radio" class="form-control" <?php if ($fallo == 'Pendiente') echo 'checked=""'; ?> name="elegir" id="btnPendiente" value="pendientesfallo"/>
                     </div>
                 </div>
                 

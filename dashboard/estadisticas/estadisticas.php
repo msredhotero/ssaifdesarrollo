@@ -36,6 +36,8 @@ $refJugo = mysql_result($resFix,0,'fecha');
 $resultadoA = mysql_result($resFix,0,'puntoslocal');
 $resultadoB = mysql_result($resFix,0,'puntosvisita');
 
+$resFecha	=	$serviciosReferencias->traerFechasPorId($refFecha);
+
 $equipoA = mysql_result($serviciosReferencias->traerEquiposPorId($equipoLocal),0,'nombre');
 $equipoB = mysql_result($serviciosReferencias->traerEquiposPorId($equipoVisitante),0,'nombre');
 
@@ -103,6 +105,15 @@ if ($existe == 0) {
 	$resEstados		= $serviciosReferencias->traerEstadospartidos();
 	$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', mysql_result($resFix,0,'refestadospartidos'));
 }
+
+
+$refCanchas		=	$serviciosReferencias->traerCanchas();
+if (mysql_result($resFixDetalle,0,'refcanchas') == '') {
+	$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(1),'');	
+} else {
+	$cadCanchas	=	$serviciosFunciones->devolverSelectBoxActivo($refCanchas,array(1),'',mysql_result($resFixDetalle,0,'refcanchas'));
+}
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -149,7 +160,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 		
 	</style>
     
-   
+   <link rel="stylesheet" href="../../css/chosen.css">
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -379,7 +390,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
     <div class="boxInfoLargoEstadisticas">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Estadisticas</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Estadisticas - <?php echo mysql_result($resFecha,0,1); ?></p>
         	
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
@@ -470,14 +481,17 @@ if ($_SESSION['refroll_predio'] != 1) {
                 	<p>Arbitro: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'arbitro'); ?></span></p>
                 </div>
                 <div class="col-md-3">
-                	<p>Cancha: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'canchas'); ?></span></p>
+                	<p>Cancha: <select data-placeholder="selecione la cancha..." id="refcanchas" name="refcanchas" class="chosen-select" tabindex="2" style="width:190px;">
+            								<option value=""></option>
+											<?php echo $cadCanchas; ?>
+                                            </select></p>
                 </div>
                 
                 <div class="col-md-6">
-                	<p style="font-size:2.2em">Resultado Local: <span class="resultadoA"><?php echo mysql_result($resFixDetalle,0,'goleslocal'); ?></span></p>
+                	<p style="font-size:2.2em">Resultado Local: <span class="resultadoA"><?php echo (mysql_result($resFixDetalle,0,'goleslocal') == '' ? 0 : mysql_result($resFixDetalle,0,'goleslocal')); ?></span></p>
                 </div>
                 <div class="col-md-6">
-                	<p style="font-size:2.2em">Resultado Visitante: <span class="resultadoB"><?php echo mysql_result($resFixDetalle,0,'golesvisitantes'); ?></span></p>
+                	<p style="font-size:2.2em">Resultado Visitante: <span class="resultadoB"><?php echo (mysql_result($resFixDetalle,0,'golesvisitantes') == '' ? 0 : mysql_result($resFixDetalle,0,'golesvisitantes')); ?></span></p>
                 </div>
                 	
                 </div>
@@ -529,8 +543,12 @@ if ($_SESSION['refroll_predio'] != 1) {
 								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
 								
 								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
-
 								
+								$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($row['refjugadores']);
+								
+								$suspendidoCategorias				=	$serviciosReferencias->hayMovimientos($row['refjugadores'],$idFixture);
+
+						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0)) {		
 						?>
                         <tr class="<?php echo $row[0]; ?>">
 
@@ -604,9 +622,57 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </tr>
                         
                         <?php
-							
-							
-							$goles = 0;
+							/* else del suspendidos */	
+							} else {
+						?>
+                        <tr class="<?php echo $row[0]; ?>">
+
+                        	<th style="background-color:#F00;">
+								<?php echo $row['nombrecompleto']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+								<?php echo $row['nrodocumento']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                        </tr>
+                        <?php
+								}
+								$goles = 0;
 							}
 						?>
                     </tbody>
@@ -655,8 +721,14 @@ if ($_SESSION['refroll_predio'] != 1) {
 								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
 								
 								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
+								
+								$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowB['refjugadores']);
+								
+								$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowB['refjugadores'],$idFixture);
+
+						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0)) {		
 						?>
-                        <tr class="<?php echo $row[0]; ?>">
+                        <tr class="<?php echo $rowB[0]; ?>">
 
                         	<th>
 								<?php echo $rowB['nombrecompleto']; ?>
@@ -727,7 +799,56 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </tr>
                         
                         <?php
+							/* else del suspendidos */	
+							} else {
+						?>
+                        <tr class="<?php echo $rowB[0]; ?>">
 
+                        	<th style="background-color:#F00;">
+								<?php echo $rowB['nombrecompleto']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+								<?php echo $rowB['nrodocumento']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
+                        </tr>
+                        <?php
+								}
 							}
 						?>
                     </tbody>
@@ -941,6 +1062,21 @@ $(document).ready(function(){
 
 });
 </script>
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+	
+	
+  </script>
 <?php } ?>
 </body>
 </html>

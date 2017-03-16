@@ -289,24 +289,46 @@ class Servicios {
 		}
 		
 		//'.utf8_encode($cadRows).' verificar al subir al servidor
-		
-		$cadView = $cadView.'
-			<table class="table table-striped table-responsive" id="example">
-            	<thead>
-                	<tr>
-                    	'.$cabeceras.'
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="'.$idresultados.'">
-
-                	'.($cadRows).'
-                </tbody>
-            </table>
-			<div style="margin-bottom:85px; margin-right:60px;"></div>
-		
-		';	
-		
+		if ($cantidad == 15) {
+			$cadView = $cadView.'
+				<table class="table table-striped table-responsive" id="example" bordercolor="#888" BORDER=1>
+					<thead>
+						<tr>
+							<th colspan="6" style="text-align:center;color:#FFF;" bgcolor="#999">Sanción</th>
+							<th colspan="10" style="text-align:center;color:#FFF;" bgcolor="#999">Fallo</th>
+						</tr>
+						<tr>
+							'.$cabeceras.'
+							<th bgcolor="#E0ECF8">Acciones</th>
+						</tr>
+					</thead>
+					<tbody id="'.$idresultados.'">
+	
+						'.($cadRows).'
+					</tbody>
+				</table>
+				<div style="margin-bottom:85px; margin-right:60px;"></div>
+			
+			';	
+			
+		} else {
+			$cadView = $cadView.'
+				<table class="table table-striped table-responsive" id="example">
+					<thead>
+						<tr>
+							'.$cabeceras.'
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody id="'.$idresultados.'">
+	
+						'.($cadRows).'
+					</tbody>
+				</table>
+				<div style="margin-bottom:85px; margin-right:60px;"></div>
+			
+			';	
+		}
 		
 		return $cadView;
 	}
