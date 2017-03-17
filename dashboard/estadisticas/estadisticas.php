@@ -217,6 +217,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$(this).number( true, 0 );
 				});
 				
+
+				
+				
 				$('.golesEA').change(function(e) {
 					var acumulado = 0;
 					$('.golesEA').each(function(intIndex){
@@ -225,6 +228,10 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$('.golescontraEB').each(function(intIndex){
 						acumulado += parseInt($(this).val());	
 					});
+					$('.penalesconvertidosEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					
 					$('.resultadoA').html(acumulado);
 				});
 				
@@ -237,11 +244,14 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$('.golescontraEB').each(function(intIndex){
 						acumulado += parseInt($(this).val());	
 					});
+					$('.penalesconvertidosEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
 					$('.resultadoA').html(acumulado);
 				});
 				
 				
-				$('.golesEA').change(function(e) {
+				$('.penalesconvertidosEA').change(function(e) {
 					var acumulado = 0;
 					$('.golesEA').each(function(intIndex){
 						acumulado += parseInt($(this).val());	
@@ -249,18 +259,10 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$('.golescontraEB').each(function(intIndex){
 						acumulado += parseInt($(this).val());	
 					});
-					$('.resultadoA').html(acumulado);
-				});
-				
-				
-				$('.golescontraEB').change(function(e) {
-					var acumulado = 0;
-					$('.golesEA').each(function(intIndex){
+					$('.penalesconvertidosEA').each(function(intIndex){
 						acumulado += parseInt($(this).val());	
 					});
-					$('.golescontraEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
-					});
+					
 					$('.resultadoA').html(acumulado);
 				});
 				
@@ -276,6 +278,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$('.golescontraEA').each(function(intIndex){
 						acumulado += parseInt($(this).val());	
 					});
+					$('.penalesconvertidosEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
 					$('.resultadoB').html(acumulado);
 				});
 				
@@ -288,10 +293,39 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$('.golescontraEA').each(function(intIndex){
 						acumulado += parseInt($(this).val());	
 					});
+					$('.penalesconvertidosEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoB').html(acumulado);
+				});
+				
+				$('.penalesconvertidosEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
 					$('.resultadoB').html(acumulado);
 				});
 				
 				$('.minutos').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > <?php echo $minutos; ?>) {
+							$(this).val(<?php echo $minutos; ?>);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.minutosEB').each(function(intIndex){
 					$(this).number( true, 0 );
 					$(this).change( function() {
 						if ($(this).val() > <?php echo $minutos; ?>) {
@@ -575,7 +609,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesconvertidos" name="penalesconvertidos<?php echo $row['refjugadores']; ?>" id="penalesconvertidos<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalconvertido'); ?>"/>
+                                	<input type="text" class="form-control input-sm penalesconvertidosEA" name="penalesconvertidos<?php echo $row['refjugadores']; ?>" id="penalesconvertidos<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalconvertido'); ?>"/>
                                 </div>
                             </th>
                             <th>
@@ -748,22 +782,22 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm minutos" name="minbutos<?php echo $rowB['refjugadores']; ?>" id="minbutos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php if (mysql_result($estadisticasB,0,'minutosjugados')==-1) { echo $minutos; } else { echo mysql_result($estadisticasB,0,'minutosjugados'); } ?>"/>
+                                	<input type="text" class="form-control input-sm minutosEB" name="minbutos<?php echo $rowB['refjugadores']; ?>" id="minbutos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php if (mysql_result($estadisticasB,0,'minutosjugados')==-1) { echo $minutos; } else { echo mysql_result($estadisticasB,0,'minutosjugados'); } ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesconvertidos" name="penalesconvertidosb<?php echo $rowB['refjugadores']; ?>" id="penalesconvertidosb<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalconvertido'); ?>"/>
+                                	<input type="text" class="form-control input-sm penalesconvertidosEB" name="penalesbconvertidos<?php echo $rowB['refjugadores']; ?>" id="penalesbconvertidos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalconvertido'); ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesatajados" name="penalesatajadosb<?php echo $rowB['refjugadores']; ?>" id="penalesatajadosb<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalatajado'); ?>"/>
+                                	<input type="text" class="form-control input-sm penalesatajados" name="penalesbatajados<?php echo $rowB['refjugadores']; ?>" id="penalesbatajados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalatajado'); ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">	
-                                	<input type="text" class="form-control input-sm penaleserrados" name="penaleserradosb<?php echo $rowB['refjugadores']; ?>" id="penaleserradosb<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalerrado'); ?>"/>
+                                	<input type="text" class="form-control input-sm penaleserrados" name="penalesberrados<?php echo $rowB['refjugadores']; ?>" id="penalesberrados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalerrado'); ?>"/>
                                 </div>
                             </th>
                             <th>

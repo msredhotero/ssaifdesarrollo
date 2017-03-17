@@ -103,6 +103,22 @@ $numero = count($_POST);
 			}
 			//////////////			fin logica			/////////////////////////////////////////////////////////
 			
+			
+			//////////////		logica PENALES		///////////////////////////////////////////////////////
+			$existePenales = $serviciosReferencias->existeFixturePorPenalesJugador($idJugador, $idFixture);
+			
+			$golesRealesLocal += $_POST['penalesconvertidos'.$idJugador];
+			
+			if ($existePenales == 0) {
+				//inserto
+				$serviciosReferencias->insertarPenalesjugadores($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['penalesconvertidos'.$idJugador], $_POST['penaleserrados'.$idJugador], $_POST['penalesatajados'.$idJugador]);
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarPenalesjugadores($existePenales, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['penalesconvertidos'.$idJugador], $_POST['penaleserrados'.$idJugador], $_POST['penalesatajados'.$idJugador]);
+			}
+			//////////////			fin logica			/////////////////////////////////////////////////////////
+			
 			//////////////		logica MINUTOS		///////////////////////////////////////////////////////
 			$existeMinutos = $serviciosReferencias->existeFixturePorMinutosJugados($idJugador, $idFixture);
 			
@@ -240,6 +256,23 @@ $numero = count($_POST);
 					$serviciosReferencias->modificarGoleadores($existeGoleadores, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$valores[$i], $_POST['enbcontra'.$idJugador]);
 				}
 				//////////////			fin logica			/////////////////////////////////////////////////////////
+				
+				
+				//////////////		logica PENALES		///////////////////////////////////////////////////////
+				$existePenales = $serviciosReferencias->existeFixturePorPenalesJugador($idJugador, $idFixture);
+				
+				$golesRealesVisitantes += $_POST['penalesbconvertidos'.$idJugador];
+				
+				if ($existePenales == 0) {
+					//inserto
+					$serviciosReferencias->insertarPenalesjugadores($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['penalesbconvertidos'.$idJugador], $_POST['penalesberrados'.$idJugador], $_POST['penalesbatajados'.$idJugador]);
+				} else {
+					//modifico	
+					
+					$serviciosReferencias->modificarPenalesjugadores($existePenales, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['penalesbconvertidos'.$idJugador], $_POST['penalesberrados'.$idJugador], $_POST['penalesbatajados'.$idJugador]);
+				}
+				//////////////			fin logica			/////////////////////////////////////////////////////////
+				
 				
 				//////////////		logica MINUTOS		///////////////////////////////////////////////////////
 				$existeMinutos = $serviciosReferencias->existeFixturePorMinutosJugados($idJugador, $idFixture);
@@ -441,15 +474,23 @@ if	($refEstadoPartido != 0) {
 		}
 		
 		
-	} else {
+	} else { // else del ganado, perdido, empatado
 		// estados donde los partidos los define el estado como W.O. Local, Perdida de puntos a Ambos, Suspendido Finalizado
 		if (($defAutomatica == 'Si') && ($finalizado == 'Si') && ($visibleParaArbitros == 'No')) {	
 			if ($golesLocalBorra == 'Si') {
+				//borrar los goles cargados al local
 				$serviciosReferencias->modificaGoleadoresPorFixtureMasivo($idFixture, $equipoLocal);
+				if ($golesRealesVisitantes > $golesvisitanteauto) {
+					$golesvisitanteauto = $golesRealesVisitantes;
+				}
 			}
 			
 			if ($golesvisitanteborra == 'Si') {
+				//borrar los goles cargados al local
 				$serviciosReferencias->modificaGoleadoresPorFixtureMasivo($idFixture, $equipoVisitante);
+				if ($golesRealesLocal > $golesLocalAuto) {
+					$golesLocalAuto = $golesRealesLocal;
+				}
 			}
 			
 			$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
@@ -457,7 +498,7 @@ if	($refEstadoPartido != 0) {
 			$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
 		}
 	}
-} else {
+} else { //else de si no selecciono un estado para el partido
 	$resEstados		= $serviciosReferencias->traerEstadospartidos();
 	$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');	
 	
@@ -573,12 +614,136 @@ if ($_SESSION['refroll_predio'] != 1) {
 				/*
 				$('#goles3').number( true, 2 );
 				$('#goles3').number( true, 2 );*/
-				$('.goles').each(function(intIndex){
+				$('.golesEB').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
 				
-				$('.golescontra').each(function(intIndex){
+				$('.golescontraEB').each(function(intIndex){
 					$(this).number( true, 0 );
+				});
+				
+				$('.golesEA').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.golescontraEA').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.amarillas').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.rojas').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.informados').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.dobleamarilla').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.cdtd').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+
+				
+				
+				$('.golesEA').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				$('.golescontraEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				$('.penalesconvertidosEA').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				
+				
+				
+				$('.golesEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoB').html(acumulado);
+				});
+				
+				
+				$('.golescontraEA').change(function(e) {
+					var acumulado = 0;
+					$('.golesEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoB').html(acumulado);
+				});
+				
+				$('.penalesconvertidosEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoB').html(acumulado);
 				});
 				
 				$('.minutos').each(function(intIndex){
@@ -586,6 +751,81 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$(this).change( function() {
 						if ($(this).val() > <?php echo $minutos; ?>) {
 							$(this).val(<?php echo $minutos; ?>);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.minutosEB').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > <?php echo $minutos; ?>) {
+							$(this).val(<?php echo $minutos; ?>);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.amarillas').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 2) {
+							$(this).val(2);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.rojas').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.informados').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.dobleamarilla').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.cdtd').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
 						}
 					});
 				});
@@ -716,18 +956,25 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </div>
                 
                 <div class="col-md-6">
-                	<p style="font-size:2.2em">Resultado Local: <?php echo mysql_result($resFixDetalle,0,'goleslocal'); ?></p>
+                	<p style="font-size:2.2em">Resultado Local: <span class="resultadoA"><?php echo (mysql_result($resFixDetalle,0,'goleslocal') == '' ? 0 : mysql_result($resFixDetalle,0,'goleslocal')); ?></span></p>
                 </div>
                 <div class="col-md-6">
-                	<p style="font-size:2.2em">Resultado Visitante: <?php echo mysql_result($resFixDetalle,0,'golesvisitantes'); ?></p>
+                	<p style="font-size:2.2em">Resultado Visitante: <span class="resultadoB"><?php echo (mysql_result($resFixDetalle,0,'golesvisitantes') == '' ? 0 : mysql_result($resFixDetalle,0,'golesvisitantes')); ?></span></p>
                 </div>
                 	
-           </div>
-                
-        	<div class="row">
+                </div>
+            
+            <div class="row">
 
                 <div style="margin-left:5px;padding-left:10px; border-left:12px solid #0C0; border-bottom:1px solid #eee;border-top:1px solid #CCC; margin-right:5px;">
                 <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
+                
+                <!--		detalles del partido			---->
+                
+                <!--		detalles fin			---->
+                
+                
+                
                 
                 <table class="table table-striped table-bordered table-responsive" id="example">
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Local: <?php echo $equipoA; ?></caption>
@@ -753,8 +1000,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	<?php 
 							
 							while ($row = mysql_fetch_array($resJugadoresA)) {
-								$estadisticas = $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivision($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
-								
+								$estadisticas	= $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivision($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
 								
 								$sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
 								
@@ -765,10 +1011,12 @@ if ($_SESSION['refroll_predio'] != 1) {
 								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
 								
 								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
+								
+								$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($row['refjugadores']);
+								
+								$suspendidoCategorias				=	$serviciosReferencias->hayMovimientos($row['refjugadores'],$idFixture);
 
-								$suspendido				=	$serviciosReferencias->traerSancionesJugadoresConFallosPorJugador($row['refjugadores'], $refFecha);
-
-						if ($suspendido == 0) {
+						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0)) {		
 						?>
                         <tr class="<?php echo $row[0]; ?>">
 
@@ -780,12 +1028,12 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm goles" name="goles<?php echo $row['refjugadores']; ?>" id="goles<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'goles'); ?>"/>
+                                	<input type="text" class="form-control input-sm golesEA" name="goles<?php echo $row['refjugadores']; ?>" id="goles<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'goles'); ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm golescontra" name="encontra<?php echo $row['refjugadores']; ?>" id="encontra<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'encontra'); ?>"/>
+                                	<input type="text" class="form-control input-sm golescontraEA" name="encontra<?php echo $row['refjugadores']; ?>" id="encontra<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'encontra'); ?>"/>
                                 </div>
                             </th>
                             <th>
@@ -795,7 +1043,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesconvertidos" name="penalesconvertidos<?php echo $row['refjugadores']; ?>" id="penalesconvertidos<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalconvertido'); ?>"/>
+                                	<input type="text" class="form-control input-sm penalesconvertidosEA" name="penalesconvertidos<?php echo $row['refjugadores']; ?>" id="penalesconvertidos<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalconvertido'); ?>"/>
                                 </div>
                             </th>
                             <th>
@@ -903,7 +1151,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 
                 <hr>
                 
-                <div style="margin-left:5px;padding-left:10px;border-left:12px solid #0C0; border-bottom:1px solid #eee; border-top:1px solid #CCC;margin-right:5px;">
+                <div style="margin-left:5px;padding-left:10px;border-left:12px solid #C00; border-bottom:1px solid #eee; border-top:1px solid #CCC;margin-right:5px;">
                 <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
                 <table class="table table-striped table-bordered table-responsive" id="example2">
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
@@ -942,9 +1190,11 @@ if ($_SESSION['refroll_predio'] != 1) {
 								
 								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
 								
-								$suspendidoB				=	$serviciosReferencias->traerSancionesJugadoresConFallosPorJugador($rowB['refjugadores'], $refFecha);
+								$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowB['refjugadores']);
 								
-						if ($suspendidoB == 0) {
+								$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowB['refjugadores'],$idFixture);
+
+						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0)) {		
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
 
@@ -956,32 +1206,32 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm goles" name="gobles<?php echo $rowB['refjugadores']; ?>" id="gobles<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'goles'); ?>"/>
+                                	<input type="text" class="form-control input-sm golesEB" name="gobles<?php echo $rowB['refjugadores']; ?>" id="gobles<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'goles'); ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm golescontra" name="enbcontra<?php echo $rowB['refjugadores']; ?>" id="enbcontra<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'encontra'); ?>"/>
+                                	<input type="text" class="form-control input-sm golescontraEB" name="enbcontra<?php echo $rowB['refjugadores']; ?>" id="enbcontra<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'encontra'); ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">
-                                	<input type="text" class="form-control input-sm minutos" name="minbutos<?php echo $rowB['refjugadores']; ?>" id="minbutos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php if (mysql_result($estadisticasB,0,'minutosjugados')==-1) { echo $minutos; } else { echo mysql_result($estadisticasB,0,'minutosjugados'); } ?>"/>
+                                	<input type="text" class="form-control input-sm minutosEB" name="minbutos<?php echo $rowB['refjugadores']; ?>" id="minbutos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php if (mysql_result($estadisticasB,0,'minutosjugados')==-1) { echo $minutos; } else { echo mysql_result($estadisticasB,0,'minutosjugados'); } ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesconvertidos" name="penalesconvertidosb<?php echo $rowB['refjugadores']; ?>" id="penalesconvertidosb<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalconvertido'); ?>"/>
+                                	<input type="text" class="form-control input-sm penalesconvertidosEB" name="penalesbconvertidos<?php echo $rowB['refjugadores']; ?>" id="penalesbconvertidos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalconvertido'); ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesatajados" name="penalesatajadosb<?php echo $rowB['refjugadores']; ?>" id="penalesatajadosb<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalatajado'); ?>"/>
+                                	<input type="text" class="form-control input-sm penalesatajados" name="penalesbatajados<?php echo $rowB['refjugadores']; ?>" id="penalesbatajados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalatajado'); ?>"/>
                                 </div>
                             </th>
                             <th>
                             	<div align="center">	
-                                	<input type="text" class="form-control input-sm penaleserrados" name="penaleserradosb<?php echo $rowB['refjugadores']; ?>" id="penaleserradosb<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalerrado'); ?>"/>
+                                	<input type="text" class="form-control input-sm penaleserrados" name="penalesberrados<?php echo $rowB['refjugadores']; ?>" id="penalesberrados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalerrado'); ?>"/>
                                 </div>
                             </th>
                             <th>
