@@ -183,6 +183,25 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 
 }
 
+function traerFechasPorTorneoJugadas($idTorneo) {
+	$sql	=	"select * from		
+				 dbfixture f 
+				 inner join		tbestadospartidos es on es.idestadopartido = f.refestadospartidos
+				 where reftorneos = ".$idTorneo."
+				 	   and defautomatica = 0
+					   and goleslocalauto = 0
+					   and golesvisitanteauto = 0
+					   and puntoslocal = 0
+					   and puntosvisitante = 0
+					   and finalizado = 0
+				 order by reffechas";	
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
+		
+}
 
 
 

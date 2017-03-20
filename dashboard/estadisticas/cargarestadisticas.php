@@ -480,6 +480,7 @@ if	($refEstadoPartido != 0) {
 			if ($golesLocalBorra == 'Si') {
 				//borrar los goles cargados al local
 				$serviciosReferencias->modificaGoleadoresPorFixtureMasivo($idFixture, $equipoLocal);
+				//verifico si los goles superan la cantidad arbitrada
 				if ($golesRealesVisitantes > $golesvisitanteauto) {
 					$golesvisitanteauto = $golesRealesVisitantes;
 				}
@@ -488,6 +489,7 @@ if	($refEstadoPartido != 0) {
 			if ($golesvisitanteborra == 'Si') {
 				//borrar los goles cargados al local
 				$serviciosReferencias->modificaGoleadoresPorFixtureMasivo($idFixture, $equipoVisitante);
+				//verifico si los goles superan la cantidad arbitrada
 				if ($golesRealesLocal > $golesLocalAuto) {
 					$golesLocalAuto = $golesRealesLocal;
 				}
@@ -505,6 +507,12 @@ if	($refEstadoPartido != 0) {
 }
 
 
+
+//////*************************			CALCULO POR ACUMULADION DE AMARILLAS	*********************************************/////
+
+
+
+//////*************************			FIN calculo de amarillas	*********************************************/////
 
 ///////////////////////				FIN							////////////////////////////	
 	
