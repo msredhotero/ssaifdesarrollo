@@ -792,6 +792,95 @@ function insertarFalloPorFecha($serviciosReferencias) {
 		}
 	}
 }
+
+
+
+function modificarFalloPorFecha($serviciosReferencias) {
+	$refsancionesjugadores = $_POST['refsancionesjugadores']; 
+	
+	if (isset($_POST['elegir'])) { 
+		$valor	= $_POST['elegir']; 
+	} else { 
+		$valor = 0; 
+	} 
+	
+	//traigo la sancion del jugador para poder acceder a la fecha//
+	$resSancionesJugadores	=	$serviciosReferencias->traerSancionesjugadoresPorId($refsancionesjugadores);
+	$refFixture				=	mysql_result($resSancionesJugadores,0,'reffixture');
+	
+	$resFixture				=	$serviciosReferencias->traerFixturePorId($refFixture);
+	$refFecha				=	mysql_result($resFixture,0,'reffechas');
+	
+	//traigo el fallo de la sancion
+	$resFallo				=	$serviciosReferencias->traerSancionesfallosPorId(mysql_result($resFixture,0,'refsancionesfallos'));
+
+	$pendientescumplimientos = mysql_result($resFallo,0,'pendientescumplimientos'); //verificar
+	
+	$errores	=	"";
+	
+	switch ($valor) {
+		case 'fallocantidad':	
+			$cantidadfechas = $_POST['cantidadfechas']; 
+			$fechadesde = ''; 
+			$fechahasta = ''; 
+			$amarillas = 0; 
+			$pendientesfallo = 0; 
+			break;
+		case 'fallofechas':
+			$cantidadfechas = 0; 
+			$fechadesde = formatearFechas($_POST['fechadesde']); 
+			$fechahasta = formatearFechas($_POST['fechahasta']); 
+			$pendientescumplimientos = 1; //verificar
+			$amarillas = 0; 
+			$pendientesfallo = 0; 
+			if (($fechadesde == '***') || ($fechahasta == '***')) {
+				$errores = 'Formato de fecha incorrecto';
+			}
+			break;
+		case 'falloamarillas':
+			$cantidadfechas = 0; 
+			$fechadesde = ''; 
+			$fechahasta = ''; 
+			$amarillas = $_POST['amarillas']; 
+			$pendientesfallo = 0; 
+			break;
+		case 'pendientesfallo':
+			$cantidadfechas = 0; 
+			$fechadesde = ''; 
+			$fechahasta = ''; 
+			$amarillas = 0; 
+			$pendientesfallo = 1; 
+			break;
+		default:
+			$amarillas = -1;
+	}
+	
+	if ($errores != '') {
+		echo $errores;
+	} else {
+		if ($amarillas == -1) {
+			echo 'Debe seleccionar una opción.';
+		} else {
+			$fechascumplidas = 0; 
+			
+			$generadaporacumulacion = 0; //solo cuando cumple con 5 amarillas
+			
+			
+			$observaciones = $_POST['observaciones']; 	
+			
+			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFixture,0,'refsancionesfallos'),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			
+			if ($res == true) { 
+				//tengo que ver en que fecha estoy parado para cortar los movimientos
+				$ultimaFechaCumplida = $serviciosReferencias->traerMovimientosancionesPorSancionJugadorCumplidas($refsancionesjugadores);
+				
+				echo ''; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
+		}
+	}
+}
 /**********************          CONECTA JUGADORES CON EQUIPOS *******************************************/
 
 function insertarConectorAjax($serviciosReferencias) { 

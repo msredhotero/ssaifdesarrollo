@@ -149,7 +149,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
-	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<script src="../../js/jquery.number.min.js"></script>
@@ -947,7 +947,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/1.10.13/api/fnFilterClear.js"></script>
+<script src="../../js/fnFilterClear.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){

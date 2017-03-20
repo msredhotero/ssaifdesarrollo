@@ -200,7 +200,7 @@ function traerFechasPorTorneoJugadas($idTorneo) {
 }
 
 function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
-		
+	$sql = "";	
 }
 
 
@@ -4751,6 +4751,12 @@ return $res;
 } 
 
 
+function eliminarMovimientosancionesApartirDe($idSancionJugador, $refFechas) { 
+$sql = "delete from dbmovimientosanciones where refsancionesjugadores =".$idSancionJugador." and reffechas <= ".$refFechas; 
+$res = $this->query($sql,0); 
+return $res; 
+}
+
 function traerMovimientosanciones() { 
 $sql = "select 
 m.idmovimientosancion,
@@ -4790,6 +4796,23 @@ function hayMovimientos($idJugador, $refFixture) {
 			where ju.idjugador =".$idJugador." and ms.cumplidas = 0 and tip.cumpletodascategorias = 1 and ms.reffixture <>".$refFixture;
 			
 	return $this->existe($sql);
+				
+}
+
+
+function traerMovimientosancionesPorSancionJugadorCumplidas($idSancionJugador) {
+	$sql = "select
+				ms.reffechas
+			from dbmovimientosanciones ms
+			inner join dbsancionesjugadores san ON san.idsancionjugador = ms.refsancionesjugadores 
+			inner join dbjugadores ju ON ju.idjugador = san.refjugadores 
+			inner join tbtiposanciones tip ON tip.idtiposancion = san.reftiposanciones
+			where ms.refsancionesjugadores =".$idSancionJugador." and ms.cumplidas = 0 and tip.cumpletodascategorias = 1
+			order by ms.reffechas
+            limit 1";
+			
+	$res = $this->query($sql,0); 
+	return $res; 
 				
 }
 
