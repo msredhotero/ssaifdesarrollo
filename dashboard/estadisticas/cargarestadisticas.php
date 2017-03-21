@@ -152,7 +152,8 @@ $numero = count($_POST);
 				$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaLrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 				
 				//*****			calculo amarillas acumuladas ********/
-				$serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $existeAmarillas);
+				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+				$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
 				//*****				fin							*****/
 				
 			} else {
@@ -306,8 +307,9 @@ $numero = count($_POST);
 				$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 				
 				//*****			calculo amarillas acumuladas ********/
-				$serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillas((integer)$idTorneo, $idJugador);
-				//$serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoVisitante, $fecha, $idCategoria, $idDivisiones, $existeAmarillas);
+				//$serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillas((integer)$idTorneo, $idJugador);
+				$cantidadAmarillasB = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+				$acuAmarillasB = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoVisitante, $fecha, $idCategoria, $idDivisiones, $idsancion,$cantidadAmarillasB);
 				//*****				fin							*****/
 				
 			} else {

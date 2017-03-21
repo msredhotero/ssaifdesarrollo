@@ -217,7 +217,7 @@ function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador) {
 							and ms.finalizo = 1
 							and sj.refjugadores = ".$idJugador."
 							and fix.reftorneos = ".(integer)$idTorneo." ";
-	return $sql;							
+								
 	return $this->existeDevuelveId($sql);
 }
 
@@ -232,7 +232,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 	}
 	
 	$sql = "select
-				sum(cantidad) as cantidad
+				coalesce((cantidad),0) as cantidad
 			from (
 				select
 					1 as cantidad
@@ -247,6 +247,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 							and fix.reftorneos = ".$idTorneo."
 							and fix.reffechas >= ".$reffechaDesde."
 							and ts.amonestacion = 1
+							and sj.cantidad > 0
 							
 				union all
 			
@@ -280,7 +281,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 							and fix.reffechas >= ".$reffechaDesde."
 							and sf.amarillas = 2
 				) t";	
-	return $sql;
+	
 	$res = $this->query($sql,0);
 	
 	if (mysql_num_rows($res)>0) {
@@ -289,9 +290,10 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 	return 0;
 }
 
-function sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha,$idFixture, $refequipos, $fecha,$refcategorias,$refdivisiones, $refSancionJugadores) {
-	$cantidadAmarillas	=	$this->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
-	return $cantidadAmarillas;
+function sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha,$idFixture, $refequipos, $fecha,$refcategorias,$refdivisiones, $refSancionJugadores,$cantidadAmarillas) {
+
+	//$cantidadAmarillas	=	$this->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+	
 	if (($cantidadAmarillas %  5) == 0) {
 
 		$fallo = $this->insertarSancionesfallos($refSancionJugadores,1,'0000-00-00','0000-00-00',0,0,0,0,1,'Acumulación de la 5 amarilla');
