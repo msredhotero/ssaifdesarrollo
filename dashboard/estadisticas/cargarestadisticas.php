@@ -306,13 +306,13 @@ $numero = count($_POST);
 				$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 				
 				//*****			calculo amarillas acumuladas ********/
-				die(var_dump($serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillas((integer)$idTorneo, $idJugador)));
+				$serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillas((integer)$idTorneo, $idJugador);
 				//$serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoVisitante, $fecha, $idCategoria, $idDivisiones, $existeAmarillas);
 				//*****				fin							*****/
 				
 			} else {
 				//modifico	
-				die(print_r($serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillas((integer)$idTorneo, $idJugador)));
+				
 				$serviciosReferencias->modificarSancionesjugadores($existeAmarillas,1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 			}
 			
