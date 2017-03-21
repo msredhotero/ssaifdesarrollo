@@ -450,6 +450,9 @@ case 'buscarPartido':
 case 'insertarFalloPorFecha':
 	insertarFalloPorFecha($serviciosReferencias);
 	break;
+case 'modificarFalloPorFecha':
+	modificarFalloPorFecha($serviciosReferencias);
+	break;
 /*****			FIN				**********/
 }
 
@@ -777,13 +780,19 @@ function insertarFalloPorFecha($serviciosReferencias) {
 			if ((integer)$res > 0) { 
 				//actualizo la referencia
 				$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
+				
 				if ($valor == 'fallocantidad') {
-		
+					
+					
 					/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
 					for ($i=1;$i<= $cantidadfechas;$i++) {
-						$serviciosReferencias->insertarMovimientosanciones($refsancionesjugadores,$refFecha + $i,$refFixture,0,0);	
+						$serviciosReferencias->insertarMovimientosanciones($refsancionesjugadores,$refFecha + $i,$refFixture,0,0,1);	
 					}
 					/********** fin ******/
+					
+					/******** recorrer y marcar las fechas cumplidas *********************************/
+					
+					/********  fin del recorrer ******************************************************/
 				}
 				echo ''; 
 			} else { 
@@ -812,7 +821,7 @@ function modificarFalloPorFecha($serviciosReferencias) {
 	$refFecha				=	mysql_result($resFixture,0,'reffechas');
 	
 	//traigo el fallo de la sancion
-	$resFallo				=	$serviciosReferencias->traerSancionesfallosPorId(mysql_result($resFixture,0,'refsancionesfallos'));
+	$resFallo				=	$serviciosReferencias->traerSancionesfallosPorId(mysql_result($resSancionesJugadores,0,'refsancionesfallos'));
 
 	$pendientescumplimientos = mysql_result($resFallo,0,'pendientescumplimientos'); //verificar
 	
@@ -868,11 +877,29 @@ function modificarFalloPorFecha($serviciosReferencias) {
 			
 			$observaciones = $_POST['observaciones']; 	
 			
-			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFixture,0,'refsancionesfallos'),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			
+			
+			/********** elimino lo cargado ***************************************************/
+			$serviciosReferencias->eliminarMovimientosancionesPorSancionJugador($refsancionesjugadores);
+			/********** fin   (despues lo controlo con los movimientos)  *********************/
 			
 			if ($res == true) { 
 				//tengo que ver en que fecha estoy parado para cortar los movimientos
-				$ultimaFechaCumplida = $serviciosReferencias->traerMovimientosancionesPorSancionJugadorCumplidas($refsancionesjugadores);
+				//$ultimaFechaCumplida = $serviciosReferencias->traerMovimientosancionesPorSancionJugadorCumplidas($refsancionesjugadores);
+				if ($valor == 'fallocantidad') {
+					
+					
+					/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
+					for ($i=1;$i<= $cantidadfechas;$i++) {
+						$serviciosReferencias->insertarMovimientosanciones($refsancionesjugadores,$refFecha + $i,$refFixture,0,0,1);	
+					}
+					/********** fin ******/
+					
+					/******** recorrer y marcar las fechas cumplidas *********************************/
+					
+					/********  fin del recorrer ******************************************************/
+				}
 				
 				echo ''; 
 			} else { 

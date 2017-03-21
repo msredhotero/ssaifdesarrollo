@@ -248,7 +248,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 
                 
                 <input type="hidden" id="refsancionesjugadores" name="refsancionesjugadores" value="<?php echo $id; ?>"/>
-                <input type="hidden" id="accion" name="accion" value="insertarFalloPorFecha"/>
+                <input type="hidden" id="accion" name="accion" value="modificarFalloPorFecha"/>
              
 
             
@@ -381,7 +381,7 @@ $(document).ready(function(){
 											
 										});
 										$("#load").html('');
-										url = "../prefallos/index.php";
+										url = "index.php";
 										$(location).attr('href',url);
 										
 										

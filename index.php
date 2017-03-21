@@ -103,6 +103,12 @@ $servicios = new Servicios();
         				return $error;
         		}
 				
+				$('body').keyup(function(e) {
+					if(e.keyCode == 13) {
+						$("#login").click();
+					}
+				});
+				
 				
 				$("#login").click(function(event) {
         			

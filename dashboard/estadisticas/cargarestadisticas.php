@@ -19,7 +19,7 @@ $serviciosHTML 			= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
 
 $fecha = date('Y-m-d');
-
+$valorB = 'marcos';
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
 
@@ -40,7 +40,7 @@ $equipoA = mysql_result($serviciosReferencias->traerEquiposPorId($equipoLocal),0
 $equipoB = mysql_result($serviciosReferencias->traerEquiposPorId($equipoVisitante),0,'nombre');
 
 $resTorneo	=	$serviciosReferencias->traerTorneosPorId(mysql_result($resFix,0,'reftorneos'));
-
+$idTorneo = (integer)mysql_result($resTorneo,0,'idtorneo');
 $idCategoria	=	mysql_result($resTorneo,0,'refcategorias');
 $idDivisiones	=	mysql_result($resTorneo,0,'refdivisiones');
 
@@ -152,7 +152,7 @@ $numero = count($_POST);
 				$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaLrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 				
 				//*****			calculo amarillas acumuladas ********/
-				
+				$serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $existeAmarillas);
 				//*****				fin							*****/
 				
 			} else {
@@ -306,12 +306,13 @@ $numero = count($_POST);
 				$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 				
 				//*****			calculo amarillas acumuladas ********/
-				
+				die(var_dump($serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillas((integer)$idTorneo, $idJugador)));
+				//$serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoVisitante, $fecha, $idCategoria, $idDivisiones, $existeAmarillas);
 				//*****				fin							*****/
 				
 			} else {
 				//modifico	
-				
+				die(print_r($serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillas((integer)$idTorneo, $idJugador)));
 				$serviciosReferencias->modificarSancionesjugadores($existeAmarillas,1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 			}
 			
@@ -873,7 +874,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             
             <div class="row">
                 <div class="col-md-3">
-                	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
+                	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion').$valorB; ?></span></p>
                 </div>
 
                 <div class="col-md-3">
