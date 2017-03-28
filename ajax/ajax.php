@@ -720,6 +720,10 @@ function insertarFalloPorFecha($serviciosReferencias) {
 	$resFixture				=	$serviciosReferencias->traerFixturePorId($refFixture);
 	$refFecha				=	mysql_result($resFixture,0,'reffechas');
 	
+	$refParaActualizar		=	0; //utilizo esta variable para acumular la ultima fecha sancionada y modificar la de la acumulacion de las amarillas
+	$fechaEncontrada		=	0;
+	$bandModificoFecha		=	0;
+	
 	
 	$pendientescumplimientos = 0; //verificar
 	
@@ -786,7 +790,18 @@ function insertarFalloPorFecha($serviciosReferencias) {
 					
 					/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
 					for ($i=1;$i<= $cantidadfechas;$i++) {
+						$otrasSancionesCargadasEnLaFecha = $serviciosReferencias->existeMovimientoEnFechaPorAcumulacion($refFecha + $i);
+						if (mysql_num_rows($otrasSancionesCargadasEnLaFecha) > 0) {
+							$bandModificoFecha = mysql_result($otrasSancionesCargadasEnLaFecha,0,0);
+							$fechaEncontrada = $refFecha + $i;
+						}
 						$serviciosReferencias->insertarMovimientosanciones($refsancionesjugadores,$refFecha + $i,$refFixture,0,0,1);	
+						$refParaActualizar = $refFecha + $i;
+					}
+					
+					//corro la fecha de la acumulada de las amarillas
+					if ($bandModificoFecha != 0) {
+						$serviciosReferencias->modificarMovimientosancionesCorrerFechas($bandModificoFecha,$fechaEncontrada,$refParaActualizar + 1);	
 					}
 					/********** fin ******/
 					
