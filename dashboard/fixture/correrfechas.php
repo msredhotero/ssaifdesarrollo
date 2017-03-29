@@ -24,35 +24,56 @@ $fecha = date('Y-m-d');
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
 
 
+$id		=	$_GET['id'];
 
+$resResult = $serviciosReferencias->traerFixtureTodoPorTorneo($id);
 
+$resFechasDelFixture = $serviciosReferencias->traerFechasFixturePorTorneo($id);
+
+$cadFechas = $serviciosFunciones->devolverSelectBox($resFechasDelFixture,array(1),'');
+
+$resResultado = $serviciosReferencias->traerTorneosPorId($id);
+
+$idCategoria = mysql_result($resResultado,0,'refcategorias');
+
+$idTemporada = mysql_result($serviciosReferencias->traerUltimaTemporada(),0,0);
+
+// dia que se juega los partidos
+$resDias = $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria);
+
+$diaDeJuego = mysql_result($resDias,0,'refdias');
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbfixture";
 
-$lblCambio	 	= array("refconectorlocal","goleslocal","refconectorvisitante","golesvisitantes","fecha","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos");
-$lblreemplazo	= array("Equipo Local","Resultado 1","Equipo Visitante","Resultado 2","Fecha Juego","Fecha","Cancha","Arbitros","Estados Partidos","Torneo");
+$lblCambio	 	= array("refconectorlocal","goleslocal","refconectorvisitante","golesvisitantes","fecha","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos","puntoslocal","puntosvisita","calificacioncancha");
+$lblreemplazo	= array("Equipo Local","Resultado 1","Equipo Visitante","Resultado 2","Fecha Juego","Fecha","Cancha","Arbitros","Estados Partidos","Torneo","Puntos Local","Puntos Visitante","Calificacion Cancha");
 
-$resConectorL	=	$serviciosReferencias->traerEquipos();
-$cadRef			=	$serviciosFunciones->devolverSelectBox($resConectorL,array(1,2)," - ");
+$resConectorL	=	$serviciosReferencias->traerEquipoPorTorneo(mysql_result($resResult,0,'reftorneos'));
+$cadRef			=	$serviciosFunciones->devolverSelectBoxActivo($resConectorL,array(1,2)," - ", mysql_result($resResult,0,'refconectorlocal'));
+
+$resConectorV	=	$serviciosReferencias->traerEquipoPorTorneo(mysql_result($resResult,0,'reftorneos'));
+$cadRefV		=	$serviciosFunciones->devolverSelectBoxActivo($resConectorV,array(1,2)," - ", mysql_result($resResult,0,'refconectorvisitante'));
 
 $resFechas		=	$serviciosReferencias->traerFechas();
-$cadRef2		=	$serviciosFunciones->devolverSelectBox($resFechas,array(1),'');
+$cadRef2		=	$serviciosFunciones->devolverSelectBoxActivo($resFechas,array(1),'', mysql_result($resResult,0,'reffechas'));
 
 $resCanchas		=	$serviciosReferencias->traerCanchas();
-$cadRef3		=	$serviciosFunciones->devolverSelectBox($resCanchas,array(1),'');
+$cadRef3		=	'<option value="">-- seleccionar --</option>';
+$cadRef3		.=	$serviciosFunciones->devolverSelectBoxActivo($resCanchas,array(1),'',mysql_result($resResult,0,'refcanchas'));
 
 $resArbitros	=	$serviciosReferencias->traerArbitros();
-$cadRef4		=	$serviciosFunciones->devolverSelectBox($resArbitros,array(1),'');
+$cadRef4		=	'<option value="">-- seleccionar --</option>';
+$cadRef4		.=	$serviciosFunciones->devolverSelectBoxActivo($resArbitros,array(1),'',mysql_result($resResult,0,'refarbitros'));
 
 $resEstadosP	=	$serviciosReferencias->traerEstadospartidos();
 $cadRef5		=	'<option value="">-- seleccionar --</option>';
-$cadRef5		.=	$serviciosFunciones->devolverSelectBox($resEstadosP,array(1),'');
+$cadRef5		.=	$serviciosFunciones->devolverSelectBoxActivo($resEstadosP,array(1),'',mysql_result($resResult,0,'refestadospartidos'));
 
-$resTorneos		=	$serviciosReferencias->traerTorneos();
-$cadRef6		=	$serviciosFunciones->devolverSelectBox($resTorneos,array(1,2),' - ');
+$resTorneos		=	$serviciosReferencias->traerTorneosPorId(mysql_result($resResult,0,'reftorneos'));
+$cadRef6		=	$serviciosFunciones->devolverSelectBoxActivo($resTorneos,array(1),'',mysql_result($resResult,0,'reftorneos'));
 
-$refdescripcion = array(0 => $cadRef,1=>$cadRef,2=>$cadRef2,3=>$cadRef3,4=>$cadRef4,5=>$cadRef5,6=>$cadRef6);
+$refdescripcion = array(0 => $cadRef,1=>$cadRefV,2=>$cadRef2,3=>$cadRef3,4=>$cadRef4,5=>$cadRef5,6=>$cadRef6);
 $refCampo	 	= array("refconectorlocal","refconectorvisitante","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos"); 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -66,8 +87,8 @@ $cabeceras2 		= "	<th>Equipo Local</th>
 				<th>Equipo Visitante</th>
 				<th>Categoria</th>
 				<th>Arbitros</th>
-				<th>Goles Local</th>
-				<th>Goles Vist.</th>
+				<th>Juez 1</th>
+				<th>Juez 2</th>
 				<th>Cancha</th>
 				<th>Fecha Juego</th>
 				<th>Fecha</th>
@@ -93,10 +114,6 @@ $cabeceras 		= "	<th>Descripción</th>
 
 
 
-
-$formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
-
-$refTorneos		=	$serviciosReferencias->traerTorneosActivos();
 
 ?>
 
@@ -133,37 +150,7 @@ $refTorneos		=	$serviciosReferencias->traerTorneosActivos();
     <link rel="stylesheet" href="../../css/bootstrap-timepicker.css">
     <script src="../../js/bootstrap-timepicker.min.js"></script>
 	<style type="text/css">
-			th {
-			  color:#D5DDE5;;
-			  background:#1b1e24;
-			  border-bottom:4px solid #9ea7af;
-			  border-right: 1px solid #343a45;
-			  font-size:17px;
-			  font-weight: 100;
-			  padding:18px;
-			  text-align:left;
-			  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-			  vertical-align:middle;
-			  font-family: "Roboto", helvetica, arial, sans-serif;
-			}
-			
-			th:first-child {
-			  border-top-left-radius:3px;
-			}
-			 
-			th:last-child {
-			  border-top-right-radius:3px;
-			  border-right:none;
-			}
-			
-			tr {
-			  border-top: 1px solid #C1C3D1;
-			  border-bottom-: 1px solid #C1C3D1;
-			  color:#666B85;
-			  font-size:16px;
-			  font-weight:normal;
-			  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
-			}
+		
   
 		
 	</style>
@@ -192,95 +179,117 @@ $refTorneos		=	$serviciosReferencias->traerTorneosActivos();
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga del Fixture</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Modificar Fechas Fixture</p>
         	
         </div>
     	<div class="cuerpoBox">
     		<form class="form-inline formulario" role="form">
             <div class="row" style="margin-left:25px; margin-right:25px;">
-    		<?php echo $formulario; ?>
+    			<div class="row" align="center">
+                    <ul class="list-inline">
+                        <li>
+                            Seleccione la fecha desde la cual se va a modificar y cuando finalizaria el torneo
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="row" align="center">
+                    <ul class="list-inline">
+    
+                        
+                        <div class="form-group col-md-4">
+                            <label for="nuevafecha" class="control-label" style="text-align:left">Fecha Cierre Torneo</label>
+                            <div class="input-group col-md-6">
+                                <input class="form-control" type="text" name="fechacierre" id="fechacierre" value="Date"/>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="form-group col-md-4">
+                            <label class="control-label" style="text-align:left" for="reffecha">Fecha Desde</label>
+                            <div class="input-group col-md-12">
+                                <select id="reffechas" class="form-control" name="reffechas">
+                                    <?php echo $cadFechas; ?>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group col-md-4">
+                            <label class="control-label" style="text-align:left" for="reffecha">Accion</label>
+                            <div class="input-group col-md-12">
+                                <div align="center">
+                                <button style="margin-left:0px;" id="modificarnuevafecha" class="btn btn-warning" type="button">Correr</button>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </ul>
+                </div>
             </div>
+            
+            <hr>
+            
+            <div class="row" style="margin-left:25px; margin-right:25px;">
+    			<div class="row" align="center">
+                    <ul class="list-inline">
+                        <li>
+                            Seleccione una fecha y un nuevo dia de juego
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="row" align="center">
+                    <ul class="list-inline">
+    
+                        
+                        <div class="form-group col-md-4">
+                            <label for="nuevafecha" class="control-label" style="text-align:left">Nueva Fecha</label>
+                            <div class="input-group col-md-6">
+                                <input class="form-control" type="text" name="nuevafecha" id="nuevafecha" value="Date"/>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="form-group col-md-4">
+                            <label class="control-label" style="text-align:left" for="reffecha">Fecha a asignar</label>
+                            <div class="input-group col-md-12">
+                                <select id="reffechan" class="form-control" name="reffechan">
+                                    <?php echo $cadFechas; ?>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group col-md-4">
+                            <label class="control-label" style="text-align:left" for="reffecha">Accion</label>
+                            <div class="input-group col-md-12">
+                                <div align="center">
+                                <button style="margin-left:0px;" id="modificarnuevafecha" class="btn btn-warning" type="button">Modificar</button>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </ul>
+                </div>
+            </div>
+            
+            
             
             <div class="row" style="margin-left:25px; margin-right:25px;">
                 <div class="alert"> </div>
                 <div id="load"> </div>
             </div>
+            
             <div class="row">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
+                    
                     <li>
-                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
+                        <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
                     </li>
-                   <!-- <li>
-                        <button type="button" class="btn btn-success" id="chequearF" style="margin-left:0px;">Chequear Fixture</button>
-                    </li>
-                    <li>
-                        <button type="button" class="btn btn-success" id="conductaF" style="margin-left:0px;">Cargar Conducta al Fixture</button>
-                    </li>
-                    <li>
-                        <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
-                    </li>-->
-
                 </ul>
                 </div>
             </div>
-
-            <hr>
             
-            <div class="row" id="contMapa2" style="margin-left:25px; margin-right:25px;">
-
-                <div class="col-md-12">
-                	<div class="form-group col-md-12">
-                        <label class="control-label" style="text-align:left; font-size:1.2em; text-decoration:underline; margin-bottom:4px;" for="fechas">Lista de Torneos</label>
-                        <div>
-                        <div class="input-group col-md-12">
-                            <table class="table table-bordered table-responsive table-striped">
-                            <thead>
-                            	<tr>
-                                	<th>Nombre</th>
-                                    <th>Temporada</th>
-                                    <th>Categoria</th>
-                                    <th>División</th>
-                                    <th style="text-align:center">Ver</th>
-                                    <th style="text-align:center">Posiciones</th>
-                                    <th style="text-align:center">Generar Fixture</th>
-                                    <th style="text-align:center">Correr Fecha</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lstjugadores">
-							<?php 
-								$cantidad = 0;
-								
-								while ($rowC = mysql_fetch_array($refTorneos)) {
-							?>
-                            	<tr>
-                                	<td><?php echo $rowC['descripcion']; ?></td>
-                                    <td><?php echo $rowC['temporada']; ?></td>
-                                    <td><?php echo $rowC['categoria']; ?></td>
-                                    <td><?php echo $rowC['division']; ?></td>
-                                    <td align="center"><img src="../../imagenes/verIco.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varver"></td>
-                                    <td align="center"><img src="../../imagenes/posicionesfix.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varposiciones"></td>
-                                    <td align="center"><img src="../../imagenes/Icon_Calendar.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="vargenerar"></td>
-                                    <td align="center"><span id="<?php echo $rowC['idtorneo']; ?>" class="glyphicon glyphicon-transfer correrFecha" style="cursor:pointer;"></span></td>
-                                    
-                                </tr>
-                            <?php
-								$cantidad += 1;
-								}
-							?>
-                            </tbody>
-                            <tfoot>
-                            	<td colspan="5" align="right">Total Torneos Activos:</td>
-                                <td><?php echo $cantidad; ?></td>
-                            </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                
-            </div>
-
             </form>
     	</div>
     </div>
@@ -307,12 +316,7 @@ $refTorneos		=	$serviciosReferencias->traerTorneosActivos();
 
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#timepicker2').timepicker({
-		minuteStep: 15,
-		showSeconds: false,
-		showMeridian: false,
-		defaultTime: false
-		});
+
 	 <?php 
 		echo $serviciosHTML->validacion($tabla);
 	
@@ -328,23 +332,8 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});
 	
-	$('.correrFecha').click( function() {
-		url = "correrfechas.php?id="+$(this).attr("id");
-		$(location).attr('href',url);
-	});
-	
-	$('.vargenerar').click( function() {
-		url = "../torneos/equipos.php?id="+$(this).attr("id");
-		$(location).attr('href',url);
-	});
-	
-	$('.varver').click( function() {
-		url = "ver.php?id="+$(this).attr("id");
-		$(location).attr('href',url);
-	});
-	
-	$('.varposiciones').click( function() {
-		url = "../posiciones/posiciones.php?id="+$(this).attr("id");
+	$('#generar').click( function() {
+		url = "generarfixture.php";
 		$(location).attr('href',url);
 	});
 	
@@ -352,6 +341,12 @@ $(document).ready(function(){
 		url = "conductafixture.php";
 		$(location).attr('href',url);
 	});
+	
+	$('.volver').click(function(event){
+		 
+		url = "index.php";
+		$(location).attr('href',url);
+	});//fin del boton modificar
 	
 	$('.varborrar').click(function(event){
 		  usersid =  $(this).attr("id");
@@ -579,19 +574,49 @@ $(document).ready(function(){
 
 });
 </script>
-<script type="text/javascript">
-$('.form_date').datetimepicker({
-	language:  'es',
-	weekStart: 1,
-	todayBtn:  1,
-	autoclose: 1,
-	todayHighlight: 1,
-	startView: 2,
-	minView: 2,
-	forceParse: 0,
-	format: 'dd/mm/yyyy'
-});
-</script>
+<script>
+  $(function() {
+	  $.datepicker.regional['es'] = {
+ closeText: 'Cerrar',
+ prevText: '<Ant',
+ nextText: 'Sig>',
+ currentText: 'Hoy',
+ monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+ monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+ dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+ dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+ dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+ weekHeader: 'Sm',
+ dateFormat: 'dd/mm/yy',
+ firstDay: 1,
+ isRTL: false,
+ showMonthAfterYear: false,
+ yearSuffix: ''
+ };
+ $.datepicker.setDefaults($.datepicker.regional['es']);
+ 
+
+	
+    $( "#nuevafecha" ).datepicker({
+		beforeShowDay: function(date) {
+			var day = date.getDay();
+			return [(day == <?php echo $diaDeJuego; ?>)];
+		}
+	});
+	
+	
+    $( "#nuevafecha" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+	
+	$( "#fechacierre" ).datepicker({
+		beforeShowDay: function(date) {
+			var day = date.getDay();
+			return [(day == <?php echo $diaDeJuego; ?>)];
+		}
+	});
+
+    $( "#fechacierre" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+  });
+  </script>
 
 
 <?php } ?>

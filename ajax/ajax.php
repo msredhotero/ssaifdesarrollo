@@ -790,7 +790,7 @@ function insertarFalloPorFecha($serviciosReferencias) {
 					
 					/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
 					for ($i=1;$i<= $cantidadfechas;$i++) {
-						$otrasSancionesCargadasEnLaFecha = $serviciosReferencias->existeMovimientoEnFechaPorAcumulacion($refFecha + $i);
+						$otrasSancionesCargadasEnLaFecha = $serviciosReferencias->existeMovimientoEnFechaPorAcumulacion($refFecha + $i, mysql_result($resSancionesJugadores,0,'refjugadores'));
 						if (mysql_num_rows($otrasSancionesCargadasEnLaFecha) > 0) {
 							$bandModificoFecha = mysql_result($otrasSancionesCargadasEnLaFecha,0,0);
 							$fechaEncontrada = $refFecha + $i;

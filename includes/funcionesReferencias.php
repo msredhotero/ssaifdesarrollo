@@ -221,6 +221,31 @@ function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador) {
 	return $this->existeDevuelveId($sql);
 }
 
+function ultimaFechaSancionadoPorCantidadFechas($idJugador) {
+	$sql	=	"select
+					max(ms.reffechas) as reffechas
+				from		dbsancionesjugadores sj
+				inner
+				join		dbsancionesfallos sf
+				on			sj.refsancionesfallos = sf.idsancionfallo
+				inner
+				join		dbfixture fix
+				on			fix.idfixture = sj.reffixture
+				inner
+				join		dbtorneos t
+				on			t.idtorneo = fix.reftorneos
+				inner
+                join		dbmovimientosanciones ms
+                on			ms.refsancionesjugadores = sj.idsancionjugador
+				where		sf.generadaporacumulacion = 0 
+							and ms.cumplidas = 0
+							and ms.finalizo = 0
+							and t.activo = 1
+							and sj.refjugadores = ".$idJugador;
+								
+	return $this->existeDevuelveId($sql);
+}
+
 
 function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 	$ultimaFecha = $this->ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador);
@@ -293,12 +318,23 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 function sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha,$idFixture, $refequipos, $fecha,$refcategorias,$refdivisiones, $refSancionJugadores,$cantidadAmarillas) {
 
 	//$cantidadAmarillas	=	$this->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
-	
+	$fechaNueva = (integer)$refFecha + 1;
 	if (($cantidadAmarillas %  5) == 0) {
 
 		$fallo = $this->insertarSancionesfallos($refSancionJugadores,1,'0000-00-00','0000-00-00',0,0,0,0,1,'Acumulación de la 5 amarilla');
+		
+		//determino si la fecha a sancionar ya fue sancionada
+		$exiteFechas = $this->existeMovimientoEnFechaPorCantidadFecha($refFecha+1, $idJugador);
+		
+		//busco la ultima fecha en caso de ser correcto
+		if (mysql_num_rows($exiteFechas)>0) {
+			$reffechaNueva = $this->ultimaFechaSancionadoPorCantidadFechas($idJugador);
+			if ($reffechaNueva >0) {
+				$fechaNueva = $reffechaNueva + 1;
+			}
+		}
 		//inserto el movimiento con el orden 2, el orden 1 es para las expulsiones
-		$this->insertarMovimientosanciones($refSancionJugadores, $refFecha+1, $idFixture,0,0,2);
+		$this->insertarMovimientosanciones($refSancionJugadores, $fechaNueva, $idFixture,0,0,2);
 
 		$this->modificarSancionesjugadoresFalladas($refSancionJugadores, $fallo);
 		return 1;	
@@ -4079,6 +4115,30 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+
+function traerFechasFixturePorTorneo($idTorneo) {
+$sql = "select
+f.reffechas,
+fec.fecha
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where tor.idtorneo = ".$idTorneo."
+group by f.reffechas,fec.fecha
+order by f.reffechas";
+$res = $this->query($sql,0);
+return $res;
+}
+
 function traerFixturePorId($id) {
 $sql = "select idfixture,reftorneos,reffechas,refconectorlocal,refconectorvisitante,refarbitros,juez1,juez2,refcanchas,fecha,hora,refestadospartidos,calificacioncancha,puntoslocal,puntosvisita,goleslocal,golesvisitantes,observaciones,publicar from dbfixture where idfixture =".$id;
 $res = $this->query($sql,0);
@@ -4950,7 +5010,7 @@ function traerSancionesJugadoresConFallosPorSancion($idFallo) {
 
 /* PARA Movimientosanciones */
 
-function existeMovimientoEnFechaPorAcumulacion($reffecha) {
+function existeMovimientoEnFechaPorAcumulacion($reffecha, $idJugador) {
 	$sql = "select
 			sj.idsancionjugador
 			from		dbmovimientosanciones mov
@@ -4966,14 +5026,14 @@ function existeMovimientoEnFechaPorAcumulacion($reffecha) {
 			inner
 			join		dbtorneos t
 			on			t.idtorneo = fix.reftorneos
-			where		mov.reffechas = ".$reffecha." and t.activo = 1 and mov.cumplidas = 0 and sf.generadaporacumulacion = 1 and mov.finalizo = 0";	
+			where		mov.reffechas = ".$reffecha." and t.activo = 1 and mov.cumplidas = 0 and sf.generadaporacumulacion = 1 and mov.finalizo = 0 and sj.refjugadores = ".$idJugador;	
 			
 	$res = $this->query($sql,0); 
 	return $res; 
 }
 
 
-function existeMovimientoEnFechaPorCantidadFecha($reffecha) {
+function existeMovimientoEnFechaPorCantidadFecha($reffecha, $idJugador) {
 	$sql = "select
 			sj.idsancionjugador
 			from		dbmovimientosanciones mov
@@ -4989,7 +5049,7 @@ function existeMovimientoEnFechaPorCantidadFecha($reffecha) {
 			inner
 			join		dbtorneos t
 			on			t.idtorneo = fix.reftorneos
-			where		mov.reffechas = ".$reffecha." and t.activo = 1 and mov.cumplidas = 0 and sf.generadaporacumulacion = 0 and mov.finalizo = 0";	
+			where		mov.reffechas = ".$reffecha." and t.activo = 1 and mov.cumplidas = 0 and sf.generadaporacumulacion = 0 and mov.finalizo = 0 and sj.refjugadores = ".$idJugador;	
 			
 	$res = $this->query($sql,0); 
 	return $res; 
