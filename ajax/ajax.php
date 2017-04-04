@@ -453,6 +453,9 @@ case 'insertarFalloPorFecha':
 case 'modificarFalloPorFecha':
 	modificarFalloPorFecha($serviciosReferencias);
 	break;
+case 'modificarMovimientosSancionesFechaCumplida':
+	modificarMovimientosSancionesFechaCumplida($serviciosReferencias);
+	break;
 /*****			FIN				**********/
 }
 
@@ -701,7 +704,18 @@ function buscarJugadores($serviciosReferencias) {
 
 
 /**********************		TODO FALLOS        *********************************************/
-
+function modificarMovimientosSancionesFechaCumplida($serviciosReferencias) {
+	$id		=	$_POST['id'];
+	$cumple =	$_POST['cumple'];
+	
+	$res = $serviciosReferencias->modificarMovimientosancionesCumplidasPorId($id,$cumple);
+	
+	if ($res == true) { 
+		echo ''; 
+	} else { 
+		echo 'Huvo un error al modificar datos'; 
+	} 	
+}
 
 /**********************                        FIN                     ***********************************/
 function insertarFalloPorFecha($serviciosReferencias) {

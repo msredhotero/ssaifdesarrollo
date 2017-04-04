@@ -504,12 +504,23 @@ if	($refEstadoPartido != 0) {
 			$lblerror = "alert-success";
 			$error = "Ok: Se cargo correctamente";	
 			$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 1);
-			$resEstados		= $serviciosReferencias->traerEstadospartidos();
-			$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+			if ($_SESSION['idroll_predio'] == 1) {
+				$resEstados		= $serviciosReferencias->traerEstadospartidos();
+				$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+			} else {
+				$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+				$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+			}
 		} else {
 			$resM = $serviciosReferencias->modificarFixturePorEstados($idFixture, 'NULL', $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 0);
-			$resEstados		= $serviciosReferencias->traerEstadospartidos();
-			$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+			
+			if ($_SESSION['idroll_predio'] == 1) {
+				$resEstados		= $serviciosReferencias->traerEstadospartidos();
+				$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+			} else {
+				$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+				$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+			}
 			
 		}
 		
@@ -536,8 +547,15 @@ if	($refEstadoPartido != 0) {
 			}
 			
 			$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
-			$resEstados		= $serviciosReferencias->traerEstadospartidos();
-			$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+
+			
+			if ($_SESSION['idroll_predio'] == 1) {
+				$resEstados		= $serviciosReferencias->traerEstadospartidos();
+				$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+			} else {
+				$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+				$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+			}
 			
 			$partidoSuspendidoCompletamente = 0;
 		} else { // else del W.O. Local, Perdida de puntos a Ambos, Suspendido Finalizado
@@ -550,8 +568,15 @@ if	($refEstadoPartido != 0) {
 		}
 	}
 } else { //else de si no selecciono un estado para el partido
-	$resEstados		= $serviciosReferencias->traerEstadospartidos();
-	$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');	
+
+	
+	if ($_SESSION['idroll_predio'] == 1) {
+		$resEstados		= $serviciosReferencias->traerEstadospartidos();
+		$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+	} else {
+		$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+		$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+	}
 	
 }
 
@@ -604,7 +629,7 @@ if (mysql_result($resFixDetalle,0,'refcanchas') == '') {
 	$cadCanchas	=	$serviciosFunciones->devolverSelectBoxActivo($refCanchas,array(1),'',mysql_result($resFixDetalle,0,'refcanchas'));
 }
 
-if ($_SESSION['refroll_predio'] != 1) {
+if ($_SESSION['idroll_predio'] != 1) {
 
 } else {
 

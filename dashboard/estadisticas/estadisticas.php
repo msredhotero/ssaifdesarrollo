@@ -98,14 +98,23 @@ $resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategorias
 
 $existe			= $serviciosReferencias->existe( "select refestadospartidos from dbfixture where refestadospartidos is not null and idfixture = ".$idFixture);
 
-if ($existe == 0) {
-	$resEstados		= $serviciosReferencias->traerEstadospartidos();
-	$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+if ($_SESSION['idroll_predio'] == 1) {
+	if ($existe == 0) {
+		$resEstados		= $serviciosReferencias->traerEstadospartidos();
+		$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+	} else {
+		$resEstados		= $serviciosReferencias->traerEstadospartidos();
+		$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', mysql_result($resFix,0,'refestadospartidos'));
+	}
 } else {
-	$resEstados		= $serviciosReferencias->traerEstadospartidos();
-	$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', mysql_result($resFix,0,'refestadospartidos'));
+	if ($existe == 0) {
+		$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+		$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+	} else {
+		$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+		$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', mysql_result($resFix,0,'refestadospartidos'));
+	}
 }
-
 
 $refCanchas		=	$serviciosReferencias->traerCanchas();
 if (mysql_result($resFixDetalle,0,'refcanchas') == '') {
@@ -114,7 +123,7 @@ if (mysql_result($resFixDetalle,0,'refcanchas') == '') {
 	$cadCanchas	=	$serviciosFunciones->devolverSelectBoxActivo($refCanchas,array(1),'',mysql_result($resFixDetalle,0,'refcanchas'));
 }
 
-if ($_SESSION['refroll_predio'] != 1) {
+if ($_SESSION['idroll_predio'] != 1) {
 
 } else {
 
@@ -560,6 +569,16 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <th style="text-align:center">I</th>
                             <th style="text-align:center">A+A</th>
                             <th style="text-align:center">CDTD</th>
+                            <?php
+
+							if ($_SESSION['idroll_predio'] == 1) {
+
+							?>
+                            <th style="text-align:center">Fallo</th>
+                            <th style="text-align:center">Ver</th>
+                            <?php
+							}
+							?>
                         </tr>
                     </thead>
                     <tbody>
@@ -581,6 +600,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 								$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($row['refjugadores']);
 								
 								$suspendidoCategorias				=	$serviciosReferencias->hayMovimientos($row['refjugadores'],$idFixture);
+								
+								$falloA					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($row['refjugadores'],$idFixture);
+								
 
 						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0)) {		
 						?>
@@ -653,6 +675,48 @@ if ($_SESSION['refroll_predio'] != 1) {
                                 </div>
                             </th>
                             
+                            <?php
+
+							if ($_SESSION['idroll_predio'] == 1) {
+								if ($falloA > 0) {
+									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA);
+									
+									$fallo	= '';
+
+									$amarillas		=	mysql_result($resFallo,0,'amarillas');
+									$cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
+									$fechadesde		=	mysql_result($resFallo,0,'fechadesde');
+									$fechahasta		=	mysql_result($resFallo,0,'fechahasta');
+									$pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
+									$observaciones	=	mysql_result($resFallo,0,'observaciones');
+									
+									if ($amarillas > 0) {
+										$fallo = 'Doble Amarilla';
+									} else {
+										if ($fechadesde != '00/00/0000') {
+											$fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
+										} else {
+											if ($pendiente == 'Si') {
+												$fallo = 'Pendiente';
+											} else {
+												$fallo = 'Cantidad de Fechas:'.$cantidadfechas;	
+											}
+										}
+									}
+							?>
+                            <th style="text-align:center"><?php echo $fallo; ?></th>
+                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloA; ?>">Ver</a></th>
+                            <?php
+								} else {
+									
+							?>	
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
+                            <?php	
+								}
+							}
+							?>
+                            
                         </tr>
                         
                         <?php
@@ -703,6 +767,48 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <th style="background-color:#F00;">
                             	
                             </th>
+                            
+                            <?php
+
+							if ($_SESSION['idroll_predio'] == 1) {
+								if ($falloA > 0) {
+									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA);
+									
+									$fallo	= '';
+
+									$amarillas		=	mysql_result($resFallo,0,'amarillas');
+									$cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
+									$fechadesde		=	mysql_result($resFallo,0,'fechadesde');
+									$fechahasta		=	mysql_result($resFallo,0,'fechahasta');
+									$pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
+									$observaciones	=	mysql_result($resFallo,0,'observaciones');
+									
+									if ($amarillas > 0) {
+										$fallo = 'Doble Amarilla';
+									} else {
+										if ($fechadesde != '00/00/0000') {
+											$fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
+										} else {
+											if ($pendiente == 'Si') {
+												$fallo = 'Pendiente';
+											} else {
+												$fallo = 'Cantidad de Fechas:'.$cantidadfechas;	
+											}
+										}
+									}
+							?>
+                            <th style="text-align:center"><?php echo $fallo; ?></th>
+                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloA; ?>">Ver</a></th>
+                            <?php
+								} else {
+									
+							?>	
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
+                            <?php	
+								}
+							}
+							?>
                         </tr>
                         <?php
 								}
@@ -738,6 +844,17 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <th style="text-align:center">I</th>
                             <th style="text-align:center">A+A</th>
                             <th style="text-align:center">CDTD</th>
+                            
+                            <?php
+
+							if ($_SESSION['idroll_predio'] == 1) {
+
+							?>
+                            <th style="text-align:center">Fallo</th>
+                            <th style="text-align:center">Ver</th>
+                            <?php
+							}
+							?>
                         </tr>
                     </thead>
                     <tbody>
@@ -759,6 +876,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 								$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowB['refjugadores']);
 								
 								$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowB['refjugadores'],$idFixture);
+								
+								$falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowB['refjugadores'],$idFixture);
 
 						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0)) {		
 						?>
@@ -830,6 +949,50 @@ if ($_SESSION['refroll_predio'] != 1) {
                                 	<input type="text" class="form-control input-sm cdtd" name="cdVtd<?php echo $rowB['refjugadores']; ?>" id="cdVtd<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
                                 </div>
                             </th>
+                            
+                            
+                            <?php
+
+							if ($_SESSION['idroll_predio'] == 1) {
+								if ($falloB > 0) {
+									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB);
+									
+									$fallo	= '';
+
+									$amarillas		=	mysql_result($resFallo,0,'amarillas');
+									$cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
+									$fechadesde		=	mysql_result($resFallo,0,'fechadesde');
+									$fechahasta		=	mysql_result($resFallo,0,'fechahasta');
+									$pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
+									$observaciones	=	mysql_result($resFallo,0,'observaciones');
+									
+									if ($amarillas > 0) {
+										$fallo = 'Doble Amarilla';
+									} else {
+										if ($fechadesde != '00/00/0000') {
+											$fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
+										} else {
+											if ($pendiente == 'Si') {
+												$fallo = 'Pendiente';
+											} else {
+												$fallo = 'Cantidad de Fechas:'.$cantidadfechas;	
+											}
+										}
+									}
+							?>
+                            <th style="text-align:center"><?php echo $fallo; ?></th>
+                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloB; ?>">Ver</a></th>
+                            <?php
+								} else {
+									
+							?>	
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
+                            <?php	
+								}
+							}
+							?>
+                            
                         </tr>
                         
                         <?php
@@ -880,6 +1043,47 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <th style="background-color:#F00;">
                             	
                             </th>
+                            <?php
+
+							if ($_SESSION['idroll_predio'] == 1) {
+								if ($falloB > 0) {
+									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB);
+									
+									$fallo	= '';
+
+									$amarillas		=	mysql_result($resFallo,0,'amarillas');
+									$cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
+									$fechadesde		=	mysql_result($resFallo,0,'fechadesde');
+									$fechahasta		=	mysql_result($resFallo,0,'fechahasta');
+									$pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
+									$observaciones	=	mysql_result($resFallo,0,'observaciones');
+									
+									if ($amarillas > 0) {
+										$fallo = 'Doble Amarilla';
+									} else {
+										if ($fechadesde != '00/00/0000') {
+											$fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
+										} else {
+											if ($pendiente == 'Si') {
+												$fallo = 'Pendiente';
+											} else {
+												$fallo = 'Cantidad de Fechas:'.$cantidadfechas;	
+											}
+										}
+									}
+							?>
+                            <th style="text-align:center"><?php echo $fallo; ?></th>
+                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloB; ?>">Ver</a></th>
+                            <?php
+								} else {
+									
+							?>	
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
+                            <?php	
+								}
+							}
+							?>
                         </tr>
                         <?php
 								}

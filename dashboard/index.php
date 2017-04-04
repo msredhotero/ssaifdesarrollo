@@ -130,7 +130,11 @@ $cadJugadores = '';
 <div id="content">
 
 <h3>Bienvenido</h3>
-
+	
+    <?php
+	if ($_SESSION['idroll_predio'] == 1) {
+	
+	?>
 	<div class="row" style="margin-right:15px;">
     <div class="col-md-12">
     <div class="panel" style="border-color:#006666;">
@@ -157,6 +161,8 @@ $cadJugadores = '';
                 
                                 </div>
                             </div>
+                            
+                            
 					</div><!-- fin del contenedor detalle -->
                     </div>		
 				</div>
@@ -168,7 +174,9 @@ $cadJugadores = '';
     
     
     
-    
+    <?php
+	}
+	?>
    
 </div>
 

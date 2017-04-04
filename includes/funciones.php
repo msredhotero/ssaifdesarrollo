@@ -294,8 +294,8 @@ class Servicios {
 				<table class="table table-striped table-responsive" id="example" bordercolor="#888" BORDER=1>
 					<thead>
 						<tr>
-							<th colspan="6" style="text-align:center;color:#FFF;" bgcolor="#999">Sanción</th>
-							<th colspan="10" style="text-align:center;color:#FFF;" bgcolor="#999">Fallo</th>
+							<th colspan="6" style="text-align:center;color:#FFF;" bgcolor="#555">Sanción</th>
+							<th colspan="10" style="text-align:center;color:#FFF;" bgcolor="#555">Fallo</th>
 						</tr>
 						<tr>
 							'.$cabeceras.'
