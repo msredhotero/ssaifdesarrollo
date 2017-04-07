@@ -22,72 +22,42 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Torneos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fallos",$_SESSION['refroll_predio'],'');
 
 
+$id = $_GET['id'];
+
+$resResultado	=	$serviciosReferencias->traerSancionesjugadoresPorId($id);
+$resDetalles	=	$serviciosReferencias->traerSancionesjugadoresPorIdDetalles($id);
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Torneo";
+$singular = "Sancion Cumplida";
 
-$plural = "Torneos";
+$plural = "Sanciones Cumplidas";
 
-$eliminar = "eliminarTorneos";
+$eliminar = "eliminarSancionesfechascumplidas";
 
-$insertar = "insertarTorneos";
+$insertar = "insertarSancionesfechascumplidas";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbtorneos";
-
-$lblCambio	 	= array("reftipotorneo","reftemporadas","refcategorias","refdivisiones","cantidadascensos","cantidaddescensos","respetadefiniciontipojugadores","respetadefinicionhabilitacionestransitorias","respetadefinicionsancionesacumuladas","acumulagoleadores","acumulatablaconformada");
-$lblreemplazo	= array("Tipo Torneo","Temporada","Categoria","Division","Cant.Ascensos","Cant.Descensos","Respet.Def. Tipo Jugador","Respet.Def. Hab.Transt.","Respet.Def. Sansiones Acum.","Acum.Goleadores","Acum.Tabla Conformada");
+$tabla 			= "dbsancionesfechascumplidas";
 
 
-$resTipoTorneo 	= $serviciosReferencias->traerTipotorneo();
-$cadRef 	= $serviciosFunciones->devolverSelectBox($resTipoTorneo,array(1),'');
-
-$resTemporadas 	= $serviciosReferencias->traerTemporadas();
-$cadRef2 	= $serviciosFunciones->devolverSelectBox($resTemporadas,array(1),'');
-
-$resCategorias 	= $serviciosReferencias->traerCategorias();
-$cadRef3 	= $serviciosFunciones->devolverSelectBox($resCategorias,array(1),'');
-
-$resDivisiones 	= $serviciosReferencias->traerDivisiones();
-$cadRef4 	= $serviciosFunciones->devolverSelectBox($resDivisiones,array(1),'');
-
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2,2 => $cadRef3,3 => $cadRef4);
-$refCampo 	=  array("reftipotorneo","reftemporadas","refcategorias","refdivisiones");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Descripción</th>
-					<th>Tipo Torneo</th>
-					<th>Temporadas</th>
-					<th>Categorias</th>
-					<th>Divisiones</th>
-					<th>Cant.Ascensos</th>
-					<th>Cant.Descensos</th>
-					<th>Respet.Def. Tipo Jugador</th>
-					<th>Respet.Def. Hab.Transt.</th>
-					<th>Respet.Def. Sansiones Acum.</th>
-					<th>Acum.Goleadores</th>
-					<th>Acum.Tabla Conformada</th>
-					<th>Obs.</th>
-					<th>Activo</th>";
+$cabeceras 		= "	<th>Fecha</th>
+					<th>Cumplida</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-
-
-
-$formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
-
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerTorneos(),90);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerSancionesfechascumplidasPorSancionJugador($id),2);
 
 
 
@@ -157,55 +127,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <h3><?php echo $plural; ?></h3>
 
-    <div class="boxInfoLargo">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
-        	
-        </div>
-    	<div class="cuerpoBox">
-        	<form class="form-inline formulario" role="form">
-        	<div class="row">
-            
-			<?php echo $formulario; ?>
-            <div class="col-md-6">
-            	<label class="control-label">Fecha de Inicio</label>
-                <div class="input-group col-md-12">
-                	<input type="text" name="fechainicio" id="fechainicio" class="form-control"/>
-                    <script type="text/javascript">
-					$(document).ready(function(){
-						
-						$("#fechainicio").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
-					});
-					</script>
-                </div>
-            </div>
-            
-            </div>
-            
-            
-            
-            
-            <div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
-                
-                </div>
-                <div id='load'>
-                
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-12">
-                <ul class="list-inline" style="margin-top:15px;">
-                    <li>
-                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
-                    </li>
-                </ul>
-                </div>
-            </div>
-            </form>
-    	</div>
-    </div>
+    
     
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
@@ -213,6 +135,20 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
+        	<ul class="list-group">
+              <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> Jugador</li>
+              <li class="list-group-item list-group-item-default">Nombre Completo:<?php echo mysql_result($resDetalles,0,'jugador');?></li>
+              <li class="list-group-item list-group-item-default">Nro Documento:<?php echo mysql_result($resDetalles,0,'nrodocumento');?></li>
+              <li class="list-group-item list-group-item-default">Fecha de la sación:<?php echo mysql_result($resDetalles,0,'fecha')?></li>
+              <li class="list-group-item list-group-item-default">Sanción:<?php echo mysql_result($resDetalles,0,'tiposancion');?></li>
+			  <li class="list-group-item list-group-item-default">Categoria:<?php echo mysql_result($resDetalles,0,'categoria');?></li>
+			  <li class="list-group-item list-group-item-default">División:<?php echo mysql_result($resDetalles,0,'division');?></li>
+			  <li class="list-group-item list-group-item-default">Fechas:<?php echo mysql_result($resDetalles,0,'cantidadfechas');?></li>
+			  <li class="list-group-item list-group-item-default">Obs.:<?php echo mysql_result($resDetalles,0,'observaciones');?></li>
+			  <li class="list-group-item list-group-item-default"><a href="../estadisticas/estadisticas.php?id=<?php echo mysql_result($resDetalles,0,'reffixture'); ?>">Ir a la Estadistica</a></li>
+              
+            </ul>
+            
         	<?php echo $lstCargados; ?>
     	</div>
     </div>
@@ -274,13 +210,28 @@ $(document).ready(function(){
 	
 	$('#activo').prop('checked',true);
 	
-	$('#respetadefiniciontipojugadores').prop('checked',true);
-
-	$('#respetadefinicionhabilitacionestransitorias').prop('checked',true);
-
-	$('#respetadefinicionsancionesacumuladas').prop('checked',true);
-
-
+	$('#fechaalta').val('<?php echo date('d/m/Y'); ?>');
+	
+	function traerContactosPorCountries(id) {
+		$.ajax({
+				data:  {id: id, 
+						accion: 'traerContactosPorCountries'},
+				url:   '../../ajax/ajax.php',
+				type:  'post',
+				beforeSend: function () {
+						
+				},
+				success:  function (response) {
+					$('#refcontactos').html(response);
+				}
+		});	
+	}
+	
+	$('#refcountries').change(function() {
+		traerContactosPorCountries($(this).val());
+	});
+	
+	traerContactosPorCountries($(this).val());
 	
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
@@ -307,12 +258,11 @@ $(document).ready(function(){
 		  }
 	});//fin del boton modificar
 	
-	
-	$("#example").on("click",'.vargenerar', function(){
+	$("#example").on("click",'.varver', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			
-			url = "equipos.php?id=" + usersid;
+			url = "ver.php?id=" + usersid;
 			$(location).attr('href',url);
 		  } else {
 			alert("Error, vuelva a realizar la acción.");	
@@ -391,29 +341,28 @@ $(document).ready(function(){
 				//una vez finalizado correctamente
 				success: function(data){
 
-
-					if (!isNaN(data)) {	
-						$(".alert").removeClass("alert-danger");
-						$(".alert").removeClass("alert-info");
-						$(".alert").addClass("alert-success");
-						$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-						$(".alert").delay(3000).queue(function(){
-							/*aca lo que quiero hacer 
-							  después de los 2 segundos de retraso*/
-							$(this).dequeue(); //continúo con el siguiente ítem en la cola
-							
-						});
-						$("#load").html('');
-						url = "equipos.php?id="+data+"&fechainicio="+$('#fechainicio').val();
-						$(location).attr('href',url);
-						
-						
-					} else {
-						$(".alert").removeClass("alert-danger");
-						$(".alert").addClass("alert-danger");
-						$(".alert").html('<strong>Error!</strong> '+data);
-						$("#load").html('');
-					}
+					if (data == '') {
+                                            $(".alert").removeClass("alert-danger");
+											$(".alert").removeClass("alert-info");
+                                            $(".alert").addClass("alert-success");
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
+											$(".alert").delay(3000).queue(function(){
+												/*aca lo que quiero hacer 
+												  después de los 2 segundos de retraso*/
+												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+												
+											});
+											$("#load").html('');
+											url = "index.php";
+											$(location).attr('href',url);
+                                            
+											
+                                        } else {
+                                        	$(".alert").removeClass("alert-danger");
+                                            $(".alert").addClass("alert-danger");
+                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                            $("#load").html('');
+                                        }
 				},
 				//si ha ocurrido un error
 				error: function(){

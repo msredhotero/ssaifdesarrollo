@@ -43,6 +43,13 @@ $equipoB = mysql_result($serviciosReferencias->traerEquiposPorId($equipoVisitant
 
 $resTorneo	=	$serviciosReferencias->traerTorneosPorId(mysql_result($resFix,0,'reftorneos'));
 
+//todas las fechas del torneo del equipo local
+$resTodasFechas = $serviciosReferencias->traerFechasFixturePorTorneoEquipo(mysql_result($resFix,0,'reftorneos'), $equipoLocal);
+
+//todas las fechas del torneo del equipo visitante
+$resTodasFechasV = $serviciosReferencias->traerFechasFixturePorTorneoEquipo(mysql_result($resFix,0,'reftorneos'), $equipoVisitante);
+
+
 $idCategoria	=	mysql_result($resTorneo,0,'refcategorias');
 $idDivisiones	=	mysql_result($resTorneo,0,'refdivisiones');
 
@@ -437,6 +444,30 @@ if ($_SESSION['idroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
+        
+        <button data-toggle="collapse" data-target="#demo" class="btn btn-info" style="margin-bottom:5px;">Fechas de los equipos</button>
+        <div id="demo" class="collapse">
+        	<div class="col-md-12" align="center" style="text-align:center;">
+                <ul class="list-inline" id="lstFechas">
+                    <?php while ($row = mysql_fetch_array($resTodasFechas)) { ?>
+                    <li style="padding-bottom:8px;">
+                        <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-success" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+            
+            <div class="col-md-12" align="center" style="text-align:center;">
+                <ul class="list-inline" id="lstFechas">
+                    <?php while ($row = mysql_fetch_array($resTodasFechasV)) { ?>
+                    <li style="padding-bottom:8px;">
+                        <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-danger" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+        </div>                
+                        
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
         	<div class="row">
                 <div class="col-md-3">
@@ -599,12 +630,15 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($row['refjugadores']);
 								
-								$suspendidoCategorias				=	$serviciosReferencias->hayMovimientos($row['refjugadores'],$idFixture);
+								$suspendidoCategorias		=	$serviciosReferencias->hayMovimientos($row['refjugadores'],$idFixture);
+								$suspendidoCategoriasAA		=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($row['refjugadores'],$idFixture, $idCategoria);
 								
 								$falloA					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($row['refjugadores'],$idFixture);
 								
-
-						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0)) {		
+						
+						
+						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0)) {	
+						
 						?>
                         <tr class="<?php echo $row[0]; ?>">
 
@@ -705,7 +739,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 									}
 							?>
                             <th style="text-align:center"><?php echo $fallo; ?></th>
-                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloA; ?>">Ver</a></th>
+                            <th style="text-align:center"><a href="../sancionesfechascumplidas/index.php?id=<?php echo $falloA; ?>">Ver</a></th>
                             <?php
 								} else {
 									
@@ -798,7 +832,8 @@ if ($_SESSION['idroll_predio'] != 1) {
 									}
 							?>
                             <th style="text-align:center"><?php echo $fallo; ?></th>
-                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloA; ?>">Ver</a></th>
+                            <th style="text-align:center"><a href="../sancionesfechascumplidas/index.php?id=<?php echo $falloA; ?>">Ver</a></th>
+                            <input type="hidden" id="sancionJugadores<?php echo $row['refjugadores']; ?>" name="sancionJugadores<?php echo $row['refjugadores']; ?>" value="1"/>
                             <?php
 								} else {
 									
@@ -876,10 +911,11 @@ if ($_SESSION['idroll_predio'] != 1) {
 								$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowB['refjugadores']);
 								
 								$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowB['refjugadores'],$idFixture);
+								$suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowB['refjugadores'],$idFixture, $idCategoria);
 								
 								$falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowB['refjugadores'],$idFixture);
 
-						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0)) {		
+						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0)) {		
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
 
@@ -981,7 +1017,8 @@ if ($_SESSION['idroll_predio'] != 1) {
 									}
 							?>
                             <th style="text-align:center"><?php echo $fallo; ?></th>
-                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloB; ?>">Ver</a></th>
+                            <th style="text-align:center"><a href="../sancionesfechascumplidas/index.php?id=<?php echo $falloB; ?>">Ver</a></th>
+                            <input type="hidden" id="sancionBJugadores<?php echo $rowB['refjugadores']; ?>" name="sancionBJugadores<?php echo $rowB['refjugadores']; ?>" value="1"/>
                             <?php
 								} else {
 									
@@ -1073,7 +1110,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 									}
 							?>
                             <th style="text-align:center"><?php echo $fallo; ?></th>
-                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloB; ?>">Ver</a></th>
+                            <th style="text-align:center"><a href="../sancionesfechascumplidas/index.php?id=<?php echo $falloB; ?>">Ver</a></th>
                             <?php
 								} else {
 									

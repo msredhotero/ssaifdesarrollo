@@ -22,50 +22,53 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Torneos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fallos",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerTorneosPorId($id);
+$resResultado = $serviciosReferencias->traerSancionesfechascumplidasPorId($id);
 
+
+$resSancionJugador	=	$serviciosReferencias->traerSancionesjugadoresPorIdSancionFallo(mysql_result($resResultado,0,'refsancionesfallos'));
+$resDetalles	=	$serviciosReferencias->traerSancionesjugadoresPorIdDetalles(mysql_result($resSancionJugador,0,'idsancionjugador'));
+
+$resFixture		=	$serviciosReferencias->traerFixturePorId(mysql_result($resSancionJugador,0,'reffixture'));
+
+$resFechas = $serviciosReferencias->traerFechasFixturePorTorneoDesdeFecha(mysql_result($resFixture,0,'reftorneos'), mysql_result($resFixture,0,'reffechas'), mysql_result($resSancionJugador,0,'refequipos'));
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Torneo";
+$singular = "Sancion Cumplida";
 
-$plural = "Torneos";
+$plural = "Sanciones Cumplidas";
 
-$eliminar = "eliminarTorneos";
+$eliminar = "eliminarSancionesfechascumplidas";
 
-$modificar = "modificarTorneos";
+$modificar = "modificarSancionesfechascumplidas";
 
-$idTabla = "idtorneo";
+$idTabla = "idsancionfechacumplida";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbtorneos";
+$tabla 			= "dbsancionesfechascumplidas";
 
-$lblCambio	 	= array("reftipotorneo","reftemporadas","refcategorias","refdivisiones","cantidadascensos","cantidaddescensos","respetadefiniciontipojugadores","respetadefinicionhabilitacionestransitorias","respetadefinicionsancionesacumuladas","acumulagoleadores","acumulatablaconformada");
-$lblreemplazo	= array("Tipo Torneo","Temporada","Categoria","Division","Cant.Ascensos","Cant.Descensos","Respet.Def. Tipo Jugador","Respet.Def. Hab.Transt.","Respet.Def. Sansiones Acum.","Acum.Goleadores","Acum.Tabla Conformada");
+$lblCambio	 	= array("reffixture","refjugadores","refsancionesfallos");
+$lblreemplazo	= array("Fechas","Jugador","Fallo");
+
+$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resFechas,array(1),'', mysql_result($resResultado,0,'reffixture'));
+
+$resJugador = $serviciosReferencias->traerJugadoresPorId(mysql_result($resResultado,0,'refjugadores'));
+$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resJugador,array(3,4),', ', mysql_result($resResultado,0,'refjugadores'));
+
+$resFallo 	= $serviciosReferencias->traerSancionesfallosPorId(mysql_result($resResultado,0,'refsancionesfallos'));
+$cadRef3 	= $serviciosFunciones->devolverSelectBoxActivo($resFallo,array(1),'', mysql_result($resResultado,0,'refsancionesfallos'));
 
 
-$resTipoTorneo 	= $serviciosReferencias->traerTipotorneo();
-$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resTipoTorneo,array(1),'', mysql_result($resResultado,0,'reftipotorneo'));
-
-$resTemporadas 	= $serviciosReferencias->traerTemporadas();
-$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resTemporadas,array(1),'', mysql_result($resResultado,0,'reftemporadas'));
-
-$resCategorias 	= $serviciosReferencias->traerCategorias();
-$cadRef3 	= $serviciosFunciones->devolverSelectBoxActivo($resCategorias,array(1),'', mysql_result($resResultado,0,'refcategorias'));
-
-$resDivisiones 	= $serviciosReferencias->traerDivisiones();
-$cadRef4 	= $serviciosFunciones->devolverSelectBoxActivo($resDivisiones,array(1),'', mysql_result($resResultado,0,'refdivisiones'));
-
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2,2 => $cadRef3,3 => $cadRef4);
-$refCampo 	=  array("reftipotorneo","reftemporadas","refcategorias","refdivisiones");
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2,2 => $cadRef3);
+$refCampo 	=  array("reffixture","refjugadores","refsancionesfallos");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -145,6 +148,19 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
+        	<ul class="list-group">
+              <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> Jugador</li>
+              <li class="list-group-item list-group-item-default">Nombre Completo:<?php echo mysql_result($resDetalles,0,'jugador');?></li>
+              <li class="list-group-item list-group-item-default">Nro Documento:<?php echo mysql_result($resDetalles,0,'nrodocumento');?></li>
+              <li class="list-group-item list-group-item-default">Fecha de la sación:<?php echo mysql_result($resDetalles,0,'fecha')?></li>
+              <li class="list-group-item list-group-item-default">Sanción:<?php echo mysql_result($resDetalles,0,'tiposancion');?></li>
+			  <li class="list-group-item list-group-item-default">Categoria:<?php echo mysql_result($resDetalles,0,'categoria');?></li>
+			  <li class="list-group-item list-group-item-default">División:<?php echo mysql_result($resDetalles,0,'division');?></li>
+			  <li class="list-group-item list-group-item-default">Fechas:<?php echo mysql_result($resDetalles,0,'cantidadfechas');?></li>
+			  <li class="list-group-item list-group-item-default">Obs.:<?php echo mysql_result($resDetalles,0,'observaciones');?></li>
+			  <li class="list-group-item list-group-item-default"><a href="../estadisticas/estadisticas.php?id=<?php echo mysql_result($resDetalles,0,'reffixture'); ?>.'">Ir a la Estadistica</a></li>
+              
+            </ul>
         	<form class="form-inline formulario" role="form">
         	
 			<div class="row">
@@ -171,6 +187,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
                     </li>
+
                     <li>
                         <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
                     </li>
@@ -196,6 +213,9 @@ if ($_SESSION['refroll_predio'] != 1) {
         <p><strong>Importante: </strong>Si elimina el equipo se perderan todos los datos de este</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
+
+
+
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
@@ -205,45 +225,21 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	if ('<?php echo mysql_result($resResultado,0,'respetadefiniciontipojugadores'); ?>' == 'Si') {
-		$('#respetadefiniciontipojugadores').prop('checked',true);
+	if ('<?php echo mysql_result($resResultado,0,'cumplida'); ?>' == 'Si') {
+		$('#cumplida').prop('checked',true);
 	} else {
-		$('#respetadefiniciontipojugadores').prop('checked',false);
-	}
-	
-	if ('<?php echo mysql_result($resResultado,0,'respetadefinicionhabilitacionestransitorias'); ?>' == 'Si') {
-		$('#respetadefinicionhabilitacionestransitorias').prop('checked',true);
-	} else {
-		$('#respetadefinicionhabilitacionestransitorias').prop('checked',false);
-	}
-	
-	if ('<?php echo mysql_result($resResultado,0,'respetadefinicionsancionesacumuladas'); ?>' == 'Si') {
-		$('#respetadefinicionsancionesacumuladas').prop('checked',true);
-	} else {
-		$('#respetadefinicionsancionesacumuladas').prop('checked',false);
-	}
-	
-	if ('<?php echo mysql_result($resResultado,0,'acumulagoleadores'); ?>' == 'Si') {
-		$('#acumulagoleadores').prop('checked',true);
-	} else {
-		$('#acumulagoleadores').prop('checked',false);
-	}
-	
-	if ('<?php echo mysql_result($resResultado,0,'acumulatablaconformada'); ?>' == 'Si') {
-		$('#acumulatablaconformada').prop('checked',true);
-	} else {
-		$('#acumulatablaconformada').prop('checked',false);
-	}
-	
-	if ('<?php echo mysql_result($resResultado,0,'activo'); ?>' == 'Si') {
-		$('#activo').prop('checked',true);
-	} else {
-		$('#activo').prop('checked',false);
+		$('#cumplida').prop('checked',false);
 	}
 	
 	$('.volver').click(function(event){
 		 
 		url = "index.php";
+		$(location).attr('href',url);
+	});//fin del boton modificar
+	
+	$('#ver').click(function(event){
+		 
+		url = "ver.php?id="+<?php echo $id; ?>;
 		$(location).attr('href',url);
 	});//fin del boton modificar
 	
@@ -260,44 +256,65 @@ $(document).ready(function(){
 			alert("Error, vuelva a realizar la acción.");	
 		  }
 	});//fin del boton eliminar
-
+	
+	function traerContactosPorCountries(id) {
+		$.ajax({
+				data:  {id: id, 
+						accion: 'traerContactosPorCountries'},
+				url:   '../../ajax/ajax.php',
+				type:  'post',
+				beforeSend: function () {
+						
+				},
+				success:  function (response) {
+					$('#refcontactos').html(response);
+				}
+		});	
+	}
+	
+	$('#refcountries').change(function() {
+		traerContactosPorCountries($(this).val());
+	});
+	
 	 $( "#dialog2" ).dialog({
 		 	
-			    autoOpen: false,
-			 	resizable: false,
-				width:600,
-				height:240,
-				modal: true,
-				buttons: {
-				    "Eliminar": function() {
+		autoOpen: false,
+		resizable: false,
+		width:600,
+		height:240,
+		modal: true,
+		buttons: {
+			"Eliminar": function() {
+
+				$.ajax({
+							data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
+							url:   '../../ajax/ajax.php',
+							type:  'post',
+							beforeSend: function () {
+									
+							},
+							success:  function (response) {
+									url = "index.php";
+									$(location).attr('href',url);
+									
+							}
+					});
+				$( this ).dialog( "close" );
+				$( this ).dialog( "close" );
+					$('html, body').animate({
+						scrollTop: '1000px'
+					},
+					1500);
+			},
+			Cancelar: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+ 
+ 
+	}); //fin del dialogo para eliminar
 	
-						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
-									url:   '../../ajax/ajax.php',
-									type:  'post',
-									beforeSend: function () {
-											
-									},
-									success:  function (response) {
-											url = "index.php";
-											$(location).attr('href',url);
-											
-									}
-							});
-						$( this ).dialog( "close" );
-						$( this ).dialog( "close" );
-							$('html, body').animate({
-	           					scrollTop: '1000px'
-	       					},
-	       					1500);
-				    },
-				    Cancelar: function() {
-						$( this ).dialog( "close" );
-				    }
-				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
+	
 	
 	
 	<?php 
