@@ -5502,6 +5502,8 @@ function hayMovimientos($idJugador, $idFixture) {
 				dbtorneos tor ON tor.idtorneo = fix.reftorneos
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
+					inner join
+				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
 					left join
 				(select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas 
 					from dbsancionesfechascumplidas fc
@@ -5512,7 +5514,7 @@ function hayMovimientos($idJugador, $idFixture) {
 			WHERE
 				ju.idjugador = ".$idJugador."
 					AND tip.cumpletodascategorias = 1
-					AND fix.reffechas > fixv.reffechas";
+					AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
 			
 	return $this->existeDevuelveId($sql);			
 }
@@ -5535,6 +5537,8 @@ function hayMovimientosDevuelveId($idJugador, $idFixture) {
 				dbtorneos tor ON tor.idtorneo = fix.reftorneos
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
+					inner join
+				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
 					left join
 				(select fc.refsancionesfallos, count(*) as cumplidas 
 					from dbsancionesfechascumplidas fc 
@@ -5543,7 +5547,7 @@ function hayMovimientosDevuelveId($idJugador, $idFixture) {
 			WHERE
 				ju.idjugador = ".$idJugador."
 					AND tip.cumpletodascategorias = 1
-					AND fix.reffechas > fixv.reffechas";
+					AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
 			
 	return $this->existeDevuelveId($sql);			
 }
@@ -5565,6 +5569,8 @@ function hayMovimientosAmarillasAcumuladas($idJugador, $idFixture, $idCategoria)
 				dbtorneos tor ON tor.idtorneo = fix.reftorneos and san.refcategorias = tor.refcategorias
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
+					inner join
+				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
 					left join
 				(select fc.refsancionesfallos, count(*) as cumplidas 
 					from dbsancionesfechascumplidas fc 
@@ -5574,7 +5580,7 @@ function hayMovimientosAmarillasAcumuladas($idJugador, $idFixture, $idCategoria)
 				ju.idjugador = ".$idJugador."
 					AND tor.refcategorias = ".$idCategoria."
 					AND tip.cumpletodascategorias = 0
-					AND fix.reffechas > fixv.reffechas";
+					AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
 	
 					
 	return $this->existeDevuelveId($sql);	
@@ -5597,6 +5603,8 @@ function hayMovimientosAmarillasAcumuladasDevuelveId($idJugador, $idFixture, $id
 				dbtorneos tor ON tor.idtorneo = fix.reftorneos and san.refcategorias = tor.refcategorias
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
+					inner join
+				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
 					left join
 				(select fc.refsancionesfallos, count(*) as cumplidas 
 					from dbsancionesfechascumplidas fc 
@@ -5606,7 +5614,7 @@ function hayMovimientosAmarillasAcumuladasDevuelveId($idJugador, $idFixture, $id
 				ju.idjugador = ".$idJugador."
 					AND tor.refcategorias = ".$idCategoria."
 					AND tip.cumpletodascategorias = 0
-					AND fix.reffechas > fixv.reffechas";
+					AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
 					
 	return $this->existeDevuelveId($sql);	
 }
