@@ -38,16 +38,20 @@ $resultadoB = mysql_result($resFix,0,'puntosvisita');
 
 $resFecha	=	$serviciosReferencias->traerFechasPorId($refFecha);
 
+
+if (($equipoLocal != 0) && ($equipoVisitante != 0)) {
+	
+
 $equipoA = mysql_result($serviciosReferencias->traerEquiposPorId($equipoLocal),0,'nombre');
 $equipoB = mysql_result($serviciosReferencias->traerEquiposPorId($equipoVisitante),0,'nombre');
 
 $resTorneo	=	$serviciosReferencias->traerTorneosPorId(mysql_result($resFix,0,'reftorneos'));
 
 //todas las fechas del torneo del equipo local
-$resTodasFechas = $serviciosReferencias->traerFechasFixturePorTorneoEquipo(mysql_result($resFix,0,'reftorneos'), $equipoLocal);
+$resTodasFechas = $serviciosReferencias->traerFechasFixturePorTorneoEquipoLocal(mysql_result($resFix,0,'reftorneos'), $equipoLocal);
 
 //todas las fechas del torneo del equipo visitante
-$resTodasFechasV = $serviciosReferencias->traerFechasFixturePorTorneoEquipo(mysql_result($resFix,0,'reftorneos'), $equipoVisitante);
+$resTodasFechasV = $serviciosReferencias->traerFechasFixturePorTorneoEquipoVisitante(mysql_result($resFix,0,'reftorneos'), $equipoVisitante);
 
 
 $idCategoria	=	mysql_result($resTorneo,0,'refcategorias');
@@ -449,6 +453,7 @@ if ($_SESSION['idroll_predio'] != 1) {
         <div id="demo" class="collapse">
         	<div class="col-md-12" align="center" style="text-align:center;">
                 <ul class="list-inline" id="lstFechas">
+                	<li><?php echo $equipoA; ?></li>
                     <?php while ($row = mysql_fetch_array($resTodasFechas)) { ?>
                     <li style="padding-bottom:8px;">
                         <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-success" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
@@ -459,6 +464,7 @@ if ($_SESSION['idroll_predio'] != 1) {
             
             <div class="col-md-12" align="center" style="text-align:center;">
                 <ul class="list-inline" id="lstFechas">
+                	<li><?php echo $equipoB; ?></li>
                     <?php while ($row = mysql_fetch_array($resTodasFechasV)) { ?>
                     <li style="padding-bottom:8px;">
                         <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-danger" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
@@ -913,6 +919,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 								$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowB['refjugadores'],$idFixture);
 								$suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowB['refjugadores'],$idFixture, $idCategoria);
 								
+								//die(var_dump($suspendidoCategoriasAAB));
 								$falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowB['refjugadores'],$idFixture);
 
 						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0)) {		
@@ -1352,6 +1359,341 @@ $(document).ready(function(){
 	
 	
   </script>
+  
+<?php } else { ?>
+
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+
+<title>Gesti&oacute;n: AIF</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
+    
+
+    
+    <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
+    <link rel="stylesheet" href="../../css/jquery-ui.css">
+
+    <script src="../../js/jquery-ui.js"></script>
+    
+	<!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
+	
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="../../bootstrap/js/bootstrap.min.js"></script>
+	<script src="../../js/jquery.number.min.js"></script>
+    
+	<style type="text/css">
+		
+  
+		
+	</style>
+    
+   <link rel="stylesheet" href="../../css/chosen.css">
+   <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
+      <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
+      <script src="../../js/jquery.mousewheel.js"></script>
+      <script src="../../js/perfect-scrollbar.js"></script>
+      <script>
+      jQuery(document).ready(function ($) {
+        "use strict";
+        $('#navigation').perfectScrollbar();
+		
+		
+      });
+    </script>
+    
+    <script type="text/javascript">
+			
+			$(function(){
+				// Set up the number formatting.
+				/*
+				$('#goles3').number( true, 2 );
+				$('#goles3').number( true, 2 );*/
+				$('.golesEB').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.golescontraEB').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.golesEA').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.golescontraEA').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.amarillas').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.rojas').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.informados').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.dobleamarilla').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.cdtd').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+
+				
+				
+				$('.golesEA').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				$('.golescontraEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				$('.penalesconvertidosEA').change(function(e) {
+					var acumulado = 0;
+					$('.golesEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					
+					$('.resultadoA').html(acumulado);
+				});
+				
+				
+				
+				
+				
+				$('.golesEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoB').html(acumulado);
+				});
+				
+				
+				$('.golescontraEA').change(function(e) {
+					var acumulado = 0;
+					$('.golesEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoB').html(acumulado);
+				});
+				
+				$('.penalesconvertidosEB').change(function(e) {
+					var acumulado = 0;
+					$('.golesEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.golescontraEA').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.penalesconvertidosEB').each(function(intIndex){
+						acumulado += parseInt($(this).val());	
+					});
+					$('.resultadoB').html(acumulado);
+				});
+				
+				$('.minutos').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > <?php echo $minutos; ?>) {
+							$(this).val(<?php echo $minutos; ?>);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.minutosEB').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > <?php echo $minutos; ?>) {
+							$(this).val(<?php echo $minutos; ?>);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.amarillas').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 2) {
+							$(this).val(2);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.rojas').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.informados').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.dobleamarilla').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.cdtd').each(function(intIndex){
+					$(this).number( true, 0 );
+					$(this).change( function() {
+						if ($(this).val() > 1) {
+							$(this).val(1);
+						}
+						if ($(this).val() < 0) {
+							$(this).val(0);
+						}
+					});
+				});
+				
+				$('.penalesconvertidos').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.penalesatajados').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+				
+				$('.penaleserrados').each(function(intIndex){
+					$(this).number( true, 0 );
+				});
+
+			});
+		</script>
+    
+
+</head>
+
+<body>
+
+ 
+<?php echo $resMenu; ?>
+
+<div id="content">
+
+    <div class="boxInfoLargoEstadisticas">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Estadisticas - <?php echo mysql_result($resFecha,0,1); ?></p>
+        	
+        </div>
+    	<div class="cuerpoBox" style="padding-right:10px;">
+
+            <div class="row" style="margin-left:15px; margin-right:15px;">
+                <div class="col-md-12">
+                <h4>Esta fecha no puede ser cargada, a falta de un equipo</h4>
+                <ul class="list-inline" style="margin-top:15px;">
+
+
+                    <li>
+                        <a href="index.php"><button type="button" class="btn btn-default volver">Volver</button></a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+            <input type="hidden" id="accion" name="accion" value="insertarEstadisticaMasiva" />
+            <input type="hidden" id="idfixture" name="idfixture" value="<?php echo $idFixture; ?>" />
+            </form>
+    	</div>
+    </div>
+
+   
+</div>
+
+
+</div>
+
+<?php } ?>  
+  
 <?php } ?>
 </body>
 </html>

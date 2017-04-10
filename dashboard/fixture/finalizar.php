@@ -410,18 +410,11 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosRefere
         </div>
     	<div class="cuerpoBox">
     		<h1>Fixture Generado Correctamente <?php //echo $res; ?></h1>
+            <a href="index.php"><button type="button" class="btn btn-default volver">Volver</button></a>
     	</div>
     </div>
 
-    <div class="boxInfoLargo">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Fixture Cargados</p>
-        	
-        </div>
-    	<div class="cuerpoBox">
-        	<?php echo $lstCargados; ?>
-    	</div>
-    </div>
+
     
    
 </div>

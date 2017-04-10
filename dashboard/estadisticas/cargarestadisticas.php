@@ -44,6 +44,15 @@ $idTorneo = (integer)mysql_result($resTorneo,0,'idtorneo');
 $idCategoria	=	mysql_result($resTorneo,0,'refcategorias');
 $idDivisiones	=	mysql_result($resTorneo,0,'refdivisiones');
 
+
+//todas las fechas del torneo del equipo local
+$resTodasFechas = $serviciosReferencias->traerFechasFixturePorTorneoEquipoLocal(mysql_result($resFix,0,'reftorneos'), $equipoLocal);
+
+//todas las fechas del torneo del equipo visitante
+$resTodasFechasV = $serviciosReferencias->traerFechasFixturePorTorneoEquipoVisitante(mysql_result($resFix,0,'reftorneos'), $equipoVisitante);
+
+$resFecha	=	$serviciosReferencias->traerFechasPorId($refFecha);
+
 ///////////////   traigo la utima temporada  ///////////////////
 $refTemporada = $serviciosReferencias->traerUltimaTemporada();
 
@@ -943,10 +952,36 @@ if ($_SESSION['idroll_predio'] != 1) {
 
     <div class="boxInfoLargoEstadisticas">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Estadisticas</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Estadisticas - <?php echo mysql_result($resFecha,0,1); ?></p>
         	
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
+        
+        <button data-toggle="collapse" data-target="#demo" class="btn btn-info" style="margin-bottom:5px;">Fechas de los equipos</button>
+        <div id="demo" class="collapse">
+        	<div class="col-md-12" align="center" style="text-align:center;">
+                <ul class="list-inline" id="lstFechas">
+                	<li><?php echo $equipoA; ?></li>
+                    <?php while ($row = mysql_fetch_array($resTodasFechas)) { ?>
+                    <li style="padding-bottom:8px;">
+                        <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-success" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+            
+            <div class="col-md-12" align="center" style="text-align:center;">
+                <ul class="list-inline" id="lstFechas">
+                	<li><?php echo $equipoB; ?></li>
+                    <?php while ($row = mysql_fetch_array($resTodasFechasV)) { ?>
+                    <li style="padding-bottom:8px;">
+                        <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-danger" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+        </div> 
+        
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
             
             <div class="row">

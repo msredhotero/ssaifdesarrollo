@@ -28,7 +28,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fallos"
 $id		=	$_GET['id'];
 
 $resResultado	=	$serviciosReferencias->traerSancionesjugadoresPorId($id);
-$resDetalles	=	$serviciosReferencias->traerSancionesjugadoresPorIdDetalles($id);
+$resDetalles	=	$serviciosReferencias->traerSancionesjugadoresPorIdDetallesSinFallo($id);
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Fallo";
 

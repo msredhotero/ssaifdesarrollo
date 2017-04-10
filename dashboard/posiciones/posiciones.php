@@ -153,7 +153,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <tbody>
                         	<?php
 								$cant = 1;
-								while ($row = mysql_fetch_array($resPosiciones)) {
+								//while ($row = mysql_fetch_array($resPosiciones)) {
+								//die(var_dump($resPosiciones));	
+								foreach ($resPosiciones as $row) {	
 							?>
                             <tr>
                             	<td><?php echo $cant; ?></td>
@@ -228,6 +230,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+	
 	
 	$('#busqueda').click(function(e) {
         $.ajax({
