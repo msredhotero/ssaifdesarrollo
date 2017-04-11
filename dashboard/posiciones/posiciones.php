@@ -27,6 +27,8 @@ $idTorneo		=	$_GET['id'];
 
 $resPosiciones		=	$serviciosReferencias->Posiciones($idTorneo);
 
+$resGoleadores		=	$serviciosReferencias->Goleadores($idTorneo);
+
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -176,21 +178,8 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </tbody>
                     </table>
                 </div>
+            </div>
 
-				
-            </div>
-            
-            <div class='row' style="margin-left:15px; margin-right:15px;">
-                <div class='alert'>
-                	
-                </div>
-                <div class='alert alert2'>
-                
-                </div>
-                <div id='load'>
-                
-                </div>
-            </div>
 			
 			<div class="row">
                 <div class="col-md-12">
@@ -207,6 +196,63 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
                     </li>-->
+
+                </ul>
+                </div>
+            </div>
+            </form>
+    	</div>
+    </div>
+    
+    
+    <div class="boxInfoLargo">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Tabla de Goleadores</p>
+        	
+        </div>
+    	<div class="cuerpoBox" style="padding-right:10px;">
+    		<form class="form-inline formulario" role="form">
+
+            <div class="row">    
+                <div class="col-md-12">
+                	<table class="table table-bordered table-responsive">
+                    	<thead>
+                        	<th>Equipos</th>
+                            <th>Apellido y Nombre</th>
+                            <th>Nro Documento</th>
+                            <th>Goles</th>
+                        </thead>
+                        <tbody>
+                        	<?php
+								$cant = 1;
+								while ($row = mysql_fetch_array($resGoleadores)) {
+								
+							?>
+                            <tr>
+                                <td><?php echo $row['equipo']; ?></td>
+                                <td><?php echo $row['apyn']; ?></td>
+                                <td><?php echo $row['nrodocumento']; ?></td>
+                                <td><?php echo $row['goles']; ?></td>
+                            </tr>
+                            <?php
+								$cant += 1;
+								}
+							?>
+                        </tbody>
+                    </table>
+                
+                </div>
+
+				
+            </div>
+
+			
+			<div class="row">
+                <div class="col-md-12">
+                <ul class="list-inline" style="margin-top:15px;">
+                    <li>
+                        <button type="button" class="btn btn-default" id="volver" style="margin-left:0px;">volver</button>
+                    </li>
 
                 </ul>
                 </div>

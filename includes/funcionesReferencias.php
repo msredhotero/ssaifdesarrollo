@@ -243,19 +243,7 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 	
 	$arPosiciones = array();
 	
-	/*
-	p.equipo,
-sum(p.puntos) as puntos,
-sum(p.goles) as goles,
-sum(p.pj) as pj,
-sum(p.pg) as pg,
-sum(p.pp) as pp,
-sum(p.pe) as pe,
-sum(p.amarillas) as amarillas,
-sum(p.rojas) as rojas
-	
-	
-	*/
+
 	while ($row = mysql_fetch_array($res)) {
 		$puntosBonus = $this->calcularPuntoBonus($refTorneo, $row['idequipo']);	
 		
@@ -269,19 +257,70 @@ sum(p.rojas) as rojas
 							  'amarillas'=> $row['amarillas'],
 							  'rojas'=> $row['rojas']);
 	}
-	/*
-	foreach ($arPosiciones as $clave => $fila) {
-		$puntos[$clave] 	= $fila['puntos'];
-		$rojas[$clave] 		= $fila['rojas'];
-		$amirillas[$clave] 	= $fila['amarillas'];
-	}
-	*/
+
 	$sorted = $this->array_orderby($arPosiciones, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
-	
-	//$nuevoAr = array_multisort($puntos, SORT_DESC, $rojas, SORT_ASC, $amirillas, SORT_ASC, $arPosiciones);
-	
+
 	return $sorted;
 
+}
+
+function Goleadores($idTorneo) {
+	$sql = "select
+			t.equipo, t.apyn, t.nrodocumento, t.goles
+			from (
+				select
+				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles
+				from		dbgoleadores g
+				inner
+				join		dbfixture fix
+				on			g.reffixture = fix.idfixture
+				inner
+				join		dbtorneos t
+				on			t.idtorneo = fix.reftorneos
+				inner 
+				join 		dbequipos el 
+				ON 			el.idequipo = fix.refconectorlocal and g.refequipos = fix.refconectorlocal
+				/*
+				inner
+				join		dbconector co
+				on			co.refequipos = f.refconectorlocal and co.refcategorias = t.refcategorias and co.refjugadores = g.refjugadores
+				*/
+				inner
+				join		dbjugadores j
+				on			j.idjugador = g.refjugadores
+				where		t.idtorneo = ".$idTorneo." and g.goles > 0
+				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+				
+				union all
+				
+				
+				select
+				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles
+				from		dbgoleadores g
+				inner
+				join		dbfixture fix
+				on			g.reffixture = fix.idfixture
+				inner
+				join		dbtorneos t
+				on			t.idtorneo = fix.reftorneos
+				inner 
+				join 		dbequipos el 
+				ON 			el.idequipo = fix.refconectorvisitante and g.refequipos = fix.refconectorvisitante
+				/*
+				inner
+				join		dbconector co
+				on			co.refequipos = f.refconectorlocal and co.refcategorias = t.refcategorias and co.refjugadores = g.refjugadores
+				*/
+				inner
+				join		dbjugadores j
+				on			j.idjugador = g.refjugadores
+				where		t.idtorneo = ".$idTorneo." and g.goles > 0
+				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+			) t
+				order by t.goles desc, t.apyn";	
+				
+	$res = $this->query($sql,0);
+	return $res;
 }
 
 function traerFechasPorTorneoJugadas($idTorneo) {
