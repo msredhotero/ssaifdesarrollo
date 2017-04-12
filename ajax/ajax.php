@@ -456,6 +456,16 @@ case 'modificarFalloPorFecha':
 case 'modificarMovimientosSancionesFechaCumplida':
 	modificarMovimientosSancionesFechaCumplida($serviciosReferencias);
 	break;
+	
+case 'insertarSancionesfechascumplidas':
+	insertarSancionesfechascumplidas($serviciosReferencias);
+	break;
+case 'modificarSancionesfechascumplidas':
+	modificarSancionesfechascumplidas($serviciosReferencias);
+	break;
+case 'eliminarSancionesfechascumplidas':
+	eliminarSancionesfechascumplidas($serviciosReferencias);
+	break; 
 /*****			FIN				**********/
 }
 
@@ -716,6 +726,59 @@ function modificarMovimientosSancionesFechaCumplida($serviciosReferencias) {
 		echo 'Huvo un error al modificar datos'; 
 	} 	
 }
+
+
+
+function insertarSancionesfechascumplidas($serviciosReferencias) {
+	$reffixture = $_POST['reffixture'];
+	$refjugadores = $_POST['refjugadores'];
+	
+	if (isset($_POST['cumplida'])) {
+		$cumplida = 1;
+	} else {
+		$cumplida = 0;
+	}
+	
+	$refsancionesfallos = $_POST['refsancionesfallos'];
+	
+	$res = $serviciosReferencias->insertarSancionesfechascumplidas($reffixture,$refjugadores,$cumplida,$refsancionesfallos);
+	
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
+
+
+function modificarSancionesfechascumplidas($serviciosReferencias) {
+	$id = $_POST['id'];
+	$reffixture = $_POST['reffixture'];
+	$refjugadores = $_POST['refjugadores'];
+
+	if (isset($_POST['cumplida'])) {
+		$cumplida = 1;
+	} else {
+		$cumplida = 0;
+	}
+	
+	$refsancionesfallos = $_POST['refsancionesfallos'];
+	
+	$res = $serviciosReferencias->modificarSancionesfechascumplidas($id,$reffixture,$refjugadores,$cumplida,$refsancionesfallos);
+	
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+
+function eliminarSancionesfechascumplidas($serviciosReferencias) {
+	$id = $_POST['id'];
+
+	$res = $serviciosReferencias->eliminarSancionesfechascumplidas($id);
+	echo $res;
+} 
 
 /**********************                        FIN                     ***********************************/
 function insertarFalloPorFecha($serviciosReferencias) {

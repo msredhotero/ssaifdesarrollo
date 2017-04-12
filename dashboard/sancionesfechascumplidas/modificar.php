@@ -233,7 +233,7 @@ $(document).ready(function(){
 	
 	$('.volver').click(function(event){
 		 
-		url = "index.php";
+		url = "index.php?id="+<?php echo mysql_result($resSancionJugador,0,'idsancionjugador'); ?>;
 		$(location).attr('href',url);
 	});//fin del boton modificar
 	

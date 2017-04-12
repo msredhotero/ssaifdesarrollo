@@ -53,11 +53,12 @@ $tabla 			= "dbsancionesfechascumplidas";
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
 $cabeceras 		= "	<th>Fecha</th>
+					<th>Categorias</th>
 					<th>Cumplida</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerSancionesfechascumplidasPorSancionJugador($id),2);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerSancionesfechascumplidasPorSancionJugador($id),3);
 
 
 

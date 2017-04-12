@@ -45,11 +45,13 @@ $idCategoria	=	mysql_result($resTorneo,0,'refcategorias');
 $idDivisiones	=	mysql_result($resTorneo,0,'refdivisiones');
 
 
-//todas las fechas del torneo del equipo local
-$resTodasFechas = $serviciosReferencias->traerFechasFixturePorTorneoEquipoLocal(mysql_result($resFix,0,'reftorneos'), $equipoLocal);
+//todas las fechas del torneo del equipo local (Fechas Local y Visitante)
+$resTodasFechasL = $serviciosReferencias->traerFechasFixturePorTorneoEquipoLocal(mysql_result($resFix,0,'reftorneos'), $equipoLocal);
+$resTodasFechasLV = $serviciosReferencias->traerFechasFixturePorTorneoEquipoVisitante(mysql_result($resFix,0,'reftorneos'), $equipoLocal);
 
 //todas las fechas del torneo del equipo visitante
 $resTodasFechasV = $serviciosReferencias->traerFechasFixturePorTorneoEquipoVisitante(mysql_result($resFix,0,'reftorneos'), $equipoVisitante);
+$resTodasFechasVL = $serviciosReferencias->traerFechasFixturePorTorneoEquipoLocal(mysql_result($resFix,0,'reftorneos'), $equipoVisitante);
 
 $resFecha	=	$serviciosReferencias->traerFechasPorId($refFecha);
 
@@ -465,6 +467,7 @@ $contabilizaVisitante	= 0;
 //variable para determinar si el partido va a continuar
 $partidoSuspendidoCompletamente = 0;
 
+
 if	($refEstadoPartido != 0) {
 	
 
@@ -574,8 +577,20 @@ if	($refEstadoPartido != 0) {
 		} else { // else del W.O. Local, Perdida de puntos a Ambos, Suspendido Finalizado
 			
 			// if para cuando un partido se suspende y no se carga nada
-			if (($defAutomatica == 'No') && ($finalizado == 'No') && ($golesLocalAuto == 'No') && ($golesvisitanteauto == 'No')) {	
+			if (($defAutomatica == 'No') && ($finalizado == 'No') && ($golesLocalAuto == 0) && ($golesvisitanteauto == 0)) {	
+			
+				
 				$partidoSuspendidoCompletamente = 1;
+				
+				$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
+				
+				if ($_SESSION['idroll_predio'] == 1) {
+					$resEstados		= $serviciosReferencias->traerEstadospartidos();
+					$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+				} else {
+					$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+					$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+				}
 			
 			}
 		}
@@ -961,8 +976,14 @@ if ($_SESSION['idroll_predio'] != 1) {
         <div id="demo" class="collapse">
         	<div class="col-md-12" align="center" style="text-align:center;">
                 <ul class="list-inline" id="lstFechas">
-                	<li><?php echo $equipoA; ?></li>
-                    <?php while ($row = mysql_fetch_array($resTodasFechas)) { ?>
+                	<li><?php echo $equipoA; ?> - Local: </li>
+                    <?php while ($row = mysql_fetch_array($resTodasFechasL)) { ?>
+                    <li style="padding-bottom:8px;">
+                        <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-success" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
+                    </li>
+                    <?php } ?>
+                    <li>Visitante: </li>
+                    <?php while ($row = mysql_fetch_array($resTodasFechasLV)) { ?>
                     <li style="padding-bottom:8px;">
                         <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-success" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
                     </li>
@@ -972,15 +993,21 @@ if ($_SESSION['idroll_predio'] != 1) {
             
             <div class="col-md-12" align="center" style="text-align:center;">
                 <ul class="list-inline" id="lstFechas">
-                	<li><?php echo $equipoB; ?></li>
+                	<li><?php echo $equipoB; ?> - Visitante: </li>
                     <?php while ($row = mysql_fetch_array($resTodasFechasV)) { ?>
+                    <li style="padding-bottom:8px;">
+                        <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-danger" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
+                    </li>
+                    <?php } ?>
+                    <li>Local: </li>
+                    <?php while ($row = mysql_fetch_array($resTodasFechasVL)) { ?>
                     <li style="padding-bottom:8px;">
                         <a href="estadisticas.php?id=<?php echo $row[0]; ?>"><button type="button" class="btn btn-danger" style="margin-left:0px;"><?php echo $row[1]; ?></button></a>
                     </li>
                     <?php } ?>
                 </ul>
             </div>
-        </div> 
+        </div>  
         
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
             
@@ -1151,8 +1178,10 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								$falloA					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($row['refjugadores'],$idFixture);
 								
+								$yaCumpli				=	$serviciosReferencias->estaFechaYaFueCumplida($row['refjugadores'],$idFixture);
+								
 
-						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0)) {		
+						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0)) {		
 						?>
                         <tr class="<?php echo $row[0]; ?>">
 
@@ -1330,7 +1359,8 @@ if ($_SESSION['idroll_predio'] != 1) {
                             </th>
                             
                              <?php
-
+							
+							
 							if ($_SESSION['idroll_predio'] == 1) {
 								if ($falloA > 0) {
 									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA);
@@ -1441,8 +1471,10 @@ if ($_SESSION['idroll_predio'] != 1) {
 								$suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowB['refjugadores'],$idFixture, $idCategoria);
 								
 								$falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowB['refjugadores'],$idFixture);
+								
+								$yaCumpliB				=	$serviciosReferencias->estaFechaYaFueCumplida($rowB['refjugadores'],$idFixture);
 
-						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0)) {	
+						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0)) {	
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
 
@@ -1516,7 +1548,8 @@ if ($_SESSION['idroll_predio'] != 1) {
                         
                         
                         <?php
-
+							
+							
 							if ($_SESSION['idroll_predio'] == 1) {
 								if ($falloB > 0) {
 									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB);

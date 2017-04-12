@@ -5524,6 +5524,12 @@ function hayMovimientosViejo($idJugador, $idFixture) {
 	return $this->existe($sql);			
 }
 
+function estaFechaYaFueCumplida($idJugador, $idFixture) {
+	$sql = "select * from dbsancionesfechascumplidas where reffixture = ".$idFixture." and refjugadores = ".$idJugador." and cumplida = 1";	
+	
+	return $this->existe($sql);
+}
+
 function hayMovimientos($idJugador, $idFixture) {
 	$sql = "SELECT 
 				coalesce(sf.cantidadfechas -  coalesce(sfc.cumplidas,0),0) as faltan
@@ -5862,21 +5868,62 @@ return $res;
 
 function traerSancionesfechascumplidasPorSancionJugador($idSancionJugador) { 
 $sql = "select 
-s.idsancionfechacumplida,
-fec.fecha,
-(case when s.cumplida = 1 then 'Si' else 'No' end) as cumplida,
-s.reffixture,
-s.refjugadores,
-s.refsancionesfallos
-from dbsancionesfechascumplidas s 
-inner join dbsancionesjugadores sj
-on	s.refsancionesfallos = sj.refsancionesfallos
-inner join dbfixture fix
-on	fix.idfixture = s.reffixture
-inner join tbfechas fec
-on	fec.idfecha = fix.reffechas
-where sj.idsancionjugador = ".$idSancionJugador."
-order by 1"; 
+			s.idsancionfechacumplida,
+			fec.fecha,
+			cat.categoria,
+			(case
+				when s.cumplida = 1 then 'Si'
+				else 'No'
+			end) as cumplida,
+			s.reffixture,
+			s.refjugadores,
+			s.refsancionesfallos
+		from
+			dbsancionesfechascumplidas s
+				inner join
+			dbsancionesjugadores sj ON s.refsancionesfallos = sj.refsancionesfallos
+				inner join
+			dbfixture fix ON fix.idfixture = s.reffixture
+				inner join
+			dbtorneos tor ON tor.idtorneo = fix.reftorneos
+				inner join
+			tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+				inner join
+			tbfechas fec ON fec.idfecha = fix.reffechas
+		where sj.idsancionjugador = ".$idSancionJugador."
+		order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerSancionesfechascumplidasPorSancionJugadorEnSuCategoria($idSancionJugador) { 
+$sql = "select 
+			s.idsancionfechacumplida,
+			fec.fecha,
+			cat.categoria,
+			(case
+				when s.cumplida = 1 then 'Si'
+				else 'No'
+			end) as cumplida,
+			s.reffixture,
+			s.refjugadores,
+			s.refsancionesfallos
+			
+		from
+			dbsancionesfechascumplidas s
+				inner join
+			dbsancionesjugadores sj ON s.refsancionesfallos = sj.refsancionesfallos
+				inner join
+			dbfixture fix ON fix.idfixture = s.reffixture
+				inner join
+			dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.refcategorias = sj.refcategorias
+				inner join
+			tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+				inner join
+			tbfechas fec ON fec.idfecha = fix.reffechas
+		where sj.idsancionjugador = ".$idSancionJugador."
+		order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
