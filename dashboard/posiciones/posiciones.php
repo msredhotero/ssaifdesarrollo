@@ -151,6 +151,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <th>Puntos</th>
                             <th>Amarillas</th>
                             <th>Rojas</th>
+                            <th>P.B.</th>
                         </thead>
                         <tbody>
                         	<?php
@@ -170,6 +171,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                                 <td><?php echo $row['puntos']; ?></td>
                                 <td><?php echo $row['amarillas']; ?></td>
                                 <td><?php echo $row['rojas']; ?></td>
+                                <td><?php echo $row['puntobonus']; ?></td>
                             </tr>
                             <?php
 								$cant += 1;

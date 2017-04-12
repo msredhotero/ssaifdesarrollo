@@ -13,29 +13,36 @@ class ServiciosReferencias {
 function calcularPuntoBonus($refTorneo, $idEquipo) {
 	$resPuntosBonus = $this->traerPuntobonusPorId(1);
 	
-	$cantidadFechas = mysql_result($resPuntosBonus,0,'cantidadfechas');
+	$cantidadFechas = (integer)mysql_result($resPuntosBonus,0,'cantidadfechas');
+	
+	$puntosextra	= (integer)mysql_result($resPuntosBonus,0,'puntosextra');
+	
 	
 	//determinar ultima fecha jugado del torneo	
 	$ultimaFecha	=	$this->traerUltimaFechaFixturePorTorneoEquipo($refTorneo, $idEquipo);
 	
-	$mod			= round($ultimaFecha / 4 , 0, PHP_ROUND_HALF_UP);
+	$mod			= round($ultimaFecha / $cantidadFechas , 0, PHP_ROUND_HALF_DOWN);
 	
 	$puntos = 0;
 	
-	if (($mod > 0) and ($ultimaFecha >= 4)) {
+	if (($mod > 0) and ($ultimaFecha >= $cantidadFechas)) {
 		
 		for ($i =1; $i <= $mod; $i++) {
 			$calculo = "SELECT 
 					(case when coalesce(SUM(sj.cantidad),0) > 0 then 0 else 1 end) AS amarillas 
 				FROM
+					dbfixture fix
+						left join
 					dbsancionesjugadores sj
-						right JOIN
-					dbfixture fix ON sj.reffixture = fix.idfixture and (fix.refconectorlocal = ".$idEquipo." or fix.refconectorvisitante = ".$idEquipo.") and sj.refequipos = ".$idEquipo."
+					 ON sj.reffixture = fix.idfixture and (fix.refconectorlocal = ".$idEquipo." or fix.refconectorvisitante = ".$idEquipo.") and sj.refequipos = ".$idEquipo."
 						left JOIN
 				tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
-				where fix.reftorneos = ".$refTorneo." and fix.reffechas >= ".(4 * ($i - 1))." and fix.reffechas <= ".(4 * ($i));
-				
-			$puntos += $this->existeDevuelveId($calculo);	
+				where fix.reftorneos = ".$refTorneo." and fix.reffechas >= ".($cantidadFechas * ($i - 1))." and fix.reffechas <= ".($cantidadFechas * ($i));
+			
+			$resCalculo = $this->existeDevuelveId($calculo);
+			if ($resCalculo > 0) {	
+				$puntos += $puntosextra;	
+			}
 				
 		}
 		
@@ -243,6 +250,7 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 	
 	$arPosiciones = array();
 	
+	$puntosBonus = 0;
 
 	while ($row = mysql_fetch_array($res)) {
 		$puntosBonus = $this->calcularPuntoBonus($refTorneo, $row['idequipo']);	
@@ -255,7 +263,10 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 							  'pp'=> $row['pp'],
 							  'pe'=> $row['pe'],
 							  'amarillas'=> $row['amarillas'],
-							  'rojas'=> $row['rojas']);
+							  'rojas'=> $row['rojas'],
+							  'puntobonus'=> (integer)$puntosBonus);
+							  
+		$puntosBonus = 0;					  
 	}
 
 	$sorted = $this->array_orderby($arPosiciones, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
@@ -4471,7 +4482,7 @@ function traerUltimaFechaFixturePorTorneo($idTorneo) {
 
 function traerUltimaFechaFixturePorTorneoEquipo($idTorneo, $idEquipo) {
 	$sql = "select
-			distinct max(f.reffechas)
+			distinct count(f.reffechas)
 			from dbfixture f
 			inner join dbtorneos tor ON tor.idtorneo = f.reftorneos 
 			inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
