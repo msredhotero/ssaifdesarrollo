@@ -5596,7 +5596,7 @@ function hayMovimientos($idJugador, $idFixture) {
 					INNER JOIN
 				tbtiposanciones tip ON tip.idtiposancion = san.reftiposanciones
 					INNER JOIN
-				dbfixture fix ON fix.idfixture = ".$idFixture."
+				dbfixture fix ON fix.idfixture = ".$idFixture." AND fix.fecha > san.fecha
 					INNER JOIN
 				dbtorneos tor ON tor.idtorneo = fix.reftorneos
 					INNER JOIN
@@ -5663,7 +5663,7 @@ function hayMovimientosAmarillasAcumuladas($idJugador, $idFixture, $idCategoria)
 					INNER JOIN
 				tbtiposanciones tip ON tip.idtiposancion = san.reftiposanciones
 					INNER JOIN
-				dbfixture fix ON fix.idfixture = ".$idFixture."
+				dbfixture fix ON fix.idfixture = ".$idFixture." AND fix.fecha > san.fecha
 					INNER JOIN
 				dbtorneos tor ON tor.idtorneo = fix.reftorneos and san.refcategorias = tor.refcategorias
 					INNER JOIN

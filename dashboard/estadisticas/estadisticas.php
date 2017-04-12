@@ -140,11 +140,7 @@ if ($_SESSION['idroll_predio'] == 1) {
 		$contabilizaLocal		= mysql_result($estadoPartido,0,'contabilizalocal');
 		$contabilizaVisitante	= mysql_result($estadoPartido,0,'contabilizavisitante');
 		
-		if (($defAutomatica == 'No') && ($finalizado == 'No') && ($golesLocalAuto == 0) && ($golesvisitanteauto == 0)) {
-			$partidoSuspendidoCompletamente = 1;		
-		} else {
-			$partidoSuspendidoCompletamente = 0;		
-		}
+
 	}
 } else {
 	if ($existe == 0) {
@@ -176,11 +172,7 @@ if ($_SESSION['idroll_predio'] == 1) {
 		$contabilizaLocal		= mysql_result($estadoPartido,0,'contabilizalocal');
 		$contabilizaVisitante	= mysql_result($estadoPartido,0,'contabilizavisitante');
 		
-		if (($defAutomatica == 'No') && ($finalizado == 'No') && ($golesLocalAuto == 0) && ($golesvisitanteauto == 0)) {
-			$partidoSuspendidoCompletamente = 1;		
-		} else {
-			$partidoSuspendidoCompletamente = 0;		
-		}
+
 	}
 }
 
@@ -712,7 +704,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								$yaCumpli				=	$serviciosReferencias->estaFechaYaFueCumplida($row['refjugadores'],$idFixture);
 						
-						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0) && (($partidoSuspendidoCompletamente == 0) || ($falloA==0))) {	
+						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0)) {	
 						
 						?>
                         <tr class="<?php echo $row[0]; ?>">
@@ -993,7 +985,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								$yaCumpliB				=	$serviciosReferencias->estaFechaYaFueCumplida($rowB['refjugadores'],$idFixture);
 
-						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && (($partidoSuspendidoCompletamente == 0) || ($falloB == 0))) {		
+						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0)) {		
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
 
