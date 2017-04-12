@@ -323,6 +323,13 @@ function Goleadores($idTorneo) {
 	return $res;
 }
 
+function traerPlanillas($idTorneo, $refFechas) {
+	$sql	=	"";
+	
+	$res = $this->traerFixtureTodoPorTorneoFecha($idTorneo, $refFechas);
+	return $res;	
+}
+
 function traerFechasPorTorneoJugadas($idTorneo) {
 	$sql	=	"select * from		
 				 dbfixture f 
@@ -4279,6 +4286,53 @@ left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 where tor.idtorneo = ".$idTorneo."
+order by f.reffechas, f.idfixture";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerFixtureTodoPorTorneoFecha($idTorneo, $refFechas) {
+$sql = "select
+f.idfixture,
+el.nombre as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+ev.nombre as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.goleslocal,
+f.golesvisitantes,
+can.nombre as canchas,
+fec.fecha,
+date_format(f.fecha,'%d/%m/%Y'),
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.observaciones,
+f.publicar,
+f.refcanchas,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refestadospartidos,
+f.refarbitros
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where tor.idtorneo = ".$idTorneo." and f.reffechas = ".$refFechas."
 order by f.reffechas, f.idfixture";
 $res = $this->query($sql,0);
 return $res;

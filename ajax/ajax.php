@@ -45,6 +45,9 @@ case 'eliminarFixture':
 eliminarFixture($serviciosReferencias);
 break; 
 
+case 'traerFechasPorTorneos':
+	traerFechasPorTorneos($serviciosReferencias, $serviciosFunciones);
+	break;
 
 case 'insertarContactos':
 insertarContactos($serviciosReferencias);
@@ -1149,6 +1152,15 @@ function eliminarConectorDefinitivamente($serviciosReferencias) {
 } 
 
 
+function traerFechasPorTorneos($serviciosReferencias, $serviciosFunciones) {
+	$idTorneo = $_POST['idTorneo'];
+	
+	$res = $serviciosReferencias->traerFechasFixturePorTorneo($idTorneo);
+	
+	$cad = $serviciosFunciones->devolverSelectBox($res,array(1),'');
+	
+	echo $cad;
+}
 
 
 function insertarFixture($serviciosReferencias) {

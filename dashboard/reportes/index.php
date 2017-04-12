@@ -28,6 +28,8 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Reporte
 $resEquipos = $serviciosReferencias->traerEquipos();
 $cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2,3),' - ');
 
+$resTorneosActivos = $serviciosReferencias->traerTorneosActivos();
+$cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivos,array(1,2,3,4,5),' - ');
 
 ?>
 
@@ -139,6 +141,68 @@ $cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2,3),' - '
     
     
     
+    
+    
+    <div class="boxInfoLargo tile-stats stat-til tile-white">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Reporte Planilla de Partido</p>
+        	
+        </div>
+    	<div class="cuerpoBox">
+        	<form class="form-inline formulario" role="form">
+        	<div class="row">
+            	<div class="form-group col-md-6">
+                    <label class="control-label" style="text-align:left" for="refcliente">Seleccione el Torneo</label>
+                    <div class="input-group col-md-12">
+                    	<select id="reftorneo1" class="form-control" name="reftorneo1">
+							<?php echo $cadRefTorneosActivos; ?>
+                    	</select>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-6">
+                    <label class="control-label" style="text-align:left" for="refcliente">Seleccione la Fecha</label>
+                    <div class="input-group col-md-12">
+                    	<select id="reffechas1" class="form-control" name="reffechas1">
+							
+                    	</select>
+                    </div>
+                </div>
+                
+                
+                <div class="form-group col-md-6">
+                    <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
+
+                    	<ul class="list-inline">
+                        	<li>
+                    			<button type="button" class="btn btn-success" id="rptPP" style="margin-left:0px;">Generar</button>
+                            </li>
+                            <!--<li>
+                        		<button type="button" class="btn btn-default" id="rptCJExcel" style="margin-left:0px;">Generar Excel</button>
+                            </li>-->
+                        </ul>
+
+                </div>
+                
+
+            </div>
+            
+            
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <div class='alert'>
+                
+                </div>
+                <div id='load'>
+                
+                </div>
+            </div>
+
+            </form>
+    	</div>
+    </div>
+    
+    
+    
 
     
     
@@ -156,30 +220,35 @@ $cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2,3),' - '
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	function traerClientesPorEmpresa(idEmpresa) {
+	function traerFechasPorTorneos(idTorneo) {
 		$.ajax({
-				data:  {idEmpresa: idEmpresa,
-						accion: 'traerClientesPorEmpresa'},
+				data:  {idTorneo: idTorneo,
+						accion: 'traerFechasPorTorneos'},
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
 						
 				},
 				success:  function (response) {
-						$('#refcliente1').html(response);
+						$('#reffechas1').html(response);
 						
 				}
 		});
 	}
 	
-	$('#refempresa4').change(function(e) {
-		traerClientesPorEmpresa($(this).val());	
+	$('#reftorneo1').change(function(e) {
+		traerFechasPorTorneos($(this).val());	
 	});
 	
-
+	traerFechasPorTorneos($('#reftorneo1').val());
 	
 	$("#rptCJ").click(function(event) {
         window.open("../../reportes/rptCondicionJugador.php?id=" + $("#refequipo").val() ,'_blank');	
+						
+    });
+	
+	$("#rptPP").click(function(event) {
+        window.open("../../reportes/rptPlanilla.php?idtorneo=" + $("#reftorneo1").val() + "&reffechas=" + $("#reffechas1").val() ,'_blank');	
 						
     });
 	
