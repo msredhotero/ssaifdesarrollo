@@ -22,7 +22,7 @@ function calcularPuntoBonus($refTorneo, $idEquipo) {
 	
 	$puntos = 0;
 	
-	if ($mod > 0) {
+	if (($mod > 0) and ($ultimaFecha >= 4)) {
 		
 		for ($i =1; $i <= $mod; $i++) {
 			$calculo = "SELECT 
