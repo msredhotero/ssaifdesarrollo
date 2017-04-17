@@ -89,6 +89,7 @@ $numero = count($_POST);
 	
 	$golesRealesLocal 		= 0;
 	$golesRealesVisitantes	= 0;
+	$idsancion = 0;
 	
 	for($i=0;$i<$numero;$i++){
 		
@@ -161,12 +162,7 @@ $numero = count($_POST);
 				if ($existeAmarillas == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaLrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
-					
-					//*****			calculo amarillas acumuladas ********/
-					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
-					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
-					$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
-					//*****				fin							*****/
+
 					
 				} else {
 					//modifico	
@@ -228,11 +224,20 @@ $numero = count($_POST);
 				if ($existeDobleAmarillas == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(4,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleLamarilla'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
+
 					
 				} else {
 					//modifico	
 					
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeDobleAmarillas,4,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleLamarilla'.$idJugador], $idCategoria, $idDivisiones);
+				}
+			} else {
+				
+				//analizo si en un supuesto caso anteriormente tenia una amarilla
+				if ($existeAmarillas != 0) {
+					$serviciosReferencias->eliminarMovimientosancionesPorSancionJugadorAcumuadasAmarillas($existeDobleAmarillas);
+					$serviciosReferencias->eliminarSancionesfallosPorSacionJugador($existeDobleAmarillas);
+					$serviciosReferencias->eliminarSancionesjugadores($existeDobleAmarillas);
 				}
 			}
 			/***********		FIN					*************************************************************/
@@ -254,6 +259,30 @@ $numero = count($_POST);
 				}
 			}
 			/***********		FIN					*************************************************************/
+			
+			
+			/**************** miro si la acumulacion de amarillas hace que lo sancione **************************/
+			$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 1, $idFixture);
+			if ($idsancion != 0) {
+				//*****			calculo amarillas acumuladas ********/
+				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
+				$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
+				//*****				fin							*****/	
+			} else {
+				$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 4, $idFixture);
+				if ($idsancion != 0) {
+					//*****			calculo amarillas acumuladas ********/
+					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
+					$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
+					//*****				fin							*****/	
+				}
+			}
+			
+			
+			
+			/**************** 					fin				*************************************************/
 
 		}
 		
@@ -335,12 +364,7 @@ $numero = count($_POST);
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 					
-					//*****			calculo amarillas acumuladas ********/
-					//$serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillas((integer)$idTorneo, $idJugador);
-					$cantidadAmarillasB = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
-					//die(var_dump($cantidadAmarillasB));
-					$acuAmarillasB = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoVisitante, $fecha, $idCategoria, $idDivisiones, $idsancion,$cantidadAmarillasB);
-					//*****				fin							*****/
+					
 					
 				} else {
 					//modifico	
@@ -408,6 +432,14 @@ $numero = count($_POST);
 					
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeDobleAmarillas,4,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleVamarilla'.$idJugador], $idCategoria, $idDivisiones);
 				}
+			} else {
+				
+				//analizo si en un supuesto caso anteriormente tenia una amarilla
+				if ($existeAmarillas != 0) {
+					$serviciosReferencias->eliminarMovimientosancionesPorSancionJugadorAcumuadasAmarillas($existeDobleAmarillas);
+					$serviciosReferencias->eliminarSancionesfallosPorSacionJugador($existeDobleAmarillas);
+					$serviciosReferencias->eliminarSancionesjugadores($existeDobleAmarillas);
+				}
 			}
 			/***********		FIN					*************************************************************/
 
@@ -430,6 +462,30 @@ $numero = count($_POST);
 			/***********		FIN					*************************************************************/
 
 			}
+			
+			
+			/**************** miro si la acumulacion de amarillas hace que lo sancione **************************/
+			$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 1, $idFixture);
+			if ($idsancion != 0) {
+				//*****			calculo amarillas acumuladas ********/
+				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
+				$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
+				//*****				fin							*****/	
+			} else {
+				$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 4, $idFixture);
+				if ($idsancion != 0) {
+					//*****			calculo amarillas acumuladas ********/
+					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
+					$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
+					//*****				fin							*****/	
+				}
+			}
+			//*****				fin							*****/
+			
+			
+			/**************** 					fin				*************************************************/
 		}
 		
 		
@@ -1109,8 +1165,32 @@ if ($_SESSION['idroll_predio'] != 1) {
                 <div class="col-md-6">
                 	<p style="font-size:2.2em">Resultado Visitante: <span class="resultadoB"><?php echo (mysql_result($resFixDetalle,0,'golesvisitantes') == '' ? 0 : mysql_result($resFixDetalle,0,'golesvisitantes')); ?></span></p>
                 </div>
+                
+                <div class='row' style="margin-left:15px; margin-right:15px;">
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Estado Partido</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="refestadospartidos" name="refestadospartidos">
+                                <option value="0">-- Seleccionar --</option>
+                                <?php echo $cadEstados; ?>
+                            </select>    
+                        </div>
+                    </div>
+                </div>
                 	
                 </div>
+                
+             <div class='row' style="margin-left:15px; margin-right:15px;">
+                <div class='alert'>
+                
+                </div>
+                <div class='alert <?php echo $lblerror; ?>'>
+                	<p><?php echo $error; ?></p>
+                </div>
+                <div id='load'>
+                
+                </div>
+            </div>   
             
             <div class="row">
 
@@ -1704,29 +1784,9 @@ if ($_SESSION['idroll_predio'] != 1) {
             
             
             
-            <div class='row' style="margin-left:15px; margin-right:15px;">
-                <div class='alert'>
-                
-                </div>
-                <div class='alert <?php echo $lblerror; ?>'>
-                	<p><?php echo $error; ?></p>
-                </div>
-                <div id='load'>
-                
-                </div>
-            </div>
             
-            <div class='row' style="margin-left:15px; margin-right:15px;">
-            	<div class="form-group col-md-4" style="display:block">
-                    <label for="reftipodocumentos" class="control-label" style="text-align:left">Estado Partido</label>
-                    <div class="input-group col-md-12">
-                        <select class="form-control" id="refestadospartidos" name="refestadospartidos">
-                        	<option value="0">-- Seleccionar --</option>
-                            <?php echo $cadEstados; ?>
-                        </select>    
-                    </div>
-                </div>
-            </div>
+            
+            
 			
             
             <div class="row" style="margin-left:15px; margin-right:15px;">

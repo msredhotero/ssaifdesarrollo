@@ -49,7 +49,8 @@ $resTipoDoc 	= $serviciosReferencias->traerTipodocumentos();
 $cadRef 	= $serviciosFunciones->devolverSelectBox($resTipoDoc,array(1),'');
 
 $resCountries 	= $serviciosReferencias->traerCountries();
-$cadRef2 	= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
+$cadRef2	= '<option value="0">----  Seleccionar  ----</option>';
+$cadRef2 	.= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
 $refdescripcion = array(0 => $cadRef,1 => $cadRef2);
 $refCampo 	=  array("reftipodocumentos","refcountries");
@@ -551,6 +552,7 @@ $(document).ready(function(){
 		
 		if (validador() == "")
         {
+			if ($('#refcountries').val() != 0) {
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
@@ -601,6 +603,12 @@ $(document).ready(function(){
                     $("#load").html('');
 				}
 			});
+			} else {
+				$(".alert").removeClass("alert-danger");
+				$(".alert").addClass("alert-danger");
+				$(".alert").html('<strong>Error!</strong> Debe seleccionar un countrie');
+				$("#load").html('');	
+			}
 		}
     });
 	

@@ -204,6 +204,13 @@ $(document).ready(function(){
 	
 	$("#hora").mask("99:99",{placeholder:"hh:mm"});
 	
+	if ('<?php echo mysql_result($resResultado,0,'conreingreso'); ?>' == 'Si') {
+		$('#conreingreso').prop('checked',true);
+	} else {
+		$('#conreingreso').prop('checked',false);
+	}
+	
+	
 	$('.volver').click(function(event){
 		 
 		url = "index.php";

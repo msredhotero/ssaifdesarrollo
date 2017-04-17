@@ -118,7 +118,7 @@ class Servicios {
 				$idresultados = "resultados";
 				break;
 			case 93:
-				$cantidad = 10;
+				$cantidad = 11;
 				$classMod = 'varmodificar';
 				$classVar = 'varcountries';
 				$lblVar	  = 'Countries Asignados';

@@ -63,7 +63,7 @@ $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivo
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
-
+	<link rel="stylesheet" href="../../css/chosen.css">
 	<style type="text/css">
 
 		
@@ -98,12 +98,17 @@ $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivo
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
         	<div class="row">
-            	<div class="form-group col-md-6">
+
+                
+                <div class="form-group col-md-6" style="display:'.$lblOculta.'">
                     <label class="control-label" style="text-align:left" for="refcliente">Seleccione el Equipo</label>
                     <div class="input-group col-md-12">
-                    	<select id="refequipo" class="form-control" name="refequipo">
+                        
+                        <select data-placeholder="selecione el equipo..." id="refequipo" name="refequipo" class="chosen-select form-control" tabindex="2">
+                            <option value=""></option>
 							<?php echo $cadRefE; ?>
-                    	</select>
+                
+                			</select>
                     </div>
                 </div>
                 
@@ -126,7 +131,7 @@ $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivo
             </div>
             
             
-            <div class='row' style="margin-left:25px; margin-right:25px;">
+            <div class='row' style="margin-left:25px; margin-right:25px; margin-bottom:80px;">
                 <div class='alert'>
                 
                 </div>
@@ -392,6 +397,22 @@ $('.form_date').datetimepicker({
     $( "#fechahasta5" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 	
   });
+  </script>
+  
+  <script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+	
+	
   </script>
 <?php } ?>
 </body>

@@ -30,7 +30,7 @@ $singular = "Fallo";
 
 $plural = "Fallos";
 
-$eliminar = "eliminarTiposanciones";
+$eliminar = "eliminarSancionesfallos";
 
 $insertar = "insertarSancionesfallos";
 
@@ -293,8 +293,8 @@ $(document).ready(function(){
 											
 									},
 									success:  function (response) {
-											url = "index.php";
-											$(location).attr('href',url);
+										url = "index.php";
+										//$(location).attr('href',url);
 											
 									}
 							});

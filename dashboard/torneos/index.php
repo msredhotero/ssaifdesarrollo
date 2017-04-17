@@ -183,7 +183,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             <div class="col-md-6">
             	<label class="control-label">Punto Bonus</label>
                 <div class="input-group col-md-3">
-                	<input type="checkbox" checked name="puntobonus" id="puntobonus" class="form-control"/>
+                	<input type="checkbox" name="puntobonus" id="puntobonus" class="form-control"/>
                     
                 </div>
             </div>

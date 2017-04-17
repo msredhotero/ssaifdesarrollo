@@ -192,7 +192,7 @@ $ajaxFuncionesController = '';
 
 $servicios	= "Referencias";
 
-$sqlMapaer	= "SHOW FULL TABLES FROM aif_nuevo";
+$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_desa";
 $resMapeo 	=	query($sqlMapaer,0);
 
 $aliasTablaMadre = '';

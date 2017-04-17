@@ -65,7 +65,8 @@ $cabeceras 		= "	<th>Temporadas</th>
 					<th>Documentaciones</th>
 					<th>Motivos</th>
 					<th>Equipo</th>
-					<th>Categoria</th>";
+					<th>Categoria</th>
+					<th>Fecha Limite</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -74,7 +75,7 @@ $resDocumentaciones2	=	$serviciosReferencias->traerDocumentaciones();
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugador($id),5);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugador($id),6);
 
 $resMotivosHabDeportivas	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDeportivas('Edad');
 $cadRef		=	$serviciosFunciones->devolverSelectBox($resMotivosHabDeportivas,array(2),'');

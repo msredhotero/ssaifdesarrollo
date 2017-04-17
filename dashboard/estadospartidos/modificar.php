@@ -200,6 +200,9 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});//fin del boton modificar
 	
+	
+	
+	
 	$('.varborrar').click(function(event){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {

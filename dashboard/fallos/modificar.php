@@ -162,7 +162,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fallo Por Fechas</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" <?php if ($fallo == 'Cantidad') echo 'checked=""'; ?> name="elegir" id="btnFechas" value="fallocantidad"/>
+                        <input type="checkbox" class="form-control" <?php if ($fallo == 'Cantidad') echo 'checked=""'; ?> name="elegir[]" id="btnFechas" value="fallocantidad"/>
                     </div>
                 </div>
                 <div class="form-group col-md-4" style="display:block">
@@ -177,7 +177,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fallo Por Días</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" <?php if ($fallo == 'Dias') echo 'checked=""'; ?> name="elegir" id="btnDias" value="fallofechas"/>
+                        <input type="checkbox" class="form-control" <?php if ($fallo == 'Dias') echo 'checked=""'; ?> name="elegir[]" id="btnDias" value="fallofechas"/>
                     </div>
                 </div>
                 <div class="form-group col-md-4" style="display:block">
@@ -204,7 +204,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Fallo Por Amarillas</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" name="elegir" <?php if ($fallo == 'Amarillas') echo 'checked=""'; ?> id="btnAmarillas" value="falloamarillas"/>
+                        <input type="checkbox" class="form-control" name="elegir[]" <?php if ($fallo == 'Amarillas') echo 'checked=""'; ?> id="btnAmarillas" value="falloamarillas"/>
                     </div>
                 </div>
                 <div class="form-group col-md-4" style="display:block">
@@ -220,7 +220,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                     <label for="reftipodocumentos" class="control-label" style="text-align:left">Dejar Pendiente de Fallo</label>
                     <div class="input-group col-md-12">
-                        <input type="radio" class="form-control" <?php if ($fallo == 'Pendiente') echo 'checked=""'; ?> name="elegir" id="btnPendiente" value="pendientesfallo"/>
+                        <input type="checkbox" class="form-control" <?php if ($fallo == 'Pendiente') echo 'checked=""'; ?> name="elegir[]" id="btnPendiente" value="pendientesfallo"/>
                     </div>
                 </div>
                 

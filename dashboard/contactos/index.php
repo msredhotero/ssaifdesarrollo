@@ -65,7 +65,8 @@ $cabeceras 		= "	<th>Tipo Contacto</th>
 					<th>Celular</th>
 					<th>Fax</th>
 					<th>Email</th>
-					<th>Publico</th>";
+					<th>Publico</th>
+					<th>Countries</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 

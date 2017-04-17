@@ -634,6 +634,19 @@ if ($_SESSION['idroll_predio'] != 1) {
                 <div class="col-md-6">
                 	<p style="font-size:2.2em">Resultado Visitante: <span class="resultadoB"><?php echo (mysql_result($resFixDetalle,0,'golesvisitantes') == '' ? 0 : mysql_result($resFixDetalle,0,'golesvisitantes')); ?></span></p>
                 </div>
+                
+                
+                <div class='row' style="margin-left:15px; margin-right:15px;">
+                    <div class="form-group col-md-4" style="display:block">
+                        <label for="reftipodocumentos" class="control-label" style="text-align:left">Estado Partido</label>
+                        <div class="input-group col-md-12">
+                            <select class="form-control" id="refestadospartidos" name="refestadospartidos">
+                                <option value="0">-- Seleccionar --</option>
+                                <?php echo $cadEstados; ?>
+                            </select>    
+                        </div>
+                    </div>
+                </div>
                 	
                 </div>
             
@@ -702,9 +715,11 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								$falloA					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($row['refjugadores'],$idFixture);
 								
+								$pendiente				=	$serviciosReferencias->hayPendienteDeFallo($row['refjugadores'],$idFixture);
+								
 								$yaCumpli				=	$serviciosReferencias->estaFechaYaFueCumplida($row['refjugadores'],$idFixture);
 						
-						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0)) {	
+						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0) && ($pendiente == 0)) {	
 						
 						?>
                         <tr class="<?php echo $row[0]; ?>">
@@ -983,9 +998,11 @@ if ($_SESSION['idroll_predio'] != 1) {
 								//die(var_dump($suspendidoCategoriasAAB));
 								$falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowB['refjugadores'],$idFixture);
 								
+								$pendienteB				=	$serviciosReferencias->hayPendienteDeFallo($rowB['refjugadores'],$idFixture);
+								
 								$yaCumpliB				=	$serviciosReferencias->estaFechaYaFueCumplida($rowB['refjugadores'],$idFixture);
 
-						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0)) {		
+						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && ($pendienteB == 0)) {		
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
 
@@ -1203,17 +1220,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 
             
             
-            <div class='row' style="margin-left:15px; margin-right:15px;">
-            	<div class="form-group col-md-4" style="display:block">
-                    <label for="reftipodocumentos" class="control-label" style="text-align:left">Estado Partido</label>
-                    <div class="input-group col-md-12">
-                        <select class="form-control" id="refestadospartidos" name="refestadospartidos">
-                        	<option value="0">-- Seleccionar --</option>
-                            <?php echo $cadEstados; ?>
-                        </select>    
-                    </div>
-                </div>
-            </div>
+            
             
             
             <div class='row' style="margin-left:15px; margin-right:15px;">

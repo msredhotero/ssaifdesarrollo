@@ -200,6 +200,12 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});//fin del boton modificar
 	
+	if ('<?php echo mysql_result($resResultado,0,'obligatoria'); ?>' == 'Si') {
+		$('#obligatoria').prop('checked',true);
+	} else {
+		$('#obligatoria').prop('checked',false);
+	}
+	
 	$('.varborrar').click(function(event){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {

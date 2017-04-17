@@ -469,6 +469,10 @@ case 'modificarSancionesfechascumplidas':
 case 'eliminarSancionesfechascumplidas':
 	eliminarSancionesfechascumplidas($serviciosReferencias);
 	break; 
+	
+case 'eliminarSancionesfallos':
+	eliminarSancionesfallos($serviciosReferencias);
+	break;
 /*****			FIN				**********/
 }
 
@@ -783,6 +787,13 @@ function eliminarSancionesfechascumplidas($serviciosReferencias) {
 	echo $res;
 } 
 
+function eliminarSancionesfallos($serviciosReferencias) {
+	$id = $_POST['id'];
+
+	$res = $serviciosReferencias->eliminarSancionesfallos($id);
+	echo $res;
+}
+
 /**********************                        FIN                     ***********************************/
 function insertarFalloPorFecha($serviciosReferencias) {
 	$refsancionesjugadores = $_POST['refsancionesjugadores']; 
@@ -927,34 +938,38 @@ function modificarFalloPorFecha($serviciosReferencias) {
 			$cantidadfechas = $_POST['cantidadfechas']; 
 			$fechadesde = ''; 
 			$fechahasta = ''; 
-			$amarillas = 0; 
+			$amarillas = $_POST['amarillas']; 
 			$pendientesfallo = 0; 
-			break;
+			
 		case 'fallofechas':
 			$cantidadfechas = 0; 
 			$fechadesde = formatearFechas($_POST['fechadesde']); 
 			$fechahasta = formatearFechas($_POST['fechahasta']); 
 			$pendientescumplimientos = 1; //verificar
-			$amarillas = 0; 
+			$amarillas = $_POST['amarillas']; 
 			$pendientesfallo = 0; 
 			if (($fechadesde == '***') || ($fechahasta == '***')) {
 				$errores = 'Formato de fecha incorrecto';
 			}
-			break;
+			
 		case 'falloamarillas':
-			$cantidadfechas = 0; 
-			$fechadesde = ''; 
-			$fechahasta = ''; 
+			$cantidadfechas = $_POST['cantidadfechas']; 
+			$fechadesde = formatearFechas($_POST['fechadesde']); 
+			$fechahasta = formatearFechas($_POST['fechahasta']); 
 			$amarillas = $_POST['amarillas']; 
 			$pendientesfallo = 0; 
-			break;
+			
+			if (($fechadesde == '***') || ($fechahasta == '***')) {
+				$errores = 'Formato de fecha incorrecto';
+			}
+			
 		case 'pendientesfallo':
 			$cantidadfechas = 0; 
 			$fechadesde = ''; 
 			$fechahasta = ''; 
 			$amarillas = 0; 
 			$pendientesfallo = 1; 
-			break;
+			
 		default:
 			$amarillas = -1;
 	}
@@ -976,25 +991,28 @@ function modificarFalloPorFecha($serviciosReferencias) {
 			
 			
 			/********** elimino lo cargado ***************************************************/
-			$serviciosReferencias->eliminarMovimientosancionesPorSancionJugador($refsancionesjugadores);
+			//$serviciosReferencias->eliminarMovimientosancionesPorSancionJugador($refsancionesjugadores);
 			/********** fin   (despues lo controlo con los movimientos)  *********************/
 			
 			if ($res == true) { 
 				//tengo que ver en que fecha estoy parado para cortar los movimientos
 				//$ultimaFechaCumplida = $serviciosReferencias->traerMovimientosancionesPorSancionJugadorCumplidas($refsancionesjugadores);
+				/*
 				if ($valor == 'fallocantidad') {
-					
+					*/
 					
 					/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
+					/*
 					for ($i=1;$i<= $cantidadfechas;$i++) {
 						$serviciosReferencias->insertarMovimientosanciones($refsancionesjugadores,$refFecha + $i,$refFixture,0,0,1);	
 					}
+					*/
 					/********** fin ******/
 					
 					/******** recorrer y marcar las fechas cumplidas *********************************/
 					
 					/********  fin del recorrer ******************************************************/
-				}
+				//}
 				
 				echo ''; 
 			} else { 
