@@ -30,7 +30,7 @@ if (mysql_num_rows($refTemporada)>0) {
 $idtorneo			=	$_GET['idtorneo'];
 $reffechas			=	$_GET['reffechas'];
 
-$resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffecha);
+$resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
 
 $resTorneo = $serviciosReferencias->traerTorneosDetallePorId($idtorneo);
 
@@ -39,13 +39,21 @@ $resDefTemp= $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemp
 
 $descripcion 	= mysql_result($resTorneo,0,'descripcion');
 $temporada 		= mysql_result($resTorneo,0,'temporada');
-$categoria		= mysql_result($resFixDetalle,0,'categoria');
-$division		= mysql_result($resFixDetalle,0,'division');
+$categoria		= mysql_result($resTorneo,0,'categoria');
+$division		= mysql_result($resTorneo,0,'division');
+
+$resFecha		= $serviciosReferencias->traerFechasPorId($reffechas);
 
 $reingreso					= mysql_result($resDefTemp,0,'reingreso');
+if ($reingreso == 'Si') {
+	$descReintegro = 'CON REINGRESOS';
+} else {
+	$descReintegro = 'SIN REINGRESOS';
+}
 $minutospartido 			= mysql_result($resDefTemp,0,'minutospartido');
 $cantidadcambiosporpartido	= mysql_result($resDefTemp,0,'cantidadcambiosporpartido');
-
+$dia						= mysql_result($resDefTemp,0,'dia');
+$hora						= mysql_result($resDefTemp,0,'hora');
 
 $pdf = new FPDF();
 $cantidadJugadores = 0;
@@ -59,113 +67,84 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	
 	$pdf->AddPage();
 	/***********************************    PRIMER CUADRANTE ******************************************/
-	$pdf->Rect(5,5,200,281,'');
-	$pdf->Image('../imagenes/aif_logo.png',16,15,0);
-	$pdf->Rect(5,45,200,241,'');
-	$pdf->SetFont('Arial','U',15);
-	$pdf->SetXY(17,6);
-	$pdf->Cell(30,7,'PREDIO 98',0,0,'C',false);
-	$pdf->SetFont('Arial','',15);
-	$pdf->SetXY(60,5);
-	$pdf->Cell(30,20,strtoupper($rowE['zona']),1,0,'C',false);
-	$pdf->Cell(115,20,strtoupper(utf8_decode($rowE['descripciontorneo'])),1,0,'C',false);
-	$pdf->Ln();
-	$pdf->SetX(60);
-	$pdf->Cell(30,20,strtoupper($rowE['tipofecha']),1,0,'C',false);
-	$pdf->Cell(50,20,strtoupper($rowE['cancha']),1,0,'C',false);
-	$pdf->Cell(65,20,'HORARIO '.strtoupper($rowE['hora']),1,0,'C',false);
+	
+	$pdf->Image('../imagenes/aif_logo.png',2,2,25);
+
 	/***********************************    FIN ******************************************/
 	
-	/***********************************    SEGUNDO CUADRANTE ******************************************/
-	$pdf->SetXY(5,45);
-	$pdf->Cell(180,7,'PLANILLA DE INCRIPCIÓN - BUENA FE',0,0,'C',false);
-	$pdf->Ln();
-	$pdf->SetFont('Arial','',8);
-	$pdf->SetX(5);
-	$pdf->MultiCell(200,4,'IMPORTANTE:  El "Predio 98” canchas de fútbol, denominado también “La Organización” no se responsabiliza por lesiones ocasionadas en uso de las instalaciones, prácticas de juego, y/o hechos de fuerza mayor y/o caso fortuito, agresiones personales u otros hechos que causen perjuicios material y/o lesiones corporales, como asimismo tampoco se responsabiliza por extravío y/o pérdida de objetos personales, reservándose el derecho de admisión a la totalidad de canchas y/o establecimiento.',1,'L',false);
-	$pdf->SetFont('Arial','B',8);
-	$pdf->SetX(5);
-	$pdf->MultiCell(200,4,'Con la firma del presente, expresamente desiste de cualquier reclamo y acción al respecto. Los DNI y firmas pueden ser completados en la 1º fecha en el Predio.',1,'L',false);
 	
-	$pdf->SetFillColor(255,10,12);
-	$pdf->SetFont('Arial','',10);
-	$pdf->SetX(5);
-	$pdf->Cell(200,5,'COMPLETAR TODOS LOS DATOS CON MAYUSCULAS',1,0,'C',true);
 	
 	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
-	$pdf->Ln();
-	$pdf->SetX(5);
-	$pdf->SetFont('Arial','',9);
-	$pdf->Cell(47.5,5,'NOMBRE DEL EQUIPO:',1,0,'C',false);
-	$pdf->SetFont('Arial','B',10);
-	$pdf->Cell(152.5,5,strtoupper(utf8_decode($rowE['nombre'])),1,0,'C',false);
+
 	
 	$pdf->Ln();
-	$pdf->SetX(5);
+	$pdf->SetX(40);
 	$pdf->SetFont('Arial','',9);
 	$pdf->SetFillColor(155,155,155);
-	$pdf->Cell(47.5,5,'Nombre capitan del equipo:',1,0,'L',true);
-	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(52.5,5,strtoupper(utf8_decode($rowE['nombrecapitan'])),1,0,'L',false);
-	$pdf->SetFont('Arial','',9);
-	$pdf->Cell(47.5,5,'Nombre sub-cap. del equipo:',1,0,'L',true);
-	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(52.5,5,strtoupper(utf8_decode($rowE['nombresubcapitan'])),1,0,'L',false);
+	$pdf->Cell(35,5,'Temporada:',1,0,'L',true);
+	$pdf->Cell(70,5,'Temporada '.$temporada,1,0,'L',false);
+	$pdf->Cell(50,5,$dia." ".date('d-m-Y')." ".$hora,1,0,'L',false);
+	
 	
 	$pdf->Ln();
-	$pdf->SetX(5);
+	$pdf->SetX(40);
 	$pdf->SetFont('Arial','',9);
-	$pdf->Cell(47.5,5,'Teléfono capitan del equipo:',1,0,'L',true);
-	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(52.5,5,strtoupper($rowE['telefonocapitan']),1,0,'L',false);
-	$pdf->SetFont('Arial','',9);
-	$pdf->Cell(47.5,5,'Teléfono sub-cap. del equipo:',1,0,'L',true);
-	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(52.5,5,strtoupper($rowE['telefonosubcapitan']),1,0,'L',false);
+	$pdf->SetFillColor(155,155,155);
+	$pdf->Cell(35,5,'Torneo:',1,0,'L',true);
+	$pdf->Cell(70,5,$descripcion,1,0,'L',false);
+	$pdf->Cell(50,5,$descReintegro,1,0,'L',false);
 	
 	$pdf->Ln();
-	$pdf->SetX(5);
+	$pdf->SetX(40);
 	$pdf->SetFont('Arial','',9);
-	$pdf->Cell(47.5,5,'Email capitan del equipo:',1,0,'L',true);
-	$pdf->SetFont('Arial','',7);
-	$pdf->Cell(52.5,5,strtoupper(utf8_decode($rowE['emailcapitan'])),1,0,'L',false);
-	$pdf->SetFont('Arial','',9);
-	$pdf->Cell(47.5,5,'Email sub-cap. del equipo:',1,0,'L',true);
-	$pdf->SetFont('Arial','',7);
-	$pdf->Cell(52.5,5,strtoupper(utf8_decode($rowE['emailsubcapitan'])),1,0,'L',false);
+	$pdf->SetFillColor(155,155,155);
+	$pdf->Cell(35,5,'Categoria:',1,0,'L',true);
+	$pdf->Cell(70,5,$categoria,1,0,'L',false);
+	$pdf->Cell(50,5,($minutospartido / 2)." MINUTOS POR TIEMPO",1,0,'L',false);
 	
 	$pdf->Ln();
-	$pdf->SetX(5);
+	$pdf->SetX(40);
 	$pdf->SetFont('Arial','',9);
-	$pdf->Cell(47.5,5,'Facebook capitan del equipo:',1,0,'L',true);
-	$pdf->SetFont('Arial','',7);
-	$pdf->Cell(52.5,5,strtoupper(utf8_decode($rowE['facebookcapitan'])),1,0,'L',false);
+	$pdf->SetFillColor(155,155,155);
+	$pdf->Cell(35,5,'Division:',1,0,'L',true);
+	$pdf->Cell(40,5,$division,1,0,'L',false);
+	$pdf->Cell(80,5,"CAMBIOS PER.: ".$cantidadcambiosporpartido." JUGAD.",1,0,'L',false);
+	
+	$pdf->Ln();
+	$pdf->SetX(40);
 	$pdf->SetFont('Arial','',9);
-	$pdf->Cell(47.5,5,'Facebook sub-cap. del equipo:',1,0,'L',true);
-	$pdf->SetFont('Arial','',7);
-	$pdf->Cell(52.5,5,strtoupper(utf8_decode($rowE['facebooksubcapitan'])),1,0,'L',false);
+	$pdf->SetFillColor(155,155,155);
+	$pdf->Cell(35,5,'Fecha:',1,0,'L',true);
+	$pdf->Cell(40,5,mysql_result($resFecha,0,'fecha'),1,0,'L',false);
+	$pdf->Cell(40,5,'Partido:',1,0,'L',true);
+	$pdf->Cell(40,5,mysql_result($resFecha,0,'fecha'),1,0,'L',false);
+	
 	
 	$pdf->SetFont('Arial','B',10);
 	$pdf->Ln();
+	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(200,5,'JUGADORES',1,0,'C',false);
+	$pdf->Cell(200,5,'PLANILLA DEL PARTIDO',1,0,'C',true);
 	$pdf->SetFont('Arial','',9);
-	$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
+	$pdf->Ln();
+	$pdf->SetX(5);
+	$pdf->Cell(200,5,'CANCHA: '.$rowE['canchas']." - ".$rowE['arbitro']." // ".$rowE['telefono'],0,0,'L',FALSE); 
+	//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
+	
+	$resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($rowE['refconectorlocal'], mysql_result($resTorneo,0,'refcategorias'));
+	$resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($rowE['refconectorvisitante'], mysql_result($resTorneo,0,'refcategorias'));
 	
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(49.5,5,'APELLIDO Y NOMBRE',1,0,'C',true);
-	$pdf->Cell(20,5,'DNI',1,0,'C',true);
-	$pdf->Cell(25,5,'FIRMA',1,0,'C',true);
-	$pdf->Cell(17.5,5,'N°CAMIS.',1,0,'C',true);
-	$pdf->Cell(15,5,'GOLES',1,0,'C',true);
-	$pdf->Cell(20,5,'AMARILLAS',1,0,'C',true);
-	$pdf->Cell(20,5,'AMAR.ACU.',1,0,'C',true);
-	$pdf->Cell(20,5,'ROJAS',1,0,'C',true);
-	$pdf->Cell(13,5,'JUGO',1,0,'C',true);
-	/*
+	$pdf->Cell(79,5,'Local: ('.$rowE['refconectorlocal'].") ".$rowE['equipolocal'],1,0,'C',false);
+	$pdf->Cell(19,5,'Goles:',1,0,'C',false);
+	$pdf->Cell(4,5,'',0,0,'C',false);
+	$pdf->Cell(79,5,'Visitante: ('.$rowE['refconectorvisitante'].") ".$rowE['equipovisitante'],1,0,'C',false);
+	$pdf->Cell(19,5,'Goles:',1,0,'C',false);
+	
+	
 	$i = 0;
-	while ($rowJ = mysql_fetch_array($resJugadores))
+	while ($rowJ = mysql_fetch_array($resJugadoresA))
 	{
 		$pdf->SetFillColor(183,183,183);
 		$i = $i+1;
@@ -214,7 +193,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		}
 	}
 	
-	*/
+	
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->Cell(56,5,'Total Goles:',1,0,'L',false);

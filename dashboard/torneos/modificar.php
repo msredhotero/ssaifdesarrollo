@@ -29,7 +29,7 @@ $id = $_GET['id'];
 
 $resResultado = $serviciosReferencias->traerTorneosPorId($id);
 
-
+$resPuntoBonus = $serviciosReferencias->traerTorneopuntobonusPorTorneo($id);
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Torneo";
 
@@ -149,6 +149,25 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
 			<div class="row">
 			<?php echo $formulario; ?>
+            
+            <div class="col-md-6">
+            	<label class="control-label">Punto Bonus</label>
+                <div class="input-group col-md-1">
+                	<?php
+						if (mysql_num_rows($resPuntoBonus)>0) {
+					?>
+                	<input type="checkbox" checked name="puntobonus" id="puntobonus" class="form-control"/>
+                    <?php
+						} else {
+					?>
+                    <input type="checkbox" name="puntobonus" id="puntobonus" class="form-control"/>
+                    <?php
+						} 
+					?>
+                    
+                    
+                </div>
+            </div>
             </div>
             
             

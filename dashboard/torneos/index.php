@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 
 session_start();
@@ -177,6 +177,14 @@ if ($_SESSION['refroll_predio'] != 1) {
 						$("#fechainicio").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 					});
 					</script>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+            	<label class="control-label">Punto Bonus</label>
+                <div class="input-group col-md-3">
+                	<input type="checkbox" checked name="puntobonus" id="puntobonus" class="form-control"/>
+                    
                 </div>
             </div>
             

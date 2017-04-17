@@ -25,10 +25,23 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Posicio
 
 $idTorneo		=	$_GET['id'];
 
+$resTorneo			=	$serviciosReferencias->traerTorneosPorId($idTorneo);
+
+$acumulatablaconformada 					= mysql_result($resTorneo,0,'acumulatablaconformada');
+$acumulagoleadores 							= mysql_result($resTorneo,0,'acumulagoleadores');
+$respetadefinicionsancionesacumuladas 		= mysql_result($resTorneo,0,'respetadefinicionsancionesacumuladas');
+$respetadefiniciontipojugadores 			= mysql_result($resTorneo,0,'respetadefiniciontipojugadores'); //de seguro no la usan
+$respetadefinicionhabilitacionestransitorias = mysql_result($resTorneo,0,'respetadefinicionhabilitacionestransitorias');
+
+
 $resPosiciones		=	$serviciosReferencias->Posiciones($idTorneo);
 
 $resGoleadores		=	$serviciosReferencias->Goleadores($idTorneo);
 
+$resConformadaPosiciones		=	$serviciosReferencias->PosicionesConformada(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'),mysql_result($resTorneo,0,'refdivisiones'));
+
+
+$resConformadaGoleadores		=	$serviciosReferencias->GoleadoresConformada(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'),mysql_result($resTorneo,0,'refdivisiones'));
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -263,8 +276,140 @@ if ($_SESSION['refroll_predio'] != 1) {
     	</div>
     </div>
 
+	<hr>
+	
+    <div class="boxInfoLargo">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Tabla Conformada</p>
+        	
+        </div>
+    	<div class="cuerpoBox" style="padding-right:10px;">
+    		<form class="form-inline formulario" role="form">
+        	<div class="row">
+				<div class="col-md-12">
+                    <table class="table table-bordered table-responsive">
+                    	<thead>
+                        	<th>Posicion</th>
+                            <th>Equipos</th>
+                            <th>PJ</th>
+                            <th>PG</th>
+                            <th>PP</th>
+                            <th>PE</th>
+                            <th>Goles</th>
+                            <th>Puntos</th>
+                            <th>Amarillas</th>
+                            <th>Rojas</th>
+                            <th>P.B.</th>
+                        </thead>
+                        <tbody>
+                        	<?php
+								$cant = 1;
+								//while ($row = mysql_fetch_array($resPosiciones)) {
+								//die(var_dump($resPosiciones));	
+								foreach ($resConformadaPosiciones as $row) {	
+							?>
+                            <tr>
+                            	<td><?php echo $cant; ?></td>
+                                <td><?php echo $row['equipo']; ?></td>
+                                <td><?php echo $row['pj']; ?></td>
+                                <td><?php echo $row['pg']; ?></td>
+                                <td><?php echo $row['pp']; ?></td>
+                                <td><?php echo $row['pe']; ?></td>
+                                <td><?php echo $row['goles']; ?></td>
+                                <td><?php echo $row['puntos']; ?></td>
+                                <td><?php echo $row['amarillas']; ?></td>
+                                <td><?php echo $row['rojas']; ?></td>
+                                <td><?php echo $row['puntobonus']; ?></td>
+                            </tr>
+                            <?php
+								$cant += 1;
+								}
+							?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
+			
+			<div class="row">
+                <div class="col-md-12">
+                <ul class="list-inline" style="margin-top:15px;">
+                    <li>
+                        <button type="button" class="btn btn-default" id="volver" style="margin-left:0px;">volver</button>
+                    </li>
+                   <!-- <li>
+                        <button type="button" class="btn btn-success" id="chequearF" style="margin-left:0px;">Chequear Fixture</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-success" id="conductaF" style="margin-left:0px;">Cargar Conducta al Fixture</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
+                    </li>-->
 
+                </ul>
+                </div>
+            </div>
+            </form>
+    	</div>
+    </div>
+    
+    
+    <div class="boxInfoLargo">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Tabla Conformada de Goleadores</p>
+        	
+        </div>
+    	<div class="cuerpoBox" style="padding-right:10px;">
+    		<form class="form-inline formulario" role="form">
+
+            <div class="row">    
+                <div class="col-md-12">
+                	<table class="table table-bordered table-responsive">
+                    	<thead>
+                        	<th>Equipos</th>
+                            <th>Apellido y Nombre</th>
+                            <th>Nro Documento</th>
+                            <th>Goles</th>
+                        </thead>
+                        <tbody>
+                        	<?php
+								$cant = 1;
+								while ($row = mysql_fetch_array($resConformadaGoleadores)) {
+								
+							?>
+                            <tr>
+                                <td><?php echo $row['equipo']; ?></td>
+                                <td><?php echo $row['apyn']; ?></td>
+                                <td><?php echo $row['nrodocumento']; ?></td>
+                                <td><?php echo $row['goles']; ?></td>
+                            </tr>
+                            <?php
+								$cant += 1;
+								}
+							?>
+                        </tbody>
+                    </table>
+                
+                </div>
+
+				
+            </div>
+
+			
+			<div class="row">
+                <div class="col-md-12">
+                <ul class="list-inline" style="margin-top:15px;">
+                    <li>
+                        <button type="button" class="btn btn-default" id="volver" style="margin-left:0px;">volver</button>
+                    </li>
+
+                </ul>
+                </div>
+            </div>
+            </form>
+    	</div>
+    </div>
    
 </div>
 

@@ -264,7 +264,8 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 							  'pe'=> $row['pe'],
 							  'amarillas'=> $row['amarillas'],
 							  'rojas'=> $row['rojas'],
-							  'puntobonus'=> (integer)$puntosBonus);
+							  'puntobonus'=> (integer)$puntosBonus,
+							  'idequipo'=> $row['idequipo']);
 							  
 		$puntosBonus = 0;					  
 	}
@@ -274,6 +275,110 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 	return $sorted;
 
 }
+
+
+
+function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
+	
+	$sql = "select idtorneo from dbtorneos where reftemporadas =".$idTemporada." and refcategorias = ".$idCategoria." and refdivisiones = ".$idDivision." and acumulatablaconformada = 1";
+	
+	$resConformada = $this->query($sql,0);
+	
+	$lstPosiciones = array();
+	
+	$lstPosicionesFinal = array();
+	
+	while ($rowT = mysql_fetch_array($resConformada)) {
+	
+		$arPosiciones = $this->Posiciones($rowT['idtorneo']);
+		
+		foreach ($arPosiciones as $valorT) {
+			
+			$lstPosiciones[] = array('equipo'=> $valorT['equipo'],
+								  'puntos'=> (integer)$valorT['puntos'],
+								  'goles'=> $valorT['goles'],
+								  'pj'=> $valorT['pj'],
+								  'pg'=> $valorT['pg'],
+								  'pp'=> $valorT['pp'],
+								  'pe'=> $valorT['pe'],
+								  'amarillas'=> $valorT['amarillas'],
+								  'rojas'=> $valorT['rojas'],
+								  'puntobonus'=> (integer)$valorT['puntobonus'],
+							  	  'idequipo'=> $valorT['idequipo']);
+													  
+		}
+
+	
+	}
+	
+	$sorted = $this->array_orderby($lstPosiciones, 'idequipo', SORT_ASC);
+	
+	$cambio = 0;
+	$primero = 0;
+	
+	$equipo		= '';
+	$puntos 	= 0;
+	$goles		= 0;
+	$pj			= 0;
+	$pg			= 0;
+	$pp			= 0;
+	$pe			= 0;
+	$amarillas	= 0;
+	$rojas		= 0;
+	$puntobonus = 0;
+
+	foreach ($sorted as $tblFinal) {
+		if ($cambio != $tblFinal['idequipo']) {
+			if ($primero != 0) {
+				$lstPosicionesFinal[] = array('equipo'=> $equipo,
+								  'puntos'=> $puntos,
+								  'goles'=> $goles,
+								  'pj'=> $pj,
+								  'pg'=> $pg,
+								  'pp'=> $pp,
+								  'pe'=> $pe,
+								  'amarillas'=> $amarillas,
+								  'rojas'=> $rojas,
+								  'puntobonus'=> $puntobonus);
+			}
+			
+			$cambio = $tblFinal['idequipo'];
+			
+			$equipo		= '';
+			$puntos 	= 0;
+			$goles		= 0;
+			$pj			= 0;
+			$pg			= 0;
+			$pp			= 0;
+			$pe			= 0;
+			$amarillas	= 0;
+			$rojas		= 0;
+			$puntobonus = 0;
+		}
+		
+		$equipo 	= $tblFinal['equipo'];
+		$puntos	    += (integer)$tblFinal['puntos'];
+		$goles	    += (integer)$tblFinal['goles'];
+		$pj	   		+= (integer)$tblFinal['pj'];
+		$pg	   		+= (integer)$tblFinal['pg'];
+		$pp	   		+= (integer)$tblFinal['pp'];
+		$pe	   		+= (integer)$tblFinal['pe'];
+		$amarillas	+= (integer)$tblFinal['amarillas'];
+		$rojas	    += (integer)$tblFinal['rojas'];
+		$puntobonus	+= (integer)$tblFinal['puntobonus'];
+		
+		$primero = 1;
+		 
+	}
+	
+	
+	$sorted = $this->array_orderby($lstPosicionesFinal, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
+
+	return $sorted;
+
+}
+
+
 
 function Goleadores($idTorneo) {
 	$sql = "select
@@ -328,6 +433,68 @@ function Goleadores($idTorneo) {
 				where		t.idtorneo = ".$idTorneo." and g.goles > 0
 				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
 			) t
+				order by t.goles desc, t.apyn";	
+				
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function GoleadoresConformada($idTemporada, $idCategoria, $idDivision) {
+	
+	$sql = "select
+			t.equipo, t.apyn, t.nrodocumento, sum(t.goles) as goles
+			from (
+				select
+				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles
+				from		dbgoleadores g
+				inner
+				join		dbfixture fix
+				on			g.reffixture = fix.idfixture
+				inner
+				join		dbtorneos t
+				on			t.idtorneo = fix.reftorneos
+				inner 
+				join 		dbequipos el 
+				ON 			el.idequipo = fix.refconectorlocal and g.refequipos = fix.refconectorlocal
+				/*
+				inner
+				join		dbconector co
+				on			co.refequipos = f.refconectorlocal and co.refcategorias = t.refcategorias and co.refjugadores = g.refjugadores
+				*/
+				inner
+				join		dbjugadores j
+				on			j.idjugador = g.refjugadores
+				where		t.reftemporadas =".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.acumulagoleadores = 1 and g.goles > 0
+				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+				
+				union all
+				
+				
+				select
+				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles
+				from		dbgoleadores g
+				inner
+				join		dbfixture fix
+				on			g.reffixture = fix.idfixture
+				inner
+				join		dbtorneos t
+				on			t.idtorneo = fix.reftorneos
+				inner 
+				join 		dbequipos el 
+				ON 			el.idequipo = fix.refconectorvisitante and g.refequipos = fix.refconectorvisitante
+				/*
+				inner
+				join		dbconector co
+				on			co.refequipos = f.refconectorlocal and co.refcategorias = t.refcategorias and co.refjugadores = g.refjugadores
+				*/
+				inner
+				join		dbjugadores j
+				on			j.idjugador = g.refjugadores
+				where		t.reftemporadas =".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.acumulagoleadores = 1 and g.goles > 0
+				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+			) t
+				group by t.equipo, t.apyn, t.nrodocumento
 				order by t.goles desc, t.apyn";	
 				
 	$res = $this->query($sql,0);
@@ -2946,6 +3113,39 @@ $res = $this->query($sql,0);
 return $res;
 } 
 
+
+function traerTorneosDetallePorId($id) { 
+$sql = "select 
+t.idtorneo,
+t.descripcion,
+tip.tipotorneo as tipotorneo,
+tem.temporada,
+cat.categoria,
+di.division,
+t.cantidadascensos,
+t.cantidaddescensos,
+t.respetadefiniciontipojugadores,
+t.respetadefinicionhabilitacionestransitorias,
+t.respetadefinicionsancionesacumuladas,
+t.acumulagoleadores,
+t.acumulatablaconformada,
+t.observaciones,
+t.activo,
+t.reftipotorneo,
+t.reftemporadas,
+t.refcategorias,
+t.refdivisiones
+from dbtorneos t 
+inner join tbtipotorneo tip ON tip.idtipotorneo = t.reftipotorneo 
+inner join tbtemporadas tem ON tem.idtemporadas = t.reftemporadas 
+inner join tbcategorias cat ON cat.idtcategoria = t.refcategorias 
+inner join tbdivisiones di ON di.iddivision = t.refdivisiones 
+where t.idtorneo = ".$id."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+}  
+
 /* Fin */
 /* /* Fin de la Tabla: dbtorneos*/
 
@@ -3193,6 +3393,84 @@ return $res;
 
 /* Fin */
 /* /* Fin de la Tabla: tbpuntobonus*/
+
+
+/* PARA Torneopuntobonus */
+
+function insertarTorneopuntobonus($reftorneos,$refpuntobonus) { 
+
+	$sqlExiste = "select idtorneopuntobonus from dbtorneopuntobonus where reftorneos=".$reftorneos;
+	
+	$existe = $this->existeDevuelveId($sqlExiste);
+	
+	if ($existe == 0) {
+		$sql = "insert into dbtorneopuntobonus(idtorneopuntobonus,reftorneos,refpuntobonus) 
+		values ('',".$reftorneos.",".$refpuntobonus.")"; 
+		$res = $this->query($sql,1); 
+		return $res; 
+	} else {
+		return $existe;	
+	}
+} 
+
+
+function modificarTorneopuntobonus($id,$reftorneos,$refpuntobonus) { 
+$sql = "update dbtorneopuntobonus 
+set 
+reftorneos = ".$reftorneos.",refpuntobonus = ".$refpuntobonus." 
+where idtorneopuntobonus =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+
+function eliminarTorneopuntobonus($id) { 
+$sql = "delete from dbtorneopuntobonus where idtorneopuntobonus =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarTorneopuntobonusPorTorneo($idTorneo) { 
+$sql = "delete from dbtorneopuntobonus where reftorneos =".$idTorneo; 
+$res = $this->query($sql,0); 
+return $res; 
+}
+
+
+function traerTorneopuntobonus() { 
+$sql = "select 
+t.idtorneopuntobonus,
+t.reftorneos,
+t.refpuntobonus
+from dbtorneopuntobonus t 
+inner join dbtorneos tor ON tor.idtorneo = t.reftorneos 
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo 
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas 
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias 
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones 
+inner join tbpuntobonus pun ON pun.idpuntobonus = t.refpuntobonus 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerTorneopuntobonusPorId($id) { 
+$sql = "select idtorneopuntobonus,reftorneos,refpuntobonus from dbtorneopuntobonus where idtorneopuntobonus =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerTorneopuntobonusPorTorneo($idTorneo) { 
+$sql = "select idtorneopuntobonus,reftorneos,refpuntobonus from dbtorneopuntobonus where reftorneos =".$idTorneo; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbtorneopuntobonus*/
 
 
 
@@ -3462,7 +3740,8 @@ d.conreingreso,
 d.observaciones,
 d.refcategorias,
 d.reftemporadas,
-d.refdias
+d.refdias,
+(case when d.conreingreso = 1 then 'Si' else 'No' end) as reingreso
 from dbdefinicionescategoriastemporadas d 
 inner join tbcategorias cat ON cat.idtcategoria = d.refcategorias 
 inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas 
@@ -4277,6 +4556,7 @@ f.juez1,
 f.juez2,
 f.observaciones,
 f.publicar,
+arb.telefonoparticular as telefono,
 f.refcanchas,
 f.reftorneos,
 f.reffechas,
@@ -4324,6 +4604,7 @@ f.juez1,
 f.juez2,
 f.observaciones,
 f.publicar,
+arb.telefonoparticular as telefono,
 f.refcanchas,
 f.reftorneos,
 f.reffechas,

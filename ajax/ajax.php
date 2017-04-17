@@ -2350,6 +2350,12 @@ function insertarTorneos($serviciosReferencias) {
 		$activo = 0; 
 	} 
 	
+	if (isset($_POST['puntobnus'])) { 
+		$puntobonus	= 1; 
+	} else { 
+		$puntobonus = 0; 
+	} 
+	
 	$fechainicio = $_POST['fechainicio'];
 	$fechainicio = formatearFechas($fechainicio);
 	
@@ -2357,6 +2363,7 @@ function insertarTorneos($serviciosReferencias) {
 		$res = $serviciosReferencias->insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo); 
 		if ((integer)$res > 0) { 
 			$serviciosReferencias->desactivarTorneos($res,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);
+			$serviciosReferencias->insertarTorneopuntobonus($res,1);
 			echo $res; 
 		} else { 
 			echo 'Huvo un error al insertar datos';	 
@@ -2407,10 +2414,21 @@ function modificarTorneos($serviciosReferencias) {
 		$activo = 0; 
 	} 
 	
+	if (isset($_POST['puntobonus'])) { 
+		$puntobonus	= 1; 
+	} else { 
+		$puntobonus = 0; 
+	} 
+	
 	$res = $serviciosReferencias->modificarTorneos($id,$descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo); 
 	if ($res == true) { 
 		if ($activo == 1) {
 			$serviciosReferencias->desactivarTorneos($id,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);	
+		}
+		if ($puntobonus == 0) {
+			$serviciosReferencias->eliminarTorneopuntobonusPorTorneo($id);	
+		} else {
+			$serviciosReferencias->insertarTorneopuntobonus($id,1);	
 		}
 		echo ''; 
 	} else { 
