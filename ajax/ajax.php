@@ -933,45 +933,43 @@ function modificarFalloPorFecha($serviciosReferencias) {
 	
 	$errores	=	"";
 	
-	switch ($valor) {
-		case 'fallocantidad':	
-			$cantidadfechas = $_POST['cantidadfechas']; 
-			$fechadesde = ''; 
-			$fechahasta = ''; 
-			$amarillas = $_POST['amarillas']; 
-			$pendientesfallo = 0; 
-			
-		case 'fallofechas':
-			$cantidadfechas = 0; 
-			$fechadesde = formatearFechas($_POST['fechadesde']); 
-			$fechahasta = formatearFechas($_POST['fechahasta']); 
-			$pendientescumplimientos = 1; //verificar
-			$amarillas = $_POST['amarillas']; 
-			$pendientesfallo = 0; 
-			if (($fechadesde == '***') || ($fechahasta == '***')) {
-				$errores = 'Formato de fecha incorrecto';
-			}
-			
-		case 'falloamarillas':
-			$cantidadfechas = $_POST['cantidadfechas']; 
-			$fechadesde = formatearFechas($_POST['fechadesde']); 
-			$fechahasta = formatearFechas($_POST['fechahasta']); 
-			$amarillas = $_POST['amarillas']; 
-			$pendientesfallo = 0; 
-			
-			if (($fechadesde == '***') || ($fechahasta == '***')) {
-				$errores = 'Formato de fecha incorrecto';
-			}
-			
-		case 'pendientesfallo':
-			$cantidadfechas = 0; 
-			$fechadesde = ''; 
-			$fechahasta = ''; 
-			$amarillas = 0; 
-			$pendientesfallo = 1; 
-			
-		default:
-			$amarillas = -1;
+	$amarillas = 0;
+	
+	$count = count($valor);
+
+	for ($i = 0; $i < $count; $i++) {
+
+		switch ($valor[$i]) {
+			case 'fallocantidad':	
+				$cantidadfechas = $_POST['cantidadfechas']; 
+				$fechadesde = ''; 
+				$fechahasta = ''; 
+				$pendientesfallo = 0; 
+				break;
+			case 'fallofechas':
+				$cantidadfechas = 0; 
+				$fechadesde = formatearFechas($_POST['fechadesde']); 
+				$fechahasta = formatearFechas($_POST['fechahasta']); 
+				$pendientescumplimientos = 1; //verificar
+				$pendientesfallo = 0; 
+				if (($fechadesde == '***') || ($fechahasta == '***')) {
+					$errores = 'Formato de fecha incorrecto';
+				}
+				break;
+			case 'falloamarillas':
+				$amarillas = $_POST['amarillas']; 
+				$pendientesfallo = 0; 
+				break;
+			case 'pendientesfallo':
+				$cantidadfechas = 0; 
+				$fechadesde = ''; 
+				$fechahasta = ''; 
+				$amarillas = 0; 
+				$pendientesfallo = 1; 
+				break;
+			default:
+				$amarillas = -1;
+		}
 	}
 	
 	if ($errores != '') {
@@ -1192,12 +1190,12 @@ function insertarFixture($serviciosReferencias) {
 	$refcanchas = $_POST['refcanchas'];
 	$fecha = formatearFechas($_POST['fecha']);
 	$hora = $_POST['hora'];
-	$refestadospartidos = $_POST['refestadospartidos'];
-	$calificacioncancha = $_POST['calificacioncancha'];
-	$puntoslocal = $_POST['puntoslocal'];
-	$puntosvisita = $_POST['puntosvisita'];
-	$goleslocal = $_POST['goleslocal'];
-	$golesvisitantes = $_POST['golesvisitantes'];
+	$refestadospartidos = ($_POST['refestadospartidos'] == '' ? 'NULL' : $_POST['refestadospartidos']);
+	$calificacioncancha = ($_POST['calificacioncancha'] == '' ? 'NULL' : $_POST['calificacioncancha']);
+	$puntoslocal = ($_POST['puntoslocal'] == '' ? 'NULL' : $_POST['puntoslocal']);
+	$puntosvisita = ($_POST['puntosvisita'] == '' ? 'NULL' : $_POST['puntosvisita']);
+	$goleslocal = ($_POST['goleslocal'] == '' ? 'NULL' : $_POST['goleslocal']);
+	$golesvisitantes = ($_POST['golesvisitantes'] == '' ? 'NULL' : $_POST['golesvisitantes']);
 	$observaciones = $_POST['observaciones'];
 	
 	if (isset($_POST['publicar'])) {
@@ -1206,7 +1204,7 @@ function insertarFixture($serviciosReferencias) {
 		$publicar = 0;
 	}
 	
-	if ($fecha == '***') {
+	if ($fecha != '***') {
 		$res = $serviciosReferencias->insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
 		
 		if ((integer)$res > 0) {
@@ -1215,7 +1213,7 @@ function insertarFixture($serviciosReferencias) {
 			echo 'Huvo un error al insertar datos';
 		}
 	} else {
-		echo 'Formato de fecha erroneo';	
+		echo 'Formato de fecha erroneo'.$_POST['fecha'];	
 	}
 }
 

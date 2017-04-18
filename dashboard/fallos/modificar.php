@@ -31,6 +31,10 @@ $resResultado	=	$serviciosReferencias->traerSancionesjugadoresPorId($id);
 $resDetalles	=	$serviciosReferencias->traerSancionesjugadoresPorIdDetalles($id);
 
 $resFallo		=	$serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($id);
+
+$cumplidas		=	mysql_num_rows($serviciosReferencias->traerSancionesfechascumplidasPorSancionJugadorEnSuCategoria($id));
+
+
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Fallo";
 
@@ -143,7 +147,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Modificar <?php echo $plural; ?></p>
         	
         </div>
     	<div class="cuerpoBox">
@@ -153,6 +157,7 @@ if ($_SESSION['refroll_predio'] != 1) {
               <li class="list-group-item list-group-item-default">Nro Documento: <?php echo mysql_result($resDetalles,0,'nrodocumento'); ?></li>
               <li class="list-group-item list-group-item-default">Fecha de la sación: <?php echo mysql_result($resDetalles,0,'fecha'); ?></li>
               <li class="list-group-item list-group-item-default">Sanción: <?php echo mysql_result($resDetalles,0,'tiposancion'); ?></li>
+              <li class="list-group-item list-group-item-default">Cumplidas: <?php echo $cumplidas; ?></li>
               
             </ul>
         
