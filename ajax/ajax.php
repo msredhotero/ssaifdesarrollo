@@ -820,41 +820,43 @@ function insertarFalloPorFecha($serviciosReferencias) {
 	
 	$errores	=	"";
 	
-	switch ($valor) {
-		case 'fallocantidad':	
-			$cantidadfechas = $_POST['cantidadfechas']; 
-			$fechadesde = ''; 
-			$fechahasta = ''; 
-			$amarillas = 0; 
-			$pendientesfallo = 0; 
-			break;
-		case 'fallofechas':
-			$cantidadfechas = 0; 
-			$fechadesde = formatearFechas($_POST['fechadesde']); 
-			$fechahasta = formatearFechas($_POST['fechahasta']); 
-			$pendientescumplimientos = 1; //verificar
-			$amarillas = 0; 
-			$pendientesfallo = 0; 
-			if (($fechadesde == '***') || ($fechahasta == '***')) {
-				$errores = 'Formato de fecha incorrecto';
-			}
-			break;
-		case 'falloamarillas':
-			$cantidadfechas = 0; 
-			$fechadesde = ''; 
-			$fechahasta = ''; 
-			$amarillas = $_POST['amarillas']; 
-			$pendientesfallo = 0; 
-			break;
-		case 'pendientesfallo':
-			$cantidadfechas = 0; 
-			$fechadesde = ''; 
-			$fechahasta = ''; 
-			$amarillas = 0; 
-			$pendientesfallo = 1; 
-			break;
-		default:
-			$amarillas = -1;
+	$amarillas = 0;
+	
+	$count = count($valor);
+	
+	for ($i = 0; $i < $count; $i++) {
+
+		switch ($valor[$i]) {
+			case 'fallocantidad':	
+				$cantidadfechas = $_POST['cantidadfechas']; 
+				$fechadesde = ''; 
+				$fechahasta = ''; 
+				$pendientesfallo = 0; 
+				break;
+			case 'fallofechas':
+				$cantidadfechas = 0; 
+				$fechadesde = formatearFechas($_POST['fechadesde']); 
+				$fechahasta = formatearFechas($_POST['fechahasta']); 
+				$pendientescumplimientos = 1; //verificar
+				$pendientesfallo = 0; 
+				if (($fechadesde == '***') || ($fechahasta == '***')) {
+					$errores = 'Formato de fecha incorrecto';
+				}
+				break;
+			case 'falloamarillas':
+				$amarillas = $_POST['amarillas']; 
+				$pendientesfallo = 0; 
+				break;
+			case 'pendientesfallo':
+				$cantidadfechas = 0; 
+				$fechadesde = ''; 
+				$fechahasta = ''; 
+				$amarillas = 0; 
+				$pendientesfallo = 1; 
+				break;
+			default:
+				$amarillas = -1;
+		}
 	}
 	
 	if ($errores != '') {
@@ -876,30 +878,6 @@ function insertarFalloPorFecha($serviciosReferencias) {
 				//actualizo la referencia
 				$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
 				
-				if ($valor == 'fallocantidad') {
-					
-					
-					/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
-					for ($i=1;$i<= $cantidadfechas;$i++) {
-						$otrasSancionesCargadasEnLaFecha = $serviciosReferencias->existeMovimientoEnFechaPorAcumulacion($refFecha + $i, mysql_result($resSancionesJugadores,0,'refjugadores'));
-						if (mysql_num_rows($otrasSancionesCargadasEnLaFecha) > 0) {
-							$bandModificoFecha = mysql_result($otrasSancionesCargadasEnLaFecha,0,0);
-							$fechaEncontrada = $refFecha + $i;
-						}
-						$serviciosReferencias->insertarMovimientosanciones($refsancionesjugadores,$refFecha + $i,$refFixture,0,0,1);	
-						$refParaActualizar = $refFecha + $i;
-					}
-					
-					//corro la fecha de la acumulada de las amarillas
-					if ($bandModificoFecha != 0) {
-						$serviciosReferencias->modificarMovimientosancionesCorrerFechas($bandModificoFecha,$fechaEncontrada,$refParaActualizar + 1);	
-					}
-					/********** fin ******/
-					
-					/******** recorrer y marcar las fechas cumplidas *********************************/
-					
-					/********  fin del recorrer ******************************************************/
-				}
 				echo ''; 
 			} else { 
 				echo 'Huvo un error al insertar datos';	 
