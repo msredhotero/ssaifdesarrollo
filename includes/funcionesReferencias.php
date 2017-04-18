@@ -5526,7 +5526,7 @@ function traerSancionesJugadoresConFallos() {
 			sf.fechadesde,
 			sf.fechahasta,
 			sf.amarillas,
-			sf.fechascumplidas,
+			coalesce( sfc.cumplidas,0) as fechascumplidas,
 			(case when sf.pendientescumplimientos = 1 then 'Si' else 'No' end) as pendientescumplimientos,
 			(case when sf.pendientesfallo = 1 then 'Si' else 'No' end) as pendientesfallo,
 			(case when sf.generadaporacumulacion = 1 then 'Si' else 'No' end) as generadaporacumulacion,
@@ -5551,7 +5551,14 @@ function traerSancionesJugadoresConFallos() {
 		inner join dbequipos equ ON equ.idequipo = p.refequipos 
 		inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
 		inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
-		inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones ";	
+		inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+		left join
+				(select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas 
+					from dbsancionesfechascumplidas fc
+					inner join dbfixture fixf on fixf.idfixture = fc.reffixture
+					inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos 
+					group by fc.refsancionesfallos,torc.refcategorias) sfc
+				ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = p.refcategorias";	
 		
 		$res = $this->query($sql,0);
 		return $res;
