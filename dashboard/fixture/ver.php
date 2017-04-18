@@ -167,6 +167,7 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras2,$resResult,89);
         </div>
     	<div class="cuerpoBox">
         	<?php echo $lstCargados; ?>
+            <a href="index.php"><button type="button" class="btn btn-default volver">Volver</button></a>
     	</div>
     </div>
 

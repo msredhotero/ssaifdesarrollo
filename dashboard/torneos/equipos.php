@@ -202,6 +202,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-default volver" id="volver" style="margin-left:0px;">Volver</button>
                     </li>
+                    <li>
+                        <button type="button" class="btn btn-default volverF" id="volverF" style="margin-left:0px;">Volver a Fixture</button>
+                    </li>
                 </ul>
                 </div>
             </div>
@@ -340,7 +343,11 @@ $(document).ready(function(){
 	});//fin del boton modificar
 
 
-			
+	$('.volverF').click(function(event){
+		 
+		url = "../fixture/index.php";
+		$(location).attr('href',url);
+	});//fin del boton modificar		
 	
 
 });
