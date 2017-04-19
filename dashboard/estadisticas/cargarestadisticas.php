@@ -75,8 +75,9 @@ $error = '';
 $lblerror = '';
 
 
-$serviciosReferencias->modificarFixturePorCancha($idFixture, $_POST['refcanchas']);
+$resModCancha = $serviciosReferencias->modificarFixturePorCancha($idFixture, $_POST['refcanchas'], $_POST['refarbitros'], $_POST['juez1'], $_POST['juez2']);
 
+//die(var_dump($resModCancha));
 $numero = count($_POST);
 	$tags = array_keys($_POST);// obtiene los nombres de las varibles
 	$valores = array_values($_POST);// obtiene los valores de las varibles
@@ -262,6 +263,7 @@ $numero = count($_POST);
 			
 			
 			/**************** miro si la acumulacion de amarillas hace que lo sancione **************************/
+			/****** aca solo sanciono por cantidad de amarillas cargadas, no espero el fallo, si le ponen doble amarilla espero el fallo */
 			$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 1, $idFixture);
 			if ($idsancion != 0) {
 				//*****			calculo amarillas acumuladas ********/
@@ -269,15 +271,6 @@ $numero = count($_POST);
 				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
 				$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
 				//*****				fin							*****/	
-			} else {
-				$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 4, $idFixture);
-				if ($idsancion != 0) {
-					//*****			calculo amarillas acumuladas ********/
-					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
-					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
-					$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
-					//*****				fin							*****/	
-				}
 			}
 			
 			
@@ -711,6 +704,14 @@ if (mysql_result($resFixDetalle,0,'refcanchas') == '') {
 	$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(1),'');	
 } else {
 	$cadCanchas	=	$serviciosFunciones->devolverSelectBoxActivo($refCanchas,array(1),'',mysql_result($resFixDetalle,0,'refcanchas'));
+}
+
+
+$refArbitros	=	$serviciosReferencias->traerArbitros();
+if (mysql_result($resFixDetalle,0,'refarbitros') == '') {
+	$cadArbitros	=	$serviciosFunciones->devolverSelectBox($refArbitros,array(1),'');	
+} else {
+	$cadArbitros	=	$serviciosFunciones->devolverSelectBoxActivo($refArbitros,array(1),'',mysql_result($resFixDetalle,0,'refarbitros'));
 }
 
 if ($_SESSION['idroll_predio'] != 1) {
@@ -1150,21 +1151,33 @@ if ($_SESSION['idroll_predio'] != 1) {
 								?></p>
                 </div>
 				<div class="col-md-3">
-                	<p>Arbitro: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'arbitro'); ?></span></p>
+                	<p>Arbitro: <select data-placeholder="selecione el Arbitro..." id="refarbitros" name="refarbitros" class="chosen-select" tabindex="2" style="width:210px;">
+            								<option value=""></option>
+											<?php echo $cadArbitros; ?>
+                                            </select></p>
                 </div>
                 <div class="col-md-3">
-                	<p>Cancha: <select data-placeholder="selecione la cancha..." id="refcanchas" name="refcanchas" class="chosen-select" tabindex="2" style="width:190px;">
+                	<p>Cancha: <select data-placeholder="selecione la cancha..." id="refcanchas" name="refcanchas" class="chosen-select" tabindex="2" style="width:210px;">
             								<option value=""></option>
 											<?php echo $cadCanchas; ?>
                                             </select></p>
                 </div>
                 
                 <div class="col-md-6">
-                	<p style="font-size:2.2em">Resultado Local: <span class="resultadoA"><?php echo (mysql_result($resFixDetalle,0,'goleslocal') == '' ? 0 : mysql_result($resFixDetalle,0,'goleslocal')); ?></span></p>
+                	<p>Juez 1: <input type="text" class="form-control" id="juez1" name="juez1" value="<?php echo mysql_result($resFixDetalle,0,'juez1'); ?>"/></p>
                 </div>
                 <div class="col-md-6">
-                	<p style="font-size:2.2em">Resultado Visitante: <span class="resultadoB"><?php echo (mysql_result($resFixDetalle,0,'golesvisitantes') == '' ? 0 : mysql_result($resFixDetalle,0,'golesvisitantes')); ?></span></p>
+                	<p>Juez 2: <input type="text" class="form-control" id="juez2" name="juez2" value="<?php echo mysql_result($resFixDetalle,0,'juez2'); ?>"/></p>
                 </div>
+                
+                <div class="col-md-6">
+                	<p style="font-size:2.2em">Resultado <?php echo $equipoA; ?>: <span class="resultadoA"><?php echo (mysql_result($resFixDetalle,0,'goleslocal') == '' ? 0 : mysql_result($resFixDetalle,0,'goleslocal')); ?></span></p>
+                </div>
+                <div class="col-md-6">
+                	<p style="font-size:2.2em">Resultado <?php echo $equipoB; ?>: <span class="resultadoB"><?php echo (mysql_result($resFixDetalle,0,'golesvisitantes') == '' ? 0 : mysql_result($resFixDetalle,0,'golesvisitantes')); ?></span></p>
+                </div>
+                
+
                 
                 <div class='row' style="margin-left:15px; margin-right:15px;">
                     <div class="form-group col-md-4" style="display:block">

@@ -4620,10 +4620,13 @@ return $res;
 }
 
 
-function modificarFixturePorCancha($id,$refCanchas) {
+function modificarFixturePorCancha($id,$refCanchas, $refArbitros, $juez1, $juez2) {
 $sql = "update dbfixture
 set
-refcanchas = ".$refCanchas."
+refcanchas = ".$refCanchas.",
+refarbitros = ".$refArbitros.",
+juez1 = '".$juez1."',
+juez2 = '".$juez2."'
 where idfixture =".$id;
 $res = $this->query($sql,0);
 return $res;
