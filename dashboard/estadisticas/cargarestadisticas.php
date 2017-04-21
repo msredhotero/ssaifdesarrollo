@@ -465,15 +465,6 @@ $numero = count($_POST);
 				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
 				$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
 				//*****				fin							*****/	
-			} else {
-				$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 4, $idFixture);
-				if ($idsancion != 0) {
-					//*****			calculo amarillas acumuladas ********/
-					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
-					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
-					$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
-					//*****				fin							*****/	
-				}
 			}
 			//*****				fin							*****/
 			

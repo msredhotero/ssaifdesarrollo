@@ -778,8 +778,10 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 				inner
 				join		tbtiposanciones ts
 				on			ts.idtiposancion = sj.reftiposanciones
+				inner
+				join		dbtorneos t
+				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias
 				where		sj.refjugadores = ".$idJugador."
-							and fix.reftorneos = ".$idTorneo."
 							and fix.reffechas >= ".$reffechaDesde."
 							and ts.amonestacion = 1
 							and sj.cantidad > 0
@@ -795,26 +797,13 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 				inner
 				join		dbfixture fix
 				on			fix.idfixture = sj.reffixture
+				inner
+				join		dbtorneos t
+				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias
 				where		sj.refjugadores = ".$idJugador."
-							and fix.reftorneos = ".$idTorneo."
 							and fix.reffechas >= ".$reffechaDesde."
-							and sj.reftiposanciones = 4 and sf.amarillas <> 2
+							and sj.reftiposanciones = 4 or sf.amarillas = 2
 							
-				union all
-			
-				select
-					2 as cantidad
-				from		dbsancionesjugadores sj
-				inner
-				join		dbsancionesfallos sf
-				on			sj.refsancionesfallos = sf.idsancionfallo
-				inner
-				join		dbfixture fix
-				on			fix.idfixture = sj.reffixture
-				where		sj.refjugadores = ".$idJugador."
-							and fix.reftorneos = ".$idTorneo."
-							and fix.reffechas >= ".$reffechaDesde."
-							and sf.amarillas = 2
 				) t";	
 	
 	$res = $this->query($sql,0);
@@ -6134,7 +6123,7 @@ function estaFechaYaFueCumplida($idJugador, $idFixture) {
 
 function hayPendienteDeFallo($idJugador, $idFixture) {
 	$sql = "SELECT 
-				coalesce(sf.cantidadfechas -  coalesce(sfc.cumplidas,0),0) as faltan
+				coalesce(1,0) as faltan
 			FROM
 				dbsancionesjugadores san
 					INNER JOIN

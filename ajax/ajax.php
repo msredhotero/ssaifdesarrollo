@@ -875,6 +875,18 @@ function insertarFalloPorFecha($serviciosReferencias) {
 			$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
 			
 			if ((integer)$res > 0) { 
+				//necesito saber si cuando resuelven por 2 amarillas en el pre-fallo o en el fallo o la convinandiocn de las dos
+				
+				//// aplico el calculo de acumulacionde amarillas si el or es true /////
+				
+				if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
+					//*****			calculo amarillas acumuladas ********/
+					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
+					$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
+					//*****				fin							*****/
+				}
+			
 				//actualizo la referencia
 				$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
 				
