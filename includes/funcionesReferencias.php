@@ -6479,6 +6479,13 @@ return $res;
 } 
 
 
+function eliminarSancionesfechascumplidasPorSancionFallo($idSancionFallo) { 
+$sql = "delete from dbsancionesfechascumplidas where refsancionesfallos =".$idSancionFallo; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 function traerSancionesfechascumplidas() { 
 $sql = "select 
 s.idsancionfechacumplida,
