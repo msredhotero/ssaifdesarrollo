@@ -68,6 +68,7 @@ $numeroDia = date('w', strtotime($fechainicio));
 
 //die(var_dump($serviciosFunciones->formatearFechas($fechainicio)));
 
+
 switch ($numeroDia) {
 	case 0:
 		$numeroDia = 7;
@@ -106,10 +107,10 @@ if (mysql_num_rows($resDias)>0) {
 		} else {
 			$nuevoNumero = mysql_result($resDias,0,'refdias') - $numeroDia;
 		
-			date_add($fechaNueva, date_interval_create_from_date_string('-'.$nuevoNumero.' days'));
+			date_add($fechaNueva, date_interval_create_from_date_string('+'.$nuevoNumero.' days'));
 		}
 	}
-	//die(var_dump($numeroDia));
+	//die(var_dump($fechaNueva));
 	$hora = mysql_result($resDias,0,'hora');
 } else {
 	$hora = '15:30';

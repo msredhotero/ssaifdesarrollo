@@ -305,6 +305,13 @@ case 'eliminarTorneos':
 eliminarTorneos($serviciosReferencias); 
 break; 
 
+case 'correrfechafixture':
+	correrfechafixture($serviciosReferencias);
+	break;
+case 'modificarnuevafecha':
+	modificarnuevafecha($serviciosReferencias);
+	break;
+
 case 'insertarEquipos': 
 insertarEquipos($serviciosReferencias); 
 break; 
@@ -889,7 +896,7 @@ function insertarFalloPorFecha($serviciosReferencias) {
 				//*****			calculo amarillas acumuladas ********/
 				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
 				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
-				$fechaNueva = (integer)$refFecha + 1;
+
 				if (($cantidadAmarillas %  5) == 0) {
 			
 					$fallo = $this->insertarSancionesfallos($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla');
@@ -1007,37 +1014,48 @@ function modificarFalloPorFecha($serviciosReferencias) {
 			
 			$observaciones = $_POST['observaciones']; 	
 			
-			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			//necesito saber si cuando resuelven por 2 amarillas en el pre-fallo o en el fallo o la convinandiocn de las dos
+				
+			//// aplico el calculo de acumulacionde amarillas si el or es true /////
 			
+			if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
+				//*****			calculo amarillas acumuladas ********/
+				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
+
+				if (($cantidadAmarillas %  5) == 0) {
+
+					$fallo = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,1+$cantidadfechas,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla'); 
+
+				} else {
+					$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+				
+					if ($res == true) { 
+		
+						
+						echo ''; 
+					} else { 
+						echo 'Huvo un error al insertar datos';	 
+					} 
+				}
+				
+				//*****				fin							*****/
+			} else {
+				$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+				
+				if ($res == true) { 
+
+					echo ''; 
+				} else { 
+					echo 'Huvo un error al insertar datos';	 
+				} 
+			}
 			
 			/********** elimino lo cargado ***************************************************/
 			//$serviciosReferencias->eliminarMovimientosancionesPorSancionJugador($refsancionesjugadores);
 			/********** fin   (despues lo controlo con los movimientos)  *********************/
 			
-			if ($res == true) { 
-				//tengo que ver en que fecha estoy parado para cortar los movimientos
-				//$ultimaFechaCumplida = $serviciosReferencias->traerMovimientosancionesPorSancionJugadorCumplidas($refsancionesjugadores);
-				/*
-				if ($valor == 'fallocantidad') {
-					*/
-					
-					/********** inserto en la tabla de movimientos las fechas que no va a jugar ******/
-					/*
-					for ($i=1;$i<= $cantidadfechas;$i++) {
-						$serviciosReferencias->insertarMovimientosanciones($refsancionesjugadores,$refFecha + $i,$refFixture,0,0,1);	
-					}
-					*/
-					/********** fin ******/
-					
-					/******** recorrer y marcar las fechas cumplidas *********************************/
-					
-					/********  fin del recorrer ******************************************************/
-				//}
-				
-				echo ''; 
-			} else { 
-				echo 'Huvo un error al insertar datos';	 
-			} 
+			
 		}
 	}
 }
@@ -2347,6 +2365,15 @@ echo $res;
 /**************  ETAPA 3 Y 4 **************************************/
 /* PARA Torneos */
 
+function correrfechafixture($serviciosReferencias) {
+	$idtorneo 	= $_POST['idtorneo']; 
+	$nuevafecha = $_POST['nuevafecha']; 
+	$fechadesde = $_POST['fechadesde']; 
+	
+	$res = $serviciosReferencias->correrfechafixture($idtorneo, $nuevafecha, $fechadesde);
+	
+	echo $res;
+}
  
 function insertarTorneos($serviciosReferencias) { 
 	$descripcion = $_POST['descripcion']; 

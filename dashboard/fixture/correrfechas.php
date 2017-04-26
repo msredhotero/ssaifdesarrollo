@@ -43,13 +43,19 @@ $resDias = $serviciosReferencias->traerDefinicionescategoriastemporadasPorTempor
 
 $diaDeJuego = mysql_result($resDias,0,'refdias');
 
+$ultimaFechaCalendario = $serviciosReferencias->traerUltimaFechaCalendarioFixturePorTorneo($id);
+
+if ($diaDeJuego == 7) {
+	$diaDeJuego = 0;	
+}
+
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbfixture";
 
 $lblCambio	 	= array("refconectorlocal","goleslocal","refconectorvisitante","golesvisitantes","fecha","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos","puntoslocal","puntosvisita","calificacioncancha");
 $lblreemplazo	= array("Equipo Local","Resultado 1","Equipo Visitante","Resultado 2","Fecha Juego","Fecha","Cancha","Arbitros","Estados Partidos","Torneo","Puntos Local","Puntos Visitante","Calificacion Cancha");
 
-$resConectorL	=	$serviciosReferencias->traerEquipoPorTorneo(mysql_result($resResult,0,'reftorneos'));
+$resConectorL	=	$serviciosReferencias->traerEquipoPorTorneo($id);
 $cadRef			=	$serviciosFunciones->devolverSelectBoxActivo($resConectorL,array(1,2)," - ", mysql_result($resResult,0,'refconectorlocal'));
 
 $resConectorV	=	$serviciosReferencias->traerEquipoPorTorneo(mysql_result($resResult,0,'reftorneos'));
@@ -218,7 +224,7 @@ $cabeceras 		= "	<th>Descripción</th>
                             <label class="control-label" style="text-align:left" for="reffecha">Accion</label>
                             <div class="input-group col-md-12">
                                 <div align="center">
-                                <button style="margin-left:0px;" id="modificarnuevafecha" class="btn btn-warning" type="button">Correr</button>
+                                <button style="margin-left:0px;" id="correrfechafixture" class="btn btn-warning" type="button">Correr</button>
                                 </div>
                             </div>
                         </div>
@@ -317,10 +323,7 @@ $cabeceras 		= "	<th>Descripción</th>
 <script type="text/javascript">
 $(document).ready(function(){
 
-	 <?php 
-		echo $serviciosHTML->validacion($tabla);
-	
-	?>
+
 	
 	$('#chequearF').click( function() {
 		url = "chequear.php";
@@ -362,20 +365,29 @@ $(document).ready(function(){
 		  }
 	});//fin del boton eliminar
 	
-	function jugo(idFixture) {
+	function correrfechafixture(idtorneo, nuevafecha, fechadesde) {
 		$.ajax({
-				data:  {idFixture: idFixture, accion: 'marcarJugo'},
+				data:  {idtorneo: idtorneo, 
+						nuevafecha: nuevafecha,
+						fechadesde: fechadesde,
+						accion: 'correrfechafixture'},
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
 						
 				},
 				success:  function (response) {
-						alert('Se marco correctamente');
-						
+						alert(response);
+						url = "correrfechas.php?id="+<?php echo $id; ?>;
+						//$(location).attr('href',url);
 				}
 		});	
 	}
+	
+	$('#correrfechafixture').click(function() {
+		
+		correrfechafixture(<?php echo $id; ?>, $('#fechacierre').val(), $('#reffechas').val());
+	});
 	
 	function chequeado(idFixture) {
 		$.ajax({
@@ -595,7 +607,7 @@ $(document).ready(function(){
  };
  $.datepicker.setDefaults($.datepicker.regional['es']);
  
-
+	
 	
     $( "#nuevafecha" ).datepicker({
 		beforeShowDay: function(date) {
@@ -607,6 +619,7 @@ $(document).ready(function(){
 	
     $( "#nuevafecha" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 	
+	
 	$( "#fechacierre" ).datepicker({
 		beforeShowDay: function(date) {
 			var day = date.getDay();
@@ -615,6 +628,8 @@ $(document).ready(function(){
 	});
 
     $( "#fechacierre" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+	$( "#fechacierre" ).datepicker("setDate", "<?php echo $ultimaFechaCalendario; ?>");
+	$( "#fechacierre" ).datepicker( "option", "minDate", "<?php echo $ultimaFechaCalendario; ?>" );
   });
   </script>
 

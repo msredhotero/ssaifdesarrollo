@@ -75,7 +75,8 @@ $tablasAr	= array("contactos"        => "dbcontactos",
 "mejorjugador"=>"dbmejorjugador",
 "minutosjugados"=>"dbminutosjugados",
 "penalesjugadores"=>"dbpenalesjugadores",
-"sancionesfechascumplidas"=>"dbsancionesfechascumplidas");
+"sancionesfechascumplidas"=>"dbsancionesfechascumplidas",
+"sancionesjugadoresfallos"=>"dbsancionesjugadoresfallos");
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
@@ -120,7 +121,8 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "mejorjugador"=>"dbmejorjugador",
 "minutosjugados"=>"dbminutosjugados",
 "penalesjugadores"=>"dbpenalesjugadores",
-"sancionesfechascumplidas"=>"dbsancionesfechascumplidas");
+"sancionesfechascumplidas"=>"dbsancionesfechascumplidas",
+"sancionesjugadoresfallos"=>"dbsancionesjugadoresfallos");
 
 	$tablasArAux	= array("contactos"        => 2,        
 "tipocontactos"=> 1,
@@ -162,7 +164,8 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "mejorjugador"=>5,
 "minutosjugados"=>5,
 "penalesjugadores"=>5,
-"sancionesfechascumplidas"=>2);
+"sancionesfechascumplidas"=>2,
+"sancionesjugadoresfallos"=>2);
 	
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
@@ -192,7 +195,7 @@ $ajaxFuncionesController = '';
 
 $servicios	= "Referencias";
 
-$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_desa";
+$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_desa_host";
 $resMapeo 	=	query($sqlMapaer,0);
 
 $aliasTablaMadre = '';

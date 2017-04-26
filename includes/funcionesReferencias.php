@@ -3188,6 +3188,23 @@ function desactivarTorneos($idTorneo,$reftipotorneo,$reftemporadas,$refcategoria
 	return $res; 
 }
 
+function correrfechafixture($idtorneo, $nuevafecha, $fechadesde) {
+	$ultimaFecha = $this->traerUltimaFechaFixtureSinEstadoPorTorneo($idtorneo);
+	
+	$diferencia = $ultimaFecha - $fechadesde;
+	
+	$cambios = 0;
+	for ($i=$ultimaFecha; $i>=$fechadesde;$i--) {
+		
+		$this->modificarFixtureFechaPorRefFecha($idtorneo, $i, $nuevafecha);		
+		$cambios += 1;
+		$nuevafecha = strtotime ( '-7 day' , strtotime ( $nuevafecha ) ) ;
+		$nuevafecha = date ( 'Y-m-d' , $nuevafecha );
+	}
+	
+	return 'Se modificaron '.$cambios.' fechas del torneo';
+}
+
 function insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo) { 
 $sql = "insert into dbtorneos(idtorneo,descripcion,reftipotorneo,reftemporadas,refcategorias,refdivisiones,cantidadascensos,cantidaddescensos,respetadefiniciontipojugadores,respetadefinicionhabilitacionestransitorias,respetadefinicionsancionesacumuladas,acumulagoleadores,acumulatablaconformada,observaciones,activo) 
 values ('','".($descripcion)."',".$reftipotorneo.",".$reftemporadas.",".$refcategorias.",".$refdivisiones.",".($cantidadascensos == '' ? 0 : $cantidadascensos).",".($cantidaddescensos == '' ? 0 : $cantidaddescensos).",".$respetadefiniciontipojugadores.",".$respetadefinicionhabilitacionestransitorias.",".$respetadefinicionsancionesacumuladas.",".$acumulagoleadores.",".$acumulatablaconformada.",'".($observaciones)."',".$activo.")"; 
@@ -4622,6 +4639,16 @@ return $res;
 }
 
 
+function modificarFixtureFechaPorRefFecha($reftorneos,$reffechas, $fecha) {
+$sql = "update dbfixture
+set
+fecha = '".$fecha."'
+where reffechas =".$reffechas." and reftorneos =".$reftorneos;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
 
 function eliminarFixture($id) {
 $sql = "delete from dbfixture where idfixture =".$id;
@@ -4936,6 +4963,28 @@ function traerUltimaFechaFixturePorTorneo($idTorneo) {
 			from dbfixture f
 			inner join dbtorneos tor ON tor.idtorneo = f.reftorneos 
 			inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+			where tor.idtorneo = ".$idTorneo;
+			
+	$res = $this->existeDevuelveId($sql);
+	return $res;
+}
+
+function traerUltimaFechaFixtureSinEstadoPorTorneo($idTorneo) {
+	$sql = "select
+			distinct max(f.reffechas)
+			from dbfixture f
+			inner join dbtorneos tor ON tor.idtorneo = f.reftorneos 
+			where tor.idtorneo = ".$idTorneo;
+			
+	$res = $this->existeDevuelveId($sql);
+	return $res;
+}
+
+function traerUltimaFechaCalendarioFixturePorTorneo($idTorneo) {
+	$sql = "select
+			distinct max(f.fecha)
+			from dbfixture f
+			inner join dbtorneos tor ON tor.idtorneo = f.reftorneos 
 			where tor.idtorneo = ".$idTorneo;
 			
 	$res = $this->existeDevuelveId($sql);
@@ -5331,7 +5380,66 @@ return $res;
 /* /* Fin de la Tabla: dbpenalesjugadores*/
 
 
+/* PARA Sancionesjugadoresfallos */
 
+function insertarSancionesjugadoresfallos($refsancionesjugadores,$refsancionesfallos) {
+$sql = "insert into dbsancionesjugadoresfallos(idsancionjugadorfallos,refsancionesjugadores,refsancionesfallos)
+values ('',".$refsancionesjugadores.",".$refsancionesfallos.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarSancionesjugadoresfallos($id,$refsancionesjugadores,$refsancionesfallos) {
+$sql = "update dbsancionesjugadoresfallos
+set
+refsancionesjugadores = ".$refsancionesjugadores.",refsancionesfallos = ".$refsancionesfallos."
+where idsancionjugadorfallos =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarSancionesjugadoresfallos($id) {
+$sql = "delete from dbsancionesjugadoresfallos where idsancionjugadorfallos =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function eliminarSancionesjugadoresfallosPorSancionJugador($idSancionJugador) {
+$sql = "delete from dbsancionesjugadoresfallos where refsancionesjugadores =".$idSancionJugador;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarSancionesjugadoresfallosPorFallo($idFallo) {
+$sql = "delete from dbsancionesjugadoresfallos where refsancionesfallos =".$idFallo;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerSancionesjugadoresfallos() {
+$sql = "select
+s.idsancionjugadorfallos,
+s.refsancionesjugadores,
+s.refsancionesfallos
+from dbsancionesjugadoresfallos s
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerSancionesjugadoresfallosPorId($id) {
+$sql = "select idsancionjugadorfallos,refsancionesjugadores,refsancionesfallos from dbsancionesjugadoresfallos where idsancionjugadorfallos =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbsancionesjugadoresfallos*/
 
 /* PARA Sancionesfallos */
 
