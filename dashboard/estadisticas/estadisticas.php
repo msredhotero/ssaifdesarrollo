@@ -418,7 +418,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 				$('.amarillas').each(function(intIndex){
 					$(this).number( true, 0 );
 					$(this).change( function() {
-						if ($(this).val() > 2) {
+						if ($(this).val() > 1) {
 							$(this).val(2);
 						}
 						if ($(this).val() < 0) {

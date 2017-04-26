@@ -811,6 +811,15 @@ function insertarFalloPorFecha($serviciosReferencias) {
 	$resFixture				=	$serviciosReferencias->traerFixturePorId($refFixture);
 	$refFecha				=	mysql_result($resFixture,0,'reffechas');
 	
+	$idTorneo				=	mysql_result($resFixture,0,'reftorneos');
+
+	$equipo					=	mysql_result($resSancionesJugadores,0,'refequipos');
+	$fecha					=	date('Y-m-d');
+	$idCategoria			=	mysql_result($resSancionesJugadores,0,'refcategorias');
+	$idDivisiones			=	mysql_result($resSancionesJugadores,0,'refdivisiones');
+	$idsancion				=	$refsancionesjugadores;
+	$idJugador				=	mysql_result($resSancionesJugadores,0,'refjugadores');
+	
 	$refParaActualizar		=	0; //utilizo esta variable para acumular la ultima fecha sancionada y modificar la de la acumulacion de las amarillas
 	$fechaEncontrada		=	0;
 	$bandModificoFecha		=	0;
@@ -872,28 +881,51 @@ function insertarFalloPorFecha($serviciosReferencias) {
 			
 			$observaciones = $_POST['observaciones']; 	
 			
-			$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			//necesito saber si cuando resuelven por 2 amarillas en el pre-fallo o en el fallo o la convinandiocn de las dos
+				
+			//// aplico el calculo de acumulacionde amarillas si el or es true /////
 			
-			if ((integer)$res > 0) { 
-				//necesito saber si cuando resuelven por 2 amarillas en el pre-fallo o en el fallo o la convinandiocn de las dos
+			if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
+				//*****			calculo amarillas acumuladas ********/
+				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
+				$fechaNueva = (integer)$refFecha + 1;
+				if (($cantidadAmarillas %  5) == 0) {
+			
+					$fallo = $this->insertarSancionesfallos($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla');
+					
+					//actualizo la referencia
+					$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $fallo);
+				} else {
+					$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
 				
-				//// aplico el calculo de acumulacionde amarillas si el or es true /////
-				
-				if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
-					//*****			calculo amarillas acumuladas ********/
-					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
-					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
-					$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
-					//*****				fin							*****/
+					if ((integer)$res > 0) { 
+						
+					
+						//actualizo la referencia
+						$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
+						
+						echo ''; 
+					} else { 
+						echo 'Huvo un error al insertar datos';	 
+					} 
 				}
-			
-				//actualizo la referencia
-				$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
 				
-				echo ''; 
-			} else { 
-				echo 'Huvo un error al insertar datos';	 
-			} 
+				//*****				fin							*****/
+			} else {
+				$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+				
+				if ((integer)$res > 0) { 
+					
+				
+					//actualizo la referencia
+					$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
+					
+					echo ''; 
+				} else { 
+					echo 'Huvo un error al insertar datos';	 
+				} 
+			}
 		}
 	}
 }
