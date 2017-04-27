@@ -899,40 +899,26 @@ function insertarFalloPorFecha($serviciosReferencias) {
 
 				if (($cantidadAmarillas %  5) == 0) {
 			
-					$fallo = $this->insertarSancionesfallos($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla');
+					$fallo = $serviciosReferencias->insertarSancionesfallosacumuladas($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla');
 					
-					//actualizo la referencia
-					$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $fallo);
-				} else {
-					$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
-				
-					if ((integer)$res > 0) { 
-						
-					
-						//actualizo la referencia
-						$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
-						
-						echo ''; 
-					} else { 
-						echo 'Huvo un error al insertar datos';	 
-					} 
-				}
+				} 
 				
 				//*****				fin							*****/
-			} else {
-				$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			} 
+			
+			$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			
+			if ((integer)$res > 0) { 
 				
-				if ((integer)$res > 0) { 
-					
+			
+				//actualizo la referencia
+				$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
 				
-					//actualizo la referencia
-					$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
-					
-					echo ''; 
-				} else { 
-					echo 'Huvo un error al insertar datos';	 
-				} 
-			}
+				echo ''; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
+			
 		}
 	}
 }
@@ -1025,31 +1011,29 @@ function modificarFalloPorFecha($serviciosReferencias) {
 
 				if (($cantidadAmarillas %  5) == 0) {
 
-					$fallo = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,1+$cantidadfechas,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla'); 
+					$fallo = $serviciosReferencias->insertarSancionesfallosacumuladas($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla');
 
 				} else {
-					$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
-				
-					if ($res == true) { 
-		
-						
-						echo ''; 
-					} else { 
-						echo 'Huvo un error al insertar datos';	 
-					} 
+					$existe = $serviciosReferencias->traerSancionesfallosacumuladasPorIdSancionJugador($refsancionesjugadores);
+					
+					if (mysql_num_rows($existe)>0) {
+						//borro la sancion
+						$serviciosReferencias->eliminarSancionesfallosacumuladas(mysql_result($existe,0,0));	
+					}
 				}
 				
 				//*****				fin							*****/
-			} else {
-				$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
-				
-				if ($res == true) { 
+			} 
+			
+			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			
+			if ($res == true) { 
 
-					echo ''; 
-				} else { 
-					echo 'Huvo un error al insertar datos';	 
-				} 
-			}
+				echo ''; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
+			
 			
 			/********** elimino lo cargado ***************************************************/
 			//$serviciosReferencias->eliminarMovimientosancionesPorSancionJugador($refsancionesjugadores);

@@ -252,6 +252,8 @@ $refTorneos		=	$serviciosReferencias->traerTorneosActivos();
 								$cantidad = 0;
 								
 								while ($rowC = mysql_fetch_array($refTorneos)) {
+									$existe = mysql_num_rows($serviciosReferencias->traerFixtureTodoPorTorneo($rowC['idtorneo']));
+									
 							?>
                             	<tr>
                                 	<td><?php echo $rowC['descripcion']; ?></td>
@@ -260,8 +262,8 @@ $refTorneos		=	$serviciosReferencias->traerTorneosActivos();
                                     <td><?php echo $rowC['division']; ?></td>
                                     <td align="center"><img src="../../imagenes/verIco.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varver"></td>
                                     <td align="center"><img src="../../imagenes/posicionesfix.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varposiciones"></td>
-                                    <td align="center"><img src="../../imagenes/Icon_Calendar.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="vargenerar"></td>
-                                    <td align="center"><span id="<?php echo $rowC['idtorneo']; ?>" class="glyphicon glyphicon-transfer correrFecha" style="cursor:pointer;"></span></td>
+                                    <td align="center"><?php if ($existe < 1) { ?><img src="../../imagenes/Icon_Calendar.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="vargenerar"><?php } ?></td>
+                                    <td align="center"><?php if ($existe > 0) { ?><span id="<?php echo $rowC['idtorneo']; ?>" class="glyphicon glyphicon-transfer correrFecha" style="cursor:pointer;"></span><?php } ?></td>
                                     
                                 </tr>
                             <?php

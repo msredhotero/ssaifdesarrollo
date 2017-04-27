@@ -175,7 +175,7 @@ $numero = count($_POST);
 				//analizo si en un supuesto caso anteriormente tenia una amarilla
 				if ($existeAmarillas != 0) {
 					$serviciosReferencias->eliminarMovimientosancionesPorSancionJugadorAcumuadasAmarillas($existeAmarillas);
-					$serviciosReferencias->eliminarSancionesfallosPorSacionJugador($existeAmarillas);
+					$serviciosReferencias->eliminarSancionesfallosacumuladasPorIdSancionJugador($existeAmarillas);
 					$serviciosReferencias->eliminarSancionesjugadores($existeAmarillas);
 				}
 			}
@@ -360,7 +360,7 @@ $numero = count($_POST);
 				//analizo si en un supuesto caso anteriormente tenia una amarilla
 				if ($existeAmarillas != 0) {
 					$serviciosReferencias->eliminarMovimientosancionesPorSancionJugadorAcumuadasAmarillas($existeAmarillas);
-					$serviciosReferencias->eliminarSancionesfallosPorSacionJugador($existeAmarillas);
+					$serviciosReferencias->eliminarSancionesfallosacumuladasPorIdSancionJugador($existeAmarillas);
 					$serviciosReferencias->eliminarSancionesjugadores($existeAmarillas);
 				}	
 			}
