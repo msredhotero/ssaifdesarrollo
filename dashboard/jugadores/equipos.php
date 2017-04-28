@@ -394,7 +394,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             <?php if (mysql_num_rows($resCantidadConectoresActivos) > 0) { ?>
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert alert-info' id="erroresCargos">
-                	<p><strong>Importante!</strong> El jugador esta jugando actualmente para el equipo <strong><?php echo mysql_result($resCantidadConectoresActivos,0,2); ?></strong>, si lo carga un otro equipo este se dara de baja automaticamente.</p>
+                	<p><strong>Importante!</strong> El jugador esta jugando actualmente para el equipo <strong><?php echo mysql_result($resCantidadConectoresActivos,0,2); ?></strong>.</p>
                 </div>
                 <div id='load'>
                 

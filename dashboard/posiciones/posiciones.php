@@ -38,6 +38,14 @@ $resPosiciones		=	$serviciosReferencias->Posiciones($idTorneo);
 
 $resGoleadores		=	$serviciosReferencias->Goleadores($idTorneo);
 
+$resPuntoBonus		=	$serviciosReferencias->traerTorneopuntobonusPorTorneo($idTorneo);
+
+if (mysql_num_rows($resPuntoBonus)>0) {
+	$exite	= 1;
+} else {
+	$exite	= 0;
+}
+
 $resConformadaPosiciones		=	$serviciosReferencias->PosicionesConformada(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'),mysql_result($resTorneo,0,'refdivisiones'));
 
 
@@ -164,7 +172,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <th>Puntos</th>
                             <th>Amarillas</th>
                             <th>Rojas</th>
+                            <?php if ($exite == 1) { ?>
                             <th>P.B.</th>
+                            <?php } ?>
                         </thead>
                         <tbody>
                         	<?php
@@ -184,7 +194,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                                 <td><?php echo $row['puntos']; ?></td>
                                 <td><?php echo $row['amarillas']; ?></td>
                                 <td><?php echo $row['rojas']; ?></td>
+                                <?php if ($exite == 1) { ?>
                                 <td><?php echo $row['puntobonus']; ?></td>
+                                <?php } ?>
                             </tr>
                             <?php
 								$cant += 1;
@@ -299,7 +311,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <th>Puntos</th>
                             <th>Amarillas</th>
                             <th>Rojas</th>
+                            <?php if ($exite == 1) { ?>
                             <th>P.B.</th>
+                            <?php } ?>
                         </thead>
                         <tbody>
                         	<?php
@@ -319,7 +333,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                                 <td><?php echo $row['puntos']; ?></td>
                                 <td><?php echo $row['amarillas']; ?></td>
                                 <td><?php echo $row['rojas']; ?></td>
+                                <?php if ($exite == 1) { ?>
                                 <td><?php echo $row['puntobonus']; ?></td>
+                                <?php } ?>
                             </tr>
                             <?php
 								$cant += 1;

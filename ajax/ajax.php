@@ -480,6 +480,10 @@ case 'eliminarSancionesfechascumplidas':
 case 'eliminarSancionesfallos':
 	eliminarSancionesfallos($serviciosReferencias);
 	break;
+	
+case 'eliminarSancionesfallosacumuladas':
+	eliminarSancionesfallosacumuladas($serviciosReferencias);
+	break;
 /*****			FIN				**********/
 }
 
@@ -801,6 +805,14 @@ function eliminarSancionesfallos($serviciosReferencias) {
 	echo $res;
 }
 
+
+function eliminarSancionesfallosacumuladas($serviciosReferencias) {
+	$id = $_POST['id'];
+
+	$res = $serviciosReferencias->eliminarSancionesfallosacumuladasPorIdSancionJugador($id);
+	echo $res;
+}
+
 /**********************                        FIN                     ***********************************/
 function insertarFalloPorFecha($serviciosReferencias) {
 	$refsancionesjugadores = $_POST['refsancionesjugadores']; 
@@ -1078,7 +1090,8 @@ function insertarConectorAjax($serviciosReferencias) {
 			$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
 			if ((integer)$res > 0) { 
 				
-				$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
+				
+				//$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
 				
 				$resConector = $serviciosReferencias->traerConectorActivosPorConector($res);
 				

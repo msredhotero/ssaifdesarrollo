@@ -5872,6 +5872,52 @@ function traerSancionesJugadoresConFallos() {
 }
 
 
+/* recordar poner buscar por temporada activa */
+function traerSancionesJugadoresConFallosAcumulados() {
+	$sql = "select
+			p.idsancionjugador,
+			concat(jug.apellido, ', ', jug.nombres) as jugador,
+			jug.nrodocumento,
+			equ.nombre as equipo,
+			p.fecha,
+			tip.descripcion as tiposancion,
+			p.cantidad,
+			sf.cantidadfechas,
+			sf.fechadesde,
+			sf.fechahasta,
+			sf.amarillas,
+			coalesce( sf.fechascumplidas,0) as fechascumplidas,
+			(case when sf.pendientescumplimientos = 1 then 'Si' else 'No' end) as pendientescumplimientos,
+			(case when sf.pendientesfallo = 1 then 'Si' else 'No' end) as pendientesfallo,
+			(case when sf.generadaporacumulacion = 1 then 'Si' else 'No' end) as generadaporacumulacion,
+			sf.observaciones,
+			p.reftiposanciones,
+			p.refjugadores,
+			p.refequipos,
+			p.reffixture,
+			p.refcategorias,
+			p.refdivisiones,
+			p.refsancionesfallos
+		from dbsancionesjugadores p
+		inner join dbsancionesfallosacumuladas sf ON sf.refsancionesjugadores = p.idsancionjugador
+		inner join tbtiposanciones tip ON tip.idtiposancion = p.reftiposanciones
+		inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+		inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+		inner join dbcountries co ON co.idcountrie = jug.refcountries 
+		inner join dbfixture fix ON fix.idfixture = p.reffixture 
+		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+		inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+		inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+		inner join dbequipos equ ON equ.idequipo = p.refequipos 
+		inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+		inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+		inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones ";	
+		
+		$res = $this->query($sql,0);
+		return $res;
+}
+
+
 
 /* recordar poner buscar por temporada activa */
 function traerSancionesJugadoresPendientesConFallos() {

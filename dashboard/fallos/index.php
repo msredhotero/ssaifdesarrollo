@@ -80,7 +80,7 @@ $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lb
 
 $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerSancionesJugadoresConFallos(),15);
 
-
+$lstCargadosAcumulados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerSancionesJugadoresConFallosAcumulados(),87);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -146,46 +146,6 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <div id="content">
 
-<h3><?php echo $plural; ?></h3>
-
-    <div class="boxInfoLargo">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
-        	
-        </div>
-    	<div class="cuerpoBox">
-        	<form class="form-inline formulario" role="form">
-        	<div class="row">
-			<?php echo $formulario; ?>
-            </div>
-            <!--
-            <div class="row">
-            	<div id="map" ></div>
-
-            </div>
-            -->
-            <div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
-                
-                </div>
-                <div id='load'>
-                
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-12">
-                <ul class="list-inline" style="margin-top:15px;">
-                    <li>
-                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
-                    </li>
-                </ul>
-                </div>
-            </div>
-            </form>
-    	</div>
-    </div>
-    
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
@@ -193,6 +153,17 @@ if ($_SESSION['refroll_predio'] != 1) {
         </div>
     	<div class="cuerpoBox">
         	<?php echo $lstCargados; ?>
+    	</div>
+    </div>
+    
+    
+    <div class="boxInfoLargo">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Suspendidos por Acumulacion de Amarillas</p>
+        	
+        </div>
+    	<div class="cuerpoBox">
+        	<?php echo $lstCargadosAcumulados; ?>
     	</div>
     </div>
     
@@ -213,6 +184,16 @@ if ($_SESSION['refroll_predio'] != 1) {
         <p><strong>Importante: </strong>Si elimina el <?php echo $singular; ?> se perderan todos los datos de este</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
+
+<div id="dialog3" title="Eliminar Suspension Acumuladas">
+    	<p>
+        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            ¿Esta seguro que desea eliminar la suspencion por amarillas acumuladas?.<span id="proveedorEli"></span>
+        </p>
+        <p><strong>Importante: </strong>Si elimina el <?php echo $singular; ?> se perderan todos los datos de este</p>
+        <input type="hidden" value="" id="idEliminarAcumuladas" name="idEliminarAcumuladas">
+</div>
+
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
@@ -221,7 +202,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#example').dataTable({
+	$('table.table').dataTable({
 		"order": [[ 0, "asc" ]],
 		"language": {
 			"emptyTable":     "No hay datos cargados",
@@ -250,7 +231,7 @@ $(document).ready(function(){
 	
 	$('#activo').prop('checked',true);
 
-	$("#example").on("click",'.varborrar', function(){
+	$("table.table").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			$("#idEliminar").val(usersid);
@@ -264,7 +245,22 @@ $(document).ready(function(){
 		  }
 	});//fin del boton eliminar
 	
-	$("#example").on("click",'.varmodificar', function(){
+	
+	$("table.table").on("click",'.varborraracumulados', function(){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			$("#idEliminarAcumuladas").val(usersid);
+			$("#dialog3").dialog("open");
+
+			
+			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
+			//$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton eliminar
+	
+	$("table.table").on("click",'.varmodificar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			
@@ -313,12 +309,46 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 			
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
-	
-	?>
-	
 
+	
+	$( "#dialog3" ).dialog({
+		 	
+			autoOpen: false,
+			resizable: false,
+			width:600,
+			height:240,
+			modal: true,
+			buttons: {
+				"Eliminar": function() {
+
+					$.ajax({
+								data:  {id: $('#idEliminarAcumuladas').val(), accion: 'eliminarSancionesfallosacumuladas'},
+								url:   '../../ajax/ajax.php',
+								type:  'post',
+								beforeSend: function () {
+										
+								},
+								success:  function (response) {
+									url = "index.php";
+									//$(location).attr('href',url);
+										
+								}
+						});
+					$( this ).dialog( "close" );
+					$( this ).dialog( "close" );
+						$('html, body').animate({
+							scrollTop: '1000px'
+						},
+						1500);
+				},
+				Cancelar: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+	 
+	 
+		}); //fin del dialogo para eliminar
+			
 	
 	
 	//al enviar el formulario

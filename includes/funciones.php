@@ -161,6 +161,12 @@ class Servicios {
 				$idresultados = "resultados";
 				$icoVar	  = "glyphicon-check";
 				break;
+			case 87:
+				$cantidad = 15;
+				$classMod = '';
+				$classEli = 'varborraracumulados';
+				$idresultados = "resultados";
+				break;
 			default:
 				$classMod = 'varmodificar';
 				$classEli = 'varborrar';
