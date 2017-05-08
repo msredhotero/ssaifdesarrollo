@@ -167,15 +167,28 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	while ($rowJ = mysql_fetch_array($resJugadoresA))
 	{
 		
+		$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($rowJ['refjugadores']);
+								
+		$suspendidoCategorias		=	$serviciosReferencias->hayMovimientos($rowJ['refjugadores'],$rowE['idfixture']);
+		$suspendidoCategoriasAA		=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowJ['refjugadores'],$rowE['idfixture'], $rowJ['refcategorias']);
+		
+		$falloA					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowJ['refjugadores'],$rowE['idfixture']);
+		
+		$pendiente				=	$serviciosReferencias->hayPendienteDeFallo($rowJ['refjugadores'],$rowE['idfixture']);
+		
+		$yaCumpli				=	$serviciosReferencias->estaFechaYaFueCumplida($rowJ['refjugadores'],$rowE['idfixture']);
+								
+								
 		$cadCumpleEdad = '';
 		$errorDoc = 'FALTA';
 		$cadErrorDoc = '';
 		$habilitacion= 'INHAB.';
 		$transitoria= '';
 		$valorDocumentacion = 0;
+		$documentaciones = '';
 		
 		$edad = $serviciosReferencias->verificarEdad($rowJ['refjugadores']);
-
+		
 		$cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowJ['refjugadores'], $rowJ['refcategorias'], $rowJ['idtipojugador']);
 		
 		$documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($rowJ['refjugadores']);
@@ -184,9 +197,10 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 			$cadCumpleEdad = "CUMPLE";	
 		} else {
 			// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
-			$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowJ['refjugadores'], $idTemporada, $rowJ['refcategorias'],$rowJ['refequipos']);
+			$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowJ['refjugadores'], $idTemporada, $rowJ['refcategorias'], $rowJ['refequipos']);
 			if (mysql_num_rows($habilitacionTransitoria)>0) {
 				$cadCumpleEdad = "HAB. TRANS.";	
+				$habilitacion= 'HAB.';	
 			} else {
 				$cadCumpleEdad = "NO CUMPLE";	
 			}
@@ -196,9 +210,16 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 			while ($rowH = mysql_fetch_array($documentaciones)) {
 				if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
 					if ($rowH['obligatoria'] == 'Si') {
-						$valorDocumentacion += 1;	
+						$valorDocumentacion += 1;
+						if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($rowJ['refjugadores'],$rowH['refdocumentaciones']))>0) {
+							$valorDocumentacion -= 1;	
+						}
 					}
-					$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+					if ($rowH['contravalordesc'] == '') {
+						$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+					} else {
+						$cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
+					}
 				}
 			}
 			if ($cadErrorDoc == '') {
@@ -209,15 +230,17 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 			}
 			
 		} else {
-			$cadErrorDoc = 'FALTA PRESENTAR DOCUMENTACIONES';
+			$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
 		}
 		
-		if ($valorDocumentacion == 0 && $cadCumpleEdad == 'CUMPLE') {
-			if ($cadErrorDoc ==  'FALTA PRESENTAR DOCUMENTACIONES') {
+		if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+			if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
 				$habilitacion= 'INHAB.';	
 			} else {
 				$habilitacion= 'HAB.';	
 			}
+		} else {
+			$habilitacion= 'INHAB.';
 		}
 									
 									
@@ -228,13 +251,19 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->SetX(5);
 		
 		$pdf->Cell(6,4,'',1,0,'C',false);
-		$pdf->Cell(35,4,$rowJ['nombrecompleto'],0,0,'L',false);
+		$pdf->SetFont('Arial','',7);
+		$pdf->Cell(35,4,substr($rowJ['nombrecompleto'],0,20),0,0,'L',false);
+		$pdf->SetFont('Arial','',8);
 		$pdf->Cell(6,4,'',1,0,'C',false);
 		$pdf->Cell(6,4,'',1,0,'C',false);
 		$pdf->Cell(7,4,'',1,0,'C',false);
 		$pdf->Cell(19,4,$rowJ['nrodocumento'],0,0,'C',false);
-		if (($habilitacion == 'HAB.') || ($cadCumpleEdad == 'HAB. TRANS.')) { 
+		if (($habilitacion == 'HAB.')) { 
+			if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0) && ($pendiente == 0)) {
 			$pdf->Cell(19,4,'___________',0,0,'C',false);
+			} else {
+				$pdf->Cell(19,4,'SUSPENDIDO',0,0,'C',false);		
+			}
 		} else {
 			$pdf->Cell(19,4,'INHAB.',0,0,'C',false);	
 		}
@@ -260,18 +289,110 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->SetY($inicializaY - 1);
 	while ($rowV = mysql_fetch_array($resJugadoresB))
 	{
+		
+		$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowV['refjugadores']);
+								
+		$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowV['refjugadores'],$rowE['idfixture']);
+		$suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowV['refjugadores'],$rowE['idfixture'], $rowV['refcategorias']);
+		
+		//die(var_dump($suspendidoCategoriasAAB));
+		$falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowV['refjugadores'],$rowE['idfixture']);
+		
+		$pendienteB				=	$serviciosReferencias->hayPendienteDeFallo($rowV['refjugadores'],$rowE['idfixture']);
+		
+		$yaCumpliB				=	$serviciosReferencias->estaFechaYaFueCumplida($rowV['refjugadores'],$rowE['idfixture']);
+								
+								
+		
+		$cadCumpleEdad = '';
+		$errorDoc = 'FALTA';
+		$cadErrorDoc = '';
+		$habilitacion= 'INHAB.';
+		$transitoria= '';
+		$valorDocumentacion = 0;
+		$documentaciones = '';
+		
+		$edad = $serviciosReferencias->verificarEdad($rowV['refjugadores']);
+		
+		$cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowV['refjugadores'], $rowV['refcategorias'], $rowV['idtipojugador']);
+		
+		$documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($rowV['refjugadores']);
+		
+		if ($cumpleEdad == 1) {
+			$cadCumpleEdad = "CUMPLE";	
+		} else {
+			// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
+			$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowV['refjugadores'], $idTemporada, $rowV['refcategorias'], $rowV['refequipos']);
+			if (mysql_num_rows($habilitacionTransitoria)>0) {
+				$cadCumpleEdad = "HAB. TRANS.";	
+				$habilitacion= 'HAB.';	
+			} else {
+				$cadCumpleEdad = "NO CUMPLE";	
+			}
+		}
+		
+		if (mysql_num_rows($documentaciones)>0) {
+			while ($rowH = mysql_fetch_array($documentaciones)) {
+				if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
+					if ($rowH['obligatoria'] == 'Si') {
+						$valorDocumentacion += 1;
+						if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($rowV['refjugadores'],$rowH['refdocumentaciones']))>0) {
+							$valorDocumentacion -= 1;	
+						}
+					}
+					if ($rowH['contravalordesc'] == '') {
+						$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+					} else {
+						$cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
+					}
+				}
+			}
+			if ($cadErrorDoc == '') {
+				$cadErrorDoc = 'OK';
+				$errorDoc = 'OK';
+			} else {
+				$cadErrorDoc = substr($cadErrorDoc,0,-3);
+			}
+			
+		} else {
+			$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
+		}
+		
+		if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+			if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+				$habilitacion= 'INHAB.';	
+			} else {
+				$habilitacion= 'HAB.';	
+			}
+		} else {
+			$habilitacion= 'INHAB.';
+		}
+		
+		
 		$pdf->SetFillColor(183,183,183);
 		$i = $i+1;
 		$pdf->Ln();
 		$pdf->SetX(107);
 		
 		$pdf->Cell(6,4,'',1,0,'C',false);
-		$pdf->Cell(35,4,$rowV['nombrecompleto'],0,0,'L',false);
+		$pdf->SetFont('Arial','',7);
+		$pdf->Cell(35,4,substr($rowV['nombrecompleto'],0,20),0,0,'L',false);
+		$pdf->SetFont('Arial','',8);
 		$pdf->Cell(6,4,'',1,0,'C',false);
 		$pdf->Cell(6,4,'',1,0,'C',false);
 		$pdf->Cell(7,4,'',1,0,'C',false);
 		$pdf->Cell(19,4,$rowV['nrodocumento'],0,0,'C',false);
-		$pdf->Cell(19,4,'___________',0,0,'C',false);
+		
+		
+		if (($habilitacion == 'HAB.')) { 
+			if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && ($pendienteB == 0)) {
+			$pdf->Cell(19,4,'___________',0,0,'C',false);
+			} else {
+				$pdf->Cell(19,4,'SUSPENDIDO',0,0,'C',false);		
+			}
+		} else {
+			$pdf->Cell(19,4,'INHAB.',0,0,'C',false);	
+		}
 
 
 		if ($i == 27) {

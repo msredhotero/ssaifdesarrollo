@@ -850,6 +850,11 @@ function insertarFalloPorFecha($serviciosReferencias) {
 	
 	$amarillas = 0;
 	
+	$fechadesde = ''; 
+	$fechahasta = ''; 
+	
+	$cantidadfechas = 0; 
+	
 	$count = count($valor);
 	
 	for ($i = 0; $i < $count; $i++) {
@@ -901,30 +906,30 @@ function insertarFalloPorFecha($serviciosReferencias) {
 			$observaciones = $_POST['observaciones']; 	
 			
 			//necesito saber si cuando resuelven por 2 amarillas en el pre-fallo o en el fallo o la convinandiocn de las dos
-				
-			//// aplico el calculo de acumulacionde amarillas si el or es true /////
 			
-			if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
-				//*****			calculo amarillas acumuladas ********/
-				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
-				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
+			$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones);
 
-				if (($cantidadAmarillas %  5) == 0) {
-			
-					$fallo = $serviciosReferencias->insertarSancionesfallosacumuladas($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla');
-					
-				} 
-				
-				//*****				fin							*****/
-			} 
-			
-			$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
-			
 			if ((integer)$res > 0) { 
-				
-			
+
 				//actualizo la referencia
 				$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
+				
+				//// aplico el calculo de acumulacionde amarillas si el or es true /////
+			
+				if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
+					//*****			calculo amarillas acumuladas ********/
+					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
+					if ((integer)$cantidadAmarillas >= 5) {
+	
+					
+						$fallo = $serviciosReferencias->insertarSancionesfallosacumuladas($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla');
+							
+						
+					}
+					
+					//*****				fin							*****/
+				} 
 				
 				echo ''; 
 			} else { 
@@ -953,6 +958,14 @@ function modificarFalloPorFecha($serviciosReferencias) {
 	$resFixture				=	$serviciosReferencias->traerFixturePorId($refFixture);
 	$refFecha				=	mysql_result($resFixture,0,'reffechas');
 	
+	$idTorneo				=	mysql_result($resFixture,0,'reftorneos');
+	
+	$equipo					=	mysql_result($resSancionesJugadores,0,'refequipos');
+	$fecha					=	date('Y-m-d');
+	$idCategoria			=	mysql_result($resSancionesJugadores,0,'refcategorias');
+	$idDivisiones			=	mysql_result($resSancionesJugadores,0,'refdivisiones');
+	$idsancion				=	$refsancionesjugadores;
+	$idJugador				=	mysql_result($resSancionesJugadores,0,'refjugadores');
 	//traigo el fallo de la sancion
 	$resFallo				=	$serviciosReferencias->traerSancionesfallosPorId(mysql_result($resSancionesJugadores,0,'refsancionesfallos'));
 
@@ -961,6 +974,11 @@ function modificarFalloPorFecha($serviciosReferencias) {
 	$errores	=	"";
 	
 	$amarillas = 0;
+	
+	$fechadesde = ''; 
+	$fechahasta = ''; 
+	
+	$cantidadfechas = 0; 
 	
 	$count = count($valor);
 
@@ -1021,9 +1039,9 @@ function modificarFalloPorFecha($serviciosReferencias) {
 				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
 				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
 
-				if (($cantidadAmarillas %  5) == 0) {
+				if ((integer)$cantidadAmarillas >= 5) {
 
-					$fallo = $serviciosReferencias->insertarSancionesfallosacumuladas($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla');
+					$fallo = $serviciosReferencias->insertarSancionesfallosacumuladas($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla'.$cantidadAmarillas);
 
 				} else {
 					$existe = $serviciosReferencias->traerSancionesfallosacumuladasPorIdSancionJugador($refsancionesjugadores);

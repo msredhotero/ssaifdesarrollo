@@ -21,7 +21,7 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 $valorB = 'marcos';
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadisticas",$_SESSION['refroll_predio'],'');
 
 $idFixture = $_POST['idfixture'];
 //die(var_dump($idFixture));
@@ -1248,7 +1248,146 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								$yaCumpli				=	$serviciosReferencias->estaFechaYaFueCumplida($row['refjugadores'],$idFixture);
 								
+						/* todo para saber si esta o no inhabilitado */
+								$cadCumpleEdad = '';
+								$errorDoc = 'FALTA';
+								$cadErrorDoc = '';
+								$habilitacion= 'INHAB.';
+								$transitoria= '';
+								$valorDocumentacion = 0;
+								$documentaciones = '';
+							
+					
+								
+								$edad = $serviciosReferencias->verificarEdad($row['refjugadores']);
+								
+								$cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($row['refjugadores'], $idCategoria, $row['idtipojugador']);
+								
+								$documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($row['refjugadores']);
+								
+								if ($cumpleEdad == 1) {
+									$cadCumpleEdad = "CUMPLE";	
+								} else {
+									// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
+									$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], $idTemporada, $idCategoria, $equipoLocal);
+									if (mysql_num_rows($habilitacionTransitoria)>0) {
+										$cadCumpleEdad = "HAB. TRANS.";	
+										$habilitacion= 'HAB.';	
+									} else {
+										$cadCumpleEdad = "NO CUMPLE";	
+									}
+								}
+								
+								if (mysql_num_rows($documentaciones)>0) {
+									while ($rowH = mysql_fetch_array($documentaciones)) {
+										if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
+											if ($rowH['obligatoria'] == 'Si') {
+												$valorDocumentacion += 1;
+												if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($row['refjugadores'],$rowH['refdocumentaciones']))>0) {
+													$valorDocumentacion -= 1;	
+												}
+											}
+											if ($rowH['contravalordesc'] == '') {
+												$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+											} else {
+												$cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
+											}
+										}
+									}
+									if ($cadErrorDoc == '') {
+										$cadErrorDoc = 'OK';
+										$errorDoc = 'OK';
+									} else {
+										$cadErrorDoc = substr($cadErrorDoc,0,-3);
+									}
+									
+								} else {
+									$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
+								}
+								
+								if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+									if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+										$habilitacion= 'INHAB.';	
+									} else {
+										$habilitacion= 'HAB.';	
+									}
+								} else {
+									$habilitacion= 'INHAB.';
+								}
+								
+								/* fin todo para saber si esta o no inhabilitado */
+					
+						if (($habilitacion != 'HAB.')) {
+							
+						?>
+                        <tr class="<?php echo $row[0]; ?>">
 
+                        	<th style="background-color: #FC0;">
+								<?php echo $row['nombrecompleto']; ?>
+                            </th>
+                            <th style="background-color:#FC0;">
+								<?php echo $row['nrodocumento']; ?>
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            
+                            <?php
+
+								if ($_SESSION['idroll_predio'] == 1) {
+								
+							?>
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
+                            
+                            <?php
+								} else {
+									
+							?>	
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
+                            <?php	
+								} 
+							
+							?>
+                        
+                        </tr>
+                        <?php	
+						} else {
+							
 						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0)) {		
 						?>
                         <tr class="<?php echo $row[0]; ?>">
@@ -1467,9 +1606,17 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="text-align:center"></th>
                             <?php	
 								}
-							}
+							} 
+							
 							?>
+                        
+                        
                         </tr>
+                        
+
+                        
+                        
+                        <?php } ?>
                         <?php
 								}
 								$goles = 0;
@@ -1542,6 +1689,142 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								$yaCumpliB				=	$serviciosReferencias->estaFechaYaFueCumplida($rowB['refjugadores'],$idFixture);
 
+						/* todo para saber si esta o no inhabilitado */
+								$cadCumpleEdad = '';
+								$errorDoc = 'FALTA';
+								$cadErrorDoc = '';
+								$habilitacion= 'INHAB.';
+								$transitoria= '';
+								$valorDocumentacion = 0;
+								$documentaciones = '';
+							
+					
+								
+								$edad = $serviciosReferencias->verificarEdad($rowB['refjugadores']);
+								
+								$cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowB['refjugadores'], $idCategoria, $rowB['idtipojugador']);
+								
+								$documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($rowB['refjugadores']);
+								
+								if ($cumpleEdad == 1) {
+									$cadCumpleEdad = "CUMPLE";	
+								} else {
+									// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
+									$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowB['refjugadores'], $idTemporada, $idCategoria, $equipoVisitante);
+									if (mysql_num_rows($habilitacionTransitoria)>0) {
+										$cadCumpleEdad = "HAB. TRANS.";	
+										$habilitacion= 'HAB.';	
+									} else {
+										$cadCumpleEdad = "NO CUMPLE";	
+									}
+								}
+								
+								if (mysql_num_rows($documentaciones)>0) {
+									while ($rowH = mysql_fetch_array($documentaciones)) {
+										if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
+											if ($rowH['obligatoria'] == 'Si') {
+												$valorDocumentacion += 1;
+												if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($rowB['refjugadores'],$rowH['refdocumentaciones']))>0) {
+													$valorDocumentacion -= 1;	
+												}
+											}
+											if ($rowH['contravalordesc'] == '') {
+												$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+											} else {
+												$cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
+											}
+										}
+									}
+									if ($cadErrorDoc == '') {
+										$cadErrorDoc = 'OK';
+										$errorDoc = 'OK';
+									} else {
+										$cadErrorDoc = substr($cadErrorDoc,0,-3);
+									}
+									
+								} else {
+									$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
+								}
+								
+								if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+									if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+										$habilitacion= 'INHAB.';	
+									} else {
+										$habilitacion= 'HAB.';	
+									}
+								} else {
+									$habilitacion= 'INHAB.';
+								}
+								
+								/* fin todo para saber si esta o no inhabilitado */
+								
+						if (($habilitacion != 'HAB.')) {		
+						?>
+						<tr class="<?php echo $row[0]; ?>">
+
+                        	<th style="background-color:#FC0;">
+								<?php echo $rowB['nombrecompleto']; ?>
+                            </th>
+                            <th style="background-color:#FC0;">
+								<?php echo $rowB['nrodocumento']; ?>
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
+                            
+                            <?php
+
+								if ($_SESSION['idroll_predio'] == 1) {
+								
+							?>
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
+                            
+                            <?php
+								} else {
+									
+							?>	
+                            <th style="text-align:center"></th>
+                            <th style="text-align:center"></th>
+                            <?php	
+								} 
+							
+							?>
+                         </tr>
+                        <?php } else { 
 						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0)) {	
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
@@ -1755,11 +2038,20 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="text-align:center"></th>
                             <?php	
 								}
-							}
+							} 
+							
 							?>
+                        
+                        
                         </tr>
+                        
+
+                        
+                        
+                        <?php } ?>
                         <?php
 								}
+								$goles = 0;
 							}
 						?>
                     </tbody>

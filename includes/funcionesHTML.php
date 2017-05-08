@@ -5,7 +5,7 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosHTML {
 
-function menu($usuario,$titulo,$rol,$empresa) {
+function menu3($usuario,$titulo,$rol,$empresa) {
 	
 	$sql = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' order by orden";
 	$res = $this->query($sql,0);
@@ -14,6 +14,8 @@ function menu($usuario,$titulo,$rol,$empresa) {
 	$cadhover= "";
 	
 	$js = "<script src='../../js/jquery.maskedinput.min.js' type='text/javascript'></script>
+		<link rel='stylesheet' href='../../css/jquery.sweet-dropdown.min.css' />
+<script src='../../js/jquery.sweet-dropdown.min.js'></script>
 		<script>
 		$(document).ready(function(){
 			$('#colapsarMenu').click(function() {
@@ -33,6 +35,107 @@ function menu($usuario,$titulo,$rol,$empresa) {
 		</script>";
 		
 	$cant = 1;
+	/*
+	<div class="dropdown-menu dropdown-anchor-top-left dropdown-has-anchor" id="dropdown-with-icons">
+	<ul>
+		<li><a href="#"><svg>...</svg> Item 1</a>></li>
+		<li><a href="#"><svg>...</svg> Item 2</a></li>
+		<li class="divider"></li>
+		<li><a href="#"><svg>...</svg> Item 3</a></li>
+	</ul>
+</div>
+	*/
+	while ($row = mysql_fetch_array($res)) {
+		if ($titulo == $row['nombre']) {
+			$nombre = $row['nombre'];
+			$row['url'] = "index.php";	
+		}
+		
+		if (strpos($row['permiso'],$rol) !== false) {
+			if ($row['idmenu'] == 1) {
+				$cadmenu = $cadmenu.'<button data-dropdown="#dropdown-with-icons">'.$row['nombre'].'</button>';
+				//$cadmenu = $cadmenu.'<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';
+				//$cadhover = $cadhover.'</li>';	
+			} else {
+				$cadmenu = $cadmenu.'<button data-dropdown="#dropdown-with-icons">'.$row['nombre'].'</button>';
+				//$cadmenu = $cadmenu.'<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';
+				//$cadhover = $cadhover.'</li>';
+			}
+		}
+		$cant+=1;
+	}
+	
+	
+	$menu = utf8_encode($cadmenu).'
+		<div class="dropdown-menu dropdown-anchor-top-left dropdown-has-anchor" id="dropdown-with-icons">
+			<ul>
+				
+			</ul>
+		
+		</div>
+		<div style="background-color:#333; position:absolute; top:0;left:0; height:35px; width:100%; color:#FFF; padding-top:7px;" >
+			
+			<ul class="list-inline" style="margin-left:12px;">
+				<li style="margin-left:20%;"><span class="glyphicon glyphicon-list" id="colapsarMenu" style="cursor:pointer;"> </span></li>
+				<li class="navbar-right"><span class="glyphicon glyphicon-user"></span> '.$usuario.'</li>
+
+			</ul>
+		</div>
+		 
+		<div style="height:30px;">
+		
+		</div> 
+	
+		
+
+		</div>'.$js;
+	
+	return $menu;
+	
+}
+
+
+
+function menu($usuario,$titulo,$rol,$empresa) {
+	
+	$sql = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' order by orden";
+	$res = $this->query($sql,0);
+	
+	$cadmenu = "";
+	$cadhover= "";
+	
+	$js = "<script src='../../js/jquery.maskedinput.min.js' type='text/javascript'></script>
+		<link rel='stylesheet' href='sweet-dropdown/dist/min/jquery.sweet-dropdown.min.css' />
+<script src='sweet-dropdown/dist/min/jquery.sweet-dropdown.min.js'></script>
+		<script>
+		$(document).ready(function(){
+			$('#colapsarMenu').click(function() {
+			if ($('#colapsarMenu').attr('class') == 'glyphicon glyphicon-list') {
+			$('#content').css( { marginLeft : '1%' } );
+			$('#navigation').hide();
+			$('#colapsarMenu').removeClass('glyphicon glyphicon-list');
+			$('#colapsarMenu').addClass('glyphicon glyphicon-align-justify');
+			} else {
+			$('#content').css( { marginLeft : '21%' } );
+			$('#navigation').show();			
+			$('#colapsarMenu').removeClass('glyphicon glyphicon-align-justify');
+			$('#colapsarMenu').addClass('glyphicon glyphicon-list');
+			}
+			});
+		});
+		</script>";
+		
+	$cant = 1;
+	/*
+	<div class="dropdown-menu dropdown-anchor-top-left dropdown-has-anchor" id="dropdown-with-icons">
+	<ul>
+		<li><a href="#"><svg>...</svg> Item 1</a>></li>
+		<li><a href="#"><svg>...</svg> Item 2</a></li>
+		<li class="divider"></li>
+		<li><a href="#"><svg>...</svg> Item 3</a></li>
+	</ul>
+</div>
+	*/
 	while ($row = mysql_fetch_array($res)) {
 		if ($titulo == $row['nombre']) {
 			$nombre = $row['nombre'];

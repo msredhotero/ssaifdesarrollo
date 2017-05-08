@@ -164,17 +164,20 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	<thead>
                         	<th>Posicion</th>
                             <th>Equipos</th>
+                            <th>Pts</th>
+                            <?php if ($exite == 1) { ?>
+                            <th>Pts B.</th>
+                            <th>Pts N.</th>
+                            <?php } ?>
                             <th>PJ</th>
                             <th>PG</th>
-                            <th>PP</th>
                             <th>PE</th>
-                            <th>Goles</th>
-                            <th>Puntos</th>
-                            <th>Amarillas</th>
-                            <th>Rojas</th>
-                            <?php if ($exite == 1) { ?>
-                            <th>P.B.</th>
-                            <?php } ?>
+                            <th>PP</th>
+                            <th>GA</th>
+                            <th>GC</th>
+                            <th>Amon.</th>
+                            <th>Expuls.</th>
+                            
                         </thead>
                         <tbody>
                         	<?php
@@ -186,17 +189,20 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <tr>
                             	<td><?php echo $cant; ?></td>
                                 <td><?php echo $row['equipo']; ?></td>
-                                <td><?php echo $row['pj']; ?></td>
-                                <td><?php echo $row['pg']; ?></td>
-                                <td><?php echo $row['pp']; ?></td>
-                                <td><?php echo $row['pe']; ?></td>
-                                <td><?php echo $row['goles']; ?></td>
                                 <td><?php echo $row['puntos']; ?></td>
-                                <td><?php echo $row['amarillas']; ?></td>
-                                <td><?php echo $row['rojas']; ?></td>
                                 <?php if ($exite == 1) { ?>
                                 <td><?php echo $row['puntobonus']; ?></td>
+                                <td><?php echo ((integer)$row['puntos'] - (integer)$row['puntobonus']); ?></td>
                                 <?php } ?>
+                                <td><?php echo $row['pj']; ?></td>
+                                <td><?php echo $row['pg']; ?></td>
+                                <td><?php echo $row['pe']; ?></td>
+                                <td><?php echo $row['pp']; ?></td>
+                                <td><?php echo $row['goles']; ?></td>
+                                <td><?php echo $row['golescontra']; ?></td>
+                                <td><?php echo $row['amarillas']; ?></td>
+                                <td><?php echo $row['rojas']; ?></td>
+                                
                             </tr>
                             <?php
 								$cant += 1;
