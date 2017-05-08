@@ -26,7 +26,7 @@ $fecha = date('Y-m-d');
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Reportes",$_SESSION['refroll_predio'],'');
 
 $resEquipos = $serviciosReferencias->traerEquipos();
-$cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2,3),' - ');
+$cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2,3,4),' - ');
 
 $resTorneosActivos = $serviciosReferencias->traerTorneosActivos();
 $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivos,array(1,2,3,4,5),' - ');
@@ -100,7 +100,7 @@ $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivo
         	<div class="row">
 
                 
-                <div class="form-group col-md-6" style="display:'.$lblOculta.'">
+                <div class="form-group col-md-10" style="display:'.$lblOculta.'">
                     <label class="control-label" style="text-align:left" for="refcliente">Seleccione el Equipo</label>
                     <div class="input-group col-md-12">
                         
@@ -113,7 +113,7 @@ $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivo
                 </div>
                 
                 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
 
                     	<ul class="list-inline">
