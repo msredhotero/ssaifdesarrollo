@@ -581,7 +581,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 
 function Goleadores($idTorneo) {
 	$sql = "select
-			t.equipo, t.apyn, t.nrodocumento, t.goles
+			t.equipo, t.apyn, t.nrodocumento, sum(t.goles) as goles
 			from (
 				select
 				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles
@@ -631,8 +631,46 @@ function Goleadores($idTorneo) {
 				on			j.idjugador = g.refjugadores
 				where		t.idtorneo = ".$idTorneo." and g.goles > 0
 				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+				
+				UNION ALL 
+				SELECT 
+					el.nombre AS equipo,
+						CONCAT(j.apellido, ', ', j.nombres) AS apyn,
+						j.nrodocumento,
+						SUM(g.penalconvertido) AS goles
+				FROM
+					dbpenalesjugadores g
+				INNER JOIN dbfixture fix ON g.reffixture = fix.idfixture
+				INNER JOIN dbtorneos t ON t.idtorneo = fix.reftorneos
+				INNER JOIN dbequipos el ON el.idequipo = fix.refconectorvisitante
+					AND g.refequipos = fix.refconectorvisitante
+				INNER JOIN dbjugadores j ON j.idjugador = g.refjugadores
+				WHERE
+					t.idtorneo = ".$idTorneo."
+						AND g.penalconvertido > 0
+				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento
+				
+				
+				UNION ALL 
+				SELECT 
+					el.nombre AS equipo,
+						CONCAT(j.apellido, ', ', j.nombres) AS apyn,
+						j.nrodocumento,
+						SUM(g.penalconvertido) AS goles
+				FROM
+					dbpenalesjugadores g
+				INNER JOIN dbfixture fix ON g.reffixture = fix.idfixture
+				INNER JOIN dbtorneos t ON t.idtorneo = fix.reftorneos
+				INNER JOIN dbequipos el ON el.idequipo = fix.refconectorlocal
+					AND g.refequipos = fix.refconectorlocal
+				INNER JOIN dbjugadores j ON j.idjugador = g.refjugadores
+				WHERE
+					t.idtorneo = ".$idTorneo."
+						AND g.penalconvertido > 0
+				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento
 			) t
-				order by t.goles desc, t.apyn";	
+				group by t.equipo, t.apyn, t.nrodocumento
+				order by sum(t.goles) desc, t.apyn";	
 				
 	$res = $this->query($sql,0);
 	return $res;
@@ -692,9 +730,44 @@ function GoleadoresConformada($idTemporada, $idCategoria, $idDivision) {
 				on			j.idjugador = g.refjugadores
 				where		t.reftemporadas =".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.acumulagoleadores = 1 and g.goles > 0
 				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+				
+				UNION ALL 
+				SELECT 
+					el.nombre AS equipo,
+						CONCAT(j.apellido, ', ', j.nombres) AS apyn,
+						j.nrodocumento,
+						SUM(g.penalconvertido) AS goles
+				FROM
+					dbpenalesjugadores g
+				INNER JOIN dbfixture fix ON g.reffixture = fix.idfixture
+				INNER JOIN dbtorneos t ON t.idtorneo = fix.reftorneos
+				INNER JOIN dbequipos el ON el.idequipo = fix.refconectorvisitante
+					AND g.refequipos = fix.refconectorvisitante
+				INNER JOIN dbjugadores j ON j.idjugador = g.refjugadores
+				WHERE
+					t.reftemporadas =".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.acumulagoleadores = 1 AND g.penalconvertido > 0
+				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento
+				
+				
+				UNION ALL 
+				SELECT 
+					el.nombre AS equipo,
+						CONCAT(j.apellido, ', ', j.nombres) AS apyn,
+						j.nrodocumento,
+						SUM(g.penalconvertido) AS goles
+				FROM
+					dbpenalesjugadores g
+				INNER JOIN dbfixture fix ON g.reffixture = fix.idfixture
+				INNER JOIN dbtorneos t ON t.idtorneo = fix.reftorneos
+				INNER JOIN dbequipos el ON el.idequipo = fix.refconectorlocal
+					AND g.refequipos = fix.refconectorlocal
+				INNER JOIN dbjugadores j ON j.idjugador = g.refjugadores
+				WHERE
+					t.reftemporadas =".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.acumulagoleadores = 1 AND g.penalconvertido > 0
+				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento
 			) t
 				group by t.equipo, t.apyn, t.nrodocumento
-				order by t.goles desc, t.apyn";	
+				order by sum(t.goles) desc, t.apyn";	
 				
 	$res = $this->query($sql,0);
 	return $res;
