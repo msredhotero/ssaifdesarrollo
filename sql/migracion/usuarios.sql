@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_prod`.`dbusuarios`
+INSERT INTO `ssaif_prod_abril`.`dbusuarios`
 (`idusuario`,
 `usuario`,
 `password`,

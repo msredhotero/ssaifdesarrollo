@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_prod`.`dbconector`
+INSERT INTO `ssaif_prod_abril`.`dbconector`
 (`idconector`,
 `refjugadores`,
 `reftipojugadores`,
@@ -15,11 +15,11 @@ SELECT '',
 	e.categoriaid,
 	(case when j.clubid <> e.clubid then 1 else 0 end),
 	1
-FROM `ssaif_bck_abril`.`reljugadoresequipos` je
+FROM `ssaif_bck_09052017`.`reljugadoresequipos` je
 inner
-join	ssaif_bck_abril.equipos e
+join	ssaif_bck_09052017.equipos e
 on		je.equipoid = e.equipoid
 inner
-join	ssaif_bck_abril.jugadores j
-on		j.jugadorid = je.jugadorid
+join	ssaif_bck_09052017.jugadores j
+on		j.jugadorid = je.jugadorid;
 

@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_prod`.`tbroles`
+INSERT INTO `ssaif_prod_abril`.`tbroles`
 (`idrol`,
 `descripcion`,
 `activo`)

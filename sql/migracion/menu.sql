@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_prod`.`predio_menu`
+INSERT INTO `ssaif_prod_abril`.`predio_menu`
 (`idmenu`,
 `url`,
 `icono`,
@@ -19,6 +19,6 @@ SELECT `predio_menu`.`idmenu`,
     `predio_menu`.`administracion`,
     `predio_menu`.`torneo`,
     `predio_menu`.`reportes`
-FROM `ssaif_desa_host`.`predio_menu`;
+FROM `ssaif_test_final`.`predio_menu`;
 
 

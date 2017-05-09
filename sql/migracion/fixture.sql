@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_prod`.`dbfixture`
+INSERT INTO `ssaif_prod_abril`.`dbfixture`
 (`idfixture`,
 `reftorneos`,
 `reffechas`,
@@ -37,5 +37,5 @@ SELECT `partidos`.`partidoid`,
     `partidos`.`golesvisita`,
     `partidos`.`observaciones`,
     `partidos`.`publicar`
-FROM `ssaif_bck_abril`.`partidos`;
+FROM `ssaif_bck_09052017`.`partidos`;
 
