@@ -96,7 +96,7 @@ $cabeceras 		= "	<th>Descripción</th>
 
 $formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$refTorneos		=	$serviciosReferencias->traerTorneosActivos();
+$refTorneos		=	$serviciosReferencias->traerTorneos();
 
 ?>
 
