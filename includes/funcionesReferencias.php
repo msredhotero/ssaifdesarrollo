@@ -133,7 +133,7 @@ left join(SELECT
 			dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorlocal = sj.refequipos
 				INNER JOIN
 		tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
-		where ts.amonestacion = 1
+		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
 		GROUP BY fix.idfixture, sj.refequipos) fixa
 on		fixa.idfixture = f.idfixture and fixa.refequipos = el.idequipo
 
@@ -225,7 +225,7 @@ left join(SELECT
 			dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorvisitante = sj.refequipos
 				INNER JOIN
 		tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
-		where ts.expulsion = 1
+		where ts.expulsion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
 		GROUP BY fix.idfixture, sj.refequipos) fixr
 on		fixr.idfixture = f.idfixture and fixr.refequipos = ev.idequipo
 
@@ -5968,6 +5968,16 @@ return $res;
 
 /* recordar poner buscar por temporada activa */
 function traerSancionesJugadoresConFallos() {
+	
+$resTemporadas = $this->traerUltimaTemporada();	
+
+if (mysql_num_rows($resTemporadas)>0) {
+	$ultimaTemporada = mysql_result($resTemporadas,0,0);	
+} else {
+	$ultimaTemporada = 0;	
+}	
+	
+	
 	$sql = "select
 			p.idsancionjugador,
 			concat(jug.apellido, ', ', jug.nombres) as jugador,
@@ -6012,7 +6022,9 @@ function traerSancionesJugadoresConFallos() {
 					inner join dbfixture fixf on fixf.idfixture = fc.reffixture
 					inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos 
 					group by fc.refsancionesfallos,torc.refcategorias) sfc
-				ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = p.refcategorias";	
+				ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = p.refcategorias
+		where tor.reftemporadas = ".$ultimaTemporada."		
+		";	
 		
 		$res = $this->query($sql,0);
 		return $res;

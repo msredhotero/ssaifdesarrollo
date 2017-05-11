@@ -923,7 +923,7 @@ function insertarFalloPorFecha($serviciosReferencias) {
 					if ((integer)$cantidadAmarillas >= 5) {
 	
 					
-						$fallo = $serviciosReferencias->insertarSancionesfallosacumuladas($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla');
+						$fallo = $serviciosReferencias->insertarSancionesfallosacumuladas($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla:'.$cantidadAmarillas);
 							
 						
 					}
