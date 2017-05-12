@@ -1003,7 +1003,7 @@ if ($_SESSION['idroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
-        
+        <a href="index.php">Busqueda de Partidos</a>
         <button data-toggle="collapse" data-target="#demo" class="btn btn-info" style="margin-bottom:5px;">Fechas de los equipos</button>
         <div id="demo" class="collapse">
         	<div class="col-md-12" align="center" style="text-align:center;">
