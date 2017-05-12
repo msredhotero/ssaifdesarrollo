@@ -971,6 +971,12 @@ function modificarFalloPorFecha($serviciosReferencias) {
 
 	$pendientescumplimientos = mysql_result($resFallo,0,'pendientescumplimientos'); //verificar
 	
+	if ($pendientescumplimientos == 'Si') {
+		$pendientescumplimientos = 1;
+	} else {
+		$pendientescumplimientos = 0;
+	}
+	
 	$errores	=	"";
 	
 	$amarillas = 0;

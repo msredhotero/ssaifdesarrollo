@@ -1945,8 +1945,10 @@ if ($_SESSION['idroll_predio'] != 1) {
                         <?php
 							/* else del suspendidos */	
 							} else {
-								
-								
+								/*
+								if ($rowB['refjugadores']== 5637) {
+									die('acaaaaaaaaaaaaaaaaaaa');	
+								}*/
 								// cargo que la fecha no la cumplio
 								if ($partidoSuspendidoCompletamente == 0) {
 									$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$rowB['refjugadores'],1,'');

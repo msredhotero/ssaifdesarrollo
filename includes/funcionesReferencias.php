@@ -213,7 +213,7 @@ left join(SELECT
 			dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorvisitante = sj.refequipos
 				INNER JOIN
 		tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
-		where ts.amonestacion = 1
+		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
 		GROUP BY fix.idfixture, sj.refequipos) fixa
 on		fixa.idfixture = f.idfixture and fixa.refequipos = ev.idequipo
 
@@ -225,7 +225,7 @@ left join(SELECT
 			dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorvisitante = sj.refequipos
 				INNER JOIN
 		tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
-		where ts.expulsion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
+		where ts.expulsion = 1
 		GROUP BY fix.idfixture, sj.refequipos) fixr
 on		fixr.idfixture = f.idfixture and fixr.refequipos = ev.idequipo
 
@@ -898,16 +898,14 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 				from		dbsancionesjugadores sj
 				inner
 				join		dbfixture fix
-				on			fix.idfixture = sj.reffixture and fix.reffechas > ".$reffechaDesde."
+				on			fix.idfixture = sj.reffixture and fix.reffechas > ".$reffechaDesde." and sj.refjugadores = ".$idJugador."
 				inner
 				join		tbtiposanciones ts
 				on			ts.idtiposancion = sj.reftiposanciones
 				inner
 				join		dbtorneos t
 				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias
-				where		sj.refjugadores = ".$idJugador."
-							
-							and ts.amonestacion = 1
+				where		ts.amonestacion = 1
 							and sj.cantidad > 0
 							
 				union all
@@ -917,16 +915,14 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 				from		dbsancionesjugadores sj
 				inner
 				join		dbsancionesfallos sf
-				on			sj.refsancionesfallos = sf.idsancionfallo
+				on			sj.refsancionesfallos = sf.idsancionfallo and sj.refjugadores = ".$idJugador."
 				inner
 				join		dbfixture fix
 				on			fix.idfixture = sj.reffixture and fix.reffechas > ".$reffechaDesde."
 				inner
 				join		dbtorneos t
 				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias
-				where		sj.refjugadores = ".$idJugador."
-							
-							and sj.reftiposanciones = 4 or sf.amarillas = 2
+				where		sj.reftiposanciones = 4 or sf.amarillas = 2
 							
 				) t";	
 	
@@ -5676,7 +5672,11 @@ return $res;
 
 
 function traerSancionesfallosPorId($id) {
-$sql = "select idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,amarillas,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones from dbsancionesfallos where idsancionfallo =".$id;
+$sql = "select idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,amarillas,fechascumplidas,
+(case when pendientescumplimientos=1 then 'Si' else 'No' end) as pendientescumplimientos,
+(case when pendientesfallo=1 then 'Si' else 'No' end) as pendientesfallo,
+(case when generadaporacumulacion=1 then 'Si' else 'No' end) as generadaporacumulacion,
+observaciones from dbsancionesfallos where idsancionfallo =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
