@@ -34,7 +34,7 @@ function calcularPuntoBonus($refTorneo, $idEquipo) {
 					dbfixture fix
 						left join
 					dbsancionesjugadores sj
-					 ON sj.reffixture = fix.idfixture and (fix.refconectorlocal = ".$idEquipo." or fix.refconectorvisitante = ".$idEquipo.") and sj.refequipos = ".$idEquipo."
+					 ON sj.reffixture = fix.idfixture and (fix.refconectorlocal = ".$idEquipo." or fix.refconectorvisitante = ".$idEquipo.") and sj.refequipos = ".$idEquipo." and sj.reftiposanciones <> 1
 						left JOIN
 				tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
 				where fix.reftorneos = ".$refTorneo." and fix.reffechas >= ".($cantidadFechas * ($i - 1))." and fix.reffechas <= ".($cantidadFechas * ($i));
@@ -4694,6 +4694,87 @@ from
 order by 1";
 $res = $this->query($sql,0);
 return $res;
+}
+
+function traerJugadoresPorCountries($idCountries) {
+	$sql = "select
+			j.nrodocumento,
+			concat(j.apellido,', ',j.nombres) as apyn,
+			j.email,
+			j.fechanacimiento,
+			j.observaciones
+			from		dbjugadores j
+			inner
+			join		dbcountries cc
+			on			cc.idcountrie = j.refcountries
+			where		cc.idcountrie = ".$idCountries." and (j.fechabaja = '1900-01-01' or j.fechabaja = '0000-00-00')";	
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+function traerJugadoresVariosEquipos($idtemporada) {
+	
+	$sql = "select
+		j.nrodocumento,
+		concat(j.apellido,', ',j.nombres) as apyn,
+		j.email,
+		j.fechanacimiento,
+		count(r.refequipos) as cantidad,
+		j.observaciones
+		
+		from	
+		(
+		select 
+			c.refjugadores,
+			c.refequipos
+		from
+			dbconector c
+				inner join
+			dbjugadores jug ON jug.idjugador = c.refjugadores
+				inner join
+			tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+				inner join
+			dbcountries co ON co.idcountrie = jug.refcountries
+				inner join
+			tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+				inner join
+			dbequipos equ ON equ.idequipo = c.refequipos
+				inner join
+			tbdivisiones di ON di.iddivision = equ.refdivisiones
+				inner join
+			dbcontactos con ON con.idcontacto = equ.refcontactos
+				inner join
+			tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+				inner join
+			tbcategorias cat ON cat.idtcategoria = c.refcategorias
+				inner join
+			(select distinct fix.refconectorlocal 
+				from dbfixture fix 
+				inner join dbtorneos t ON t.idtorneo = fix.reftorneos
+				where t.reftemporadas = ".$idtemporada.") as fe
+			on fe.refconectorlocal = c.refequipos
+		where
+			c.activo = 1 and (jug.fechabaja = '1900-01-01' or jug.fechabaja = '0000-00-00')
+		group by c.refjugadores,
+			c.refequipos
+		) as r
+		inner
+		join		dbjugadores j
+		on			j.idjugador = r.refjugadores
+		group by j.nrodocumento,
+		j.apellido,
+		j.nombres,
+		j.email,
+		j.fechanacimiento,
+		j.observaciones
+		having (count(r.refequipos) > 1)
+		order by count(r.refequipos) desc";	
+	$res = $this->query($sql,0);
+	return $res;
+
+
+			
+				
 }
 
 

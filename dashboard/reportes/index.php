@@ -252,9 +252,8 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
 							<option value="1">Resultado Partidos</option>
                             <option value="2">Jugadores Por Club</option>
                             <option value="3">Jugadores en varios Equipos</option>
-                            <option value="4">Jugadores Por Club</option>
-                            <option value="5">Puntuación Canchas</option>
-                            <option value="6">Estadisticas Arbitros</option>
+                            <option value="4">Puntuación Canchas</option>
+                            <option value="5">Estadisticas Arbitros</option>
                             
                     	</select>
                     </div>
@@ -404,7 +403,22 @@ $(document).ready(function(){
 	
 	
 	$("#rptRP").click(function(event) {
-        window.open("../../reportes/rptResultadoPartido.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');	
+		var e = parseInt($('#tiporeporte').val());
+
+		switch(e) {
+			case 1:
+				window.open("../../reportes/rptResultadoPartido.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');	
+				break;
+			case 2:
+				window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + $("#refcountries1").val() ,'_blank');	
+				break;
+			case 3:
+				window.open("../../reportes/rptJugadoresVariosEquipos.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');	
+				break;
+			default:
+				alert('Debe elegir una opcion');
+		} 
+        
 						
     });
 	

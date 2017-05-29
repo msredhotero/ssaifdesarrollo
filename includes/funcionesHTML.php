@@ -95,8 +95,147 @@ function menu3($usuario,$titulo,$rol,$empresa) {
 }
 
 
-
 function menu($usuario,$titulo,$rol,$empresa) {
+	$cad = '<nav class="navbar navbar-default">
+			  <div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+				  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				  </button>
+				  <a class="navbar-brand" href="#">AIF</a>
+				</div>
+			
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				  <ul class="nav navbar-nav">
+					<li class="active"><a href="../index.php">Dashboard <span class="sr-only">(current)</span></a></li>
+					<li><a href="../countries/">COUNTRIES</a></li>
+					<li><a href="../equipos/">EQUIPOS</a></li>
+					<li><a href="../jugadores/">JUGADORES</a></li>
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TORNEO <span class="caret"></span></a>
+					  <ul class="dropdown-menu">
+						<li><a href="../fixture/">Estadisticas</a></li>
+						<li><a href="../estadisticas/">Fixture</a></li>
+						<li><a href="../torneos/">Torneos</a></li>
+						<li><a href="../arbitros/">Arbitros</a></li>
+						<li><a href="../canchas/">Canchas</a></li>
+						<li><a href="../fechasexcluidas/">Fechas Excluidas</a></li>
+					  </ul>
+					</li>
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TRIBUNAL <span class="caret"></span></a>
+					  <ul class="dropdown-menu">
+						<li><a href="../prefallos/">Pre-Fallos</a></li>
+						<li><a href="../fallos/">Fallos</a></li>
+					  </ul>
+					</li>
+					<li><a href="../reportes/">REPORTES</a></li>
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">General <span class="caret"></span></a>
+					  <ul class="dropdown-menu">
+						<li><a href="../tipocontacto/">Tipo Contacto</a></li>
+						<li><a href="../temporadas/">Temporada</a></li>
+						<li><a href="../divisiones/">Divisiones</a></li>
+						<li><a href="../tipojugadores/">Tipo de Jugadores</a></li>
+						<li><a href="../documentaciones/">Documentaciones</a></li>
+						<li><a href="../motivoshabilitacionestransitorias/">Mot. Hab. Transitoria</a></li>
+						<li><a href="../valoreshabilitacionestransitorias/">Valores Documentacion</a></li>
+						<li><a href="../puntosbonus/">Punto Bonus</a></li>
+						<li><a href="../tipossanciones/">Tipos Sanciones</a></li>
+						<li><a href="../estadospartidos/">Estados Partidos</a></li>
+						<li><a href="../posiciontributaria/">Posicion Tributaria</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="../definicionescategoriastemporadas/">Def. Cat. Temp.</a></li>
+						<li><a href="../definicionescategoriastemporadastipojugadores/">Def. Cat. Tempo. Tipo Jugador</a></li>
+						<li><a href="../definicionessancionesacumuladastemporadas/">Def. Sanciones Acumuladas</a></li>
+					  </ul>
+					</li>
+					<li><a href="#"><span class="glyphicon glyphicon-user"></span> '.$usuario.'</a></li>
+					<li><a href="../logout.php"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+				  </ul>
+				  
+				</div><!-- /.navbar-collapse -->
+			  </div><!-- /.container-fluid -->
+			</nav>';	
+	return $cad;
+}
+
+function menuD($usuario,$titulo,$rol,$empresa) {
+	$cad = '<nav class="navbar navbar-default">
+			  <div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+				  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				  </button>
+				  <a class="navbar-brand" href="#">AIF</a>
+				</div>
+			
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				  <ul class="nav navbar-nav">
+					<li class="active"><a href="../index.php">Dashboard <span class="sr-only">(current)</span></a></li>
+					<li><a href="../countries/">COUNTRIES</a></li>
+					<li><a href="../equipos/">EQUIPOS</a></li>
+					<li><a href="../jugadores/">JUGADORES</a></li>
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TORNEO <span class="caret"></span></a>
+					  <ul class="dropdown-menu">
+						<li><a href="../fixture/">Estadisticas</a></li>
+						<li><a href="../estadisticas/">Fixture</a></li>
+						<li><a href="../torneos/">Torneos</a></li>
+						<li><a href="../arbitros/">Arbitros</a></li>
+						<li><a href="../canchas/">Canchas</a></li>
+						<li><a href="../fechasexcluidas/">Fechas Excluidas</a></li>
+					  </ul>
+					</li>
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TRIBUNAL <span class="caret"></span></a>
+					  <ul class="dropdown-menu">
+						<li><a href="../prefallos/">Pre-Fallos</a></li>
+						<li><a href="../fallos/">Fallos</a></li>
+					  </ul>
+					</li>
+					<li><a href="../reportes/">REPORTES</a></li>
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">General <span class="caret"></span></a>
+					  <ul class="dropdown-menu">
+						<li><a href="../tipocontacto/">Tipo Contacto</a></li>
+						<li><a href="../temporadas/">Temporada</a></li>
+						<li><a href="../divisiones/">Divisiones</a></li>
+						<li><a href="../tipojugadores/">Tipo de Jugadores</a></li>
+						<li><a href="../documentaciones/">Documentaciones</a></li>
+						<li><a href="../motivoshabilitacionestransitorias/">Mot. Hab. Transitoria</a></li>
+						<li><a href="../valoreshabilitacionestransitorias/">Valores Documentacion</a></li>
+						<li><a href="../puntosbonus/">Punto Bonus</a></li>
+						<li><a href="../tipossanciones/">Tipos Sanciones</a></li>
+						<li><a href="../estadospartidos/">Estados Partidos</a></li>
+						<li><a href="../posiciontributaria/">Posicion Tributaria</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="../definicionescategoriastemporadas/">Def. Cat. Temp.</a></li>
+						<li><a href="../definicionescategoriastemporadastipojugadores/">Def. Cat. Tempo. Tipo Jugador</a></li>
+						<li><a href="../definicionessancionesacumuladastemporadas/">Def. Sanciones Acumuladas</a></li>
+					  </ul>
+					</li>
+					<li><a href="#"><span class="glyphicon glyphicon-user"></span> '.$usuario.'</a></li>
+					<li><a href="../logout.php"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+				  </ul>
+				  
+				</div><!-- /.navbar-collapse -->
+			  </div><!-- /.container-fluid -->
+			</nav>';	
+	return $cad;
+}
+
+function menu2($usuario,$titulo,$rol,$empresa) {
 	
 	$sql = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' order by orden";
 	$res = $this->query($sql,0);

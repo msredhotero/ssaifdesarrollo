@@ -124,7 +124,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(200,5,'PLANILLA DEL PARTIDO',1,0,'C',true);
+	$pdf->Cell(200,5,'PLANILLA DEL PARTIDO Id:'.$rowE['idfixture'],1,0,'C',true);
 	$pdf->SetFont('Arial','',8);
 	$pdf->Ln();
 	$pdf->SetX(5);
@@ -149,8 +149,8 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->Cell(6,4,'GF',1,0,'C',false);
 	$pdf->Cell(6,4,'GC',1,0,'C',false);
 	$pdf->Cell(7,4,'A/E',1,0,'C',false);
-	$pdf->Cell(19,4,'Carnet',1,0,'C',false);
-	$pdf->Cell(19,4,'Firma',1,0,'C',false);
+	$pdf->Cell(16,4,'Carnet',1,0,'C',false);
+	$pdf->Cell(22,4,'Firma',1,0,'C',false);
 	
 	$pdf->Cell(4,4,'',0,0,'C',false);
 	$pdf->Cell(6,4,'Nro',1,0,'C',false);
@@ -158,8 +158,8 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->Cell(6,4,'GF',1,0,'C',false);
 	$pdf->Cell(6,4,'GC',1,0,'C',false);
 	$pdf->Cell(7,4,'A/E',1,0,'C',false);
-	$pdf->Cell(19,4,'Carnet',1,0,'C',false);
-	$pdf->Cell(19,4,'Firma',1,0,'C',false);
+	$pdf->Cell(16,4,'Carnet',1,0,'C',false);
+	$pdf->Cell(22,4,'Firma',1,0,'C',false);
 	
 	
 	$inicializaY = $pdf->GetY();
@@ -250,22 +250,22 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		
 		$pdf->SetX(5);
 		
-		$pdf->Cell(6,4,'',1,0,'C',false);
+		$pdf->Cell(6,6,'',1,0,'C',false);
 		$pdf->SetFont('Arial','',7);
-		$pdf->Cell(35,4,substr($rowJ['nombrecompleto'],0,20),0,0,'L',false);
+		$pdf->Cell(35,6,substr($rowJ['nombrecompleto'],0,20),0,0,'L',false);
 		$pdf->SetFont('Arial','',8);
-		$pdf->Cell(6,4,'',1,0,'C',false);
-		$pdf->Cell(6,4,'',1,0,'C',false);
-		$pdf->Cell(7,4,'',1,0,'C',false);
-		$pdf->Cell(19,4,$rowJ['nrodocumento'],0,0,'C',false);
+		$pdf->Cell(6,6,'',1,0,'C',false);
+		$pdf->Cell(6,6,'',1,0,'C',false);
+		$pdf->Cell(7,6,'',1,0,'C',false);
+		$pdf->Cell(16,6,$rowJ['nrodocumento'],0,0,'C',false);
 		if (($habilitacion == 'HAB.')) { 
 			if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0) && ($pendiente == 0)) {
-			$pdf->Cell(19,4,'___________',0,0,'C',false);
+			$pdf->Cell(22,6,'_____________',0,0,'C',false);
 			} else {
-				$pdf->Cell(19,4,'SUSPENDIDO',0,0,'C',false);		
+				$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
 			}
 		} else {
-			$pdf->Cell(19,4,'INHAB.',0,0,'C',false);	
+			$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
 		}
 
 
@@ -278,7 +278,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		for ($j=$i+1;$j<28;$j++) {
 			$pdf->Ln();
 			$pdf->SetX(5);
-			$pdf->Cell(98,5,'',0,0,'C',false);
+			$pdf->Cell(98,6,'',0,0,'C',false);
 			
 		}
 	}
@@ -374,24 +374,24 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->Ln();
 		$pdf->SetX(107);
 		
-		$pdf->Cell(6,4,'',1,0,'C',false);
+		$pdf->Cell(6,6,'',1,0,'C',false);
 		$pdf->SetFont('Arial','',7);
-		$pdf->Cell(35,4,substr($rowV['nombrecompleto'],0,20),0,0,'L',false);
+		$pdf->Cell(35,6,substr($rowV['nombrecompleto'],0,20),0,0,'L',false);
 		$pdf->SetFont('Arial','',8);
-		$pdf->Cell(6,4,'',1,0,'C',false);
-		$pdf->Cell(6,4,'',1,0,'C',false);
-		$pdf->Cell(7,4,'',1,0,'C',false);
-		$pdf->Cell(19,4,$rowV['nrodocumento'],0,0,'C',false);
+		$pdf->Cell(6,6,'',1,0,'C',false);
+		$pdf->Cell(6,6,'',1,0,'C',false);
+		$pdf->Cell(7,6,'',1,0,'C',false);
+		$pdf->Cell(16,6,$rowV['nrodocumento'],0,0,'C',false);
 		
 		
 		if (($habilitacion == 'HAB.')) { 
 			if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && ($pendienteB == 0)) {
-			$pdf->Cell(19,4,'___________',0,0,'C',false);
+			$pdf->Cell(22,6,'_____________',0,0,'C',false);
 			} else {
-				$pdf->Cell(19,4,'SUSPENDIDO',0,0,'C',false);		
+				$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
 			}
 		} else {
-			$pdf->Cell(19,4,'INHAB.',0,0,'C',false);	
+			$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
 		}
 
 
@@ -404,7 +404,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		for ($j=$i+1;$j<28;$j++) {
 			$pdf->Ln();
 			$pdf->SetX(107);
-			$pdf->Cell(98,5,'',0,0,'C',false);
+			$pdf->Cell(98,6,'',0,0,'C',false);
 			
 		}
 	}

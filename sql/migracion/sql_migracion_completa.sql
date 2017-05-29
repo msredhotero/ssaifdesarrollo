@@ -28,15 +28,6 @@ FROM `ssaif_bck_09052017`.`posicionestributarias`;
 
 
 
-INSERT INTO `ssaif_prod_abril`.`tbposiciontributaria`
-(`idposiciontributaria`,
-`posiciontributaria`,
-`activo`)
-SELECT `posicionestributarias`.`postributariaid`,
-    `posicionestributarias`.`descripcion`,
-    1
-FROM `ssaif_bck_09052017`.`posicionestributarias`;
-
 
 INSERT INTO `ssaif_prod_abril`.`dbcountries`
 (`idcountrie`,
@@ -88,7 +79,7 @@ FROM `ssaif_bck_09052017`.`canchas` c
 left
 join ssaif_bck_09052017.relclubescanchas cc
 on c.canchaid = cc.canchaid
-group by c.`canchaid`,c.`descripcion`
+group by c.`canchaid`,c.`descripcion`;
 
 
 INSERT INTO `ssaif_prod_abril`.`dbcountriecanchas`
@@ -102,7 +93,7 @@ c.`canchaid`
 FROM `ssaif_bck_09052017`.`canchas` c
 inner
 join ssaif_bck_09052017.relclubescanchas cc
-on c.canchaid = cc.canchaid
+on c.canchaid = cc.canchaid;
 
 
 INSERT INTO `ssaif_prod_abril`.`tbcategorias`
@@ -171,7 +162,7 @@ SELECT `estadospartidos`.`estadopartidoid`,
     `estadospartidos`.`contabilizalocal`,
     `estadospartidos`.`contabilizavisitante`
 FROM `ssaif_bck_09052017`.`estadospartidos`
-where estadopartidoid > 0
+where estadopartidoid > 0;
 
 
 INSERT INTO `ssaif_prod_abril`.`tbfechas`
@@ -347,7 +338,7 @@ join	ssaif_bck_09052017.definicionescategoriastemporadas d
 on		d.categoriaid = dt.categoriaid and d.temporadaid = dt.temporadaid
 inner
 join	ssaif_prod_abril.dbdefinicionescategoriastemporadas t
-on		d.categoriaid = t.refcategorias and d.temporadaid = t.reftemporadas
+on		d.categoriaid = t.refcategorias and d.temporadaid = t.reftemporadas;
 
 
 
@@ -459,7 +450,7 @@ INSERT INTO `ssaif_prod_abril`.`dbjugadoresdocumentacion`
 SELECT '',
 	s.`jugadorid`,
     s.`docjugadoresid`,
-    0,
+    d.habilita,
     s.`observaciones`
 FROM ssaif_bck_09052017.reljugadoresdocumentacionjugadores s
     inner
@@ -479,7 +470,7 @@ INSERT INTO `ssaif_prod_abril`.`dbjugadoresdocumentacion`
 SELECT '',
 	s.`jugadorid`,
     s.`docjugadoresid`,
-    0,
+    d.habilita,
     s.`observaciones`
 FROM ssaif_bck_09052017.reljugadoresdocumentacionjugadores s
     inner
