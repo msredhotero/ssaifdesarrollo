@@ -640,11 +640,15 @@ if ($_SESSION['idroll_predio'] != 1) {
                                             </select></p>
                 </div>
                 
-                <div class="col-md-6">
+                <div class="col-md-4">
                 	<p>Juez 1: <input type="text" class="form-control" id="juez1" name="juez1" value="<?php echo mysql_result($resFixDetalle,0,'juez1'); ?>"/></p>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                 	<p>Juez 2: <input type="text" class="form-control" id="juez2" name="juez2" value="<?php echo mysql_result($resFixDetalle,0,'juez2'); ?>"/></p>
+                </div>
+                
+                <div class="col-md-4">
+                	<p>Calificación Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
                 </div>
                 
                 <div class="col-md-6">

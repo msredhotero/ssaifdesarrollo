@@ -31,6 +31,21 @@ $cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2,3,4),' -
 $resTorneosActivos = $serviciosReferencias->traerTorneosActivos();
 $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivos,array(1,2,3,4,5),' - ');
 
+$resTemporadas	=	$serviciosReferencias->traerTemporadas();
+$cadRefTemporadas	=	$serviciosFunciones->devolverSelectBox($resTemporadas,array(1),'');
+
+$resCategorias	=	$serviciosReferencias->traerCategorias();
+$cadRefCategorias	=	$serviciosFunciones->devolverSelectBox($resCategorias,array(1),'');
+
+$resDivisiones	=	$serviciosReferencias->traerDivisiones();
+$cadRefDivisiones	=	$serviciosFunciones->devolverSelectBox($resDivisiones,array(1),'');
+
+$resCountries	=	$serviciosReferencias->traerCountries();
+$cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
+
+
+
+
 ?>
 
 <!DOCTYPE HTML>
@@ -208,6 +223,142 @@ $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivo
     
     
     
+    
+    
+    <div class="boxInfoLargo tile-stats stat-til tile-white">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Reportes Generales</p>
+        	
+        </div>
+    	<div class="cuerpoBox">
+        	<form class="form-inline formulario" role="form">
+        	<div class="row">
+            	
+                <div class="form-group col-md-6">
+                    <label class="control-label" style="text-align:left" for="refcliente">Temporada</label>
+                    <div class="input-group col-md-12">
+                    	<select id="reftemporada1" class="form-control" name="reftemporada1">
+                        	<option value="0">-- Seleccione --</option>
+							<?php echo $cadRefTemporadas; ?>
+                    	</select>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-6">
+                    <label class="control-label" style="text-align:left" for="refcliente">Tipo Reporte</label>
+                    <div class="input-group col-md-12">
+                    	<select id="tiporeporte" class="form-control" name="tiporeporte">
+                        	<option value="0">-- Seleccione --</option>
+							<option value="1">Resultado Partidos</option>
+                            <option value="2">Jugadores Por Club</option>
+                            <option value="3">Jugadores en varios Equipos</option>
+                            <option value="4">Jugadores Por Club</option>
+                            <option value="5">Puntuación Canchas</option>
+                            <option value="6">Estadisticas Arbitros</option>
+                            
+                    	</select>
+                    </div>
+                </div>
+                
+                
+                <div class="form-group col-md-6">
+                    <label class="control-label" style="text-align:left" for="refcliente">Countrie</label>
+                    <div class="input-group col-md-12">
+                    	<select id="refcountries1" class="form-control" name="refcountries1">
+                        	<option value="0">-- Seleccione --</option>
+							<?php echo $cadRefCountries; ?>
+                    	</select>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-3">
+                    <label class="control-label" style="text-align:left" for="refcliente">Categorias</label>
+                    <div class="input-group col-md-12">
+                    	<select id="refcategorias1" class="form-control" name="refcategorias1">
+                        	<option value="0">-- Seleccione --</option>
+							<?php echo $cadRefCategorias; ?>
+                    	</select>
+                    </div>
+                </div>
+                
+                
+                <div class="form-group col-md-3">
+                    <label class="control-label" style="text-align:left" for="refcliente">Division</label>
+                    <div class="input-group col-md-12">
+                    	<select id="refdivision1" class="form-control" name="refdivision1">
+                        	<option value="0">-- Seleccione --</option>
+							<?php echo $cadRefDivisiones; ?>
+                    	</select>
+                    </div>
+                </div>
+            	<div class="form-group col-md-6">
+                    <label class="control-label" style="text-align:left" for="refcliente">Torneos</label>
+                    <div class="input-group col-md-12">
+                    	<select id="reftorneo3" class="form-control" name="reftorneo3">
+                        	<option value="0">-- Seleccione --</option>
+							<?php echo $cadRefTorneosActivos; ?>
+                    	</select>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-2">
+                    <label class="control-label" style="text-align:left" for="refcliente">Fechas</label>
+                    <div class="input-group col-md-12">
+                    	<select id="reffechas3" class="form-control" name="reffechas3">
+							<option value="0">-- Seleccione --</option>
+                    	</select>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-2">
+                    <label class="control-label" style="text-align:left" for="refcliente">Fechas Desde</label>
+                    <div class="input-group col-md-12">
+                    	<input type="text" id="reffechadesde1" class="form-control" name="reffechadesde1" value="Date">
+                    </div>
+                </div>
+                
+                
+                <div class="form-group col-md-2">
+                    <label class="control-label" style="text-align:left" for="refcliente">Fechas Hasta</label>
+                    <div class="input-group col-md-12">
+                    	<input type="text" id="reffechahasta1" class="form-control" name="reffechahasta1" value="Date">
+                    </div>
+                </div>
+                
+                
+                <div class="form-group col-md-6">
+                    <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
+
+                    	<ul class="list-inline">
+                        	<li>
+                    			<button type="button" class="btn btn-success" id="rptRP" style="margin-left:0px;">Generar</button>
+                            </li>
+                            <!--<li>
+                        		<button type="button" class="btn btn-default" id="rptCJExcel" style="margin-left:0px;">Generar Excel</button>
+                            </li>-->
+                        </ul>
+
+                </div>
+                
+
+            </div>
+            
+            
+            <div class='row' style="margin-left:25px; margin-right:25px;">
+                <div class='alert'>
+                
+                </div>
+                <div id='load'>
+                
+                </div>
+            </div>
+
+            </form>
+    	</div>
+    </div>
+    
+    
+    
 
     
     
@@ -225,7 +376,7 @@ $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivo
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	function traerFechasPorTorneos(idTorneo) {
+	function traerFechasPorTorneos(idTorneo, contenedor) {
 		$.ajax({
 				data:  {idTorneo: idTorneo,
 						accion: 'traerFechasPorTorneos'},
@@ -235,17 +386,28 @@ $(document).ready(function(){
 						
 				},
 				success:  function (response) {
-						$('#reffechas1').html(response);
+						$('#'+contenedor).html(response);
 						
 				}
 		});
 	}
 	
 	$('#reftorneo1').change(function(e) {
-		traerFechasPorTorneos($(this).val());	
+		traerFechasPorTorneos($(this).val(),'reffechas1');	
 	});
 	
-	traerFechasPorTorneos($('#reftorneo1').val());
+	$('#reftorneo3').change(function(e) {
+		traerFechasPorTorneos($(this).val(),'reffechas3');	
+	});
+	
+	traerFechasPorTorneos($('#reftorneo1').val(),'reffechas1');
+	
+	
+	$("#rptRP").click(function(event) {
+        window.open("../../reportes/rptResultadoPartido.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');	
+						
+    });
+	
 	
 	$("#rptCJ").click(function(event) {
         window.open("../../reportes/rptCondicionJugador.php?id=" + $("#refequipo").val() ,'_blank');	
@@ -365,11 +527,11 @@ $('.form_date').datetimepicker({
  };
  $.datepicker.setDefaults($.datepicker.regional['es']);
  
-    $( "#fechadesde1" ).datepicker();
-    $( "#fechadesde1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+    $( "#reffechadesde1" ).datepicker();
+    $( "#reffechadesde1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 	
-	$( "#fechadesde2" ).datepicker();
-    $( "#fechadesde2" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+	$( "#reffechahasta1" ).datepicker();
+    $( "#reffechahasta1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 	
 	$( "#fechadesde3" ).datepicker();
     $( "#fechadesde3" ).datepicker( "option", "dateFormat", "yy-mm-dd" );

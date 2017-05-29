@@ -4755,13 +4755,14 @@ return $res;
 }
 
 
-function modificarFixturePorCancha($id,$refCanchas, $refArbitros, $juez1, $juez2) {
+function modificarFixturePorCancha($id,$refCanchas, $refArbitros, $juez1, $juez2, $calificacioncancha) {
 $sql = "update dbfixture
 set
 refcanchas = ".$refCanchas.",
 refarbitros = ".$refArbitros.",
 juez1 = '".$juez1."',
-juez2 = '".$juez2."'
+juez2 = '".$juez2."',
+calificacioncancha = ".$calificacioncancha."
 where idfixture =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -7029,6 +7030,244 @@ inner join dbcountries cou ON cou.idcountrie = equ.refcountries
 inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
 inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
 where p.refjugadores = ".$idJugador." and p.reffixture =".$idFixture;
+$res = $this->query($sql,0); 
+return $res; 
+}
+
+
+function traerIncidenciasPorFixtureEquipoLocal($idFixture, $idEquipo) { 
+$sql = "select
+r.apyn,
+r.nrodocumento,
+r.refjugadores,
+r.reffixture,
+r.refequipos,
+r.refcategorias,
+r.refdivisiones,
+sum(r.goles) as goles,
+sum(r.encontra) as encontra,
+max(r.aei) as aei,
+sum(r.pc) as pc,
+sum(r.pa) as pa,
+sum(r.pe) as pe
+from (
+select 
+	concat(jug.apellido, ', ', jug.nombres) as apyn, 
+	jug.nrodocumento,
+	p.refjugadores,
+	p.reffixture,
+	p.refequipos,
+	p.refcategorias,
+	p.refdivisiones,
+	p.goles,
+	p.encontra,
+	0 as aei,
+	0 as pc,
+	0 as pa,
+	0 as pe
+	from dbgoleadores p
+	inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+	inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+	inner join dbcountries co ON co.idcountrie = jug.refcountries 
+	inner join dbfixture fix ON fix.idfixture = p.reffixture 
+	inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+	inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+	left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+	inner join dbequipos equ ON equ.idequipo = p.refequipos 
+	inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+	inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+	inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo."
+	
+	union all
+	
+	select 
+	concat(jug.apellido, ', ', jug.nombres) as apyn, 
+	jug.nrodocumento,
+	p.refjugadores,
+	p.reffixture,
+	p.refequipos,
+	p.refcategorias,
+	p.refdivisiones,
+	0 as goles,
+	0 as encontra,
+	0 as aei,
+	p.penalconvertido as pc,
+	p.penalatajado as pa,
+	p.penalerrado as pe
+	from dbpenalesjugadores p
+	inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+	inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+	inner join dbcountries co ON co.idcountrie = jug.refcountries 
+	inner join dbfixture fix ON fix.idfixture = p.reffixture 
+	inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+	inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+	left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+	inner join dbequipos equ ON equ.idequipo = p.refequipos 
+	inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+	inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+	inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and (p.penalconvertido > 0 or p.penalatajado > 0 or p.penalerrado > 0)
+	
+	
+	union all
+	
+	select 
+	concat(jug.apellido, ', ', jug.nombres) as apyn, 
+	jug.nrodocumento,
+	p.refjugadores,
+	p.reffixture,
+	p.refequipos,
+	p.refcategorias,
+	p.refdivisiones,
+	0 as goles,
+	0 as encontra,
+	(case when p.reftiposanciones = 1 then 'A'
+			when p.reftiposanciones = 2 then 'E'
+			when p.reftiposanciones = 3 then 'I' end) as aei,
+	0 as pc,
+	0 as pa,
+	0 as pe
+	from dbsancionesjugadores p
+	inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+	inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+	inner join dbcountries co ON co.idcountrie = jug.refcountries 
+	inner join dbfixture fix ON fix.idfixture = p.reffixture 
+	inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+	inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+	left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+	inner join dbequipos equ ON equ.idequipo = p.refequipos 
+	inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+	inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+	inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.reftiposanciones in (1,2,3) and p.cantidad >0
+) as r
+group by r.apyn,
+r.nrodocumento,
+r.refjugadores,
+r.reffixture,
+r.refequipos,
+r.refcategorias,
+r.refdivisiones";
+$res = $this->query($sql,0); 
+return $res; 
+}
+
+
+function traerIncidenciasPorFixtureEquipoVisitante($idFixture, $idEquipo) { 
+$sql = "select
+r.apyn,
+r.nrodocumento,
+r.refjugadores,
+r.reffixture,
+r.refequipos,
+r.refcategorias,
+r.refdivisiones,
+sum(r.goles) as goles,
+sum(r.encontra) as encontra,
+max(r.aei) as aei,
+sum(r.pc) as pc,
+sum(r.pa) as pa,
+sum(r.pe) as pe
+from (
+select 
+	concat(jug.apellido, ', ', jug.nombres) as apyn, 
+	jug.nrodocumento,
+	p.refjugadores,
+	p.reffixture,
+	p.refequipos,
+	p.refcategorias,
+	p.refdivisiones,
+	p.goles,
+	p.encontra,
+	0 as aei,
+	0 as pc,
+	0 as pa,
+	0 as pe
+	from dbgoleadores p
+	inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+	inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+	inner join dbcountries co ON co.idcountrie = jug.refcountries 
+	inner join dbfixture fix ON fix.idfixture = p.reffixture 
+	inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+	inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+	left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+	inner join dbequipos equ ON equ.idequipo = p.refequipos 
+	inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+	inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+	inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo."
+	
+	union all
+	
+	select 
+	concat(jug.apellido, ', ', jug.nombres) as apyn, 
+	jug.nrodocumento,
+	p.refjugadores,
+	p.reffixture,
+	p.refequipos,
+	p.refcategorias,
+	p.refdivisiones,
+	0 as goles,
+	0 as encontra,
+	0 as aei,
+	p.penalconvertido as pc,
+	p.penalatajado as pa,
+	p.penalerrado as pe
+	from dbpenalesjugadores p
+	inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+	inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+	inner join dbcountries co ON co.idcountrie = jug.refcountries 
+	inner join dbfixture fix ON fix.idfixture = p.reffixture 
+	inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+	inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+	left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+	inner join dbequipos equ ON equ.idequipo = p.refequipos 
+	inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+	inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+	inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and (p.penalconvertido > 0 or p.penalatajado > 0 or p.penalerrado > 0)
+	
+	
+	union all
+	
+	select 
+	concat(jug.apellido, ', ', jug.nombres) as apyn, 
+	jug.nrodocumento,
+	p.refjugadores,
+	p.reffixture,
+	p.refequipos,
+	p.refcategorias,
+	p.refdivisiones,
+	0 as goles,
+	0 as encontra,
+	(case when p.reftiposanciones = 1 then 'A'
+			when p.reftiposanciones = 2 then 'E'
+			when p.reftiposanciones = 3 then 'I' end) as aei,
+	0 as pc,
+	0 as pa,
+	0 as pe
+	from dbsancionesjugadores p
+	inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
+	inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
+	inner join dbcountries co ON co.idcountrie = jug.refcountries 
+	inner join dbfixture fix ON fix.idfixture = p.reffixture 
+	inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+	inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+	left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+	inner join dbequipos equ ON equ.idequipo = p.refequipos 
+	inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+	inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+	inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.reftiposanciones in (1,2,3) and p.cantidad >0
+) as r
+group by r.apyn,
+r.nrodocumento,
+r.refjugadores,
+r.reffixture,
+r.refequipos,
+r.refcategorias,
+r.refdivisiones";
 $res = $this->query($sql,0); 
 return $res; 
 }
