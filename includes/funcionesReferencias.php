@@ -7354,6 +7354,58 @@ return $res;
 }
 
 
+function traerPromedioCanchasPorCountrie($idCountrie, $idTemporada) {
+	$sql = "select
+				r.idcountrie, r.countrie, r.cancha, round((r.calificacion / r.cantidad),2) as promedio
+			from (
+				select 
+					cou.idcountrie, cou.nombre as countrie, cc.nombre as cancha
+					, sum(fix.calificacioncancha) as calificacion, count(fix.idfixture) as cantidad
+			
+				from  dbfixture fix
+				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+				inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+				inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+				inner join dbcountriecanchas dc ON dc.refcountries = cou.idcountrie
+				inner join tbcanchas cc ON cc.idcancha = dc.refcanchas
+				where fix.calificacioncancha <> 0 and
+				tor.reftemporadas = ".$idTemporada."
+				group by cou.idcountrie, cc.nombre, cou.nombre
+			) as r
+			where r.idcountrie = ".$idCountrie."
+			order by 4 desc,3";	
+	$res = $this->query($sql,0); 
+	return $res;
+}
+
+function traerPromedioCanchas($idTemporada) {
+	$sql = "select
+				r.idcountrie, r.countrie, round((r.calificacion / r.cantidad),2) as promedio
+			from (
+				select 
+					cou.idcountrie, cou.nombre as countrie
+					, sum(fix.calificacioncancha) as calificacion, count(fix.idfixture) as cantidad
+			
+				from  dbfixture fix
+				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+				inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+				inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+				inner join dbcountriecanchas dc ON dc.refcountries = cou.idcountrie
+				inner join tbcanchas cc ON cc.idcancha = dc.refcanchas
+				where fix.calificacioncancha <> 0 and
+				tor.reftemporadas = ".$idTemporada."
+				group by cou.idcountrie,  cou.nombre
+			) as r
+			order by 3 desc";
+	$res = $this->query($sql,0); 
+	return $res;	
+}
+
+
 function traerGoleadoresPorId($id) { 
 $sql = "select idgoleador,refjugadores,reffixture,refequipos,refcategorias,refdivisiones,goles,encontra from dbgoleadores where idgoleador =".$id; 
 $res = $this->query($sql,0); 

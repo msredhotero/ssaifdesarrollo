@@ -233,18 +233,7 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
         	<div class="row">
-            	
-                <div class="form-group col-md-6">
-                    <label class="control-label" style="text-align:left" for="refcliente">Temporada</label>
-                    <div class="input-group col-md-12">
-                    	<select id="reftemporada1" class="form-control" name="reftemporada1">
-                        	<option value="0">-- Seleccione --</option>
-							<?php echo $cadRefTemporadas; ?>
-                    	</select>
-                    </div>
-                </div>
-                
-                <div class="form-group col-md-6">
+            	<div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Tipo Reporte</label>
                     <div class="input-group col-md-12">
                     	<select id="tiporeporte" class="form-control" name="tiporeporte">
@@ -258,6 +247,18 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
                     	</select>
                     </div>
                 </div>
+                
+                <div class="form-group col-md-6">
+                    <label class="control-label" style="text-align:left" for="refcliente">Temporada</label>
+                    <div class="input-group col-md-12">
+                    	<select id="reftemporada1" class="form-control" name="reftemporada1">
+                        	<option value="0">-- Seleccione --</option>
+							<?php echo $cadRefTemporadas; ?>
+                    	</select>
+                    </div>
+                </div>
+                
+                
                 
                 
                 <div class="form-group col-md-6">
@@ -414,6 +415,9 @@ $(document).ready(function(){
 				break;
 			case 3:
 				window.open("../../reportes/rptJugadoresVariosEquipos.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');	
+				break;
+			case 4:
+				window.open("../../reportes/rptPromedioCanchas.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');	
 				break;
 			default:
 				alert('Debe elegir una opcion');
