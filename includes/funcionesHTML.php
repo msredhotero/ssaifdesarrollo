@@ -96,7 +96,7 @@ function menu3($usuario,$titulo,$rol,$empresa) {
 
 
 function menu($usuario,$titulo,$rol,$empresa) {
-	$cad = '<nav class="navbar navbar-default">
+	$cad = '<script src="../../js/jquery.maskedinput.min.js" type="text/javascript"></script><nav class="navbar navbar-default">
 			  <div class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
