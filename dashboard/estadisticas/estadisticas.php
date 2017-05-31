@@ -1674,7 +1674,39 @@ $(document).ready(function(){
        
     });
 	
+	$(document).on('change','#example_filter input', function(e){
+
+		var acumulado = 0;
+		$('.golesEA').each(function(intIndex){
+			acumulado += parseInt($(this).val());	
+		});
+		$('.golescontraEB').each(function(intIndex){
+			acumulado += parseInt($(this).val());	
+		});
+		$('.penalesconvertidosEA').each(function(intIndex){
+			acumulado += parseInt($(this).val());	
+		});
+		
+		$('.resultadoA').html(acumulado);
+
+	});
 	
+	
+	$(document).on('change','#example2_filter input', function(e){
+
+		
+		var acumuladoB = 0;
+		$('.golesEB').each(function(intIndex){
+			acumuladoB += parseInt($(this).val());	
+		});
+		$('.golescontraEA').each(function(intIndex){
+			acumuladoB += parseInt($(this).val());	
+		});
+		$('.penalesconvertidosEB').each(function(intIndex){
+			acumuladoB += parseInt($(this).val());	
+		});
+		$('.resultadoB').html(acumuladoB);
+	});
 
 	
 	//al enviar el formulario
