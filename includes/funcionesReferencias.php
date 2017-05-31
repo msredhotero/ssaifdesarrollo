@@ -6601,6 +6601,7 @@ function hayMovimientos($idJugador, $idFixture) {
 			WHERE
 				ju.idjugador = ".$idJugador."
 					AND tip.cumpletodascategorias = 1
+					AND sf.fechascumplidas <> sf.cantidadfechas
 					AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
 			
 	return $this->existeDevuelveId($sql);			
@@ -6634,6 +6635,7 @@ function hayMovimientosDevuelveId($idJugador, $idFixture) {
 			WHERE
 				ju.idjugador = ".$idJugador."
 					AND tip.cumpletodascategorias = 1
+					AND sf.fechascumplidas <> sf.cantidadfechas
 					AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
 			
 	return $this->existeDevuelveId($sql);			

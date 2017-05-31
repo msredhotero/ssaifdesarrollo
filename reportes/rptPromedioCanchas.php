@@ -99,13 +99,18 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(5,4,$cantPartidos,1,0,'C',false);
-	$pdf->Cell(60,4,utf8_decode($rowE['apyn']),1,0,'L',false);
-	$pdf->Cell(15,4,$rowE['nrodocumento'],1,0,'C',false);
-	$pdf->Cell(20,4,$rowE['email'],1,0,'C',false);
-	$pdf->Cell(16,4,$rowE['fechanacimiento'],1,0,'C',false);
-	$pdf->Cell(84,4,substr(utf8_decode($rowE['observaciones']),0,56),1,0,'L',false);
+	$pdf->Cell(5,4,$cantPartidos,1,0,'C',True);
+	$pdf->Cell(95,4,utf8_decode($rowE['countrie']),1,0,'L',True);
+	$pdf->Cell(16,4,$rowE['promedio'],1,0,'C',True);
 	
+	$canchas = $serviciosReferencias->traerPromedioCanchasPorCountrie($rowE['idcountrie'], $idTemporada);
+	while ($rowC = mysql_fetch_array($canchas)) {
+		$pdf->Ln();
+		$pdf->SetX(5);
+		$pdf->Cell(5,4,'',1,0,'C',True);
+		$pdf->Cell(95,4,utf8_decode($rowC['cancha']),1,0,'L',false);
+		$pdf->Cell(16,4,$rowC['promedio'],1,0,'C',false);
+	}
 	
 	
 		
@@ -120,7 +125,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 
 
 
-$nombreTurno = "JUGADORES-COUNTRIES-".$fecha.".pdf";
+$nombreTurno = "PROMEDIO-CANCHAS-".$fecha.".pdf";
 
 $pdf->Output($nombreTurno,'D');
 
