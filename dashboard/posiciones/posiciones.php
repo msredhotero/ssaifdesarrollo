@@ -57,6 +57,11 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 	
 }
+/*
+$idEquipo = 435;
+
+die(var_dump($serviciosReferencias->calcularPuntoBonus( 165 , (integer)$idEquipo )));
+*/
 
 
 ?>

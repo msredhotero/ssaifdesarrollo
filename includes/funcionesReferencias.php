@@ -10,7 +10,7 @@ date_default_timezone_set('America/Buenos_Aires');
 class ServiciosReferencias {
 
 
-function calcularPuntoBonus($refTorneo, $idEquipo) {
+function calcularPuntoBonusViejo($refTorneo, $idEquipo) {
 	$resPuntosBonus = $this->traerPuntobonusPorId(1);
 	
 	$cantidadFechas = (integer)mysql_result($resPuntosBonus,0,'cantidadfechas');
@@ -21,12 +21,13 @@ function calcularPuntoBonus($refTorneo, $idEquipo) {
 	//determinar ultima fecha jugado del torneo	
 	$ultimaFecha	=	$this->traerUltimaFechaFixturePorTorneoEquipo($refTorneo, $idEquipo);
 	
-	$mod			= round($ultimaFecha / $cantidadFechas , 0, PHP_ROUND_HALF_DOWN);
+	$mod			= floor($ultimaFecha / $cantidadFechas );
 	
+	//return $mod;
 	$puntos = 0;
 	
 	if (($mod > 0) and ($ultimaFecha >= $cantidadFechas)) {
-		
+		$puntos = 0;
 		for ($i =1; $i <= $mod; $i++) {
 			$calculo = "SELECT 
 					(case when coalesce(SUM(sj.cantidad),0) > 0 then 0 else 1 end) AS amarillas 
@@ -47,6 +48,63 @@ function calcularPuntoBonus($refTorneo, $idEquipo) {
 		}
 		
 		return $puntos;
+				
+	}
+	
+	return $puntos;	
+	
+	
+}
+
+
+
+function calcularPuntoBonus($refTorneo, $idEquipo) {
+	$resPuntosBonus = $this->traerPuntobonusPorId(1);
+	
+	$cantidadFechas = (integer)mysql_result($resPuntosBonus,0,'cantidadfechas');
+	
+	$puntosextra	= (integer)mysql_result($resPuntosBonus,0,'puntosextra');
+	
+	
+	//determinar ultima fecha jugado del torneo	
+	$ultimaFecha	=	$this->traerUltimaFechaFixturePorTorneoEquipo($refTorneo, $idEquipo);
+	
+
+	
+	//return $mod;
+	
+	
+	if ($ultimaFecha >= 4) {
+		
+
+		$calculo = "SELECT 
+				sum(coalesce(sj.cantidad,0)) AS amarillas , fix.reffechas
+			FROM
+				dbfixture fix
+					left join
+				dbsancionesjugadores sj
+				 ON sj.reffixture = fix.idfixture and (fix.refconectorlocal = ".$idEquipo." or fix.refconectorvisitante = ".$idEquipo.") and sj.refequipos = ".$idEquipo." and sj.reftiposanciones <> 1
+					left JOIN
+			tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+			where fix.reftorneos = ".$refTorneo." and fix.reffechas <= ".$ultimaFecha." group by fix.reffechas order by fix.fecha";
+		
+		
+		//return $calculo;
+		$resCalcular = $this->query($calculo,0);
+		$puntos = 0;
+		$contador = 0;
+		while ($rowC = mysql_fetch_array($resCalcular)) {
+			if ($rowC['amarillas'] == 0) {
+				$contador = $contador + 1;
+			} else {
+				$contador = 0;
+			}
+			
+			if ($contador == 4) {
+				$puntos = $puntos + 1;
+				$contador = 0;
+			}
+		}
 				
 	}
 	
@@ -261,7 +319,7 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 	
 	
 	while ($row = mysql_fetch_array($res)) {
-		
+		$puntosBonus = 0;
 		if (mysql_num_rows($resPuntosBonus)>0) {
 			$puntosBonus = $this->calcularPuntoBonus($refTorneo, $row['idequipo']);	
 		}
