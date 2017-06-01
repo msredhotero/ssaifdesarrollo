@@ -12,11 +12,13 @@ include ('../../includes/funciones.php');
 include ('../../includes/funcionesUsuarios.php');
 include ('../../includes/funcionesHTML.php');
 include ('../../includes/funcionesReferencias.php');
+include ('../../includes/funcionesPlayOff.php');
 
 $serviciosFunciones 	= new Servicios();
 $serviciosUsuario 		= new ServiciosUsuarios();
 $serviciosHTML 			= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
+$serviciosPlayOff		= new ServiciosPlayOff();
 
 $fecha = date('Y-m-d');
 
@@ -30,11 +32,11 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbfixture";
 
-$lblCambio	 	= array("refconectorlocal","goleslocal","refconectorvisitante","golesvisitantes","fecha","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos");
-$lblreemplazo	= array("Equipo Local","Resultado 1","Equipo Visitante","Resultado 2","Fecha Juego","Fecha","Cancha","Arbitros","Estados Partidos","Torneo");
+$lblCambio	 	= array("refconectorlocal","goleslocal","refconectorvisitante","golesvisitantes","fecha","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos","refetapas");
+$lblreemplazo	= array("Equipo Local","Resultado 1","Equipo Visitante","Resultado 2","Fecha Juego","Fecha","Cancha","Arbitros","Estados Partidos","Torneo","Etapas");
 
 $resConectorL	=	$serviciosReferencias->traerEquipos();
-$cadRef			=	$serviciosFunciones->devolverSelectBox($resConectorL,array(1,2)," - ");
+$cadRef			=	$serviciosFunciones->devolverSelectBox($resConectorL,array(0,1,2,3,4)," - ");
 
 $resFechas		=	$serviciosReferencias->traerFechas();
 $cadRef2		=	$serviciosFunciones->devolverSelectBox($resFechas,array(1),'');
@@ -52,8 +54,12 @@ $cadRef5		.=	$serviciosFunciones->devolverSelectBox($resEstadosP,array(1),'');
 $resTorneos		=	$serviciosReferencias->traerTorneos();
 $cadRef6		=	$serviciosFunciones->devolverSelectBox($resTorneos,array(1,2),' - ');
 
-$refdescripcion = array(0 => $cadRef,1=>$cadRef,2=>$cadRef2,3=>$cadRef3,4=>$cadRef4,5=>$cadRef5,6=>$cadRef6);
-$refCampo	 	= array("refconectorlocal","refconectorvisitante","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos"); 
+$resEtapas		=	$serviciosPlayOff->traerEtapas();
+$cadRef7		=	"<option value='0'></option>";
+$cadRef7		.=	$serviciosFunciones->devolverSelectBox($resEtapas,array(1,2),' - ');
+
+$refdescripcion = array(0 => $cadRef,1=>$cadRef,2=>$cadRef2,3=>$cadRef3,4=>$cadRef4,5=>$cadRef5,6=>$cadRef6,7=>$cadRef7);
+$refCampo	 	= array("refconectorlocal","refconectorvisitante","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos","refetapas"); 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
