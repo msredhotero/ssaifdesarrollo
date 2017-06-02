@@ -34,6 +34,8 @@ $resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$r
 
 $resTorneo = $serviciosReferencias->traerTorneosDetallePorId($idtorneo);
 
+$tipoTorneo = mysql_result($resTorneo,0,'reftipotorneo');
+
 $resDefTemp= $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'));
 //echo $resEquipos;
 
@@ -187,6 +189,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$valorDocumentacion = 0;
 		$documentaciones = '';
 		
+		
 		$edad = $serviciosReferencias->verificarEdad($rowJ['refjugadores']);
 		
 		$cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowJ['refjugadores'], $rowJ['refcategorias'], $rowJ['idtipojugador']);
@@ -252,17 +255,21 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		
 		$pdf->Cell(6,6,'',1,0,'C',false);
 		$pdf->SetFont('Arial','',7);
-		$pdf->Cell(35,6,substr($rowJ['nombrecompleto'],0,20),0,0,'L',false);
+		$pdf->Cell(35,6,substr(utf8_decode($rowJ['nombrecompleto']),0,20),0,0,'L',false);
 		$pdf->SetFont('Arial','',8);
 		$pdf->Cell(6,6,'',1,0,'C',false);
 		$pdf->Cell(6,6,'',1,0,'C',false);
 		$pdf->Cell(7,6,'',1,0,'C',false);
 		$pdf->Cell(16,6,$rowJ['nrodocumento'],0,0,'C',false);
 		if (($habilitacion == 'HAB.')) { 
-			if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0) && ($pendiente == 0)) {
-			$pdf->Cell(22,6,'_____________',0,0,'C',false);
+			if ($tipoTorneo != 3) {
+				if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0) && ($pendiente == 0)) {
+				$pdf->Cell(22,6,'_____________',0,0,'C',false);
+				} else {
+					$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
+				}
 			} else {
-				$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
+				$pdf->Cell(22,6,'_____________',0,0,'C',false);
 			}
 		} else {
 			$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
@@ -376,7 +383,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		
 		$pdf->Cell(6,6,'',1,0,'C',false);
 		$pdf->SetFont('Arial','',7);
-		$pdf->Cell(35,6,substr($rowV['nombrecompleto'],0,20),0,0,'L',false);
+		$pdf->Cell(35,6,substr(utf8_decode($rowV['nombrecompleto']),0,20),0,0,'L',false);
 		$pdf->SetFont('Arial','',8);
 		$pdf->Cell(6,6,'',1,0,'C',false);
 		$pdf->Cell(6,6,'',1,0,'C',false);
@@ -385,10 +392,14 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		
 		
 		if (($habilitacion == 'HAB.')) { 
-			if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && ($pendienteB == 0)) {
-			$pdf->Cell(22,6,'_____________',0,0,'C',false);
+			if ($tipoTorneo != 3) {
+				if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && ($pendienteB == 0)) {
+				$pdf->Cell(22,6,'_____________',0,0,'C',false);
+				} else {
+					$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
+				}
 			} else {
-				$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
+				$pdf->Cell(22,6,'_____________',0,0,'C',false);
 			}
 		} else {
 			$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	

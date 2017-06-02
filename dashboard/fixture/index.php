@@ -12,13 +12,11 @@ include ('../../includes/funciones.php');
 include ('../../includes/funcionesUsuarios.php');
 include ('../../includes/funcionesHTML.php');
 include ('../../includes/funcionesReferencias.php');
-include ('../../includes/funcionesPlayOff.php');
 
 $serviciosFunciones 	= new Servicios();
 $serviciosUsuario 		= new ServiciosUsuarios();
 $serviciosHTML 			= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
-$serviciosPlayOff		= new ServiciosPlayOff();
 
 $fecha = date('Y-m-d');
 
@@ -52,14 +50,19 @@ $cadRef5		=	'<option value="">-- seleccionar --</option>';
 $cadRef5		.=	$serviciosFunciones->devolverSelectBox($resEstadosP,array(1),'');
 
 $resTorneos		=	$serviciosReferencias->traerTorneos();
-$cadRef6		=	$serviciosFunciones->devolverSelectBox($resTorneos,array(1,2),' - ');
+$cadRef6		=	$serviciosFunciones->devolverSelectBox($resTorneos,array(1,2,3,4),' - ');
 
-$resEtapas		=	$serviciosPlayOff->traerEtapas();
+$resEtapas		=	$serviciosReferencias->traerEtapas();
 $cadRef7		=	"<option value='0'></option>";
 $cadRef7		.=	$serviciosFunciones->devolverSelectBox($resEtapas,array(1,2),' - ');
 
-$refdescripcion = array(0 => $cadRef,1=>$cadRef,2=>$cadRef2,3=>$cadRef3,4=>$cadRef4,5=>$cadRef5,6=>$cadRef6,7=>$cadRef7);
-$refCampo	 	= array("refconectorlocal","refconectorvisitante","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos","refetapas"); 
+$cadPosiciones = '<option value="0"></option>';
+for ($i=1;$i<=64;$i++) {
+	$cadPosiciones .= '<option value="'.$i.'">Posicion '.$i.'</option>';	
+}
+
+$refdescripcion = array(0 => $cadRef,1=>$cadRef,2=>$cadRef2,3=>$cadRef3,4=>$cadRef4,5=>$cadRef5,6=>$cadRef6,7=>$cadRef7,8=>$cadPosiciones);
+$refCampo	 	= array("refconectorlocal","refconectorvisitante","reffechas","refcanchas","refarbitros","refestadospartidos","reftorneos","refetapas","posicion"); 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -100,7 +103,7 @@ $cabeceras 		= "	<th>Descripción</th>
 
 
 
-$formulario 	= $serviciosFunciones->camposTabla("insertarFixture",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+$formulario 	= $serviciosFunciones->camposTabla("insertarFixtureNuevo",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
 $refTorneos		=	$serviciosReferencias->traerTorneos();
 

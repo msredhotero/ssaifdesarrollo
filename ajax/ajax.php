@@ -37,6 +37,8 @@ switch ($accion) {
 
 case 'insertarFixture':
 insertarFixture($serviciosReferencias);
+case 'insertarFixtureNuevo':
+insertarFixtureNuevo($serviciosReferencias);
 break;
 case 'modificarFixture':
 modificarFixture($serviciosReferencias);
@@ -1272,6 +1274,48 @@ function insertarFixture($serviciosReferencias) {
 			echo '';
 		} else {
 			echo 'Huvo un error al insertar datos';
+		}
+	} else {
+		echo 'Formato de fecha erroneo'.$_POST['fecha'];	
+	}
+}
+
+
+
+function insertarFixtureNuevo($serviciosReferencias) {
+	$reftorneos = $_POST['reftorneos'];
+	$reffechas = $_POST['reffechas'];
+	$refconectorlocal = $_POST['refconectorlocal'];
+	$refconectorvisitante = $_POST['refconectorvisitante'];
+	$refarbitros = $_POST['refarbitros'];
+	$juez1 = $_POST['juez1'];
+	$juez2 = $_POST['juez2'];
+	$refcanchas = $_POST['refcanchas'];
+	$fecha = formatearFechas($_POST['fecha']);
+	$hora = $_POST['hora'];
+	$refestadospartidos = ($_POST['refestadospartidos'] == '' ? 'NULL' : $_POST['refestadospartidos']);
+	$calificacioncancha = ($_POST['calificacioncancha'] == '' ? 'NULL' : $_POST['calificacioncancha']);
+	$puntoslocal = ($_POST['puntoslocal'] == '' ? 'NULL' : $_POST['puntoslocal']);
+	$puntosvisita = ($_POST['puntosvisita'] == '' ? 'NULL' : $_POST['puntosvisita']);
+	$goleslocal = ($_POST['goleslocal'] == '' ? 'NULL' : $_POST['goleslocal']);
+	$golesvisitantes = ($_POST['golesvisitantes'] == '' ? 'NULL' : $_POST['golesvisitantes']);
+	$observaciones = $_POST['observaciones'];
+	$refetapas = $_POST['refetapas'];
+	$posicion = $_POST['posicion'];
+	
+	if (isset($_POST['publicar'])) {
+		$publicar = 1;
+	} else {
+		$publicar = 0;
+	}
+	
+	if ($fecha != '***') {
+		$res = $serviciosReferencias->insertarFixtureNuevo($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar,$refetapas, $posicion);
+		
+		if ((integer)$res > 0) {
+			echo '';
+		} else {
+			echo 'Huvo un error al insertar datos ';
 		}
 	} else {
 		echo 'Formato de fecha erroneo'.$_POST['fecha'];	
