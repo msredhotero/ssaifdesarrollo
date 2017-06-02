@@ -4669,7 +4669,7 @@ from
         inner join
     tbcategorias cat ON cat.idtcategoria = c.refcategorias
 	where equ.idequipo = ".$refEquipos." and c.activo = 1 and c.refcategorias = ".$idCategoria."
-order by 1";
+order by concat(jug.apellido,', ',jug.nombres)";
 $res = $this->query($sql,0);
 return $res;
 }
