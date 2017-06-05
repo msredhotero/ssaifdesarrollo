@@ -57,6 +57,8 @@ $cantidadcambiosporpartido	= mysql_result($resDefTemp,0,'cantidadcambiosporparti
 $dia						= mysql_result($resDefTemp,0,'dia');
 $hora						= mysql_result($resDefTemp,0,'hora');
 
+$fechaPartido				= mysql_result($resEquipos,0,'fechapartido');
+
 $pdf = new FPDF();
 $cantidadJugadores = 0;
 #Establecemos los márgenes izquierda, arriba y derecha: 
@@ -85,7 +87,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->SetFillColor(155,155,155);
 	$pdf->Cell(35,5,'Temporada:',1,0,'L',true);
 	$pdf->Cell(70,5,'Temporada '.$temporada,1,0,'L',false);
-	$pdf->Cell(50,5,$dia." ".date('d-m-Y')." ".$hora,1,0,'L',false);
+	$pdf->Cell(50,5,$dia." ".$fechaPartido." ".$hora,1,0,'L',false);
 	
 	
 	$pdf->Ln();
