@@ -5085,7 +5085,8 @@ return $res;
 }
 
 
-function traerFixtureTodoPorTorneoFecha($idTorneo, $refFechas) {
+
+function traerFixtureTodoPorTorneoPlayOff() {
 $sql = "select
 f.idfixture,
 el.nombre as equipolocal,
@@ -5099,6 +5100,59 @@ f.golesvisitantes,
 can.nombre as canchas,
 fec.fecha,
 date_format(f.fecha,'%d/%m/%Y'),
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.observaciones,
+f.publicar,
+arb.telefonoparticular as telefono,
+f.refcanchas,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refestadospartidos,
+f.refarbitros,
+f.refetapas,
+ep.descripcion,
+ep.valor,
+f.posicion
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+inner join tbetapas ep on ep.idetapa = f.refetapas
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where ti.idtipotorneo = 3
+order by f.refetapas, f.posicion";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerFixtureTodoPorTorneoFecha($idTorneo, $refFechas) {
+$sql = "select
+f.idfixture,
+el.nombre as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+ev.nombre as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.goleslocal,
+f.golesvisitantes,
+can.nombre as canchas,
+fec.fecha,
+date_format(f.fecha,'%d/%m/%Y') as fechapartido,
 f.hora,
 est.descripcion as estado,
 f.calificacioncancha,
