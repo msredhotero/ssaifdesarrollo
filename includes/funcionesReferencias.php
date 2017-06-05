@@ -962,7 +962,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 				on			ts.idtiposancion = sj.reftiposanciones
 				inner
 				join		dbtorneos t
-				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias
+				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos
 				where		ts.amonestacion = 1
 							and sj.cantidad > 0
 							
@@ -979,7 +979,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 				on			fix.idfixture = sj.reffixture and fix.reffechas > ".$reffechaDesde."
 				inner
 				join		dbtorneos t
-				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias
+				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos
 				where		sj.reftiposanciones = 4 or sf.amarillas = 2
 							
 				) t";	

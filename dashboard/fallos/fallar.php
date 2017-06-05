@@ -36,7 +36,7 @@ $plural = "Fallos";
 
 $eliminar = "eliminarSancionesfallos";
 
-$insertar = "insertarSancionesfallos";
+$insertar = "insertarFalloPorFecha";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
