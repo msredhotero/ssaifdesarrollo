@@ -6366,7 +6366,7 @@ function traerSancionesJugadoresConFallosPorJugador($idJugador, $reffecha) {
 
 
 /* recordar poner buscar por temporada activa */
-function suspendidoPorDias($idJugador) {
+function suspendidoPorDias($idJugador, $idTipoTorneo) {
 	$sql = "select
 			p.idsancionjugador
 		from dbsancionesjugadores p
@@ -6376,7 +6376,7 @@ function suspendidoPorDias($idJugador) {
 		inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
 		inner join dbcountries co ON co.idcountrie = jug.refcountries 
 		inner join dbfixture fix ON fix.idfixture = p.reffixture 
-		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
 		inner join tbfechas fe ON fe.idfecha = fix.reffechas 
 		inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
 		inner join dbequipos equ ON equ.idequipo = p.refequipos 
@@ -6395,7 +6395,7 @@ function suspendidoPorDias($idJugador) {
 
 
 /* recordar poner buscar por temporada activa */
-function traerSancionesJugadoresConFallosPorSancion($idFallo) {
+function traerSancionesJugadoresConFallosPorSancion($idFallo, $idTipoTorneo) {
 	$sql = "select
 			p.idsancionjugador,
 			concat(jug.apellido, ', ', jug.nombres) as jugador,
@@ -6427,7 +6427,7 @@ function traerSancionesJugadoresConFallosPorSancion($idFallo) {
 		inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos 
 		inner join dbcountries co ON co.idcountrie = jug.refcountries 
 		inner join dbfixture fix ON fix.idfixture = p.reffixture 
-		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
 		inner join tbfechas fe ON fe.idfecha = fix.reffechas 
 		inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
 		inner join dbequipos equ ON equ.idequipo = p.refequipos 
@@ -6664,7 +6664,7 @@ function estaFechaYaFueCumplida($idJugador, $idFixture) {
 }
 
 
-function hayPendienteDeFallo($idJugador, $idFixture) {
+function hayPendienteDeFallo($idJugador, $idFixture, $idTipoTorneo) {
 	$sql = "SELECT 
 				coalesce(1,0) as faltan
 			FROM
@@ -6682,7 +6682,7 @@ function hayPendienteDeFallo($idJugador, $idFixture) {
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
 					inner join
-				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
+				dbtorneos torv ON torv.idtorneo = fixv.reftorneos and torv.reftipotorneo = ".$idTipoTorneo."
 					left join
 				(select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas 
 					from dbsancionesfechascumplidas fc
@@ -6698,7 +6698,7 @@ function hayPendienteDeFallo($idJugador, $idFixture) {
 	return $this->existeDevuelveId($sql);			
 }
 
-function hayMovimientos($idJugador, $idFixture) {
+function hayMovimientos($idJugador, $idFixture, $idTipoTorneo) {
 	$sql = "SELECT 
 				coalesce(sf.cantidadfechas -  coalesce(sfc.cumplidas,0),0) as faltan
 			FROM
@@ -6712,7 +6712,7 @@ function hayMovimientos($idJugador, $idFixture) {
 					INNER JOIN
 				dbfixture fix ON fix.idfixture = ".$idFixture." AND fix.fecha > san.fecha
 					INNER JOIN
-				dbtorneos tor ON tor.idtorneo = fix.reftorneos
+				dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
 					inner join
@@ -6734,7 +6734,7 @@ function hayMovimientos($idJugador, $idFixture) {
 }
 
 
-function hayMovimientosDevuelveId($idJugador, $idFixture) {
+function hayMovimientosDevuelveId($idJugador, $idFixture, $idTipoTorneo) {
 	$sql = "SELECT 
 				distinct san.refsancionesfallos
 			FROM
@@ -6748,7 +6748,7 @@ function hayMovimientosDevuelveId($idJugador, $idFixture) {
 					INNER JOIN
 				dbfixture fix ON fix.idfixture = ".$idFixture."
 					INNER JOIN
-				dbtorneos tor ON tor.idtorneo = fix.reftorneos
+				dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
 					inner join
@@ -6767,7 +6767,7 @@ function hayMovimientosDevuelveId($idJugador, $idFixture) {
 	return $this->existeDevuelveId($sql);			
 }
 
-function hayMovimientosAmarillasAcumuladas($idJugador, $idFixture, $idCategoria) {
+function hayMovimientosAmarillasAcumuladas($idJugador, $idFixture, $idCategoria, $idTipoTorneo) {
 	$sql = "SELECT 
 				coalesce(sf.cantidadfechas - sf.fechascumplidas,0) as faltan
 			FROM
@@ -6785,7 +6785,7 @@ function hayMovimientosAmarillasAcumuladas($idJugador, $idFixture, $idCategoria)
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
 					inner join
-				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
+				dbtorneos torv ON torv.idtorneo = fixv.reftorneos and torv.reftipotorneo = ".$idTipoTorneo."
 			WHERE
 				ju.idjugador = ".$idJugador."
 					AND tor.refcategorias = ".$idCategoria."
@@ -6797,7 +6797,7 @@ function hayMovimientosAmarillasAcumuladas($idJugador, $idFixture, $idCategoria)
 	return $this->existeDevuelveId($sql);	
 }
 
-function hayMovimientosAmarillasAcumuladasDevuelveId($idJugador, $idFixture, $idCategoria) {
+function hayMovimientosAmarillasAcumuladasDevuelveId($idJugador, $idFixture, $idCategoria, $idTipoTorneo) {
 	$sql = "SELECT 
 				distinct san.idsancionjugador
 			FROM
@@ -6815,7 +6815,7 @@ function hayMovimientosAmarillasAcumuladasDevuelveId($idJugador, $idFixture, $id
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
 					inner join
-				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
+				dbtorneos torv ON torv.idtorneo = fixv.reftorneos and torv.reftipotorneo = ".$idTipoTorneo."
 					
 			WHERE
 				ju.idjugador = ".$idJugador."
@@ -6827,7 +6827,7 @@ function hayMovimientosAmarillasAcumuladasDevuelveId($idJugador, $idFixture, $id
 	return $this->existeDevuelveId($sql);	
 }
 
-function hayMovimientosAmarillasAcumuladasDevuelveIdAcumulado($idJugador, $idFixture, $idCategoria) {
+function hayMovimientosAmarillasAcumuladasDevuelveIdAcumulado($idJugador, $idFixture, $idCategoria, $idTipoTorneo) {
 	$sql = "SELECT 
 				distinct sf.idsancionfalloacumuladas
 			FROM
@@ -6845,7 +6845,7 @@ function hayMovimientosAmarillasAcumuladasDevuelveIdAcumulado($idJugador, $idFix
 					INNER JOIN
 				dbfixture fixv ON fixv.idfixture = san.reffixture
 					inner join
-				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
+				dbtorneos torv ON torv.idtorneo = fixv.reftorneos and torv.reftipotorneo = ".$idTipoTorneo."
 					
 			WHERE
 				ju.idjugador = ".$idJugador."
@@ -6857,7 +6857,7 @@ function hayMovimientosAmarillasAcumuladasDevuelveIdAcumulado($idJugador, $idFix
 	return $this->existeDevuelveId($sql);	
 }
 
-function devolverIdSancionJugadorPorSancion($idJugador, $idFixture) {
+function devolverIdSancionJugadorPorSancion($idJugador, $idFixture, $idTipoTorneo) {
 	$sql = "select
 			*
 			from dbmovimientosanciones ms
@@ -6866,7 +6866,7 @@ function devolverIdSancionJugadorPorSancion($idJugador, $idFixture) {
 			inner join dbjugadores ju ON ju.idjugador = san.refjugadores 
 			inner join tbtiposanciones tip ON tip.idtiposancion = san.reftiposanciones
 			inner join dbfixture fix on fix.idfixture = ".$idFixture."
-			inner join dbtorneos tor on tor.idtorneo = fix.reftorneos
+			inner join dbtorneos tor on tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
 			inner join dbfixture fixv ON fixv.idfixture = san.reffixture
 			where ju.idjugador =".$idJugador." and tor.activo = 1 and ms.cumplidas = 0 and tip.cumpletodascategorias = 1 and fix.reffechas > fixv.reffechas";
 			

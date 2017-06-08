@@ -47,6 +47,10 @@ $equipoB = mysql_result($serviciosReferencias->traerEquiposPorId($equipoVisitant
 
 $resTorneo	=	$serviciosReferencias->traerTorneosPorId(mysql_result($resFix,0,'reftorneos'));
 
+////////////  TRAIGO EL TIPO DE TORNEO  //////////////////////////////
+$idTipoTorneoTorneo	= mysql_result($resTorneo,0,'reftipotorneo');
+/////////////  FIN TIPO TORNEO ///////////////////////////////////////
+
 //todas las fechas del torneo del equipo local (Fechas Local y Visitante)
 $resTodasFechasL = $serviciosReferencias->traerFechasFixturePorTorneoEquipoLocal(mysql_result($resFix,0,'reftorneos'), $equipoLocal);
 $resTodasFechasLV = $serviciosReferencias->traerFechasFixturePorTorneoEquipoVisitante(mysql_result($resFix,0,'reftorneos'), $equipoLocal);
