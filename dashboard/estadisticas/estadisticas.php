@@ -735,14 +735,14 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
 								
-								$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($row['refjugadores']);
+								$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($row['refjugadores'], $idTipoTorneoTorneo);
 								
-								$suspendidoCategorias		=	$serviciosReferencias->hayMovimientos($row['refjugadores'],$idFixture);
-								$suspendidoCategoriasAA		=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($row['refjugadores'],$idFixture, $idCategoria);
+								$suspendidoCategorias		=	$serviciosReferencias->hayMovimientos($row['refjugadores'],$idFixture, $idTipoTorneoTorneo);
+								$suspendidoCategoriasAA		=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($row['refjugadores'],$idFixture, $idCategoria, $idTipoTorneoTorneo);
 								
 								$falloA					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($row['refjugadores'],$idFixture);
 								
-								$pendiente				=	$serviciosReferencias->hayPendienteDeFallo($row['refjugadores'],$idFixture);
+								$pendiente				=	$serviciosReferencias->hayPendienteDeFallo($row['refjugadores'],$idFixture, $idTipoTorneoTorneo);
 								
 								$yaCumpli				=	$serviciosReferencias->estaFechaYaFueCumplida($row['refjugadores'],$idFixture);
 								
@@ -962,7 +962,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 							if ($_SESSION['idroll_predio'] == 1) {
 								if ($falloA > 0) {
-									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA);
+									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA, $idTipoTorneoTorneo);
 									
 									$fallo	= '';
 
@@ -1058,7 +1058,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 							if ($_SESSION['idroll_predio'] == 1) {
 								if ($falloA > 0) {
-									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA);
+									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA, $idTipoTorneoTorneo);
 									
 									$fallo	= '';
 
@@ -1168,15 +1168,15 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
 								
-								$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowB['refjugadores']);
+								$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowB['refjugadores'], $idTipoTorneoTorneo);
 								
-								$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowB['refjugadores'],$idFixture);
-								$suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowB['refjugadores'],$idFixture, $idCategoria);
+								$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowB['refjugadores'],$idFixture, $idTipoTorneoTorneo);
+								$suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowB['refjugadores'],$idFixture, $idCategoria, $idTipoTorneoTorneo);
 								
 								//die(var_dump($suspendidoCategoriasAAB));
 								$falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowB['refjugadores'],$idFixture);
 								
-								$pendienteB				=	$serviciosReferencias->hayPendienteDeFallo($rowB['refjugadores'],$idFixture);
+								$pendienteB				=	$serviciosReferencias->hayPendienteDeFallo($rowB['refjugadores'],$idFixture, $idTipoTorneoTorneo);
 								
 								$yaCumpliB				=	$serviciosReferencias->estaFechaYaFueCumplida($rowB['refjugadores'],$idFixture);
 								
@@ -1393,7 +1393,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 							if ($_SESSION['idroll_predio'] == 1) {
 								if ($falloB > 0) {
-									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB);
+									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB, $idTipoTorneoTorneo);
 									
 									$fallo	= '';
 
@@ -1487,7 +1487,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 							if ($_SESSION['idroll_predio'] == 1) {
 								if ($falloB > 0) {
-									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB);
+									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB, $idTipoTorneoTorneo);
 									
 									$fallo	= '';
 

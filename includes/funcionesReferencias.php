@@ -855,7 +855,7 @@ function traerFechasPorTorneoJugadas($idTorneo) {
 }
 
 //esta funcion me devuelve la fecha en la cual fue fallada la suspencion, no donde fue cumplida.
-function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugador) {
+function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugador, $idTipoTorneo) {
 	$sql	=	"select
 					max(ms.amarillas) as amarillas
 				from		dbsancionesjugadores sj
@@ -874,6 +874,9 @@ function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugad
                 inner
 				join		dbfixture fixc
 				on			fixc.idfixture = sc.reffixture
+				inner
+				join		dbtorneos tor
+				on			tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
 				where		ms.generadaporacumulacion = 1 
 							and ms.fechascumplidas = 1
 							and sj.refjugadores = ".$idJugador."
@@ -883,7 +886,7 @@ function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugad
 }
 
 // esta funcion me devuelve donde fue sancionado por ultima vez
-function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador) {
+function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $idTipoTorneo) {
 	$sql	=	"select
 					max(fixc.reffechas) as reffechas
 				from		dbsancionesjugadores sj
@@ -902,6 +905,9 @@ function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador) {
                 inner
 				join		dbfixture fixc
 				on			fixc.idfixture = sc.reffixture
+				inner
+				join		dbtorneos tor
+				on			tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
 				where		ms.generadaporacumulacion = 1 
 							and ms.fechascumplidas = 1
 							and sj.refjugadores = ".$idJugador."
@@ -935,8 +941,8 @@ function ultimaFechaSancionadoPorCantidadFechas($idJugador) {
 }
 
 //calculo para acumulacion de amarillas
-function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
-	$ultimaFecha = $this->ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador);
+function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo) {
+	$ultimaFecha = $this->ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $idTipoTorneo);
 
 	if ($ultimaFecha == 0) {
 		$reffechaDesde = 1;	
@@ -945,7 +951,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 		$reffechaDesde = $ultimaFecha;
 		
 		//calculo para vaeriguar si sobra una amarilla de la ultima sancion
-		$restoAmarillas = (integer)$this->ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugador) - 1;
+		$restoAmarillas = (integer)$this->ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugador, $idTipoTorneo) - 1;
 	}
 	
 	$sql = "select
@@ -962,7 +968,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 				on			ts.idtiposancion = sj.reftiposanciones
 				inner
 				join		dbtorneos t
-				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos
+				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo = ".$idTipoTorneo."
 				where		ts.amonestacion = 1
 							and sj.cantidad > 0
 							
@@ -979,7 +985,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha) {
 				on			fix.idfixture = sj.reffixture and fix.reffechas > ".$reffechaDesde."
 				inner
 				join		dbtorneos t
-				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos
+				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo = ".$idTipoTorneo."
 				where		sj.reftiposanciones = 4 or sf.amarillas = 2
 							
 				) t";	
@@ -5139,6 +5145,112 @@ return $res;
 }
 
 
+function traerFixtureTodoPorTorneoPlayOffPorEtapas($idEtapa) {
+$sql = "select
+f.idfixture,
+el.nombre as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+ev.nombre as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.goleslocal,
+f.golesvisitantes,
+can.nombre as canchas,
+fec.fecha,
+date_format(f.fecha,'%d/%m/%Y'),
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.observaciones,
+f.publicar,
+arb.telefonoparticular as telefono,
+f.refcanchas,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refestadospartidos,
+f.refarbitros,
+f.refetapas,
+ep.descripcion,
+ep.valor,
+f.posicion
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+inner join tbetapas ep on ep.idetapa = f.refetapas
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where ti.idtipotorneo = 3 and f.refetapas = ".$idEtapa."
+order by f.refetapas, f.posicion";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
+function traerFixtureTodoPorTorneoPlayOffPorEtapasPosicion($idEtapa, $posicion) {
+$sql = "select
+f.idfixture,
+el.nombre as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+ev.nombre as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.goleslocal,
+f.golesvisitantes,
+can.nombre as canchas,
+fec.fecha,
+date_format(f.fecha,'%d/%m/%Y'),
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.observaciones,
+f.publicar,
+arb.telefonoparticular as telefono,
+f.refcanchas,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refestadospartidos,
+f.refarbitros,
+f.refetapas,
+ep.descripcion,
+ep.valor,
+f.posicion
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+inner join tbetapas ep on ep.idetapa = f.refetapas
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where ti.idtipotorneo = 3 and f.refetapas = ".$idEtapa." and f.posicion = ".$posicion."
+order by f.refetapas, f.posicion";
+$res = $this->query($sql,0);
+return $res;
+}
+
 function traerFixtureTodoPorTorneoFecha($idTorneo, $refFechas) {
 $sql = "select
 f.idfixture,
@@ -6992,7 +7104,7 @@ function traerMovimientosancionesIdSancionPorSancionJugador($idJugador) {
 
 /* PARA Sancionesfechascumplidas */
 
-function insertarSancionesfechascumplidas($reffixture,$refjugadores,$cumplida,$refsancionesfallos) { 
+function insertarSancionesfechascumplidas($reffixture,$refjugadores,$cumplida,$refsancionesfallos, $idTipoTorneo) { 
 
 	$sqlExiste = "select idsancionfechacumplida from dbsancionesfechascumplidas where reffixture =".$reffixture." and refjugadores =".$refjugadores;
 	
@@ -7005,19 +7117,19 @@ function insertarSancionesfechascumplidas($reffixture,$refjugadores,$cumplida,$r
 		
 		$idCategoria	=	mysql_result($resTorneo,0,'refcategorias');
 										
-		$suspendidoCategorias		=	$this->hayMovimientos($refjugadores,$reffixture);
+		$suspendidoCategorias		=	$this->hayMovimientos($refjugadores,$reffixture, $idTipoTorneo);
 		
-		$suspendidoCategoriasAA		=	$this->hayMovimientosAmarillasAcumuladas($refjugadores,$reffixture, $idCategoria);
+		$suspendidoCategoriasAA		=	$this->hayMovimientosAmarillasAcumuladas($refjugadores,$reffixture, $idCategoria, $idTipoTorneo);
 		
 		//primero sanciono por fecha desde y hasta
 		if ($suspendidoCategorias != 0) {
 			//busco el refsancionesfallos
-			$refsancionesfallos = $this->hayMovimientosDevuelveId($refjugadores,$reffixture);
+			$refsancionesfallos = $this->hayMovimientosDevuelveId($refjugadores,$reffixture, $idTipoTorneo);
 			$idAcumulado = 0;
 		} else {
 			if ($suspendidoCategoriasAA != 0) {
-				$refsancionesJugadores = $this->hayMovimientosAmarillasAcumuladasDevuelveId($refjugadores,$reffixture, $idCategoria);
-				$idAcumulado		 = $this->hayMovimientosAmarillasAcumuladasDevuelveIdAcumulado($refjugadores,$reffixture, $idCategoria);
+				$refsancionesJugadores = $this->hayMovimientosAmarillasAcumuladasDevuelveId($refjugadores,$reffixture, $idCategoria, $idTipoTorneo);
+				$idAcumulado		 = $this->hayMovimientosAmarillasAcumuladasDevuelveIdAcumulado($refjugadores,$reffixture, $idCategoria, $idTipoTorneo);
 				//hago cumplir la fecha
 				$this->modificarSancionesfallosacumuladasPorSancionJugador($refsancionesJugadores);
 				$refsancionesfallos = 0;

@@ -833,6 +833,9 @@ function insertarFalloPorFecha($serviciosReferencias) {
 	$refFecha				=	mysql_result($resFixture,0,'reffechas');
 	
 	$idTorneo				=	mysql_result($resFixture,0,'reftorneos');
+	
+	$resTorneo				=	$serviciosReferencias->traerTorneosPorId($idTorneo);
+	$idTipoTorneo			=	mysql_result($resTorneo,0,'reftipotorneo');
 
 	$equipo					=	mysql_result($resSancionesJugadores,0,'refequipos');
 	$fecha					=	date('Y-m-d');
@@ -920,7 +923,7 @@ function insertarFalloPorFecha($serviciosReferencias) {
 			
 				if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
 					//*****			calculo amarillas acumuladas ********/
-					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo);
 					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
 					if ((integer)$cantidadAmarillas >= 5) {
 	
@@ -961,6 +964,9 @@ function modificarFalloPorFecha($serviciosReferencias) {
 	$refFecha				=	mysql_result($resFixture,0,'reffechas');
 	
 	$idTorneo				=	mysql_result($resFixture,0,'reftorneos');
+	
+	$resTorneo				=	$serviciosReferencias->traerTorneosPorId($idTorneo);
+	$idTipoTorneo			=	mysql_result($resTorneo,0,'reftipotorneo');
 	
 	$equipo					=	mysql_result($resSancionesJugadores,0,'refequipos');
 	$fecha					=	date('Y-m-d');
@@ -1044,7 +1050,7 @@ function modificarFalloPorFecha($serviciosReferencias) {
 			
 			if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
 				//*****			calculo amarillas acumuladas ********/
-				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo);
 				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
 
 				if ((integer)$cantidadAmarillas >= 5) {

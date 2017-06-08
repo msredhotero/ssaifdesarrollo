@@ -60,7 +60,13 @@ $cabeceras 		= "	<th>Categorias</th>";
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
-$playOff		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOff();
+$prePlayOff		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapas(1);
+$PlayOff		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapas(2);
+$Octavos		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapas(3);
+$Cuartos		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapas(4);
+$SemiFinal		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapas(5);
+$Tercer			=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapas(6);
+$Final			=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapas(7);
 
 
 
@@ -126,7 +132,7 @@ if ($_SESSION['refroll_predio'] != 1) {
   display:flex;
   flex-direction:column;
   justify-content:center;
-  width:200px;
+  width:240px;
   list-style:none;
   padding:0;
 }
@@ -190,221 +196,249 @@ li.game{
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
        
-				<h4>2013 NCAA Tournament - Midwest Bracket</h4>
+				<h4>PlayOff</h4>
                 <main id="tournament">
-                	<?php
-					
-					
-						while ($row = mysql_fetch_array($playOff)) {
-						
-						
-					?>
+                	
                 	<ul class="round round-1">
+                        <?php
+						$i = 0;
+						for ($i=1;$i<=16;$i++) {
+							
+							$resPlayOff 		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapasPosicion(1,$i);
+							if (mysql_num_rows($resPlayOff)>0) {
+								$equipoLocal		=	mysql_result($resPlayOff,0,'equipolocal');
+								$equipovisitante	=	mysql_result($resPlayOff,0,'equipovisitante');
+								$goleslocal			=	mysql_result($resPlayOff,0,'goleslocal');
+								$golesvisitantes	=	mysql_result($resPlayOff,0,'golesvisitantes');
+								$estadoPartido		=	mysql_result($resPlayOff,0,'refestadospartidos');
+							} else {
+								$equipoLocal		=	'&nbsp;';
+								$equipovisitante	=	'&nbsp;';
+								$goleslocal			=	'&nbsp;';
+								$golesvisitantes	=	'&nbsp;';
+								$estadoPartido		=	'&nbsp;';
+	
+							}
+						?>
+							<?php
+                            if ($estadoPartido == 1) {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
                         
+                            <li class="game game-top winner"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom "><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+                            <?php
+                            } else {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
                         
-                        <li class="game game-top "></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom winner"></li>
-                
-						<li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner">Colo St <span>84</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">Missouri <span>72</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top "></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom winner"></li>
-                
-                        
-                        <li class="game game-top "></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom winner"></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner">Memphis <span>54</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">St Mary's <span>52</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top "></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom winner"></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top "></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom winner"></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top "></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom winner"></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top "></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom winner"></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top "></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom winner"></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top "></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom winner"></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner"></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom "></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner"></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom "></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner"></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom "></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner"></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom "></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner"></li>
-                        <li class="game game-spacer-sin">&nbsp;</li>
-                        <li class="game game-bottom "></li>
-                
+                            <li class="game game-top"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom winner"><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+
+                            
+                            <?php    
+                            }
+                            ?>
+                        	
+                        <?php
+						}
+						?>
                         <li class="spacer">&nbsp;</li>
                     </ul>
                     <ul class="round round-2">
-                        <li class="spacer">&nbsp;</li>
+                        <?php
+						for ($i=1;$i<=8;$i++) {
+							
+							$resPlayOff 		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapasPosicion(3,$i);
+							if (mysql_num_rows($resPlayOff)>0) {
+								$equipoLocal		=	mysql_result($resPlayOff,0,'equipolocal');
+								$equipovisitante	=	mysql_result($resPlayOff,0,'equipovisitante');
+								$goleslocal			=	mysql_result($resPlayOff,0,'goleslocal');
+								$golesvisitantes	=	mysql_result($resPlayOff,0,'golesvisitantes');
+								$estadoPartido		=	mysql_result($resPlayOff,0,'refestadospartidos');
+							} else {
+								$equipoLocal		=	'&nbsp;';
+								$equipovisitante	=	'&nbsp;';
+								$goleslocal			=	'&nbsp;';
+								$golesvisitantes	=	'&nbsp;';
+								$estadoPartido		=	'&nbsp;';
+	
+							}
+						?>
+							<?php
+                            if ($estadoPartido == 1) {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
                         
-                        <li class="game game-top winner">Lousville <span>79</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">NC A&T <span>48</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
+                            <li class="game game-top winner"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom "><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+                            <?php
+                            } else {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
                         
-                        <li class="game game-top winner">Colo St <span>84</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">Missouri <span>72</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top ">Oklahoma St <span>55</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom winner">Oregon <span>68</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner">Saint Louis <span>64</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">New Mexico St <span>44</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner">Memphis <span>54</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">St Mary's <span>52</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner">Mich St <span>65</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">Valparaiso <span>54</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner">Creighton <span>67</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">Cincinnati <span>63</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top winner">Duke <span>73</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">Albany <span>61</span></li>
-                
+                            <li class="game game-top"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom winner"><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+
+                            
+                            <?php    
+                            }
+                            ?>
+                        	
+                        <?php
+						}
+						?>
                         <li class="spacer">&nbsp;</li>
                     </ul>
                     <ul class="round round-3">
-                        <li class="spacer">&nbsp;</li>
+                        <?php
+						for ($i=1;$i<=4;$i++) {
+							
+							$resPlayOff 		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapasPosicion(4,$i);
+							if (mysql_num_rows($resPlayOff)>0) {
+								$equipoLocal		=	mysql_result($resPlayOff,0,'equipolocal');
+								$equipovisitante	=	mysql_result($resPlayOff,0,'equipovisitante');
+								$goleslocal			=	mysql_result($resPlayOff,0,'goleslocal');
+								$golesvisitantes	=	mysql_result($resPlayOff,0,'golesvisitantes');
+								$estadoPartido		=	mysql_result($resPlayOff,0,'refestadospartidos');
+							} else {
+								$equipoLocal		=	'&nbsp;';
+								$equipovisitante	=	'&nbsp;';
+								$goleslocal			=	'&nbsp;';
+								$golesvisitantes	=	'&nbsp;';
+								$estadoPartido		=	'&nbsp;';
+	
+							}
+						?>
+							<?php
+                            if ($estadoPartido == 1) {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
                         
-                        <li class="game game-top winner">Lousville <span>82</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">Colo St <span>56</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
+                            <li class="game game-top winner"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom "><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+                            <?php
+                            } else {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
                         
-                        <li class="game game-top winner">Oregon <span>74</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">Saint Louis <span>57</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top ">Memphis <span>48</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom winner">Mich St <span>70</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
-                        
-                        <li class="game game-top ">Creighton <span>50</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom winner">Duke <span>66</span></li>
-                
+                            <li class="game game-top"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom winner"><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+
+                            
+                            <?php    
+                            }
+                            ?>
+                        	
+                        <?php
+						}
+						?>
                         <li class="spacer">&nbsp;</li>
                     </ul>
                     <ul class="round round-4">
-                        <li class="spacer">&nbsp;</li>
+                        <?php
+						for ($i=1;$i<=2;$i++) {
+							
+							$resPlayOff 		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapasPosicion(5,$i);
+							if (mysql_num_rows($resPlayOff)>0) {
+								$equipoLocal		=	mysql_result($resPlayOff,0,'equipolocal');
+								$equipovisitante	=	mysql_result($resPlayOff,0,'equipovisitante');
+								$goleslocal			=	mysql_result($resPlayOff,0,'goleslocal');
+								$golesvisitantes	=	mysql_result($resPlayOff,0,'golesvisitantes');
+								$estadoPartido		=	mysql_result($resPlayOff,0,'refestadospartidos');
+							} else {
+								$equipoLocal		=	'&nbsp;';
+								$equipovisitante	=	'&nbsp;';
+								$goleslocal			=	'&nbsp;';
+								$golesvisitantes	=	'&nbsp;';
+								$estadoPartido		=	'&nbsp;';
+	
+							}
+						?>
+							<?php
+                            if ($estadoPartido == 1) {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
                         
-                        <li class="game game-top winner">Lousville <span>77</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">Oregon <span>69</span></li>
-                
-                        <li class="spacer">&nbsp;</li>
+                            <li class="game game-top winner"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom "><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+                            <?php
+                            } else {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
                         
-                        <li class="game game-top ">Mich St <span>61</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom winner">Duke <span>71</span></li>
-                
+                            <li class="game game-top"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom winner"><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+
+                            
+                            <?php    
+                            }
+                            ?>
+                        	
+                        <?php
+						}
+						?>
                         <li class="spacer">&nbsp;</li>
                     </ul>
                     <ul class="round round-5">
-                        <li class="spacer">&nbsp;</li>
+                        <?php
+						for ($i=1;$i<=1;$i++) {
+							
+							$resPlayOff 		=	$serviciosReferencias->traerFixtureTodoPorTorneoPlayOffPorEtapasPosicion(7,$i);
+							
+							if (mysql_num_rows($resPlayOff)>0) {
+								$equipoLocal		=	mysql_result($resPlayOff,0,'equipolocal');
+								$equipovisitante	=	mysql_result($resPlayOff,0,'equipovisitante');
+								$goleslocal			=	mysql_result($resPlayOff,0,'goleslocal');
+								$golesvisitantes	=	mysql_result($resPlayOff,0,'golesvisitantes');
+								$estadoPartido		=	mysql_result($resPlayOff,0,'refestadospartidos');
+							} else {
+								$equipoLocal		=	'&nbsp;';
+								$equipovisitante	=	'&nbsp;';
+								$goleslocal			=	'&nbsp;';
+								$golesvisitantes	=	'&nbsp;';
+								$estadoPartido		=	'&nbsp;';
+	
+							}
+						?>
+							<?php
+                            if ($estadoPartido == 1) {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
                         
-                        <li class="game game-top winner">Lousville <span>85</span></li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li class="game game-bottom ">Duke <span>63</span></li>
+                            <li class="game game-top winner"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom "><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+                            <?php
+                            } else {
+                            ?>
+                            <li class="spacer">&nbsp;</li>
+
                         
+                            <li class="game game-top"><?php echo $equipoLocal; ?> <span><?php echo $goleslocal; ?></span></li>
+                            <li class="game game-spacer">&nbsp;</li>
+                            <li class="game game-bottom winner"><?php echo $equipovisitante; ?> <span><?php echo $golesvisitantes; ?></span></li>
+
+                            
+                            <?php    
+                            }
+                            ?>
+                        	
+                        <?php
+						}
+						?>
                         <li class="spacer">&nbsp;</li>
                     </ul>	
                     
-                    <?php
-						}
-					?>	
+
                 </main>
    
 
