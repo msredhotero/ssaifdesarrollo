@@ -450,7 +450,7 @@ $numero = count($_POST);
 			$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 1, $idFixture);
 			if ($idsancion != 0) {
 				//*****			calculo amarillas acumuladas ********/
-				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
+				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo);
 				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
 				$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
 				//*****				fin							*****/	
@@ -1008,6 +1008,7 @@ if ($_SESSION['idroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
+        <div class="row">
         <a href="index.php">Busqueda de Partidos</a>
         <button data-toggle="collapse" data-target="#demo" class="btn btn-info" style="margin-bottom:5px;">Fechas de los equipos</button>
         <div id="demo" class="collapse">
@@ -1045,6 +1046,15 @@ if ($_SESSION['idroll_predio'] != 1) {
                 </ul>
             </div>
         </div>  
+        
+        <div class="col-md-6">
+            <label class="control-label">Ingrese el Numero de Partido</label>
+            <div class="input-group">
+                <input class="form-control" type="text" name="buscar" id="buscar"/>
+                <button type="button" class="btn btn-success" id="busqueda">Buscar</button>
+            </div>
+        </div>
+        </div>
         
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
             
@@ -1214,11 +1224,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="text-align:center">PA</th>
                             <th style="text-align:center">PE</th>
                             <th style="text-align:center">MJ</th>
-                            <th style="text-align:center">A</th>
-                            <th style="text-align:center">E</th>
-                            <th style="text-align:center">I</th>
-                            <th style="text-align:center">A+A</th>
-                            <th style="text-align:center">CDTD</th>
+                            <th style="text-align:center; background-color:#FF0;">A</th>
+                            <th style="text-align:center; background-color:#F00;">E</th>
+                            <th style="text-align:center; background-color:#09F;">I</th>
+                            <th style="text-align:center; background-color:#0C0;">A+A</th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
                             
                             <?php
 
@@ -1655,11 +1665,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="text-align:center">PA</th>
                             <th style="text-align:center">PE</th>
                             <th style="text-align:center">MJ</th>
-                            <th style="text-align:center">A</th>
-                            <th style="text-align:center">E</th>
-                            <th style="text-align:center">I</th>
-                            <th style="text-align:center">A+A</th>
-                            <th style="text-align:center">CDTD</th>
+                            <th style="text-align:center; background-color:#FF0;">A</th>
+                            <th style="text-align:center; background-color:#F00;">E</th>
+                            <th style="text-align:center; background-color:#09F;">I</th>
+                            <th style="text-align:center; background-color:#0C0;">A+A</th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
                             
                             <?php
 
@@ -2174,6 +2184,29 @@ $(document).ready(function(){
 			}
 		  }
 	} );
+	
+	
+	$('#busqueda').click(function(e) {
+        $.ajax({
+			data:  {id: $('#buscar').val(), accion: 'buscarPartido'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					
+			},
+			success:  function (response) {
+				if (response > 0) {
+					url = "estadisticas.php?id="+response;
+					$(location).attr('href',url);
+				} else {
+					$(".alert").removeClass("alert-danger");
+					$(".alert").addClass("alert-danger");
+					$(".alert").html('<strong>Error!</strong> No se encontro el partido');
+					$("#load").html('');
+				}
+			}
+		});
+    });
 	
 	$('.volver').click(function(e) {
         url = "estadisticas.php?id="+<?php echo $idFixture; ?>;

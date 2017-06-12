@@ -702,11 +702,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="text-align:center">PA</th>
                             <th style="text-align:center">PE</th>
                             <th style="text-align:center">MJ</th>
-                            <th style="text-align:center">A</th>
-                            <th style="text-align:center">E</th>
-                            <th style="text-align:center">I</th>
-                            <th style="text-align:center">A+A</th>
-                            <th style="text-align:center">CDTD</th>
+                            <th style="text-align:center; background-color:#FF0;">A</th>
+                            <th style="text-align:center; background-color:#F00;">E</th>
+                            <th style="text-align:center; background-color:#09F;">I</th>
+                            <th style="text-align:center; background-color:#0C0;">A+A</th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
                             <?php
 
 							if ($_SESSION['idroll_predio'] == 1) {
@@ -1134,11 +1134,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="text-align:center">PA</th>
                             <th style="text-align:center">PE</th>
                             <th style="text-align:center">MJ</th>
-                            <th style="text-align:center">A</th>
-                            <th style="text-align:center">E</th>
-                            <th style="text-align:center">I</th>
-                            <th style="text-align:center">A+A</th>
-                            <th style="text-align:center">CDTD</th>
+                            <th style="text-align:center; background-color:#FF0;">A</th>
+                            <th style="text-align:center; background-color:#F00;">E</th>
+                            <th style="text-align:center; background-color:#09F;">I</th>
+                            <th style="text-align:center; background-color:#0C0;">A+A</th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
                             
                             <?php
 

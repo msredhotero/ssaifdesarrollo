@@ -945,7 +945,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorne
 	$ultimaFecha = $this->ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $idTipoTorneo);
 
 	if ($ultimaFecha == 0) {
-		$reffechaDesde = 1;	
+		$reffechaDesde = 0;	
 		$restoAmarillas = 0;
 	} else {
 		$reffechaDesde = $ultimaFecha;

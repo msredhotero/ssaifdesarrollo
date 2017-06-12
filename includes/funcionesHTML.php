@@ -138,6 +138,7 @@ function menu($usuario,$titulo,$rol,$empresa) {
 					<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">General <span class="caret"></span></a>
 					  <ul class="dropdown-menu">
+						<li><a href="../contactos/">Contactos</a></li>
 						<li><a href="../tipocontacto/">Tipo Contacto</a></li>
 						<li><a href="../temporadas/">Temporada</a></li>
 						<li><a href="../divisiones/">Divisiones</a></li>

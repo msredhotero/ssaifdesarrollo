@@ -59,7 +59,7 @@ $resTraerJugadores = $serviciosReferencias->traerJugadores();
 
 $cadJugadores = '';
 	while ($row = mysql_fetch_array($resTraerJugadores)) {
-		$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
+		$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].' '.$row['nombres'].' - '.$row['nrodocumento'].'",';
 	}
 		
 ?>
