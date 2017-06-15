@@ -1003,8 +1003,11 @@ function sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha,$idFix
 	//$cantidadAmarillas	=	$this->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha);
 	//$fechaNueva = (integer)$refFecha + 1;
 	if ($cantidadAmarillas >=  5) {
-
-		$fallo = $this->insertarSancionesfallosacumuladas($refSancionJugadores,1,'0000-00-00','0000-00-00',1,0,0,0,1,'Acumulación de la 5 amarilla');
+		//determino si la fecha a sancionar ya fue sancionada
+		$existe = $this->traerSancionesfallosacumuladasPorIdSancionJugador($refSancionJugadores);
+		if (mysql_num_rows($existe)<1) {
+			$fallo = $this->insertarSancionesfallosacumuladas($refSancionJugadores,1,'0000-00-00','0000-00-00',1,0,0,0,1,utf8_decode('Acumulación de la 5 amarilla'));
+		}
 		
 		//determino si la fecha a sancionar ya fue sancionada
 		//$exiteFechas = $this->existeMovimientoEnFechaPorCantidadFecha($refFecha+1, $idJugador);

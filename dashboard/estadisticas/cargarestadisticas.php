@@ -2094,9 +2094,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
 
-                    <li>
-                        <button type="button" class="btn btn-primary" id="cargamasiva">Guardar Masivo</button>
-                    </li>
+
                     <li>
                         <button type="button" class="btn btn-default volver">Volver</button>
                     </li>

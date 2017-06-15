@@ -932,27 +932,27 @@ if ($_SESSION['idroll_predio'] != 1) {
                                 	<input type="checkbox" class="form-control input-sm mejor" id="mejorjugador<?php echo $row['refjugadores']; ?>" name="mejorjugador<?php echo $row['refjugadores']; ?>" <?php if (mysql_result($estadisticas,0,'mejorjugador')== 'Si') { echo 'checked'; } ?> style="width:30px;"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#FF0">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm amarillas" name="amaLrillas<?php echo $row['refjugadores']; ?>" id="amaLrillas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#F00">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm rojas" name="roLjas<?php echo $row['refjugadores']; ?>" id="roLjas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#09F">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm informados" name="inforLmados<?php echo $row['refjugadores']; ?>" id="inforLmados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#0C0">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm dobleamarilla" name="dobleLamarilla<?php echo $row['refjugadores']; ?>" id="dobleLamarilla<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm cdtd" name="cdLtd<?php echo $row['refjugadores']; ?>" id="cdLtd<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
                                 </div>
@@ -1362,27 +1362,27 @@ if ($_SESSION['idroll_predio'] != 1) {
                                 	<input type="checkbox" class="form-control input-sm mejor" id="mejorbjugador<?php echo $rowB['refjugadores']; ?>" name="mejorbjugador<?php echo $rowB['refjugadores']; ?>" <?php if (mysql_result($estadisticasB,0,'mejorjugador')== 'Si') { echo 'checked'; } ?> style="width:30px;"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#FF0">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm amarillas" name="amaVrillas<?php echo $rowB['refjugadores']; ?>" id="amaVrillas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#F00">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm rojas" name="roVjas<?php echo $rowB['refjugadores']; ?>" id="roVjas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#09F">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm informados" name="inforVmados<?php echo $rowB['refjugadores']; ?>" id="inforVmados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#0C0">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm dobleamarilla" name="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" id="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm cdtd" name="cdVtd<?php echo $rowB['refjugadores']; ?>" id="cdVtd<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
                                 </div>
