@@ -63,7 +63,7 @@ if (!$_POST){
 	}
 	
 	$resV = '';
-	$resValores = $serviciosReferencias->traerValoreshabilitacionestransitorias();
+	$resValores = $serviciosReferencias->traerDocumentaciones();
 	$cadV = 'multiselect';
 
 	while ($rowV = mysql_fetch_array($resValores)) {
