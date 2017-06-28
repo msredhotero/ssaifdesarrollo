@@ -551,7 +551,7 @@ if ($_SESSION['idroll_predio'] != 1) {
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
         	<div class="row">
                 <div class="col-md-3">
-                	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
+                	<p>Descripciï¿½n: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
                 </div>
 
                 <div class="col-md-3">
@@ -652,7 +652,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 </div>
                 
                 <div class="col-md-4">
-                	<p>Calificación Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
+                	<p>Calificaciï¿½n Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
                 </div>
                 
                 <div class="col-md-6">
@@ -680,7 +680,7 @@ if ($_SESSION['idroll_predio'] != 1) {
             <div class="row">
 
                 <div style="margin-left:5px;padding-left:10px; border-left:12px solid #0C0; border-bottom:1px solid #eee;border-top:1px solid #CCC; margin-right:5px;">
-                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
+                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadï¿½sticos</h4>
                 
                 <!--		detalles del partido			---->
                 
@@ -1119,7 +1119,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 <hr>
                 
                 <div style="margin-left:5px;padding-left:10px;border-left:12px solid #C00; border-bottom:1px solid #eee; border-top:1px solid #CCC;margin-right:5px;">
-                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
+                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadï¿½sticos</h4>
                 <table class="table table-striped table-bordered table-responsive" id="example2">
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
                     <thead>
@@ -1716,10 +1716,10 @@ $(document).ready(function(){
 	//al enviar el formulario
     $('#cargar').click(function(){
 
-			//información del formulario
+			//informaciï¿½n del formulario
 		var formData = new FormData($(".formulario")[0]);
 		var message = "";
-		//hacemos la petición ajax  
+		//hacemos la peticiï¿½n ajax  
 		$.ajax({
 			url: '../../ajax/ajax.php',  
 			type: 'POST',
@@ -1744,8 +1744,8 @@ $(document).ready(function(){
 					$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente las <strong>Estadisticas</strong>. ');
 					$(".alert").delay(3000).queue(function(){
 						/*aca lo que quiero hacer 
-						  después de los 2 segundos de retraso*/
-						$(this).dequeue(); //continúo con el siguiente ítem en la cola
+						  despuï¿½s de los 2 segundos de retraso*/
+						$(this).dequeue(); //continï¿½o con el siguiente ï¿½tem en la cola
 						
 					});
 					$("#load").html('');

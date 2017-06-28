@@ -557,6 +557,26 @@ join	ssaif_bck_09052017.jugadores j
 on		j.jugadorid = je.jugadorid;
 
 
+/*
+update ssaif_back_host_06.dbfixture
+
+UPDATE ssaif_back_host_06.dbfixture p, ssaif_back_abril.partidos pp
+SET p.refestadospartidos = pp.estadopartidoid,
+	p.refarbitros = pp.arbitroid,
+    p.juez1 = pp.juez1,
+    p.juez2 = pp.juez2,
+    p.refcanchas = pp.canchaid,
+    p.fecha = pp.fecha,
+    p.calificacioncancha = pp.calificacioncancha,
+    p.puntoslocal = pp.puntoslocal,
+    p.puntosvisita = pp.puntosvisita,
+    p.goleslocal = pp.goleslocal,
+    p.golesvisitantes = pp.golesvisita,
+    p.observaciones = pp.observaciones
+WHERE p.idfixture = pp.partidoid
+AND p.fecha > '2017-04-01'
+
+*/
 INSERT INTO `ssaif_prod_abril`.`dbfixture`
 (`idfixture`,
 `reftorneos`,

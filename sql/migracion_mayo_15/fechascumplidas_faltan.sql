@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_mayo_15`.`dbsancionesfechascumplidas`
+INSERT INTO `ssaif_desa_host_06`.`dbsancionesfechascumplidas`
 (`idsancionfechacumplida`,
 `reffixture`,
 `refjugadores`,
@@ -13,12 +13,12 @@ SELECT
 	1,
 	sc.`sancionfalloid`,
 	0
-FROM `aif_mayo_15`.`partidoscumplimientosanciones` sc
+FROM `ssaif_back_abril`.`partidoscumplimientosanciones` sc
 inner
-join	aif_mayo_15.sancionesfallos sf
+join	ssaif_back_abril.sancionesfallos sf
 on 		sf.sancionfalloid = sc.sancionfalloid
 inner
-join	aif_mayo_15.sancionesjugadores sj
+join	ssaif_back_abril.sancionesjugadores sj
 on		sj.sancionjugadorid = sf.sancionjugadorid
 
 group by sc.`partidoidcumplimiento`,
