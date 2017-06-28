@@ -963,7 +963,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 							if ($_SESSION['idroll_predio'] == 1) {
 								if ($falloA > 0) {
 									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA, $idTipoTorneoTorneo);
-									
+									//die(var_dump($falloA));
 									$fallo	= '';
 
 									$amarillas		=	mysql_result($resFallo,0,'amarillas');

@@ -320,64 +320,77 @@ tr {
 								
 								while ($rowC = mysql_fetch_array($resJugadoresEquipos)) {
 									$cadCumpleEdad = '';
-									$errorDoc = 'FALTA';
-									$cadErrorDoc = '';
-									$habilitacion= 'INHAB.';
-									$transitoria= '';
-									$valorDocumentacion = 0;
-									
-									$edad = $serviciosReferencias->verificarEdad($rowC['refjugadores']);
-		
-									$cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowC['refjugadores'], $rowC['refcategorias'], $rowC['idtipojugador']);
-									
-									$documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($rowC['refjugadores']);
-									
-									if ($cumpleEdad == 1) {
-										$cadCumpleEdad = "CUMPLE";	
-									} else {
-										// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
-										$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowC['refjugadores'], $idTemporada, $rowC['refcategorias'],$id);
-										if (mysql_num_rows($habilitacionTransitoria)>0) {
-											$cadCumpleEdad = "HAB. TRANS.";	
-										} else {
-											$cadCumpleEdad = "NO CUMPLE";	
-										}
-									}
-									
-									if (mysql_num_rows($documentaciones)>0) {
-										while ($rowH = mysql_fetch_array($documentaciones)) {
-											if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
-												if ($rowH['obligatoria'] == 'Si') {
-													$valorDocumentacion += 1;	
-												}
-												$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
-											}
-										}
-										if ($cadErrorDoc == '') {
-											$cadErrorDoc = 'OK';
-											$errorDoc = 'OK';
-										} else {
-											$cadErrorDoc = substr($cadErrorDoc,0,-3);
-										}
-										
-									} else {
-										$cadErrorDoc = 'FALTA PRESENTAR DOCUMENTACIONES';
-									}
-									
-									if ($valorDocumentacion == 0 && $cadCumpleEdad == 'CUMPLE') {
-										if ($cadErrorDoc ==  'FALTA PRESENTAR DOCUMENTACIONES') {
-											$habilitacion= 'INHAB.';	
-										} else {
-											$habilitacion= 'HAB.';	
-										}
-									}
+                                $errorDoc = 'FALTA';
+                                $cadErrorDoc = '';
+                                $habilitacion= 'INHAB.';
+                                $transitoria= '';
+                                $valorDocumentacion = 0;
+                                $documentaciones = '';
+                            
+                    
+                                
+                                $edad = $serviciosReferencias->verificarEdad($rowC['refjugadores']);
+                                
+                                $cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowC['refjugadores'], $rowC['refcategorias'], $rowC['idtipojugador']);
+                                
+                                $documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($rowC['refjugadores']);
+                                
+                                if ($cumpleEdad == 1) {
+                                    $cadCumpleEdad = "CUMPLE";  
+                                } else {
+                                    // VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
+                                    $habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowC['refjugadores'], $idTemporada, $rowC['refcategorias'], $id);
+                                    if (mysql_num_rows($habilitacionTransitoria)>0) {
+                                        $cadCumpleEdad = "HAB. TRANS."; 
+                                        $habilitacion= 'HAB.';  
+                                    } else {
+                                        $cadCumpleEdad = "NO CUMPLE";   
+                                    }
+                                }
+                                
+                                if (mysql_num_rows($documentaciones)>0) {
+                                    while ($rowH = mysql_fetch_array($documentaciones)) {
+                                        if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
+                                            if ($rowH['obligatoria'] == 'Si') {
+                                                $valorDocumentacion += 1;
+                                                if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($rowC['refjugadores'],$rowH['refdocumentaciones']))>0) {
+                                                    $valorDocumentacion -= 1;   
+                                                }
+                                            }
+                                            if ($rowH['contravalordesc'] == '') {
+                                                $cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+                                            } else {
+                                                $cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
+                                            }
+                                        }
+                                    }
+                                    if ($cadErrorDoc == '') {
+                                        $cadErrorDoc = 'OK';
+                                        $errorDoc = 'OK';
+                                    } else {
+                                        $cadErrorDoc = substr($cadErrorDoc,0,-3);
+                                    }
+                                    
+                                } else {
+                                    $cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
+                                }
+                                
+                                if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+                                    if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+                                        $habilitacion= 'INHAB.';    
+                                    } else {
+                                        $habilitacion= 'HAB.';  
+                                    }
+                                } else {
+                                    $habilitacion= 'INHAB.';
+                                }
 								$cantidad += 1;
 							?>
                             	<?php 
-									if (($habilitacion == 'HAB.') || ($cadCumpleEdad == 'HAB. TRANS.')) { 
-                            			$color = '';		
+									if (($habilitacion != 'HAB.')) {
+                            			$color = 'style="background-color: #FE2E2E; color: #FFF;"';		
                                  	} else { 
-                                		$color = 'style="background-color: #FE2E2E; color: #FFF;"';
+                                        $color = '';
                                  	} 
 								?>
                                 <tr>

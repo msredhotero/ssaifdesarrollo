@@ -3074,6 +3074,15 @@ return $res;
 
 
 function traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($idJugador, $idDocumentacion) { 
+
+$resTemporadas = $this->traerUltimaTemporada();	
+
+if (mysql_num_rows($resTemporadas)>0) {
+	$ultimaTemporada = mysql_result($resTemporadas,0,0);	
+} else {
+	$ultimaTemporada = 0;	
+}
+	
 $sql = "select 
 j.iddbjugadormotivohabilitaciontransitoria,
 tem.temporada,
@@ -3096,7 +3105,7 @@ inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones
 inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
 left join dbequipos equ ON equ.idequipo = j.refequipos 
 inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
-where j.refjugadores = ".$idJugador." and doc.descripcion <> 'Edad' and doc.iddocumentacion = ".$idDocumentacion."
+where j.refjugadores = ".$idJugador." and doc.descripcion <> 'Edad' and doc.iddocumentacion = ".$idDocumentacion." and tem.idtemporadas = ".$ultimaTemporada."
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
