@@ -243,6 +243,7 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
                             <option value="3">Jugadores en varios Equipos</option>
                             <option value="4">Puntuación Canchas</option>
                             <option value="5">Estadisticas Arbitros</option>
+                            <option value="6">Suspendidos Actuales</option>
                             
                     	</select>
                     </div>
@@ -419,6 +420,9 @@ $(document).ready(function(){
 			case 4:
 				window.open("../../reportes/rptPromedioCanchas.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');	
 				break;
+            case 6:
+                window.open("../../reportes/rptSuspendidosExcel.php" ,'_blank');  
+                break;    
 			default:
 				alert('Debe elegir una opcion');
 		} 
