@@ -30,7 +30,12 @@ $id		=	$_GET['id'];
 $resResultado	=	$serviciosReferencias->traerSancionesjugadoresPorId($id);
 $resDetalles	=	$serviciosReferencias->traerSancionesjugadoresPorIdDetalles($id);
 
-$resFallo		=	$serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($id);
+$resFix			=	$serviciosReferencias->traerFixturePorId(mysql_result($resResultado,0,'reffixture'));
+$resTor			=	$serviciosReferencias->traerTorneosPorId(mysql_result($resFix,0,'reftorneos'));
+
+$idTipoTorneo	=	mysql_result($resTor,0,'reftipotorneo');
+
+$resFallo		=	$serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($id, $idTipoTorneo);
 
 $cumplidas		=	mysql_num_rows($serviciosReferencias->traerSancionesfechascumplidasPorSancionJugadorEnSuCategoria($id));
 
@@ -67,7 +72,7 @@ $observaciones	=	mysql_result($resFallo,0,'observaciones');
 if ($amarillas > 0) {
 	$fallo = 'Amarillas';
 } else {
-	if ($fechadesde != '00/00/0000') {
+	if (($fechadesde != '00/00/0000') && ($fechadesde != '01/01/1900')) {
 		$fallo = 'Dias';
 	} else {
 		if ($pendiente == 'Si') {

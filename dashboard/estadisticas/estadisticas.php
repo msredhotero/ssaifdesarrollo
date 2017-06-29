@@ -551,7 +551,7 @@ if ($_SESSION['idroll_predio'] != 1) {
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
         	<div class="row">
                 <div class="col-md-3">
-                	<p>Descripciï¿½n: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
+                	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
                 </div>
 
                 <div class="col-md-3">
@@ -652,7 +652,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 </div>
                 
                 <div class="col-md-4">
-                	<p>Calificaciï¿½n Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
+                	<p>Calificación Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
                 </div>
                 
                 <div class="col-md-6">
@@ -680,7 +680,7 @@ if ($_SESSION['idroll_predio'] != 1) {
             <div class="row">
 
                 <div style="margin-left:5px;padding-left:10px; border-left:12px solid #0C0; border-bottom:1px solid #eee;border-top:1px solid #CCC; margin-right:5px;">
-                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadï¿½sticos</h4>
+                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
                 
                 <!--		detalles del partido			---->
                 
@@ -1119,7 +1119,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 <hr>
                 
                 <div style="margin-left:5px;padding-left:10px;border-left:12px solid #C00; border-bottom:1px solid #eee; border-top:1px solid #CCC;margin-right:5px;">
-                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadï¿½sticos</h4>
+                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos EstadÃ­sticos</h4>
                 <table class="table table-striped table-bordered table-responsive" id="example2">
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
                     <thead>
