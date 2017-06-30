@@ -835,7 +835,21 @@ function GoleadoresConformada($idTemporada, $idCategoria, $idDivision) {
 
 function suspendidosTotal() {
 
-	$sql = "SELECT 
+	$sql = "select
+				r.nombre,
+			    r.nrodocumento,
+			    r.apyn,
+			    r.torneos,
+			    r.idfixture,
+			    r.equipos,
+			    r.fecha,
+			    r.cantidadfechas,
+			    r.dias,
+			    r.cumplidas,
+				r.fechascumplidas,
+			    r.categoria
+			from (
+			SELECT 
 			    cc.nombre,
 			    j.nrodocumento,
 			    CONCAT(j.apellido, ', ', j.nombres) AS apyn,
@@ -850,7 +864,65 @@ function suspendidosTotal() {
 			    CONCAT('(', e.idequipo, ') ', e.nombre) AS equipos,
 			    sj.fecha,
 			    sf.cantidadfechas,
-			    0 cumplidas,
+			    coalesce((case when cantidadfechas < 1 then -1 * datediff(sf.fechadesde, sf.fechahasta) end),0) as dias,
+			    coalesce((case when cantidadfechas > 0 then spp.cumplidas
+					  when year(sf.fechadesde) > 1950 then -1 * datediff(sf.fechadesde, now())
+			        end),0) cumplidas,
+				sf.fechascumplidas,
+			    ca.categoria
+			FROM
+			    dbsancionesfallos sf
+			        INNER JOIN
+			    dbsancionesjugadores sj ON sf.refsancionesjugadores = sj.idsancionjugador
+			        INNER JOIN
+			    dbequipos e ON e.idequipo = sj.refequipos
+			        INNER JOIN
+			    dbfixture fix ON fix.idfixture = sj.reffixture
+			        INNER JOIN
+			    dbjugadores j ON j.idjugador = sj.refjugadores
+			        INNER JOIN
+			    dbcountries cc ON cc.idcountrie = j.refcountries
+			        INNER JOIN
+			    dbtorneos t ON t.idtorneo = fix.reftorneos
+			        INNER JOIN
+			    tbtemporadas tt ON t.reftemporadas = tt.idtemporadas
+			        INNER JOIN
+			    tbcategorias ca ON ca.idtcategoria = t.refcategorias
+			        INNER JOIN
+			    tbdivisiones di ON di.iddivision = t.refdivisiones
+					left join
+				(select count(ss.reffixture) as cumplidas, ss.refjugadores, ss.refsancionesfallos, tt.refcategorias 
+						from dbsancionesfechascumplidas ss
+							inner join dbfixture ff ON ff.idfixture = ss.reffixture
+			                inner join dbtorneos tt ON tt.idtorneo = ff.reftorneos
+						group by ss.refjugadores, ss.refsancionesfallos, tt.refcategorias) spp 
+				ON sj.refjugadores = spp.refjugadores and spp.refsancionesfallos = sf.idsancionfallo and spp.refcategorias = sj.refcategorias
+			            
+			WHERE
+			    sf.cantidadfechas <> sf.fechascumplidas
+			        OR (sf.fechahasta >= NOW()
+			        AND sf.fechadesde <> '1900-01-01')
+
+			union all
+			        
+			SELECT 
+			    cc.nombre,
+			    j.nrodocumento,
+			    CONCAT(j.apellido, ', ', j.nombres) AS apyn,
+			    CONCAT(tt.temporada,
+			            ' ',
+			            ca.categoria,
+			            ' ',
+			            di.division,
+			            ' ',
+			            t.descripcion) AS torneos,
+			    fix.idfixture,        
+			    CONCAT('(', e.idequipo, ') ', e.nombre) AS equipos,
+			    sj.fecha,
+			    sf.cantidadfechas,
+			    0 as dias,
+			    sf.fechascumplidas cumplidas,
+				sf.fechascumplidas,
 			    ca.categoria
 			FROM
 			    dbsancionesfallosacumuladas sf
@@ -872,11 +944,13 @@ function suspendidosTotal() {
 			    tbcategorias ca ON ca.idtcategoria = t.refcategorias
 			        INNER JOIN
 			    tbdivisiones di ON di.iddivision = t.refdivisiones
+			            
 			WHERE
-			    sf.cantidadfechas <> sf.fechascumplidas
-			        OR (sf.fechahasta >= NOW()
-			        AND sf.fechadesde <> '1900-01-01')
-			ORDER BY j.apellido , j.nombres";
+			    sf.cantidadfechas <> sf.fechascumplidas  
+			    ) r
+			order by r.apyn
+
+			";
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -6340,7 +6414,7 @@ inner join dbequipos equ ON equ.idequipo = p.refequipos
 inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
 inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
 inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
-where p.cantidad >1 and p.refsancionesfallos is null and tip.idtiposancion = 1
+where p.cantidad >2 and p.refsancionesfallos is null and tip.idtiposancion = 1
 ";
 $res = $this->query($sql,0);
 return $res;

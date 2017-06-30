@@ -77,9 +77,9 @@ $objPHPExcel->setActiveSheetIndex(0)
 	->setCellValue('E3',  utf8_encode($titulosColumnas[4]))
     ->setCellValue('F3',  utf8_encode($titulosColumnas[5]))
     ->setCellValue('G3',  utf8_encode($titulosColumnas[6]))
-    ->setCellValue('G3',  utf8_encode($titulosColumnas[7]))
-    ->setCellValue('G3',  utf8_encode($titulosColumnas[8]))
-    ->setCellValue('G3',  utf8_encode($titulosColumnas[9]));
+    ->setCellValue('H3',  utf8_encode($titulosColumnas[7]))
+    ->setCellValue('I3',  utf8_encode($titulosColumnas[8]))
+    ->setCellValue('J3',  utf8_encode($titulosColumnas[9]));
 
 
 // Agregar Informacion
@@ -90,19 +90,35 @@ $objPHPExcel->setActiveSheetIndex(0)
 ->setCellValue('A2', '10')
 ->setCellValue('C2', '=sum(A2:B2)');*/
 
-$i = 5; //Numero de fila donde se va a comenzar a rellenar
+$i = 4; //Numero de fila donde se va a comenzar a rellenar
  while ($fila = mysql_fetch_array($datos)) {
+    $tipoSancion = '';
+    $valor = 0;
+
+    if ($fila[8] > 0) {
+        $tipoSancion = $fila[8].' dias';
+    } else {
+        $tipoSancion = $fila[7].' fechas';
+    }
+
+    if ($fila[8] > 0) {
+        $valor = $fila[9].' dias';
+    } else {
+        $valor = $fila[9].' fechas';
+    }
+
+
      $objPHPExcel->setActiveSheetIndex(0)
-         ->setCellValue('A'.$i, utf8_encode($fila[0]))
-         ->setCellValue('B'.$i, utf8_encode($fila[1]))
-         ->setCellValue('C'.$i, utf8_encode($fila[2]))
-         ->setCellValue('D'.$i, utf8_encode($fila[3]))
-		 ->setCellValue('E'.$i, utf8_encode($fila[4]))
-         ->setCellValue('F'.$i, utf8_encode($fila[5]))
-         ->setCellValue('G'.$i, utf8_encode($fila[6]))
-         ->setCellValue('H'.$i, utf8_encode($fila[7]))
-         ->setCellValue('I'.$i, utf8_encode($fila[8]))
-         ->setCellValue('J'.$i, utf8_encode($fila[9]));
+         ->setCellValue('A'.$i, ($fila[0]))
+         ->setCellValue('B'.$i, ($fila[1]))
+         ->setCellValue('C'.$i, ($fila[2]))
+         ->setCellValue('D'.$i, ($fila[3]))
+		 ->setCellValue('E'.$i, ($fila[4]))
+         ->setCellValue('F'.$i, ($fila[5]))
+         ->setCellValue('G'.$i, ($fila[6]))
+         ->setCellValue('H'.$i, ($tipoSancion))
+         ->setCellValue('I'.$i, ($valor))
+         ->setCellValue('J'.$i, ($fila[11]));
      $i++;
  }
 
@@ -197,9 +213,9 @@ $estiloInformacion->applyFromArray( array(
     )
 ));
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:I1')->applyFromArray($estiloTituloReporte);
-$objPHPExcel->getActiveSheet()->getStyle('A2:I2')->applyFromArray($estiloTituloReporte);
-$objPHPExcel->getActiveSheet()->getStyle('A3:I3')->applyFromArray($estiloTituloColumnas);
+$objPHPExcel->getActiveSheet()->getStyle('A1:J1')->applyFromArray($estiloTituloReporte);
+$objPHPExcel->getActiveSheet()->getStyle('A2:J2')->applyFromArray($estiloTituloReporte);
+$objPHPExcel->getActiveSheet()->getStyle('A3:J3')->applyFromArray($estiloTituloColumnas);
 
 // Renombrar Hoja
 $objPHPExcel->getActiveSheet()->setTitle('Hoja1');
