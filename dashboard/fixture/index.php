@@ -197,7 +197,7 @@ $refTorneos		=	$serviciosReferencias->traerTorneos();
 
 <div id="content">
 
-<h3>Fixture</h3>
+<h3>Estadisticas</h3>
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">

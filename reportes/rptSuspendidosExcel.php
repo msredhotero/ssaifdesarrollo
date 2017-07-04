@@ -107,7 +107,7 @@ $i = 4; //Numero de fila donde se va a comenzar a rellenar
         $valor = $fila[9].' fechas';
     }
 
-
+	if ($fila[7] != $fila[9]) {
      $objPHPExcel->setActiveSheetIndex(0)
          ->setCellValue('A'.$i, ($fila[0]))
          ->setCellValue('B'.$i, ($fila[1]))
@@ -120,6 +120,7 @@ $i = 4; //Numero de fila donde se va a comenzar a rellenar
          ->setCellValue('I'.$i, ($valor))
          ->setCellValue('J'.$i, ($fila[11]));
      $i++;
+	}
  }
 
 $estiloTituloReporte = array(

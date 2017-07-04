@@ -26,7 +26,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadis
 $resFixture		=	$serviciosReferencias->traerFixtureTodo();
 $cadFix			=	$serviciosFunciones->devolverSelectBox($resFixture,array(0,1,4,5,10),' - ');
 
-
+$resProximasFechas	= $serviciosReferencias->traerProximaFechaTodos();
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -95,7 +95,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <div id="content">
 
-<h3>Estadisticas</h3>
+<h3>Fixture</h3>
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
@@ -122,6 +122,56 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <button type="button" class="btn btn-success" id="ir">Ir</button>
                     </div>
                 </div>
+            </div>
+            
+            <div class='row' style="margin-left:15px; margin-right:15px; margin-top:10px;">
+            	<h2>Proximas Fechas</h2>
+            <?php
+				$categorias = '';
+				$cadCabecera = '';
+				$primero = 0;
+				while ($row = mysql_fetch_array($resProximasFechas)) {
+					if ($categorias != $row['categoria']) {
+						if ($primero != 0) {
+							$cadCabecera .= '</tbody></table></div></div></div>';
+						}
+						$cadCabecera .= '<div class="col-md-12"><div class="panel panel-primary">
+										<div class="panel-heading">'.$row['categoria'].' - '.$row['fecha'].'</div>
+										<div class="panel-body">
+										<table class="table table-striped" style="padding:2px;">
+										<thead>
+											<tr>
+												<th>Local</th>
+												<th>Visitante</th>
+												<th>Fecha</th>
+												<th>Hora</th>
+												<th>Division</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>';
+										
+						$primero = 1;
+						$categorias = $row['categoria'];			
+					}
+					
+					$dateH = new DateTime($row['fechajuego']);
+					
+					$cadCabecera .= "<tr>
+										<td>".$row['equipoLocal']."</td>
+										<td>".$row['equipoVisitante']."</td>
+										<td>".$dateH->format('d-m-Y')."</td>
+										<td>".$row['hora']."</td>
+										<td>".$row['division']."</td>
+										<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a></td>
+									</tr>";
+
+				}
+				
+				$cadCabecera .= '</tbody></table></div></div></div>';
+				
+				echo $cadCabecera;
+			?>
             </div>
             
             <div class='row' style="margin-left:15px; margin-right:15px;">

@@ -244,6 +244,7 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
                             <option value="4">Puntuación Canchas</option>
                             <option value="5">Estadisticas Arbitros</option>
                             <option value="6">Suspendidos Actuales</option>
+                            <option value="7">Proxima Fecha</option>
                             
                     	</select>
                     </div>
@@ -422,7 +423,10 @@ $(document).ready(function(){
 				break;
             case 6:
                 window.open("../../reportes/rptSuspendidosExcel.php" ,'_blank');  
-                break;    
+                break;  
+			case 7:
+                window.open("../../reportes/rptProximaFecha.php" ,'_blank');  
+                break;	  
 			default:
 				alert('Debe elegir una opcion');
 		} 

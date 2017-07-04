@@ -69,6 +69,8 @@ class Servicios {
 		$lblVar2	= '';
 		$icoVar		= 'glyphicon-exclamation-sign';
 		$icoVar2	= 'glyphicon-search';
+		
+		$idTable = 'example';
 				
 		switch ($cantidad) {
 			case 99:
@@ -165,9 +167,10 @@ class Servicios {
 				$cantidad = 15;
 				$classMod = '';
 				$classVer = '';
-				$lblVer	  = '';
+				$lblVer	  = 'Eliminar';
 				$classEli = 'varborraracumulados';
 				$idresultados = "resultados";
+				$idTable = 'example2';
 				break;
 			default:
 				$classMod = 'varmodificar';
@@ -299,7 +302,7 @@ class Servicios {
 		//'.utf8_encode($cadRows).' verificar al subir al servidor
 		if ($cantidad == 15) {
 			$cadView = $cadView.'
-				<table class="table table-striped table-responsive" id="example" bordercolor="#888" BORDER=1>
+				<table class="table table-striped table-responsive" id="'.$idTable.'" bordercolor="#888" BORDER=1>
 					<thead>
 						<tr>
 							<th colspan="6" style="text-align:center;color:#FFF;" bgcolor="#555">Sanción</th>

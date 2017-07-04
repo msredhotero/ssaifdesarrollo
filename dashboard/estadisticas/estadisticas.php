@@ -112,6 +112,39 @@ $cabeceras2 		= "<th>Nombre</th>
 $resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoLocal, $idCategoria);
 $resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoVisitante, $idCategoria);
 
+$resDetalleIncidenciasLocal = $serviciosReferencias->traerSancionesjugadoresPorFixtureEquipoTotales($idFixture,$equipoLocal);
+$resDetalleIncidenciasVisit = $serviciosReferencias->traerSancionesjugadoresPorFixtureEquipoTotales($idFixture,$equipoVisitante);
+
+$incidenciaALocal	=	0;
+$incidenciaRLocal	=	0;
+$incidenciaILocal	=	0;
+$incidenciaDALocal	=	0;
+$incidenciaCDTDLocal =	0;
+
+$incidenciaAVisit	=	0;
+$incidenciaRVisit	=	0;
+$incidenciaIVisit	=	0;
+$incidenciaDAVisit	=	0;
+$incidenciaCDTDVisit =	0;
+
+if (mysql_num_rows($resDetalleIncidenciasLocal)>0) {
+	$incidenciaALocal	=	mysql_result($resDetalleIncidenciasLocal,0,'amarillas');
+	$incidenciaRLocal	=	mysql_result($resDetalleIncidenciasLocal,0,'rojas');
+	$incidenciaILocal	=	mysql_result($resDetalleIncidenciasLocal,0,'informados');
+	$incidenciaDALocal	=	mysql_result($resDetalleIncidenciasLocal,0,'dobleamarilla');
+	$incidenciaCDTDLocal =	mysql_result($resDetalleIncidenciasLocal,0,'cdtd');	
+}
+
+if (mysql_num_rows($resDetalleIncidenciasVisit)>0) {
+	$incidenciaAVisit	=	mysql_result($resDetalleIncidenciasVisit,0,'amarillas');
+	$incidenciaRVisit	=	mysql_result($resDetalleIncidenciasVisit,0,'rojas');
+	$incidenciaIVisit	=	mysql_result($resDetalleIncidenciasVisit,0,'informados');
+	$incidenciaDAVisit	=	mysql_result($resDetalleIncidenciasVisit,0,'dobleamarilla');
+	$incidenciaCDTDVisit =	mysql_result($resDetalleIncidenciasVisit,0,'cdtd');	
+}
+
+
+
 $existe			= $serviciosReferencias->existe( "select refestadospartidos from dbfixture where refestadospartidos is not null and idfixture = ".$idFixture);
 
 if ($_SESSION['idroll_predio'] == 1) {
@@ -702,11 +735,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="text-align:center">PA</th>
                             <th style="text-align:center">PE</th>
                             <th style="text-align:center">MJ</th>
-                            <th style="text-align:center; background-color:#FF0;">A</th>
-                            <th style="text-align:center; background-color:#F00;">E</th>
-                            <th style="text-align:center; background-color:#09F;">I</th>
-                            <th style="text-align:center; background-color:#0C0;">A+A</th>
-                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
+                            <th style="text-align:center; background-color:#FF0;">A <span class="badge"><?php echo $incidenciaALocal; ?></span></th>
+                            <th style="text-align:center; background-color:#F00;">E <span class="badge"><?php echo $incidenciaRLocal; ?></span></th>
+                            <th style="text-align:center; background-color:#09F;">I <span class="badge"><?php echo $incidenciaILocal; ?></span></th>
+                            <th style="text-align:center; background-color:#0C0;">A+A <span class="badge"><?php echo $incidenciaDALocal; ?></span></th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD <span class="badge"><?php echo $incidenciaCDTDLocal; ?></span></th>
                             <?php
 
 							if ($_SESSION['idroll_predio'] == 1) {
@@ -1134,11 +1167,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="text-align:center">PA</th>
                             <th style="text-align:center">PE</th>
                             <th style="text-align:center">MJ</th>
-                            <th style="text-align:center; background-color:#FF0;">A</th>
-                            <th style="text-align:center; background-color:#F00;">E</th>
-                            <th style="text-align:center; background-color:#09F;">I</th>
-                            <th style="text-align:center; background-color:#0C0;">A+A</th>
-                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
+                            <th style="text-align:center; background-color:#FF0;">A <span class="badge"><?php echo $incidenciaAVisit; ?></span></th>
+                            <th style="text-align:center; background-color:#F00;">E <span class="badge"><?php echo $incidenciaRVisit; ?></span></th>
+                            <th style="text-align:center; background-color:#09F;">I <span class="badge"><?php echo $incidenciaIVisit; ?></span></th>
+                            <th style="text-align:center; background-color:#0C0;">A+A <span class="badge"><?php echo $incidenciaDAVisit; ?></span></th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD <span class="badge"><?php echo $incidenciaCDTDVisit; ?></span></th>
                             
                             <?php
 

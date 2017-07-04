@@ -957,6 +957,136 @@ function suspendidosTotal() {
 }
 
 
+function traerProximaFechaTodos() {
+	
+	$resTemporadas = $this->traerUltimaTemporada();	
+
+	if (mysql_num_rows($resTemporadas)>0) {
+		$ultimaTemporada = mysql_result($resTemporadas,0,0);	
+	} else {
+		$ultimaTemporada = 0;	
+	}
+
+	$sql = "select
+
+			fix.idfixture,
+			cat.categoria,
+			di.division,
+			tor.descripcion as torneo,
+			(select el.nombre from dbequipos el where el.idequipo = fix.refconectorlocal) as equipoLocal,
+			(select el.nombre from dbequipos el where el.idequipo = fix.refconectorlocal) as equipoVisitante,
+			cc.nombre,
+			dia.dia,
+			dct.hora,
+			cc.nombre as cancha,
+			f.fecha,
+			fix.fecha as fechajuego,
+			f.idfecha
+		from dbfixture fix 
+		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+		inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+		inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+		inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+		left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+		inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+		left join tbcanchas cc ON cc.idcancha = fix.refcanchas
+		inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
+		inner join tbdias dia ON dia.iddia = dct.refdias
+		inner join tbfechas f ON f.idfecha = fix.reffechas
+		
+		inner join (select
+		
+				cat.idtcategoria,
+				di.iddivision,
+				tor.idtorneo,
+				min(f.idfecha) as idfecha
+				from dbfixture fix 
+				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+				inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+				inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+				left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+				left join tbcanchas cc ON cc.idcancha = fix.refcanchas
+				inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
+				inner join tbdias dia ON dia.iddia = dct.refdias
+				inner join tbfechas f ON f.idfecha = fix.reffechas
+				where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
+				group by cat.idtcategoria, di.iddivision, tor.idtorneo) sig 
+				ON sig.idtcategoria = tor.refcategorias
+					and sig.iddivision = tor.refdivisiones
+					and sig.idtorneo = tor.idtorneo
+					and sig.idfecha = fix.reffechas
+		
+		where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
+		order by tor.refcategorias, tor.refdivisiones, f.idfecha
+		";	
+		
+	
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function traerProximaFechaDesdeHasta() {
+	
+	$resTemporadas = $this->traerUltimaTemporada();	
+
+	if (mysql_num_rows($resTemporadas)>0) {
+		$ultimaTemporada = mysql_result($resTemporadas,0,0);	
+	} else {
+		$ultimaTemporada = 0;	
+	}
+
+	$sql = "select
+
+			min(fix.fecha) as fechajuegodesde,
+			max(fix.fecha) as fechajuegohasta
+		from dbfixture fix 
+		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+		inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+		inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+		inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+		left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+		inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+		left join tbcanchas cc ON cc.idcancha = fix.refcanchas
+		inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
+		inner join tbdias dia ON dia.iddia = dct.refdias
+		inner join tbfechas f ON f.idfecha = fix.reffechas
+		
+		inner join (select
+		
+				cat.idtcategoria,
+				di.iddivision,
+				tor.idtorneo,
+				min(f.idfecha) as idfecha
+				from dbfixture fix 
+				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+				inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+				inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+				left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+				left join tbcanchas cc ON cc.idcancha = fix.refcanchas
+				inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
+				inner join tbdias dia ON dia.iddia = dct.refdias
+				inner join tbfechas f ON f.idfecha = fix.reffechas
+				where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
+				group by cat.idtcategoria, di.iddivision, tor.idtorneo) sig 
+				ON sig.idtcategoria = tor.refcategorias
+					and sig.iddivision = tor.refdivisiones
+					and sig.idtorneo = tor.idtorneo
+					and sig.idfecha = fix.reffechas
+		
+		where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
+		order by tor.refcategorias, tor.refdivisiones, f.idfecha";	
+		
+	
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
 function traerPlanillas($idTorneo, $refFechas) {
 	$sql	=	"";
 	
@@ -6281,6 +6411,31 @@ return $res;
 }
 
 
+function traerSancionesjugadoresPorFixtureEquipoTotales($idFixture, $idEquipo) {
+$sql = "select
+
+equ.nombre as equipo,
+coalesce((case when p.reftiposanciones = 1 then sum(p.cantidad) end),0) as amarillas,
+coalesce((case when p.reftiposanciones = 2 then sum(p.cantidad) end),0) as rojas,
+coalesce((case when p.reftiposanciones = 3 then sum(p.cantidad) end),0) as informados,
+coalesce((case when p.reftiposanciones = 4 then sum(p.cantidad) end),0) as dobleamarilla,
+coalesce((case when p.reftiposanciones = 5 then sum(p.cantidad) end),0) as cdtd
+from dbsancionesjugadores p
+inner join tbtiposanciones tip ON tip.idtiposancion = p.reftiposanciones
+inner join dbfixture fix ON fix.idfixture = p.reffixture 
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = p.refequipos 
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones  
+where fix.idfixture =".$idFixture." and equ.idequipo = ".$idEquipo;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
 
 function traerSancionesjugadoresPorIdDetallesSinFallo($id) {
 $sql = "select
@@ -7789,6 +7944,7 @@ return $res;
 
 /* Fin */
 /* /* Fin de la Tabla: dbgoleadores*/
+
 
 function traerEstadisticaPorFixtureJugadorCategoriaDivision($idJugador, $idFixture, $idCategoria, $idDivision) {
 	$sql = "select 
