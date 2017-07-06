@@ -6187,6 +6187,36 @@ return $res;
 
 /* PARA Sancionesfallos */
 
+/* para buscar sanciones entre fechas */
+
+function existeYaLaSancion($reffixture, $refjugadores, $refsancionesfallos) {
+	$sql = "select idsancionfechacumplida from dbsancionesfechascumplidas 
+			where reffixture =".$reffixture." and refjugadores = ".$refjugadores." and refsancionesfallos=".$refsancionesfallos;
+			
+	return $this->existe($sql);	
+}
+
+
+function traerSancionesfallosacumuladasCambioPorEquipoFechaDesdeHasta($idEquipo,$fechaDesde, $fechaHasta, $idCategoria) { 
+$sql = "SELECT 
+    ff.fecha, fix.fecha as fechajuego, e.descripcion
+FROM
+    dbfixture fix
+		inner join
+	dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftemporadas = 6 and tor.refcategorias = ".$idCategoria."
+		inner join
+	tbestadospartidos e ON e.idestadopartido = fix.refestadospartidos
+        INNER JOIN
+    tbfechas ff ON ff.idfecha = fix.reffechas
+WHERE		(fix.refconectorlocal = ".$idEquipo." or fix.refconectorvisitante = ".$idEquipo." )
+and fix.fecha between '".$fechaDesde."' and '".$fechaHasta."' order by ff.idfecha"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* fin */
+
+
 function insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones) { 
 $sql = "insert into dbsancionesfallos(idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,amarillas,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones) 
 values ('',".$refsancionesjugadores.",".$cantidadfechas.",'".utf8_decode($fechadesde)."','".utf8_decode($fechahasta)."',".$amarillas.",".$fechascumplidas.",".$pendientescumplimientos.",".$pendientesfallo.",".$generadaporacumulacion.",'".utf8_decode($observaciones)."')"; 
@@ -7433,6 +7463,14 @@ function insertarSancionesfechascumplidas($reffixture,$refjugadores,$cumplida,$r
 	
 	}
 } 
+
+function insertarSancionCumplidaSolo($reffixture, $refjugadores, $cumplida, $refsancionesfallos, $idAcumulado) {
+	$sql = "insert into dbsancionesfechascumplidas(idsancionfechacumplida,reffixture,refjugadores,cumplida,refsancionesfallos,refsancionesfallosacumuladas) 
+		values ('',".$reffixture.",".$refjugadores.",".$cumplida.",".$refsancionesfallos.",".$idAcumulado.")"; 
+		$res = $this->query($sql,1); 
+		return $res;
+}
+
 
 
 function modificarSancionesfechascumplidas($id,$reffixture,$refjugadores,$cumplida,$refsancionesfallos) { 

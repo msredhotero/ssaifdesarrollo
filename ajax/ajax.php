@@ -1069,7 +1069,19 @@ function modificarFalloPorFecha($serviciosReferencias) {
 				//*****				fin							*****/
 			} 
 			
-			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones); 
+			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones);
+			
+			if ($cantidadfechas > 0) {
+				$resCambio = $serviciosReferencias->traerSancionesfallosacumuladasCambioPorEquipoFechaDesdeHasta(mysql_result($resSancionesJugadores,0,'refequipos'),mysql_result($resSancionesJugadores,0,'fecha'),date('Y-m-d'),mysql_result($resSancionesJugadores,0,'refcategorias'));
+				if (mysql_num_rows($resCambio)>0) {
+					while ($row = mysql_fetch_array($resCambio)) {
+						
+						if ($serviciosReferencias->existeYaLaSancion($refFixture, $idJugador, mysql_result($resFallo,0,0)) == 0) {
+							$serviciosReferencias->insertarSancionCumplidaSolo($refFixture, $idJugador, 1, mysql_result($resFallo,0,0), 0);	
+						}
+					}
+				}
+			}
 			
 			if ($res == true) { 
 

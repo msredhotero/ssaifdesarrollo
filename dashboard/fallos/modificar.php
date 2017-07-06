@@ -77,11 +77,13 @@ if ($amarillas > 0) {
 	} else {
 		if ($pendiente == 'Si') {
 			$fallo = 'Pendiente';
+			
 		} else {
 			$fallo = 'Cantidad';	
 		}
 	}
 }
+$resCambio = $serviciosReferencias->traerSancionesfallosacumuladasCambioPorEquipoFechaDesdeHasta(mysql_result($resResultado,0,'refequipos'),mysql_result($resResultado,0,'fecha'),date('Y-m-d'),mysql_result($resResultado,0,'refcategorias'));
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -256,7 +258,28 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </div>
                 </div>
                 
+                <div class="alert alert-warning">
+                	<?php
+						if (mysql_num_rows($resCambio)>0) {
+					?>
+                    	<p>Si modifica el estado de Pendiente para pasarlo a cantidad de fechas, las fechas que actualmente el jugador ya cumplio son:</p>
+                        <ul style="margin-left:20px;">
+                        	<?php
+							$total = 0;
+							while ($row = mysql_fetch_array($resCambio)) {
+								$total += 1;
+							?>
+                            <li><?php echo $row[0].' - Fecha Juego: '.$row[1].' ('.$row[2].')'; ?></li>
+                            <?php
+							}
+                            ?>
+                            <?php echo '<li>Total Fechas: '.$total.'</li>'; ?>
+                        </ul>
+                    <?php	
+						}
+					?>
                 
+                </div>
                 
                 <input type="hidden" id="refsancionesjugadores" name="refsancionesjugadores" value="<?php echo $id; ?>"/>
                 <input type="hidden" id="accion" name="accion" value="modificarFalloPorFecha"/>
