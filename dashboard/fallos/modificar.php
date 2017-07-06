@@ -163,6 +163,7 @@ if ($_SESSION['refroll_predio'] != 1) {
               <li class="list-group-item list-group-item-default">Fecha de la sación: <?php echo mysql_result($resDetalles,0,'fecha'); ?></li>
               <li class="list-group-item list-group-item-default">Sanción: <?php echo mysql_result($resDetalles,0,'tiposancion'); ?></li>
               <li class="list-group-item list-group-item-default">Cumplidas: <?php echo $cumplidas; ?></li>
+              <li class="list-group-item list-group-item-default"><a href="../estadisticas/estadisticas.php?id=<?php echo mysql_result($resResultado,0,'reffixture'); ?>">Ir Estadistica</a></li>
               
             </ul>
         
