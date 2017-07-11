@@ -26,6 +26,20 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadis
 $resFixture		=	$serviciosReferencias->traerFixtureTodo();
 $cadFix			=	$serviciosFunciones->devolverSelectBox($resFixture,array(0,1,4,5,10),' - ');
 
+
+
+$refCanchas		=	$serviciosReferencias->traerCanchas();
+
+$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(1),'');	
+
+
+
+$refArbitros	=	$serviciosReferencias->traerArbitros();
+
+$cadArbitros	=	$serviciosFunciones->devolverSelectBox($refArbitros,array(1),'');	
+
+
+
 $resProximasFechas	= $serviciosReferencias->traerProximaFechaTodos();
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -146,7 +160,10 @@ if ($_SESSION['refroll_predio'] != 1) {
 												<th>Fecha</th>
 												<th>Hora</th>
 												<th>Division</th>
+												<th>Arbitro</th>
 												<th></th>
+												<th>Accion</th>
+
 											</tr>
 										</thead>
 										<tbody>';
@@ -163,7 +180,12 @@ if ($_SESSION['refroll_predio'] != 1) {
 										<td>".$dateH->format('d-m-Y')."</td>
 										<td>".$row['hora']."</td>
 										<td>".$row['division']."</td>
+										<td><select data-placeholder='selecione el Arbitro...' id='refarbitros' name='refarbitros' class='chosen-select' tabindex='2' style='width:210px;'>
+            								<option value='".$row['idarbitro']."'>".$row['arbitro']."</option>
+											".$cadArbitros."
+                                            </select></td>
 										<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a></td>
+										<td><button type='button' class='btn btn-primary cargaparticular' id='".$row['idfixture']."'>Guardar</button></td>
 									</tr>";
 
 				}

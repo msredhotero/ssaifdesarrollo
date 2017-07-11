@@ -981,7 +981,9 @@ function traerProximaFechaTodos() {
 			cc.nombre as cancha,
 			f.fecha,
 			fix.fecha as fechajuego,
-			f.idfecha
+			f.idfecha,
+			coalesce(arr.idarbitro,0) as idarbitro,
+			coalesce(arr.nombrecompleto,'') as arbitro
 		from dbfixture fix 
 		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
 		inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
@@ -992,6 +994,7 @@ function traerProximaFechaTodos() {
 		left join tbcanchas cc ON cc.idcancha = fix.refcanchas
 		inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
 		inner join tbdias dia ON dia.iddia = dct.refdias
+		left join dbarbitros arr ON arr.idarbitro = fix.refarbitros
 		inner join tbfechas f ON f.idfecha = fix.reffechas
 		
 		inner join (select
@@ -3767,6 +3770,20 @@ return $res;
 } 
 
 
+function traerTorneosPorTemporada($idTemporada) { 
+$sql = "select idtorneo,descripcion,reftipotorneo,reftemporadas,refcategorias,refdivisiones,cantidadascensos,cantidaddescensos,
+(case when respetadefiniciontipojugadores = 1 then 'Si' else 'No' end) as respetadefiniciontipojugadores,
+(case when respetadefinicionhabilitacionestransitorias = 1 then 'Si' else 'No' end) as respetadefinicionhabilitacionestransitorias,
+(case when respetadefinicionsancionesacumuladas = 1 then 'Si' else 'No' end) as respetadefinicionsancionesacumuladas,
+(case when acumulagoleadores = 1 then 'Si' else 'No' end) as acumulagoleadores,
+(case when acumulatablaconformada = 1 then 'Si' else 'No' end) as acumulatablaconformada,
+observaciones,
+(case when activo = 1 then 'Si' else 'No' end) as activo from dbtorneos where reftemporadas =".$idTemporada; 
+$res = $this->query($sql,0); 
+return $res;
+} 
+
+
 function traerTorneosDetallePorId($id) { 
 $sql = "select 
 t.idtorneo,
@@ -5544,6 +5561,59 @@ f.reffechas,
 f.refconectorlocal,
 f.refconectorvisitante,
 f.refestadospartidos,
+f.refarbitros,
+coalesce(cl.nombre,'') as contactoLocal,
+coalesce(cv.nombre,'') as contactoVisitante
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbcontactos cl ON cl.idcontacto = el.refcontactos
+left join dbcontactos cv ON cv.idcontacto = ev.refcontactos
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where tor.idtorneo = ".$idTorneo." and f.reffechas = ".$refFechas."
+order by f.reffechas, f.idfixture";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
+function traerFixtureTodoPorTemporadaFecha($idTemporada, $refFechas) {
+$sql = "select
+f.idfixture,
+el.nombre as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+ev.nombre as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.goleslocal,
+f.golesvisitantes,
+can.nombre as canchas,
+fec.fecha,
+date_format(f.fecha,'%d/%m/%Y') as fechapartido,
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.observaciones,
+f.publicar,
+arb.telefonoparticular as telefono,
+f.refcanchas,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refestadospartidos,
 f.refarbitros
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
@@ -5557,7 +5627,7 @@ inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
-where tor.idtorneo = ".$idTorneo." and f.reffechas = ".$refFechas."
+where tor.reftemporada = ".$idTemporada." and f.reffechas = ".$refFechas."
 order by f.reffechas, f.idfixture";
 $res = $this->query($sql,0);
 return $res;

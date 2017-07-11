@@ -75,7 +75,7 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/chosen.css">
@@ -175,7 +175,8 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
                     <label class="control-label" style="text-align:left" for="refcliente">Seleccione el Torneo</label>
                     <div class="input-group col-md-12">
                     	<select id="reftorneo1" class="form-control" name="reftorneo1">
-							<?php echo $cadRefTorneosActivos; ?>
+							<option value="0">Todas</option>
+                            <?php echo $cadRefTorneosActivos; ?>
                     	</select>
                     </div>
                 </div>
@@ -388,9 +389,45 @@ $(document).ready(function(){
 						
 				},
 				success:  function (response) {
+
+                    if (response != '') {
 						$('#'+contenedor).html(response);
-						
-				}
+                    } else {
+
+                        
+                        $('#'+contenedor).html('<option value="1">Fecha 1</option> \
+                                    <option value="2">Fecha 2</option> \
+                                    <option value="3">Fecha 3</option> \
+                                    <option value="4">Fecha 4</option> \
+                                    <option value="5">Fecha 5</option> \
+                                    <option value="6">Fecha 6</option> \
+                                    <option value="7">Fecha 7</option> \
+                                    <option value="8">Fecha 8</option> \
+                                    <option value="9">Fecha 9</option> \
+                                    <option value="10">Fecha 10</option> \
+                                    <option value="11">Fecha 11</option> \
+                                    <option value="12">Fecha 12</option> \
+                                    <option value="13">Fecha 13</option> \
+                                    <option value="14">Fecha 14</option> \
+                                    <option value="15">Fecha 15</option> \
+                                    <option value="16">Fecha 16</option> \
+                                    <option value="17">Fecha 17</option> \
+                                    <option value="18">Fecha 18</option> \
+                                    <option value="19">Fecha 19</option> \
+                                    <option value="20">Fecha 20</option> \
+                                    <option value="21">Fecha 21</option> \
+                                    <option value="22">Fecha 22</option> \
+                                    <option value="23">Fecha 23</option> \
+                                    <option value="24">Fecha 24</option> \
+                                    <option value="25">Fecha 25</option> \
+                                    <option value="26">Fecha 26</option> \
+                                    <option value="27">Fecha 27</option> \
+                                    <option value="28">Fecha 28</option> \
+                                    <option value="29">Fecha 29</option> \
+                                    <option value="30">Fecha 30</option>');
+                        
+                    } 
+                }
 		});
 	}
 	
@@ -441,7 +478,12 @@ $(document).ready(function(){
     });
 	
 	$("#rptPP").click(function(event) {
-        window.open("../../reportes/rptPlanilla.php?idtorneo=" + $("#reftorneo1").val() + "&reffechas=" + $("#reffechas1").val() ,'_blank');	
+        if ($("#reftorneo1").val() == 0) {
+            window.open("../../reportes/rptPlanillaTodas.php?reffechas=" + $("#reffechas1").val() ,'_blank');    
+        } else {
+            window.open("../../reportes/rptPlanilla.php?idtorneo=" + $("#reftorneo1").val() + "&reffechas=" + $("#reffechas1").val() ,'_blank');        
+        }
+        
 						
     });
 	

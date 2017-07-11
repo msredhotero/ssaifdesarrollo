@@ -171,14 +171,14 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	while ($rowJ = mysql_fetch_array($resJugadoresA))
 	{
 		
-		$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($rowJ['refjugadores']);
+		$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($rowJ['refjugadores'],$tipoTorneo);
 								
-		$suspendidoCategorias		=	$serviciosReferencias->hayMovimientos($rowJ['refjugadores'],$rowE['idfixture']);
-		$suspendidoCategoriasAA		=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowJ['refjugadores'],$rowE['idfixture'], $rowJ['refcategorias']);
+		$suspendidoCategorias		=	$serviciosReferencias->hayMovimientos($rowJ['refjugadores'],$rowE['idfixture'],$tipoTorneo);
+		$suspendidoCategoriasAA		=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowJ['refjugadores'],$rowE['idfixture'], $rowJ['refcategorias'] ,$tipoTorneo);
 		
 		$falloA					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowJ['refjugadores'],$rowE['idfixture']);
 		
-		$pendiente				=	$serviciosReferencias->hayPendienteDeFallo($rowJ['refjugadores'],$rowE['idfixture']);
+		$pendiente				=	$serviciosReferencias->hayPendienteDeFallo($rowJ['refjugadores'],$rowE['idfixture'],$tipoTorneo);
 		
 		$yaCumpli				=	$serviciosReferencias->estaFechaYaFueCumplida($rowJ['refjugadores'],$rowE['idfixture']);
 								
@@ -299,15 +299,15 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	while ($rowV = mysql_fetch_array($resJugadoresB))
 	{
 		
-		$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowV['refjugadores']);
+		$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowV['refjugadores'], $tipoTorneo);
 								
-		$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowV['refjugadores'],$rowE['idfixture']);
-		$suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowV['refjugadores'],$rowE['idfixture'], $rowV['refcategorias']);
+		$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowV['refjugadores'],$rowE['idfixture'], $tipoTorneo);
+		$suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowV['refjugadores'],$rowE['idfixture'], $rowV['refcategorias'], $tipoTorneo);
 		
 		//die(var_dump($suspendidoCategoriasAAB));
 		$falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowV['refjugadores'],$rowE['idfixture']);
 		
-		$pendienteB				=	$serviciosReferencias->hayPendienteDeFallo($rowV['refjugadores'],$rowE['idfixture']);
+		$pendienteB				=	$serviciosReferencias->hayPendienteDeFallo($rowV['refjugadores'],$rowE['idfixture'], $tipoTorneo);
 		
 		$yaCumpliB				=	$serviciosReferencias->estaFechaYaFueCumplida($rowV['refjugadores'],$rowE['idfixture']);
 								
@@ -532,7 +532,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(200,4,'Capitan: ____________ Delegado: ____________ Acl: ______________ Capitan: ____________ Delegado: ____________ Acl: ______________',0,0,'C',false);
+	$pdf->Cell(200,4,'Capitan: __________ Delegado: '.$rowE['contactoLocal'].' Acl: ______________ Capitan: _________ Delegado: '.$rowE['contactoVisitante'].' Acl: ______________',0,0,'C',false);
 	
 	
 	$pdf->Ln();
