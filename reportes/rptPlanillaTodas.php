@@ -27,7 +27,10 @@ if (mysql_num_rows($refTemporada)>0) {
 	$idTemporada = 0;
 }
 
-$resTorneosTodos = $serviciosReferencias->traerTorneosPorTemporada($idTemporada);
+$desde	= $_GET['desde'];
+$hasta	= $_GET['hasta'];
+
+$resTorneosTodos = $serviciosReferencias->traerTorneosPorTemporadaPorFechas($idTemporada, $desde, $hasta);
 
 $pdf = new FPDF();
 #Establecemos los márgenes izquierda, arriba y derecha: 
@@ -38,7 +41,7 @@ $pdf = new FPDF();
 
 while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 	$idtorneo			=	$rowTT['idtorneo'];
-	$reffechas			=	$_GET['reffechas'];
+	$reffechas			=	$rowTT['reffechas'];
 
 	$resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
 
@@ -284,12 +287,12 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 			}
 
 
-			if ($i == 27) {
+			if ($i == 30) {
 				break;	
 			}
 		}
 		
-		if ($i < 28) {
+		if ($i < 31) {
 			for ($j=$i+1;$j<28;$j++) {
 				$pdf->Ln();
 				$pdf->SetX(5);
@@ -414,12 +417,12 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 			}
 
 
-			if ($i == 27) {
+			if ($i == 30) {
 				break;	
 			}
 		}
 		
-		if ($i < 28) {
+		if ($i < 31) {
 			for ($j=$i+1;$j<28;$j++) {
 				$pdf->Ln();
 				$pdf->SetX(107);

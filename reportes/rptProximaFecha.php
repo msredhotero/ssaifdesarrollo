@@ -21,17 +21,41 @@ require('fpdf.php');
 
 ////***** Parametros ****////////////////////////////////
 
+$fechaDesde = '';
+$fechaHasta = '';
+
+
+if (isset($_GET['reffechadesde1'])) {
+	$fechaDesde = $_GET['reffechadesde1'];
+}
+
+if (isset($_GET['reffechahasta1'])) {
+	$fechaHasta = $_GET['reffechahasta1'];
+}
+
+$fechaDesde = $_GET['reffechadesde1'];
+$fechaHasta = $_GET['reffechahasta1'];
+
 /////////////////////////////  fin parametross  ///////////////////////////
 
+if (($fechaDesde != '') && ($fechaHasta != '')) {
+	$resDatos = $serviciosReferencias->traerProximaFechaTodosReal($fechaDesde,$fechaHasta);
+} else {
+	$resDatos = $serviciosReferencias->traerProximaFechaTodos();
+}
 
-$resDatos = $serviciosReferencias->traerProximaFechaTodos();
 
-$resDesdeHasta = $serviciosReferencias->traerProximaFechaDesdeHasta();
 
+if (($fechaDesde != '') && ($fechaHasta != '')) {
+	$resDesdeHasta = $serviciosReferencias->traerProximaFechaDesdeHastaReal($fechaDesde,$fechaHasta);
+} else {
+	$resDesdeHasta = $serviciosReferencias->traerProximaFechaDesdeHasta();
+	$fechaDesde 	= mysql_result($resDesdeHasta,0,'fechajuegodesde');
+	$fechaHasta 	= mysql_result($resDesdeHasta,0,'fechajuegohasta');
+}
 //echo $resEquipos;
 
-$fechaDesde 	= mysql_result($resDesdeHasta,0,'fechajuegodesde');
-$fechaHasta 	= mysql_result($resDesdeHasta,0,'fechajuegohasta');
+
 
 $resTemporadas = $serviciosReferencias->traerUltimaTemporada();	
 
@@ -71,6 +95,7 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->SetY(25);
 	$pdf->SetX(5);
 	$pdf->Cell(200,5,'Partidos del '.$dateD->format('d-m-Y')." al ".$dateH->format('d-m-Y')." - Temporada: ".$ultimaTemporada,1,0,'C',true);
+
 	$pdf->SetFont('Arial','',8);
 	$pdf->Ln();
 	$pdf->Ln();
@@ -109,6 +134,8 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	if ($categoria != $rowE['categoria']) {
 		$categoria = $rowE['categoria'];
 		$division = '';
+		$pdf->Ln();
+		$pdf->Ln();
 		$pdf->Ln();
 		$pdf->SetX(5);
 		$pdf->Cell(200,5,utf8_decode($rowE['categoria']),1,0,'C',true);

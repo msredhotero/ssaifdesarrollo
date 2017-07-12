@@ -137,6 +137,25 @@ $numero = count($_POST);
 			}
 			//////////////			fin logica			/////////////////////////////////////////////////////////
 			
+			
+			
+			//////////////		logica DORSALES		///////////////////////////////////////////////////////
+			$existeDorsal = $serviciosReferencias->existeFixturePorDorsalesJugador($idJugador, $idFixture);
+			
+			if ($existeDorsal == 0) {
+				//inserto
+				$serviciosReferencias->insertarDorsales($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['dorsal'.$idJugador]);
+			} else {
+				//modifico	
+				
+				$serviciosReferencias->modificarDorsales($existeDorsal, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['dorsal'.$idJugador]);
+			}
+			//////////////			fin logica			/////////////////////////////////////////////////////////
+			
+			
+			
+			
+			
 			//////////////		logica MINUTOS		///////////////////////////////////////////////////////
 			$existeMinutos = $serviciosReferencias->existeFixturePorMinutosJugados($idJugador, $idFixture);
 			
@@ -320,6 +339,21 @@ $numero = count($_POST);
 				}
 				//////////////			fin logica			/////////////////////////////////////////////////////////
 				
+				
+				
+				//////////////		logica DORSALES		///////////////////////////////////////////////////////
+				$existeDorsal = $serviciosReferencias->existeFixturePorDorsalesJugador($idJugador, $idFixture);
+				
+				if ($existeDorsal == 0) {
+					//inserto
+					$serviciosReferencias->insertarDorsales($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['dorbsal'.$idJugador]);
+				} else {
+					//modifico	
+					
+					$serviciosReferencias->modificarDorsales($existeDorsal, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['dorbsal'.$idJugador]);
+				}
+				//////////////			fin logica			/////////////////////////////////////////////////////////
+			
 				
 				//////////////		logica MINUTOS		///////////////////////////////////////////////////////
 				$existeMinutos = $serviciosReferencias->existeFixturePorMinutosJugados($idJugador, $idFixture);
@@ -637,6 +671,28 @@ if	($refEstadoPartido != 0) {
 	
 }
 
+
+///**** DETALLE DEL PARTIDO *****///
+
+$detallePartidoLocal = $serviciosReferencias->traerInicidenciasPorFixtureEquipoDetalle($idFixture,$equipoLocal);
+
+$arDetalleLocal = array();
+
+while( $row = mysql_fetch_assoc( $detallePartidoLocal)){
+    $arDetalleLocal[] = $row['refjugadores']; // Inside while loop
+}
+
+$detallePartidoVisit = $serviciosReferencias->traerInicidenciasPorFixtureEquipoDetalle($idFixture, $equipoVisitante);
+
+$arDetalleVisit = array();
+
+while( $row = mysql_fetch_assoc( $detallePartidoVisit)){
+    $arDetalleVisit[] = $row['refjugadores']; // Inside while loop
+}
+
+//die(var_dump($arDetalleVisit));
+
+///****   FIN   ****///////////////
 
 
 //////*************************			CALCULO POR ACUMULADION DE AMARILLAS	*********************************************/////
@@ -1217,6 +1273,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                     	<tr>
                         	<th>Jugador</th>
                             <th>DNI</th>
+                            <th style="text-align:center">DRSL</th>
                             <th style="text-align:center">GA</th>
                             <th style="text-align:center">GC</th>
                             <th style="text-align:center">MIN</th>
@@ -1339,75 +1396,13 @@ if ($_SESSION['idroll_predio'] != 1) {
 						if (($habilitacion != 'HAB.')) {
 							
 						?>
-                        <tr class="<?php echo $row[0]; ?>">
-
-                        	<th style="background-color: #FC0;">
-								<?php echo $row['nombrecompleto']; ?>
-                            </th>
-                            <th style="background-color:#FC0;">
-								<?php echo $row['nrodocumento']; ?>
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            
-                            <?php
-
-								if ($_SESSION['idroll_predio'] == 1) {
-								
-							?>
-                            <th style="text-align:center"></th>
-                            <th style="text-align:center"></th>
-                            
-                            <?php
-								} else {
-									
-							?>	
-                            <th style="text-align:center"></th>
-                            <th style="text-align:center"></th>
-                            <?php	
-								} 
-							
-							?>
                         
-                        </tr>
                         <?php	
 						} else {
 							
 						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0)) {		
+						
+							if (in_array($row['refjugadores'], $arDetalleLocal)) {
 						?>
                         <tr class="<?php echo $row[0]; ?>">
 
@@ -1416,6 +1411,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             </th>
                             <th>
 								<?php echo $row['nrodocumento']; ?>
+                            </th>
+                            <th>
+                            	<div align="center">
+                                	<input type="text" class="form-control input-sm dorsalEA" name="dorsal<?php echo $row['refjugadores']; ?>" id="dorsal<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'dorsal'); ?>"/>
+                                </div>
                             </th>
                             <th>
                             	<div align="center">
@@ -1452,27 +1452,27 @@ if ($_SESSION['idroll_predio'] != 1) {
                                 	<input type="checkbox" class="form-control input-sm mejor" id="mejorjugador<?php echo $row['refjugadores']; ?>" name="mejorjugador<?php echo $row['refjugadores']; ?>" <?php if (mysql_result($estadisticas,0,'mejorjugador')== 'Si') { echo 'checked'; } ?> style="width:30px;"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#FF0">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm amarillas" name="amaLrillas<?php echo $row['refjugadores']; ?>" id="amaLrillas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#F00">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm rojas" name="roLjas<?php echo $row['refjugadores']; ?>" id="roLjas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#09F">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm informados" name="inforLmados<?php echo $row['refjugadores']; ?>" id="inforLmados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#0C0">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm dobleamarilla" name="dobleLamarilla<?php echo $row['refjugadores']; ?>" id="dobleLamarilla<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm cdtd" name="cdLtd<?php echo $row['refjugadores']; ?>" id="cdLtd<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
                                 </div>
@@ -1519,6 +1519,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="text-align:center"></th>
                             <?php	
 								}
+								} //fin del detalle del partido
 							}
 							?>
                             
@@ -1546,6 +1547,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                             </th>
                             <th style="background-color:#F00;">
 								<?php echo $row['nrodocumento']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
                             </th>
                             <th style="background-color:#F00;">
                             	
@@ -1658,6 +1662,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 
                         	<th>Jugador</th>
                             <th>DNI</th>
+                            <th style="text-align:center">DRSL</th>
                             <th style="text-align:center">GA</th>
                             <th style="text-align:center">GC</th>
                             <th style="text-align:center">MIN</th>
@@ -1779,72 +1784,11 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 						if (($habilitacion != 'HAB.')) {		
 						?>
-						<tr class="<?php echo $row[0]; ?>">
-
-                        	<th style="background-color:#FC0;">
-								<?php echo $rowB['nombrecompleto']; ?>
-                            </th>
-                            <th style="background-color:#FC0;">
-								<?php echo $rowB['nrodocumento']; ?>
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
-                            
-                            <?php
-
-								if ($_SESSION['idroll_predio'] == 1) {
-								
-							?>
-                            <th style="text-align:center"></th>
-                            <th style="text-align:center"></th>
-                            
-                            <?php
-								} else {
-									
-							?>	
-                            <th style="text-align:center"></th>
-                            <th style="text-align:center"></th>
-                            <?php	
-								} 
-							
-							?>
-                         </tr>
+						
                         <?php } else { 
 						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0)) {	
+						
+							if (in_array($rowB['refjugadores'], $arDetalleVisit)) {
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
 
@@ -1853,6 +1797,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             </th>
                             <th>
 								<?php echo $rowB['nrodocumento']; ?>
+                            </th>
+                            <th>
+                            	<div align="center">
+                                	<input type="text" class="form-control input-sm dorsalEB" name="dorbsal<?php echo $rowB['refjugadores']; ?>" id="dorbsal<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'dorsal'); ?>"/>
+                                </div>
                             </th>
                             <th>
                             	<div align="center">
@@ -1889,27 +1838,27 @@ if ($_SESSION['idroll_predio'] != 1) {
                                 	<input type="checkbox" class="form-control input-sm mejor" id="mejorbjugador<?php echo $rowB['refjugadores']; ?>" name="mejorbjugador<?php echo $rowB['refjugadores']; ?>" <?php if (mysql_result($estadisticasB,0,'mejorjugador')== 'Si') { echo 'checked'; } ?> style="width:30px;"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#FF0">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm amarillas" name="amaVrillas<?php echo $rowB['refjugadores']; ?>" id="amaVrillas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#F00">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm rojas" name="roVjas<?php echo $rowB['refjugadores']; ?>" id="roVjas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#09F">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm informados" name="inforVmados<?php echo $rowB['refjugadores']; ?>" id="inforVmados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#0C0">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm dobleamarilla" name="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" id="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
                                 </div>
                             </th>
-                            <th>
+                            <th style="text-align:center; background-color:#333; color:#FFF;">
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm cdtd" name="cdVtd<?php echo $rowB['refjugadores']; ?>" id="cdVtd<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
                                 </div>
@@ -1958,6 +1907,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                                     <th style="text-align:center"></th>
                             <?php	
 								}
+								} //fin del detalle partido
 							}
 							?>
                         </tr>
@@ -1982,6 +1932,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                             </th>
                             <th style="background-color:#F00;">
 								<?php echo $rowB['nrodocumento']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
                             </th>
                             <th style="background-color:#F00;">
                             	

@@ -215,9 +215,9 @@ if ($_SESSION['idroll_predio'] == 1) {
 
 $refCanchas		=	$serviciosReferencias->traerCanchas();
 if (mysql_result($resFixDetalle,0,'refcanchas') == '') {
-	$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(1),'');	
+	$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(2),'');	
 } else {
-	$cadCanchas	=	$serviciosFunciones->devolverSelectBoxActivo($refCanchas,array(1),'',mysql_result($resFixDetalle,0,'refcanchas'));
+	$cadCanchas	=	$serviciosFunciones->devolverSelectBoxActivo($refCanchas,array(2),'',mysql_result($resFixDetalle,0,'refcanchas'));
 }
 
 
@@ -728,6 +728,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                     	<tr>
                         	<th>Jugador</th>
                             <th>DNI</th>
+                            <th style="text-align:center">DRSL</th>
                             <th style="text-align:center">GA</th>
                             <th style="text-align:center">GC</th>
                             <th style="text-align:center">MIN</th>
@@ -895,6 +896,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="background-color:#FC0;">
                             	
                             </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
                             
                             <?php
 
@@ -929,6 +933,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             </th>
                             <th>
 								<?php echo $row['nrodocumento']; ?>
+                            </th>
+                            <th>
+                            	<div align="center">
+                                	<input type="text" class="form-control input-sm dorsalEA" name="dorsal<?php echo $row['refjugadores']; ?>" id="dorsal<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'dorsal'); ?>"/>
+                                </div>
                             </th>
                             <th>
                             	<div align="center">
@@ -1086,6 +1095,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="background-color:#F00;">
                             	
                             </th>
+                            <th style="background-color:#F00;">
+                            	
+                            </th>
                             
                             <?php
 
@@ -1160,6 +1172,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 
                         	<th>Jugador</th>
                             <th>DNI</th>
+                            <th style="text-align:center">DRSL</th>
                             <th style="text-align:center">GA</th>
                             <th style="text-align:center">GC</th>
                             <th style="text-align:center">MIN</th>
@@ -1328,6 +1341,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="background-color:#FC0;">
                             	
                             </th>
+                            <th style="background-color:#FC0;">
+                            	
+                            </th>
                             
                             <?php
 
@@ -1359,6 +1375,11 @@ if ($_SESSION['idroll_predio'] != 1) {
                             </th>
                             <th>
 								<?php echo $rowB['nrodocumento']; ?>
+                            </th>
+                            <th>
+                            	<div align="center">
+                                	<input type="text" class="form-control input-sm dorsalEB" name="dorbsal<?php echo $rowB['refjugadores']; ?>" id="dorbsal<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'dorsal'); ?>"/>
+                                </div>
                             </th>
                             <th>
                             	<div align="center">
@@ -1479,6 +1500,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                             </th>
                             <th style="background-color:#F00;">
 								<?php echo $rowB['nrodocumento']; ?>
+                            </th>
+                            <th style="background-color:#F00;">
+                            	
                             </th>
                             <th style="background-color:#F00;">
                             	

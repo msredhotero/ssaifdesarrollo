@@ -278,12 +278,12 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		}
 
 
-		if ($i == 27) {
+		if ($i == 30) {
 			break;	
 		}
 	}
 	
-	if ($i < 28) {
+	if ($i < 31) {
 		for ($j=$i+1;$j<28;$j++) {
 			$pdf->Ln();
 			$pdf->SetX(5);
@@ -408,12 +408,12 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		}
 
 
-		if ($i == 27) {
+		if ($i == 30) {
 			break;	
 		}
 	}
 	
-	if ($i < 28) {
+	if ($i < 31) {
 		for ($j=$i+1;$j<28;$j++) {
 			$pdf->Ln();
 			$pdf->SetX(107);

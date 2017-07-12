@@ -306,14 +306,7 @@ $cabeceras 		= "	<th>Descripción</th>
 
 
 </div>
-<div id="dialog2" title="Eliminar Fixture">
-    	<p>
-        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar el fixture?.<span id="proveedorEli"></span>
-        </p>
-        <p><strong>Importante: </strong>Si elimina el fixture se perderan todos los datos de este</p>
-        <input type="hidden" value="" id="idEliminar" name="idEliminar">
-</div>
+
 
 <script src="../../js/bootstrap-datetimepicker.min.js"></script>
 <script src="../../js/bootstrap-datetimepicker.es.js"></script>
@@ -389,199 +382,36 @@ $(document).ready(function(){
 		correrfechafixture(<?php echo $id; ?>, $('#fechacierre').val(), $('#reffechas').val());
 	});
 	
-	function chequeado(idFixture) {
+	
+	
+	function modificarnuevafecha(idtorneo, nuevafecha, fechadesde) {
 		$.ajax({
-				data:  {idFixture: idFixture, accion: 'marcarChequeado'},
+				data:  {idtorneo: idtorneo, 
+						nuevafecha: nuevafecha,
+						fechadesde: fechadesde,
+						accion: 'modificarnuevafecha'},
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
 						
 				},
 				success:  function (response) {
-						alert('Se marco correctamente');
-						
+						alert(response);
+						url = "correrfechas.php?id="+<?php echo $id; ?>;
+						//$(location).attr('href',url);
 				}
 		});	
 	}
 	
-	$("#example").on("click",'.jugo', function(){
-		  usersid =  $(this).attr("id");
-		  if (!isNaN(usersid)) {
-			$.ajax({
-				data:  {idFixture: usersid, accion: 'marcarJugo'},
-				url:   '../../ajax/ajax.php',
-				type:  'post',
-				beforeSend: function () {
-						
-				},
-				success:  function (response) {
-						alert('Se marco correctamente');
-						
-				}
-			});	
-			
-		  } else {
-			alert("Error, vuelva a realizar la acción.");	
-		  }
-	});//fin del boton jugo
-	
-	
-	$("#example").on("click",'.chequeado', function(){
-		  usersid =  $(this).attr("id");
-		  if (!isNaN(usersid)) {
-		  	$.ajax({
-					data:  {idFixture: usersid, accion: 'marcarChequeado'},
-					url:   '../../ajax/ajax.php',
-					type:  'post',
-					beforeSend: function () {
-							
-					},
-					success:  function (response) {
-							alert('Se marco correctamente');
-							
-					}
-			});
-
-		  } else {
-			alert("Error, vuelva a realizar la acción.");	
-		  }
-	});//fin del boton chequeado
-	
-	
-	$('.estadistica').click(function(event){
-		  usersid =  $(this).attr("id");
-		  if (!isNaN(usersid)) {
-			url = "../estadisticas/estadisticas.php?id="+usersid;
-			$(location).attr('href',url);
-
-			
-			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
-			//$(location).attr('href',url);
-		  } else {
-			alert("Error, vuelva a realizar la acción.");	
-		  }
-	});//fin del boton estadisticas
-	
-
-	$("#example").on("click",'.varmodificar', function(){
-		  usersid =  $(this).attr("id");
-		  if (!isNaN(usersid)) {
-			
-			url = "modificar.php?id=" + usersid;
-			$(location).attr('href',url);
-		  } else {
-			alert("Error, vuelva a realizar la acción.");	
-		  }
-	});//fin del boton modificar
-
-	 $( "#dialog2" ).dialog({
-		 	
-			    autoOpen: false,
-			 	resizable: false,
-				width:600,
-				height:240,
-				modal: true,
-				buttons: {
-				    "Eliminar": function() {
-	
-						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarFixture'},
-									url:   '../../ajax/ajax.php',
-									type:  'post',
-									beforeSend: function () {
-											
-									},
-									success:  function (response) {
-											url = "index.php";
-											$(location).attr('href',url);
-											
-									}
-							});
-						$( this ).dialog( "close" );
-						$( this ).dialog( "close" );
-							$('html, body').animate({
-	           					scrollTop: '1000px'
-	       					},
-	       					1500);
-				    },
-				    Cancelar: function() {
-						$( this ).dialog( "close" );
-				    }
-				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
-	
-	
-	//al enviar el formulario
-    $('#cargar').click(function(){
+	$('#modificarnuevafecha').click(function() {
 		
-		if (validador() == "")
-        {
-			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax  
-			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
+		modificarnuevafecha(<?php echo $id; ?>, $('#nuevafecha').val(), $('#reffechan').val());
+	});
+	
 
-					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Fixture</strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											//url = "index.php";
-											var a = $('#reftorneoge_a option:selected').html();
-											var b = $('#reftorneoge_b option:selected').html();
-											a = a.split(' - ');
-											b = b.split(' - ');
-											
-											$('#resultados').prepend('<tr><td>' + a[1] + '</td><td></td><td></td><td>' + 
-																		+ b[1] + '</td><td>' + 
-																		a[0] + '</td><td>' + 
-																		$('#fechajuego option:selected').html() + '</td><td>' + 
-																		$('#reffecha option:selected').html() + '</td><td>' + 
-																		$('#hora option:selected').html() + '</td><td style="color:#f00;">Nuevo</td></tr>').fadeIn(300);
-											
-											//$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
-		}
-    });
+	
+	
+
 	
 
 });

@@ -2453,9 +2453,23 @@ function correrfechafixture($serviciosReferencias) {
 	$nuevafecha = $_POST['nuevafecha']; 
 	$fechadesde = $_POST['fechadesde']; 
 	
-	$res = $serviciosReferencias->correrfechafixture($idtorneo, $nuevafecha, $fechadesde);
+	$res = $serviciosReferencias->correrfechafixture($idtorneo, $fechadesde, $nuevafecha);
 	
 	echo $res;
+}
+
+function modificarnuevafecha($serviciosReferencias) {
+	$idtorneo 	= $_POST['idtorneo']; 
+	$nuevafecha = $_POST['nuevafecha']; 
+	$fechadesde = $_POST['fechadesde']; 
+	
+	$res = $serviciosReferencias->modificarFixtureFechaPorRefFecha($idtorneo,$fechadesde, $nuevafecha);
+	
+	if ($res) {
+		echo 'Se modifico correctamente ';	
+	} else {
+		echo 'Ocurrio un error ';	
+	}
 }
  
 function insertarTorneos($serviciosReferencias) { 

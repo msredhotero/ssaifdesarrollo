@@ -190,6 +190,21 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
                     </div>
                 </div>
                 
+                <div class="form-group col-md-2">
+                    <label class="control-label" style="text-align:left" for="refcliente">Fechas Desde</label>
+                    <div class="input-group col-md-12">
+                    	<input type="text" id="reffechadesde2" class="form-control" name="reffechadesde2" value="Date">
+                    </div>
+                </div>
+                
+                
+                <div class="form-group col-md-2">
+                    <label class="control-label" style="text-align:left" for="refcliente">Fechas Hasta</label>
+                    <div class="input-group col-md-12">
+                    	<input type="text" id="reffechahasta2" class="form-control" name="reffechahasta2" value="Date">
+                    </div>
+                </div>
+                
                 
                 <div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
@@ -462,7 +477,7 @@ $(document).ready(function(){
                 window.open("../../reportes/rptSuspendidosExcel.php" ,'_blank');  
                 break;  
 			case 7:
-                window.open("../../reportes/rptProximaFecha.php" ,'_blank');  
+                window.open("../../reportes/rptProximaFecha.php?reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');  
                 break;	  
 			default:
 				alert('Debe elegir una opcion');
@@ -479,7 +494,7 @@ $(document).ready(function(){
 	
 	$("#rptPP").click(function(event) {
         if ($("#reftorneo1").val() == 0) {
-            window.open("../../reportes/rptPlanillaTodas.php?reffechas=" + $("#reffechas1").val() ,'_blank');    
+            window.open("../../reportes/rptPlanillaTodas.php?reffechas=" + $("#reffechas1").val() + "&desde=" + $('#reffechadesde2').val() + "&hasta=" + $('#reffechahasta2').val() ,'_blank');    
         } else {
             window.open("../../reportes/rptPlanilla.php?idtorneo=" + $("#reftorneo1").val() + "&reffechas=" + $("#reffechas1").val() ,'_blank');        
         }
@@ -600,6 +615,12 @@ $('.form_date').datetimepicker({
 	
 	$( "#reffechahasta1" ).datepicker();
     $( "#reffechahasta1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+	
+	$( "#reffechadesde2" ).datepicker();
+    $( "#reffechadesde2" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+	
+	$( "#reffechahasta2" ).datepicker();
+    $( "#reffechahasta2" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 	
 	$( "#fechadesde3" ).datepicker();
     $( "#fechadesde3" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
