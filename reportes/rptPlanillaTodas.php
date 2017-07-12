@@ -71,7 +71,35 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 	$hora						= mysql_result($resDefTemp,0,'hora');
 
 	$fechaPartido				= mysql_result($resEquipos,0,'fechapartido');
+	
+	$fechaPartido				= mysql_result($resEquipos,0,'fechapartidocomun');
 
+
+	$numeroDia = date('w', strtotime($fechaPartido));
+	
+	switch ($numeroDia) {
+		case 0:
+			$dia = 'Domingo';
+			break;
+		case 1:
+			$dia = 'Lunes';
+			break;
+		case 2:
+			$dia = 'Martes';
+			break;
+		case 3:
+			$dia = 'Miércoles';
+			break;
+		case 4:
+			$dia = 'Jueves';
+			break;
+		case 5:
+			$dia = 'Viernes';
+			break;
+		case 6:
+			$dia = 'Sábado';
+			break;	
+	}
 	
 	$cantidadJugadores = 0;
 	

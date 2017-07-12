@@ -3777,15 +3777,23 @@ function correrfechafixture($idtorneo, $nuevafecha, $fechadesde) {
 	$diferencia = $ultimaFecha - $fechadesde;
 	
 	$cambios = 0;
+	$fechasExcluidas = 'no';
+	//$resFechaExcluida = '';
 	for ($i=$ultimaFecha; $i>=$fechadesde;$i--) {
 		
-		$this->modificarFixtureFechaPorRefFecha($idtorneo, $i, $nuevafecha);		
-		$cambios += 1;
+		$resFechaExcluida = $this->traerFechasexcluidasPorFecha($nuevafecha);
+		if (mysql_num_rows($resFechaExcluida)>0) {
+			$i += 1;
+			$fechasExcluidas = 'Si';
+		} else {
+			$this->modificarFixtureFechaPorRefFecha($idtorneo, $i, $nuevafecha);		
+			$cambios += 1;
+		}
 		$nuevafecha = strtotime ( '-7 day' , strtotime ( $nuevafecha ) ) ;
 		$nuevafecha = date ( 'Y-m-d' , $nuevafecha );
 	}
 	
-	return 'Se modificaron '.$cambios.' fechas del torneo';
+	return 'Se modificaron '.$cambios.' fechas del torneo. Hay fechas excluidas: '.$fechasExcluidas;
 }
 
 function insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo) { 
@@ -4395,7 +4403,7 @@ return $res;
 } 
 
 function traerFechasexcluidasPorFecha($fecha) { 
-$sql = "select idfechaexcluida,fecha,descripcion from tbfechasexcluidas where fecha =".$fecha; 
+$sql = "select idfechaexcluida,fecha,descripcion from tbfechasexcluidas where fecha ='".$fecha."'"; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -5718,7 +5726,8 @@ f.refconectorvisitante,
 f.refestadospartidos,
 f.refarbitros,
 coalesce(cl.nombre,'') as contactoLocal,
-coalesce(cv.nombre,'') as contactoVisitante
+coalesce(cv.nombre,'') as contactoVisitante,
+date_format(f.fecha,'%Y-%m-%d') as fechapartidocomun
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo

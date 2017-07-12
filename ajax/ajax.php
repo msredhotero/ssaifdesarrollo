@@ -2453,7 +2453,7 @@ function correrfechafixture($serviciosReferencias) {
 	$nuevafecha = $_POST['nuevafecha']; 
 	$fechadesde = $_POST['fechadesde']; 
 	
-	$res = $serviciosReferencias->correrfechafixture($idtorneo, $fechadesde, $nuevafecha);
+	$res = $serviciosReferencias->correrfechafixture($idtorneo, $nuevafecha, $fechadesde);
 	
 	echo $res;
 }
