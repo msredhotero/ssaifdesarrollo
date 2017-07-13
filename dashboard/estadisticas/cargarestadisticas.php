@@ -502,6 +502,24 @@ $numero = count($_POST);
 	}
 
 
+///////////////////////  PARA LOS CAMBIOS                        ///////////////////////////
+// BORRO TODOS LOS CAMBIOS Y LOS VUELVO A CARGAR 
+$serviciosReferencias->eliminarCambiosPorFixture($idFixture);
+
+for ($i=1; $i<=7; $i++) {
+	if (isset($_POST['salecambioVisitante'.$i])) {
+		$serviciosReferencias->insertarCambios($_POST['salecambioVisitante'.$i], $_POST['entracambioVisitante'.$i], $idFixture, $equipoVisitante, $idCategoria, $idDivisiones, $_POST['minutocambioVisitante'.$i]);
+	}
+	
+	if (isset($_POST['salecambioLocal'.$i])) {
+		$serviciosReferencias->insertarCambios($_POST['salecambioLocal'.$i], $_POST['entracambioLocal'.$i], $idFixture, $equipoLocal, $idCategoria, $idDivisiones, $_POST['minutocambioLocal'.$i]);
+	}
+}
+
+
+
+///////////////////////         FIN                             ////////////////////////////
+
 
 ///////////////////////  CALCULA SEGUN EL ESTADO DEL PARTIDO	////////////////////////////
 $refEstadoPartido		=		$_POST['refestadospartidos'];

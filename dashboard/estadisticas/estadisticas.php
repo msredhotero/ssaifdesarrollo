@@ -228,6 +228,10 @@ if (mysql_result($resFixDetalle,0,'refarbitros') == '') {
 	$cadArbitros	=	$serviciosFunciones->devolverSelectBoxActivo($refArbitros,array(1),'',mysql_result($resFixDetalle,0,'refarbitros'));
 }
 
+$resCambioLocal 	= $serviciosReferencias->traerCambiosPorFixtureEquipo($idFixture, $equipoLocal);
+$resCambioVisitante = $serviciosReferencias->traerCambiosPorFixtureEquipo($idFixture, $equipoVisitante);
+
+
 
 if ($_SESSION['idroll_predio'] != 1) {
 
@@ -1157,6 +1161,52 @@ if ($_SESSION['idroll_predio'] != 1) {
 						?>
                     </tbody>
                 </table>
+                
+                <!-- parte para los cambios -->
+                <p>Cambios equipo Local</p>
+                <?php
+					$iC = 1;
+					while ($rowCambio = mysql_fetch_array($resCambioLocal)) {
+				?>
+                <div class="row" style="margin-left:25px;">
+                	
+                    <div class="col-md-3">
+                    	<p>Sale: <input class="form-control localsale" type="text" name="salecambioLocal<?php echo $iC; ?>" id="salecambioLocal<?php echo $iC; ?>" value="<?php echo $rowCambio['refdorsalsale']; ?>"/></p>
+                    </div>
+                    <div class="col-md-3">
+						<p>Entra: <input class="form-control localentra" type="text" name="entracambioLocal<?php echo $iC; ?>" id="entracambioLocal<?php echo $iC; ?>" value="<?php echo $rowCambio['refdorsalentra']; ?>"/></p>
+                    </div>
+                    <div class="col-md-3">
+						<p>Minuto: <input class="form-control localminu" type="text" name="minutocambioLocal<?php echo $iC; ?>" id="minutocambioLocal<?php echo $iC; ?>" value="<?php echo $rowCambio['minuto']; ?>"/></p>
+                    </div>
+                    
+                </div>
+                <?php
+					$iC += 1;
+					}
+                ?>
+                
+                <?php
+					for ($k = $iC;$k<= 7;$k++) {
+				?>
+                <div class="row" style="margin-left:25px;">
+                    <div class="col-md-3">
+                    	<p>Sale: <input class="form-control localsale" type="text" name="salecambioLocal<?php echo $k; ?>" id="salecambioLocal<?php echo $k; ?>" value=""/></p>
+                    </div>
+                    <div class="col-md-3">
+						<p>Entra: <input class="form-control localentra" type="text" name="entracambioLocal<?php echo $k; ?>" id="entracambioLocal<?php echo $k; ?>" value=""/></p>
+                    </div>
+                    <div class="col-md-3">
+						<p>Minuto: <input class="form-control localminu" type="text" name="minutocambioLocal<?php echo $k; ?>" id="minutocambioLocal<?php echo $k; ?>" value=""/></p>
+                    </div>
+                    
+                </div>
+                <?php
+					}
+                ?>
+                
+                
+                <!-- fin -->
                 </div>
   
                 
@@ -1164,7 +1214,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 <hr>
                 
                 <div style="margin-left:5px;padding-left:10px;border-left:12px solid #C00; border-bottom:1px solid #eee; border-top:1px solid #CCC;margin-right:5px;">
-                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
+                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadisticos</h4>
                 <table class="table table-striped table-bordered table-responsive" id="example2">
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
                     <thead>
@@ -1597,6 +1647,53 @@ if ($_SESSION['idroll_predio'] != 1) {
 						?>
                     </tbody>
                 </table>
+                
+                <!-- parte para los cambios -->
+                <p>Cambios equipo Local</p>
+                
+                <?php
+					$iC = 1;
+					while ($rowCambio = mysql_fetch_array($resCambioVisitante)) {
+				?>
+                <div class="row" style="margin-left:25px;">
+                	
+                    <div class="col-md-3">
+                    	<p>Sale: <input class="form-control visitsale" type="text" name="salecambioVisitante<?php echo $iC; ?>" id="salecambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambio['refdorsalsale']; ?>"/></p>
+                    </div>
+                    <div class="col-md-3">
+						<p>Entra: <input class="form-control visitentra" type="text" name="entracambioVisitante<?php echo $iC; ?>" id="entracambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambio['refdorsalentra']; ?>"/></p>
+                    </div>
+                    <div class="col-md-3">
+						<p>Minuto: <input class="form-control visitminu" type="text" name="minutocambioVisitante<?php echo $iC; ?>" id="minutocambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambio['minuto']; ?>"/></p>
+                    </div>
+                    
+                </div>
+                <?php
+					$iC += 1;
+					}
+                ?>
+                
+                <?php
+					$iC = 1;
+					for ($k = $iC;$k<= 7;$k++) {
+				?>
+                <div class="row" style="margin-left:25px;">
+                    <div class="col-md-3">
+                    	<p>Sale: <input class="form-control visitsale" type="text" name="salecambioVisitante<?php echo $k; ?>" id="salecambioVisitante<?php echo $k; ?>" value=""/></p>
+                    </div>
+                    <div class="col-md-3">
+						<p>Entra: <input class="form-control visitentra" type="text" name="entracambioVisitante<?php echo $k; ?>" id="entracambioVisitante<?php echo $k; ?>" value=""/></p>
+                    </div>
+                    <div class="col-md-3">
+						<p>Minuto: <input class="form-control visitminu" type="text" name="minutocambioVisitante<?php echo $k; ?>" id="minutocambioVisitante<?php echo $k; ?>" value=""/></p>
+                    </div>
+                    
+                </div>
+                <?php
+					}
+                ?>
+                
+                <!-- fin -->
 				</div>
                 
                 
@@ -1626,6 +1723,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                         <button type="button" class="btn btn-primary" id="cargamasiva">Guardar Masivo</button>
                     </li>
                     <li>
+                        <button type="button" class="btn btn-success" id="calcularMinutos">Calcular Minutos</button>
+                    </li>
+                    <li>
                         <button type="button" class="btn btn-default volver">Volver</button>
                     </li>
                 </ul>
@@ -1653,7 +1753,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 $(document).ready(function(){
 	
 	$('#colapsarMenu').click();
-	
+	var minutosPartido = <?php echo $minutos; ?>;
 	/*var table = $('#example dataTables_filter input');*/
 	
 	var table = $('#example').dataTable({
@@ -1718,6 +1818,84 @@ $(document).ready(function(){
 		$(location).attr('href',url);
     });
 	
+	function existeCambioSaleLocal(dorsal, lblEach, lblBuscar, lblValor) {
+		nuevoSale = 0;
+		$('.'+lblEach).each(function(intIndex){
+			idCambio = $(this).attr("id");
+			idCambio = idCambio.replace(lblBuscar, "");
+			if ($(this).val()==dorsal) {
+				nuevoSale = $('#'+lblValor+idCambio).val();
+				return false;
+			}
+		});
+		return nuevoSale;
+	}
+	
+	function existeCambioEntraLocal(dorsal, minutosPartido, lblEach, lblBuscar, lblValor) {
+		nuevoEntra = 0;
+		$('.'+lblEach).each(function(intIndex){
+			idCambio = $(this).attr("id");
+			idCambio = idCambio.replace(lblBuscar, "");
+			if ($(this).val()==dorsal) {
+				nuevoEntra = minutosPartido - $('#'+lblValor+idCambio).val();
+				return false;
+			}
+		});
+		return nuevoEntra;
+	}
+	
+	
+	
+	function calcularMinutos() {
+		
+		
+		// para restarle los minutos jugados al que sale y entra
+		/* localsale - salecambioLocal - minutocambioLocal */
+		$('.dorsalEA').each(function(intIndex){
+			idJugador = $(this).attr("id");
+			idJugador = idJugador.replace("dorsal", "");
+			if ($(this).val()==0) {
+				$('#minutos'+idJugador).val(0);	
+			} else {
+				
+				if (existeCambioSaleLocal($(this).val(),'localsale','salecambioLocal','minutocambioLocal')>0) {
+					$('#minutos'+idJugador).val(existeCambioSaleLocal($(this).val(),'localsale','salecambioLocal','minutocambioLocal'));
+				}
+				
+				if (existeCambioEntraLocal($(this).val(),minutosPartido,'localentra','entracambioLocal','minutocambioLocal')>0) {
+					$('#minutos'+idJugador).val(existeCambioEntraLocal($(this).val(),minutosPartido,'localentra','entracambioLocal','minutocambioLocal'));
+				}
+				
+			}
+		});
+		
+		
+		// para restarle los minutos jugados al que sale
+		/* visitsale - salecambioVisitante - minutocambioVisitante */
+		$('.dorsalEB').each(function(intIndex){
+			idJugador = $(this).attr("id");
+			idJugador = idJugador.replace("dorbsal", "");
+			if ($(this).val()==0) {
+				$('#minbutos'+idJugador).val(0);	
+			} else {
+				
+				if (existeCambioSaleLocal($(this).val(),'visitsale','salecambioVisitante','minutocambioVisitante')>0) {
+					$('#minbutos'+idJugador).val(existeCambioSaleLocal($(this).val(),'visitsale','salecambioVisitante','minutocambioVisitante'));
+				}
+				
+				if (existeCambioEntraLocal($(this).val(),minutosPartido,'visitentra','entracambioVisitante','minutocambioVisitante')>0) {
+					$('#minbutos'+idJugador).val(existeCambioEntraLocal($(this).val(),minutosPartido,'visitentra','entracambioVisitante','minutocambioVisitante'));
+				}
+				
+			}
+		});
+	}
+	
+	$('#calcularMinutos').click(function(e) {
+        calcularMinutos();
+    });
+	
+	
 	$('#cargamasiva').click(function(e) {
 		table.fnFilter('Win');
       	table.fnFilter('Trident', 0);
@@ -1730,6 +1908,9 @@ $(document).ready(function(){
  
       	// Remove all filtering
       	table2.fnFilterClear();  
+		
+		calcularMinutos();
+		
 		
 		$( "#target" ).submit();
        

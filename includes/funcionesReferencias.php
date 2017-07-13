@@ -6338,6 +6338,107 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: dbpenalesjugadores*/
 
+/* PARA Cambios */
+
+function existeFixturePorCambiosJugador($refdorsalsale,$refdorsalentra, $idFixture) {
+	$sql = "select * from dbcambios where refdorsalsale =".$refdorsalsale." and refdorsalentra =".$refdorsalentra." and reffixture =".$idFixture;
+	
+	return $this->existeDevuelveId($sql);	
+}
+
+function insertarCambios($refdorsalsale,$refdorsalentra,$reffixture,$refequipos,$refcategorias,$refdivisiones,$minuto) { 
+$sql = "insert into dbcambios(idcambio,refdorsalsale,refdorsalentra,reffixture,refequipos,refcategorias,refdivisiones,minuto) 
+values ('',".$refdorsalsale.",".$refdorsalentra.",".$reffixture.",".$refequipos.",".$refcategorias.",".$refdivisiones.",".$minuto.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarCambios($id,$refdorsalsale,$refdorsalentra,$reffixture,$refequipos,$refcategorias,$refdivisiones,$minuto) { 
+$sql = "update dbcambios 
+set 
+refdorsalsale = ".$refdorsalsale.",refdorsalentra = ".$refdorsalentra.",reffixture = ".$reffixture.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",minuto = ".$minuto." 
+where idcambio =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarCambios($id) { 
+$sql = "delete from dbcambios where idcambio =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function eliminarCambiosPorFixture($idFixture) { 
+$sql = "delete from dbcambios where reffixture =".$idFixture; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerCambios() { 
+$sql = "select 
+c.idcambio,
+c.refdorsalsale,
+c.refdorsalentra,
+c.reffixture,
+c.refequipos,
+c.refcategorias,
+c.refdivisiones,
+c.minuto
+from dbcambios c 
+inner join dbfixture fix ON fix.idfixture = c.reffixture 
+inner join dbtorneos to ON to.idtorneo = fix.reftorneos 
+inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+inner join co ON co. = fix.refconectorlocal 
+inner join dbarbitros ar ON ar.idarbitro = fix.refarbitros 
+inner join tbcanchas ca ON ca.idcancha = fix.refcanchas 
+inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+inner join dbequipos equ ON equ.idequipo = c.refequipos 
+inner join dbcountries co ON co.idcountrie = equ.refcountries 
+inner join tbcategorias ca ON ca.idtcategoria = equ.refcategorias 
+inner join tbdivisiones di ON di.iddivision = equ.refdivisiones 
+inner join dbcontactos co ON co.idcontacto = equ.refcontactos 
+inner join tbcategorias cat ON cat.idtcategoria = c.refcategorias 
+inner join tbdivisiones div ON div.iddivision = c.refdivisiones 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerCambiosPorFixtureEquipo($idFixture, $idEquipo) { 
+$sql = "select 
+c.idcambio,
+c.refdorsalsale,
+c.refdorsalentra,
+c.reffixture,
+c.refequipos,
+c.refcategorias,
+c.refdivisiones,
+c.minuto
+from dbcambios c 
+inner join dbfixture fix ON fix.idfixture = c.reffixture 
+inner join dbequipos equ ON equ.idequipo = c.refequipos 
+inner join tbcategorias cat ON cat.idtcategoria = c.refcategorias 
+inner join tbdivisiones divi ON divi.iddivision = c.refdivisiones 
+where c.reffixture = ".$idFixture." and c.refequipos = ".$idEquipo."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerCambiosPorId($id) { 
+$sql = "select idcambio,refdorsalsale,refdorsalentra,reffixture,refequipos,refcategorias,refdivisiones,minuto from dbcambios where idcambio =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbcambios*/
+
 
 /* PARA Dorsales */
 
