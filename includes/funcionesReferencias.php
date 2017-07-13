@@ -8690,10 +8690,10 @@ from
         and pen.refdivisiones = di.iddivision
 		LEFT JOIN
     dbdorsales dor 
-    ON 	pen.reffixture = fix.idfixture
-		and pen.refjugadores = jug.idjugador
-        and pen.refcategorias = cat.idtcategoria
-        and pen.refdivisiones = di.iddivision
+    ON 	dor.reffixture = fix.idfixture
+		and dor.refjugadores = jug.idjugador
+        and dor.refcategorias = cat.idtcategoria
+        and dor.refdivisiones = di.iddivision
 	where jug.idjugador = ".$idJugador." and fix.idfixture = ".$idFixture." and c.refcategorias = ".$idCategoria." and di.iddivision = ".$idDivision;
 	$res = $this->query($sql,0);
 	return $res;	

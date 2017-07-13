@@ -1649,22 +1649,22 @@ if ($_SESSION['idroll_predio'] != 1) {
                 </table>
                 
                 <!-- parte para los cambios -->
-                <p>Cambios equipo Local</p>
+                <p>Cambios equipo Visitante</p>
                 
                 <?php
 					$iC = 1;
-					while ($rowCambio = mysql_fetch_array($resCambioVisitante)) {
+					while ($rowCambioV = mysql_fetch_array($resCambioVisitante)) {
 				?>
                 <div class="row" style="margin-left:25px;">
                 	
                     <div class="col-md-3">
-                    	<p>Sale: <input class="form-control visitsale" type="text" name="salecambioVisitante<?php echo $iC; ?>" id="salecambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambio['refdorsalsale']; ?>"/></p>
+                    	<p>Sale: <input class="form-control visitsale" type="text" name="salecambioVisitante<?php echo $iC; ?>" id="salecambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambioV['refdorsalsale']; ?>"/></p>
                     </div>
                     <div class="col-md-3">
-						<p>Entra: <input class="form-control visitentra" type="text" name="entracambioVisitante<?php echo $iC; ?>" id="entracambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambio['refdorsalentra']; ?>"/></p>
+						<p>Entra: <input class="form-control visitentra" type="text" name="entracambioVisitante<?php echo $iC; ?>" id="entracambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambioV['refdorsalentra']; ?>"/></p>
                     </div>
                     <div class="col-md-3">
-						<p>Minuto: <input class="form-control visitminu" type="text" name="minutocambioVisitante<?php echo $iC; ?>" id="minutocambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambio['minuto']; ?>"/></p>
+						<p>Minuto: <input class="form-control visitminu" type="text" name="minutocambioVisitante<?php echo $iC; ?>" id="minutocambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambioV['minuto']; ?>"/></p>
                     </div>
                     
                 </div>
