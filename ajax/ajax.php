@@ -455,7 +455,9 @@ case 'insertarEstadisticaMasiva':
 case 'buscarPartido':
 	buscarPartido($serviciosReferencias);
 	break;
-
+case 'guardarPartidoSimple':
+	guardarPartidoSimple($serviciosReferencias);
+	break;
 /*****			FIN				**********/
 
 /*****		TODO FALLOS        **********/
@@ -1259,6 +1261,22 @@ function traerFechasPorTorneos($serviciosReferencias, $serviciosFunciones) {
 	echo $cad;
 }
 
+
+function guardarPartidoSimple($serviciosReferencias) {
+	$idfixture		 = $_POST['idfixture'];
+	$fecha			 = $_POST['fecha'];
+	$hora			 = $_POST['hora'];
+	$refcanchas		 = $_POST['cancha'];	
+	
+	$fecha = formatearFechas($fecha);
+	
+	if ($fecha != '***') {
+		$res = $serviciosReferencias->guardarPartidoSimple($idfixture, $fecha, $hora, $refcanchas);
+		echo '';
+	} else {
+		echo 'Formato de fecha erroneo'.$_POST['fecha'];
+	}
+}
 
 function insertarFixture($serviciosReferencias) {
 	$reftorneos = $_POST['reftorneos'];

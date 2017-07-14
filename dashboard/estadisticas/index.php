@@ -30,7 +30,7 @@ $cadFix			=	$serviciosFunciones->devolverSelectBox($resFixture,array(0,1,4,5,10)
 
 $refCanchas		=	$serviciosReferencias->traerCanchas();
 
-$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(1),'');	
+$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(2),'');	
 
 
 
@@ -77,7 +77,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
-
+	<link rel="stylesheet" href="../../css/chosen.css">
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
@@ -160,7 +160,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 												<th>Fecha</th>
 												<th>Hora</th>
 												<th>Division</th>
-												<th>Arbitro</th>
+												<th>Cancha</th>
 												<th></th>
 												<th>Accion</th>
 
@@ -177,15 +177,15 @@ if ($_SESSION['refroll_predio'] != 1) {
 					$cadCabecera .= "<tr>
 										<td>".$row['equipoLocal']."</td>
 										<td>".$row['equipoVisitante']."</td>
-										<td>".$dateH->format('d-m-Y')."</td>
-										<td>".$row['hora']."</td>
+										<td><input class='form-control fecha' type='text' name='fecha".$row['idfixture']."' id='fecha".$row['idfixture']."' value='".$dateH->format('d-m-Y')."'/></td>
+										<td><input class='form-control hora' type='text' name='hora".$row['idfixture']."' id='hora".$row['idfixture']."' value='".$row['hora']."'/></td>
 										<td>".$row['division']."</td>
-										<td><select data-placeholder='selecione el Arbitro...' id='refarbitros' name='refarbitros' class='chosen-select' tabindex='2' style='width:210px;'>
-            								<option value='".$row['idarbitro']."'>".$row['arbitro']."</option>
-											".$cadArbitros."
+										<td><select data-placeholder='selecione la Cancha...' id='refcanchas".$row['idfixture']."' name='refcanchas".$row['idfixture']."' class='chosen-select' tabindex='2' style='width:210px;'>
+            								<option value='".$row['idcancha']."'>".$row['cancha']."</option>
+											".$cadCanchas."
                                             </select></td>
 										<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a></td>
-										<td><button type='button' class='btn btn-primary cargaparticular' id='".$row['idfixture']."'>Guardar</button></td>
+										<td><button type='button' class='btn btn-primary guardarPartidoSimple' id='".$row['idfixture']."'>Guardar</button></td>
 									</tr>";
 
 				}
@@ -218,6 +218,28 @@ if ($_SESSION['refroll_predio'] != 1) {
    
 </div>
 
+<!-- Modal del guardar-->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Guardar Partido</h4>
+        </div>
+        <div class="modal-body">
+          <p id="error"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>
 
 </div>
 
@@ -229,7 +251,52 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
+	$(document).ready(function(){
+		$(".hora").each(function(intIndex) {
+			$(this).mask("99:99",{placeholder:"hh:mm"});
+		});
+		
+		$(".fecha").each(function(intIndex) {
+			$(this).mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+		});
+		
+	});
+	
+	$('.guardarPartidoSimple').click(function(e) {
+		
+		idBtn = $(this).attr("id");
+
+		$('#myModal').modal("show");
+        $.ajax({
+			data:  {idfixture: $(this).attr("id"), 
+					fecha: $('#fecha'+$(this).attr("id")).val(), 
+					hora: $('#hora'+$(this).attr("id")).val(), 
+					cancha: $('#refcanchas'+$(this).attr("id")).val(), 
+					accion: 'guardarPartidoSimple'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					
+			},
+			success:  function (response) {
+				if (response == '') {
+					$('#error').html('<span class="glyphicon glyphicon-ok"></span> Se guardo correctamente');
+					$('#'+idBtn).removeClass("btn-primary");
+					$('#'+idBtn).addClass("btn-success");
+					$('#'+idBtn).html('<span class="glyphicon glyphicon-ok"></span> Guardado');
+					
+				} else {
+					$('#error').html('Huvo un error al guardar los datos, verifique los datos ingresados '.response);
+					$('#'+idBtn).removeClass("btn-primary");
+					$('#'+idBtn).addClass("btn-danger");
+					$('#'+idBtn).html('<span class="glyphicon glyphicon-ban-circle"></span> Guardar');
+				}
+			}
+		});
+    });									
+										
 	$('#busqueda').click(function(e) {
+		
         $.ajax({
 			data:  {id: $('#buscar').val(), accion: 'buscarPartido'},
 			url:   '../../ajax/ajax.php',
@@ -258,6 +325,21 @@ $(document).ready(function(){
 
 });
 </script>
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+	
+	
+  </script>
 <?php } ?>
 </body>
 </html>

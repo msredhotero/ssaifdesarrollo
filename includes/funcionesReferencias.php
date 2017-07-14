@@ -974,16 +974,17 @@ function traerProximaFechaTodos() {
 			di.division,
 			tor.descripcion as torneo,
 			(select el.nombre from dbequipos el where el.idequipo = fix.refconectorlocal) as equipoLocal,
-			(select el.nombre from dbequipos el where el.idequipo = fix.refconectorlocal) as equipoVisitante,
+			(select el.nombre from dbequipos el where el.idequipo = fix.refconectorvisitante) as equipoVisitante,
 			cc.nombre,
 			dia.dia,
-			dct.hora,
+			fix.hora,
 			cc.nombre as cancha,
 			f.fecha,
 			fix.fecha as fechajuego,
 			f.idfecha,
 			coalesce(arr.idarbitro,0) as idarbitro,
-			coalesce(arr.nombrecompleto,'') as arbitro
+			coalesce(arr.nombrecompleto,'') as arbitro,
+			cc.idcancha
 		from dbfixture fix 
 		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
 		inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
@@ -2083,7 +2084,7 @@ c.nombre,
 c.refcountries
 from tbcanchas c
 left join dbcountries cou ON cou.idcountrie = c.refcountries
-order by 1";
+order by c.nombre";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -6031,6 +6032,21 @@ return $res;
 
 
 /********************  nuevos tablas 20/02/2017 para las ESTADISTICAS ************//////
+
+function guardarPartidoSimple($idFixture, $fecha, $hora, $refcanchas) {
+	
+	$sql = "update dbfixture 
+			set	
+				fecha = '".$fecha."',
+				hora = '".$hora."',
+				refcanchas = ".($refcanchas == '' ? 'NULL' : $refcanchas)."
+				where idfixture = ".$idFixture;	
+	$res = $this->query($sql,0); 
+	return $res; 
+}
+
+
+
 
 /* PARA Mejorjugador */
 
