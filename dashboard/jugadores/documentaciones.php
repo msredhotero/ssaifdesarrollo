@@ -257,6 +257,13 @@ if ($_SESSION['refroll_predio'] != 1) {
 				if (mysql_num_rows($resJugadores)<1) {
 					while ($row = mysql_fetch_array($resDocumentaciones2)) {
 						$resValores		=	$serviciosReferencias->traerValoreshabilitacionestransitoriasPorDocumentacion($row[0]);
+						$habiltacionTranst = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion( $id,$row[0]);
+						$habilita = '';
+
+						if (mysql_num_rows($habiltacionTranst)>0) {
+							$habilita = '*';
+						}
+						
 				?>
 					<?php
                         if ($row[2] == 'Si') { 
@@ -274,6 +281,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                             	<div class="input-group">
                             	<span class="input-group-addon">
                                 <input type="checkbox" aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu[]">
+                                <span style="color:#F00"><?php echo $habilita; ?></span>
                                 </span>
                                 <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
                                 <span class="input-group-addon">
@@ -340,6 +348,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 				} else {
 					while ($row = mysql_fetch_array($resJugadores)) {
 						$resValores		=	$serviciosReferencias->traerValoreshabilitacionestransitoriasPorDocumentacionJugadorActivas($row[0],$id);
+						
+						$habiltacionTranst = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion( $id,$row['refdocumentaciones']);
+						
 				?>
                 	<?php
 						if ($row[3] == 'Si') { 
@@ -365,7 +376,13 @@ if ($_SESSION['refroll_predio'] != 1) {
                                 <input type="checkbox" <?php echo $check; ?> aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
                                 </span>
                                 <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
+                                <?php 
+									if (mysql_num_rows($habiltacionTranst)>0) {
+								?>
+                                <span class="input-group-addon" style="color:#F00;">
+                                <?php } else { ?>
                                 <span class="input-group-addon">
+                                <?php } ?>
                                     <?php echo $cadA; ?>
                                 </span>
 								</div><!-- /input-group -->

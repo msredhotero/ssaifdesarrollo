@@ -444,7 +444,9 @@ case 'buscarJugadores':
 case 'buscarJugadoresFiltro':
 	buscarJugadoresFiltro($serviciosReferencias);
 	break;
-
+case 'filtrosGenerales':
+	filtrosGenerales($serviciosReferencias, $serviciosFunciones);
+	break;
 /*****          FIN            ***********/
 
 
@@ -564,6 +566,127 @@ function verificaEdadCategoriaJugador($serviciosReferencias) {
 
 
 /**********************     BUSQUEDAS             ********************************************************/
+function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
+	$resTemporadas = $serviciosReferencias->traerUltimaTemporada();	
+
+	$where = '';
+
+	if  ((isset($_POST['reftemporada1'])) && ($_POST['reftemporada1']!=0)) {
+		$reftemporada = $_POST['reftemporada1'];
+		$where .= 'tor.reftemporadas = '.$reftemporada." and ";
+	} else {
+		if (mysql_num_rows($resTemporadas)>0) {
+			$reftemporada = mysql_result($resTemporadas,0,0);	
+			$where .= 'tor.reftemporadas = '.$reftemporada." and ";
+		} else {
+			$reftemporada = 0;	
+		}
+	}
+	
+	if ((isset($_POST['refcountries1'])) && ($_POST['refcountries1']!=0)) {
+		$refcountres = $_POST['refcountries1'];
+		$where .= 'equ.refcountries = '.$refcountres." and ";
+	} else {
+		$refcountres = '';
+	}
+	if ((isset($_POST['refcategorias1'])) && ($_POST['refcategorias1']!=0)) {
+		$refcategorias = $_POST['refcategorias1'];
+		$where .= 'tor.refcategorias = '.$refcategorias." and ";
+	} else {
+		$refcategorias = '';
+	}
+	if ((isset($_POST['refdivision1'])) && ($_POST['refdivision1']!=0)) {
+		$refdivision = $_POST['refdivision1'];
+		$where .= 'tor.refdivisiones = '.$refdivision." and ";
+	} else {
+		$refdivision = '';
+	}
+	if ((isset($_POST['reftorneo3'])) && ($_POST['reftorneo3']!=0)) {
+		$reftorneos = $_POST['reftorneo3'];
+		$where .= 'tor.idtorneo = '.$reftorneos." and ";
+	} else {
+		$reftorneos = '';
+	}
+	if ((isset($_POST['reffechas3'])) && ($_POST['reffechas3']!=0)) {
+		$reffechas = $_POST['reffechas3'];
+		$where .= 'fix.reffechas = '.$reffechas." and ";
+	} else {
+		$reffechas = '';
+	}
+	
+	if ((isset($_POST['reffechadesde1'])) && ($_POST['reffechadesde1']!='')) {
+		$desde = $_POST['reffechadesde1'];
+		$hasta = $_POST['reffechahasta1'];
+		if ((isset($_POST['reffechadesde1'])) && ($_POST['reffechadesde1']!='')) {
+			$where .= "fix.fecha between '".$desde."' and '".$hasta."' and ";
+		} else {
+			$where .= "fix.fecha >= '".$desde."' and ";
+		}
+	} else {
+		$desde = '';
+	}
+	
+	$refCanchas		=	$serviciosReferencias->traerCanchas();
+
+	$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(2),'');
+
+	$resProximasFechas	= $serviciosReferencias->traerProximaFechaFiltros(substr($where,0,strlen($where)-4));
+	//echo $resProximasFechas;
+	$categorias = '';
+	$cadCabecera = '';
+	$primero = 0;
+	while ($row = mysql_fetch_array($resProximasFechas)) {
+		if ($categorias != $row['categoria']) {
+			if ($primero != 0) {
+				$cadCabecera .= '</tbody></table></div></div></div>';
+			}
+			$cadCabecera .= '<div class="col-md-12"><div class="panel panel-primary">
+							<div class="panel-heading">'.$row['categoria'].' - '.$row['fecha'].'</div>
+							<div class="panel-body">
+							<table class="table table-striped" style="padding:2px;">
+							<thead>
+								<tr>
+									<th>Local</th>
+									<th>Visitante</th>
+									<th>Fecha</th>
+									<th>Hora</th>
+									<th>Division</th>
+									<th>Cancha</th>
+									<th></th>
+									<th>Accion</th>
+
+								</tr>
+							</thead>
+							<tbody>';
+							
+			$primero = 1;
+			$categorias = $row['categoria'];			
+		}
+		
+		$dateH = new DateTime($row['fechajuego']);
+		
+		$cadCabecera .= "<tr>
+							<td>".$row['equipoLocal']."</td>
+							<td>".$row['equipoVisitante']."</td>
+							<td><input class='form-control fecha' type='text' name='fecha".$row['idfixture']."' id='fecha".$row['idfixture']."' value='".$dateH->format('d-m-Y')."'/></td>
+							<td><input class='form-control hora' type='text' name='hora".$row['idfixture']."' id='hora".$row['idfixture']."' value='".$row['hora']."'/></td>
+							<td>".$row['division']."</td>
+							<td><select data-placeholder='selecione la Cancha...' id='refcanchas".$row['idfixture']."' name='refcanchas".$row['idfixture']."' class='chosen-select' tabindex='2' style='width:210px;'>
+								<option value='".$row['idcancha']."'>".$row['cancha']."</option>
+								".$cadCanchas."
+								</select></td>
+							<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a></td>
+							<td><button type='button' class='btn btn-primary guardarPartidoSimple' id='".$row['idfixture']."'>Guardar</button></td>
+						</tr>";
+
+	}
+	
+	$cadCabecera .= '</tbody></table></div></div></div>';
+	
+	echo $cadCabecera;
+}
+
+
 function buscarJugadoresFiltro($serviciosReferencias) {
 	$busqueda		=	$_POST['busqueda'];
 	
