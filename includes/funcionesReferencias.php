@@ -1089,7 +1089,7 @@ function traerProximaFechaFiltros($where) {
 					and sig.idtorneo = tor.idtorneo
 					and sig.idfecha = fix.reffechas
 		
-		where fix.refestadospartidos is null and tor.reftipotorneo in (1,2)
+		where tor.reftipotorneo in (1,2)
 		order by tor.refcategorias, tor.refdivisiones, f.idfecha
 		";	
 		
@@ -1160,7 +1160,7 @@ function traerProximaFechaTodosReal($desde, $hasta) {
 					and sig.idtorneo = tor.idtorneo
 					and sig.idfecha = fix.reffechas
 		
-		where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
+		where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
 		order by tor.refcategorias, tor.refdivisiones, f.idfecha
 		";	
 		
