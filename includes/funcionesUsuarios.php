@@ -329,7 +329,7 @@ function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto
 
 
 
-function query($sql,$accion) {
+	function query($sql,$accion) {
 		
 		
 		

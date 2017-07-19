@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_local_julio`.`dbcontactos`
+INSERT INTO `ssaif_mayo_15`.`dbcontactos`
 (`idcontacto`,
 `reftipocontactos`,
 `nombre`,
@@ -10,7 +10,9 @@ INSERT INTO `ssaif_local_julio`.`dbcontactos`
 `fax`,
 `email`,
 `observaciones`,
-`publico`)
+`publico`,
+bckidclub,
+bckidcontacto)
 
 
 SELECT '',
@@ -26,6 +28,8 @@ SELECT '',
     `relclubescontactos`.`fax`,
     `relclubescontactos`.`mail`,
     `relclubescontactos`.`observaciones`,
-    1
-FROM `aif_bck_up_mayo_15`.`relclubescontactos`;
+	1,
+	`relclubescontactos`.clubid,
+	`relclubescontactos`.contactoid
+FROM `ssaif_bck_abril`.`relclubescontactos`;
 

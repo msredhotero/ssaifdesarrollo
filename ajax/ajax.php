@@ -633,15 +633,17 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 	$resProximasFechas	= $serviciosReferencias->traerProximaFechaFiltros(substr($where,0,strlen($where)-4));
 	//echo $resProximasFechas;
 	$categorias = '';
+	$fecha = '';
 	$cadCabecera = '';
 	$primero = 0;
 	while ($row = mysql_fetch_array($resProximasFechas)) {
-		if ($categorias != $row['categoria']) {
+		if (($categorias != $row['categoria']) || ($fecha != $row['fecha'])) {
+			
 			if ($primero != 0) {
 				$cadCabecera .= '</tbody></table></div></div></div>';
 			}
 			$cadCabecera .= '<div class="col-md-12"><div class="panel panel-primary">
-							<div class="panel-heading">'.$row['categoria'].' - '.$row['fecha'].'</div>
+							<div class="panel-heading">'.$row['categoria'].' - '.$row['fecha'].' - Division: '.$row['division'].'</div>
 							<div class="panel-body">
 							<table class="table table-striped" style="padding:2px;">
 							<thead>
@@ -660,7 +662,8 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 							<tbody>';
 							
 			$primero = 1;
-			$categorias = $row['categoria'];			
+			$categorias = $row['categoria'];	
+			$fecha = $row['fecha'];		
 		}
 		
 		$dateH = new DateTime($row['fechajuego']);

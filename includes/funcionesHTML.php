@@ -96,6 +96,28 @@ function menu3($usuario,$titulo,$rol,$empresa) {
 
 
 function menu($usuario,$titulo,$rol,$empresa) {
+	
+	$sqlGrupo1 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 1 order by orden";
+	$resGrupo1 = $this->query($sql,0);
+	
+	$sqlGrupo2 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 2 order by orden";
+	$resGrupo2 = $this->query($sql,0);
+	
+	$sqlGrupo3 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 3 order by orden";
+	$resGrupo3 = $this->query($sql,0);
+	
+	$sqlGrupo4 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 4 order by orden";
+	$resGrupo4 = $this->query($sql,0);
+	
+	$sqlGrupo5 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 5 order by orden";
+	$resGrupo5 = $this->query($sql,0);
+	
+	$sqlGrupo6 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 6 order by orden";
+	$resGrupo6 = $this->query($sql,0);
+	
+	$sqlGrupo7 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 7 order by orden";
+	$resGrupo7 = $this->query($sql,0);
+	
 	$cad = '<script src="../../js/jquery.maskedinput.min.js" type="text/javascript"></script><nav class="navbar navbar-default">
 			  <div class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
@@ -162,7 +184,10 @@ function menu($usuario,$titulo,$rol,$empresa) {
 				  
 				</div><!-- /.navbar-collapse -->
 			  </div><!-- /.container-fluid -->
-			</nav>';	
+			</nav>';
+			
+			
+				
 	return $cad;
 }
 
@@ -538,7 +563,7 @@ function footer() {
 </div><!--fin del footer-->";
 }
 
-function query($sql,$accion) {
+	function query($sql,$accion) {
 		
 		require_once 'appconfig.php';
 

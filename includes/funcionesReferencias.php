@@ -1065,31 +1065,7 @@ function traerProximaFechaFiltros($where) {
 		left join dbarbitros arr ON arr.idarbitro = fix.refarbitros
 		inner join tbfechas f ON f.idfecha = fix.reffechas
 		
-		inner join (select
-		
-				cat.idtcategoria,
-				di.iddivision,
-				tor.idtorneo,
-				min(f.idfecha) as idfecha
-				from dbfixture fix 
-				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
-				inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
-				inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
-				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
-				left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
-				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
-				left join tbcanchas cc ON cc.idcancha = fix.refcanchas
-				inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
-				inner join tbdias dia ON dia.iddia = dct.refdias
-				inner join tbfechas f ON f.idfecha = fix.reffechas
-				where ".$where."
-				group by cat.idtcategoria, di.iddivision, tor.idtorneo) sig 
-				ON sig.idtcategoria = tor.refcategorias
-					and sig.iddivision = tor.refdivisiones
-					and sig.idtorneo = tor.idtorneo
-					and sig.idfecha = fix.reffechas
-		
-		where tor.reftipotorneo in (1,2)
+		where ".$where."
 		order by tor.refcategorias, tor.refdivisiones, f.idfecha
 		";	
 		
@@ -1135,32 +1111,8 @@ function traerProximaFechaTodosReal($desde, $hasta) {
 		inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
 		inner join tbdias dia ON dia.iddia = dct.refdias
 		inner join tbfechas f ON f.idfecha = fix.reffechas
-		
-		inner join (select
-		
-				cat.idtcategoria,
-				di.iddivision,
-				tor.idtorneo,
-				min(f.idfecha) as idfecha
-				from dbfixture fix 
-				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
-				inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
-				inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
-				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
-				left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
-				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
-				left join tbcanchas cc ON cc.idcancha = fix.refcanchas
-				inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
-				inner join tbdias dia ON dia.iddia = dct.refdias
-				inner join tbfechas f ON f.idfecha = fix.reffechas
-				where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha between '".$desde."' and '".$hasta."'
-				group by cat.idtcategoria, di.iddivision, tor.idtorneo) sig 
-				ON sig.idtcategoria = tor.refcategorias
-					and sig.iddivision = tor.refdivisiones
-					and sig.idtorneo = tor.idtorneo
-					and sig.idfecha = fix.reffechas
-		
-		where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
+
+		where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha between '".$desde."' and '".$hasta."'
 		order by tor.refcategorias, tor.refdivisiones, f.idfecha
 		";	
 		
@@ -1255,32 +1207,7 @@ function traerProximaFechaDesdeHastaReal($desde, $hasta) {
 		inner join tbdias dia ON dia.iddia = dct.refdias
 		inner join tbfechas f ON f.idfecha = fix.reffechas
 		
-		inner join (select
-		
-				cat.idtcategoria,
-				di.iddivision,
-				tor.idtorneo,
-				min(f.idfecha) as idfecha
-				from dbfixture fix 
-				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
-				inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
-				inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
-				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
-				left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
-				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
-				left join tbcanchas cc ON cc.idcancha = fix.refcanchas
-				inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
-				inner join tbdias dia ON dia.iddia = dct.refdias
-				inner join tbfechas f ON f.idfecha = fix.reffechas
-				where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
-						and fix.fecha between '".$desde."' and '".$hasta."'
-				group by cat.idtcategoria, di.iddivision, tor.idtorneo) sig 
-				ON sig.idtcategoria = tor.refcategorias
-					and sig.iddivision = tor.refdivisiones
-					and sig.idtorneo = tor.idtorneo
-					and sig.idfecha = fix.reffechas
-		
-		where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
+		where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha between '".$desde."' and '".$hasta."'
 		order by tor.refcategorias, tor.refdivisiones, f.idfecha";	
 		
 	

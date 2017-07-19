@@ -103,6 +103,7 @@ $pdf->SetAutoPageBreak(true,1);
 	
 	$categoria  = '';
 	$division	= '';
+	$fecha		= '';
 	
 	$cantPartidos = 0;
 	$i=0;
@@ -152,6 +153,14 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->Cell(60,4,'Division: '.utf8_decode($rowE['division']),0,0,'L',false);
 		$pdf->Cell(60,4,'Torneo: '.utf8_decode($rowE['torneo']),0,0,'L',false);
 		
+
+		
+		
+	}
+	
+	if ($fecha != $rowE['fecha']) {	
+		$fecha = $rowE['fecha'];
+		$pdf->Ln();
 		$pdf->Ln();
 		$pdf->SetX(5);
 		$pdf->SetFont('Arial','',8);
