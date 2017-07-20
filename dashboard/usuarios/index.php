@@ -10,7 +10,7 @@ if (!isset($_SESSION['usua_predio']))
 
 
 include ('../../includes/funciones.php');
-include ('../../includes/funcionesSeguridad.php');
+
 include ('../../includes/funcionesUsuarios.php');
 include ('../../includes/funcionesHTML.php');
 include ('../../includes/funcionesReferencias.php');
@@ -20,12 +20,18 @@ $serviciosFunciones = new Servicios();
 $serviciosUsuario 	= new ServiciosUsuarios();
 $serviciosHTML 		= new ServiciosHTML();
 $serviciosReferencias = new ServiciosReferencias();
+
+
+//*** SEGURIDAD ****/
+include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../usuarios/');
+//*** FIN  ****/
 
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../usuarios/');
+
 
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Usuarios",$_SESSION['refroll_predio'],'');
 

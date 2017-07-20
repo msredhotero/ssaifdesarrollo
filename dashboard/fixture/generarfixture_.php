@@ -26,6 +26,12 @@ $serviciosGrupos	= new ServiciosG();
 $serviciosZonasEquipos	= new ServiciosZonasEquipos();
 $Generar = new GenerarFixture();
 
+//*** SEGURIDAD ****/
+include ('../../includes/funcionesSeguridad.php');
+$serviciosSeguridad = new ServiciosSeguridad();
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../fixture/');
+//*** FIN  ****/
+
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);

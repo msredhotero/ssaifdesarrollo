@@ -18,6 +18,12 @@ $serviciosUsuario 		= new ServiciosUsuarios();
 $serviciosHTML 			= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
 
+//*** SEGURIDAD ****/
+include ('../../includes/funcionesSeguridad.php');
+$serviciosSeguridad = new ServiciosSeguridad();
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../estadisticas/');
+//*** FIN  ****/
+
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
@@ -132,6 +138,12 @@ if ($_SESSION['refroll_predio'] != 1) {
     	<div class="cuerpoBox" style="padding-right:10px;">
     		<form class="form-inline formulario" role="form">
         	<div class="row">
+            	<?php if ($_SESSION['idroll_predio'] != 1) { ?>
+                <div class="alert alert-warning" style="margin:10px 20px;">
+                	<p><span class="glyphicon glyphicon-info-sign"></span> Si es redireccionado cuando busca el numero del partido es porque ya fue finalizada la carga por la AIF</p>
+                </div>
+                <br>
+                <?php } ?>
 				<div class="col-md-6">
                     <label class="control-label">Ingrese el Numero de Partido</label>
                     <div class="input-group">
@@ -139,7 +151,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <button type="button" class="btn btn-success" id="busqueda">Buscar</button>
                     </div>
                 </div>
-
+				<?php if ($_SESSION['idroll_predio'] == 1) { ?>
 				<div class="col-md-6">
                     <label class="control-label">Ingrese el Numero de Partido</label>
                     <div class="input-group">
@@ -149,8 +161,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <button type="button" class="btn btn-success" id="ir">Ir</button>
                     </div>
                 </div>
+                <?php } ?>
             </div>
-            
+            <?php if ($_SESSION['idroll_predio'] == 1) { ?>
             <div class='row' style="margin-left:15px; margin-right:15px; margin-top:10px;">
             	<h2>Proximas Fechas</h2>
                 <div class="row">
@@ -252,7 +265,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             </div>
             
             </div>
-            
+            <?php } ?>
             <div class='row' style="margin-left:15px; margin-right:15px;">
                 <div class='alert'>
                 	

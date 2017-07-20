@@ -21,6 +21,11 @@ $serviciosReferencias = new ServiciosReferencias();
 
 $fecha = date('Y-m-d');
 
+//*** SEGURIDAD ****/
+include ('../../includes/funcionesSeguridad.php');
+$serviciosSeguridad = new ServiciosSeguridad();
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../usuarios/');
+//*** FIN  ****/
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Usuarios",$_SESSION['refroll_predio'],'');
 

@@ -18,6 +18,12 @@ $serviciosUsuario 		= new ServiciosUsuarios();
 $serviciosHTML 			= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
 
+//*** SEGURIDAD ****/
+include ('../../includes/funcionesSeguridad.php');
+$serviciosSeguridad = new ServiciosSeguridad();
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../estadisticas/');
+//*** FIN  ****/
+
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
@@ -188,7 +194,11 @@ if ($_SESSION['idroll_predio'] == 1) {
 		$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', mysql_result($resFix,0,'refestadospartidos'));
 		
 		$estadoPartido	=	$serviciosReferencias->traerEstadospartidosPorId(mysql_result($resFix,0,'refestadospartidos'));
-	
+		
+		if (mysql_result($estadoPartido,0,'visibleparaarbitros') == 'No') {
+			
+			header('Location: index.php');	
+		}
 		$defAutomatica			= mysql_result($estadoPartido,0,'defautomatica');
 	
 		$golesLocalAuto			= mysql_result($estadoPartido,0,'goleslocalauto');

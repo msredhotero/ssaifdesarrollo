@@ -25,6 +25,12 @@ $serviciosGrupos	= new ServiciosG();
 $serviciosZonasEquipos	= new ServiciosZonasEquipos();
 $serviciosDatos		= new ServiciosDatos();
 
+//*** SEGURIDAD ****/
+include ('../../includes/funcionesSeguridad.php');
+$serviciosSeguridad = new ServiciosSeguridad();
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../fixture/');
+//*** FIN  ****/
+
 $fecha = date('Y-m-d');
 
 $cadEquipoLocal = 'reftorneoge_a';

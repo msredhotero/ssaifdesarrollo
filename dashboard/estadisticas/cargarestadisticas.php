@@ -18,6 +18,12 @@ $serviciosUsuario 		= new ServiciosUsuarios();
 $serviciosHTML 			= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
 
+//*** SEGURIDAD ****/
+include ('../../includes/funcionesSeguridad.php');
+$serviciosSeguridad = new ServiciosSeguridad();
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../estadisticas/');
+//*** FIN  ****/
+
 $fecha = date('Y-m-d');
 $valorB = 'marcos';
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
@@ -660,23 +666,77 @@ if	($refEstadoPartido != 0) {
 			$partidoSuspendidoCompletamente = 0;
 		} else { // else del W.O. Local, Perdida de puntos a Ambos, Suspendido Finalizado
 			
-			// if para cuando un partido se suspende y no se carga nada
-			if (($defAutomatica == 'No') && ($finalizado == 'No') && ($golesLocalAuto == 0) && ($golesvisitanteauto == 0)) {	
-			
-				
-				$partidoSuspendidoCompletamente = 1;
-				
-				$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
-				
-				if ($_SESSION['idroll_predio'] == 1) {
-					$resEstados		= $serviciosReferencias->traerEstadospartidos();
-					$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
-				} else {
-					$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
-					$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+			// para los arbitros
+			if (($defAutomatica == 'No') && ($finalizado == 'No') && ($visibleParaArbitros == 'Si') && (($puntosLocal > 0) || ($puntosVisitante > 0))) {
+				if (($golesRealesLocal > $golesRealesVisitantes) && (($puntosLocal == 0) || ($puntosLocal == 1))) {
+					$error = "Error: El equipo local deberia ganar";	
+					$lblerror = "alert-danger";
 				}
-			
+				
+				if (($golesRealesLocal < $golesRealesVisitantes) && (($puntosVisitante == 0) || ($puntosVisitante == 1))) {
+					$error = "Error: El equipo visitante deberia ganar";
+					$lblerror = "alert-danger";	
+				}
+				
+				if (($golesRealesLocal == $golesRealesVisitantes) && ($puntosVisitante != $puntosLocal)) {
+					$error = "Error: El partido deberia ser un empate";	
+					$lblerror = "alert-danger";
+				}
+				
+				
+				
+				if ($error == '') {
+					$lblerror = "alert-success";
+					$error = "Ok: Se cargo correctamente";	
+					$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 1);
+					if ($_SESSION['idroll_predio'] == 1) {
+						$resEstados		= $serviciosReferencias->traerEstadospartidos();
+						$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+					} else {
+						$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+						$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+					}
+					
+					/****************				MARCO LA SANCION CUMPLIDA					*********************/
+					
+					/****************				FIN MARCO LA SANCION CUMPLIDA					*********************/
+				} else {
+					$resM = $serviciosReferencias->modificarFixturePorEstados($idFixture, 'NULL', $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 0);
+					
+					if ($_SESSION['idroll_predio'] == 1) {
+						$resEstados		= $serviciosReferencias->traerEstadospartidos();
+						$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+					} else {
+						$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+						$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+					}
+					
+				}
+				
+				$partidoSuspendidoCompletamente = 0;
+				// arbitros
+
+
+			} else {
+				// if para cuando un partido se suspende y no se carga nada
+				if (($defAutomatica == 'No') && ($finalizado == 'No') && ($golesLocalAuto == 0) && ($golesvisitanteauto == 0)) {	
+				
+					
+					$partidoSuspendidoCompletamente = 1;
+					
+					$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
+					
+					if ($_SESSION['idroll_predio'] == 1) {
+						$resEstados		= $serviciosReferencias->traerEstadospartidos();
+						$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+					} else {
+						$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
+						$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
+					}
+				
+				}
 			}
+			
 		}
 	}
 } else { //else de si no selecciono un estado para el partido
@@ -1554,10 +1614,12 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 								
 								// cargo que la fecha no la cumplio
-								if ($partidoSuspendidoCompletamente == 0) {
-									$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$row['refjugadores'],1,'', $idTipoTorneo);
-								} else {
-									$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$row['refjugadores'],0,'', $idTipoTorneo);
+								if ($finalizado == 'Si') {
+									if ($partidoSuspendidoCompletamente == 0) {
+										$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$row['refjugadores'],1,'', $idTipoTorneo);
+									} else {
+										$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$row['refjugadores'],0,'', $idTipoTorneo);
+									}
 								}
 								
 						?>
@@ -1940,10 +2002,12 @@ if ($_SESSION['idroll_predio'] != 1) {
 									die('acaaaaaaaaaaaaaaaaaaa');	
 								}*/
 								// cargo que la fecha no la cumplio
-								if ($partidoSuspendidoCompletamente == 0) {
-									$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$rowB['refjugadores'],1,'', $idTipoTorneo);
-								} else {
-									$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$rowB['refjugadores'],0,'', $idTipoTorneo);
+								if ($finalizado == 'Si') {
+									if ($partidoSuspendidoCompletamente == 0) {
+										$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$rowB['refjugadores'],1,'', $idTipoTorneo);
+									} else {
+										$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$rowB['refjugadores'],0,'', $idTipoTorneo);
+									}
 								}
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">

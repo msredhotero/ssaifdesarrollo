@@ -19,6 +19,12 @@ $serviciosUsuario 		= new ServiciosUsuarios();
 $serviciosHTML 			= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
 
+//*** SEGURIDAD ****/
+include ('../../includes/funcionesSeguridad.php');
+$serviciosSeguridad = new ServiciosSeguridad();
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../equipos/');
+//*** FIN  ****/
+
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);

@@ -98,25 +98,54 @@ function menu3($usuario,$titulo,$rol,$empresa) {
 function menu($usuario,$titulo,$rol,$empresa) {
 	
 	$sqlGrupo1 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 1 order by orden";
-	$resGrupo1 = $this->query($sql,0);
+	$resGrupo1 = $this->query($sqlGrupo1,0);
+	$cad1 = '';
+	while ($row = mysql_fetch_array($resGrupo1)) {
+		$cad1 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
 	
 	$sqlGrupo2 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 2 order by orden";
-	$resGrupo2 = $this->query($sql,0);
+	$resGrupo2 = $this->query($sqlGrupo2,0);
+	$cad2 = '';
+	while ($row = mysql_fetch_array($resGrupo2)) {
+		$cad2 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
 	
 	$sqlGrupo3 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 3 order by orden";
-	$resGrupo3 = $this->query($sql,0);
+	$resGrupo3 = $this->query($sqlGrupo3,0);
+	$cad3 = '';
+	while ($row = mysql_fetch_array($resGrupo3)) {
+		$cad3 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
 	
 	$sqlGrupo4 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 4 order by orden";
-	$resGrupo4 = $this->query($sql,0);
+	$resGrupo4 = $this->query($sqlGrupo4,0);
+	$cad4 = '';
+	while ($row = mysql_fetch_array($resGrupo4)) {
+		$cad4 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
 	
 	$sqlGrupo5 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 5 order by orden";
-	$resGrupo5 = $this->query($sql,0);
+	$resGrupo5 = $this->query($sqlGrupo5,0);
+	$cad5 = '';
+	while ($row = mysql_fetch_array($resGrupo5)) {
+		$cad5 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
 	
 	$sqlGrupo6 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 6 order by orden";
-	$resGrupo6 = $this->query($sql,0);
+	$resGrupo6 = $this->query($sqlGrupo6,0);
+	$cad6 = '';
+	while ($row = mysql_fetch_array($resGrupo6)) {
+		$cad6 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
 	
 	$sqlGrupo7 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 7 order by orden";
-	$resGrupo7 = $this->query($sql,0);
+	$resGrupo7 = $this->query($sqlGrupo7,0);
+	$cad7 = '';
+	while ($row = mysql_fetch_array($resGrupo7)) {
+		$cad7 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
+	
 	
 	$cad = '<script src="../../js/jquery.maskedinput.min.js" type="text/javascript"></script><nav class="navbar navbar-default">
 			  <div class="container-fluid">
@@ -135,47 +164,26 @@ function menu($usuario,$titulo,$rol,$empresa) {
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				  <ul class="nav navbar-nav">
 					<li class="active"><a href="../index.php">Dashboard <span class="sr-only">(current)</span></a></li>
-					<li><a href="../countries/">COUNTRIES</a></li>
-					<li><a href="../equipos/">EQUIPOS</a></li>
-					<li><a href="../jugadores/">JUGADORES</a></li>
+					'.$cad1.'
+					'.$cad2.'
+					'.$cad3.'
 					<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TORNEO <span class="caret"></span></a>
 					  <ul class="dropdown-menu">
-						<li><a href="../fixture/">Estadisticas</a></li>
-						<li><a href="../estadisticas/">Fixture</a></li>
-						<li><a href="../torneos/">Torneos</a></li>
-						<li><a href="../arbitros/">Arbitros</a></li>
-						<li><a href="../canchas/">Canchas</a></li>
-						<li><a href="../fechasexcluidas/">Fechas Excluidas</a></li>
+						'.$cad4.'
 					  </ul>
 					</li>
 					<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TRIBUNAL <span class="caret"></span></a>
 					  <ul class="dropdown-menu">
-						<li><a href="../prefallos/">Pre-Fallos</a></li>
-						<li><a href="../fallos/">Fallos</a></li>
+						'.$cad5.'
 					  </ul>
 					</li>
-					<li><a href="../reportes/">REPORTES</a></li>
+					'.$cad6.'
 					<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">General <span class="caret"></span></a>
 					  <ul class="dropdown-menu">
-						<li><a href="../contactos/">Contactos</a></li>
-						<li><a href="../tipocontacto/">Tipo Contacto</a></li>
-						<li><a href="../temporadas/">Temporada</a></li>
-						<li><a href="../divisiones/">Divisiones</a></li>
-						<li><a href="../tipojugadores/">Tipo de Jugadores</a></li>
-						<li><a href="../documentaciones/">Documentaciones</a></li>
-						<li><a href="../motivoshabilitacionestransitorias/">Mot. Hab. Transitoria</a></li>
-						<li><a href="../valoreshabilitacionestransitorias/">Valores Documentacion</a></li>
-						<li><a href="../puntosbonus/">Punto Bonus</a></li>
-						<li><a href="../tipossanciones/">Tipos Sanciones</a></li>
-						<li><a href="../estadospartidos/">Estados Partidos</a></li>
-						<li><a href="../posiciontributaria/">Posicion Tributaria</a></li>
-						<li role="separator" class="divider"></li>
-						<li><a href="../definicionescategoriastemporadas/">Def. Cat. Temp.</a></li>
-						<li><a href="../definicionescategoriastemporadastipojugadores/">Def. Cat. Tempo. Tipo Jugador</a></li>
-						<li><a href="../definicionessancionesacumuladastemporadas/">Def. Sanciones Acumuladas</a></li>
+						'.$cad7.'
 					  </ul>
 					</li>
 					<li><a href="#"><span class="glyphicon glyphicon-user"></span> '.$usuario.'</a></li>
@@ -192,6 +200,56 @@ function menu($usuario,$titulo,$rol,$empresa) {
 }
 
 function menuD($usuario,$titulo,$rol,$empresa) {
+	
+	$sqlGrupo1 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 1 order by orden";
+	$resGrupo1 = $this->query($sqlGrupo1,0);
+	$cad1 = '';
+	while ($row = mysql_fetch_array($resGrupo1)) {
+		$cad1 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
+	
+	$sqlGrupo2 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 2 order by orden";
+	$resGrupo2 = $this->query($sqlGrupo2,0);
+	$cad2 = '';
+	while ($row = mysql_fetch_array($resGrupo2)) {
+		$cad2 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
+	
+	$sqlGrupo3 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 3 order by orden";
+	$resGrupo3 = $this->query($sqlGrupo3,0);
+	$cad3 = '';
+	while ($row = mysql_fetch_array($resGrupo3)) {
+		$cad3 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
+	
+	$sqlGrupo4 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 4 order by orden";
+	$resGrupo4 = $this->query($sqlGrupo4,0);
+	$cad4 = '';
+	while ($row = mysql_fetch_array($resGrupo4)) {
+		$cad4 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
+	
+	$sqlGrupo5 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 5 order by orden";
+	$resGrupo5 = $this->query($sqlGrupo5,0);
+	$cad5 = '';
+	while ($row = mysql_fetch_array($resGrupo5)) {
+		$cad5 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
+	
+	$sqlGrupo6 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 6 order by orden";
+	$resGrupo6 = $this->query($sqlGrupo6,0);
+	$cad6 = '';
+	while ($row = mysql_fetch_array($resGrupo6)) {
+		$cad6 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
+	
+	$sqlGrupo7 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 7 order by orden";
+	$resGrupo7 = $this->query($sqlGrupo7,0);
+	$cad7 = '';
+	while ($row = mysql_fetch_array($resGrupo7)) {
+		$cad7 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
+	}
+	
 	$cad = '<nav class="navbar navbar-default">
 			  <div class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
@@ -209,46 +267,26 @@ function menuD($usuario,$titulo,$rol,$empresa) {
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				  <ul class="nav navbar-nav">
 					<li class="active"><a href="../index.php">Dashboard <span class="sr-only">(current)</span></a></li>
-					<li><a href="../countries/">COUNTRIES</a></li>
-					<li><a href="../equipos/">EQUIPOS</a></li>
-					<li><a href="../jugadores/">JUGADORES</a></li>
+					'.$cad1.'
+					'.$cad2.'
+					'.$cad3.'
 					<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TORNEO <span class="caret"></span></a>
 					  <ul class="dropdown-menu">
-						<li><a href="../fixture/">Estadisticas</a></li>
-						<li><a href="../estadisticas/">Fixture</a></li>
-						<li><a href="../torneos/">Torneos</a></li>
-						<li><a href="../arbitros/">Arbitros</a></li>
-						<li><a href="../canchas/">Canchas</a></li>
-						<li><a href="../fechasexcluidas/">Fechas Excluidas</a></li>
+						'.$cad4.'
 					  </ul>
 					</li>
 					<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TRIBUNAL <span class="caret"></span></a>
 					  <ul class="dropdown-menu">
-						<li><a href="../prefallos/">Pre-Fallos</a></li>
-						<li><a href="../fallos/">Fallos</a></li>
+						'.$cad5.'
 					  </ul>
 					</li>
-					<li><a href="../reportes/">REPORTES</a></li>
+					'.$cad6.'
 					<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">General <span class="caret"></span></a>
 					  <ul class="dropdown-menu">
-						<li><a href="../tipocontacto/">Tipo Contacto</a></li>
-						<li><a href="../temporadas/">Temporada</a></li>
-						<li><a href="../divisiones/">Divisiones</a></li>
-						<li><a href="../tipojugadores/">Tipo de Jugadores</a></li>
-						<li><a href="../documentaciones/">Documentaciones</a></li>
-						<li><a href="../motivoshabilitacionestransitorias/">Mot. Hab. Transitoria</a></li>
-						<li><a href="../valoreshabilitacionestransitorias/">Valores Documentacion</a></li>
-						<li><a href="../puntosbonus/">Punto Bonus</a></li>
-						<li><a href="../tipossanciones/">Tipos Sanciones</a></li>
-						<li><a href="../estadospartidos/">Estados Partidos</a></li>
-						<li><a href="../posiciontributaria/">Posicion Tributaria</a></li>
-						<li role="separator" class="divider"></li>
-						<li><a href="../definicionescategoriastemporadas/">Def. Cat. Temp.</a></li>
-						<li><a href="../definicionescategoriastemporadastipojugadores/">Def. Cat. Tempo. Tipo Jugador</a></li>
-						<li><a href="../definicionessancionesacumuladastemporadas/">Def. Sanciones Acumuladas</a></li>
+						'.$cad7.'
 					  </ul>
 					</li>
 					<li><a href="#"><span class="glyphicon glyphicon-user"></span> '.$usuario.'</a></li>

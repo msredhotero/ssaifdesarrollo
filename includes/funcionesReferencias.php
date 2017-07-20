@@ -181,7 +181,7 @@ inner join tbfechas fec ON fec.idfecha = f.reffechas
 inner join dbequipos el ON el.idequipo = f.refconectorlocal
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
-inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
 
 left join(SELECT 
 			SUM(sj.cantidad) AS amarillas, fix.idfixture, sj.refequipos
@@ -261,7 +261,7 @@ inner join tbfechas fec ON fec.idfecha = f.reffechas
 inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
-inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
 
 left join(SELECT 
 			SUM(sj.cantidad) AS amarillas, fix.idfixture, sj.refequipos
@@ -396,7 +396,7 @@ inner join tbfechas fec ON fec.idfecha = f.reffechas
 inner join dbequipos el ON el.idequipo = f.refconectorlocal
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
-inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
 
 left join(SELECT 
 			SUM(sj.cantidad) AS amarillas, fix.idfixture, sj.refequipos
@@ -476,7 +476,7 @@ inner join tbfechas fec ON fec.idfecha = f.reffechas
 inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
-inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
 
 left join(SELECT 
 			SUM(sj.cantidad) AS amarillas, fix.idfixture, sj.refequipos
@@ -6978,7 +6978,9 @@ p.refequipos,
 p.reffixture,
 p.refcategorias,
 p.refdivisiones,
-p.refsancionesfallos
+p.refsancionesfallos,
+cat.categoria,
+cou.nombre as countrie
 from dbsancionesjugadores p
 inner join tbtiposanciones tip ON tip.idtiposancion = p.reftiposanciones
 inner join dbjugadores jug ON jug.idjugador = p.refjugadores 
@@ -7008,7 +7010,9 @@ p.refequipos,
 p.reffixture,
 p.refcategorias,
 p.refdivisiones,
-p.refsancionesfallos
+p.refsancionesfallos,
+cat.categoria,
+cou.nombre as countrie
 from dbsancionesjugadores p
 inner join tbtiposanciones tip ON tip.idtiposancion = p.reftiposanciones
 inner join dbjugadores jug ON jug.idjugador = p.refjugadores 

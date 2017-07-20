@@ -20,6 +20,12 @@ $serviciosHTML = new ServiciosHTML();
 $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
 
+//*** SEGURIDAD ****/
+include ('../../includes/funcionesSeguridad.php');
+$serviciosSeguridad = new ServiciosSeguridad();
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../reportes/');
+//*** FIN  ****/
+
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
@@ -261,6 +267,7 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
                             <option value="5">Estadisticas Arbitros</option>
                             <option value="6">Suspendidos Actuales</option>
                             <option value="7">Proxima Fecha</option>
+                            <option value="8">Acta Tribunal Disciplina</option>
                             
                     	</select>
                     </div>
@@ -478,7 +485,10 @@ $(document).ready(function(){
                 break;  
 			case 7:
                 window.open("../../reportes/rptProximaFecha.php?reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');  
-                break;	  
+                break;	
+			case 8:
+				window.open("../../reportes/rptActaTribunalDisciplina.php" ,'_blank');  
+                break;	
 			default:
 				alert('Debe elegir una opcion');
 		} 

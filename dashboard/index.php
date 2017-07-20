@@ -18,6 +18,8 @@ $serviciosHTML = new ServiciosHTML();
 $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
 
+
+
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
