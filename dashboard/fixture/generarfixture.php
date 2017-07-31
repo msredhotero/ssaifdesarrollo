@@ -29,7 +29,7 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../fixture/');
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadisticas",$_SESSION['refroll_predio'],'');
 
 
 
@@ -1031,11 +1031,11 @@ padding-bottom: 10px;
 
 <div id="content">
 
-<h3>Fixture</h3>
+<h3>Estadisticas</h3>
 
     <div class="panel panel-success" style="margin-right:50px;">
         <div class="panel-heading">
-        	Carga del Fixture
+        	Carga de la Estadisticas
         	
         </div>
     	<div class="panel-body">

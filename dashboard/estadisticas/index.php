@@ -27,7 +27,7 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../estadisticas
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadisticas",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Carga de Partidos",$_SESSION['refroll_predio'],'');
 
 $resFixture		=	$serviciosReferencias->traerFixtureTodo();
 $cadFix			=	$serviciosFunciones->devolverSelectBox($resFixture,array(0,1,4,5,10),' - ');
@@ -128,7 +128,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <div id="content">
 
-<h3>Fixture</h3>
+<h3>Carga de Partidos</h3>
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">

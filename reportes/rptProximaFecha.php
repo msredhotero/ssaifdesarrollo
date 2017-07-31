@@ -146,7 +146,8 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	
 	if ($division != $rowE['division']) {	
 		$division = $rowE['division'];
-		
+		$pdf->Ln();
+		$pdf->Ln();
 		$pdf->Ln();
 		$pdf->SetX(5);
 		$pdf->SetFont('Arial','',8);

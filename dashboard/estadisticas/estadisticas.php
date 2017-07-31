@@ -27,7 +27,7 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../estadisticas
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadisticas",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Carga de Partidos",$_SESSION['refroll_predio'],'');
 
 $idFixture = $_GET['id'];
 
@@ -553,7 +553,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 
     <div class="boxInfoLargoEstadisticas">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Estadisticas - <?php echo mysql_result($resFecha,0,1); ?></p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Partido - <?php echo mysql_result($resFecha,0,1); ?></p>
         	
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
@@ -727,7 +727,7 @@ if ($_SESSION['idroll_predio'] != 1) {
             <div class="row">
 
                 <div style="margin-left:5px;padding-left:10px; border-left:12px solid #0C0; border-bottom:1px solid #eee;border-top:1px solid #CCC; margin-right:5px;">
-                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadísticos</h4>
+                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Partido</h4>
                 
                 <!--		detalles del partido			---->
                 
@@ -1224,7 +1224,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 <hr>
                 
                 <div style="margin-left:5px;padding-left:10px;border-left:12px solid #C00; border-bottom:1px solid #eee; border-top:1px solid #CCC;margin-right:5px;">
-                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Estadisticos</h4>
+                <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Partido</h4>
                 <table class="table table-striped table-bordered table-responsive" id="example2">
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
                     <thead>

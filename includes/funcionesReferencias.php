@@ -1766,8 +1766,8 @@ c.observaciones,
 c.reftipocontactos
 from dbcontactos c
 inner join tbtipocontactos tip ON tip.idtipocontacto = c.reftipocontactos
-inner join dbcountriecontactos cc ON cc.refcontactos = c.idcontacto
-inner join dbcountries co ON cc.refcountries = co.idcountrie
+left join dbcountriecontactos cc ON cc.refcontactos = c.idcontacto
+left join dbcountries co ON cc.refcountries = co.idcountrie
 order by 1";
 $res = $this->query($sql,0);
 return $res;
@@ -3842,7 +3842,7 @@ inner join tbtipotorneo tip ON tip.idtipotorneo = t.reftipotorneo
 inner join tbtemporadas tem ON tem.idtemporadas = t.reftemporadas 
 inner join tbcategorias cat ON cat.idtcategoria = t.refcategorias 
 inner join tbdivisiones di ON di.iddivision = t.refdivisiones 
-order by tem.temporada, t.idtorneo desc"; 
+order by tem.temporada desc,cat.categoria, di.division,t.idtorneo desc"; 
 $res = $this->query($sql,0); 
 return $res; 
 }  

@@ -27,7 +27,7 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../fixture/');
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadisticas",$_SESSION['refroll_predio'],'');
 
 
 
@@ -207,40 +207,11 @@ $refTorneos		=	$serviciosReferencias->traerTorneos();
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga del Fixture</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Estadisticas</p>
         	
         </div>
     	<div class="cuerpoBox">
-    		<form class="form-inline formulario" role="form">
-            <div class="row" style="margin-left:25px; margin-right:25px;">
-    		<?php echo $formulario; ?>
-            </div>
-            
-            <div class="row" style="margin-left:25px; margin-right:25px;">
-                <div class="alert"> </div>
-                <div id="load"> </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                <ul class="list-inline" style="margin-top:15px;">
-                    <li>
-                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
-                    </li>
-                   <!-- <li>
-                        <button type="button" class="btn btn-success" id="chequearF" style="margin-left:0px;">Chequear Fixture</button>
-                    </li>
-                    <li>
-                        <button type="button" class="btn btn-success" id="conductaF" style="margin-left:0px;">Cargar Conducta al Fixture</button>
-                    </li>
-                    <li>
-                        <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
-                    </li>-->
-
-                </ul>
-                </div>
-            </div>
-
-            <hr>
+    		
             
             <div class="row" id="contMapa2" style="margin-left:25px; margin-right:25px;">
 
@@ -249,7 +220,7 @@ $refTorneos		=	$serviciosReferencias->traerTorneos();
                         <label class="control-label" style="text-align:left; font-size:1.2em; text-decoration:underline; margin-bottom:4px;" for="fechas">Lista de Torneos</label>
                         <div>
                         <div class="input-group col-md-12">
-                            <table class="table table-bordered table-responsive table-striped">
+                            <table class="table table-bordered table-responsive table-striped" id="example">
                             <thead>
                             	<tr>
                                 	<th>Nombre</th>
@@ -298,10 +269,53 @@ $refTorneos		=	$serviciosReferencias->traerTorneos();
                 
             </div>
 
-            </form>
     	</div>
     </div>
 
+
+
+
+    <div class="boxInfoLargo">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Carga del Partido</p>
+        	
+        </div>
+    	<div class="cuerpoBox">
+
+            <form class="form-inline formulario" role="form">
+            <div class="row" style="margin-left:25px; margin-right:25px;">
+    		<?php echo $formulario; ?>
+            </div>
+            
+            <div class="row" style="margin-left:25px; margin-right:25px;">
+                <div class="alert"> </div>
+                <div id="load"> </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                <ul class="list-inline" style="margin-top:15px;">
+                    <li>
+                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
+                    </li>
+                   <!-- <li>
+                        <button type="button" class="btn btn-success" id="chequearF" style="margin-left:0px;">Chequear Fixture</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-success" id="conductaF" style="margin-left:0px;">Cargar Conducta al Fixture</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
+                    </li>-->
+
+                </ul>
+                </div>
+            </div>
+
+            
+
+            </form>
+    </div>
+    </div>
     
    
 </div>
@@ -319,11 +333,40 @@ $refTorneos		=	$serviciosReferencias->traerTorneos();
 
 <script src="../../js/bootstrap-datetimepicker.min.js"></script>
 <script src="../../js/bootstrap-datetimepicker.es.js"></script>
-
+<script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
+<script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+	$('#example').dataTable({
+		"order": [[ 1, "desc" ]],
+		"language": {
+			"emptyTable":     "No hay datos cargados",
+			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
+			"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
+			"infoFiltered":   "(filtrados del total de _MAX_ filas)",
+			"infoPostFix":    "",
+			"thousands":      ",",
+			"lengthMenu":     "Mostrar _MENU_ filas",
+			"loadingRecords": "Cargando...",
+			"processing":     "Procesando...",
+			"search":         "Buscar:",
+			"zeroRecords":    "No se encontraron resultados",
+			"paginate": {
+				"first":      "Primero",
+				"last":       "Ultimo",
+				"next":       "Siguiente",
+				"previous":   "Anterior"
+			},
+			"aria": {
+				"sortAscending":  ": activate to sort column ascending",
+				"sortDescending": ": activate to sort column descending"
+			}
+		  }
+	} );
+
 	$('#timepicker2').timepicker({
 		minuteStep: 15,
 		showSeconds: false,
@@ -345,22 +388,26 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});
 	
-	$('.correrFecha').click( function() {
+
+	$("#example").on("click",'.correrFecha', function(){
 		url = "correrfechas.php?id="+$(this).attr("id");
 		$(location).attr('href',url);
 	});
 	
-	$('.vargenerar').click( function() {
+
+	$("#example").on("click",'.vargenerar', function(){
 		url = "../torneos/equipos.php?id="+$(this).attr("id");
 		$(location).attr('href',url);
 	});
 	
-	$('.varver').click( function() {
+
+	$("#example").on("click",'.varver', function(){
 		url = "ver.php?id="+$(this).attr("id");
 		$(location).attr('href',url);
 	});
 	
-	$('.varposiciones').click( function() {
+
+	$("#example").on("click",'.varposiciones', function(){	
 		url = "../posiciones/posiciones.php?id="+$(this).attr("id");
 		$(location).attr('href',url);
 	});

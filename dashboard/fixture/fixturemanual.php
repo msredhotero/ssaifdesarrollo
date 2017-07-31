@@ -27,7 +27,7 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../fixture/');
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fixture",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadisticas",$_SESSION['refroll_predio'],'');
 
 
 
@@ -148,11 +148,11 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosRefere
 
 <div id="content">
 
-<h3>Fixture</h3>
+<h3>Estadisticas</h3>
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga del Fixture</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Carga de la Estadisticas</p>
         	
         </div>
     	<div class="cuerpoBox">

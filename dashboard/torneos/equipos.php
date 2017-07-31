@@ -28,7 +28,7 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../torneos/');
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Torneos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Generacion de Fixture",$_SESSION['refroll_predio'],'');
 
 $id = $_GET['id'];
 
@@ -188,7 +188,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <div id="content">
 
-<h3><?php echo $plural; ?></h3>
+<h3>Generacion de Fixture</h3>
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">

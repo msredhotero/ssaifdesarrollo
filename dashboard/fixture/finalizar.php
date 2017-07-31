@@ -29,7 +29,7 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../fixture/');
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_predio'],"Fixture",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_predio'],"Estadisticas",$_SESSION['refroll_predio'],'');
 
 
 /////////////////  resuelvo todo lo enviado   //////////////////////////////////////////
@@ -407,15 +407,15 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosRefere
 
 <div id="content">
 
-<h3>Fixture</h3>
+<h3>Estadisticas</h3>
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga del Fixture</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Carga de Estadisticas</p>
         	
         </div>
     	<div class="cuerpoBox">
-    		<h1>Fixture Generado Correctamente <?php //echo $res; ?></h1>
+    		<h1>Estadisticas Generada Correctamente <?php //echo $res; ?></h1>
             <a href="index.php"><button type="button" class="btn btn-default volver">Volver</button></a>
     	</div>
     </div>
@@ -430,9 +430,9 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosRefere
 <div id="dialog2" title="Eliminar Fixture">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar el fixture?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar la Estadisticas?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>Si elimina el fixture se perderan todos los datos de este</p>
+        <p><strong>Importante: </strong>Si elimina la Estadisticas se perderan todos los datos de este</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
