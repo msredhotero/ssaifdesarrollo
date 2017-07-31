@@ -49,8 +49,8 @@ $cadRefDivisiones	=	$serviciosFunciones->devolverSelectBox($resDivisiones,array(
 $resCountries	=	$serviciosReferencias->traerCountries();
 $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
-
-
+$resJugadores   =   $serviciosReferencias->traerJugadores();
+$cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,array(1,2,3,4),' - ');
 
 ?>
 
@@ -268,6 +268,7 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
                             <option value="6">Suspendidos Actuales</option>
                             <option value="7">Proxima Fecha</option>
                             <option value="8">Acta Tribunal Disciplina</option>
+                            <option value="9">Historico Incidencias Jugadores</option>
                             
                     	</select>
                     </div>
@@ -349,6 +350,19 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
                     	<input type="text" id="reffechahasta1" class="form-control" name="reffechahasta1" value="Date">
                     </div>
                 </div>
+
+
+                <div class="form-group col-md-6" style="height:220px;">
+                    <label class="control-label" style="text-align:left" for="refcliente">Jugador</label>
+                    <div class="input-group col-md-12">
+                        <select data-placeholder="selecione el jugador..." id="idjugador" name="idjugador" class="chosen-select form-control" tabindex="2">
+                            <option value=""></option>
+                            <?php echo $cadRefJugadores; ?>
+                
+                            </select>
+                    </div>
+                </div>
+                
                 
                 
                 <div class="form-group col-md-6">
@@ -362,7 +376,6 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
                         		<button type="button" class="btn btn-default" id="rptCJExcel" style="margin-left:0px;">Generar Excel</button>
                             </li>-->
                         </ul>
-
                 </div>
                 
 
@@ -489,6 +502,9 @@ $(document).ready(function(){
 			case 8:
 				window.open("../../reportes/rptActaTribunalDisciplina.php" ,'_blank');  
                 break;	
+            case 9:
+                window.open("../../reportes/rptHistoricoJugadorIncidencias.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&idjugador="+ $("#idjugador").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');   
+                break;    
 			default:
 				alert('Debe elegir una opcion');
 		} 

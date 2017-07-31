@@ -20,39 +20,48 @@ require('fpdf.php');
 //$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
 
 ////***** Parametros ****////////////////////////////////
-$idTemporada 		=	$_GET['reftemporada1'];
+$idJugador 		=	$_GET['idjugador'];
+/*
 $idtorneo			=	$_GET['reftorneo3'];
 $reffechas			=	$_GET['reffechas3'];
 $refCategorias		=	$_GET['refcategorias1'];
 $refDivisiones		=	$_GET['refdivision1'];
+*/
+$idtemporada		=	'';
+$idtorneo			=	'';
+$refCategorias		=	'';
+$refDivisiones		=	'';
+
+$where = '';
+
+if (isset($_GET['reftemporada1'])) {
+	$where .= " and tep.idtemporadas = ".$_GET['reftemporada1'];
+}
+
+if (isset($_GET['reftorneo3'])) {
+	$where .= " and tor.idtorneo = ".$_GET['reftorneo3'];
+}
+
+if (isset($_GET['refcategorias1'])) {
+	$where .= " and tor.refcategorias = ".$_GET['refcategorias1'];
+}
+
+if (isset($_GET['refdivision1'])) {
+	$where .= " and tor.refdivisiones = ".$_GET['refdivision1'];
+}
+
+$where = '';
+if (($idtemporada != '') || ($idtorneo != '') || ($refCategorias != '') || ($refDivisiones != '')) {
+	$where .= " and r.idtorneo = ".$idtorneo;
+}
+
 /////////////////////////////  fin parametross  ///////////////////////////
 
 
-$resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
+$resJugadores = $serviciosReferencias->traerJugadoresPorId($idJugador);
 
-$resTorneo = $serviciosReferencias->traerTorneosDetallePorId($idtorneo);
+$resDatos = $serviciosReferencias->traerHistoricoIncidenciasPorJugador($idJugador, $where);
 
-$resDefTemp= $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'));
-//echo $resEquipos;
-
-$descripcion 	= mysql_result($resTorneo,0,'descripcion');
-$temporada 		= mysql_result($resTorneo,0,'temporada');
-$categoria		= mysql_result($resTorneo,0,'categoria');
-$division		= mysql_result($resTorneo,0,'division');
-
-
-$resFecha		= $serviciosReferencias->traerFechasPorId($reffechas);
-
-$reingreso					= mysql_result($resDefTemp,0,'reingreso');
-if ($reingreso == 'Si') {
-	$descReintegro = 'CON REINGRESOS';
-} else {
-	$descReintegro = 'SIN REINGRESOS';
-}
-$minutospartido 			= mysql_result($resDefTemp,0,'minutospartido');
-$cantidadcambiosporpartido	= mysql_result($resDefTemp,0,'cantidadcambiosporpartido');
-$dia						= mysql_result($resDefTemp,0,'dia');
-$hora						= mysql_result($resDefTemp,0,'hora');
 
 $pdf = new FPDF();
 $cantidadJugadores = 0;
@@ -82,26 +91,33 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Ln();
 	$pdf->SetY(25);
 	$pdf->SetX(5);
-	$pdf->Cell(200,5,'TABLA DE RESULTADOS AL '.date('Y-m-d'),1,0,'C',false);
+	$pdf->Cell(200,5,'Legajo de Socio',1,0,'C',false);
 	$pdf->SetFont('Arial','',8);
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(200,4,'Temporada: '.$temporada,0,0,'C',FALSE); 
+	$pdf->Cell(200,4,mysql_result($resJugadores,0,2).' - '.mysql_result($resJugadores,0,3).' '.mysql_result($resJugadores,0,4),0,0,'C',false);
+	//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
+
+	$pdf->SetFont('Arial','',8);
+	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - División: ".$division." - Fecha: ".$reffechas,0,0,'C',FALSE);
-	//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
+	
+	$categoria  = '';
+	$division	= '';
+	$torneo		= '';
+	$equipo		= '';
 	
 	$cantPartidos = 0;
 	$i=0;
 	
 	$contadorY1 = 44;
 	$contadorY2 = 44;
-while ($rowE = mysql_fetch_array($resEquipos)) {
-	$i=0;	
+while ($rowE = mysql_fetch_array($resDatos)) {
+	$i+=1;	
 	$cantPartidos += 1;
-	
-	if ($contadorY1 > 200) {
+	/*
+	if ($i > 61) {
 		$pdf->AddPage();
 		$pdf->Image('../imagenes/logoparainformes.png',2,2,40);	
 		$pdf->SetFont('Arial','B',10);
@@ -109,141 +125,75 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->Ln();
 		$pdf->SetY(25);
 		$pdf->SetX(5);
-		$pdf->Cell(200,5,'TABLA DE RESULTADOS AL '.date('Y-m-d'),1,0,'C',false);
+		$pdf->Cell(200,5,'Partidos del '.$fechaDesde." al ".$fechaHasta." - Temporada: ".$ultimaTemporada,1,0,'C',true);
 		$pdf->SetFont('Arial','',8);
 		$pdf->Ln();
 		$pdf->SetX(5);
-		$pdf->Cell(200,4,'Temporada: '.$temporada,0,0,'C',FALSE); 
-		$pdf->Ln();
-		$pdf->SetX(5);
-		$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - División: ".$division." - Fecha: ".$reffechas,0,0,'C',FALSE);
-		//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
-		
-		$cantPartidos = 0;
+
 		$i=0;
 		
-		$contadorY1 = 44;
-		$contadorY2 = 44;
 	}
+	*/
 	
-	$resJugadoresA = $serviciosReferencias->traerIncidenciasPorFixtureEquipoLocal($rowE['idfixture'],$rowE['refconectorlocal']);
-	$resJugadoresB = $serviciosReferencias->traerIncidenciasPorFixtureEquipoVisitante($rowE['idfixture'],$rowE['refconectorvisitante']);
-	$pdf->SetFont('Arial','',9);
-	$pdf->SetFillColor(155,155,155);
-	$pdf->Ln();
-	$pdf->SetX(5);
-	$pdf->Cell(25,4,$cantPartidos,1,0,'C',true);
-	$pdf->Cell(79,4,'('.$rowE['refconectorlocal'].") ".$rowE['equipolocal'],1,0,'R',true);
-	$pdf->Cell(8,4,$rowE['goleslocal'],1,0,'C',true);
-	$pdf->Cell(8,4,$rowE['golesvisitantes'],1,0,'C',true);
-	$pdf->Cell(79,4,'('.$rowE['refconectorvisitante'].") ".$rowE['equipovisitante'],1,0,'L',true);
-	
-	$pdf->Ln();
-	$pdf->SetX(5);
-	$pdf->Cell(200,4,'Estado Partido: '.$rowE['estado']." - Arbitro: ".$rowE['arbitro'],0,0,'L',FALSE);
-	$pdf->Ln();
-	$pdf->SetX(5);
-	$pdf->Cell(200,4,"Juez1: ".$rowE['juez1']." - Juez2: ".$rowE['juez2'],0,0,'L',FALSE);
-	$pdf->SetFont('Arial','',7);
-	$pdf->Ln();
-	$pdf->SetX(5);
-	$pdf->Cell(15,4,'Nro',0,0,'C',false);
-	$pdf->Cell(40,4,'Apellido y Nombre',0,0,'C',false);
-	$pdf->Cell(6,4,'GF',0,0,'C',false);
-	$pdf->Cell(6,4,'GC',0,0,'C',false);
-	$pdf->Cell(7,4,'A/E/I',0,0,'C',false);
-	$pdf->Cell(6,4,'PC',0,0,'C',false);
-	$pdf->Cell(6,4,'PA',0,0,'C',false);
-	$pdf->Cell(6,4,'PE',0,0,'C',false);
-	
-	$pdf->Cell(8,4,'',0,0,'C',false);
-	$pdf->Cell(15,4,'Nro',0,0,'C',false);
-	$pdf->Cell(40,4,'Apellido y Nombre',0,0,'C',false);
-	$pdf->Cell(6,4,'GF',0,0,'C',false);
-	$pdf->Cell(6,4,'GC',0,0,'C',false);
-	$pdf->Cell(7,4,'A/E/I',0,0,'C',false);
-	$pdf->Cell(6,4,'PC',0,0,'C',false);
-	$pdf->Cell(6,4,'PA',0,0,'C',false);
-	$pdf->Cell(6,4,'PE',0,0,'C',false);
-	
-	
-	$inicializaY = $pdf->GetY();
-	$contadorY1 = $inicializaY;
-	$contadorY2 = $inicializaY;
-	$i = 0;
-	while ($rowJ = mysql_fetch_array($resJugadoresA))
-	{
-						
-		$pdf->SetFillColor(183,183,183);
-		$i = $i+1;
+	if (($categoria != $rowE['categoria']) || ($division != $rowE['division']) || ($torneo != $rowE['torneo']) || ($equipo != $rowE['equipo'])) {
+		$categoria = $rowE['categoria'];
+		$division	= $rowE['division'];
+		$torneo		= $rowE['torneo'];
+		$equipo		= $rowE['equipo'];
 		$pdf->Ln();
-		
+		$pdf->Ln();
+		$pdf->Ln();
+		$pdf->SetFont('Arial','U',8);
 		$pdf->SetX(5);
-		
-		$pdf->Cell(15,4,$rowJ['nrodocumento'],0,0,'C',false);
-		$pdf->SetFont('Arial','',7);
-		$pdf->Cell(40,4,substr($rowJ['apyn'],0,20),0,0,'L',false);
-		$pdf->SetFont('Arial','',8);
-		$pdf->Cell(6,4,$rowJ['goles'],0,0,'C',false);
-		$pdf->Cell(6,4,$rowJ['encontra'],0,0,'C',false);
-		$pdf->Cell(7,4,($rowJ['aei'] == '0' ? '' : $rowJ['aei']),0,0,'C',false);
-		$pdf->Cell(6,4,$rowJ['pc'],0,0,'C',false);
-		$pdf->Cell(6,4,$rowJ['pa'],0,0,'C',false);
-		$pdf->Cell(6,4,$rowJ['pe'],0,0,'C',false);
-		
-
-		$contadorY1 += 4;
-
-	}
-	
-
-	
-	
-	$i = 0;
-	$pdf->SetX(107);
-	$pdf->SetY($inicializaY - 1);
-	while ($rowV = mysql_fetch_array($resJugadoresB))
-	{
-		
-		
-		
-		$pdf->SetFillColor(183,183,183);
-		$i = $i+1;
+		$pdf->Cell(20,5,utf8_decode($rowE['temporada']),0,0,'C',false);
+		$pdf->Cell(38,5,utf8_decode($rowE['categoria']),0,0,'C',false);
+		$pdf->Cell(38,5,utf8_decode($rowE['division']),0,0,'C',false);
+		$pdf->Cell(104,5,utf8_decode($rowE['torneo']),0,0,'L',false);
 		$pdf->Ln();
-		$pdf->SetX(107);
-		
-		$pdf->Cell(15,4,$rowV['nrodocumento'],0,0,'C',false);
-		$pdf->SetFont('Arial','',7);
-		$pdf->Cell(40,4,substr($rowV['apyn'],0,20),0,0,'L',false);
+		$pdf->SetX(15);
 		$pdf->SetFont('Arial','',8);
-		$pdf->Cell(6,4,$rowV['goles'],0,0,'C',false);
-		$pdf->Cell(6,4,$rowV['encontra'],0,0,'C',false);
-		$pdf->Cell(7,4,($rowV['aei'] == '0' ? '' : $rowV['aei']),0,0,'C',false);
-		$pdf->Cell(6,4,$rowV['pc'],0,0,'C',false);
-		$pdf->Cell(6,4,$rowV['pa'],0,0,'C',false);
-		$pdf->Cell(6,4,$rowV['pe'],0,0,'C',false);
-
-		$contadorY2 += 4;
-		if ($i == 27) {
-			break;	
-		}
+		$pdf->Cell(20,5,'Equipo:',0,0,'C',false);
+		$pdf->Cell(12,5,utf8_decode($rowE['refequipos']),0,0,'C',false);
+		$pdf->Cell(50,5,utf8_decode($rowE['equipo']),0,0,'L',false);
+		$pdf->Ln();
+		$pdf->SetFont('Arial','U',8);
+		$pdf->Cell(20,5,'Fecha',0,0,'C',false);
+		$pdf->Cell(20,5,'Fecha Nro.',0,0,'C',false);
+		$pdf->Cell(24,5,'Goles A Favor',0,0,'C',false);
+		$pdf->Cell(20,5,'Amonestado',0,0,'C',false);
+		$pdf->Cell(20,5,'Expulsado',0,0,'C',false);
+		$pdf->Cell(24,5,'Penales Convert.',0,0,'C',false);
+		$pdf->Cell(64,5,'Visitante',0,0,'C',false);
 	}
 	
+	
+	
+
+	$pdf->Ln();
+	$pdf->SetX(5);
+	$pdf->SetFont('Arial','',8);
+	$pdf->Cell(20,5,utf8_decode($rowE['fecha']),0,0,'C',false);
+	$pdf->Cell(20,5,utf8_decode($rowE['fechaaux']),0,0,'C',false);
+	$pdf->Cell(24,5,utf8_decode($rowE['goles']),0,0,'C',false);
+	$pdf->Cell(20,5,utf8_decode($rowE['amarillas']),0,0,'C',false);
+	$pdf->Cell(20,5,utf8_decode($rowE['rojas']),0,0,'C',false);
+	$pdf->Cell(24,5,utf8_decode($rowE['pc']),0,0,'C',false);
+	$pdf->Cell(98,5,utf8_decode($rowE['visitante']),0,0,'L',false);
 
 	
-	
-	if ($contadorY1 > $contadorY2) {
-		$pdf->SetY($contadorY1);		
-	} else {
-		$pdf->SetY($contadorY2);
-	}
+		
+
+	$contadorY1 += 4;
+
+	//$pdf->SetY($contadorY1);		
+
 
 }
 //120 x 109
 
 
 
-$nombreTurno = "INFORME-RESULTADOS-".$fecha.".pdf";
+$nombreTurno = "Histirico Incidencias Jugadores-".$fecha.".pdf";
 
 $pdf->Output($nombreTurno,'D');
 
