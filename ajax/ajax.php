@@ -206,6 +206,9 @@ break;
 case 'modificarJugadores': 
 modificarJugadores($serviciosReferencias); 
 break; 
+case 'modificarJugadorApellidoNombrePorId':
+	modificarJugadorApellidoNombrePorId($serviciosReferencias);
+	break;
 case 'eliminarJugadores': 
 eliminarJugadores($serviciosReferencias); 
 break; 
@@ -443,6 +446,9 @@ case 'buscarJugadores':
 	break;
 case 'buscarJugadoresFiltro':
 	buscarJugadoresFiltro($serviciosReferencias);
+	break;
+case 'buscarJugadoresNombresFiltro':
+	buscarJugadoresNombresFiltro($serviciosReferencias);
 	break;
 case 'filtrosGenerales':
 	filtrosGenerales($serviciosReferencias, $serviciosFunciones);
@@ -764,6 +770,72 @@ function buscarJugadoresFiltro($serviciosReferencias) {
 							
 							
 						</td>
+				 </tr>';
+	}
+	
+	$cad3 = $cad3.'</tbody>
+                                </table></div>
+                            </div>
+						</div>';
+						
+	echo $cad3;
+}
+
+
+
+function buscarJugadoresNombresFiltro($serviciosReferencias) {
+	$busqueda		=	$_POST['busqueda'];
+	
+	if (is_int($busqueda)) {
+		$tipobusqueda = 3;
+	} else {
+		$tipobusqueda = 2;
+	}
+	
+	
+	$res	=	$serviciosReferencias->buscarJugadores($tipobusqueda,$busqueda);
+	
+	$cad3 = '';
+	//////////////////////////////////////////////////////busquedajugadores/////////////////////
+	$cad3 = $cad3.'
+				<div class="col-md-12">
+				<div class="panel panel-info">
+                                <div class="panel-heading">
+                                	<h3 class="panel-title">Resultado de la Busqueda</h3>
+                                	
+                                </div>
+                                <div class="panel-body-predio" style="padding:5px 20px;">
+                                	';
+	$cad3 = $cad3.'
+	<div class="row">
+                	<table id="example" class="table table-responsive table-striped" style="font-size:0.8em; padding:2px;">
+						<thead>
+                        <tr>
+                        	<th>Tipo Documento</th>
+							<th>Nro Doc</th>
+							<th>Apellido</th>
+							<th>Nombres</th>
+							<th>Email</th>
+							<th>Fecha Nac.</th>
+							<th>Fecha Alta</th>
+							<th>Fecha Baja</th>
+							<th>Countrie</th>
+							<th>Acciones</th>
+                        </tr>
+						</thead>
+						<tbody id="resultadosProd">';
+	while ($rowJ = mysql_fetch_array($res)) {
+		$cad3 .= '<tr>
+					<td>'.($rowJ[1]).'</td>
+					<td>'.($rowJ[2]).'</td>
+					<td><input type="text" id="apellido'.$rowJ[0].'" name="apellido'.$rowJ[0].'" value="'.utf8_encode($rowJ[3]).'"/></td>
+					<td><input type="text" id="nombre'.$rowJ[0].'" name="nombre'.$rowJ[0].'" value="'.utf8_encode($rowJ[4]).'"/></td>
+					<td>'.($rowJ[5]).'</td>
+					<td>'.($rowJ[6]).'</td>
+					<td>'.($rowJ[7]).'</td>
+					<td>'.($rowJ[8]).'</td>
+					<td>'.($rowJ[9]).'</td>
+					<td><button type="button" class="btn btn-primary modificarJugadorNombreApellido" id="'.$rowJ[0].'">Guardar</button></td>
 				 </tr>';
 	}
 	
@@ -2288,6 +2360,23 @@ function modificarJugadores($serviciosReferencias) {
 		}
 	}
 } 
+
+function modificarJugadorApellidoNombrePorId($serviciosReferencias) {
+	$idJugador = $_POST['idJugador']; 
+	$apellido = $_POST['apellido']; 
+	$nombres = $_POST['nombre']; 
+	
+	$res = $serviciosReferencias->modificarJugadorApellidoNombrePorId($idJugador, $apellido, $nombres);
+	
+	if ($res == true) { 
+		echo ''; 
+	} else { 
+		echo 'Huvo un error al modificar datos'; 
+	} 
+	
+}
+
+
 function eliminarJugadores($serviciosReferencias) { 
 $id = $_POST['id']; 
 $res = $serviciosReferencias->eliminarJugadores($id); 

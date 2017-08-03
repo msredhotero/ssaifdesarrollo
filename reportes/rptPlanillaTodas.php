@@ -169,7 +169,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 		$pdf->SetFont('Arial','',8);
 		$pdf->Ln();
 		$pdf->SetX(5);
-		$pdf->Cell(200,4,'CANCHA: '.$rowE['canchas']." - ".$rowE['arbitro']." // ".$rowE['telefono'],0,0,'L',FALSE); 
+		$pdf->Cell(200,4,'CANCHA: '.$rowE['canchas']." - ".$rowE['contactoLocal']." // ".$rowE['telefonoLocal'],0,0,'L',FALSE); 
 		//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
 		
 		$resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($rowE['refconectorlocal'], mysql_result($resTorneo,0,'refcategorias'));
@@ -569,7 +569,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 		
 		$pdf->Ln();
 		$pdf->SetX(5);
-		$pdf->Cell(200,4,'Capitan: __________ Delegado: '.$rowE['contactoLocal'].' Acl: ______________ Capitan: _________ Delegado: '.$rowE['contactoVisitante'].' Acl: ______________',0,0,'C',false);
+		$pdf->Cell(200,4,'Capitan: __________ Delegado: _____________ Acl: ______________ Capitan: _________ Delegado: ______________ Acl: ______________',0,0,'C',false);
 		
 		
 		$pdf->Ln();

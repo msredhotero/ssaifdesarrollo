@@ -160,7 +160,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->SetFont('Arial','',8);
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(200,4,'CANCHA: '.$rowE['canchas']." - ".$rowE['arbitro']." // ".$rowE['telefono'],0,0,'L',FALSE); 
+	$pdf->Cell(200,4,'CANCHA: '.$rowE['canchas']." - ".$rowE['contactoLocal']." // ".$rowE['telefonoLocal'],0,0,'L',FALSE); 
 	//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
 	
 	$resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($rowE['refconectorlocal'], mysql_result($resTorneo,0,'refcategorias'));

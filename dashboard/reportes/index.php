@@ -34,7 +34,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Reporte
 $resEquipos = $serviciosReferencias->traerEquipos();
 $cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2,3,4),' - ');
 
-$resTorneosActivos = $serviciosReferencias->traerTorneosActivos();
+$resTorneosActivos = $serviciosReferencias->traerTorneos();
 $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivos,array(1,2,3,4,5),' - ');
 
 $resTemporadas	=	$serviciosReferencias->traerTemporadas();
@@ -274,7 +274,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     </div>
                 </div>
                 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6" id="tem1">
                     <label class="control-label" style="text-align:left" for="refcliente">Temporada</label>
                     <div class="input-group col-md-12">
                     	<select id="reftemporada1" class="form-control" name="reftemporada1">
@@ -287,7 +287,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                 
                 
                 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6" id="cou1">
                     <label class="control-label" style="text-align:left" for="refcliente">Countrie</label>
                     <div class="input-group col-md-12">
                     	<select id="refcountries1" class="form-control" name="refcountries1">
@@ -297,7 +297,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     </div>
                 </div>
                 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-3" id="cat1">
                     <label class="control-label" style="text-align:left" for="refcliente">Categorias</label>
                     <div class="input-group col-md-12">
                     	<select id="refcategorias1" class="form-control" name="refcategorias1">
@@ -308,7 +308,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                 </div>
                 
                 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-3" id="div1">
                     <label class="control-label" style="text-align:left" for="refcliente">Division</label>
                     <div class="input-group col-md-12">
                     	<select id="refdivision1" class="form-control" name="refdivision1">
@@ -317,7 +317,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	</select>
                     </div>
                 </div>
-            	<div class="form-group col-md-6">
+            	<div class="form-group col-md-6" id="tor1">
                     <label class="control-label" style="text-align:left" for="refcliente">Torneos</label>
                     <div class="input-group col-md-12">
                     	<select id="reftorneo3" class="form-control" name="reftorneo3">
@@ -350,9 +350,16 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	<input type="text" id="reffechahasta1" class="form-control" name="reffechahasta1" value="Date">
                     </div>
                 </div>
+                
+                <div class="form-group col-md-2" id="baj1">
+                    <label class="control-label" style="text-align:left" for="refcliente">Con Bajas</label>
+                    <div class="input-group col-md-12">
+                    	<input type="checkbox" id="baja" class="form-control" name="baja">
+                    </div>
+                </div>
 
 
-                <div class="form-group col-md-6" style="height:220px;">
+                <div class="form-group col-md-6" id="jug1">
                     <label class="control-label" style="text-align:left" for="refcliente">Jugador</label>
                     <div class="input-group col-md-12">
                         <select data-placeholder="selecione el jugador..." id="idjugador" name="idjugador" class="chosen-select form-control" tabindex="2">
@@ -362,6 +369,8 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             </select>
                     </div>
                 </div>
+                
+                <div class="form-group col-md-12" style="height:220px;">* Se aplicaran filtros a las busquedas</div>
                 
                 
                 
@@ -421,12 +430,14 @@ $(document).ready(function(){
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
-						
+					$('#'+contenedor).html('');	
 				},
 				success:  function (response) {
 
                     if (response != '') {
-						$('#'+contenedor).html(response);
+						$('#'+contenedor).prepend('<option value="">-- Seleccionar --</option>');
+						$('#'+contenedor).append(response);
+						
                     } else {
 
                         
@@ -466,6 +477,95 @@ $(document).ready(function(){
 		});
 	}
 	
+	$('#tiporeporte').change(function() {
+		switch(parseInt($('#tiporeporte').val())) {
+			case 1:
+				$('#cou1').hide();
+				$('#jug1').hide();
+				$('#baj1').hide();
+				$('#cat1').show();
+				$('#div1').show();
+				$('#tor1').show();
+				$('#tem1').show();
+				break;
+			case 2:
+				$('#cou1').show();
+				$('#jug1').hide();
+				$('#baj1').show();
+				$('#cat1').hide();
+				$('#div1').hide();
+				$('#tor1').hide();
+				$('#tem1').show();
+				break;
+			case 3:
+				$('#cou1').hide();
+				$('#jug1').hide();
+				$('#baj1').hide();
+				$('#cat1').hide();
+				$('#div1').hide();
+				$('#tor1').hide();
+				$('#tem1').show();
+				break;
+			case 4:
+				$('#cou1').hide();
+				$('#jug1').hide();
+				$('#baj1').hide();
+				$('#cat1').hide();
+				$('#div1').hide();
+				$('#tor1').hide();
+				$('#tem1').show();
+				break;
+			case 5:
+				$('#cou1').hide();
+				$('#jug1').hide();
+				$('#baj1').hide();
+				$('#cat1').hide();
+				$('#div1').hide();
+				$('#tor1').hide();
+				$('#tem1').show();
+				break;
+			case 6:
+				$('#cou1').hide();
+				$('#jug1').hide();
+				$('#baj1').hide();
+				$('#cat1').hide();
+				$('#div1').hide();
+				$('#tor1').hide();
+				$('#tem1').hide();
+				break;
+			case 7:
+				$('#cou1').hide();
+				$('#jug1').hide();
+				$('#baj1').hide();
+				$('#cat1').show();
+				$('#div1').show();
+				$('#tor1').show();
+				$('#tem1').show();
+				break;
+			case 8:
+				$('#cou1').hide();
+				$('#jug1').hide();
+				$('#baj1').hide();
+				$('#cat1').hide();
+				$('#div1').hide();
+				$('#tor1').hide();
+				$('#tem1').hide();
+				break;
+			case 9:
+				$('#cou1').hide();
+				$('#jug1').show();
+				$('#baj1').hide();
+				$('#cat1').show();
+				$('#div1').show();
+				$('#tor1').show();
+				$('#tem1').show();
+				break;
+			
+			default:
+				alert('Debe elegir una opcion');
+		}
+	});
+	
 	$('#reftorneo1').change(function(e) {
 		traerFechasPorTorneos($(this).val(),'reffechas1');	
 	});
@@ -482,7 +582,7 @@ $(document).ready(function(){
 
 		switch(e) {
 			case 1:
-				window.open("../../reportes/rptResultadoPartido.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');	
+				window.open("../../reportes/rptResultadoPartido.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + "&reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');	
 				break;
 			case 2:
 				window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + $("#refcountries1").val() ,'_blank');	

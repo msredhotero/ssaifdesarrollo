@@ -1352,9 +1352,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Local: <?php echo $equipoA; ?></caption>
                     <thead>
                     	<tr>
+                        	<th style="text-align:center">DRSL</th>
                         	<th>Jugador</th>
                             <th>DNI</th>
-                            <th style="text-align:center">DRSL</th>
                             <th style="text-align:center">GA</th>
                             <th style="text-align:center">GC</th>
                             <th style="text-align:center">MIN</th>
@@ -1486,18 +1486,18 @@ if ($_SESSION['idroll_predio'] != 1) {
 							if (in_array($row['refjugadores'], $arDetalleLocal)) {
 						?>
                         <tr class="<?php echo $row[0]; ?>">
-
+							<th>
+                            	<div align="center">
+                                	<input type="text" class="form-control input-sm dorsalEA" name="dorsal<?php echo $row['refjugadores']; ?>" id="dorsal<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'dorsal'); ?>"/>
+                                </div>
+                            </th>
                         	<th>
 								<?php echo $row['nombrecompleto']; ?>
                             </th>
                             <th>
 								<?php echo $row['nrodocumento']; ?>
                             </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm dorsalEA" name="dorsal<?php echo $row['refjugadores']; ?>" id="dorsal<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'dorsal'); ?>"/>
-                                </div>
-                            </th>
+                            
                             <th>
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm golesEA" name="goles<?php echo $row['refjugadores']; ?>" id="goles<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'goles'); ?>"/>
@@ -1624,16 +1624,16 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 						?>
                         <tr class="<?php echo $row[0]; ?>">
-
+							<th style="background-color:#F00;">
+                            	
+                            </th>
                         	<th style="background-color:#F00;">
 								<?php echo $row['nombrecompleto']; ?>
                             </th>
                             <th style="background-color:#F00;">
 								<?php echo $row['nrodocumento']; ?>
                             </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
+                            
                             <th style="background-color:#F00;">
                             	
                             </th>
@@ -1742,10 +1742,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
                     <thead>
                     	<tr>
-
+							<th style="text-align:center">DRSL</th>
                         	<th>Jugador</th>
                             <th>DNI</th>
-                            <th style="text-align:center">DRSL</th>
                             <th style="text-align:center">GA</th>
                             <th style="text-align:center">GC</th>
                             <th style="text-align:center">MIN</th>
@@ -1874,18 +1873,19 @@ if ($_SESSION['idroll_predio'] != 1) {
 							if (in_array($rowB['refjugadores'], $arDetalleVisit)) {
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
-
+							<th>
+                            	<div align="center">
+                                	<input type="text" class="form-control input-sm dorsalEB" name="dorbsal<?php echo $rowB['refjugadores']; ?>" id="dorbsal<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'dorsal'); ?>"/>
+                                </div>
+                            </th>
+                            
                         	<th>
 								<?php echo $rowB['nombrecompleto']; ?>
                             </th>
                             <th>
 								<?php echo $rowB['nrodocumento']; ?>
                             </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm dorsalEB" name="dorbsal<?php echo $rowB['refjugadores']; ?>" id="dorbsal<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'dorsal'); ?>"/>
-                                </div>
-                            </th>
+                            
                             <th>
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm golesEB" name="gobles<?php echo $rowB['refjugadores']; ?>" id="gobles<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'goles'); ?>"/>
@@ -2011,16 +2011,17 @@ if ($_SESSION['idroll_predio'] != 1) {
 								}
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
-
+							<th style="background-color:#F00;">
+                            	
+                            </th>
+                            
                         	<th style="background-color:#F00;">
 								<?php echo $rowB['nombrecompleto']; ?>
                             </th>
                             <th style="background-color:#F00;">
 								<?php echo $rowB['nrodocumento']; ?>
                             </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
+                            
                             <th style="background-color:#F00;">
                             	
                             </th>

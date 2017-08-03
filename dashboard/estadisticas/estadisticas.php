@@ -691,6 +691,10 @@ if ($_SESSION['idroll_predio'] != 1) {
                                             </select></p>
                 </div>
                 
+                <div class="col-md-6 col-xs-offset-6">
+                	<p style="color:#F03;">* Sino se encuentra cargado el Arbitro puede dar de alta haciendo click <a href="arbitros.php?idfixture=<?php echo $idFixture; ?>">aqui</a></p>
+                </div>
+                
                 <div class="col-md-4">
                 	<p>Juez 1: <input type="text" class="form-control" id="juez1" name="juez1" value="<?php echo mysql_result($resFixDetalle,0,'juez1'); ?>"/></p>
                 </div>
@@ -740,9 +744,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Local: <?php echo $equipoA; ?></caption>
                     <thead>
                     	<tr>
+                        	<th style="text-align:center">DRSL</th>
                         	<th>Jugador</th>
                             <th>DNI</th>
-                            <th style="text-align:center">DRSL</th>
                             <th style="text-align:center">GA</th>
                             <th style="text-align:center">GC</th>
                             <th style="text-align:center">MIN</th>
@@ -769,8 +773,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                     </thead>
                     <tbody>
                     	<?php 
-							
+							$tabulador = 15;
 							while ($row = mysql_fetch_array($resJugadoresA)) {
+								$tabulador += 1;
 								$estadisticas	= $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivision($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
 								
 								$sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
@@ -867,16 +872,16 @@ if ($_SESSION['idroll_predio'] != 1) {
 							
 						?>
                         <tr class="<?php echo $row[0]; ?>">
-
+							<th style="background-color:#FC0;">
+                            	
+                            </th>
                         	<th style="background-color: #FC0;">
 								<?php echo $row['nombrecompleto']; ?>
                             </th>
                             <th style="background-color:#FC0;">
 								<?php echo $row['nrodocumento']; ?>
                             </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
+                            
                             <th style="background-color:#FC0;">
                             	
                             </th>
@@ -941,18 +946,18 @@ if ($_SESSION['idroll_predio'] != 1) {
 						
 						?>
                         <tr class="<?php echo $row[0]; ?>">
-
+							<th>
+                            	<div align="center">
+                                	<input type="text" tabindex="<?php echo $tabulador; ?>" class="form-control input-sm dorsalEA" name="dorsal<?php echo $row['refjugadores']; ?>" id="dorsal<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'dorsal'); ?>"/>
+                                </div>
+                            </th>
                         	<th>
 								<?php echo $row['nombrecompleto']; ?>
                             </th>
                             <th>
 								<?php echo $row['nrodocumento']; ?>
                             </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm dorsalEA" name="dorsal<?php echo $row['refjugadores']; ?>" id="dorsal<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'dorsal'); ?>"/>
-                                </div>
-                            </th>
+                            
                             <th>
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm golesEA" name="goles<?php echo $row['refjugadores']; ?>" id="goles<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'goles'); ?>"/>
@@ -1066,7 +1071,9 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 						?>
                         <tr class="<?php echo $row[0]; ?>">
-
+							<th style="background-color:#F00;">
+                            	
+                            </th>
                         	<th style="background-color:#F00;">
 								<?php echo $row['nombrecompleto']; ?>
                             </th>
@@ -1229,10 +1236,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                 	<caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
                     <thead>
                     	<tr>
-
+							<th style="text-align:center">DRSL</th>
                         	<th>Jugador</th>
                             <th>DNI</th>
-                            <th style="text-align:center">DRSL</th>
                             <th style="text-align:center">GA</th>
                             <th style="text-align:center">GC</th>
                             <th style="text-align:center">MIN</th>
@@ -1262,6 +1268,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                     	<?php 
 							
 							while ($rowB = mysql_fetch_array($resJugadoresB)) {
+								$tabulador += 1;
 								$estadisticasB = $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivisionVisitante($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
 								
 								$sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
@@ -1358,16 +1365,17 @@ if ($_SESSION['idroll_predio'] != 1) {
 						if (($habilitacion != 'HAB.')) {		
 						?>
 						<tr class="<?php echo $row[0]; ?>">
-
+							<th style="background-color:#FC0;">
+                            	
+                            </th>
+                            
                         	<th style="background-color:#FC0;">
 								<?php echo $rowB['nombrecompleto']; ?>
                             </th>
                             <th style="background-color:#FC0;">
 								<?php echo $rowB['nrodocumento']; ?>
                             </th>
-                            <th style="background-color:#FC0;">
-                            	
-                            </th>
+                            
                             <th style="background-color:#FC0;">
                             	
                             </th>
@@ -1429,18 +1437,19 @@ if ($_SESSION['idroll_predio'] != 1) {
 						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && ($pendienteB == 0)) {		
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
-
+							<th>
+                            	<div align="center">
+                                	<input type="text" tabindex="<?php echo $tabulador; ?>" class="form-control input-sm dorsalEB" name="dorbsal<?php echo $rowB['refjugadores']; ?>" id="dorbsal<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'dorsal'); ?>"/>
+                                </div>
+                            </th>
+                            
                         	<th>
 								<?php echo $rowB['nombrecompleto']; ?>
                             </th>
                             <th>
 								<?php echo $rowB['nrodocumento']; ?>
                             </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm dorsalEB" name="dorbsal<?php echo $rowB['refjugadores']; ?>" id="dorbsal<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'dorsal'); ?>"/>
-                                </div>
-                            </th>
+                            
                             <th>
                             	<div align="center">
                                 	<input type="text" class="form-control input-sm golesEB" name="gobles<?php echo $rowB['refjugadores']; ?>" id="gobles<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'goles'); ?>"/>
@@ -1554,16 +1563,17 @@ if ($_SESSION['idroll_predio'] != 1) {
 								
 						?>
                         <tr class="<?php echo $rowB[0]; ?>">
-
+							<th style="background-color:#F00;">
+                            	
+                            </th>
+                            
                         	<th style="background-color:#F00;">
 								<?php echo $rowB['nombrecompleto']; ?>
                             </th>
                             <th style="background-color:#F00;">
 								<?php echo $rowB['nrodocumento']; ?>
                             </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
+                            
                             <th style="background-color:#F00;">
                             	
                             </th>

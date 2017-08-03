@@ -21,15 +21,54 @@ require('fpdf.php');
 
 ////***** Parametros ****////////////////////////////////
 $idTemporada 		=	$_GET['reftemporada1'];
-$idtorneo			=	$_GET['reftorneo3'];
-$reffechas			=	$_GET['reffechas3'];
-$refCategorias		=	$_GET['refcategorias1'];
-$refDivisiones		=	$_GET['refdivision1'];
+
+$where = '';
+$fechaDesde = '';
+$fechaHasta = '';
+$refCategorias = '';
+$refDivisiones = '';
+$idtorneo = '';
+
+if (isset($_GET['reftorneo3'])) {
+	$idtorneo			=	$_GET['reftorneo3'];
+	$where	.=	' and tor.idtorneo ='.$idtorneo;
+}
+if (isset($_GET['reffechadesde1'])) {
+	$fechaDesde = $_GET['reffechadesde1'];
+}
+
+if (isset($_GET['reffechahasta1'])) {
+	$fechaHasta = $_GET['reffechahasta1'];
+}
+	
+if (isset($_GET['reffechas3'])) {
+	$reffechas			=	$_GET['reffechas3'];
+	
+} else {
+	
+	$reffechas = '';
+}
+
+if (isset($_GET['refcategorias1']) && $_GET['refcategorias1'] != 0) {
+	$refCategorias		=	$_GET['refcategorias1'];
+	$where	.=	' and ca.idtcategoria ='.$refCategorias;
+}
+
+if (isset($_GET['refdivision1']) && $_GET['refdivision1'] != 0) {
+	$refDivisiones		=	$_GET['refdivision1'];
+	$where	.=	' and di.iddivision ='.$refDivisiones;
+}
+
+
+
 /////////////////////////////  fin parametross  ///////////////////////////
 
-
-$resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
-
+if ($reffechas == '') {
+	$resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoDesdeHastaWhere($idTemporada,$fechaDesde,$fechaHasta,$where);
+} else {
+	$resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
+}
+//die(print_r($resEquipos));
 $resTorneo = $serviciosReferencias->traerTorneosDetallePorId($idtorneo);
 
 $resDefTemp= $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'));
@@ -245,7 +284,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 
 $nombreTurno = "INFORME-RESULTADOS-".$fecha.".pdf";
 
-$pdf->Output($nombreTurno,'D');
+$pdf->Output($nombreTurno,'I');
 
 
 ?>

@@ -3142,6 +3142,15 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+function modificarJugadorApellidoNombrePorId($id,$apellido,$nombres) {
+	$sql = "update dbjugadores 
+set 
+apellido = '".($apellido)."',nombres = '".($nombres)."'
+where idjugador =".$id; 
+$res = $this->query($sql,0); 
+return $res;
+}
+
 
 function eliminarJugadores($id) { 
 $sql = "delete from dbjugadores where idjugador =".$id; 
@@ -6074,7 +6083,8 @@ f.refestadospartidos,
 f.refarbitros,
 coalesce(cl.nombre,'') as contactoLocal,
 coalesce(cv.nombre,'') as contactoVisitante,
-date_format(f.fecha,'%Y-%m-%d') as fechapartidocomun
+date_format(f.fecha,'%Y-%m-%d') as fechapartidocomun,
+coalesce(cl.telefono,'') as telefonoLocal
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
@@ -6090,6 +6100,61 @@ left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 where tor.idtorneo = ".$idTorneo." and f.reffechas = ".$refFechas."
+order by f.reffechas, f.idfixture";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
+function traerFixtureTodoPorTorneoDesdeHastaWhere($idTemperada,$desde, $hasta, $where) {
+$sql = "select
+f.idfixture,
+el.nombre as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+ev.nombre as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.goleslocal,
+f.golesvisitantes,
+can.nombre as canchas,
+fec.fecha,
+date_format(f.fecha,'%d/%m/%Y') as fechapartido,
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.observaciones,
+f.publicar,
+arb.telefonoparticular as telefono,
+f.refcanchas,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refestadospartidos,
+f.refarbitros,
+coalesce(cl.nombre,'') as contactoLocal,
+coalesce(cv.nombre,'') as contactoVisitante,
+date_format(f.fecha,'%Y-%m-%d') as fechapartidocomun,
+coalesce(cl.telefono,'') as telefonoLocal
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbcontactos cl ON cl.idcontacto = el.refcontactos
+left join dbcontactos cv ON cv.idcontacto = ev.refcontactos
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where te.idtemporadas = ".$idTemperada." and f.fecha between '".$desde."' and '".$hasta."' ".$where."
 order by f.reffechas, f.idfixture";
 $res = $this->query($sql,0);
 return $res;

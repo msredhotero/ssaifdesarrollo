@@ -283,6 +283,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-primary" id="cargarcontinuar" style="margin-left:0px;">Guardar y Continuar</button>
                     </li>
+                    <li>
+                        <button type="button" class="btn btn-warning" id="modificarnombres" style="margin-left:0px;">Modificar Nombres</button>
+                    </li>
                 </ul>
                 </div>
             </div>
@@ -480,6 +483,11 @@ $(document).ready(function(){
 	
 	$('#equiposRefFusion').click(function() {
 		$('#equiposRefequipos').html('');
+	});
+	
+	$('#modificarnombres').click(function() {
+		url = "modificarnombres.php";
+		$(location).attr('href',url);
 	});
 	
 	$("#example").on("click",'.varborrar', function(){
