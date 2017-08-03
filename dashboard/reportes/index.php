@@ -122,14 +122,45 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
                 
                 <div class="form-group col-md-10" style="display:'.$lblOculta.'">
-                    <label class="control-label" style="text-align:left" for="refcliente">Seleccione el Equipo</label>
+                    <label class="control-label" style="text-align:left" for="refcliente">Seleccione Temporada | Country | Equipo | Categoria | Division</label>
                     <div class="input-group col-md-12">
+                        <span class="input-group-addon">
+                            <select id="cjreftemporada" name="cjreftemporada" class="form-control" tabindex="2">
+                                
+                                <?php echo $cadRefTemporadas; ?>
+                    
+                            </select>
+                        </span>
+                        <span class="input-group-addon">
+                            <select id="cjrefcountries" name="cjrefcountries" class="form-control" tabindex="2">
+                                
+                                
+                    
+                            </select>
+                        </span>
+                        <span class="input-group-addon">
+                            <select id="cjrefequipos" name="cjrefequipos" class="form-control" tabindex="2">
+                                
+                                
+                    
+                            </select>
+                        </span>
+                        <span class="input-group-addon">
+                            <select id="cjrefcategorias" name="cjrefcategorias" class="form-control" tabindex="2">
+                                
+                                
+                    
+                            </select>
+                        </span>
+                        <span class="input-group-addon">
+
+                            <select id="cjrefdivisiones" name="cjrefdivisiones" class="form-control" tabindex="2">
+                                
+                                
+                    
+                            </select>
+                        </span>
                         
-                        <select data-placeholder="selecione el equipo..." id="refequipo" name="refequipo" class="chosen-select form-control" tabindex="2">
-                            <option value=""></option>
-							<?php echo $cadRefE; ?>
-                
-                			</select>
                     </div>
                 </div>
                 
@@ -351,10 +382,58 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     </div>
                 </div>
                 
+                <div class="form-group col-md-3" id="fpa1">
+                    <label class="control-label" style="text-align:left" for="refcliente">Partidos</label>
+                    <div class="input-group col-md-12">
+                        <span class="input-group-addon">
+                    	<select id="filtropartidos">
+                            <option value="0">-------</option>
+                            <option value="1">Mayor a</option>
+                            <option value="2">Menor a</option>
+                            <option value="3">Igual a</option>
+                        </select>
+                        </span>
+                        <input type="text" id="valorpartido" class="form-control" name="valorpartido">
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-3" id="fam1">
+                    <label class="control-label" style="text-align:left" for="refcliente">Amarillas</label>
+                    <div class="input-group col-md-12">
+                        <span class="input-group-addon">
+                        <select id="filtroamarillas">
+                            <option value="0">-------</option>
+                            <option value="1">Mayor a</option>
+                            <option value="2">Menor a</option>
+                            <option value="3">Igual a</option>
+                        </select>
+                        </span>
+                        <input type="text" id="valoramarillas" class="form-control" name="valoramarillas">
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-3" id="fra1">
+                    <label class="control-label" style="text-align:left" for="refcliente">Rojas</label>
+                    <div class="input-group col-md-12">
+                        <span class="input-group-addon">
+                        <select id="filtrorojas">
+                            <option value="0">-------</option>
+                            <option value="1">Mayor a</option>
+                            <option value="2">Menor a</option>
+                            <option value="3">Igual a</option>
+                        </select>
+                        </span>
+                        <input type="text" id="valorrojas" class="form-control" name="valorrojas">
+                    </div>
+                </div>
+
+
                 <div class="form-group col-md-2" id="baj1">
                     <label class="control-label" style="text-align:left" for="refcliente">Con Bajas</label>
                     <div class="input-group col-md-12">
-                    	<input type="checkbox" id="baja" class="form-control" name="baja">
+                        <input type="checkbox" id="baja" class="form-control" name="baja">
                     </div>
                 </div>
 
@@ -487,6 +566,9 @@ $(document).ready(function(){
 				$('#div1').show();
 				$('#tor1').show();
 				$('#tem1').show();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
 				break;
 			case 2:
 				$('#cou1').show();
@@ -496,6 +578,9 @@ $(document).ready(function(){
 				$('#div1').hide();
 				$('#tor1').hide();
 				$('#tem1').show();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
 				break;
 			case 3:
 				$('#cou1').hide();
@@ -505,6 +590,9 @@ $(document).ready(function(){
 				$('#div1').hide();
 				$('#tor1').hide();
 				$('#tem1').show();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
 				break;
 			case 4:
 				$('#cou1').hide();
@@ -514,6 +602,9 @@ $(document).ready(function(){
 				$('#div1').hide();
 				$('#tor1').hide();
 				$('#tem1').show();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
 				break;
 			case 5:
 				$('#cou1').hide();
@@ -523,6 +614,9 @@ $(document).ready(function(){
 				$('#div1').hide();
 				$('#tor1').hide();
 				$('#tem1').show();
+                $('#fpa1').show();
+                $('#fam1').show();
+                $('#fra1').show();
 				break;
 			case 6:
 				$('#cou1').hide();
@@ -532,6 +626,9 @@ $(document).ready(function(){
 				$('#div1').hide();
 				$('#tor1').hide();
 				$('#tem1').hide();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
 				break;
 			case 7:
 				$('#cou1').hide();
@@ -541,6 +638,9 @@ $(document).ready(function(){
 				$('#div1').show();
 				$('#tor1').show();
 				$('#tem1').show();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
 				break;
 			case 8:
 				$('#cou1').hide();
@@ -550,6 +650,9 @@ $(document).ready(function(){
 				$('#div1').hide();
 				$('#tor1').hide();
 				$('#tem1').hide();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
 				break;
 			case 9:
 				$('#cou1').hide();
@@ -559,6 +662,9 @@ $(document).ready(function(){
 				$('#div1').show();
 				$('#tor1').show();
 				$('#tem1').show();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
 				break;
 			
 			default:
@@ -585,7 +691,8 @@ $(document).ready(function(){
 				window.open("../../reportes/rptResultadoPartido.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + "&reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');	
 				break;
 			case 2:
-				window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + $("#refcountries1").val() ,'_blank');	
+				window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');	
+                window.open("../../reportes/rptJugadoresPorCountriesExcel.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');  
 				break;
 			case 3:
 				window.open("../../reportes/rptJugadoresVariosEquipos.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');	
@@ -593,6 +700,9 @@ $(document).ready(function(){
 			case 4:
 				window.open("../../reportes/rptPromedioCanchas.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');	
 				break;
+            case 5:
+                window.open("../../reportes/rptEstadisticaArbitros.php?reftemporada1=" + $("#reftemporada1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() ,'_blank');
+                break;
             case 6:
                 window.open("../../reportes/rptSuspendidosExcel.php" ,'_blank');  
                 break;  

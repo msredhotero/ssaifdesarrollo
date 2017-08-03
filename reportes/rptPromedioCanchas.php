@@ -74,6 +74,10 @@ $pdf->SetAutoPageBreak(true,1);
 	
 	$contadorY1 = 44;
 	$contadorY2 = 44;
+
+	$acumulador1 = 0;
+	$acumulador2 = 0;
+
 while ($rowE = mysql_fetch_array($resDatos)) {
 	$i+=1;	
 	$cantPartidos += 1;
@@ -96,12 +100,6 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	}
 	
 	
-	$pdf->Ln();
-	$pdf->SetX(5);
-	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(5,4,$cantPartidos,1,0,'C',True);
-	$pdf->Cell(95,4,utf8_decode($rowE['countrie']),1,0,'L',True);
-	$pdf->Cell(16,4,$rowE['promedio'],1,0,'C',True);
 	
 	$canchas = $serviciosReferencias->traerPromedioCanchasPorCountrie($rowE['idcountrie'], $idTemporada);
 	while ($rowC = mysql_fetch_array($canchas)) {
@@ -110,10 +108,22 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->Cell(5,4,'',1,0,'C',True);
 		$pdf->Cell(95,4,utf8_decode($rowC['cancha']),1,0,'L',false);
 		$pdf->Cell(16,4,$rowC['promedio'],1,0,'C',false);
+
+		$acumulador1 += $rowC['promedio'];
+		$acumulador2 += 1;
 	}
 	
-	
+	$pdf->Ln();
+	$pdf->SetX(5);
+	$pdf->SetFont('Arial','',8);
+	$pdf->Cell(5,4,$cantPartidos,1,0,'C',True);
+	$pdf->Cell(95,4,utf8_decode($rowE['countrie']),1,0,'L',True);
+	$pdf->Cell(16,4,round(($acumulador2 == 0 ? 0 : $acumulador1 / $acumulador2),2,PHP_ROUND_HALF_UP),1,0,'C',True);
+	$pdf->Ln();
+	$pdf->Ln();
 		
+	$acumulador1 = 0;
+	$acumulador2 = 0;
 
 	$contadorY1 += 4;
 

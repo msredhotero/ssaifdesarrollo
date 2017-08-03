@@ -5572,7 +5572,27 @@ function traerJugadoresPorCountries($idCountries) {
 			inner
 			join		dbcountries cc
 			on			cc.idcountrie = j.refcountries
-			where		cc.idcountrie = ".$idCountries." and (j.fechabaja = '1900-01-01' or j.fechabaja = '0000-00-00')";	
+			where		cc.idcountrie = ".$idCountries." and (j.fechabaja = '1900-01-01' or j.fechabaja = '0000-00-00') 
+			order by concat(j.apellido,', ',j.nombres)";	
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function traerJugadoresPorCountriesBaja($idCountries) {
+	$sql = "select
+			j.nrodocumento,
+			concat(j.apellido,', ',j.nombres) as apyn,
+			j.email,
+			j.fechanacimiento,
+			j.observaciones,
+            j.fechabaja
+			from		dbjugadores j
+			inner
+			join		dbcountries cc
+			on			cc.idcountrie = j.refcountries
+			where		cc.idcountrie = ".$idCountries." and (j.fechabaja <> '1900-01-01' and j.fechabaja <> '0000-00-00') 
+			order by concat(j.apellido,', ',j.nombres)";	
 	$res = $this->query($sql,0);
 	return $res;
 }
@@ -5580,12 +5600,28 @@ function traerJugadoresPorCountries($idCountries) {
 function traerJugadoresVariosEquipos($idtemporada) {
 	
 	$sql = "select
+	rr.nrodocumento,
+	rr.apyn,
+	rr.email,
+	rr.fechanacimiento,
+    cou.nombre as country,
+    equ.nombre as equipo,
+    cat.categoria,
+    divi.division,
+    rr.idjugador,
+    cat.idtcategoria,
+    coc.reftipojugadores,
+    coc.refequipos,
+    cou.idcountrie
+from	(
+	select
 		j.nrodocumento,
 		concat(j.apellido,', ',j.nombres) as apyn,
 		j.email,
 		j.fechanacimiento,
 		count(r.refequipos) as cantidad,
-		j.observaciones
+		j.idjugador,
+        j.refcountries
 		
 		from	
 		(
@@ -5619,7 +5655,7 @@ function traerJugadoresVariosEquipos($idtemporada) {
 				where t.reftemporadas = ".$idtemporada.") as fe
 			on fe.refconectorlocal = c.refequipos
 		where
-			c.activo = 1 and (jug.fechabaja = '1900-01-01' or jug.fechabaja = '0000-00-00')
+			c.activo = 1 and (jug.fechabaja = '1900-01-01' or jug.fechabaja = '0000-00-00') and equ.activo = 1
 		group by c.refjugadores,
 			c.refequipos
 		) as r
@@ -5631,9 +5667,23 @@ function traerJugadoresVariosEquipos($idtemporada) {
 		j.nombres,
 		j.email,
 		j.fechanacimiento,
-		j.observaciones
+		j.idjugador,
+        j.refcountries
 		having (count(r.refequipos) > 1)
-		order by count(r.refequipos) desc";	
+        ) rr
+	inner
+    join		dbconector coc
+    on			coc.refjugadores = rr.idjugador
+    inner join
+			dbequipos equ ON equ.idequipo = coc.refequipos and equ.activo = 1
+    inner join
+			dbcountries cou ON cou.idcountrie = rr.refcountries	
+	inner join
+			tbdivisiones divi ON divi.iddivision = equ.refdivisiones
+	inner join
+			tbcategorias cat ON cat.idtcategoria = coc.refcategorias
+            
+	order by cou.nombre,rr.apyn";	
 	$res = $this->query($sql,0);
 	return $res;
 
@@ -8916,14 +8966,13 @@ function traerPromedioCanchasPorCountrie($idCountrie, $idTemporada) {
 				inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
 				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
 				inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
-				inner join dbcountriecanchas dc ON dc.refcountries = cou.idcountrie
-				inner join tbcanchas cc ON cc.idcancha = dc.refcanchas
+				inner join tbcanchas cc ON cc.idcancha = fix.refcanchas
 				where fix.calificacioncancha <> 0 and
 				tor.reftemporadas = ".$idTemporada."
 				group by cou.idcountrie, cc.nombre, cou.nombre
 			) as r
 			where r.idcountrie = ".$idCountrie."
-			order by 4 desc,3";	
+			order by 3";	
 	$res = $this->query($sql,0); 
 	return $res;
 }
@@ -8942,16 +8991,69 @@ function traerPromedioCanchas($idTemporada) {
 				inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
 				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
 				inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
-				inner join dbcountriecanchas dc ON dc.refcountries = cou.idcountrie
-				inner join tbcanchas cc ON cc.idcancha = dc.refcanchas
+				inner join tbcanchas cc ON cc.idcancha = fix.refcanchas
 				where fix.calificacioncancha <> 0 and
 				tor.reftemporadas = ".$idTemporada."
 				group by cou.idcountrie,  cou.nombre
 			) as r
-			order by 3 desc";
+			order by 2";
 	$res = $this->query($sql,0); 
 	return $res;	
 }
+
+
+function traerEstadisticaArbitrosPorTemporadaWhere($idTemporada, $where) {
+	$sql = "select
+				r.idarbitro,r.nombrecompleto, r.cantidad, coalesce( r.amarillas,0) as amarillas, coalesce( r.rojas,0) as rojas
+				, round((coalesce( r.amarillas,0) / r.cantidad) ,2) as porcentajeamarillas
+				, round((coalesce( r.rojas,0) / r.cantidad) ,2) as porcentajerojas
+			from (
+				select 
+					a.idarbitro
+					,a.nombrecompleto
+					,  count(fix.idfixture) as cantidad
+					,  sum(fixa.amarillas) as amarillas
+					,  sum(fixr.rojas) as rojas
+				from  dbfixture fix
+				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+				inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+				inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+				inner join dbarbitros a ON a.idarbitro = fix.refarbitros
+				left join(SELECT 
+							SUM(sj.cantidad) AS amarillas, fix.idfixture
+						FROM
+							dbsancionesjugadores sj
+								INNER JOIN
+							dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorlocal = sj.refequipos
+								INNER JOIN
+						tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+						where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
+						GROUP BY fix.idfixture, sj.refequipos) fixa
+				on		fixa.idfixture = fix.idfixture
+
+				left join(SELECT 
+							SUM(sj.cantidad) AS rojas, fix.idfixture
+						FROM
+							dbsancionesjugadores sj
+								INNER JOIN
+							dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorlocal = sj.refequipos
+								INNER JOIN
+						tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+						where ts.expulsion = 1
+						GROUP BY fix.idfixture, sj.refequipos) fixr
+				on		fixr.idfixture = fix.idfixture
+				where fix.calificacioncancha <> 0 and
+				tor.reftemporadas = ".$idTemporada."
+				group by a.idarbitro,a.nombrecompleto
+			) as r
+		    where r.cantidad > 0 ".$where."
+			order by 2";
+	$res = $this->query($sql,0); 
+	return $res;	
+}
+
 
 
 function traerGoleadoresPorId($id) { 

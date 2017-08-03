@@ -199,7 +199,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 
 
 
-$nombreTurno = "JUGADORES-COUNTRIES-".$fecha.".pdf";
+$nombreTurno = "PROXIMA-FECHA-".$fecha.".pdf";
 
 $pdf->Output($nombreTurno,'I');
 
