@@ -195,7 +195,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 
 $nombreTurno = "Histirico Incidencias Jugadores-".$fecha.".pdf";
 
-$pdf->Output($nombreTurno,'D');
+$pdf->Output($nombreTurno,'I');
 
 
 ?>

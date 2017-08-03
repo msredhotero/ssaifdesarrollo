@@ -600,7 +600,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 
 $nombreTurno = "Planillas-".$fecha.".pdf";
 
-$pdf->Output($nombreTurno,'D');
+$pdf->Output($nombreTurno,'I');
 
 
 ?>

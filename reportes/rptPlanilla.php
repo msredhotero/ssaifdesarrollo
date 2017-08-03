@@ -591,7 +591,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 
 $nombreTurno = "Planillas-".$fecha.".pdf";
 
-$pdf->Output($nombreTurno,'D');
+$pdf->Output($nombreTurno,'I');
 
 
 ?>

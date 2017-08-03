@@ -127,7 +127,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 
 $nombreTurno = "PROMEDIO-CANCHAS-".$fecha.".pdf";
 
-$pdf->Output($nombreTurno,'D');
+$pdf->Output($nombreTurno,'I');
 
 
 ?>
