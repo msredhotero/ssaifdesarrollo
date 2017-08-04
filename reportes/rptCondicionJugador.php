@@ -22,18 +22,11 @@ require('fpdf.php');
 
 $idTemporada = $_GET['reftemporada'];	
 
-
-$id				=	$_GET['id'];
-
-$datos		=	$serviciosReferencias->traerConectorActivosPorEquipos($id);
-
-$datosEdades=	$serviciosReferencias->traerConectorActivosPorEquiposEdades($id);
-
-$equipo		=	$serviciosReferencias->traerEquiposPorEquipo($id);
-
-$idCategoria=	mysql_result($equipo,0,'refcategorias');
-
-$definiciones=  $serviciosReferencias->traerDefinicionesPorTemporadaCategoria($idTemporada, $idCategoria);
+if ((isset($_GET['id'])) || ($_GET['id'] != 0)) {
+	$id				=	$_GET['id'];
+} else {
+	$id				=	0;	
+}
 
 
 
@@ -93,9 +86,10 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	
 	$aumentoNombre = 0;
 	
-	$this->SetFont('Arial','',9);
+	
     while ($row = mysql_fetch_array($data))
     {
+
 		$cadCumpleEdad = '';
 		$errorDoc = 'FALTA';
 		$cadErrorDoc = '';
@@ -181,7 +175,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2], $y);
 		$this->MultiCell($w[3],5,strtoupper($row['countrie']),'','L');
-		if ($this->GetY() > $yN + 5) {
+		if ($this->GetY() > $yN + 4) {
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3], $y);
@@ -198,18 +192,20 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4] + $w[5], $y);
-		$this->MultiCell($w[6],5,$cadCumpleEdad,'','C');
+		$this->SetFont('Arial','',8);
+		$this->MultiCell($w[6],5,$cadCumpleEdad,'','L');
 		if ($this->GetY() > $yN + 5) {
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4] + $w[5] + $w[6], $y);
+		$this->SetFont('Arial','',9);
 		$this->MultiCell($w[7],5,$habilitacion,'','C');
         if ($this->GetY() > $yN + 5) {
 			$yN = $this->GetY();
 		}
 		
 		
-		if ($totalcant >= 250) {
+		if ($yN >= 250) {
 			$this->AddPage();
 			
 			
@@ -234,6 +230,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$x=3;
 			$yN=11;
 			$totalcant = 1;
+			$this->SetY(11);
 		}
 		
 		$aumentoNombre = 0;
@@ -270,35 +267,56 @@ $pdf = new PDF();
 $headerFacturacion = array("Carnet", "Jugador", "Fec. Nac.", "Country","Est. Doc.", "Obs. Doc.", "Cumple Edad", "Condición");
 // Carga de datos
 
-$pdf->AddPage();
 
-$pdf->SetMargins(3, 5 , 3); 
+$idCountry  = 	$_GET['refcountries'];
 
-$pdf->Image('../imagenes/aif_logo.png',2,2,40);
-$pdf->SetFont('Arial','U',17);
-$pdf->Cell(188,7,strtoupper('Condicion de Jugador'),0,0,'C',false);
-$pdf->Ln();
-$pdf->Cell(200,7,'Fecha: '.date('Y-m-d'),0,0,'C',false);
-$pdf->Ln();
-$pdf->Cell(200,7,'Equipo: '.mysql_result($equipo,0,'nombre'),0,0,'C',false);
-$pdf->Ln();
-$pdf->Ln();
-$pdf->Ln();
-$pdf->SetFont('Arial','',9);
-$pdf->Cell(35,5,'Temporada: 2016',1,0,'L',false);
-$pdf->Cell(75,5,'Country: '.mysql_result($equipo,0,'countrie'),1,0,'L',false);
-$pdf->Cell(50,5,'Categoria: '.mysql_result($equipo,0,'categoria'),1,0,'L',false);
-$pdf->Cell(45,5,'División: '.mysql_result($equipo,0,'division'),1,0,'L',false);
-$pdf->Ln();
-$pdf->Cell(35,5,'Jugadores: '.mysql_result($datosEdades,0,'cantidadJugadores'),1,0,'L',false);
-$pdf->Cell(75,5,'Edad Min.: '.mysql_result($datosEdades,0,'edadMinima'),1,0,'L',false);
-$pdf->Cell(50,5,'Edad Max.: '.mysql_result($datosEdades,0,'edadMaxima'),1,0,'L',false);
-$pdf->Cell(45,5,'Promedio: '.number_format(mysql_result($datosEdades,0,'edadPromedio'),2,',','.'),1,0,'L',false);
+if ($id == 0) {
+	$lstEquipos =	$serviciosReferencias->traerEquiposPorCountriesActivosInactivos($idCountry, $_GET['bajaequipos']);
+} else {
+	$lstEquipos =	$serviciosReferencias->traerEquiposPorEquipo($id);
+}
+while ($rowC = mysql_fetch_array($lstEquipos)) {
+	$datos		=	$serviciosReferencias->traerConectorActivosPorEquipos($rowC['idequipo']);
 
-$pdf->SetFont('Arial','',10);
+	$datosEdades=	$serviciosReferencias->traerConectorActivosPorEquiposEdades($rowC['idequipo']);
 
-$pdf->ingresosFacturacion($headerFacturacion,$datos,$TotalFacturacion,$serviciosReferencias, $idCategoria, $idTemporada);
+	$equipo		=	$serviciosReferencias->traerEquiposPorEquipo($rowC['idequipo']);
 
+	$idCategoria=	mysql_result($equipo,0,'refcategorias');
+
+	$definiciones=  $serviciosReferencias->traerDefinicionesPorTemporadaCategoria($idTemporada, $idCategoria);
+
+	$pdf->AddPage();
+
+	$pdf->SetMargins(3, 5 , 3); 
+
+	$pdf->Image('../imagenes/aif_logo.png',2,2,40);
+	$pdf->SetFont('Arial','U',17);
+	$pdf->Cell(188,7,strtoupper('Condicion de Jugador'),0,0,'C',false);
+	$pdf->Ln();
+	$pdf->Cell(200,7,'Fecha: '.date('Y-m-d'),0,0,'C',false);
+	$pdf->Ln();
+	$pdf->Cell(200,7,'Equipo: '.mysql_result($equipo,0,'nombre')." (".$rowC['idequipo'].")",0,0,'C',false);
+	$pdf->Ln();
+	$pdf->Ln();
+	$pdf->Ln();
+	$pdf->Ln();
+	$pdf->SetFont('Arial','',9);
+	$pdf->Cell(35,5,'Temporada: 2016',1,0,'L',false);
+	$pdf->Cell(75,5,'Country: '.$rowC['countrie'],1,0,'L',false);
+	$pdf->Cell(50,5,'Categoria: '.$rowC['categoria'],1,0,'L',false);
+	$pdf->Cell(45,5,'División: '.$rowC['division'],1,0,'L',false);
+	$pdf->Ln();
+	$pdf->Cell(35,5,'Jugadores: '.mysql_result($datosEdades,0,'cantidadJugadores'),1,0,'L',false);
+	$pdf->Cell(75,5,'Edad Min.: '.mysql_result($datosEdades,0,'edadMinima'),1,0,'L',false);
+	$pdf->Cell(50,5,'Edad Max.: '.mysql_result($datosEdades,0,'edadMaxima'),1,0,'L',false);
+	$pdf->Cell(45,5,'Promedio: '.number_format(mysql_result($datosEdades,0,'edadPromedio'),2,',','.'),1,0,'L',false);
+
+	$pdf->SetFont('Arial','',10);
+
+	$pdf->ingresosFacturacion($headerFacturacion,$datos,$TotalFacturacion,$serviciosReferencias, $idCategoria, $idTemporada);
+
+}
 $pdf->Ln();
 
 $pdf->SetFont('Arial','',9);

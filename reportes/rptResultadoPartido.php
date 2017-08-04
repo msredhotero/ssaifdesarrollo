@@ -29,9 +29,11 @@ $refCategorias = '';
 $refDivisiones = '';
 $idtorneo = '';
 
-if (isset($_GET['reftorneo3'])) {
+if (isset($_GET['reftorneo3']) && ($_GET['reftorneo3'] != 0)) {
 	$idtorneo			=	$_GET['reftorneo3'];
 	$where	.=	' and tor.idtorneo ='.$idtorneo;
+} else {
+	$idtorneo = 0;
 }
 if (isset($_GET['reffechadesde1'])) {
 	$fechaDesde = $_GET['reffechadesde1'];
@@ -41,7 +43,7 @@ if (isset($_GET['reffechahasta1'])) {
 	$fechaHasta = $_GET['reffechahasta1'];
 }
 	
-if (isset($_GET['reffechas3'])) {
+if ((isset($_GET['reffechas3'])) && ($_GET['reffechas3'] != 0)) {
 	$reffechas			=	$_GET['reffechas3'];
 	
 } else {
@@ -69,30 +71,10 @@ if ($reffechas == '') {
 	$resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
 }
 //die(print_r($resEquipos));
-$resTorneo = $serviciosReferencias->traerTorneosDetallePorId($idtorneo);
 
-$resDefTemp= $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'));
-//echo $resEquipos;
-
-$descripcion 	= mysql_result($resTorneo,0,'descripcion');
-$temporada 		= mysql_result($resTorneo,0,'temporada');
-$categoria		= mysql_result($resTorneo,0,'categoria');
-$division		= mysql_result($resTorneo,0,'division');
-
-
-$resFecha		= $serviciosReferencias->traerFechasPorId($reffechas);
-
-$reingreso					= mysql_result($resDefTemp,0,'reingreso');
-if ($reingreso == 'Si') {
-	$descReintegro = 'CON REINGRESOS';
-} else {
-	$descReintegro = 'SIN REINGRESOS';
+if ($idtorneo != 0) {
+	
 }
-$minutospartido 			= mysql_result($resDefTemp,0,'minutospartido');
-$cantidadcambiosporpartido	= mysql_result($resDefTemp,0,'cantidadcambiosporpartido');
-$dia						= mysql_result($resDefTemp,0,'dia');
-$hora						= mysql_result($resDefTemp,0,'hora');
-
 $pdf = new FPDF();
 $cantidadJugadores = 0;
 #Establecemos los márgenes izquierda, arriba y derecha: 
@@ -116,19 +98,7 @@ $pdf->SetAutoPageBreak(true,1);
 
 	
 	
-	$pdf->SetFont('Arial','B',10);
-	$pdf->Ln();
-	$pdf->Ln();
-	$pdf->SetY(25);
-	$pdf->SetX(5);
-	$pdf->Cell(200,5,'TABLA DE RESULTADOS AL '.date('Y-m-d'),1,0,'C',false);
-	$pdf->SetFont('Arial','',8);
-	$pdf->Ln();
-	$pdf->SetX(5);
-	$pdf->Cell(200,4,'Temporada: '.$temporada,0,0,'C',FALSE); 
-	$pdf->Ln();
-	$pdf->SetX(5);
-	$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - División: ".$division." - Fecha: ".$reffechas,0,0,'C',FALSE);
+	
 	//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
 	
 	$cantPartidos = 0;
@@ -136,10 +106,85 @@ $pdf->SetAutoPageBreak(true,1);
 	
 	$contadorY1 = 44;
 	$contadorY2 = 44;
+
+	$primero = 0;
+	$fechasA = 0;
+	$torneoA = 0;
+	$categoriaA = 0;
+	$divisionA = 0;
+
+	$pdf->Ln();
+	$pdf->Ln();
+	$pdf->SetY(25);
 while ($rowE = mysql_fetch_array($resEquipos)) {
 	$i=0;	
 	$cantPartidos += 1;
 	
+	if (($fechasA != $rowE['reffechas']) || ($torneoA != $rowE['reftorneos']) || ($categoriaA != $rowE['refcategorias']) || ($divisionA != $rowE['refdivisiones'])) {
+
+		if ($primero == 1) {
+			$pdf->AddPage();
+
+			$pdf->Image('../imagenes/logoparainformes.png',2,2,40);
+
+			$cantPartidos = 0;
+			$i=0;
+			
+			$contadorY1 = 44;
+			$contadorY2 = 44;
+
+			$pdf->Ln();
+			$pdf->Ln();
+			$pdf->SetY(25);
+		}
+
+		$fechasA = $rowE['reffechas'];
+		$torneoA = $rowE['reftorneos'];
+		$categoriaA = $rowE['refcategorias'];
+		$divisionA = $rowE['refdivisiones'];
+
+		$resTorneo = $serviciosReferencias->traerTorneosDetallePorId($rowE['reftorneos']);
+
+		$resDefTemp= $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'));
+		//echo $resEquipos;
+
+		$descripcion 	= mysql_result($resTorneo,0,'descripcion');
+		$temporada 		= mysql_result($resTorneo,0,'temporada');
+		$categoria		= mysql_result($resTorneo,0,'categoria');
+		$division		= mysql_result($resTorneo,0,'division');
+
+
+		$resFecha		= $serviciosReferencias->traerFechasPorId($rowE['reffechas']);
+		$reffechas 		= $rowE['fecha'];
+
+		$reingreso					= mysql_result($resDefTemp,0,'reingreso');
+		if ($reingreso == 'Si') {
+			$descReintegro = 'CON REINGRESOS';
+		} else {
+			$descReintegro = 'SIN REINGRESOS';
+		}
+		$minutospartido 			= mysql_result($resDefTemp,0,'minutospartido');
+		$cantidadcambiosporpartido	= mysql_result($resDefTemp,0,'cantidadcambiosporpartido');
+		$dia						= mysql_result($resDefTemp,0,'dia');
+		$hora						= mysql_result($resDefTemp,0,'hora');
+
+		$pdf->SetFont('Arial','B',10);
+		$pdf->Ln();
+		$pdf->Ln();
+		$pdf->SetX(5);
+		$pdf->Cell(200,5,'TABLA DE RESULTADOS AL '.date('Y-m-d'),1,0,'C',false);
+		$pdf->SetFont('Arial','',8);
+		$pdf->Ln();
+		$pdf->SetX(5);
+		$pdf->Cell(200,4,'Temporada: '.$temporada,0,0,'C',FALSE); 
+		$pdf->Ln();
+		$pdf->SetX(5);
+		$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - División: ".$division." - Fecha: ".$reffechas." - ".$rowE['fechapartido'],0,0,'C',FALSE);
+
+		$primero = 1;
+	}
+
+
 	if ($contadorY1 > 200) {
 		$pdf->AddPage();
 		$pdf->Image('../imagenes/logoparainformes.png',2,2,40);	
@@ -155,7 +200,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->Cell(200,4,'Temporada: '.$temporada,0,0,'C',FALSE); 
 		$pdf->Ln();
 		$pdf->SetX(5);
-		$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - División: ".$division." - Fecha: ".$reffechas,0,0,'C',FALSE);
+		$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - División: ".$division." - Fecha: ".$reffechas." - ".$rowE['fechapartido'],0,0,'C',FALSE);
 		//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
 		
 		$cantPartidos = 0;

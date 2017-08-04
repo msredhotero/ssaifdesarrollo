@@ -4483,6 +4483,35 @@ return $res;
 } 
 
 
+function traerEquiposPorCountriesActivosInactivos($idCountrie, $baja) { 
+$sql = "select 
+e.idequipo,
+cou.nombre as countrie,
+e.nombre,
+cat.categoria,
+di.division,
+con.nombre as contacto,
+e.fechaalta,
+e.fachebaja,
+(case when e.activo=1 then 'Si' else 'No' end) as activo,
+e.refcountries,
+e.refcategorias,
+e.refdivisiones,
+e.refcontactos
+from dbequipos e 
+inner join dbcountries cou ON cou.idcountrie = e.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias 
+inner join tbdivisiones di ON di.iddivision = e.refdivisiones 
+inner join dbcontactos con ON con.idcontacto = e.refcontactos 
+inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos 
+where cou.idcountrie = ".$idCountrie." and e.activo = ".$baja."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 function traerCategoriaPorEquipo($idEquipo) { 
 $sql = "select 
 e.idequipo,
@@ -6190,7 +6219,9 @@ f.refarbitros,
 coalesce(cl.nombre,'') as contactoLocal,
 coalesce(cv.nombre,'') as contactoVisitante,
 date_format(f.fecha,'%Y-%m-%d') as fechapartidocomun,
-coalesce(cl.telefono,'') as telefonoLocal
+coalesce(cl.telefono,'') as telefonoLocal,
+tor.refcategorias, 
+tor.refdivisiones
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
@@ -6204,9 +6235,9 @@ left join dbcontactos cl ON cl.idcontacto = el.refcontactos
 left join dbcontactos cv ON cv.idcontacto = ev.refcontactos
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
-left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 where te.idtemporadas = ".$idTemperada." and f.fecha between '".$desde."' and '".$hasta."' ".$where."
-order by f.reffechas, f.idfixture";
+order by tor.refcategorias, tor.refdivisiones, tor.idtorneo,f.reffechas, f.idfixture";
 $res = $this->query($sql,0);
 return $res;
 }

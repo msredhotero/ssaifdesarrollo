@@ -122,7 +122,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
                 
                 <div class="form-group col-md-10" style="display:'.$lblOculta.'">
-                    <label class="control-label" style="text-align:left" for="refcliente">Seleccione Temporada | Country | Equipo </label>
+                    <label class="control-label" style="text-align:left" for="refcliente">Seleccione Temporada | Country | Equipo | Baja</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
                             <select id="cjreftemporada" name="cjreftemporada" class="form-control" tabindex="2">
@@ -149,6 +149,11 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     
                             </select>
                         </span>
+
+                        <span class="input-group-addon">
+                            <input type="checkbox" id="bajaequipos" class="form-control" name="bajaequipos">
+                        </span>
+                        
                         
                     </div>
                 </div>
@@ -534,7 +539,8 @@ $(document).ready(function(){
                     } else {
 
                         
-                        $('#'+contenedor).html('<option value="1">Fecha 1</option> \
+                        $('#'+contenedor).html('<option value="">-- Seleccionar --</option> \
+                                    <option value="1">Fecha 1</option> \
                                     <option value="2">Fecha 2</option> \
                                     <option value="3">Fecha 3</option> \
                                     <option value="4">Fecha 4</option> \
@@ -739,8 +745,8 @@ $(document).ready(function(){
 	
 	$("#rptCJ").click(function(event) {
 		
-		if (($("#cjrefequipos").val() != 0) && ($("#cjrefequipos").val() != null)) {
-        	window.open("../../reportes/rptCondicionJugador.php?id=" + $("#cjrefequipos").val() + "&reftemporada=" + $("#cjreftemporada").val() ,'_blank');	
+		if (($("#cjrefcountries").val() != 0) && ($("#cjrefcountries").val() != null)) {
+        	window.open("../../reportes/rptCondicionJugador.php?id=" + $("#cjrefequipos").val() + "&reftemporada=" + $("#cjreftemporada").val() + "&bajaequipos=" + $("#bajaequipos").prop('checked') + "&refcountries=" + $('#cjrefcountries').val() ,'_blank');	
 		} else {
 			alert('Debe elegir un equipo');
 		}
