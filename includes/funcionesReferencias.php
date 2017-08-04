@@ -902,6 +902,7 @@ function suspendidosTotal() {
 			    sf.cantidadfechas <> sf.fechascumplidas
 			        OR (sf.fechahasta >= NOW()
 			        AND sf.fechadesde <> '1900-01-01')
+					OR sf.pendientesfallo = 1
 
 			union all
 			        
@@ -7632,6 +7633,15 @@ function traerSancionesJugadoresPendientesConFallos() {
 			(case when sf.generadaporacumulacion = 1 then 'Si' else 'No' end) as generadaporacumulacion,
 			sf.observaciones,
 			p.reftiposanciones,
+			cat.categoria,
+			co.nombre as countrie,
+			CONCAT(tt.temporada,
+			            ' ',
+			            cat.categoria,
+			            ' ',
+			            divi.division,
+			            ' ',
+			            tor.descripcion) as torneo,
 			p.refjugadores,
 			p.refequipos,
 			p.reffixture,
@@ -7646,6 +7656,7 @@ function traerSancionesJugadoresPendientesConFallos() {
 		inner join dbcountries co ON co.idcountrie = jug.refcountries 
 		inner join dbfixture fix ON fix.idfixture = p.reffixture 
 		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+		inner join tbtemporadas tt ON tt.idtemporadas = tor.reftemporadas
 		inner join tbfechas fe ON fe.idfecha = fix.reffechas 
 		inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
 		inner join dbequipos equ ON equ.idequipo = p.refequipos 
@@ -9233,6 +9244,33 @@ from
 }
 
 /***************************************** Fin *****************************************/
+
+
+/****************   COMPLETAR COMBOS		*********************************************/
+
+function traerCategoriasPorCountries($idCountry) {
+	$sql = "select c.idtcategoria, c.categoria 
+			from tbcategorias c 
+			inner dbequipos e ON e.refcategorias = c.idtcategoria 
+			inner dbcountries cou ON cou.idcountrie = e.refcountries 
+			where cou.idcountrie =".$idCountry."
+			group by c.idtcategoria, c.categoria 
+			order by c.categoria ";
+			
+	$res = $this->query($sql,0);
+	return $res;	
+	
+}
+
+
+
+
+
+
+
+
+/*************				FIN				*********************************************/
+
 /************  FUNCIONES PARA LA PARTE ADMINISTRATIVA  *********************/
 
 /****** VERIFICO LA EDAD ******/////

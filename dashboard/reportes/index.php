@@ -122,7 +122,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
                 
                 <div class="form-group col-md-10" style="display:'.$lblOculta.'">
-                    <label class="control-label" style="text-align:left" for="refcliente">Seleccione Temporada | Country | Equipo | Categoria | Division</label>
+                    <label class="control-label" style="text-align:left" for="refcliente">Seleccione Temporada | Country | Equipo </label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
                             <select id="cjreftemporada" name="cjreftemporada" class="form-control" tabindex="2">
@@ -134,27 +134,16 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         <span class="input-group-addon">
                             <select id="cjrefcountries" name="cjrefcountries" class="form-control" tabindex="2">
                                 
-                                
+                                <option value="0">-- Seleccione --</option>
+                                <?php echo $cadRefCountries; ?>
                     
                             </select>
                         </span>
+                        
+                        
                         <span class="input-group-addon">
                             <select id="cjrefequipos" name="cjrefequipos" class="form-control" tabindex="2">
                                 
-                                
-                    
-                            </select>
-                        </span>
-                        <span class="input-group-addon">
-                            <select id="cjrefcategorias" name="cjrefcategorias" class="form-control" tabindex="2">
-                                
-                                
-                    
-                            </select>
-                        </span>
-                        <span class="input-group-addon">
-
-                            <select id="cjrefdivisiones" name="cjrefdivisiones" class="form-control" tabindex="2">
                                 
                                 
                     
@@ -502,6 +491,31 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 <script type="text/javascript">
 $(document).ready(function(){
 	
+	$('#cjrefcountries').change(function(e) {
+        
+		$.ajax({
+				data:  {id: $('#cjrefcountries').val(),
+						accion: 'traerEquiposPorCountries'},
+				url:   '../../ajax/ajax.php',
+				type:  'post',
+				beforeSend: function () {
+					$('#cjrefequipos').html('');	
+				},
+				success:  function (response) {
+
+                    if (response != '') {
+						$('#cjrefequipos').prepend('<option value="">-- Seleccionar --</option>');
+						$('#cjrefequipos').append(response);
+						
+                    } else {
+
+                        $('#cjrefequipos').html('<option value="">-- Seleccionar --</option>');
+                        
+                    } 
+                }
+		});
+    });
+	
 	function traerFechasPorTorneos(idTorneo, contenedor) {
 		$.ajax({
 				data:  {idTorneo: idTorneo,
@@ -724,7 +738,12 @@ $(document).ready(function(){
 	
 	
 	$("#rptCJ").click(function(event) {
-        window.open("../../reportes/rptCondicionJugador.php?id=" + $("#refequipo").val() ,'_blank');	
+		
+		if (($("#cjrefequipos").val() != 0) && ($("#cjrefequipos").val() != null)) {
+        	window.open("../../reportes/rptCondicionJugador.php?id=" + $("#cjrefequipos").val() + "&reftemporada=" + $("#cjreftemporada").val() ,'_blank');	
+		} else {
+			alert('Debe elegir un equipo');
+		}
 						
     });
 	

@@ -439,6 +439,18 @@ case 'verificaEdadCategoriaJugador':
 
 /*****          fin          ************/
 
+/*****		Llenar Combos con otros ******/
+case 'traerCategoriasPorCountries':
+	traerCategoriasPorCountries($serviciosReferencias, $serviciosFunciones);
+	break;
+case 'traerDivisionesPorEquipos':
+	traerEquiposPorTemporadasCountries($serviciosReferencias);
+	break;
+case 'traerDivisionesPorEquiposCategorias':
+	traerEquiposPorTemporadasCountries($serviciosReferencias);
+	break;
+
+/*****			fin					******/
 
 /*****        BUSQUEDAS        **********/
 case 'buscarJugadores':
@@ -501,6 +513,19 @@ case 'eliminarSancionesfallosacumuladas':
 
 /* Fin */
 
+
+/*****		Llenar Combos con otros ******/
+function traerCategoriasPorCountries($serviciosReferencias, $serviciosFunciones) {
+	$idCountries = $_POST['id'];
+	
+	$res = traerCategoriasPorCountries($idCountries);
+	$cad = $serviciosFunciones->devolverSelectBox($res, array(1), '');
+	
+	echo $cad;
+		
+}
+
+/* Fin */
 function formatearFechas($fecha) {
 	if ($fecha != '') {
 		$arFecha = explode("/", $fecha);
@@ -2913,7 +2938,7 @@ function traerEquiposPorCountries($serviciosFunciones,$serviciosReferencias) {
 	$id = $_POST['id']; 
 	
 	$resEquipo			=	$serviciosReferencias->traerEquiposPorCountries($id);
-	$cadRefEquipo		=	$serviciosFunciones->devolverSelectBox($resEquipo,array(2),'');
+	$cadRefEquipo		=	$serviciosFunciones->devolverSelectBox($resEquipo,array(0,2,3,4),' - ');
 	
 	echo $cadRefEquipo;	
 }

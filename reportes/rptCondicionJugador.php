@@ -19,13 +19,9 @@ require('fpdf.php');
 
 //$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
 
-$refTemporada = $serviciosReferencias->traerUltimaTemporada();
 
-if (mysql_num_rows($refTemporada)>0) {
-	$idTemporada = mysql_result($refTemporada,0,0);	
-} else {
-	$idTemporada = 0;
-}
+$idTemporada = $_GET['reftemporada'];	
+
 
 $id				=	$_GET['id'];
 

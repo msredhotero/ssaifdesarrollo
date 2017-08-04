@@ -37,8 +37,7 @@ $fecha = date('Y-m-d');
 
 $datos		=	$serviciosReferencias->suspendidosTotal();
 
-
-
+//$datosP		=	$serviciosReferencias->traerSancionesJugadoresPendientesConFallos();
 // Crea un nuevo objeto PHPExcel
 $objPHPExcel = new PHPExcel();
 
@@ -213,6 +212,9 @@ $estiloInformacion->applyFromArray( array(
         )
     )
 ));
+
+
+
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:J1')->applyFromArray($estiloTituloReporte);
 $objPHPExcel->getActiveSheet()->getStyle('A2:J2')->applyFromArray($estiloTituloReporte);

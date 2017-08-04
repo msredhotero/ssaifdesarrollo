@@ -113,6 +113,15 @@ $pdf->SetAutoPageBreak(true,1);
 	
 	$contadorY1 = 44;
 	$contadorY2 = 44;
+	
+	$acuGoles = 0;
+	$acuPartidos = 0;
+	$acuAmarillas = 0;
+	$acuRojas = 0;
+	$acuPenales = 0;
+	
+	$primero = 0;
+	
 while ($rowE = mysql_fetch_array($resDatos)) {
 	$i+=1;	
 	$cantPartidos += 1;
@@ -136,10 +145,30 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	*/
 	
 	if (($categoria != $rowE['categoria']) || ($division != $rowE['division']) || ($torneo != $rowE['torneo']) || ($equipo != $rowE['equipo'])) {
+		
+		if ($primero == 1) {
+			$pdf->Ln();
+			$pdf->SetX(5);
+			$pdf->SetFont('Arial','',8);
+			$pdf->Cell(20,5,'SubTotales',0,0,'C',false);
+			$pdf->Cell(30,5,'Partidos: '.$acuPartidos,0,0,'C',false);
+			$pdf->Cell(30,5,'Goles: '.$acuGoles,0,0,'C',false);
+			$pdf->Cell(30,5,'Amonestaciones: '.$acuAmarillas,0,0,'C',false);
+			$pdf->Cell(30,5,'Rojas: '.$acuRojas,0,0,'C',false);
+			$pdf->Cell(30,5,'Penales Conv.: '.$acuPenales,0,0,'C',false);
+		}
+		$primero = 1;
 		$categoria = $rowE['categoria'];
 		$division	= $rowE['division'];
 		$torneo		= $rowE['torneo'];
 		$equipo		= $rowE['equipo'];
+		
+		$acuGoles = 0;
+		$acuPartidos = 0;
+		$acuAmarillas = 0;
+		$acuRojas = 0;
+		$acuPenales = 0;
+	
 		$pdf->Ln();
 		$pdf->Ln();
 		$pdf->Ln();
@@ -163,7 +192,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->Cell(20,5,'Amonestado',0,0,'C',false);
 		$pdf->Cell(20,5,'Expulsado',0,0,'C',false);
 		$pdf->Cell(24,5,'Penales Convert.',0,0,'C',false);
-		$pdf->Cell(64,5,'Visitante',0,0,'C',false);
+		$pdf->Cell(64,5,'Contrario',0,0,'C',false);
 	}
 	
 	
@@ -172,7 +201,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(20,5,utf8_decode($rowE['fecha']),0,0,'C',false);
+	$pdf->Cell(20,5,utf8_decode($rowE['fecha']).' '.$rowE['localia'],0,0,'C',false);
 	$pdf->Cell(20,5,utf8_decode($rowE['fechaaux']),0,0,'C',false);
 	$pdf->Cell(24,5,utf8_decode($rowE['goles']),0,0,'C',false);
 	$pdf->Cell(20,5,utf8_decode($rowE['amarillas']),0,0,'C',false);
@@ -180,7 +209,11 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$pdf->Cell(24,5,utf8_decode($rowE['pc']),0,0,'C',false);
 	$pdf->Cell(98,5,utf8_decode($rowE['visitante']),0,0,'L',false);
 
-	
+	$acuGoles += $rowE['goles'];
+	$acuPartidos += 1;
+	$acuAmarillas += $rowE['amarillas'];
+	$acuRojas += $rowE['rojas'];
+	$acuPenales += $rowE['pc'];
 		
 
 	$contadorY1 += 4;
@@ -189,6 +222,16 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 
 
 }
+
+$pdf->Ln();
+$pdf->SetX(5);
+$pdf->SetFont('Arial','',8);
+$pdf->Cell(20,5,'SubTotales',0,0,'C',false);
+$pdf->Cell(30,5,'Partidos: '.$acuPartidos,0,0,'C',false);
+$pdf->Cell(30,5,'Goles: '.$acuGoles,0,0,'C',false);
+$pdf->Cell(30,5,'Amonestaciones: '.$acuAmarillas,0,0,'C',false);
+$pdf->Cell(30,5,'Rojas: '.$acuRojas,0,0,'C',false);
+$pdf->Cell(30,5,'Penales Conv.: '.$acuPenales,0,0,'C',false);
 //120 x 109
 
 

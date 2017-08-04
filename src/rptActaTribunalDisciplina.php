@@ -129,9 +129,33 @@ $i = 3; //Numero de fila donde se va a comenzar a rellenar
 		 ->setCellValue('K'.$i, '')
 		 ->setCellValue('L'.$i, '')
 		 ->setCellValue('M'.$i, '');
-	$i++; 
+	$i += 1;
  }
+ 
+$objPHPExcel->setActiveSheetIndex(0)
+    ->mergeCells('A'.$i.':M'.$i);
+$objPHPExcel->setActiveSheetIndex(0)
+    ->setCellValue('A'.$i,  'Pendientes');
+$i++; 
 
+ while ($filaP = mysql_fetch_array($datosP)) {
+
+     $objPHPExcel->setActiveSheetIndex(0)
+         ->setCellValue('A'.$i, ($filaP['categoria']))
+		 ->setCellValue('B'.$i, '')
+         ->setCellValue('C'.$i, ($filaP['fecha']))
+		 ->setCellValue('D'.$i, '')
+		 ->setCellValue('E'.$i, '')
+         ->setCellValue('F'.$i, ($filaP['countrie']))
+		 ->setCellValue('G'.$i, '')
+         ->setCellValue('H'.$i, ($filaP['jugador']))
+         ->setCellValue('I'.$i, ($filaP['nrodocumento']))
+         ->setCellValue('J'.$i, ($filaP['equipo']))
+		 ->setCellValue('K'.$i, '')
+		 ->setCellValue('L'.$i, '')
+		 ->setCellValue('M'.$i, '');
+	//$i++; 
+ }
 
 $estiloTituloReporte = array(
     'font' => array(
@@ -223,36 +247,6 @@ $estiloInformacion->applyFromArray( array(
         )
     )
 ));
-
-
-$objPHPExcel->setActiveSheetIndex(0)
-    ->mergeCells('A'.$i.':M'.$i);
-$objPHPExcel->setActiveSheetIndex(0)
-    ->setCellValue('A'.$i,  'Pendientes');
-$objPHPExcel->getActiveSheet()->getStyle('A'.$i.':M'.$i)->applyFromArray($estiloTituloColumnas);
-$i++; 
-
-while ($fila = mysql_fetch_array($datosP)) {
-
-     $objPHPExcel->setActiveSheetIndex(0)
-         ->setCellValue('A'.$i, ($fila['categoria']))
-		 ->setCellValue('B'.$i, '')
-         ->setCellValue('C'.$i, ($fila['fecha']))
-		 ->setCellValue('D'.$i, '')
-		 ->setCellValue('E'.$i, '')
-         ->setCellValue('F'.$i, ($fila['countrie']))
-		 ->setCellValue('G'.$i, '')
-         ->setCellValue('H'.$i, ($fila['jugador']))
-         ->setCellValue('I'.$i, ($fila['nrodocumento']))
-         ->setCellValue('J'.$i, ($fila['equipo']))
-		 ->setCellValue('K'.$i, '')
-		 ->setCellValue('L'.$i, '')
-		 ->setCellValue('M'.$i, '');
-	//$i++; 
- }
- 
-
-
 
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->applyFromArray($estiloTituloColumnas);
