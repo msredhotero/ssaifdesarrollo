@@ -27,7 +27,7 @@ $idCountries		=	$_GET['refcountries1'];
 
 $resDatos = $serviciosReferencias->traerJugadoresPorCountries($idCountries);
 
-if ($_GET['bajas1'] == true) {
+if ($_GET['bajas1'] == 'true') {
 	$resDatosBaja = $serviciosReferencias->traerJugadoresPorCountriesBaja($idCountries);
 } else {
 	$resDatosBaja = $serviciosReferencias->traerJugadoresPorCountriesBaja(0);
@@ -57,12 +57,12 @@ $objPHPExcel->getProperties()
  
 $tituloReporte = "Jugadores Por Countries";
 $tituloReporte2 = "Fecha: ".date('Y-m-d');
-$titulosColumnas = array("Apellido y Nombre", "Nro.Doc.", "Email","Fecha Nac.", "Fecha Baja");
+$titulosColumnas = array("Apellido y Nombre", "Nro.Doc.","Fecha Nac.", "Fecha Baja");
 
 $objPHPExcel->setActiveSheetIndex(0)
-    ->mergeCells('A1:E1');
+    ->mergeCells('A1:D1');
 $objPHPExcel->setActiveSheetIndex(0)
-    ->mergeCells('A2:E2');
+    ->mergeCells('A2:D2');
 
 	
 	 
@@ -74,8 +74,7 @@ $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue('A3',  utf8_encode($titulosColumnas[0]))  //Titulo de las columnas
     ->setCellValue('B3',  utf8_encode($titulosColumnas[1]))
     ->setCellValue('C3',  utf8_encode($titulosColumnas[2]))
-    ->setCellValue('D3',  utf8_encode($titulosColumnas[3]))
-	->setCellValue('E3',  utf8_encode($titulosColumnas[4]));
+    ->setCellValue('D3',  utf8_encode($titulosColumnas[3]));
 
 
 // Agregar Informacion
@@ -92,15 +91,14 @@ $i = 4; //Numero de fila donde se va a comenzar a rellenar
      $objPHPExcel->setActiveSheetIndex(0)
          ->setCellValue('A'.$i, ($fila[0]))
          ->setCellValue('B'.$i, ($fila[1]))
-         ->setCellValue('C'.$i, ($fila[2]))
-         ->setCellValue('D'.$i, ($fila[3]))
-		 ->setCellValue('E'.$i, '');
+         ->setCellValue('C'.$i, ($fila[3]))
+         ->setCellValue('D'.$i, '');
      $i++;
 
  }
 
 $objPHPExcel->setActiveSheetIndex(0)
-    ->mergeCells('A'.$i.':E'.$i);
+    ->mergeCells('A'.$i.':D'.$i);
 $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue('A'.$i,  'Bajas');
 $i++;    
@@ -109,9 +107,8 @@ $i++;
      $objPHPExcel->setActiveSheetIndex(0)
          ->setCellValue('A'.$i, ($fila[0]))
          ->setCellValue('B'.$i, ($fila[1]))
-         ->setCellValue('C'.$i, ($fila[2]))
-         ->setCellValue('D'.$i, ($fila[3]))
-		 ->setCellValue('E'.$i, ($fila[5]));
+         ->setCellValue('C'.$i, ($fila[3]))
+         ->setCellValue('D'.$i, ($fila[5]));
      $i++;
 
  }
@@ -207,9 +204,9 @@ $estiloInformacion->applyFromArray( array(
     )
 ));
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:E1')->applyFromArray($estiloTituloReporte);
-$objPHPExcel->getActiveSheet()->getStyle('A2:E2')->applyFromArray($estiloTituloReporte);
-$objPHPExcel->getActiveSheet()->getStyle('A3:E3')->applyFromArray($estiloTituloColumnas);
+$objPHPExcel->getActiveSheet()->getStyle('A1:D1')->applyFromArray($estiloTituloReporte);
+$objPHPExcel->getActiveSheet()->getStyle('A2:D2')->applyFromArray($estiloTituloReporte);
+$objPHPExcel->getActiveSheet()->getStyle('A3:D3')->applyFromArray($estiloTituloColumnas);
 
 // Renombrar Hoja
 $objPHPExcel->getActiveSheet()->setTitle('Hoja1');

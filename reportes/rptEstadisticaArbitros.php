@@ -179,11 +179,11 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$pdf->SetX(5);
 	$pdf->SetFont('Arial','',8);
 	$pdf->Cell(70,4,utf8_decode($rowE['nombrecompleto']),1,0,'L',false);
-	$pdf->Cell(25,4,utf8_decode($rowE['cantidad']),1,0,'C',false);
-	$pdf->Cell(25,4,utf8_decode($rowE['amarillas']),1,0,'C',false);
-	$pdf->Cell(25,4,utf8_decode($rowE['rojas']),1,0,'C',false);
-	$pdf->Cell(25,4,utf8_decode($rowE['porcentajeamarillas']),1,0,'C',false);
-	$pdf->Cell(25,4,utf8_decode($rowE['porcentajerojas']),1,0,'C',false);
+	$pdf->Cell(25,4,($rowE['cantidad']),1,0,'C',false);
+	$pdf->Cell(25,4,($rowE['amarillas']),1,0,'C',false);
+	$pdf->Cell(25,4,($rowE['rojas']),1,0,'C',false);
+	$pdf->Cell(25,4,($rowE['porcentajeamarillas']),1,0,'C',false);
+	$pdf->Cell(25,4,($rowE['porcentajerojas']),1,0,'C',false);
 
 		
 	$acumulador1 = 0;

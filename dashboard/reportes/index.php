@@ -287,6 +287,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         	<option value="0">-- Seleccione --</option>
 							<option value="1">Resultado Partidos</option>
                             <option value="2">Jugadores Por Club</option>
+                            <option value="10">Jugadores Por Club Excel</option>
                             <option value="3">Jugadores en varios Equipos</option>
                             <option value="4">Puntuación Canchas</option>
                             <option value="5">Estadisticas Arbitros</option>
@@ -294,6 +295,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="7">Proxima Fecha</option>
                             <option value="8">Acta Tribunal Disciplina</option>
                             <option value="9">Historico Incidencias Jugadores</option>
+                            <option value="11">Estadistica Jugador Por Categoria</option>
                             
                     	</select>
                     </div>
@@ -393,7 +395,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
 
                 <div class="form-group col-md-3" id="fam1">
-                    <label class="control-label" style="text-align:left" for="refcliente">Amarillas</label>
+                    <label class="control-label" style="text-align:left" for="refcliente">Amonestaciones</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
                         <select id="filtroamarillas">
@@ -420,6 +422,84 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         </select>
                         </span>
                         <input type="text" id="valorrojas" class="form-control" name="valorrojas">
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-3" id="ffa1">
+                    <label class="control-label" style="text-align:left" for="refcliente">Fecha Alta</label>
+                    <div class="input-group col-md-12">
+                        <span class="input-group-addon">
+                        <select id="filtrofechaalta">
+                            <option value="0">-------</option>
+                            <option value="1">Mayor a</option>
+                            <option value="2">Menor a</option>
+                            <option value="3">Igual a</option>
+                        </select>
+                        </span>
+                        <input type="text" id="valorfechaalta" class="form-control" name="valorfechaalta">
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-3" id="ffn1">
+                    <label class="control-label" style="text-align:left" for="refcliente">Fecha Nacimiento</label>
+                    <div class="input-group col-md-12">
+                        <span class="input-group-addon">
+                        <select id="filtrofechanacimiento">
+                            <option value="0">-------</option>
+                            <option value="1">Mayor a</option>
+                            <option value="2">Menor a</option>
+                            <option value="3">Igual a</option>
+                        </select>
+                        </span>
+                        <input type="text" id="valorfechanacimiento" class="form-control" name="valorfechanacimiento">
+                    </div>
+                </div>
+                
+                
+                <div class="form-group col-md-3" id="fed1">
+                    <label class="control-label" style="text-align:left" for="refcliente">Edad</label>
+                    <div class="input-group col-md-12">
+                        <span class="input-group-addon">
+                        <select id="filtroedad">
+                            <option value="0">-------</option>
+                            <option value="1">Mayor a</option>
+                            <option value="2">Menor a</option>
+                            <option value="3">Igual a</option>
+                        </select>
+                        </span>
+                        <input type="text" id="valoredad" class="form-control" name="valoredad">
+                    </div>
+                </div>
+                
+                
+                <div class="form-group col-md-3" id="fmn1">
+                    <label class="control-label" style="text-align:left" for="refcliente">Minutos Jugadores</label>
+                    <div class="input-group col-md-12">
+                        <span class="input-group-addon">
+                        <select id="filtrominutos">
+                            <option value="0">-------</option>
+                            <option value="1">Mayor a</option>
+                            <option value="2">Menor a</option>
+                            <option value="3">Igual a</option>
+                        </select>
+                        </span>
+                        <input type="text" id="valorminutos" class="form-control" name="valorminutos">
+                    </div>
+                </div>
+                
+                
+                <div class="form-group col-md-3" id="fmj1">
+                    <label class="control-label" style="text-align:left" for="refcliente">Cant. Mejor Jug.</label>
+                    <div class="input-group col-md-12">
+                        <span class="input-group-addon">
+                        <select id="filtromejorjugador">
+                            <option value="0">-------</option>
+                            <option value="1">Mayor a</option>
+                            <option value="2">Menor a</option>
+                            <option value="3">Igual a</option>
+                        </select>
+                        </span>
+                        <input type="text" id="valormejorjugador" class="form-control" name="valormejorjugador">
                     </div>
                 </div>
 
@@ -495,7 +575,11 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
 <script type="text/javascript">
 $(document).ready(function(){
-	
+
+		
+	$("#valorfechaalta").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+	$("#valornacimiento").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+										
 	$('#cjrefcountries').change(function(e) {
         
 		$.ajax({
@@ -576,6 +660,13 @@ $(document).ready(function(){
 		});
 	}
 	
+	$('#ffa1').hide();
+	$('#ffn1').hide();
+	$('#fed1').hide();
+	$('#fmj1').hide();
+	$('#fmn1').hide();
+				
+	
 	$('#tiporeporte').change(function() {
 		switch(parseInt($('#tiporeporte').val())) {
 			case 1:
@@ -589,6 +680,11 @@ $(document).ready(function(){
                 $('#fpa1').hide();
                 $('#fam1').hide();
                 $('#fra1').hide();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
 				break;
 			case 2:
 				$('#cou1').show();
@@ -601,6 +697,28 @@ $(document).ready(function(){
                 $('#fpa1').hide();
                 $('#fam1').hide();
                 $('#fra1').hide();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
+				break;
+			case 10:
+				$('#cou1').show();
+				$('#jug1').hide();
+				$('#baj1').show();
+				$('#cat1').hide();
+				$('#div1').hide();
+				$('#tor1').hide();
+				$('#tem1').show();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
 				break;
 			case 3:
 				$('#cou1').hide();
@@ -613,6 +731,11 @@ $(document).ready(function(){
                 $('#fpa1').hide();
                 $('#fam1').hide();
                 $('#fra1').hide();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
 				break;
 			case 4:
 				$('#cou1').hide();
@@ -625,6 +748,11 @@ $(document).ready(function(){
                 $('#fpa1').hide();
                 $('#fam1').hide();
                 $('#fra1').hide();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
 				break;
 			case 5:
 				$('#cou1').hide();
@@ -637,6 +765,11 @@ $(document).ready(function(){
                 $('#fpa1').show();
                 $('#fam1').show();
                 $('#fra1').show();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
 				break;
 			case 6:
 				$('#cou1').hide();
@@ -649,6 +782,11 @@ $(document).ready(function(){
                 $('#fpa1').hide();
                 $('#fam1').hide();
                 $('#fra1').hide();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
 				break;
 			case 7:
 				$('#cou1').hide();
@@ -661,6 +799,11 @@ $(document).ready(function(){
                 $('#fpa1').hide();
                 $('#fam1').hide();
                 $('#fra1').hide();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
 				break;
 			case 8:
 				$('#cou1').hide();
@@ -673,6 +816,11 @@ $(document).ready(function(){
                 $('#fpa1').hide();
                 $('#fam1').hide();
                 $('#fra1').hide();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
 				break;
 			case 9:
 				$('#cou1').hide();
@@ -685,8 +833,29 @@ $(document).ready(function(){
                 $('#fpa1').hide();
                 $('#fam1').hide();
                 $('#fra1').hide();
+				$('#ffa1').hide();
+				$('#ffn1').hide();
+				$('#fed1').hide();
+				$('#fmj1').hide();
+				$('#fmn1').hide();
 				break;
-			
+			case 11:
+				$('#cou1').hide();
+				$('#jug1').hide();
+				$('#baj1').hide();
+				$('#cat1').show();
+				$('#div1').show();
+				$('#tor1').hide();
+				$('#tem1').show();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
+				$('#ffa1').show();
+				$('#ffn1').show();
+				$('#fed1').show();
+				$('#fmj1').show();
+				$('#fmn1').show();
+				break;
 			default:
 				alert('Debe elegir una opcion');
 		}
@@ -712,6 +881,10 @@ $(document).ready(function(){
 				break;
 			case 2:
 				window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');	
+                  
+				break;
+			case 10:
+				
                 window.open("../../reportes/rptJugadoresPorCountriesExcel.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');  
 				break;
 			case 3:
@@ -735,6 +908,10 @@ $(document).ready(function(){
             case 9:
                 window.open("../../reportes/rptHistoricoJugadorIncidencias.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&idjugador="+ $("#idjugador").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');   
                 break;    
+			case 11:
+                window.open("../../reportes/rptEstadisticaJugadorPorCategoria.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrofechaalta=' + $('#filtrofechaalta').val() + '&filtrofechaaltavalor=' + $('#valorfechaalta').val() + '&filtrofechanacimiento=' + $('#filtrofechanacimiento').val() + '&filtrofechanacimientovalor=' + $('#valorfechanacimiento').val() + '&filtroedad=' + $('#filtroedad').val() + '&filtroedadvalor=' + $('#valoredad').val() + '&filtromejorjugador=' + $('#filtromejorjugador').val() + '&filtromejorjugadorvalor=' + $('#valormejorjugador').val() + '&filtrominutos=' + $('#filtrominutos').val() + '&filtrominutosvalor=' + $('#valorminutos').val(),'_blank');   
+                break; 	
+				
 			default:
 				alert('Debe elegir una opcion');
 		} 

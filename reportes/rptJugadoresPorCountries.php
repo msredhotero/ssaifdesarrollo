@@ -26,7 +26,7 @@ $idCountries		=	$_GET['refcountries1'];
 
 $resDatos = $serviciosReferencias->traerJugadoresPorCountries($idCountries);
 
-if ($_GET['bajas1'] == true) {
+if ($_GET['bajas1'] == 'true') {
 	$resDatosBaja = $serviciosReferencias->traerJugadoresPorCountriesBaja($idCountries);
 } else {
 	$resDatosBaja = $serviciosReferencias->traerJugadoresPorCountriesBaja(0);
@@ -78,7 +78,6 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Cell(5,4,'',1,0,'C',false);
 	$pdf->Cell(60,4,'Apellido y Nombre',1,0,'C',false);
 	$pdf->Cell(15,4,'Nro. Doc.',1,0,'C',false);
-	$pdf->Cell(20,4,'Email',1,0,'C',false);
 	$pdf->Cell(16,4,'Fecha Nac.',1,0,'C',false);
 
 	$cantPartidos = 0;
@@ -109,7 +108,6 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->Cell(5,4,'',1,0,'C',false);
 		$pdf->Cell(60,4,'Apellido y Nombre',0,0,'C',false);
 		$pdf->Cell(15,4,'Nro. Doc.',0,0,'C',false);
-		$pdf->Cell(20,4,'Email',0,0,'C',false);
 		$pdf->Cell(16,4,'Fecha Nac.',1,0,'C',false);
 
 	}
@@ -121,7 +119,6 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$pdf->Cell(5,4,$cantPartidos,1,0,'C',false);
 	$pdf->Cell(60,4,utf8_decode($rowE['apyn']),1,0,'L',false);
 	$pdf->Cell(15,4,$rowE['nrodocumento'],1,0,'C',false);
-	$pdf->Cell(20,4,$rowE['email'],1,0,'C',false);
 	$pdf->Cell(16,4,$rowE['fechanacimiento'],1,0,'C',false);
 
 	
@@ -168,7 +165,6 @@ $pdf->AddPage();
 	$pdf->Cell(5,4,'',1,0,'C',false);
 	$pdf->Cell(60,4,'Apellido y Nombre',1,0,'C',false);
 	$pdf->Cell(15,4,'Nro. Doc.',1,0,'C',false);
-	$pdf->Cell(20,4,'Email',1,0,'C',false);
 	$pdf->Cell(16,4,'Fecha Nac.',1,0,'C',false);
 	$pdf->Cell(16,4,'Fecha Baja',1,0,'C',false);
 	$cantPartidos = 0;
@@ -199,7 +195,6 @@ while ($rowE = mysql_fetch_array($resDatosBaja)) {
 		$pdf->Cell(5,4,'',1,0,'C',false);
 		$pdf->Cell(60,4,'Apellido y Nombre',0,0,'C',false);
 		$pdf->Cell(15,4,'Nro. Doc.',0,0,'C',false);
-		$pdf->Cell(20,4,'Email',0,0,'C',false);
 		$pdf->Cell(16,4,'Fecha Nac.',1,0,'C',false);
 		$pdf->Cell(16,4,'Fecha Baja',1,0,'C',false);
 	}
@@ -211,7 +206,6 @@ while ($rowE = mysql_fetch_array($resDatosBaja)) {
 	$pdf->Cell(5,4,$cantPartidos,1,0,'C',false);
 	$pdf->Cell(60,4,utf8_decode($rowE['apyn']),1,0,'L',false);
 	$pdf->Cell(15,4,$rowE['nrodocumento'],1,0,'C',false);
-	$pdf->Cell(20,4,$rowE['email'],1,0,'C',false);
 	$pdf->Cell(16,4,$rowE['fechanacimiento'],1,0,'C',false);
 	$pdf->Cell(16,4,$rowE['fechabaja'],1,0,'C',false);
 

@@ -61,7 +61,7 @@ if (($idtemporada != '') || ($idtorneo != '') || ($refCategorias != '') || ($ref
 $resJugadores = $serviciosReferencias->traerJugadoresPorId($idJugador);
 
 $resDatos = $serviciosReferencias->traerHistoricoIncidenciasPorJugador($idJugador, $where);
-
+//die(print_r($resDatos));
 
 $pdf = new FPDF();
 $cantidadJugadores = 0;
@@ -107,6 +107,7 @@ $pdf->SetAutoPageBreak(true,1);
 	$division	= '';
 	$torneo		= '';
 	$equipo		= '';
+	$temporada	= '';
 	
 	$cantPartidos = 0;
 	$i=0;
@@ -144,7 +145,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	}
 	*/
 	
-	if (($categoria != $rowE['categoria']) || ($division != $rowE['division']) || ($torneo != $rowE['torneo']) || ($equipo != $rowE['equipo'])) {
+	if (($temporada != $rowE['temporada']) || ($categoria != $rowE['categoria']) || ($division != $rowE['division']) || ($torneo != $rowE['torneo']) || ($equipo != $rowE['equipo'])) {
 		
 		if ($primero == 1) {
 			$pdf->Ln();
@@ -162,6 +163,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$division	= $rowE['division'];
 		$torneo		= $rowE['torneo'];
 		$equipo		= $rowE['equipo'];
+		$temporada		= $rowE['temporada'];
 		
 		$acuGoles = 0;
 		$acuPartidos = 0;

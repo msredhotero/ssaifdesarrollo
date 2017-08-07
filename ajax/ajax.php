@@ -2245,13 +2245,36 @@ echo $res;
 } 
 
 function insertarTemporadas($serviciosReferencias) {
-$temporada = $_POST['temporada'];
-$res = $serviciosReferencias->insertarTemporadas($temporada);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Huvo un error al insertar datos';
-}
+	$temporada = $_POST['temporada'];
+	
+	if (isset($_POST['copiar'])) {
+		$copiar = 1;	
+	} else {
+		$copiar = 0;	
+	}
+	
+	$resTemporadas = $serviciosReferencias->traerUltimaTemporada();	
+
+	if (mysql_num_rows($resTemporadas)>0) {
+		$ultimaTemporada = mysql_result($resTemporadas,0,0);	
+	} else {
+		$ultimaTemporada = 0;	
+	}
+	
+	$res = $serviciosReferencias->insertarTemporadas($temporada);
+	
+	if ((integer)$res > 0) {
+		if (($copiar == 1) && ($ultimaTemporada != 0)) {
+			$copiaDT = $serviciosReferencias->copiarDefinicionAnterior($ultimaTemporada, $res);
+			if ((integer)$copiaDT > 0) {
+				$serviciosReferencias->copiarDefinicionTipoJugadorAnterior($ultimaTemporada, $res);
+				$serviciosReferencias->copiarDefinicionSancionesAnterior($ultimaTemporada, $res);
+			}
+		}
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
 }
 function modificarTemporadas($serviciosReferencias) {
 $id = $_POST['id'];

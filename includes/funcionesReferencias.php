@@ -1576,6 +1576,372 @@ function traerHistoricoIncidenciasPorJugador($idJugador, $where) {
 
 }
 
+
+function traerEstadisticaJugadorPorCategoria($where) {
+	$sql = "SELECT 
+			    r.apyn,
+			    r.nrodocumento,
+			    r.refjugadores,
+			    r.refequipos,
+			    r.refcategorias,
+			    r.refdivisiones,
+			    r.temporada,
+			    r.categoria,
+			    r.division,
+			    r.equipo,
+			    SUM(r.goles) AS goles,
+			    SUM(r.encontra) AS encontra,
+			    MAX(r.amarillas) AS amarillas,
+			    MAX(r.rojas) AS rojas,
+			    SUM(r.pc) AS pc,
+			    SUM(r.pa) AS pa,
+			    SUM(r.pe) AS pe,
+                r.fechanacimiento,
+                r.fechaalta,
+                r.edad,
+                sum(r.minutos) as minutos,
+                sum(r.mejorjugador) as mejorjugador,
+                sum(r.partidos) as partidos,
+                r.country
+			FROM
+			    (SELECT 
+			        CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
+			            jug.nrodocumento,
+			            coc.refjugadores,
+			            equ.idequipo AS refequipos,
+			            tor.refcategorias,
+			            tor.refdivisiones,
+			            tep.temporada,
+			            cat.categoria,
+			            divi.division,
+			            equ.nombre AS equipo,
+			            0 AS goles,
+			            0 AS encontra,
+			            0 AS amarillas,
+			            0 AS rojas,
+			            0 AS pc,
+			            0 AS pa,
+			            0 AS pe,
+                        sum(mij.minutos) as minutos,
+                        jug.fechanacimiento,
+                        year(now()) - year(jug.fechanacimiento) as edad,
+                        jug.fechaalta,
+                        sum(case when coalesce( mj.idmejorjugador,0)>0 then 1 else 0 end) as mejorjugador,
+                        count(fix.idfixture) as partidos,
+                        cou.nombre as country
+			    FROM
+			        dbfixture fix
+			    INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos
+			    INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
+			    LEFT JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+			    INNER JOIN tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+			    INNER JOIN tbdivisiones divi ON divi.iddivision = tor.refdivisiones
+			    INNER JOIN dbequipos equ ON equ.idequipo = fix.refconectorlocal
+			    INNER JOIN dbequipos equV ON equV.idequipo = fix.refconectorvisitante
+			    INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
+			    INNER JOIN dbconector coc ON coc.refequipos = equ.idequipo
+			        AND coc.refcategorias = cat.idtcategoria
+			    INNER JOIN dbjugadores jug ON jug.idjugador = coc.refjugadores
+			    INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+			    INNER JOIN dbcountries co ON co.idcountrie = jug.refcountries
+			    INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
+			    INNER JOIN dbminutosjugados mij ON mij.reffixture = fix.idfixture
+			        AND mij.refjugadores = jug.idjugador
+				left JOIN dbmejorjugador mj ON mj.reffixture = fix.idfixture
+			        AND mj.refjugadores = jug.idjugador
+			    WHERE
+			        es.finalizado = 1 ".$where."
+                    group by jug.apellido, jug.nombres,
+			            jug.nrodocumento,
+			            coc.refjugadores,
+			            equ.idequipo,
+			            tor.refcategorias,
+			            tor.refdivisiones,
+			            tep.temporada,
+			            cat.categoria,
+			            divi.division,
+			            equ.nombre,
+                        jug.fechanacimiento,
+                        jug.fechaalta,
+                        cou.nombre
+			            UNION ALL SELECT 
+			        CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
+			            jug.nrodocumento,
+			            coc.refjugadores,
+			            equ.idequipo AS refequipos,
+			            tor.refcategorias,
+			            tor.refdivisiones,
+			            tep.temporada,
+			            cat.categoria,
+			            divi.division,
+			            equ.nombre AS equipo,
+			            0 AS goles,
+			            0 AS encontra,
+			            0 AS amarillas,
+			            0 AS rojas,
+			            0 AS pc,
+			            0 AS pa,
+			            0 AS pe,
+                        sum(mij.minutos) as minutos,
+                        jug.fechanacimiento,
+                        year(now()) - year(jug.fechanacimiento) as edad,
+                        jug.fechaalta,
+                        sum(case when coalesce( mj.idmejorjugador,0)>0 then 1 else 0 end) as mejorjugador,
+                        count(fix.idfixture) as partidos,
+                        cou.nombre as country
+			    FROM
+			        dbfixture fix
+			    INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos
+			    INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
+			    LEFT JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+			    INNER JOIN tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+			    INNER JOIN tbdivisiones divi ON divi.iddivision = tor.refdivisiones
+			    INNER JOIN dbequipos equ ON equ.idequipo = fix.refconectorvisitante
+			    INNER JOIN dbequipos equV ON equV.idequipo = fix.refconectorlocal
+			    INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
+			    INNER JOIN dbconector coc ON coc.refequipos = equ.idequipo
+			        AND coc.refcategorias = cat.idtcategoria
+			    INNER JOIN dbjugadores jug ON jug.idjugador = coc.refjugadores
+			    INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+			    INNER JOIN dbcountries co ON co.idcountrie = jug.refcountries
+			    INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
+			    INNER JOIN dbminutosjugados mij ON mij.reffixture = fix.idfixture
+			        AND mij.refjugadores = jug.idjugador
+				left JOIN dbmejorjugador mj ON mj.reffixture = fix.idfixture
+			        AND mj.refjugadores = jug.idjugador
+			    WHERE
+			        es.finalizado = 1 ".$where."
+			            group by jug.apellido, jug.nombres,
+			            jug.nrodocumento,
+			            coc.refjugadores,
+			            equ.idequipo,
+			            tor.refcategorias,
+			            tor.refdivisiones,
+			            tep.temporada,
+			            cat.categoria,
+			            divi.division,
+			            equ.nombre,
+                        jug.fechanacimiento,
+                        jug.fechaalta,
+                        cou.nombre
+			            UNION ALL 
+			            
+			            SELECT 
+			        CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
+			            jug.nrodocumento,
+			            p.refjugadores,
+			            p.refequipos,
+			            p.refcategorias,
+			            p.refdivisiones,
+			            tep.temporada,
+			            cat.categoria,
+			            divi.division,
+			            equ.nombre AS equipo,
+			            p.goles,
+			            p.encontra,
+			            0 AS amarillas,
+			            0 AS rojas,
+			            0 AS pc,
+			            0 AS pa,
+			            0 AS pe,
+                        0 as minutos,
+                        jug.fechanacimiento,
+                        year(now()) - year(jug.fechanacimiento) as edad,
+                        jug.fechaalta,
+                        0 as mejorjugador,
+                        0 as partidos,
+                        cou.nombre as country
+			    FROM
+			        dbgoleadores p
+			    INNER JOIN dbjugadores jug ON jug.idjugador = p.refjugadores
+			    INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+			    INNER JOIN dbcountries co ON co.idcountrie = jug.refcountries
+			    INNER JOIN dbfixture fix ON fix.idfixture = p.reffixture
+			    INNER JOIN dbequipos equV ON equV.idequipo = (CASE
+			        WHEN p.refequipos = fix.refconectorlocal THEN fix.refconectorvisitante
+			        ELSE fix.refconectorlocal
+			    END)
+			    INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos and p.refcategorias = tor.refcategorias and p.refdivisiones = tor.refdivisiones
+			    INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
+			    INNER JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+			    INNER JOIN dbequipos equ ON equ.idequipo = p.refequipos
+			    INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
+			    INNER JOIN tbcategorias cat ON cat.idtcategoria = p.refcategorias
+			    INNER JOIN tbdivisiones divi ON divi.iddivision = p.refdivisiones
+			    INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
+			    WHERE
+			        es.finalizado = 1 ".$where."
+			        
+			        UNION ALL 
+			        
+			        SELECT 
+			        CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
+			            jug.nrodocumento,
+			            p.refjugadores,
+			            p.refequipos,
+			            p.refcategorias,
+			            p.refdivisiones,
+			            tep.temporada,
+			            cat.categoria,
+			            divi.division,
+			            equ.nombre AS equipo,
+			            0 AS goles,
+			            0 AS encontra,
+			            0 AS amarillas,
+			            0 AS rojas,
+			            p.penalconvertido AS pc,
+			            p.penalatajado AS pa,
+			            p.penalerrado AS pe,
+                        0 as minutos,
+                        jug.fechanacimiento,
+                        year(now()) - year(jug.fechanacimiento) as edad,
+                        jug.fechaalta,
+                        0 as mejorjugador,
+                        0 as partidos,
+                        cou.nombre as country
+			    FROM
+			        dbpenalesjugadores p
+			    INNER JOIN dbjugadores jug ON jug.idjugador = p.refjugadores
+			    INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+			    INNER JOIN dbcountries co ON co.idcountrie = jug.refcountries
+			    INNER JOIN dbfixture fix ON fix.idfixture = p.reffixture
+			    INNER JOIN dbequipos equV ON equV.idequipo = (CASE
+			        WHEN p.refequipos = fix.refconectorlocal THEN fix.refconectorvisitante
+			        ELSE fix.refconectorlocal
+			    END)
+			    INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos and p.refcategorias = tor.refcategorias and p.refdivisiones = tor.refdivisiones
+			    INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
+			    INNER JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+			    INNER JOIN dbequipos equ ON equ.idequipo = p.refequipos
+			    INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
+			    INNER JOIN tbcategorias cat ON cat.idtcategoria = p.refcategorias
+			    INNER JOIN tbdivisiones divi ON divi.iddivision = p.refdivisiones
+			    INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
+			    WHERE
+			        es.finalizado = 1 ".$where."
+			            AND (p.penalconvertido > 0
+			            OR p.penalatajado > 0
+			            OR p.penalerrado > 0) 
+
+					UNION ALL 
+
+					SELECT 
+			        CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
+			            jug.nrodocumento,
+			            p.refjugadores,
+			            p.refequipos,
+			            p.refcategorias,
+			            p.refdivisiones,
+			            tep.temporada,
+			            cat.categoria,
+			            divi.division,
+			            equ.nombre AS equipo,
+			            0 AS goles,
+			            0 AS encontra,
+			            1 AS amarillas,
+			            0 AS rojas,
+			            0 AS pc,
+			            0 AS pa,
+			            0 AS pe,
+                        0 as minutos,
+                        jug.fechanacimiento,
+                        year(now()) - year(jug.fechanacimiento) as edad,
+                        jug.fechaalta,
+                        0 as mejorjugador,
+                        0 as partidos,
+                        cou.nombre as country
+			    FROM
+			        dbsancionesjugadores p
+			    INNER JOIN dbjugadores jug ON jug.idjugador = p.refjugadores
+			    INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+			    INNER JOIN dbcountries co ON co.idcountrie = jug.refcountries
+			    INNER JOIN dbfixture fix ON fix.idfixture = p.reffixture
+			    INNER JOIN dbequipos equV ON equV.idequipo = (CASE
+			        WHEN p.refequipos = fix.refconectorlocal THEN fix.refconectorvisitante
+			        ELSE fix.refconectorlocal
+			    END)
+			    INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos and p.refcategorias = tor.refcategorias and p.refdivisiones = tor.refdivisiones
+			    INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
+			    INNER JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+			    INNER JOIN dbequipos equ ON equ.idequipo = p.refequipos
+			    INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
+			    INNER JOIN tbcategorias cat ON cat.idtcategoria = p.refcategorias
+			    INNER JOIN tbdivisiones divi ON divi.iddivision = p.refdivisiones
+			    INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
+			    WHERE
+			        es.finalizado = 1 ".$where."
+			            AND p.reftiposanciones IN (1)
+			            AND p.cantidad > 0 
+
+			            UNION ALL 
+
+			            SELECT 
+			        CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
+			            jug.nrodocumento,
+			            p.refjugadores,
+			            p.refequipos,
+			            p.refcategorias,
+			            p.refdivisiones,
+			            tep.temporada,
+			            cat.categoria,
+			            divi.division,
+			            equ.nombre AS equipo,
+			            0 AS goles,
+			            0 AS encontra,
+			            0 AS amarillas,
+			            1 AS rojas,
+			            0 AS pc,
+			            0 AS pa,
+			            0 AS pe,
+                        0 as minutos,
+                        jug.fechanacimiento,
+                        year(now()) - year(jug.fechanacimiento) as edad,
+                        jug.fechaalta,
+                        0 as mejorjugador,
+                        0 as partidos,
+                        cou.nombre as country
+			    FROM
+			        dbsancionesjugadores p
+			    INNER JOIN dbjugadores jug ON jug.idjugador = p.refjugadores
+			    INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+			    INNER JOIN dbcountries co ON co.idcountrie = jug.refcountries
+			    INNER JOIN dbfixture fix ON fix.idfixture = p.reffixture
+			    INNER JOIN dbequipos equV ON equV.idequipo = (CASE
+			        WHEN p.refequipos = fix.refconectorlocal THEN fix.refconectorvisitante
+			        ELSE fix.refconectorlocal
+			    END)
+			    INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos and p.refcategorias = tor.refcategorias and p.refdivisiones = tor.refdivisiones
+			    INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
+			    INNER JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+			    INNER JOIN dbequipos equ ON equ.idequipo = p.refequipos
+			    INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
+			    INNER JOIN tbcategorias cat ON cat.idtcategoria = p.refcategorias
+			    INNER JOIN tbdivisiones divi ON divi.iddivision = p.refdivisiones
+			    INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
+			    WHERE
+			        es.finalizado = 1 ".$where."
+			            AND p.reftiposanciones IN (2 , 3, 4, 5)
+			            AND p.cantidad > 0) AS r
+			GROUP BY r.apyn,
+			    r.nrodocumento,
+			    r.refjugadores,
+			    r.refequipos,
+			    r.refcategorias,
+			    r.refdivisiones,
+			    r.temporada,
+			    r.categoria,
+			    r.division,
+			    r.equipo,
+                r.fechanacimiento,
+                r.fechaalta,
+                r.edad,
+                r.country
+			ORDER BY r.apyn,r.temporada , r.categoria , r.division ";
+	$res = $this->query($sql,0);
+	return $res;
+
+}
+
 function traerFechasPorTorneoJugadas($idTorneo) {
 	$sql	=	"select * from		
 				 dbfixture f 
@@ -3031,6 +3397,25 @@ return $res;
 
 
 /* PARA Jugadores */
+function traerApellidoNombreMalos() {
+	$sql = "select
+				j.idjugador,
+				tip.tipodocumento,
+				j.nrodocumento,
+				j.apellido,
+				j.nombres,
+				j.email,
+				j.fechanacimiento,
+				j.fechaalta,
+				j.fechabaja,
+				cou.nombre as countrie
+			from 	dbjugadores j
+			inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+			inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+			where concat(j.apellido, ' ',j.nombres) REGEXP 'Ã|À|À|À|Á|Á|Á|Â|Â|Â|Ã|Ã|Ã|Ä|Ä|Ä|Å|Å|Å|Æ|Æ|&|Ç|Ç|Ç|È|È|È|É|É|É|Ê|Ê|Ê|Ë|Ë|Ë|Ì|Ì|Ì|Í|Í|Í|Î|Î|Î|Ï|Ï|Ï|Ð|Ð|ð|Ò|Ò|Ò|Ó|Ó|Ó|Ô|Ô|Ô|Õ|Õ|Õ|Ö|Ö|Ö|×|×|×|Ø|Ø|Ø|Ù|Ù|Ù|Ú|Ú|Ú|Û|Û|Û|Ü|Ü|Ü|Ý|Ý|Ý|Þ|Þ|þ|ß|ß|ß|À|à|à|Á|Â|â|â|Ã|ã|ã|Ä|ä|ä|Å|å|å|Æ|æ|æ|Ç|ç|ç|È|è|è|É|é|é|Ê|ê|ê|Ë|ë|ë|Ì|ì|ì|Í|Î|î|î|Ï|ï|ï|Ð|ð|ð|Ò|ò|ò|Ó|Ô|ô|ô|Õ|õ|õ|Ö|ö|ö|÷|÷|÷|Ø|ø|ø|Ù|ù|ù|Ú|Û|û|û|Ü|ü|ü|Ý|ý|ý|Þ|þ|þ|Ÿ|ÿ|ÿ' or concat(j.apellido, ' ',j.nombres) like '%?%' or concat(j.apellido, ' ',j.nombres) like '%¿%'";
+	return $this->query($sql,0);
+}
+
 
 function buscarJugadores($tipobusqueda,$busqueda) {
 		switch ($tipobusqueda) {
@@ -3146,7 +3531,7 @@ return $res;
 function modificarJugadorApellidoNombrePorId($id,$apellido,$nombres) {
 	$sql = "update dbjugadores 
 set 
-apellido = '".($apellido)."',nombres = '".($nombres)."'
+apellido = '".utf8_decode($apellido)."',nombres = '".utf8_decode($nombres)."'
 where idjugador =".$id; 
 $res = $this->query($sql,0); 
 return $res;
@@ -4734,10 +5119,18 @@ return $res;
 
 
 function traerTiposancionesPorId($id) { 
-$sql = "select idtiposancion,expulsion,amonestacion,descripcion,cantminfechas,abreviatura,cantmaxfechas,cumpletodascategorias,llevapendiente,ocultardetallepublico from tbtiposanciones where idtiposancion =".$id; 
+$sql = "select idtiposancion,
+	(case when expulsion = 1 then 'Si' else 'No' end) as expulsion,
+	(case when amonestacion = 1 then 'Si' else 'No' end) as amonestacion,
+	descripcion,
+	cantminfechas,abreviatura,cantmaxfechas,
+	(case when cumpletodascategorias = 1 then 'Si' else 'No' end) as cumpletodascategorias,
+	(case when llevapendiente = 1 then 'Si' else 'No' end) as llevapendiente,
+	(case when ocultardetallepublico = 1 then 'Si' else 'No' end) as ocultardetallepublico from tbtiposanciones where idtiposancion =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
+
 
 /* Fin */
 /* /* Fin de la Tabla: tbtiposanciones*/
@@ -4893,6 +5286,37 @@ return $res;
 
 /* PARA Definicionescategoriastemporadas */
 
+function copiarDefinicionAnterior($definicionVieja, $definicionNueva) {
+	$sql = "INSERT INTO dbdefinicionescategoriastemporadas
+			(iddefinicioncategoriatemporada,
+			refcategorias,
+			reftemporadas,
+			cantmaxjugadores,
+			cantminjugadores,
+			refdias,
+			hora,
+			minutospartido,
+			cantidadcambiosporpartido,
+			conreingreso,
+			observaciones)
+			SELECT '',
+				refcategorias,
+				".$definicionNueva.",
+				cantmaxjugadores,
+				cantminjugadores,
+				refdias,
+				hora,
+				minutospartido,
+				cantidadcambiosporpartido,
+				conreingreso,
+				observaciones
+			FROM dbdefinicionescategoriastemporadas where reftemporadas =".$definicionVieja;
+	$res = $this->query($sql,1);
+	return $res;		
+			
+}
+
+
 function insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) {
 $sql = "insert into dbdefinicionescategoriastemporadas(iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,refdias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones)
 values ('',".$refcategorias.",".$reftemporadas.",".$cantmaxjugadores.",".$cantminjugadores.",".$refdias.",'".($hora)."',".$minutospartido.",".$cantidadcambiosporpartido.",".$conreingreso.",'".($observaciones)."')";
@@ -4984,6 +5408,32 @@ return $res;
 
 /* PARA Definicionescategoriastemporadastipojugador */
 
+function copiarDefinicionTipoJugadorAnterior($definicionVieja, $definicionNueva) {
+	$sql = "INSERT INTO dbdefinicionescategoriastemporadastipojugador
+			(iddefinicionescategoriastemporadastipojugador,
+			refdefinicionescategoriastemporadas,
+			reftipojugadores,
+			edadmaxima,
+			edadminima,
+			cantjugadoresporequipo,
+			jugadorescancha,
+			observaciones)
+			SELECT '',
+				(select v.iddefinicioncategoriatemporada from dbdefinicionescategoriastemporadas v where v.reftemporadas = ".$definicionNueva." and v.refcategorias = dc.refcategorias) as aux,
+				d.reftipojugadores,
+				d.edadmaxima,
+				d.edadminima,
+				d.cantjugadoresporequipo,
+				d.jugadorescancha,
+				d.observaciones
+				
+			FROM dbdefinicionescategoriastemporadastipojugador d
+			inner join dbdefinicionescategoriastemporadas dc on d.refdefinicionescategoriastemporadas = dc.iddefinicioncategoriatemporada
+			where dc.reftemporadas = ".$definicionVieja;
+	$res = $this->query($sql,1);
+	return $res;		
+			
+}
 
 function insertarDefinicionescategoriastemporadastipojugador($refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones) { 
 $sql = "insert into dbdefinicionescategoriastemporadastipojugador(iddefinicionescategoriastemporadastipojugador,refdefinicionescategoriastemporadas,reftipojugadores,edadmaxima,edadminima,cantjugadoresporequipo,jugadorescancha,observaciones) 
@@ -5068,6 +5518,24 @@ function traerDefinicionesPorTemporadaCategoriaTipoJugador($idTemporada, $idCate
 
 
 /* PARA Definicionessancionesacumuladastemporadas */
+
+function copiarDefinicionSancionesAnterior($definicionVieja, $definicionNueva) {
+	$sql = "INSERT INTO dbdefinicionessancionesacumuladastemporadas
+				(iddefinicionessancionesacumuladastemporadas,
+				reftiposanciones,
+				reftemporadas,
+				cantidadacumulada,
+				cantidadfechasacumplir)
+			SELECT '',
+				reftiposanciones,
+				".$definicionNueva.",
+				cantidadacumulada,
+				cantidadfechasacumplir
+			FROM dbdefinicionessancionesacumuladastemporadas where reftemporadas =".$definicionVieja;
+	$res = $this->query($sql,1);
+	return $res;		
+			
+}
 
 function insertarDefinicionessancionesacumuladastemporadas($reftiposanciones,$reftemporadas,$cantidadacumulada,$cantidadfechasacumplir) { 
 $sql = "insert into dbdefinicionessancionesacumuladastemporadas(iddefinicionessancionesacumuladastemporadas,reftiposanciones,reftemporadas,cantidadacumulada,cantidadfechasacumplir) 

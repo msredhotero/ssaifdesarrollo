@@ -230,35 +230,73 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="row">
 
                     
-                    <div class="form-group col-md-6">
-                     <label class="control-label" style="text-align:left" for="torneo">Busqueda</label>
-                        <div class="input-group col-md-12">
-                            <input type="text" name="busqueda" id="busqueda" class="form-control">
-                        </div>
-
-                    </div>
+                    <div id="error" class="alert" style="margin:20px 10px;">
                     
-                    <div class="form-group col-md-6">
-                    	 <ul class="list-inline" style="margin-top:15px;">
-                            <li>
-                             <button id="buscar" class="btn btn-primary" style="margin-left:0px;" type="button">Buscar</button>
-                            </li>
-                        </ul>
-
                     </div>
                     
                     <div class="form-group col-md-12">
                     	<div class="cuerpoBox" id="resultados">
-        
+        					<?php
+								$res	=	$serviciosReferencias->traerApellidoNombreMalos();
+	
+								$cad3 = '';
+								//////////////////////////////////////////////////////busquedajugadores/////////////////////
+								$cad3 = $cad3.'
+											<div class="col-md-12">
+											<div class="panel panel-info">
+															<div class="panel-heading">
+																<h3 class="panel-title">Resultado de la Busqueda</h3>
+																
+															</div>
+															<div class="panel-body-predio" style="padding:5px 20px;">
+																';
+								$cad3 = $cad3.'
+								<div class="row">
+												<table id="example" class="table table-responsive table-striped" style="font-size:0.8em; padding:2px;">
+													<thead>
+													<tr>
+														<th>Tipo Documento</th>
+														<th>Nro Doc</th>
+														<th>Apellido</th>
+														<th>Nombres</th>
+														<th>Email</th>
+														<th>Fecha Nac.</th>
+														<th>Fecha Alta</th>
+														<th>Fecha Baja</th>
+														<th>Countrie</th>
+														<th>Acciones</th>
+													</tr>
+													</thead>
+													<tbody id="resultadosProd">';
+								while ($rowJ = mysql_fetch_array($res)) {
+									$cad3 .= '<tr>
+												<td>'.($rowJ[1]).'</td>
+												<td>'.($rowJ[2]).'</td>
+												<td><input type="text" id="apellido'.$rowJ[0].'" name="apellido'.$rowJ[0].'" value="'.utf8_encode($rowJ[3]).'"/></td>
+												<td><input type="text" id="nombre'.$rowJ[0].'" name="nombre'.$rowJ[0].'" value="'.utf8_encode($rowJ[4]).'"/></td>
+												<td>'.($rowJ[5]).'</td>
+												<td>'.($rowJ[6]).'</td>
+												<td>'.($rowJ[7]).'</td>
+												<td>'.($rowJ[8]).'</td>
+												<td>'.($rowJ[9]).'</td>
+												<td><button type="button" class="btn btn-primary modificarJugadorNombreApellido" id="'.$rowJ[0].'">Guardar</button></td>
+											 </tr>';
+								}
+								
+								$cad3 = $cad3.'</tbody>
+															</table></div>
+														</div>
+													</div>';
+													
+								echo $cad3;
+							
+							?>
        		 			</div>
 					</div>
                 
                 </div>
                 
-                <div class="row">
-                    <div class="alert"> </div>
-                    <div id="load"> </div>
-                </div>
+
 
             
             </form>
@@ -267,31 +305,12 @@ if ($_SESSION['refroll_predio'] != 1) {
     
     
 
-  <!-- Modal del guardar-->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Guardar Apellido y Nombre</h4>
-        </div>
-        <div class="modal-body">
-          <p id="error"></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>  
+ 
     
    
 </div>
 
-
+    
 </div>
 
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
@@ -366,19 +385,12 @@ $(document).ready(function(){
 	
 
 	
-	$('#modificarnombres').click(function() {
-		url = "modificarnombres.php";
-		$(location).attr('href',url);
-	});
-	
-
-	
 
 	$("#resultados").on("click",'.modificarJugadorNombreApellido', function(){
 		
 		idBtn = $(this).attr("id");
 
-		$('#myModal').modal("show");
+		
         $.ajax({
 			data:  {idJugador: $(this).attr("id"), 
 					apellido: $('#apellido'+$(this).attr("id")).val(), 
@@ -387,16 +399,25 @@ $(document).ready(function(){
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-					
+				$(".alert").removeClass("alert-danger");
+				$(".alert").removeClass("alert-info");
+				$(".alert").removeClass("alert-success");
+				$('#error').html('');	
 			},
 			success:  function (response) {
 				if (response == '') {
+					$(".alert").removeClass("alert-danger");
+					$(".alert").removeClass("alert-info");
+					$(".alert").addClass("alert-success");
 					$('#error').html('<span class="glyphicon glyphicon-ok"></span> Se guardo correctamente');
 					$('#'+idBtn).removeClass("btn-primary");
 					$('#'+idBtn).addClass("btn-success");
 					$('#'+idBtn).html('<span class="glyphicon glyphicon-ok"></span> Guardado');
 					
 				} else {
+					$(".alert").removeClass("alert-success");
+					$(".alert").removeClass("alert-info");
+					$(".alert").addClass("alert-danger");
 					$('#error').html('Huvo un error al guardar los datos, verifique los datos ingresados '.response);
 					$('#'+idBtn).removeClass("btn-primary");
 					$('#'+idBtn).addClass("btn-danger");

@@ -199,7 +199,38 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-
+	
+	if ('<?php echo mysql_result($resResultado,0,'expulsion'); ?>' == 'Si') {
+		$('#expulsion').prop('checked',true);
+	} else {
+		$('#expulsion').prop('checked',false);
+	}
+	
+	if ('<?php echo mysql_result($resResultado,0,'amonestacion'); ?>' == 'Si') {
+		$('#amonestacion').prop('checked',true);
+	} else {
+		$('#amonestacion').prop('checked',false);
+	}
+	
+	if ('<?php echo mysql_result($resResultado,0,'cumpletodascategorias'); ?>' == 'Si') {
+		$('#cumpletodascategorias').prop('checked',true);
+	} else {
+		$('#cumpletodascategorias').prop('checked',false);
+	}
+	
+	if ('<?php echo mysql_result($resResultado,0,'llevapendiente'); ?>' == 'Si') {
+		$('#llevapendiente').prop('checked',true);
+	} else {
+		$('#llevapendiente').prop('checked',false);
+	}
+	
+	if ('<?php echo mysql_result($resResultado,0,'ocultardetallepublico'); ?>' == 'Si') {
+		$('#ocultardetallepublico').prop('checked',true);
+	} else {
+		$('#ocultardetallepublico').prop('checked',false);
+	}
+	
+	
 	$('.volver').click(function(event){
 		 
 		url = "index.php";
