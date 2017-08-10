@@ -41,13 +41,16 @@ $where  = '';
 if (($_GET['filtropartidos'] != 0) && (isset($_GET['filtropartidosvalor']))) {
 	switch ($_GET['filtropartidos']) {
 		case 1:
-			$where .= 'and r.cantidad > '.$_GET['filtropartidosvalor'];
+			$where .= ' and r.cantidad > '.$_GET['filtropartidosvalor'];
 			break;
 		case 2:
-			$where .= 'and r.cantidad < '.$_GET['filtropartidosvalor'];
+			$where .= ' and r.cantidad < '.$_GET['filtropartidosvalor'];
 			break;
 		case 3:
-			$where .= 'and r.cantidad = '.$_GET['filtropartidosvalor'];
+			$where .= ' and r.cantidad = '.$_GET['filtropartidosvalor'];
+			break;
+		case 4:
+			$where .= ' and r.cantidad between '.$_GET['filtropartidosvalor'].' and '.$_GET['filtropartidosvalor2'];
 			break;
 	}
 }
@@ -64,6 +67,9 @@ if (($_GET['filtroamarillas'] != 0) && (isset($_GET['filtroamarillasvalor']))) {
 		case 3:
 			$where .= ' and coalesce(r.amarillas,0) = '.$_GET['filtroamarillasvalor'];
 			break;
+		case 4:
+			$where .= ' and coalesce(r.amarillas,0) between '.$_GET['filtroamarillasvalor'].' and '.$_GET['filtroamarillasvalor2'];
+			break;
 	}
 }
 
@@ -78,6 +84,9 @@ if (($_GET['filtrorojas'] != 0) && (isset($_GET['filtrorojasvalor']))) {
 			break;
 		case 3:
 			$where .= ' and coalesce(r.rojas,0) = '.$_GET['filtrorojasvalor'];
+			break;
+		case 4:
+			$where .= ' and coalesce(r.rojas,0) between '.$_GET['filtrorojasvalor'].' and '.$_GET['filtrorojasvalor2'];
 			break;
 	}
 }

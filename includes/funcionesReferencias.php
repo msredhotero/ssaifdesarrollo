@@ -1577,7 +1577,7 @@ function traerHistoricoIncidenciasPorJugador($idJugador, $where) {
 }
 
 
-function traerEstadisticaJugadorPorCategoria($where) {
+function traerEstadisticaJugadorPorCategoria($where, $whereAux) {
 	$sql = "SELECT 
 			    r.apyn,
 			    r.nrodocumento,
@@ -1589,21 +1589,47 @@ function traerEstadisticaJugadorPorCategoria($where) {
 			    r.categoria,
 			    r.division,
 			    r.equipo,
-			    SUM(r.goles) AS goles,
-			    SUM(r.encontra) AS encontra,
-			    MAX(r.amarillas) AS amarillas,
-			    MAX(r.rojas) AS rojas,
-			    SUM(r.pc) AS pc,
-			    SUM(r.pa) AS pa,
-			    SUM(r.pe) AS pe,
+			    r.goles,
+			    r.encontra,
+			    r.amarillas,
+			    r.rojas,
+			    r.pc,
+			    r.pa,
+			    r.pe,
                 r.fechanacimiento,
                 r.fechaalta,
                 r.edad,
-                sum(r.minutos) as minutos,
-                sum(r.mejorjugador) as mejorjugador,
-                sum(r.partidos) as partidos,
+                r.minutos,
+                r.mejorjugador,
+                r.partidos,
                 r.country
-			FROM
+			FROM (
+				SELECT 
+					f.apyn,
+					f.nrodocumento,
+					f.refjugadores,
+					f.refequipos,
+					f.refcategorias,
+					f.refdivisiones,
+					f.temporada,
+					f.categoria,
+					f.division,
+					f.equipo,
+					SUM(f.goles) AS goles,
+					SUM(f.encontra) AS encontra,
+					MAX(f.amarillas) AS amarillas,
+					MAX(f.rojas) AS rojas,
+					SUM(f.pc) AS pc,
+					SUM(f.pa) AS pa,
+					SUM(f.pe) AS pe,
+					f.fechanacimiento,
+					f.fechaalta,
+					f.edad,
+					sum(f.minutos) as minutos,
+					sum(f.mejorjugador) as mejorjugador,
+					sum(f.partidos) as partidos,
+					f.country
+				FROM
 			    (SELECT 
 			        CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
 			            jug.nrodocumento,
@@ -1921,21 +1947,27 @@ function traerEstadisticaJugadorPorCategoria($where) {
 			    WHERE
 			        es.finalizado = 1 ".$where."
 			            AND p.reftiposanciones IN (2 , 3, 4, 5)
-			            AND p.cantidad > 0) AS r
-			GROUP BY r.apyn,
-			    r.nrodocumento,
-			    r.refjugadores,
-			    r.refequipos,
-			    r.refcategorias,
-			    r.refdivisiones,
-			    r.temporada,
-			    r.categoria,
-			    r.division,
-			    r.equipo,
-                r.fechanacimiento,
-                r.fechaalta,
-                r.edad,
-                r.country
+			            AND p.cantidad > 0) AS f ";
+		
+		$sql .= "
+			GROUP BY f.apyn,
+			    f.nrodocumento,
+			    f.refjugadores,
+			    f.refequipos,
+			    f.refcategorias,
+			    f.refdivisiones,
+			    f.temporada,
+			    f.categoria,
+			    f.division,
+			    f.equipo,
+                f.fechanacimiento,
+                f.fechaalta,
+                f.edad,
+                f.country ) r";
+		if ($whereAux != '') {
+			$sql .= " where 1=1 ".$whereAux;	
+		}		
+		$sql .= "
 			ORDER BY r.apyn,r.temporada , r.categoria , r.division ";
 	$res = $this->query($sql,0);
 	return $res;

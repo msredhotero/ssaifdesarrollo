@@ -378,7 +378,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     </div>
                 </div>
                 
-                <div class="form-group col-md-3" id="fpa1">
+                <div class="form-group col-md-4" id="fpa1">
                     <label class="control-label" style="text-align:left" for="refcliente">Partidos</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
@@ -387,14 +387,20 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="1">Mayor a</option>
                             <option value="2">Menor a</option>
                             <option value="3">Igual a</option>
+                            <option value="4">Entre</option>
                         </select>
                         </span>
+                        <span class="input-group-addon">
                         <input type="text" id="valorpartido" class="form-control" name="valorpartido">
+                        </span>
+                        <span class="input-group-addon">
+                        <input type="text" id="valorpartido2" class="form-control" name="valorpartido2">
+                        </span>
                     </div>
                 </div>
 
 
-                <div class="form-group col-md-3" id="fam1">
+                <div class="form-group col-md-4" id="fam1">
                     <label class="control-label" style="text-align:left" for="refcliente">Amonestaciones</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
@@ -403,14 +409,20 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="1">Mayor a</option>
                             <option value="2">Menor a</option>
                             <option value="3">Igual a</option>
+                            <option value="4">Entre</option>
                         </select>
                         </span>
+                        <span class="input-group-addon">
                         <input type="text" id="valoramarillas" class="form-control" name="valoramarillas">
+                        </span>
+                        <span class="input-group-addon">
+                        <input type="text" id="valoramarillas2" class="form-control" name="valoramarillas2">
+                        </span>
                     </div>
                 </div>
 
 
-                <div class="form-group col-md-3" id="fra1">
+                <div class="form-group col-md-4" id="fra1">
                     <label class="control-label" style="text-align:left" for="refcliente">Rojas</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
@@ -419,13 +431,19 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="1">Mayor a</option>
                             <option value="2">Menor a</option>
                             <option value="3">Igual a</option>
+                            <option value="4">Entre</option>
                         </select>
                         </span>
+                        <span class="input-group-addon">
                         <input type="text" id="valorrojas" class="form-control" name="valorrojas">
+                        </span>
+                        <span class="input-group-addon">
+                        <input type="text" id="valorrojas2" class="form-control" name="valorrojas2">
+                        </span>
                     </div>
                 </div>
                 
-                <div class="form-group col-md-3" id="ffa1">
+                <div class="form-group col-md-4" id="ffa1">
                     <label class="control-label" style="text-align:left" for="refcliente">Fecha Alta</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
@@ -434,13 +452,19 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="1">Mayor a</option>
                             <option value="2">Menor a</option>
                             <option value="3">Igual a</option>
+                            <option value="4">Entre</option>
                         </select>
                         </span>
+                        <span class="input-group-addon">
                         <input type="text" id="valorfechaalta" class="form-control" name="valorfechaalta">
+                        </span>
+                        <span class="input-group-addon">
+                        <input type="text" id="valorfechaalta2" class="form-control" name="valorfechaalta2">
+                        </span>
                     </div>
                 </div>
                 
-                <div class="form-group col-md-3" id="ffn1">
+                <div class="form-group col-md-4" id="ffn1">
                     <label class="control-label" style="text-align:left" for="refcliente">Fecha Nacimiento</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
@@ -449,14 +473,20 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="1">Mayor a</option>
                             <option value="2">Menor a</option>
                             <option value="3">Igual a</option>
+                            <option value="4">Entre</option>
                         </select>
                         </span>
+                        <span class="input-group-addon">
                         <input type="text" id="valorfechanacimiento" class="form-control" name="valorfechanacimiento">
+                        </span>
+                        <span class="input-group-addon">
+                        <input type="text" id="valorfechanacimiento2" class="form-control" name="valorfechanacimiento2">
+                        </span>
                     </div>
                 </div>
                 
                 
-                <div class="form-group col-md-3" id="fed1">
+                <div class="form-group col-md-4" id="fed1">
                     <label class="control-label" style="text-align:left" for="refcliente">Edad</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
@@ -465,14 +495,20 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="1">Mayor a</option>
                             <option value="2">Menor a</option>
                             <option value="3">Igual a</option>
+                            <option value="4">Entre</option>
                         </select>
                         </span>
+                        <span class="input-group-addon">
                         <input type="text" id="valoredad" class="form-control" name="valoredad">
+                        </span>
+                        <span class="input-group-addon">
+                        <input type="text" id="valoredad2" class="form-control" name="valoredad2">
+                        </span>
                     </div>
                 </div>
                 
                 
-                <div class="form-group col-md-3" id="fmn1">
+                <div class="form-group col-md-4" id="fmn1">
                     <label class="control-label" style="text-align:left" for="refcliente">Minutos Jugadores</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
@@ -481,14 +517,20 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="1">Mayor a</option>
                             <option value="2">Menor a</option>
                             <option value="3">Igual a</option>
+                            <option value="4">Entre</option>
                         </select>
                         </span>
+                        <span class="input-group-addon">
                         <input type="text" id="valorminutos" class="form-control" name="valorminutos">
+                        </span>
+                        <span class="input-group-addon">
+                        <input type="text" id="valorminutos2" class="form-control" name="valorminutos2">
+                        </span>
                     </div>
                 </div>
                 
                 
-                <div class="form-group col-md-3" id="fmj1">
+                <div class="form-group col-md-4" id="fmj1">
                     <label class="control-label" style="text-align:left" for="refcliente">Cant. Mejor Jug.</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
@@ -497,9 +539,15 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="1">Mayor a</option>
                             <option value="2">Menor a</option>
                             <option value="3">Igual a</option>
+                            <option value="4">Entre</option>
                         </select>
                         </span>
+                        <span class="input-group-addon">
                         <input type="text" id="valormejorjugador" class="form-control" name="valormejorjugador">
+                        </span>
+                        <span class="input-group-addon">
+                        <input type="text" id="valormejorjugador2" class="form-control" name="valormejorjugador2">
+                        </span>
                     </div>
                 </div>
 
@@ -578,7 +626,10 @@ $(document).ready(function(){
 
 		
 	$("#valorfechaalta").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
-	$("#valornacimiento").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+	$("#valorfechanacimiento").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+	
+	$("#valorfechaalta2").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+	$("#valorfechanacimiento2").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 										
 	$('#cjrefcountries').change(function(e) {
         
@@ -847,9 +898,9 @@ $(document).ready(function(){
 				$('#div1').show();
 				$('#tor1').hide();
 				$('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
+                $('#fpa1').show();
+                $('#fam1').show();
+                $('#fra1').show();
 				$('#ffa1').show();
 				$('#ffn1').show();
 				$('#fed1').show();
@@ -894,7 +945,7 @@ $(document).ready(function(){
 				window.open("../../reportes/rptPromedioCanchas.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');	
 				break;
             case 5:
-                window.open("../../reportes/rptEstadisticaArbitros.php?reftemporada1=" + $("#reftemporada1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() ,'_blank');
+                window.open("../../reportes/rptEstadisticaArbitros.php?reftemporada1=" + $("#reftemporada1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtropartidosvalor2=' + $('#valorpartido2').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtroamarillasvalor2=' + $('#valoramarillas2').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrorojasvalor2=' + $('#valorrojas2').val(),'_blank');
                 break;
             case 6:
                 window.open("../../reportes/rptSuspendidosExcel.php" ,'_blank');  
@@ -909,7 +960,7 @@ $(document).ready(function(){
                 window.open("../../reportes/rptHistoricoJugadorIncidencias.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&idjugador="+ $("#idjugador").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');   
                 break;    
 			case 11:
-                window.open("../../reportes/rptEstadisticaJugadorPorCategoria.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrofechaalta=' + $('#filtrofechaalta').val() + '&filtrofechaaltavalor=' + $('#valorfechaalta').val() + '&filtrofechanacimiento=' + $('#filtrofechanacimiento').val() + '&filtrofechanacimientovalor=' + $('#valorfechanacimiento').val() + '&filtroedad=' + $('#filtroedad').val() + '&filtroedadvalor=' + $('#valoredad').val() + '&filtromejorjugador=' + $('#filtromejorjugador').val() + '&filtromejorjugadorvalor=' + $('#valormejorjugador').val() + '&filtrominutos=' + $('#filtrominutos').val() + '&filtrominutosvalor=' + $('#valorminutos').val(),'_blank');   
+                window.open("../../reportes/rptEstadisticaJugadorPorCategoria.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtropartidosvalor2=' + $('#valorpartido2').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtroamarillasvalor2=' + $('#valoramarillas2').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrorojasvalor2=' + $('#valorrojas2').val() + '&filtrofechaalta=' + $('#filtrofechaalta').val() + '&filtrofechaaltavalor=' + $('#valorfechaalta').val() + '&filtrofechaaltavalor2=' + $('#valorfechaalta2').val() + '&filtrofechanacimiento=' + $('#filtrofechanacimiento').val() + '&filtrofechanacimientovalor=' + $('#valorfechanacimiento').val() + '&filtrofechanacimientovalor2=' + $('#valorfechanacimiento2').val() + '&filtroedad=' + $('#filtroedad').val() + '&filtroedadvalor=' + $('#valoredad').val() + '&filtroedadvalor2=' + $('#valoredad2').val() + '&filtromejorjugador=' + $('#filtromejorjugador').val() + '&filtromejorjugadorvalor=' + $('#valormejorjugador').val()  + '&filtromejorjugadorvalor2=' + $('#valormejorjugador2').val()+ '&filtrominutos=' + $('#filtrominutos').val() + '&filtrominutosvalor=' + $('#valorminutos').val() + '&filtrominutosvalor2=' + $('#valorminutos2').val(),'_blank');   
                 break; 	
 				
 			default:
