@@ -275,6 +275,9 @@ if ($id == 0) {
 } else {
 	$lstEquipos =	$serviciosReferencias->traerEquiposPorEquipo($id);
 }
+
+$resTemporada	=	$serviciosReferencias->traerTemporadasPorId($idTemporada);
+
 while ($rowC = mysql_fetch_array($lstEquipos)) {
 	$datos		=	$serviciosReferencias->traerConectorActivosPorEquipos($rowC['idequipo']);
 
@@ -302,7 +305,7 @@ while ($rowC = mysql_fetch_array($lstEquipos)) {
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetFont('Arial','',9);
-	$pdf->Cell(35,5,'Temporada: 2016',1,0,'L',false);
+	$pdf->Cell(35,5,'Temporada: '.mysql_result($resTemporada,0,1),1,0,'L',false);
 	$pdf->Cell(75,5,'Country: '.$rowC['countrie'],1,0,'L',false);
 	$pdf->Cell(50,5,'Categoria: '.$rowC['categoria'],1,0,'L',false);
 	$pdf->Cell(45,5,'División: '.$rowC['division'],1,0,'L',false);
