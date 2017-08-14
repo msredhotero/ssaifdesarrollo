@@ -1617,8 +1617,8 @@ function traerEstadisticaJugadorPorCategoria($where, $whereAux) {
 					f.equipo,
 					SUM(f.goles) AS goles,
 					SUM(f.encontra) AS encontra,
-					MAX(f.amarillas) AS amarillas,
-					MAX(f.rojas) AS rojas,
+					SUM(f.amarillas) AS amarillas,
+					SUM(f.rojas) AS rojas,
 					SUM(f.pc) AS pc,
 					SUM(f.pa) AS pa,
 					SUM(f.pe) AS pe,
@@ -1864,7 +1864,7 @@ function traerEstadisticaJugadorPorCategoria($where, $whereAux) {
 			            equ.nombre AS equipo,
 			            0 AS goles,
 			            0 AS encontra,
-			            1 AS amarillas,
+			            p.cantidad AS amarillas,
 			            0 AS rojas,
 			            0 AS pc,
 			            0 AS pa,
@@ -9636,8 +9636,8 @@ function traerEstadisticaArbitrosPorTemporadaWhere($idTemporada, $where) {
 				tor.reftemporadas = ".$idTemporada."
 				group by a.idarbitro,a.nombrecompleto
 			) as r
-            group by r.idarbitro,r.nombrecompleto
-			where r.cantidad > 0 ".$where."
+            where r.cantidad > 0 ".$where."
+			group by r.idarbitro,r.nombrecompleto
             order by 2";
 	$res = $this->query($sql,0); 
 	return $res;	
