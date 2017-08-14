@@ -560,7 +560,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(200,4,'Capitan: __________ Delegado: '.$rowE['contactoLocal'].' Acl: ______________ Capitan: _________ Delegado: '.$rowE['contactoVisitante'].' Acl: ______________',0,0,'C',false);
+	$pdf->Cell(200,4,'Capitan: __________ Delegado: ___________ Acl: ______________ Capitan: _________ Delegado: ___________ Acl: ______________',0,0,'C',false);
 	
 	
 	$pdf->Ln();

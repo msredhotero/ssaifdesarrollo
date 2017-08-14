@@ -9546,9 +9546,9 @@ function traerPromedioCanchas($idTemporada) {
 
 function traerEstadisticaArbitrosPorTemporadaWhere($idTemporada, $where) {
 	$sql = "select
-				r.idarbitro,r.nombrecompleto, r.cantidad, coalesce( r.amarillas,0) as amarillas, coalesce( r.rojas,0) as rojas
-				, round((coalesce( r.amarillas,0) / r.cantidad) ,2) as porcentajeamarillas
-				, round((coalesce( r.rojas,0) / r.cantidad) ,2) as porcentajerojas
+				r.idarbitro,r.nombrecompleto, max(r.cantidad) as cantidad, sum(coalesce( r.amarillas,0)) as amarillas, sum(coalesce( r.rojas,0)) as rojas
+				, round(sum(coalesce( r.amarillas,0) / r.cantidad) ,2) as porcentajeamarillas
+				, round(sum(coalesce( r.rojas,0) / r.cantidad) ,2) as porcentajerojas
 			from (
 				select 
 					a.idarbitro
@@ -9556,8 +9556,10 @@ function traerEstadisticaArbitrosPorTemporadaWhere($idTemporada, $where) {
 					,  count(fix.idfixture) as cantidad
 					,  sum(fixa.amarillas) as amarillas
 					,  sum(fixr.rojas) as rojas
+                     
 				from  dbfixture fix
 				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+                
 				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
 				inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
 				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
@@ -9587,11 +9589,56 @@ function traerEstadisticaArbitrosPorTemporadaWhere($idTemporada, $where) {
 						GROUP BY fix.idfixture, sj.refequipos) fixr
 				on		fixr.idfixture = fix.idfixture
 				where fix.calificacioncancha <> 0 and
+				tor.reftemporadas = 5
+				group by a.idarbitro,a.nombrecompleto
+                
+                union all
+                
+                select 
+					a.idarbitro
+					,a.nombrecompleto
+					,  count(fix.idfixture) as cantidad
+					,  sum(fixa.amarillas) as amarillas
+					,  sum(fixr.rojas) as rojas
+                     
+				from  dbfixture fix
+				inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
+                
+				inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+				inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+				inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+				inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+				inner join dbarbitros a ON a.idarbitro = fix.refarbitros
+				left join(SELECT 
+							SUM(sj.cantidad) AS amarillas, fix.idfixture
+						FROM
+							dbsancionesjugadores sj
+								INNER JOIN
+							dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorvisitante = sj.refequipos
+								INNER JOIN
+						tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+						where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
+						GROUP BY fix.idfixture, sj.refequipos) fixa
+				on		fixa.idfixture = fix.idfixture
+
+				left join(SELECT 
+							SUM(sj.cantidad) AS rojas, fix.idfixture
+						FROM
+							dbsancionesjugadores sj
+								INNER JOIN
+							dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorvisitante = sj.refequipos
+								INNER JOIN
+						tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+						where ts.expulsion = 1
+						GROUP BY fix.idfixture, sj.refequipos) fixr
+				on		fixr.idfixture = fix.idfixture
+				where fix.calificacioncancha <> 0 and
 				tor.reftemporadas = ".$idTemporada."
 				group by a.idarbitro,a.nombrecompleto
 			) as r
-		    where r.cantidad > 0 ".$where."
-			order by 2";
+            group by r.idarbitro,r.nombrecompleto
+			where r.cantidad > 0 ".$where."
+            order by 2";
 	$res = $this->query($sql,0); 
 	return $res;	
 }
