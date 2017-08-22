@@ -8173,6 +8173,9 @@ function traerSancionesJugadoresPendientesConFallos() {
 			            divi.division,
 			            ' ',
 			            tor.descripcion) as torneo,
+			coalesce((case when cantidadfechas > 0 then spp.cumplidas
+					  when year(sf.fechadesde) > 1950 then -1 * datediff(sf.fechadesde, now())
+			        end),0) cumplidas,
 			p.refjugadores,
 			p.refequipos,
 			p.reffixture,
@@ -8194,6 +8197,13 @@ function traerSancionesJugadoresPendientesConFallos() {
 		inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
 		inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
 		inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
+		left join
+				(select count(ss.reffixture) as cumplidas, ss.refjugadores, ss.refsancionesfallos, tt.refcategorias 
+						from dbsancionesfechascumplidas ss
+							inner join dbfixture ff ON ff.idfixture = ss.reffixture
+			                inner join dbtorneos tt ON tt.idtorneo = ff.reftorneos
+						group by ss.refjugadores, ss.refsancionesfallos, tt.refcategorias) spp 
+				ON sj.refjugadores = spp.refjugadores and spp.refsancionesfallos = sf.idsancionfallo and spp.refcategorias = sj.refcategorias
 		where sf.pendientesfallo = 1";	
 		
 		$res = $this->query($sql,0);

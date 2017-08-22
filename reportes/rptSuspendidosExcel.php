@@ -37,6 +37,7 @@ $fecha = date('Y-m-d');
 
 $datos		=	$serviciosReferencias->suspendidosTotal();
 
+$datosP		=	$serviciosReferencias->traerSancionesJugadoresPendientesConFallos();
 //$datosP		=	$serviciosReferencias->traerSancionesJugadoresPendientesConFallos();
 // Crea un nuevo objeto PHPExcel
 $objPHPExcel = new PHPExcel();
@@ -214,6 +215,28 @@ $estiloInformacion->applyFromArray( array(
 ));
 
 
+$objPHPExcel->setActiveSheetIndex(0)
+    ->mergeCells('A'.$i.':M'.$i);
+$objPHPExcel->setActiveSheetIndex(0)
+    ->setCellValue('A'.$i,  'Pendientes');
+$objPHPExcel->getActiveSheet()->getStyle('A'.$i.':M'.$i)->applyFromArray($estiloTituloColumnas);
+$i++; 
+
+while ($fila = mysql_fetch_array($datosP)) {
+
+     $objPHPExcel->setActiveSheetIndex(0)
+         ->setCellValue('A'.$i, ($fila['countrie']))
+		 ->setCellValue('B'.$i, ($fila['nrodocumento']))
+         ->setCellValue('C'.$i, ($fila['jugador']))
+		 ->setCellValue('D'.$i, ($fila['torneo']))
+		 ->setCellValue('E'.$i, ($fila['reffixture']))
+         ->setCellValue('F'.$i, ($fila['equipo']))
+		 ->setCellValue('G'.$i, ($fila['fecha']))
+         ->setCellValue('H'.$i, '')
+         ->setCellValue('I'.$i, '')
+         ->setCellValue('J'.$i, ($fila['categoria']));
+	//$i++; 
+ }
 
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:J1')->applyFromArray($estiloTituloReporte);
