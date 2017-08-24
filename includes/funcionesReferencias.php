@@ -541,7 +541,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 	$lstPosiciones = array();
 	
 	$lstPosicionesFinal = array();
-	
+
 	while ($rowT = mysql_fetch_array($resConformada)) {
 	
 		$arPosiciones = $this->Posiciones($rowT['idtorneo']);
@@ -581,10 +581,13 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 	$amarillas	= 0;
 	$rojas		= 0;
 	$puntobonus = 0;
-
+	$soloUno	= 0;
+	
+	//die(var_dump($sorted));
 	foreach ($sorted as $tblFinal) {
 		if ($cambio != $tblFinal['idequipo']) {
-			if ($primero != 0) {
+			
+			if (($soloUno != 0) && ($primero == 1)) {
 				$lstPosicionesFinal[] = array('equipo'=> $equipo,
 								  'puntos'=> $puntos,
 								  'goles'=> $goles,
@@ -596,8 +599,9 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 								  'amarillas'=> $amarillas,
 								  'rojas'=> $rojas,
 								  'puntobonus'=> $puntobonus);
+				
+				$primero = 0;
 			}
-			
 			$cambio = $tblFinal['idequipo'];
 			
 			$equipo		= '';
@@ -610,6 +614,8 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 			$amarillas	= 0;
 			$rojas		= 0;
 			$puntobonus = 0;
+			$golescontra= 0;
+
 		}
 		
 		$equipo 	= $tblFinal['equipo'];
@@ -624,14 +630,32 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 		$rojas	    += (integer)$tblFinal['rojas'];
 		$puntobonus	+= (integer)$tblFinal['puntobonus'];
 		
-		$primero = 1;
+		if ($primero != 0) {
+			$lstPosicionesFinal[] = array('equipo'=> $equipo,
+							  'puntos'=> $puntos,
+							  'goles'=> $goles,
+							  'golescontra'=> $valorT['golescontra'],
+							  'pj'=> $pj,
+							  'pg'=> $pg,
+							  'pp'=> $pp,
+							  'pe'=> $pe,
+							  'amarillas'=> $amarillas,
+							  'rojas'=> $rojas,
+							  'puntobonus'=> $puntobonus);
+			
+			$primero = 0;
+		} else {
+			$soloUno = 1;
+			$primero += 1;	
+		}
+		
 		 
 	}
 	
 	
-	$sorted = $this->array_orderby($lstPosicionesFinal, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
+	//$sorted = $this->array_orderby($lstPosicionesFinal, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
 
-	return $sorted;
+	return $lstPosicionesFinal;
 
 }
 
@@ -3155,6 +3179,16 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function traerCategoriasPorTemporadas($idTemporadas) {
+	$sql = "select c.idtcategoria, c.categoria 
+				from tbcategorias c 
+				inner join dbtorneos t on t.refcategorias = c.idtcategoria
+				where t.reftemporadas = ".$idTemporadas." group by c.idtcategoria, c.categoria ";	
+				
+	$res = $this->query($sql,0);
+	return $res;
+}
+
 /* Fin */
 /* /* Fin de la Tabla: tbcategorias*/
 
@@ -3200,6 +3234,17 @@ function traerDivisionesPorId($id) {
 $sql = "select iddivision,division from tbdivisiones where iddivision =".$id;
 $res = $this->query($sql,0);
 return $res;
+}
+
+
+function traerDivisionesPorCategoriasTemporadas($idTemporadas, $idcategoria) {
+	$sql = "select v.iddivision, v.division 
+				from tbdivisiones v 
+				inner join dbtorneos t on t.refdivisiones = v.iddivision
+				where t.reftemporadas = ".$idTemporadas." and t.refcategorias = ".$idcategoria." group by v.iddivision, v.division ";	
+				
+	$res = $this->query($sql,0);
+	return $res;
 }
 
 /* Fin */
@@ -4968,6 +5013,18 @@ $res = $this->query($sql,0);
 return $res; 
 }
 
+function traerEquipoPorCategoriaDivision($idCategoria, $idDivision) { 
+$sql = "select 
+e.idequipo,
+e.nombre,
+(case when e.activo = 1 then 'Si' else 'No' end) as activo
+from dbequipos e 
+where e.refcategorias = ".$idCategoria." and e.refdivisiones = ".$idDivision."
+order by e.nombre"; 
+$res = $this->query($sql,0); 
+return $res; 
+}
+
 
 /* Fin */
 /* /* Fin de la Tabla: dbequipos*/
@@ -6466,6 +6523,54 @@ left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 where tor.idtorneo = ".$idTorneo."
+order by f.reffechas, f.idfixture";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerFixtureTodoPorCountryEquiposTorneos($idEquipo, $idTorneo) {
+$sql = "select
+f.idfixture,
+el.nombre as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+ev.nombre as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.goleslocal,
+f.golesvisitantes,
+can.nombre as canchas,
+fec.fecha,
+date_format(f.fecha,'%d/%m/%Y'),
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.observaciones,
+f.publicar,
+arb.telefonoparticular as telefono,
+f.refcanchas,
+f.reftorneos,
+f.reffechas,
+f.refconectorlocal,
+f.refconectorvisitante,
+f.refestadospartidos,
+f.refarbitros
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where tor.idtorneo = ".$idTorneo." and (el.idequipo = ".$idEquipo." or ev.idequipo = ".$idEquipo.")
 order by f.reffechas, f.idfixture";
 $res = $this->query($sql,0);
 return $res;
@@ -8203,7 +8308,7 @@ function traerSancionesJugadoresPendientesConFallos() {
 							inner join dbfixture ff ON ff.idfixture = ss.reffixture
 			                inner join dbtorneos tt ON tt.idtorneo = ff.reftorneos
 						group by ss.refjugadores, ss.refsancionesfallos, tt.refcategorias) spp 
-				ON sj.refjugadores = spp.refjugadores and spp.refsancionesfallos = sf.idsancionfallo and spp.refcategorias = sj.refcategorias
+				ON p.refjugadores = spp.refjugadores and spp.refsancionesfallos = sf.idsancionfallo and spp.refcategorias = p.refcategorias
 		where sf.pendientesfallo = 1";	
 		
 		$res = $this->query($sql,0);
