@@ -29,7 +29,7 @@ $cad = '';
 			array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'], 'id'=> $row[0]));
 		} else {
 
-			array_push($ar,array('equipo'=>$row['nombre'].' - '.$row['categoria'].' - '.$row['division'], 'id'=> $row[0]));
+			array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'].' - '.$row['categoria'].' - '.$row['division'], 'id'=> $row[0]));
 		}
 	}
 

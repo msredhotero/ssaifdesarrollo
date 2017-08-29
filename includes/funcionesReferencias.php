@@ -304,6 +304,45 @@ group by ev.nombre,
             f.observaciones,
             f.publicar,
 			ev.idequipo
+			
+union all
+
+select
+
+ev.nombre as equipo,
+0 as puntos,
+ca.categoria,
+'' as arbitro,
+0 as goles,
+0 as golescontra,
+'' as canchas,
+'' as fecha,
+'' as fechajuego,
+'' as hora,
+'' as calificacioncancha,
+'' as juez1,
+'' as juez2,
+'' as observaciones,
+'' as publicar,
+0 as pj,
+0 as pg,
+0 as pp,
+0 as pe,
+0 as amarillas,
+0 as rojas,
+ev.idequipo  
+from (select 
+		e.idequipo,
+		e.nombre,
+        t.refcategorias
+		from dbequipos e 
+		inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
+        inner join tbcategorias ca on ca.idtcategoria = t.refcategorias
+		where t.idtorneo = ".$refTorneo." and e.activo=1) ev
+inner join tbcategorias ca ON ca.idtcategoria = ev.refcategorias
+left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.refconectorvisitante) and f.reftorneos = ".$refTorneo." and f.refestadospartidos is not null
+
+where f.idfixture is null
 ) p
 group by p.equipo, p.idequipo
 order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
@@ -519,6 +558,46 @@ group by ev.nombre,
             f.observaciones,
             f.publicar,
 			ev.idequipo
+			
+union all
+
+select
+
+ev.nombre as equipo,
+0 as puntos,
+ca.categoria,
+'' as arbitro,
+0 as goles,
+0 as golescontra,
+'' as canchas,
+'' as fecha,
+'' as fechajuego,
+'' as hora,
+'' as calificacioncancha,
+'' as juez1,
+'' as juez2,
+'' as observaciones,
+'' as publicar,
+0 as pj,
+0 as pg,
+0 as pp,
+0 as pe,
+0 as amarillas,
+0 as rojas,
+ev.idequipo  
+from (select 
+		e.idequipo,
+		e.nombre,
+        t.refcategorias
+		from dbequipos e 
+		inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
+        inner join tbcategorias ca on ca.idtcategoria = t.refcategorias
+		where t.idtorneo = ".$refTorneo." and e.activo=1) ev
+inner join tbcategorias ca ON ca.idtcategoria = ev.refcategorias
+left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.refconectorvisitante) and f.reftorneos = ".$refTorneo." and f.refestadospartidos is not null
+
+where f.idfixture is null
+
 ) p
 group by p.equipo, p.idequipo
 order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
@@ -653,9 +732,9 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 	}
 	
 	
-	//$sorted = $this->array_orderby($lstPosicionesFinal, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
+	$sorted = $this->array_orderby($lstPosicionesFinal, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
 
-	return $lstPosicionesFinal;
+	return $sorted;
 
 }
 
@@ -4742,6 +4821,29 @@ return $res;
 } 
 
 
+function traerTorneosPorEquipo($idEquipo) { 
+$sql = "SELECT 
+			t.idtorneo,
+			t.descripcion,
+			tem.temporada
+		FROM
+			dbtorneos t
+				inner join
+			tbtemporadas tem ON tem.idtemporadas = t.reftemporadas
+				INNER JOIN
+			dbfixture fix ON fix.reftorneos = t.idtorneo
+				AND (fix.refconectorlocal = ".$idEquipo."
+				OR fix.refconectorvisitante = ".$idEquipo.")
+		WHERE
+			t.activo = 1
+		group by t.idtorneo,
+			t.descripcion,tem.temporada
+		order by 1"; 
+$res = $this->query($sql,0); 
+return $res;
+} 
+
+
 function traerTorneosPorTemporadaPorFechas($idTemporada, $desde, $hasta) { 
 $sql = "SELECT 
 			t.idtorneo,
@@ -6540,9 +6642,9 @@ ca.categoria,
 arb.nombrecompleto as arbitro,
 f.goleslocal,
 f.golesvisitantes,
-can.nombre as canchas,
+can.nombre as cancha,
 fec.fecha,
-date_format(f.fecha,'%d/%m/%Y') as fechajuego,
+date_format(f.fecha,'%d-%m-%Y') as fechajuego,
 f.hora,
 est.descripcion as estado,
 f.calificacioncancha,
@@ -6559,8 +6661,8 @@ inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
 inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
 inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
 inner join tbfechas fec ON fec.idfecha = f.reffechas
-inner join dbequipos el ON el.idequipo = f.refconectorlocal
-inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbequipos el ON el.idequipo = f.refconectorlocal
+left join dbequipos ev ON ev.idequipo = f.refconectorvisitante
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos

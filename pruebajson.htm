@@ -57,6 +57,21 @@
 <select id="lstEquiposCatgoriaDivision">
 
 </select>
+
+
+<br />
+<p>Torneos por Equipo</p>
+<select id="lstTorneosEquipos">
+
+</select>
+</div>
+
+
+<br />
+<p>Fixture por Equipo y Torneo</p>
+<div id="lstFixtureEquiposTorneos">
+
+</div>
 </div>
 
 <script type="text/javascript">
@@ -210,18 +225,97 @@ $(document).ready(function(){
 				$('#lstEquiposCatgoriaDivision').html(''); //Nothing happnes
 			},
 			success: function(datos) {
-						
 						for (var clave in datos) {
-							//alert(datos[clave].equipo);
-							//alert(datos[clave].id);
 							$('#lstEquiposCatgoriaDivision').append('<option value="' + datos[clave].id + '">' + datos[clave].equipo + '</option>');
-							
-							
 						}
 					 },
 			 error: function() { alert("Error leyendo fichero jsonP"); }
 		});
-		
+	}
+	
+	
+	function traerTorneosEquipos(idEquipo) {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jstorneos.php', // devuelve "id" y "torneo", con parametros no obligatorios (idEquipo)
+			data: {idequipo: idEquipo},
+			beforeSend: function (XMLHttpRequest) {
+				$('#lstTorneosEquipos').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+						for (var clave in datos) {
+							$('#lstTorneosEquipos').append('<option value="' + datos[clave].id + '">' + datos[clave].torneo + '</option>');
+						}
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+	}
+	
+	
+	
+	function traerFixtureTorneosEquipos(idTorneo,idEquipo) {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsfixture.php', // devuelve "id" y "torneo", con parametros no obligatorios (idEquipo)
+			data: {idtorneo: idTorneo, idequipo: idEquipo},
+			beforeSend: function (XMLHttpRequest) {
+				$('#lstFixtureEquiposTorneos').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>equipolocal</th> \
+									<th>puntoslocal</th> \
+									<th>puntosvisita</th> \
+									<th>equipovisitante</th> \
+									<th>categoria</th> \
+									<th>arbitro</th> \
+									<th>goleslocal</th> \
+									<th>golesvisitantes</th> \
+									<th>cancha</th> \
+									<th>fecha</th> \
+									<th>fechajuego</th> \
+									<th>hora</th> \
+									<th>estado</th> \
+									<th>calificacioncancha</th> \
+									<th>juez1</th> \
+									<th>juez2</th> \
+									<th>refconectorlocal</th> \
+									<th>refconectorvisitante</th> \
+									<th>id</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+
+						for (var clave in datos) {
+							cad += '<td>' + datos[clave].equipolocal + '</td> \
+									<td>' + datos[clave].puntoslocal + '</td> \
+									<td>' + datos[clave].puntosvisita + '</td> \
+									<td>' + datos[clave].equipovisitante + '</td> \
+									<td>' + datos[clave].categoria + '</td> \
+									<td>' + datos[clave].arbitro + '</td> \
+									<td>' + datos[clave].goleslocal + '</td> \
+									<td>' + datos[clave].golesvisitantes + '</td> \
+									<td>' + datos[clave].cancha + '</td> \
+									<td>' + datos[clave].fecha + '</td> \
+									<td>' + datos[clave].fechajuego + '</td> \
+									<td>' + datos[clave].hora + '</td> \
+									<td>' + datos[clave].estado + '</td> \
+									<td>' + datos[clave].calificacioncancha + '</td> \
+									<td>' + datos[clave].juez1 + '</td> \
+									<td>' + datos[clave].juez2 + '</td> \
+									<td>' + datos[clave].refconectorlocal + '</td> \
+									<td>' + datos[clave].refconectorvisitante + '</td> \
+									<td>' + datos[clave].id + '</td></tr>';
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#lstFixtureEquiposTorneos').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
 	}
 	
 	$('#lstTemporadas').change(function() {
@@ -235,6 +329,20 @@ $(document).ready(function(){
 	
 	$('#lstDivisiones').change(function() {
 		traerEquiposPorCategoriaDivision($('#lstCategorias').val(), $(this).val());
+	});
+	
+	$('#lstEquipos').change(function() {
+		traerTorneosEquipos( $(this).val());
+	});
+	
+	$('#lstEquiposCountries').change(function() {
+		traerTorneosEquipos( $(this).val());
+	});
+	
+	
+	
+	$('#lstTorneosEquipos').change(function() {
+		traerFixtureTorneosEquipos( $(this).val(), $('#lstEquiposCountries').val());
 	});
 	
 	
