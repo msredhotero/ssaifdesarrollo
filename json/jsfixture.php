@@ -12,10 +12,12 @@ if (((isset($_GET['idcountry'])) && ($_GET['idcountry'] > 0)) && ((isset($_GET['
 }
 
 
-/*
-id: "'.$row[0].'",
-				
-*/
+$token = $_GET['callback'];
+
+header("content-type: Access-Control-Allow-Origin: *");
+
+$ar = array();
+
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerDatos)) {
 		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
@@ -26,6 +28,6 @@ $cad = '';
 			  },';
 	}
 
-echo "[".substr($cad,0,-1)."]";
-
+//echo "[".substr($cad,0,-1)."]";
+echo $token.'('.json_encode($ar).');';
 ?>

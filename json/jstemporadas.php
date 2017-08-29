@@ -11,23 +11,20 @@ $serviciosFunciones = new Servicios();
 $serviciosUsuario 	= new ServiciosUsuarios();
 $serviciosReferencias 	= new ServiciosReferencias();
 
-//$token = $_GET['token'];
+$token = $_GET['callback'];
 
 $resTraerTemporadas = $serviciosReferencias->traerTemporadas();
-/*
-id: "'.$row[0].'",
-				
-*/
+
+header("content-type: Access-Control-Allow-Origin: *");
+
+$ar = array();
 $cadTemporadas = '';
 	while ($row = mysql_fetch_array($resTraerTemporadas)) {
-		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
-		$cadTemporadas .= '
-		      {
-				"temporada": "'.$row['temporada'].'",
-				"id": "'.$row[0].'"
-			  },';
+			  
+		array_push($ar,array('temporada'=>$row['temporada'], 'id'=> $row[0]));
+		
+		
 	}
 
-echo "[".substr($cadTemporadas,0,-1)."]";
-
+echo $token.'('.json_encode($ar).');';
 ?>

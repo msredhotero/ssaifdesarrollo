@@ -23,10 +23,13 @@ $fecha = date('Y-m-d');
 $countries = $_GET['countrie'];
 
 $resTraerJugadores = $serviciosReferencias->traerJugadores();
-/*
-id: "'.$row[0].'",
-				
-*/
+
+$token = $_GET['callback'];
+
+header("content-type: Access-Control-Allow-Origin: *");
+
+$ar = array();
+
 $cadJugadores = '';
 	while ($row = mysql_fetch_array($resTraerJugadores)) {
 		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
@@ -37,6 +40,7 @@ $cadJugadores = '';
 			  },';
 	}
 
-echo "[".substr($cadJugadores,0,-1)."]";
+//echo "[".substr($cadJugadores,0,-1)."]";
+echo $token.'('.json_encode($ar).');';
 }
 ?>

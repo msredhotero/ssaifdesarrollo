@@ -15,29 +15,25 @@ if (((isset($_GET['idcategoria'])) && ($_GET['idcategoria'] > 0)) && ((isset($_G
 	$resTraerDatos = $serviciosReferencias->traerEquipos();	
 }
 
+$token = $_GET['callback'];
 
-/*
-id: "'.$row[0].'",
-				
-*/
+header("content-type: Access-Control-Allow-Origin: *");
+
+$ar = array();
+
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerDatos)) {
 		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
 		if ($datos == 1) {
-			$cad .= '
-		      {
-				"equipo": "'.$row[0].' - '.$row['nombre'].'",
-				"id": "'.$row[0].'"
-			  },';
+
+			array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'], 'id'=> $row[0]));
 		} else {
-			$cad .= '
-		      {
-				"equipo": "'.$row['nombre'].' - '.$row['categoria'].' - '.$row['division'].'",
-				"id": "'.$row[0].'"
-			  },';
+
+			array_push($ar,array('equipo'=>$row['nombre'].' - '.$row['categoria'].' - '.$row['division'], 'id'=> $row[0]));
 		}
 	}
 
-echo "[".substr($cad,0,-1)."]";
+//echo "[".substr($cad,0,-1)."]";
+echo $token.'('.json_encode($ar).');';
 
 ?>

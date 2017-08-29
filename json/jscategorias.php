@@ -13,21 +13,19 @@ if ((isset($_GET['idtemporada'])) && ($_GET['idtemporada'] > 0)) {
 	$resTraerCategorias = $serviciosReferencias->traerCategorias();	
 }
 
+$token = $_GET['callback'];
 
-/*
-id: "'.$row[0].'",
-				
-*/
+header("content-type: Access-Control-Allow-Origin: *");
+
+$ar = array();
+
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerCategorias)) {
-		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
-		$cad .= '
-		      {
-				"categoria": "'.$row['categoria'].'",
-				"id": "'.$row[0].'"
-			  },';
+
+		array_push($ar,array('categoria'=>$row['categoria'], 'id'=> $row[0]));
 	}
 
-echo "[".substr($cad,0,-1)."]";
+//echo "[".substr($cad,0,-1)."]";
+echo $token.'('.json_encode($ar).');';
 
 ?>

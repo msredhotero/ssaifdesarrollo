@@ -153,6 +153,7 @@ if (mysql_num_rows($resDetalleIncidenciasVisit)>0) {
 
 $existe			= $serviciosReferencias->existe( "select refestadospartidos from dbfixture where refestadospartidos is not null and idfixture = ".$idFixture);
 
+//die(print_r($existe));
 if ($_SESSION['idroll_predio'] == 1) {
 	if ($existe == 0) {
 		$resEstados		= $serviciosReferencias->traerEstadospartidos();
@@ -1778,7 +1779,7 @@ $(document).ready(function(){
 	
 	var table = $('#example').dataTable({
 		"lengthMenu": [[30, 60 -1], [30, 60, "All"]],
-		"order": [[ 0, "asc" ]],
+		"order": [[ 1, "asc" ]],
 		"language": {
 			"emptyTable":     "No hay datos cargados",
 			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
@@ -1807,7 +1808,7 @@ $(document).ready(function(){
 	
 	var table2 = $('#example2').dataTable({
 		"lengthMenu": [[30, 60 -1], [30, 60, "All"]],
-		"order": [[ 0, "asc" ]],
+		"order": [[ 1, "asc" ]],
 		"language": {
 			"emptyTable":     "No hay datos cargados",
 			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",

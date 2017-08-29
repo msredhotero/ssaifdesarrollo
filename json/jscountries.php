@@ -13,21 +13,21 @@ $serviciosReferencias 	= new ServiciosReferencias();
 
 //$token = $_GET['token'];
 
-$resTraerTemporadas = $serviciosReferencias->traerTemporadas();
-/*
-id: "'.$row[0].'",
-				
-*/
+$resTraerTemporadas = $serviciosReferencias->traerCountries();
+
+$token = $_GET['callback'];
+
+header("content-type: Access-Control-Allow-Origin: *");
+
+$ar = array();
+
 $cadTemporadas = '';
 	while ($row = mysql_fetch_array($resTraerTemporadas)) {
-		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
-		$cadTemporadas .= '
-		      {
-				"temporada": "'.$row['temporada'].'",
-				"id": "'.$row[0].'"
-			  },';
+
+		array_push($ar,array('country'=>$row['nombre'], 'id'=> $row[0]));
 	}
 
-echo "[".substr($cadTemporadas,0,-1)."]";
+//echo "[".substr($cadTemporadas,0,-1)."]";
+echo $token.'('.json_encode($ar).');';
 
 ?>

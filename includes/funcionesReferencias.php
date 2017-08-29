@@ -6542,22 +6542,16 @@ f.goleslocal,
 f.golesvisitantes,
 can.nombre as canchas,
 fec.fecha,
-date_format(f.fecha,'%d/%m/%Y'),
+date_format(f.fecha,'%d/%m/%Y') as fechajuego,
 f.hora,
 est.descripcion as estado,
 f.calificacioncancha,
 f.juez1,
 f.juez2,
-f.observaciones,
-f.publicar,
-arb.telefonoparticular as telefono,
 f.refcanchas,
 f.reftorneos,
-f.reffechas,
 f.refconectorlocal,
-f.refconectorvisitante,
-f.refestadospartidos,
-f.refarbitros
+f.refconectorvisitante
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo

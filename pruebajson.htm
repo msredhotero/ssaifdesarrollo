@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Documento sin título</title>
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<link rel="stylesheet" href="css/jquery-ui.css">
+
+<script src="js/jquery-ui.js"></script>
+</head>
+
+<body>
+
+<div id="respuesta">
+<br />
+<p>Temporadas</p>
+<select id="lstTemporadas">
+
+</select>
+<br />
+<p>Categorias</p>
+<select id="lstCategorias">
+
+</select>
+<br />
+<p>Divisiones</p>
+<select id="lstDivisiones">
+
+</select>
+<br />
+<p>Countries</p>
+<select id="lstCountries">
+
+</select>
+<br />
+<p>Equipos</p>
+<select id="lstEquipos">
+
+</select>
+
+<br />
+<p>Equipos Por Countries</p>
+<select id="lstEquiposCountries">
+
+</select>
+
+
+<br />
+<p>Divisiones por Temporadas y Categorias</p>
+<select id="lstDivisionesTemporadasCatgorias">
+
+</select>
+
+
+<br />
+<p>Equipos por Categorias y Diviciones</p>
+<select id="lstEquiposCatgoriaDivision">
+
+</select>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	/*http://saupureinconsulting.com.ar/aifdesarrollo/*/
+	url = 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequipos.php';
+
+	 $.ajax({
+		dataType: 'jsonp',
+		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jstemporadas.php', // devuelve "id" y "temporada", sin parametros
+		success: function(datos) {
+					
+					for (var clave in datos) {
+						//alert(datos[clave].equipo);
+						//alert(datos[clave].id);
+						$('#lstTemporadas').append('<option value="' + datos[clave].id + '">' + datos[clave].temporada + '</option>');
+						
+						
+					}
+				 },
+		 error: function() { alert("Error leyendo fichero jsonP"); }
+	});
+		
+		
+	$.ajax({
+		dataType: 'jsonp',
+		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jscategorias.php', // devuelve "id" y "categoria", sin parametros
+		success: function(datos) {
+					
+					for (var clave in datos) {
+						//alert(datos[clave].equipo);
+						//alert(datos[clave].id);
+						$('#lstCategorias').append('<option value="' + datos[clave].id + '">' + datos[clave].categoria + '</option>');
+						
+						
+					}
+				 },
+		 error: function() { alert("Error leyendo fichero jsonP"); }
+	});
+		
+		
+	$.ajax({
+		dataType: 'jsonp',
+		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsdivisiones.php', // devuelve "id" y "division", con parametros no obligatorios (idtemporada y idcategoria)
+		success: function(datos) {
+					
+					for (var clave in datos) {
+						//alert(datos[clave].equipo);
+						//alert(datos[clave].id);
+						$('#lstDivisiones').append('<option value="' + datos[clave].id + '">' + datos[clave].division + '</option>');
+						
+						
+					}
+				 },
+		 error: function() { alert("Error leyendo fichero jsonP"); }
+	});
+		
+		
+	$.ajax({
+		dataType: 'jsonp',
+		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jscountries.php', // devuelve "id" y "country", sin parametros
+		success: function(datos) {
+					
+					for (var clave in datos) {
+						//alert(datos[clave].equipo);
+						//alert(datos[clave].id);
+						$('#lstCountries').append('<option value="' + datos[clave].id + '">' + datos[clave].country + '</option>');
+						
+						
+					}
+				 },
+		 error: function() { alert("Error leyendo fichero jsonP"); }
+	});
+		
+		
+		
+	$.ajax({
+		dataType: 'jsonp',
+		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequipos.php', // devuelve "id" y "equipo", con parametros no obligatorios (idcategoria y iddivision)
+		success: function(datos) {
+					
+					for (var clave in datos) {
+						//alert(datos[clave].equipo);
+						//alert(datos[clave].id);
+						$('#lstEquipos').append('<option value="' + datos[clave].id + '">' + datos[clave].equipo + '</option>');
+						
+						
+					}
+				 },
+		 error: function() { alert("Error leyendo fichero jsonP"); }
+	});
+	
+	
+	
+	
+	
+	$('#lstCountries').change(function() {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequiposcountries.php', // devuelve "id" y "equipo", con parametros no obligatorios (idcountry)
+			data: {idcountry: $(this).val()},
+			beforeSend: function (XMLHttpRequest) {
+				$('#lstEquiposCountries').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+						
+						for (var clave in datos) {
+							//alert(datos[clave].equipo);
+							//alert(datos[clave].id);
+							$('#lstEquiposCountries').append('<option value="' + datos[clave].id + '">' + datos[clave].equipo + '</option>');
+							
+							
+						}
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+		
+	});
+	
+	
+	function traerDivisionesPorTemporadasCategorias(idTemporada, idCategoria) {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsdivisiones.php', // devuelve "id" y "division", con parametros no obligatorios (idtemporada y idcategoria)
+			data: {idtemporada: idTemporada , idcategoria: idCategoria},
+			beforeSend: function (XMLHttpRequest) {
+				$('#lstDivisionesTemporadasCatgorias').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+						
+						for (var clave in datos) {
+							//alert(datos[clave].equipo);
+							//alert(datos[clave].id);
+							$('#lstDivisionesTemporadasCatgorias').append('<option value="' + datos[clave].id + '">' + datos[clave].division + '</option>');
+							
+							
+						}
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+		
+	}
+	
+	
+	function traerEquiposPorCategoriaDivision(idCategoria, idDivision) {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequipos.php', // devuelve "id" y "division", con parametros no obligatorios (idcategoria y iddivision)
+			data: {idcategoria: idCategoria, iddivision: idDivision},
+			beforeSend: function (XMLHttpRequest) {
+				$('#lstEquiposCatgoriaDivision').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+						
+						for (var clave in datos) {
+							//alert(datos[clave].equipo);
+							//alert(datos[clave].id);
+							$('#lstEquiposCatgoriaDivision').append('<option value="' + datos[clave].id + '">' + datos[clave].equipo + '</option>');
+							
+							
+						}
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+		
+	}
+	
+	$('#lstTemporadas').change(function() {
+		traerDivisionesPorTemporadasCategorias($(this).val(), $('#lstCategorias').val());
+	});
+	
+	$('#lstCategorias').change(function() {
+		traerDivisionesPorTemporadasCategorias($('#lstTemporadas').val(), $(this).val());
+		traerEquiposPorCategoriaDivision($(this).val(), $('#lstDivisiones').val());
+	});
+	
+	$('#lstDivisiones').change(function() {
+		traerEquiposPorCategoriaDivision($('#lstCategorias').val(), $(this).val());
+	});
+	
+	
+	
+
+});
+</script>
+</body>
+</html>
