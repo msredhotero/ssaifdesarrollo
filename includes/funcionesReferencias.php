@@ -2093,6 +2093,16 @@ function traerFechasPorTorneoJugadas($idTorneo) {
 	return $res;
 }
 
+function traerUltimoDiaJugado() {
+	$sql = "select
+				max(f.fecha) as fecha
+			from		dbfixture f
+			where		f.refestadospartidos is not null";
+			
+	$res = $this->query($sql,0);
+	return $res;	
+}
+
 //esta funcion me devuelve la fecha en la cual fue fallada la suspencion, no donde fue cumplida.
 function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugador, $idTipoTorneo) {
 	$sql	=	"select
@@ -6945,6 +6955,171 @@ return $res;
 
 
 
+function traerFixtureSumarizadoTodoPorTorneoDesdeHastaWhere($idTemporadas,$desde, $hasta) {
+$sql = "select 
+			count(f.idfixture) as partidos,
+			round( sum(case when est.puntoslocal > est.puntosvisitante then 1 else 0 end) * 100 / count(f.idfixture) ) as ganadoslocal,
+			round( sum(case when est.puntoslocal < est.puntosvisitante then 1 else 0 end) * 100 / count(f.idfixture) ) as ganadosvisitante,
+			round( sum(case when est.puntoslocal = est.puntosvisitante then 1 else 0 end) * 100 / count(f.idfixture) ) as empatados,
+			sum(g.goles) + sum(g.encontra) + sum(p.penal) as goles,
+			sum(a.amarillas) as amarillas,
+			sum(r.rojas) as rojas
+		from
+			dbfixture f
+				inner join
+			dbtorneos tor ON tor.idtorneo = f.reftorneos
+				inner join
+			tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+				inner join
+			tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+				inner join
+			tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+				inner join
+			tbdivisiones di ON di.iddivision = tor.refdivisiones
+				inner join
+			tbfechas fec ON fec.idfecha = f.reffechas
+				inner join
+			dbequipos el ON el.idequipo = f.refconectorlocal
+				inner join
+			dbequipos ev ON ev.idequipo = f.refconectorvisitante
+				left join
+			dbcontactos cl ON cl.idcontacto = el.refcontactos
+				left join
+			dbcontactos cv ON cv.idcontacto = ev.refcontactos
+				left join
+			dbarbitros arb ON arb.idarbitro = f.refarbitros
+				left join
+			tbcanchas can ON can.idcancha = f.refcanchas
+				inner join
+			tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+				left join
+			(select sum(go.goles) as goles, sum(go.encontra) as encontra,go.reffixture 
+					from dbgoleadores go 
+					inner join dbfixture fix ON fix.idfixture = go.reffixture
+					inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+					where tor.reftemporadas = 6
+					group by go.reffixture) g ON g.reffixture = f.idfixture
+				left join
+			(select sum(go.penalconvertido) as penal, go.reffixture 
+					from dbpenalesjugadores go 
+					inner join dbfixture fix ON fix.idfixture = go.reffixture
+					inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+					where tor.reftemporadas = 6
+					group by go.reffixture) p ON p.reffixture = f.idfixture
+				left join
+			(select sum(go.cantidad) as amarillas,go.reffixture 
+					from dbsancionesjugadores go 
+					inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
+					inner join dbfixture fix ON fix.idfixture = go.reffixture
+					inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+					where tor.reftemporadas = 6 and ts.amonestacion = 1
+					group by go.reffixture) a ON a.reffixture = f.idfixture
+				left join
+			(select sum(go.cantidad) as rojas,go.reffixture 
+					from dbsancionesjugadores go 
+					inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
+					inner join dbfixture fix ON fix.idfixture = go.reffixture
+					inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+					where tor.reftemporadas = 6 and ts.expulsion = 1
+					group by go.reffixture) r ON r.reffixture = f.idfixture
+				
+		where
+			te.idtemporadas = ".$idTemporadas."
+				and f.fecha between '".$desde."' and '".$hasta."' and est.finalizado = 1
+		
+		order by tor.refcategorias , tor.refdivisiones , tor.idtorneo , f.reffechas , f.idfixture";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerGoleadoresPorFecha($idTemporadas, $desde, $hasta) {
+	$sql = "select 
+				g.goles,
+				g.encontra,
+				g.apellido,
+				g.nombres,
+				el.nombre as equipolocal,
+				ev.nombre as equipovisitante,
+				ca.categoria,
+				di.division
+			from
+				dbfixture f
+					inner join
+				dbtorneos tor ON tor.idtorneo = f.reftorneos
+					inner join
+				tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+					inner join
+				tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+					inner join
+				tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+					inner join
+				tbdivisiones di ON di.iddivision = tor.refdivisiones
+					inner join
+				tbfechas fec ON fec.idfecha = f.reffechas
+					inner join
+				dbequipos el ON el.idequipo = f.refconectorlocal
+					inner join
+				dbequipos ev ON ev.idequipo = f.refconectorvisitante
+					left join
+				dbcontactos cl ON cl.idcontacto = el.refcontactos
+					left join
+				dbcontactos cv ON cv.idcontacto = ev.refcontactos
+					left join
+				dbarbitros arb ON arb.idarbitro = f.refarbitros
+					left join
+				tbcanchas can ON can.idcancha = f.refcanchas
+					inner join
+				tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+					inner join
+				(select 
+					sum(r.goles) as goles,
+						sum(r.encontra) as encontra,
+						r.apellido,
+						r.nombres,
+						r.reffixture
+				from
+					(select 
+					sum(go.goles) as goles,
+						sum(go.encontra) as encontra,
+						go.reffixture,
+						jug.apellido,
+						jug.nombres
+				from
+					dbgoleadores go
+				inner join dbfixture fix ON fix.idfixture = go.reffixture
+				inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+				inner join dbjugadores jug ON jug.idjugador = go.refjugadores
+				where
+					tor.reftemporadas = 6
+						and (go.goles > 0 or go.encontra > 0)
+				group by go.reffixture , jug.apellido , jug.nombres union all select 
+					sum(go.penalconvertido) as goles,
+						0 as encontra,
+						go.reffixture,
+						jug.apellido,
+						jug.nombres
+				from
+					dbpenalesjugadores go
+				inner join dbjugadores jug ON jug.idjugador = go.refjugadores
+				inner join dbfixture fix ON fix.idfixture = go.reffixture
+				inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+				where
+					tor.reftemporadas = 6
+						and go.penalconvertido
+				group by go.reffixture , jug.apellido , jug.nombres) r
+				group by r.apellido , r.nombres , r.reffixture) g ON g.reffixture = f.idfixture
+			where
+				te.idtemporadas = ".$idTemporadas."
+							and f.fecha between '".$desde."' and '".$hasta."' and est.finalizado = 1
+			order by g.goles desc
+			limit 3";	
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+
 function traerFixtureTodoPorTemporadaFecha($idTemporada, $refFechas) {
 $sql = "select
 f.idfixture,
@@ -7219,6 +7394,41 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+
+function traerPartidoDestacadoPorFechas($idTemporada,$desde, $hasta) {
+	$sql = "select 
+				f.goleslocal,
+				f.golesvisitantes,
+				el.nombre as equipolocal,
+				ev.nombre as equipovisitante,
+				ca.categoria,
+				di.division
+			from
+				dbfixture f
+					inner join
+				dbtorneos tor ON tor.idtorneo = f.reftorneos
+					inner join
+				tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+					inner join
+				tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+					inner join
+				tbdivisiones di ON di.iddivision = tor.refdivisiones
+					inner join
+				dbequipos el ON el.idequipo = f.refconectorlocal
+					inner join
+				dbequipos ev ON ev.idequipo = f.refconectorvisitante
+					inner join
+				tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+					inner join
+				dbpartidodestacado pd ON f.idfixture = pd.reffixture
+					
+			where
+				te.idtemporadas = ".$idTemporada."
+					and f.fecha between '".$desde."' and '".$hasta."' and est.finalizado = 1";
+	
+	$res = $this->query($sql,0);
+	return $res;
+}
 
 
 /* Fin */

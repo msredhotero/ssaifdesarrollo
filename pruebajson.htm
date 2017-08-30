@@ -72,6 +72,33 @@
 <div id="lstFixtureEquiposTorneos">
 
 </div>
+
+
+
+<br />
+<p>Estadisticas HOME</p>
+<div id="estadisticas">
+	
+</div>
+
+
+<br />
+<p>Partido Destacado HOME</p>
+<div id="partidodestacado">
+	
+</div>
+
+
+<br />
+<p>Goleador HOME</p>
+<div id="goleador">
+	
+</div>
+
+</div>
+
+
+
 </div>
 
 <script type="text/javascript">
@@ -289,7 +316,7 @@ $(document).ready(function(){
 								<tbody>';
 
 						for (var clave in datos) {
-							cad += '<td>' + datos[clave].equipolocal + '</td> \
+							cad += '<tr><td>' + datos[clave].equipolocal + '</td> \
 									<td>' + datos[clave].puntoslocal + '</td> \
 									<td>' + datos[clave].puntosvisita + '</td> \
 									<td>' + datos[clave].equipovisitante + '</td> \
@@ -317,6 +344,171 @@ $(document).ready(function(){
 			 error: function() { alert("Error leyendo fichero jsonP"); }
 		});
 	}
+	
+	
+	
+	function traerEstadisticas() {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'json/jsresultadopartidos.php', // devuelve "ganadoslocal", "ganadosvisitante","empatados","goles","amarillas" y "rojas" sin parametros 
+			beforeSend: function (XMLHttpRequest) {
+				$('#estadisticas').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>% Ganado</th> \
+									<th>% Local</th> \
+									<th>% Visita</th> \
+									<th>Golas</th> \
+									<th>Amarillas</th> \
+									<th>Rojas</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+
+						for (var clave in datos) {
+							cad += '<tr><td>' + datos[clave].ganadoslocal + '</td> \
+									<td>' + datos[clave].ganadosvisitante + '</td> \
+									<td>' + datos[clave].empatados + '</td> \
+									<td>' + datos[clave].goles + '</td> \
+									<td>' + datos[clave].amarillas + '</td> \
+									<td>' + datos[clave].rojas + '</td></tr>';
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#estadisticas').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+	}
+	
+	
+	function traerPartidoDestacado() {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'json/jspartidodestacado.php', // devuelve "goleslocal", "golesvisitantes","equipolocal","equipovisitante","categoria" y "division" sin parametros 
+			beforeSend: function (XMLHttpRequest) {
+				$('#partidodestacado').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>Goles Local</th> \
+									<th>Golas Vsitante</th> \
+									<th>Equipo Local</th> \
+									<th>Equipo Visitante</th> \
+									<th>Categoria</th> \
+									<th>Division</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+
+						for (var clave in datos) {
+							cad += '<tr><td>' + datos[clave].goleslocal + '</td> \
+									<td>' + datos[clave].golesvisitantes + '</td> \
+									<td>' + datos[clave].equipolocal + '</td> \
+									<td>' + datos[clave].equipovisitante + '</td> \
+									<td>' + datos[clave].categoria + '</td> \
+									<td>' + datos[clave].division + '</td></tr>';
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#partidodestacado').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+	}
+	
+	
+	
+	function traerGoleador() {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'json/jsgoleadorespartidos.php', // devuelve "goles", "encontra","apellido","nombres","equipolocal","equipovisitante","categoria" y "division" sin parametros, esta funcion traer 3 registros.
+			beforeSend: function (XMLHttpRequest) {
+				$('#goleador').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>Goles</th> \
+									<th>Golas Vsitante</th> \
+									<th>Equipo Local</th> \
+									<th>Equipo Visitante</th> \
+									<th>Categoria</th> \
+									<th>Division</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+
+						for (var clave in datos) {
+							cad += '<tr><td>' + datos[clave].goles + '</td> \
+									<td>' + datos[clave].encontra + '</td> \
+									<td>' + datos[clave].apellido + '</td> \
+									<td>' + datos[clave].nombres + '</td> \
+									<td>' + datos[clave].equipolocal + '</td> \
+									<td>' + datos[clave].equipovisitante + '</td> \
+									<td>' + datos[clave].categoria + '</td> \
+									<td>' + datos[clave].division + '</td></tr>';
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#goleador').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+	}
+	
+	
+	
+	function traerPartidoDestacado() {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'json/jspartidodestacado.php', // devuelve "goleslocal", "golesvisitantes","equipolocal","equipovisitante","categoria" y "division" sin parametros 
+			beforeSend: function (XMLHttpRequest) {
+				$('#partidodestacado').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>Goles Local</th> \
+									<th>Golas Vsitante</th> \
+									<th>Equipo Local</th> \
+									<th>Equipo Visitante</th> \
+									<th>Categoria</th> \
+									<th>Division</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+
+						for (var clave in datos) {
+							cad += '<tr><td>' + datos[clave].goleslocal + '</td> \
+									<td>' + datos[clave].golesvisitantes + '</td> \
+									<td>' + datos[clave].equipolocal + '</td> \
+									<td>' + datos[clave].equipovisitante + '</td> \
+									<td>' + datos[clave].categoria + '</td> \
+									<td>' + datos[clave].division + '</td></tr>';
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#partidodestacado').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+	}
+	
+	traerEstadisticas();
+	traerGoleador();
+	traerPartidoDestacado();
 	
 	$('#lstTemporadas').change(function() {
 		traerDivisionesPorTemporadasCategorias($(this).val(), $('#lstCategorias').val());
