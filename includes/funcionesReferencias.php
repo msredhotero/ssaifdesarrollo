@@ -131,8 +131,318 @@ function array_orderby()
     return array_pop($args);
 }
 
+// web lucio
+function ResultadosPartidosAnteriores($refTorneo, $idequipo) {
+	$sql = "select
+				r.idfecha, r.fecha, r.resultado
+			from (
+			select 
+					f.reffechas as idfecha,f.fecha,
+					(case when f.puntoslocal > f.puntosvisita then 'G'
+						  when f.puntoslocal < f.puntosvisita then 'P'
+						  when f.puntoslocal = f.puntosvisita then 'E'
+					 end) resultado
+				from
+					dbfixture f
+				inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+				inner join tbfechas fec ON fec.idfecha = f.reffechas
+				inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+				where
+					tor.idtorneo = ".$refTorneo." and f.refconectorlocal = ".$idequipo." and est.finalizado = 1
+			union all
+			select 
+					f.reffechas as idfecha,f.fecha,
+					(case when f.puntosvisita > f.puntoslocal then 'G'
+						  when f.puntosvisita < f.puntoslocal then 'P'
+						  when f.puntosvisita = f.puntoslocal then 'E'
+					 end) resultado
+				from
+					dbfixture f
+				inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+				inner join tbfechas fec ON fec.idfecha = f.reffechas
+				inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+				where
+					tor.idtorneo = ".$refTorneo." and f.refconectorvisitante = ".$idequipo." and est.finalizado = 1
+			) r
+				order by r.fecha desc
+			limit 1,3";	
+			
+	$res = $this->query($sql,0);
+	return $res;
+	
+}
+
+function PosicionFechaAnterior($refTorneo) {
+	$sql = "
+select 
+    p.equipo,
+    sum(p.puntos) as puntos,
+    sum(p.goles) as goles,
+    sum(p.golescontra) as golescontra,
+    sum(p.pj) as pj,
+    sum(p.pg) as pg,
+    sum(p.pp) as pp,
+    sum(p.pe) as pe,
+    sum(p.amarillas) as amarillas,
+    sum(p.rojas) as rojas,
+    p.idequipo
+from   
+    (select 
+        el.nombre as equipo,
+            f.puntoslocal as puntos,
+            ca.categoria,
+            arb.nombrecompleto as arbitro,
+            f.goleslocal as goles,
+            f.golesvisitantes as golescontra,
+            can.nombre as canchas,
+            date_format(f.fecha, '%d/%m/%Y') as fechajuego,
+            f.hora,
+            f.calificacioncancha,
+            f.juez1,
+            f.juez2,
+            f.observaciones,
+            f.publicar,
+            count(el.idequipo) as pj,
+            sum(case
+                when f.puntoslocal = 3 then 1
+                else 0
+            end) as pg,
+            sum(case
+                when f.puntoslocal = 0 then 1
+                else 0
+            end) as pp,
+            sum(case
+                when f.puntoslocal = 1 then 1
+                else 0
+            end) as pe,
+            sum(coalesce(fixa.amarillas, 0)) as amarillas,
+            sum(coalesce(fixr.rojas, 0)) as rojas,
+            el.idequipo
+    from
+        dbfixture f
+    inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+    inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+    inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+    inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+    inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+    inner join (select 
+        max(fec.idfecha) - 1 as idfecha
+    from
+        dbfixture f
+    inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+    inner join tbfechas fec ON fec.idfecha = f.reffechas
+    inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+    where
+        tor.idtorneo = ".$refTorneo." and est.finalizado = 1) fr ON f.reffechas <= fr.idfecha
+    inner join dbequipos el ON el.idequipo = f.refconectorlocal
+    left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+    left join tbcanchas can ON can.idcancha = f.refcanchas
+    inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+        and est.finalizado = 1
+    left join (SELECT 
+        SUM(sj.cantidad) AS amarillas, fix.idfixture, sj.refequipos
+    FROM
+        dbsancionesjugadores sj
+    INNER JOIN dbfixture fix ON sj.reffixture = fix.idfixture
+        and fix.refconectorlocal = sj.refequipos
+    INNER JOIN tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+    where
+        ts.amonestacion = 1
+            and (sj.refsancionesfallos is null
+            or sj.refsancionesfallos = 0)
+    GROUP BY fix.idfixture , sj.refequipos) fixa ON fixa.idfixture = f.idfixture
+        and fixa.refequipos = el.idequipo
+    left join (SELECT 
+        SUM(sj.cantidad) AS rojas, fix.idfixture, sj.refequipos
+    FROM
+        dbsancionesjugadores sj
+    INNER JOIN dbfixture fix ON sj.reffixture = fix.idfixture
+        and fix.refconectorlocal = sj.refequipos
+    INNER JOIN tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+    where
+        ts.expulsion = 1
+    GROUP BY fix.idfixture , sj.refequipos) fixr ON fixr.idfixture = f.idfixture
+        and fixr.refequipos = el.idequipo
+    where
+        tor.idtorneo = ".$refTorneo."
+    group by el.nombre , f.puntoslocal , ca.categoria , arb.nombrecompleto , f.goleslocal , f.golesvisitantes , can.nombre , f.fecha , f.hora , f.calificacioncancha , f.juez1 , f.juez2 , f.observaciones , f.publicar , el.idequipo 
+
+union all 
+select 
+        ev.nombre as equipo,
+            f.puntosvisita as puntos,
+            ca.categoria,
+            arb.nombrecompleto as arbitro,
+            f.golesvisitantes as goles,
+            f.goleslocal as golescontra,
+            can.nombre as canchas,
+            date_format(f.fecha, '%d/%m/%Y') as fechajuego,
+            f.hora,
+            f.calificacioncancha,
+            f.juez1,
+            f.juez2,
+            f.observaciones,
+            f.publicar,
+            count(ev.idequipo) as pj,
+            sum(case
+                when f.puntosvisita = 3 then 1
+                else 0
+            end) as pg,
+            sum(case
+                when f.puntosvisita = 0 then 1
+                else 0
+            end) as pp,
+            sum(case
+                when f.puntosvisita = 1 then 1
+                else 0
+            end) as pe,
+            sum(coalesce(fixa.amarillas, 0)) as amarillas,
+            sum(coalesce(fixr.rojas, 0)) as rojas,
+            ev.idequipo
+    from
+        dbfixture f
+    inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+    inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+    inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+    inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+    inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+    inner join (select 
+        max(fec.idfecha) - 1 as idfecha
+    from
+        dbfixture f
+    inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+    inner join tbfechas fec ON fec.idfecha = f.reffechas
+    inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+    where
+        tor.idtorneo = ".$refTorneo." and est.finalizado = 1) fr ON f.reffechas <= fr.idfecha
+    inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+    left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+    left join tbcanchas can ON can.idcancha = f.refcanchas
+    inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+        and est.finalizado = 1
+    left join (SELECT 
+        SUM(sj.cantidad) AS amarillas, fix.idfixture, sj.refequipos
+    FROM
+        dbsancionesjugadores sj
+    INNER JOIN dbfixture fix ON sj.reffixture = fix.idfixture
+        and fix.refconectorvisitante = sj.refequipos
+    INNER JOIN tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+    where
+        ts.amonestacion = 1
+            and (sj.refsancionesfallos is null
+            or sj.refsancionesfallos = 0)
+    GROUP BY fix.idfixture , sj.refequipos) fixa ON fixa.idfixture = f.idfixture
+        and fixa.refequipos = ev.idequipo
+    left join (SELECT 
+        SUM(sj.cantidad) AS rojas, fix.idfixture, sj.refequipos
+    FROM
+        dbsancionesjugadores sj
+    INNER JOIN dbfixture fix ON sj.reffixture = fix.idfixture
+        and fix.refconectorvisitante = sj.refequipos
+    INNER JOIN tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+    where
+        ts.expulsion = 1
+    GROUP BY fix.idfixture , sj.refequipos) fixr ON fixr.idfixture = f.idfixture
+        and fixr.refequipos = ev.idequipo
+    where
+        tor.idtorneo = ".$refTorneo."
+    group by ev.nombre , f.puntosvisita , ca.categoria , arb.nombrecompleto , f.golesvisitantes , f.goleslocal , can.nombre , f.fecha , f.hora , f.calificacioncancha , f.juez1 , f.juez2 , f.observaciones , f.publicar , ev.idequipo union all select 
+        ev.nombre as equipo,
+            0 as puntos,
+            ca.categoria,
+            '' as arbitro,
+            0 as goles,
+            0 as golescontra,
+            '' as canchas,
+            '' as fechajuego,
+            '' as hora,
+            '' as calificacioncancha,
+            '' as juez1,
+            '' as juez2,
+            '' as observaciones,
+            '' as publicar,
+            0 as pj,
+            0 as pg,
+            0 as pp,
+            0 as pe,
+            0 as amarillas,
+            0 as rojas,
+            ev.idequipo
+    from
+        (select 
+        e.idequipo, e.nombre, t.refcategorias
+    from
+        dbequipos e
+    inner join dbtorneos t ON e.refcategorias = t.refcategorias
+        and e.refdivisiones = t.refdivisiones
+    inner join tbcategorias ca ON ca.idtcategoria = t.refcategorias
+    where
+        t.idtorneo = ".$refTorneo." and e.activo = 1 and t.activo = 1) ev
+    inner join tbcategorias ca ON ca.idtcategoria = ev.refcategorias
+    left join dbfixture f ON (ev.idequipo = f.refconectorlocal
+        or ev.idequipo = f.refconectorvisitante)
+        and f.reftorneos = ".$refTorneo."
+        and f.refestadospartidos is not null
+    where
+        f.idfixture is null) p
+group by p.equipo , p.idequipo
+order by sum(p.puntos) desc , sum(p.rojas) asc , sum(p.amarillas) asc
+ ";
+	
+	$res = $this->query($sql,0);
+	
+	$arPosiciones = array();
+	
+	$puntosBonus = 0;
+	
+	$resPuntosBonus	=	$this->traerTorneopuntobonusPorTorneo($refTorneo);
+	
+	$posicion = 1;
+	while ($row = mysql_fetch_array($res)) {
+		$puntosBonus = 0;
+		if (mysql_num_rows($resPuntosBonus)>0) {
+			$puntosBonus = $this->calcularPuntoBonus($refTorneo, $row['idequipo']);	
+		}
+		$arPosiciones[] = array('equipo'=> $row['equipo'],
+							  'puntos'=> (integer)$row['puntos'] + (integer)$puntosBonus,
+							  'goles'=> $row['goles'],
+							  'golescontra'=> $row['golescontra'],
+							  'pj'=> $row['pj'],
+							  'pg'=> $row['pg'],
+							  'pp'=> $row['pp'],
+							  'pe'=> $row['pe'],
+							  'amarillas'=> $row['amarillas'],
+							  'rojas'=> $row['rojas'],
+							  'puntobonus'=> (integer)$puntosBonus,
+							  'idequipo'=> $row['idequipo'],
+							  'posicion'=> $posicion);
+		$posicion += 1;					  
+		$puntosBonus = 0;					  
+	}
+
+	$sorted = $this->array_orderby($arPosiciones, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
+
+	return $sorted;
+}
+
+
 function Posiciones($refTorneo) {
 	$sql = "select
+k.equipo,
+k.puntos,
+k.goles,
+k.golescontra,
+k.pj,
+k.pg,
+k.pp,
+k.pe,
+k.amarillas,
+k.rojas,
+k.idequipo,
+	@rownum:= @rownum + 1 'posicion'
+from	(
+
+	select
 
 p.equipo,
 sum(p.puntos) as puntos,
@@ -338,7 +648,7 @@ from (select
 		from dbequipos e 
 		inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
         inner join tbcategorias ca on ca.idtcategoria = t.refcategorias
-		where t.idtorneo = ".$refTorneo." and e.activo=1) ev
+		where t.idtorneo = ".$refTorneo." and e.activo=1 and t.activo = 1) ev
 inner join tbcategorias ca ON ca.idtcategoria = ev.refcategorias
 left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.refconectorvisitante) and f.reftorneos = ".$refTorneo." and f.refestadospartidos is not null
 
@@ -347,7 +657,7 @@ where f.idfixture is null
 group by p.equipo, p.idequipo
 order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 
-";	
+) k , (SELECT @rownum:=0) R ";
 	$res = $this->query($sql,0);
 	
 	$arPosiciones = array();
@@ -356,7 +666,7 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 	
 	$resPuntosBonus	=	$this->traerTorneopuntobonusPorTorneo($refTorneo);
 	
-	
+	$posicion = 1;
 	while ($row = mysql_fetch_array($res)) {
 		$puntosBonus = 0;
 		if (mysql_num_rows($resPuntosBonus)>0) {
@@ -373,8 +683,9 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 							  'amarillas'=> $row['amarillas'],
 							  'rojas'=> $row['rojas'],
 							  'puntobonus'=> (integer)$puntosBonus,
-							  'idequipo'=> $row['idequipo']);
-							  
+							  'idequipo'=> $row['idequipo'],
+							  'posicion'=> $posicion);
+		$posicion += 1;					  
 		$puntosBonus = 0;					  
 	}
 
@@ -592,7 +903,7 @@ from (select
 		from dbequipos e 
 		inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
         inner join tbcategorias ca on ca.idtcategoria = t.refcategorias
-		where t.idtorneo = ".$refTorneo." and e.activo=1) ev
+		where t.idtorneo = ".$refTorneo." and e.activo=1 and t.activo = 1) ev
 inner join tbcategorias ca ON ca.idtcategoria = ev.refcategorias
 left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.refconectorvisitante) and f.reftorneos = ".$refTorneo." and f.refestadospartidos is not null
 
@@ -1060,6 +1371,145 @@ function suspendidosTotal() {
 	return $res;
 }
 
+
+function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategoria, $idDivision) {
+	$sql = "select
+				r.nombre,
+			    r.nrodocumento,
+			    r.apyn,
+			    r.torneos,
+			    r.idfixture,
+			    r.equipos,
+				r.equiposcontra,
+			    r.fecha,
+			    r.cantidadfechas,
+			    r.dias,
+			    r.cumplidas,
+				r.fechascumplidas,
+			    r.categoria,
+				r.pendientesfallo
+			from (
+			SELECT 
+			    cc.nombre,
+			    j.nrodocumento,
+			    CONCAT(j.apellido, ', ', j.nombres) AS apyn,
+			    CONCAT(tt.temporada,
+			            ' ',
+			            ca.categoria,
+			            ' ',
+			            di.division,
+			            ' ',
+			            t.descripcion) AS torneos,
+			    fix.idfixture,        
+			    e.nombre AS equipos,
+				ec.nombre AS equiposcontra,
+			    sj.fecha,
+			    sf.cantidadfechas,
+			    coalesce((case when cantidadfechas < 1 then -1 * datediff(sf.fechadesde, sf.fechahasta) end),0) as dias,
+			    coalesce((case when cantidadfechas > 0 then spp.cumplidas
+					  when year(sf.fechadesde) > 1950 then -1 * datediff(sf.fechadesde, now())
+			        end),0) cumplidas,
+				sf.fechascumplidas,
+			    ca.categoria,
+				sf.pendientesfallo
+			FROM
+			    dbsancionesfallos sf
+			        INNER JOIN
+			    dbsancionesjugadores sj ON sf.refsancionesjugadores = sj.idsancionjugador
+			        INNER JOIN
+			    dbequipos e ON e.idequipo = sj.refequipos
+			        INNER JOIN
+			    dbfixture fix ON fix.idfixture = sj.reffixture
+					INNER JOIN
+			    dbequipos ec ON (case when sj.refequipos = fix.refconectorlocal then fix.refconectorvisitante else fix.refconectorlocal end) = ec.idequipo
+			        INNER JOIN
+			    dbjugadores j ON j.idjugador = sj.refjugadores
+			        INNER JOIN
+			    dbcountries cc ON cc.idcountrie = j.refcountries
+			        INNER JOIN
+			    dbtorneos t ON t.idtorneo = fix.reftorneos
+			        INNER JOIN
+			    tbtemporadas tt ON t.reftemporadas = tt.idtemporadas
+			        INNER JOIN
+			    tbcategorias ca ON ca.idtcategoria = t.refcategorias
+			        INNER JOIN
+			    tbdivisiones di ON di.iddivision = t.refdivisiones
+					left join
+				(select count(ss.reffixture) as cumplidas, ss.refjugadores, ss.refsancionesfallos, tt.refcategorias 
+						from dbsancionesfechascumplidas ss
+							inner join dbfixture ff ON ff.idfixture = ss.reffixture
+			                inner join dbtorneos tt ON tt.idtorneo = ff.reftorneos
+						group by ss.refjugadores, ss.refsancionesfallos, tt.refcategorias) spp 
+				ON sj.refjugadores = spp.refjugadores and spp.refsancionesfallos = sf.idsancionfallo and spp.refcategorias = sj.refcategorias
+			            
+			WHERE
+			     t.reftemporadas = ".$idTemporada."
+				 and t.refcategorias = ".$idCategoria."
+				 and t.refdivisiones = ".$idDivision."
+				 and (sf.cantidadfechas <> sf.fechascumplidas
+			        OR (sf.fechahasta >= NOW()
+			        AND sf.fechadesde <> '1900-01-01')
+					OR sf.pendientesfallo = 1)
+
+			union all
+			        
+			SELECT 
+			    cc.nombre,
+			    j.nrodocumento,
+			    CONCAT(j.apellido, ', ', j.nombres) AS apyn,
+			    CONCAT(tt.temporada,
+			            ' ',
+			            ca.categoria,
+			            ' ',
+			            di.division,
+			            ' ',
+			            t.descripcion) AS torneos,
+			    fix.idfixture,        
+			    e.nombre AS equipos,
+				ec.nombre AS equiposcontra,
+			    sj.fecha,
+			    sf.cantidadfechas,
+			    0 as dias,
+			    sf.fechascumplidas cumplidas,
+				sf.fechascumplidas,
+			    ca.categoria,
+				sf.pendientesfallo
+			FROM
+			    dbsancionesfallosacumuladas sf
+			        INNER JOIN
+			    dbsancionesjugadores sj ON sf.refsancionesjugadores = sj.idsancionjugador
+			        INNER JOIN
+			    dbequipos e ON e.idequipo = sj.refequipos
+			        INNER JOIN
+			    dbfixture fix ON fix.idfixture = sj.reffixture
+					INNER JOIN
+			    dbequipos ec ON (case when sj.refequipos = fix.refconectorlocal then fix.refconectorvisitante else fix.refconectorlocal end) = ec.idequipo
+			        INNER JOIN
+			    dbjugadores j ON j.idjugador = sj.refjugadores
+			        INNER JOIN
+			    dbcountries cc ON cc.idcountrie = j.refcountries
+			        INNER JOIN
+			    dbtorneos t ON t.idtorneo = fix.reftorneos
+			        INNER JOIN
+			    tbtemporadas tt ON t.reftemporadas = tt.idtemporadas
+			        INNER JOIN
+			    tbcategorias ca ON ca.idtcategoria = t.refcategorias
+			        INNER JOIN
+			    tbdivisiones di ON di.iddivision = t.refdivisiones
+			            
+			WHERE
+			    sf.cantidadfechas <> sf.fechascumplidas  
+				and t.reftemporadas = ".$idTemporada."
+				 and t.refcategorias = ".$idCategoria."
+				 and t.refdivisiones = ".$idDivision."
+			    ) r
+			order by r.nombre, r.apyn";
+			
+	$res = $this->query($sql,0);
+	
+	return $res;	
+	
+}
 
 function traerProximaFechaTodos() {
 	
@@ -5050,7 +5500,7 @@ inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias
 inner join tbdivisiones di ON di.iddivision = e.refdivisiones 
 inner join dbcontactos con ON con.idcontacto = e.refcontactos 
 inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos 
-where cou.idcountrie = ".$idCountrie."
+where cou.idcountrie = ".$idCountrie." and e.activo = 1
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -5131,7 +5581,7 @@ e.idequipo,
 e.nombre,
 (case when e.activo = 1 then 'Si' else 'No' end) as activo
 from dbequipos e 
-where e.refcategorias = ".$idCategoria." and e.refdivisiones = ".$idDivision."
+where e.refcategorias = ".$idCategoria." and e.refdivisiones = ".$idDivision." and e.activo = 1 
 order by e.nombre"; 
 $res = $this->query($sql,0); 
 return $res; 

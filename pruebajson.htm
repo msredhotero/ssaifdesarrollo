@@ -15,54 +15,54 @@
 <br />
 <p>Temporadas</p>
 <select id="lstTemporadas">
-
+<option value="0">--	Seleccionar 	--</option>
 </select>
 <br />
 <p>Categorias</p>
 <select id="lstCategorias">
-
+<option value="0">--	Seleccionar 	--</option>
 </select>
 <br />
 <p>Divisiones</p>
 <select id="lstDivisiones">
-
+<option value="0">--	Seleccionar 	--</option>
 </select>
 <br />
 <p>Countries</p>
 <select id="lstCountries">
-
+<option value="0">--	Seleccionar 	--</option>
 </select>
 <br />
 <p>Equipos</p>
 <select id="lstEquipos">
-
+<option value="0">--	Seleccionar 	--</option>
 </select>
 
 <br />
 <p>Equipos Por Countries</p>
 <select id="lstEquiposCountries">
-
+<option value="0">--	Seleccionar 	--</option>
 </select>
 
 
 <br />
 <p>Divisiones por Temporadas y Categorias</p>
 <select id="lstDivisionesTemporadasCatgorias">
-
+<option value="0">--	Seleccionar 	--</option>
 </select>
 
 
 <br />
 <p>Equipos por Categorias y Diviciones</p>
 <select id="lstEquiposCatgoriaDivision">
-
+<option value="0">--	Seleccionar 	--</option>
 </select>
 
 
 <br />
 <p>Torneos por Equipo</p>
 <select id="lstTorneosEquipos">
-
+<option value="0">--	Seleccionar 	--</option>
 </select>
 </div>
 
@@ -95,6 +95,31 @@
 	
 </div>
 
+
+
+
+<br />
+<p>Goleador Torneos</p>
+<div id="goleadorestorneos">
+	
+</div>
+
+
+<br />
+<p>Suspendidos Torneos</p>
+<div id="suspendidostorneos">
+	
+</div>
+
+
+<br />
+<p>Posiciones Torneos (* en "Asc-Desc" el 0 es para el igual, el 1 es porque subio y el -1 es porque bajo de posicion)</p>
+<div id="posicionestorneos">
+	
+</div>
+
+
+
 </div>
 
 
@@ -109,6 +134,9 @@ $(document).ready(function(){
 	 $.ajax({
 		dataType: 'jsonp',
 		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jstemporadas.php', // devuelve "id" y "temporada", sin parametros
+		beforeSend: function (XMLHttpRequest) {
+				$('#lstTemporadas').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
+		},
 		success: function(datos) {
 					
 					for (var clave in datos) {
@@ -126,6 +154,9 @@ $(document).ready(function(){
 	$.ajax({
 		dataType: 'jsonp',
 		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jscategorias.php', // devuelve "id" y "categoria", sin parametros
+		beforeSend: function (XMLHttpRequest) {
+				$('#lstCategorias').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
+		},
 		success: function(datos) {
 					
 					for (var clave in datos) {
@@ -143,6 +174,9 @@ $(document).ready(function(){
 	$.ajax({
 		dataType: 'jsonp',
 		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsdivisiones.php', // devuelve "id" y "division", con parametros no obligatorios (idtemporada y idcategoria)
+		beforeSend: function (XMLHttpRequest) {
+				$('#lstDivisiones').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
+		},
 		success: function(datos) {
 					
 					for (var clave in datos) {
@@ -160,6 +194,9 @@ $(document).ready(function(){
 	$.ajax({
 		dataType: 'jsonp',
 		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jscountries.php', // devuelve "id" y "country", sin parametros
+		beforeSend: function (XMLHttpRequest) {
+				$('#lstCountries').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
+		},
 		success: function(datos) {
 					
 					for (var clave in datos) {
@@ -178,6 +215,9 @@ $(document).ready(function(){
 	$.ajax({
 		dataType: 'jsonp',
 		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequipos.php', // devuelve "id" y "equipo", con parametros no obligatorios (idcategoria y iddivision)
+		beforeSend: function (XMLHttpRequest) {
+				$('#lstEquipos').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
+		},
 		success: function(datos) {
 					
 					for (var clave in datos) {
@@ -201,7 +241,7 @@ $(document).ready(function(){
 			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequiposcountries.php', // devuelve "id" y "equipo", con parametros no obligatorios (idcountry)
 			data: {idcountry: $(this).val()},
 			beforeSend: function (XMLHttpRequest) {
-				$('#lstEquiposCountries').html(''); //Nothing happnes
+				$('#lstEquiposCountries').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
 			},
 			success: function(datos) {
 						
@@ -225,7 +265,7 @@ $(document).ready(function(){
 			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsdivisiones.php', // devuelve "id" y "division", con parametros no obligatorios (idtemporada y idcategoria)
 			data: {idtemporada: idTemporada , idcategoria: idCategoria},
 			beforeSend: function (XMLHttpRequest) {
-				$('#lstDivisionesTemporadasCatgorias').html(''); //Nothing happnes
+				$('#lstDivisionesTemporadasCatgorias').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
 			},
 			success: function(datos) {
 						
@@ -249,7 +289,7 @@ $(document).ready(function(){
 			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequipos.php', // devuelve "id" y "division", con parametros no obligatorios (idcategoria y iddivision)
 			data: {idcategoria: idCategoria, iddivision: idDivision},
 			beforeSend: function (XMLHttpRequest) {
-				$('#lstEquiposCatgoriaDivision').html(''); //Nothing happnes
+				$('#lstEquiposCatgoriaDivision').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
 			},
 			success: function(datos) {
 						for (var clave in datos) {
@@ -267,7 +307,7 @@ $(document).ready(function(){
 			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jstorneos.php', // devuelve "id" y "torneo", con parametros no obligatorios (idEquipo)
 			data: {idequipo: idEquipo},
 			beforeSend: function (XMLHttpRequest) {
-				$('#lstTorneosEquipos').html(''); //Nothing happnes
+				$('#lstTorneosEquipos').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
 			},
 			success: function(datos) {
 						for (var clave in datos) {
@@ -350,7 +390,7 @@ $(document).ready(function(){
 	function traerEstadisticas() {
 		$.ajax({
 			dataType: 'jsonp',
-			url: 'json/jsresultadopartidos.php', // devuelve "ganadoslocal", "ganadosvisitante","empatados","goles","amarillas" y "rojas" sin parametros 
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsresultadopartidos.php', // devuelve "ganadoslocal", "ganadosvisitante","empatados","goles","amarillas" y "rojas" sin parametros 
 			beforeSend: function (XMLHttpRequest) {
 				$('#estadisticas').html(''); //Nothing happnes
 			},
@@ -389,7 +429,7 @@ $(document).ready(function(){
 	function traerPartidoDestacado() {
 		$.ajax({
 			dataType: 'jsonp',
-			url: 'json/jspartidodestacado.php', // devuelve "goleslocal", "golesvisitantes","equipolocal","equipovisitante","categoria" y "division" sin parametros 
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jspartidodestacado.php', // devuelve "goleslocal", "golesvisitantes","equipolocal","equipovisitante","categoria" y "division" sin parametros 
 			beforeSend: function (XMLHttpRequest) {
 				$('#partidodestacado').html(''); //Nothing happnes
 			},
@@ -429,7 +469,7 @@ $(document).ready(function(){
 	function traerGoleador() {
 		$.ajax({
 			dataType: 'jsonp',
-			url: 'json/jsgoleadorespartidos.php', // devuelve "goles", "encontra","apellido","nombres","equipolocal","equipovisitante","categoria" y "division" sin parametros, esta funcion traer 3 registros.
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsgoleadorespartidos.php', // devuelve "goles", "encontra","apellido","nombres","equipolocal","equipovisitante","categoria" y "division" sin parametros, esta funcion traer 3 registros.
 			beforeSend: function (XMLHttpRequest) {
 				$('#goleador').html(''); //Nothing happnes
 			},
@@ -465,46 +505,150 @@ $(document).ready(function(){
 			 error: function() { alert("Error leyendo fichero jsonP"); }
 		});
 	}
+
 	
 	
-	
-	function traerPartidoDestacado() {
+	function traerGoleadoresTorneos(idTorneo) {
 		$.ajax({
 			dataType: 'jsonp',
-			url: 'json/jspartidodestacado.php', // devuelve "goleslocal", "golesvisitantes","equipolocal","equipovisitante","categoria" y "division" sin parametros 
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsgoleadorestorneos.php', // devuelve "jugador", "equipo" y "goles" con parametros obligatorio idtorneo
+			data: {idtorneo: idTorneo},
 			beforeSend: function (XMLHttpRequest) {
-				$('#partidodestacado').html(''); //Nothing happnes
+				$('#goleadorestorneos').html(''); //Nothing happnes
 			},
 			success: function(datos) {
 					var cad = '<table border="1"> \
 								<thead> \
 								<tr> \
-									<th>Goles Local</th> \
-									<th>Golas Vsitante</th> \
-									<th>Equipo Local</th> \
-									<th>Equipo Visitante</th> \
-									<th>Categoria</th> \
-									<th>Division</th> \
+									<th>Posicion</th> \
+									<th>Nombre</th> \
+									<th>Equipo</th> \
+									<th>Goles</th> \
 								</tr> \
 								</thead> \
 								<tbody>';
-
+						var i = 1;
 						for (var clave in datos) {
-							cad += '<tr><td>' + datos[clave].goleslocal + '</td> \
-									<td>' + datos[clave].golesvisitantes + '</td> \
-									<td>' + datos[clave].equipolocal + '</td> \
-									<td>' + datos[clave].equipovisitante + '</td> \
-									<td>' + datos[clave].categoria + '</td> \
-									<td>' + datos[clave].division + '</td></tr>';
+							cad += '<tr><td>' + i.toString() + '</td> \
+									<td>' + datos[clave].jugador + '</td> \
+									<td>' + datos[clave].equipo + '</td> \
+									<td>' + datos[clave].goles + '</td></tr>';
+							i = i + 1; 
 						}
 						
 						cad += '</tbody></table>';
 						
-						$('#partidodestacado').html(cad);
+						$('#goleadorestorneos').html(cad);
 					 },
 			 error: function() { alert("Error leyendo fichero jsonP"); }
 		});
 	}
+	
+	
+	
+	function traerSuspendidosTorneos(idtemporada, idcategoria, iddivision) {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jssuspendidostorneos.php', // devuelve "country", "nombre", "fecha", "partido", "tiposancion", "sancion" y "cumplido" con parametros obligatorios idtemporada, idcategoria, iddivision
+			data: {idtemporada: idtemporada, idcategoria: idcategoria, iddivision: iddivision},
+			beforeSend: function (XMLHttpRequest) {
+				$('#suspendidostorneos').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>Country</th> \
+									<th>Nombre</th> \
+									<th>Fecha</th> \
+									<th>Partido</th> \
+									<th>Tipo Sancion</th> \
+									<th>Sancion</th> \
+									<th>Cumplido</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+						var i = 1;
+						for (var clave in datos) {
+							cad += '<tr><td>' + datos[clave].country + '</td> \
+									<td>' + datos[clave].nombre + '</td> \
+									<td>' + datos[clave].fecha + '</td> \
+									<td>' + datos[clave].partido + '</td> \
+									<td>' + datos[clave].tiposancion + '</td> \
+									<td>' + datos[clave].sancion + '</td> \
+									<td>' + datos[clave].cumplido + '</td></tr>';
+							i = i + 1; 
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#suspendidostorneos').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+	}
+	
+	
+	function traerPosicionesTorneos(idtorneo) {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsposicionestorneos.php', // devuelve "posicion", "mejora", "equipos", "pts", "ptsb", "ptsn" , "pj" , "pg" , "pe" , "pp" , "gf" , "amonestados" , "expulsados", "ultimoresultado1", "ultimoresultado2" y "ultimoresultado3" con parametros obligatorios idtorneo
+			data: {idtorneo: idtorneo},
+			beforeSend: function (XMLHttpRequest) {
+				$('#posicionestorneos').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>Posicion</th> \
+									<th>Asc-Desc</th> \
+									<th>Equipos</th> \
+									<th>Pts</th> \
+									<th>Pts B</th> \
+									<th>Pts N</th> \
+									<th>PJ</th> \
+									<th>PG</th> \
+									<th>PE</th> \
+									<th>PP</th> \
+									<th>GF</th> \
+									<th>Amonestados</th> \
+									<th>Expulsados</th> \
+									<th>Ultimo Resultado 1</th> \
+									<th>Ultimo Resultado 2</th> \
+									<th>Ultimo Resultado 3</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+						var i = 1;
+						for (var clave in datos) {
+							cad += '<tr><td>' + datos[clave].posicion + '</td> \
+									<td>' + datos[clave].mejora + '</td> \
+									<td>' + datos[clave].equipos + '</td> \
+									<td>' + datos[clave].pts + '</td> \
+									<td>' + datos[clave].ptsb + '</td> \
+									<td>' + datos[clave].ptsn + '</td> \
+									<td>' + datos[clave].pj + '</td> \
+									<td>' + datos[clave].pg + '</td> \
+									<td>' + datos[clave].pe + '</td> \
+									<td>' + datos[clave].pp + '</td> \
+									<td>' + datos[clave].gf + '</td> \
+									<td>' + datos[clave].amonestados + '</td> \
+									<td>' + datos[clave].expulsados + '</td> \
+									<td>' + datos[clave].ultimoresultado1 + '</td> \
+									<td>' + datos[clave].ultimoresultado2 + '</td> \
+									<td>' + datos[clave].ultimoresultado3 + '</td></tr>';
+							i = i + 1; 
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#posicionestorneos').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+	}
+	
 	
 	traerEstadisticas();
 	traerGoleador();
@@ -521,6 +665,7 @@ $(document).ready(function(){
 	
 	$('#lstDivisiones').change(function() {
 		traerEquiposPorCategoriaDivision($('#lstCategorias').val(), $(this).val());
+		traerSuspendidosTorneos($('#lstTemporadas').val(), $('#lstCategorias').val(), $(this).val());
 	});
 	
 	$('#lstEquipos').change(function() {
@@ -535,6 +680,8 @@ $(document).ready(function(){
 	
 	$('#lstTorneosEquipos').change(function() {
 		traerFixtureTorneosEquipos( $(this).val(), $('#lstEquiposCountries').val());
+		traerGoleadoresTorneos($(this).val());
+		traerPosicionesTorneos($(this).val());
 	});
 	
 	
