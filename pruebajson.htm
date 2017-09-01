@@ -238,8 +238,8 @@ $(document).ready(function(){
 	$('#lstCountries').change(function() {
 		$.ajax({
 			dataType: 'jsonp',
-			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequiposcountries.php', // devuelve "id" y "equipo", con parametros no obligatorios (idcountry)
-			data: {idcountry: $(this).val()},
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequiposcountries.php', // devuelve "id" y "equipo", con parametros no obligatorios (idcountry y idcategoria)
+			data: {idcountry: $(this).val(), idcategoria: $('#lstCategorias').val()},
 			beforeSend: function (XMLHttpRequest) {
 				$('#lstEquiposCountries').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
 			},
@@ -301,11 +301,11 @@ $(document).ready(function(){
 	}
 	
 	
-	function traerTorneosEquipos(idEquipo) {
+	function traerTorneosEquipos(idEquipo, idtemporada, idcategoria, iddivision) {
 		$.ajax({
 			dataType: 'jsonp',
-			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jstorneos.php', // devuelve "id" y "torneo", con parametros no obligatorios (idEquipo)
-			data: {idequipo: idEquipo},
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jstorneos.php', // devuelve "id" y "torneo", con parametros no obligatorios (idEquipo, idtemporada, idcategoria, iddivision)
+			data: {idequipo: idEquipo, idtemporada: idtemporada, idcategoria: idcategoria, iddivision: iddivision},
 			beforeSend: function (XMLHttpRequest) {
 				$('#lstTorneosEquipos').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
 			},
@@ -540,7 +540,7 @@ $(document).ready(function(){
 						
 						$('#goleadorestorneos').html(cad);
 					 },
-			 error: function() { alert("Error leyendo fichero jsonP"); }
+			 error: function() { alert("Error leyendo fichero Goleadores"); }
 		});
 	}
 	
@@ -584,7 +584,7 @@ $(document).ready(function(){
 						
 						$('#suspendidostorneos').html(cad);
 					 },
-			 error: function() { alert("Error leyendo fichero jsonP"); }
+			 error: function() { alert("Error leyendo fichero Suspendidos"); }
 		});
 	}
 	
@@ -645,7 +645,7 @@ $(document).ready(function(){
 						
 						$('#posicionestorneos').html(cad);
 					 },
-			 error: function() { alert("Error leyendo fichero jsonP"); }
+			 error: function() { alert("Error leyendo fichero Posiciones"); }
 		});
 	}
 	
@@ -656,20 +656,43 @@ $(document).ready(function(){
 	
 	$('#lstTemporadas').change(function() {
 		traerDivisionesPorTemporadasCategorias($(this).val(), $('#lstCategorias').val());
+		traerTorneosEquipos( '', $(this).val(), $('#lstCategorias').val(), $('#lstDivisiones').val());
 	});
 	
 	$('#lstCategorias').change(function() {
 		traerDivisionesPorTemporadasCategorias($('#lstTemporadas').val(), $(this).val());
 		traerEquiposPorCategoriaDivision($(this).val(), $('#lstDivisiones').val());
+		traerTorneosEquipos( '', $('#lstTemporadas').val(), $(this).val(), $('#lstDivisiones').val());
+		
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequiposcountries.php', // devuelve "id" y "equipo", con parametros no obligatorios (idcountry y idcategoria)
+			data: {idcountry: $('#lstCountries').val(), idcategoria: $(this).val()},
+			beforeSend: function (XMLHttpRequest) {
+				$('#lstEquiposCountries').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
+			},
+			success: function(datos) {
+						
+						for (var clave in datos) {
+							//alert(datos[clave].equipo);
+							//alert(datos[clave].id);
+							$('#lstEquiposCountries').append('<option value="' + datos[clave].id + '">' + datos[clave].equipo + '</option>');
+							
+							
+						}
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
 	});
 	
 	$('#lstDivisiones').change(function() {
 		traerEquiposPorCategoriaDivision($('#lstCategorias').val(), $(this).val());
 		traerSuspendidosTorneos($('#lstTemporadas').val(), $('#lstCategorias').val(), $(this).val());
+		traerTorneosEquipos( '', $('#lstTemporadas').val(), $('#lstCategorias').val(), $(this).val());
 	});
 	
 	$('#lstEquipos').change(function() {
-		traerTorneosEquipos( $(this).val());
+		traerTorneosEquipos( $(this).val(), '','','');
 	});
 	
 	$('#lstEquiposCountries').change(function() {

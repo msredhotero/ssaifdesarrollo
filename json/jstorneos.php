@@ -7,10 +7,17 @@ include ('../includes/funcionesReferencias.php');
 $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
 
+$dato = 0;
 if ((isset($_GET['idequipo'])) && ($_GET['idequipo'] > 0)) {
 	$resTraerDatos = $serviciosReferencias->traerTorneosPorEquipo($_GET['idequipo']);
+	$dato = 0;
 } else {
-	$resTraerDatos = $serviciosReferencias->traerTorneosPorEquipo(99999999999);	
+	if (((isset($_GET['idtemporada'])) && ($_GET['idtemporada'] > 0)) && ((isset($_GET['idcategoria'])) && ($_GET['idcategoria'] > 0)) && ((isset($_GET['iddivision'])) && ($_GET['iddivision'] > 0))) {
+		$dato = 1;
+		$resTraerDatos = $serviciosReferencias->traerTorneosPorTemporadaCategoriaDivision($_GET['idtemporada'], $_GET['idcategoria'], $_GET['iddivision']);
+	} else {
+		$resTraerDatos = $serviciosReferencias->traerTorneosPorEquipo(99999999999);	
+	}
 }
 
 
@@ -22,8 +29,11 @@ $ar = array();
 
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerDatos)) {
-
-		array_push($ar,array('id'=>$row['idtorneo'], 'torneo'=> $row['descripcion'].' - '.$row['temporada']));
+		if ($dato == 0) {
+			array_push($ar,array('id'=>$row['idtorneo'], 'torneo'=> $row['descripcion'].' - '.$row['temporada']));
+		} else {
+			array_push($ar,array('id'=>$row['idtorneo'], 'torneo'=> $row['descripcion']));
+		}
 	}
 
 //echo "[".substr($cad,0,-1)."]";

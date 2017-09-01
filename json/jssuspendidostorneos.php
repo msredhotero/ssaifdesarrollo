@@ -1,13 +1,5 @@
 <?php
 
-session_start();
-
-if (!isset($_SESSION['usua_predio']))
-{
-	header('Location: ../../error.php');
-} else {
-
-
 include ('../includes/funciones.php');
 include ('../includes/funcionesUsuarios.php');
 include ('../includes/funcionesHTML.php');
@@ -43,5 +35,5 @@ $ar = array();
 
 //echo "[".substr($cadJugadores,0,-1)."]";
 echo $token.'('.json_encode($ar).');';
-}
+
 ?>

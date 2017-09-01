@@ -9,7 +9,11 @@ $serviciosReferencias 	= new ServiciosReferencias();
 
 $datos = 0;
 if ((isset($_GET['idcountry'])) && ($_GET['idcountry'] > 0)) {
-	$resTraerDatos = $serviciosReferencias->traerEquiposPorCountries($_GET['idcountry']);
+	if ((isset($_GET['idcategoria'])) && ($_GET['idcategoria'] > 0)) {
+		$resTraerDatos = $serviciosReferencias->traerEquiposPorCountriesCategorias($_GET['idcountry'], $_GET['idcategoria'] );
+	} else {
+		$resTraerDatos = $serviciosReferencias->traerEquiposPorCountries($_GET['idcountry']);
+	}
 	$datos = 1;
 } else {
 	$resTraerDatos = $serviciosReferencias->traerEquipos();	
