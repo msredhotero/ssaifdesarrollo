@@ -7297,8 +7297,8 @@ left join dbequipos ev ON ev.idequipo = f.refconectorvisitante
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
-where tor.idtorneo = ".$idTorneo." and (el.idequipo = ".$idEquipo." or ev.idequipo = ".$idEquipo.")
-order by f.reffechas, f.idfixture";
+where tor.idtorneo = ".$idTorneo." and (el.idequipo = ".$idEquipo." or ev.idequipo = ".$idEquipo.") and est.idestadopartido is null
+order by f.fecha, f.idfixture";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -7712,7 +7712,7 @@ function traerGoleadoresPorFecha($idTemporadas, $desde, $hasta) {
 				inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
 				inner join dbjugadores jug ON jug.idjugador = go.refjugadores
 				where
-					tor.reftemporadas = 6
+					tor.reftemporadas = ".$idTemporadas."
 						and (go.goles > 0 or go.encontra > 0)
 				group by go.reffixture , jug.apellido , jug.nombres union all select 
 					sum(go.penalconvertido) as goles,
@@ -7726,7 +7726,7 @@ function traerGoleadoresPorFecha($idTemporadas, $desde, $hasta) {
 				inner join dbfixture fix ON fix.idfixture = go.reffixture
 				inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
 				where
-					tor.reftemporadas = 6
+					tor.reftemporadas = ".$idTemporadas."
 						and go.penalconvertido
 				group by go.reffixture , jug.apellido , jug.nombres) r
 				group by r.apellido , r.nombres , r.reffixture) g ON g.reffixture = f.idfixture
