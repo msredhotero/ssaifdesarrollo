@@ -321,10 +321,10 @@ die(var_dump($serviciosReferencias->calcularPuntoBonus( 165 , (integer)$idEquipo
                         	<th>Posicion</th>
                             <th>Equipos</th>
                             <th>Pts</th>
-                            <?php if ($exite == 1) { ?>
+                            <?php //if ($exite == 1) { ?>
                             <th>Pts B.</th>
                             <th>Pts N.</th>
-                            <?php } ?>
+                            <?php //} ?>
                             <th>PJ</th>
                             <th>PG</th>
                             <th>PE</th>
@@ -346,10 +346,10 @@ die(var_dump($serviciosReferencias->calcularPuntoBonus( 165 , (integer)$idEquipo
                             	<td><?php echo $cant; ?></td>
                                 <td><?php echo $row['equipo']; ?></td>
                                 <td><?php echo $row['puntos']; ?></td>
-                                <?php if ($exite == 1) { ?>
+                                <?php //if ($exite == 1) { ?>
                                 <td><?php echo $row['puntobonus']; ?></td>
                                 <td><?php echo ((integer)$row['puntos'] - (integer)$row['puntobonus']); ?></td>
-                                <?php } ?>
+                                <?php //} ?>
                                 <td><?php echo $row['pj']; ?></td>
                                 <td><?php echo $row['pg']; ?></td>
                                 <td><?php echo $row['pe']; ?></td>

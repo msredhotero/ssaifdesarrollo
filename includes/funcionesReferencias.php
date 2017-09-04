@@ -386,7 +386,7 @@ select
     where
         f.idfixture is null) p
 group by p.equipo , p.idequipo
-order by sum(p.puntos) desc , sum(p.rojas) asc , sum(p.amarillas) asc
+order by sum(p.puntos) desc , sum(p.rojas) asc , sum(p.amarillas) asc, sum(p.goles) desc, sum(p.encontra) desc
  ";
 	
 	$res = $this->query($sql,0);
@@ -420,7 +420,7 @@ order by sum(p.puntos) desc , sum(p.rojas) asc , sum(p.amarillas) asc
 		$puntosBonus = 0;					  
 	}
 
-	$sorted = $this->array_orderby($arPosiciones, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
+	$sorted = $this->array_orderby($arPosiciones, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC, 'goles', SORT_DESC, 'golescontra', SORT_DESC);
 
 	return $sorted;
 }
@@ -689,7 +689,7 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 		$puntosBonus = 0;					  
 	}
 
-	$sorted = $this->array_orderby($arPosiciones, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
+	$sorted = $this->array_orderby($arPosiciones, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC, 'goles', SORT_DESC, 'golescontra', SORT_DESC);
 
 	return $sorted;
 
@@ -911,7 +911,7 @@ where f.idfixture is null
 
 ) p
 group by p.equipo, p.idequipo
-order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
+order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc, sum(p.goles) desc, sum(p.encontra) desc
 
 ";	
 	$res = $this->query($sql,0);
@@ -964,6 +964,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 	$equipo		= '';
 	$puntos 	= 0;
 	$goles		= 0;
+	$golescontra= 0;
 	$pj			= 0;
 	$pg			= 0;
 	$pp			= 0;
@@ -981,7 +982,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 				$lstPosicionesFinal[] = array('equipo'=> $equipo,
 								  'puntos'=> $puntos,
 								  'goles'=> $goles,
-								  'golescontra'=> $valorT['golescontra'],
+								  'golescontra'=> $golescontra,
 								  'pj'=> $pj,
 								  'pg'=> $pg,
 								  'pp'=> $pp,
@@ -1024,7 +1025,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 			$lstPosicionesFinal[] = array('equipo'=> $equipo,
 							  'puntos'=> $puntos,
 							  'goles'=> $goles,
-							  'golescontra'=> $valorT['golescontra'],
+							  'golescontra'=> $golescontra,
 							  'pj'=> $pj,
 							  'pg'=> $pg,
 							  'pp'=> $pp,
@@ -1043,7 +1044,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 	}
 	
 	
-	$sorted = $this->array_orderby($lstPosicionesFinal, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC);
+	$sorted = $this->array_orderby($lstPosicionesFinal, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC, 'goles',SORT_DESC, 'golescontra', SORT_DESC);
 
 	return $sorted;
 
@@ -5298,7 +5299,7 @@ $sql = "SELECT
 			t.activo = 1
 		group by t.idtorneo,
 			t.descripcion,tem.temporada
-		order by 1"; 
+		order by 1 desc"; 
 $res = $this->query($sql,0); 
 return $res;
 } 
@@ -5630,6 +5631,133 @@ $res = $this->query($sql,0);
 return $res; 
 }
 
+function traerUltimaFechaJugadaEquipoPorId($idEquipo, $limit) {
+	$sql = "SELECT 
+				f.fecha,
+				f.idfixture,
+				352,
+				(CASE
+					WHEN f.refconectorlocal = ".$idEquipo." THEN el.nombre
+					ELSE ev.nombre
+				END) AS equipo,
+				arb.nombrecompleto as arbitro,
+				f.juez1,
+				f.juez2,
+				can.nombre as cancha,
+			    est.descripcion as estado,
+				(case when f.puntoslocal > f.puntosvisita then 'G'
+						  when f.puntoslocal < f.puntosvisita then 'P'
+						  when f.puntoslocal = f.puntosvisita then 'E'
+					 end) resultado
+			FROM
+				dbfixture f
+					INNER JOIN
+				dbequipos el ON el.idequipo = f.refconectorlocal
+					INNER JOIN
+				dbequipos ev ON ev.idequipo = f.refconectorvisitante
+					INNER JOIN
+				tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+					AND est.finalizado = 1
+					INNER JOIN
+				dbarbitros arb ON arb.idarbitro = f.refarbitros
+					INNER JOIN
+				tbcanchas can ON can.idcancha = f.refcanchas
+			WHERE
+				f.refestadospartidos IS NOT NULL
+					AND (f.refconectorlocal = ".$idEquipo."
+					OR f.refconectorvisitante = ".$idEquipo.")
+			ORDER BY f.fecha DESC
+			LIMIT ".$limit;	
+	$res = $this->query($sql,0); 
+	return $res; 
+}
+
+function traerUltimosResultadosPorEquipo($idequipo) {
+	$sql = "SELECT 
+				(case when f.refconectorlocal = ".$idequipo." then (case when f.puntoslocal > f.puntosvisita then 'G'
+									  when f.puntoslocal < f.puntosvisita then 'P'
+									  when f.puntoslocal = f.puntosvisita then 'E'
+								 end)
+					when f.refconectorvisitante = ".$idequipo." then (case when f.puntoslocal < f.puntosvisita then 'G'
+									  when f.puntoslocal > f.puntosvisita then 'P'
+									  when f.puntoslocal = f.puntosvisita then 'E'
+								 end) end) as resultado
+			FROM
+				dbfixture f
+					INNER JOIN
+				dbequipos el ON el.idequipo = f.refconectorlocal
+					INNER JOIN
+				dbequipos ev ON ev.idequipo = f.refconectorvisitante
+					INNER JOIN
+				tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+					AND est.finalizado = 1
+			WHERE
+				f.refestadospartidos IS NOT NULL
+					AND (f.refconectorlocal = ".$idequipo."
+					OR f.refconectorvisitante = ".$idequipo.")
+			order by f.fecha desc
+			limit 5
+			";	
+	$res = $this->query($sql,0); 
+	return $res; 
+}
+
+function traerPlantelEstadisticasPorEquipo($idequipo) {
+	$sql = "select
+				jug.apellido,
+				jug.nombres,
+				jug.idjugador,
+				coalesce( sum(r.goles),0) + coalesce( sum(r.penal),0) as goles,
+				coalesce( sum(r.amarillas),0) as amarillas,
+				coalesce( sum(r.rojas),0) as rojas
+				from dbconector c
+				inner join dbjugadores jug on jug.idjugador = c.refjugadores and c.refequipos = ".$idequipo." 
+				left join
+					(	
+						select sum(go.goles) as goles, sum(go.encontra) as encontra,0 as penal,0 as amarillas, 0 as rojas,go.reffixture, jug.idjugador
+								from dbgoleadores go 
+								inner join dbjugadores jug on jug.idjugador = go.refjugadores
+								inner join dbfixture fix ON fix.idfixture = go.reffixture
+								inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+								where (fix.refconectorlocal = ".$idequipo." OR fix.refconectorvisitante = ".$idequipo.")
+								group by go.reffixture, jug.idjugador
+						union all
+						select 0 as goles,0 as encontra,sum(go.penalconvertido) as penal,0 as amarillas, 0 as rojas, go.reffixture , jug.idjugador
+								from dbpenalesjugadores go 
+								inner join dbjugadores jug on jug.idjugador = go.refjugadores
+								inner join dbfixture fix ON fix.idfixture = go.reffixture
+								inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+								where (fix.refconectorlocal = ".$idequipo." OR fix.refconectorvisitante = ".$idequipo.")
+								group by go.reffixture, jug.idjugador
+						union all
+						select 0 as goles,0 as encontra,0 as penal,sum(go.cantidad) as amarillas,0 as rojas,go.reffixture, jug.idjugador
+								from dbsancionesjugadores go 
+								inner join dbjugadores jug on jug.idjugador = go.refjugadores
+								inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
+								inner join dbfixture fix ON fix.idfixture = go.reffixture
+								inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+								where ts.amonestacion = 1 AND (fix.refconectorlocal = ".$idequipo." OR fix.refconectorvisitante = ".$idequipo.")
+								group by go.reffixture, jug.idjugador
+						union all
+						select 0 as goles,0 as encontra,0 as penal,0 as amarillas, sum(go.cantidad) as rojas,go.reffixture , jug.idjugador
+								from dbsancionesjugadores go
+								inner join dbjugadores jug on jug.idjugador = go.refjugadores
+								inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
+								inner join dbfixture fix ON fix.idfixture = go.reffixture
+								inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+								where ts.expulsion = 1 AND (fix.refconectorlocal = ".$idequipo." OR fix.refconectorvisitante = ".$idequipo.")
+								group by go.reffixture, jug.idjugador
+								
+				) r on r.idjugador = jug.idjugador
+				group by jug.apellido,
+				jug.nombres,
+				jug.idjugador
+				order by 4 desc,6,5
+				";	
+				
+	$res = $this->query($sql,0); 
+	return $res; 
+}
 
 /* Fin */
 /* /* Fin de la Tabla: dbequipos*/
@@ -7490,14 +7618,14 @@ $sql = "select
 					from dbgoleadores go 
 					inner join dbfixture fix ON fix.idfixture = go.reffixture
 					inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-					where tor.reftemporadas = 6
+					where tor.reftemporadas = ".$idTemporadas."
 					group by go.reffixture) g ON g.reffixture = f.idfixture
 				left join
 			(select sum(go.penalconvertido) as penal, go.reffixture 
 					from dbpenalesjugadores go 
 					inner join dbfixture fix ON fix.idfixture = go.reffixture
 					inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-					where tor.reftemporadas = 6
+					where tor.reftemporadas = ".$idTemporadas."
 					group by go.reffixture) p ON p.reffixture = f.idfixture
 				left join
 			(select sum(go.cantidad) as amarillas,go.reffixture 
@@ -7505,7 +7633,7 @@ $sql = "select
 					inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
 					inner join dbfixture fix ON fix.idfixture = go.reffixture
 					inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-					where tor.reftemporadas = 6 and ts.amonestacion = 1
+					where tor.reftemporadas = ".$idTemporadas." and ts.amonestacion = 1
 					group by go.reffixture) a ON a.reffixture = f.idfixture
 				left join
 			(select sum(go.cantidad) as rojas,go.reffixture 
@@ -7513,7 +7641,7 @@ $sql = "select
 					inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
 					inner join dbfixture fix ON fix.idfixture = go.reffixture
 					inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-					where tor.reftemporadas = 6 and ts.expulsion = 1
+					where tor.reftemporadas = ".$idTemporadas." and ts.expulsion = 1
 					group by go.reffixture) r ON r.reffixture = f.idfixture
 				
 		where

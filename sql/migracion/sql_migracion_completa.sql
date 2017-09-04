@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_local_agosto_aif`.`dbarbitros`
+INSERT INTO `ssaif_local_septiembre`.`dbarbitros`
 (`idarbitro`,
 `nombrecompleto`,
 `telefonoparticular`,
@@ -14,22 +14,22 @@ SELECT `arbitros`.`arbitroid`,
     '',
     '',
     `arbitros`.`email`
-FROM `aif_bck_agosto_2`.`arbitros`;
+FROM `aif_backup_septiembre`.`arbitros`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbposiciontributaria`
+INSERT INTO `ssaif_local_septiembre`.`tbposiciontributaria`
 (`idposiciontributaria`,
 `posiciontributaria`,
 `activo`)
 SELECT `posicionestributarias`.`postributariaid`,
     `posicionestributarias`.`descripcion`,
     1
-FROM `aif_bck_agosto_2`.`posicionestributarias`;
+FROM `aif_backup_septiembre`.`posicionestributarias`;
 
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbcountries`
+INSERT INTO `ssaif_local_septiembre`.`dbcountries`
 (`idcountrie`,
 `nombre`,
 `cuit`,
@@ -64,25 +64,25 @@ SELECT `clubes`.`clubid`,
     '',
     '',
     ''
-FROM `aif_bck_agosto_2`.`clubes`;
+FROM `aif_backup_septiembre`.`clubes`;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbcanchas`
+INSERT INTO `ssaif_local_septiembre`.`tbcanchas`
 (`idcancha`,
 `refcountries`,
 `nombre`)
 SELECT c.`canchaid`,
     coalesce(min(cc.`clubid`),0),
     c.`descripcion`
-FROM `aif_bck_agosto_2`.`canchas` c
+FROM `aif_backup_septiembre`.`canchas` c
 left
-join aif_bck_agosto_2.relclubescanchas cc
+join aif_backup_septiembre.relclubescanchas cc
 on c.canchaid = cc.canchaid
 group by c.`canchaid`,c.`descripcion`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbcountriecanchas`
+INSERT INTO `ssaif_local_septiembre`.`dbcountriecanchas`
 (`idcountriecancha`,
 `refcountries`,
 `refcanchas`)
@@ -90,21 +90,21 @@ INSERT INTO `ssaif_local_agosto_aif`.`dbcountriecanchas`
 SELECT '',
 cc.`clubid`,
 c.`canchaid`
-FROM `aif_bck_agosto_2`.`canchas` c
+FROM `aif_backup_septiembre`.`canchas` c
 inner
-join aif_bck_agosto_2.relclubescanchas cc
+join aif_backup_septiembre.relclubescanchas cc
 on c.canchaid = cc.canchaid;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbcategorias`
+INSERT INTO `ssaif_local_septiembre`.`tbcategorias`
 (`idtcategoria`,
 `categoria`)
 SELECT `categorias`.`categoriaid`,
     `categorias`.`descripcion`
-FROM `aif_bck_agosto_2`.`categorias`;
+FROM `aif_backup_septiembre`.`categorias`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbdias`
+INSERT INTO `ssaif_local_septiembre`.`tbdias`
 (`iddia`,
 `dia`)
 SELECT `tbdias`.`iddia`,
@@ -112,14 +112,14 @@ SELECT `tbdias`.`iddia`,
 FROM `ssaif_desa_host`.`tbdias`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbdivisiones`
+INSERT INTO `ssaif_local_septiembre`.`tbdivisiones`
 (`iddivision`,
 `division`)
 SELECT `divisiones`.`divisionid`,
     `divisiones`.`descripcion`
-FROM `aif_bck_agosto_2`.`divisiones`;
+FROM `aif_backup_septiembre`.`divisiones`;
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbdocumentaciones`
+INSERT INTO `ssaif_local_septiembre`.`tbdocumentaciones`
 (`iddocumentacion`,
 `descripcion`,
 `obligatoria`,
@@ -128,11 +128,11 @@ SELECT `documentacionjugadores`.`docjugadoresid`,
     `documentacionjugadores`.`descripcion`,
     `documentacionjugadores`.`obligatoria`,
     `documentacionjugadores`.`observaciones`
-FROM `aif_bck_agosto_2`.`documentacionjugadores`;
+FROM `aif_backup_septiembre`.`documentacionjugadores`;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbestadospartidos`
+INSERT INTO `ssaif_local_septiembre`.`tbestadospartidos`
 (`idestadopartido`,
 `descripcion`,
 `defautomatica`,
@@ -161,11 +161,11 @@ SELECT `estadospartidos`.`estadopartidoid`,
     `estadospartidos`.`visibleparaarbitros`,
     `estadospartidos`.`contabilizalocal`,
     `estadospartidos`.`contabilizavisitante`
-FROM `aif_bck_agosto_2`.`estadospartidos`
+FROM `aif_backup_septiembre`.`estadospartidos`
 where estadopartidoid > 0;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbfechas`
+INSERT INTO `ssaif_local_septiembre`.`tbfechas`
 (`idfecha`,
 `fecha`)
 SELECT `tbfechas`.`idfecha`,
@@ -173,7 +173,7 @@ SELECT `tbfechas`.`idfecha`,
 FROM `ssaif_desa_host`.`tbfechas`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbmotivoshabilitacionestransitorias`
+INSERT INTO `ssaif_local_septiembre`.`tbmotivoshabilitacionestransitorias`
 (`idmotivoshabilitacionestransitoria`,
 `inhabilita`,
 `descripcion`,
@@ -182,10 +182,10 @@ SELECT `motivoshabilitaciontransitoria`.`motivohabtransitoriaid`,
     `motivoshabilitaciontransitoria`.`inhabilitaalvencimiento`,
     `motivoshabilitaciontransitoria`.`descripcion`,
     `motivoshabilitaciontransitoria`.`docjugadoresid`
-FROM `aif_bck_agosto_2`.`motivoshabilitaciontransitoria`;
+FROM `aif_backup_septiembre`.`motivoshabilitaciontransitoria`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbpuntobonus`
+INSERT INTO `ssaif_local_septiembre`.`tbpuntobonus`
 (`idpuntobonus`,
 `descripcion`,
 `cantidadfechas`,
@@ -201,28 +201,28 @@ SELECT `puntobonus`.`puntobonusid`,
     `puntobonus`.`valoracomparar`,
     `puntobonus`.`puntosextra`,
     `puntobonus`.`consecutivas`
-FROM `aif_bck_agosto_2`.`puntobonus`;
+FROM `aif_backup_septiembre`.`puntobonus`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbtemporadas`
+INSERT INTO `ssaif_local_septiembre`.`tbtemporadas`
 (`idtemporadas`,
 `temporada`)
 SELECT `temporadas`.`temporadaid`,
     `temporadas`.`descripcion`
-FROM `aif_bck_agosto_2`.`temporadas`;
+FROM `aif_backup_septiembre`.`temporadas`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbtipocontactos`
+INSERT INTO `ssaif_local_septiembre`.`tbtipocontactos`
 (`idtipocontacto`,
 `tipocontacto`,
 `activo`)
 SELECT `tipocontactosclubes`.`tipocontactoid`,
     `tipocontactosclubes`.`descripcion`,
     1
-FROM `aif_bck_agosto_2`.`tipocontactosclubes`;
+FROM `aif_backup_septiembre`.`tipocontactosclubes`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbtipodocumentos`
+INSERT INTO `ssaif_local_septiembre`.`tbtipodocumentos`
 (`idtipodocumento`,
 `tipodocumento`)
 SELECT `tbtipodocumentos`.`idtipodocumento`,
@@ -230,17 +230,17 @@ SELECT `tbtipodocumentos`.`idtipodocumento`,
 FROM `ssaif_desa_host`.`tbtipodocumentos`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbtipojugadores`
+INSERT INTO `ssaif_local_septiembre`.`tbtipojugadores`
 (`idtipojugador`,
 `tipojugador`,
 `abreviatura`)
 SELECT `tipojugadores`.`tipojugadorid`,
     `tipojugadores`.`descripcion`,
     `tipojugadores`.`abreviatura`
-FROM `aif_bck_agosto_2`.`tipojugadores`;
+FROM `aif_backup_septiembre`.`tipojugadores`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbtiposanciones`
+INSERT INTO `ssaif_local_septiembre`.`tbtiposanciones`
 (`idtiposancion`,
 `descripcion`,
 `cantminfechas`,
@@ -261,18 +261,18 @@ SELECT `tiposanciones`.`tiposancionid`,
     `tiposanciones`.`cumpletodascategorias`,
     `tiposanciones`.`llevapendiente`,
     `tiposanciones`.`ocultardetallepublico`
-FROM `aif_bck_agosto_2`.`tiposanciones`;
+FROM `aif_backup_septiembre`.`tiposanciones`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbtipotorneo`
+INSERT INTO `ssaif_local_septiembre`.`tbtipotorneo`
 (`idtipotorneo`,
 `tipotorneo`)
 SELECT `formatostorneo`.`formatotorneoid`,
     `formatostorneo`.`descripcion`
-FROM `aif_bck_agosto_2`.`formatostorneo`;
+FROM `aif_backup_septiembre`.`formatostorneo`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbvaloreshabilitacionestransitorias`
+INSERT INTO `ssaif_local_septiembre`.`tbvaloreshabilitacionestransitorias`
 (`idvalorhabilitaciontransitoria`,
 `refdocumentaciones`,
 `descripcion`,
@@ -285,10 +285,10 @@ SELECT '',
     `documentacionjugadoresvalores`.`habilita`,
     `documentacionjugadoresvalores`.`esdefault`,
     valorid
-FROM `aif_bck_agosto_2`.`documentacionjugadoresvalores`;
+FROM `aif_backup_septiembre`.`documentacionjugadoresvalores`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbdefinicionescategoriastemporadas`
+INSERT INTO `ssaif_local_septiembre`.`dbdefinicionescategoriastemporadas`
 (`iddefinicioncategoriatemporada`,
 `refcategorias`,
 `reftemporadas`,
@@ -311,11 +311,11 @@ SELECT '',
     `definicionescategoriastemporadas`.`cantcambiosporpartido`,
     `definicionescategoriastemporadas`.`conreingreso`,
     `definicionescategoriastemporadas`.`observaciones`
-FROM `aif_bck_agosto_2`.`definicionescategoriastemporadas`;
+FROM `aif_backup_septiembre`.`definicionescategoriastemporadas`;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbdefinicionescategoriastemporadastipojugador`
+INSERT INTO `ssaif_local_septiembre`.`dbdefinicionescategoriastemporadastipojugador`
 (`iddefinicionescategoriastemporadastipojugador`,
 `refdefinicionescategoriastemporadas`,
 `reftipojugadores`,
@@ -332,17 +332,17 @@ SELECT '',
     dt.`cantjugadoresporequipo`,
     dt.`cantjugadoresencancha`,
     dt.`observaciones`
-FROM `aif_bck_agosto_2`.`definicionescategoriastemporadastipojugador` dt
+FROM `aif_backup_septiembre`.`definicionescategoriastemporadastipojugador` dt
 inner
-join	aif_bck_agosto_2.definicionescategoriastemporadas d
+join	aif_backup_septiembre.definicionescategoriastemporadas d
 on		d.categoriaid = dt.categoriaid and d.temporadaid = dt.temporadaid
 inner
-join	ssaif_local_agosto_aif.dbdefinicionescategoriastemporadas t
+join	ssaif_local_septiembre.dbdefinicionescategoriastemporadas t
 on		d.categoriaid = t.refcategorias and d.temporadaid = t.reftemporadas;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbdefinicionessancionesacumuladastemporadas`
+INSERT INTO `ssaif_local_septiembre`.`dbdefinicionessancionesacumuladastemporadas`
 (`iddefinicionessancionesacumuladastemporadas`,
 `reftiposanciones`,
 `reftemporadas`,
@@ -353,11 +353,11 @@ SELECT '',
     `definicionessancionesacumuladastemporadas`.`temporadaid`,
     `definicionessancionesacumuladastemporadas`.`cantacumulada`,
     `definicionessancionesacumuladastemporadas`.`cantfechasacumplir`
-FROM `aif_bck_agosto_2`.`definicionessancionesacumuladastemporadas`;
+FROM `aif_backup_septiembre`.`definicionessancionesacumuladastemporadas`;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbtorneos`
+INSERT INTO `ssaif_local_septiembre`.`dbtorneos`
 (`idtorneo`,
 `descripcion`,
 `reftipotorneo`,
@@ -388,11 +388,11 @@ SELECT `torneos`.`torneoid`,
     `torneos`.`acumulatablaconformada`,
     `torneos`.`observaciones`,
     1
-FROM `aif_bck_agosto_2`.`torneos`;
+FROM `aif_backup_septiembre`.`torneos`;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbcontactos`
+INSERT INTO `ssaif_local_septiembre`.`dbcontactos`
 (`idcontacto`,
 `reftipocontactos`,
 `nombre`,
@@ -427,21 +427,21 @@ SELECT '',
 	`relclubescontactos`.clubid,
 	`relclubescontactos`.contactoid,
     `relclubescontactos`.tipocontactoid
-FROM `aif_bck_agosto_2`.`relclubescontactos`;
+FROM `aif_backup_septiembre`.`relclubescontactos`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbcountriecontactos`
+INSERT INTO `ssaif_local_septiembre`.`dbcountriecontactos`
 (`idcountriecontacto`,
 `refcountries`,
 `refcontactos`)
 SELECT '',
 	`dbcontactos`.`clubid`,
 	`dbcontactos`.`idcontacto`
-FROM `ssaif_local_agosto_aif`.`dbcontactos`;
+FROM `ssaif_local_septiembre`.`dbcontactos`;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbequipos`
+INSERT INTO `ssaif_local_septiembre`.`dbequipos`
 (`idequipo`,
 `refcountries`,
 `nombre`,
@@ -460,20 +460,20 @@ SELECT `equipos`.`equipoid`,
     `equipos`.`fechaalta`,
     `equipos`.`fechabaja`,
     `equipos`.`activo`
-FROM `aif_bck_agosto_2`.`equipos`;
+FROM `aif_backup_septiembre`.`equipos`;
 
 
-UPDATE ssaif_local_agosto_aif.dbequipos e
-JOIN aif_bck_agosto_2.equipos ee 
+UPDATE ssaif_local_septiembre.dbequipos e
+JOIN aif_backup_septiembre.equipos ee 
 ON ee.equipoid = e.idequipo
-join aif_bck_agosto_2.relclubescontactos re
+join aif_backup_septiembre.relclubescontactos re
 on	ee.contactoclubid = re.contactoid and ee.clubid = re.clubid
-join ssaif_local_agosto_aif.dbcontactos cc
+join ssaif_local_septiembre.dbcontactos cc
 on cc.clubid = re.clubid and cc.contactoid = re.contactoid and cc.tipocontactoid = re.tipocontactoid
 SET e.refcontactos = cc.idcontacto;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbjugadores`
+INSERT INTO `ssaif_local_septiembre`.`dbjugadores`
 (`idjugador`,
 `reftipodocumentos`,
 `nrodocumento`,
@@ -496,10 +496,10 @@ SELECT `jugadores`.`jugadorid`,
     `jugadores`.`fechabaja`,
     `jugadores`.`clubid`,
     `jugadores`.`observaciones`
-FROM `aif_bck_agosto_2`.`jugadores`;
+FROM `aif_backup_septiembre`.`jugadores`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbjugadoresdocumentacion`
+INSERT INTO `ssaif_local_septiembre`.`dbjugadoresdocumentacion`
 (`idjugadordocumentacion`,
 `refjugadores`,
 `refdocumentaciones`,
@@ -510,16 +510,16 @@ SELECT '',
     s.`docjugadoresid`,
     d.habilita,
     s.`observaciones`
-FROM aif_bck_agosto_2.reljugadoresdocumentacionjugadores s
+FROM aif_backup_septiembre.reljugadoresdocumentacionjugadores s
     inner
-    join aif_bck_agosto_2.documentacionjugadoresvalores d
+    join aif_backup_septiembre.documentacionjugadoresvalores d
     on	d.docjugadoresid = s.docjugadoresid and d.valorid = s.valorid
     where s.docjugadoresid not in (1,2,6,7,9);
     /*where s.docjugadoresid in (1,2,6,7,9)*/
     
     
     
-INSERT INTO `ssaif_local_agosto_aif`.`dbjugadoresdocumentacion`
+INSERT INTO `ssaif_local_septiembre`.`dbjugadoresdocumentacion`
 (`idjugadordocumentacion`,
 `refjugadores`,
 `refdocumentaciones`,
@@ -530,14 +530,14 @@ SELECT '',
     s.`docjugadoresid`,
     d.habilita,
     s.`observaciones`
-FROM aif_bck_agosto_2.reljugadoresdocumentacionjugadores s
+FROM aif_backup_septiembre.reljugadoresdocumentacionjugadores s
     inner
-    join aif_bck_agosto_2.documentacionjugadoresvalores d
+    join aif_backup_septiembre.documentacionjugadoresvalores d
     on	d.docjugadoresid = s.docjugadoresid and d.valorid = s.valorid
     where s.docjugadoresid in (1,2,6,7,9);
     
     
-INSERT INTO `ssaif_local_agosto_aif`.`dbjugadoresvaloreshabilitacionestransitorias`
+INSERT INTO `ssaif_local_septiembre`.`dbjugadoresvaloreshabilitacionestransitorias`
 (`iddbjugadorvalorhabilitaciontransitoria`,
 `refjugadores`,
 `refvaloreshabilitacionestransitorias`)
@@ -546,18 +546,18 @@ SELECT
 s.`jugadorid`,
     v.idvalorhabilitaciontransitoria
     
-FROM aif_bck_agosto_2.reljugadoresdocumentacionjugadores s
+FROM aif_backup_septiembre.reljugadoresdocumentacionjugadores s
     inner
-    join aif_bck_agosto_2.documentacionjugadoresvalores d
+    join aif_backup_septiembre.documentacionjugadoresvalores d
     on	d.docjugadoresid = s.docjugadoresid and d.valorid = s.valorid
     inner
-    join ssaif_local_agosto_aif.tbvaloreshabilitacionestransitorias v
+    join ssaif_local_septiembre.tbvaloreshabilitacionestransitorias v
     on	v.valorviejo = d.valorid and v.refdocumentaciones = s.docjugadoresid
     where s.docjugadoresid not in (1,2,6,7,9) ;
     
     
     
-INSERT INTO `ssaif_local_agosto_aif`.`dbjugadoresmotivoshabilitacionestransitorias`
+INSERT INTO `ssaif_local_septiembre`.`dbjugadoresmotivoshabilitacionestransitorias`
 (`iddbjugadormotivohabilitaciontransitoria`,
 `reftemporadas`,
 `refjugadores`,
@@ -579,17 +579,17 @@ h.`temporadaid`,
     h.`fechalimhabtransitoria`,
     h.`observaciones`
 
-FROM `aif_bck_agosto_2`.`habilitacionestranjugadores` h
+FROM `aif_backup_septiembre`.`habilitacionestranjugadores` h
 inner
-join	aif_bck_agosto_2.equipos e
+join	aif_backup_septiembre.equipos e
 on		e.equipoid = h.equipoid
 inner
-join	ssaif_local_agosto_aif.tbmotivoshabilitacionestransitorias t
+join	ssaif_local_septiembre.tbmotivoshabilitacionestransitorias t
 on		t.idmotivoshabilitacionestransitoria = h.motivohabtransitoriaid;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbconector`
+INSERT INTO `ssaif_local_septiembre`.`dbconector`
 (`idconector`,
 `refjugadores`,
 `reftipojugadores`,
@@ -606,12 +606,12 @@ SELECT '',
 	e.categoriaid,
 	(case when j.clubid <> e.clubid then 1 else 0 end),
 	1
-FROM `aif_bck_agosto_2`.`reljugadoresequipos` je
+FROM `aif_backup_septiembre`.`reljugadoresequipos` je
 inner
-join	aif_bck_agosto_2.equipos e
+join	aif_backup_septiembre.equipos e
 on		je.equipoid = e.equipoid
 inner
-join	aif_bck_agosto_2.jugadores j
+join	aif_backup_septiembre.jugadores j
 on		j.jugadorid = je.jugadorid;
 
 
@@ -635,7 +635,7 @@ WHERE p.idfixture = pp.partidoid
 AND p.fecha > '2017-04-01'
 
 */
-INSERT INTO `ssaif_local_agosto_aif`.`dbfixture`
+INSERT INTO `ssaif_local_septiembre`.`dbfixture`
 (`idfixture`,
 `reftorneos`,
 `reffechas`,
@@ -674,11 +674,11 @@ SELECT `partidos`.`partidoid`,
     `partidos`.`golesvisita`,
     `partidos`.`observaciones`,
     `partidos`.`publicar`
-FROM `aif_bck_agosto_2`.`partidos`;
+FROM `aif_backup_septiembre`.`partidos`;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`predio_menu`
+INSERT INTO `ssaif_local_septiembre`.`predio_menu`
 (`idmenu`,
 `url`,
 `icono`,
@@ -699,20 +699,20 @@ SELECT `predio_menu`.`idmenu`,
     `predio_menu`.`administracion`,
     `predio_menu`.`torneo`,
     `predio_menu`.`reportes`
-FROM `ssaif_test_final`.`predio_menu`;
+FROM `ssaif_local_agosto_aif`.`predio_menu`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`tbroles`
+INSERT INTO `ssaif_local_septiembre`.`tbroles`
 (`idrol`,
 `descripcion`,
 `activo`)
 SELECT `tbroles`.`idrol`,
     `tbroles`.`descripcion`,
     `tbroles`.`activo`
-FROM `ssaif_desa_host`.`tbroles`;
+FROM `ssaif_local_agosto_aif`.`tbroles`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbtorneopuntobonus`
+INSERT INTO `ssaif_local_septiembre`.`dbtorneopuntobonus`
 (`idtorneopuntobonus`,
 `reftorneos`,
 `refpuntobonus`)
@@ -720,11 +720,11 @@ SELECT '',
 	`reltorneospuntobonus`.`torneoid`,
 	`reltorneospuntobonus`.`puntobonusid`
     
-FROM `aif_bck_agosto_2`.`reltorneospuntobonus`;
+FROM `aif_backup_septiembre`.`reltorneospuntobonus`;
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbusuarios`
+INSERT INTO `ssaif_local_septiembre`.`dbusuarios`
 (`idusuario`,
 `usuario`,
 `password`,
@@ -740,7 +740,7 @@ SELECT `dbusuarios`.`idusuario`,
 FROM `ssaif_desa_host`.`dbusuarios`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbgoleadores`
+INSERT INTO `ssaif_local_septiembre`.`dbgoleadores`
 (`idgoleador`,
 `refjugadores`,
 `reffixture`,
@@ -758,17 +758,17 @@ SELECT '',
     (case when ip.incidenciapartidoid = 1 then pd.valor else 0 end) as goles,
     (case when ip.incidenciapartidoid = 2 then pd.valor else 0 end) as engoles
 FROM
-    aif_bck_agosto_2.partidosdetalle pd
+    aif_backup_septiembre.partidosdetalle pd
 inner
-join	aif_bck_agosto_2.incidenciaspartidos ip
+join	aif_backup_septiembre.incidenciaspartidos ip
 on		pd.incidenciapartidoid = ip.incidenciapartidoid
 inner
-join    aif_bck_agosto_2.equipos e
+join    aif_backup_septiembre.equipos e
 on		e.equipoid = pd.equipoid
 where	ip.incidenciapartidoid in (1,2);
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbsancionesjugadores`
+INSERT INTO `ssaif_local_septiembre`.`dbsancionesjugadores`
 (`idsancionjugador`,
 `reftiposanciones`,
 `refjugadores`,
@@ -790,15 +790,15 @@ SELECT s.`sancionjugadorid`,
     s.`categoriasancionorigenid`,
     e.divisionid,
     s.`sancionfalloid`
-FROM `aif_bck_agosto_2`.`sancionesjugadores` s
+FROM `aif_backup_septiembre`.`sancionesjugadores` s
 inner
-join	aif_bck_agosto_2.equipos e
+join	aif_backup_septiembre.equipos e
 on		s.equipoid = e.equipoid;
 
 
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbsancionesfallos`
+INSERT INTO `ssaif_local_septiembre`.`dbsancionesfallos`
 (`idsancionfallo`,
 `refsancionesjugadores`,
 `cantidadfechas`,
@@ -822,10 +822,10 @@ SELECT `sancionesfallos`.`sancionfalloid`,
     `sancionesfallos`.`pendfallo`,
     `sancionesfallos`.`generadaporacumulacion`,
     `sancionesfallos`.`observaciones`
-FROM `aif_bck_agosto_2`.`sancionesfallos`;
+FROM `aif_backup_septiembre`.`sancionesfallos`;
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbpenalesjugadores`
+INSERT INTO `ssaif_local_septiembre`.`dbpenalesjugadores`
 (`idpenaljugador`,
 `refjugadores`,
 `reffixture`,
@@ -847,17 +847,17 @@ SELECT '',
     (case when ip.incidenciapartidoid = 6 then pd.valor else 0 end) as penalerrado,
     (case when ip.incidenciapartidoid = 5 then pd.valor else 0 end) as penalatajado
 FROM
-    aif_bck_agosto_2.partidosdetalle pd
+    aif_backup_septiembre.partidosdetalle pd
 inner
-join	aif_bck_agosto_2.incidenciaspartidos ip
+join	aif_backup_septiembre.incidenciaspartidos ip
 on		pd.incidenciapartidoid = ip.incidenciapartidoid
 inner
-join    aif_bck_agosto_2.equipos e
+join    aif_backup_septiembre.equipos e
 on		e.equipoid = pd.equipoid
 where	ip.incidenciapartidoid in (4,5,6);
 
 
-INSERT INTO ssaif_local_agosto_aif.dbminutosjugados
+INSERT INTO ssaif_local_septiembre.dbminutosjugados
 (`idminutojugado`,
 `refjugadores`,
 `reffixture`,
@@ -873,17 +873,17 @@ SELECT '',
     e.divisionid,
     pd.valor as minutos
 FROM
-    aif_bck_agosto_2.partidosdetalle pd
+    aif_backup_septiembre.partidosdetalle pd
 inner
-join	aif_bck_agosto_2.incidenciaspartidos ip
+join	aif_backup_septiembre.incidenciaspartidos ip
 on		pd.incidenciapartidoid = ip.incidenciapartidoid
 inner
-join    aif_bck_agosto_2.equipos e
+join    aif_backup_septiembre.equipos e
 on		e.equipoid = pd.equipoid
 where	ip.incidenciapartidoid in (3);
 
 
-INSERT INTO `ssaif_local_agosto_aif`.`dbmejorjugador`
+INSERT INTO `ssaif_local_septiembre`.`dbmejorjugador`
 (`idmejorjugador`,
 `refjugadores`,
 `reffixture`,
@@ -897,12 +897,12 @@ SELECT '',
     e.categoriaid,
     e.divisionid
 FROM
-    aif_bck_agosto_2.partidosdetalle pd
+    aif_backup_septiembre.partidosdetalle pd
 inner
-join	aif_bck_agosto_2.incidenciaspartidos ip
+join	aif_backup_septiembre.incidenciaspartidos ip
 on		pd.incidenciapartidoid = ip.incidenciapartidoid
 inner
-join    aif_bck_agosto_2.equipos e
+join    aif_backup_septiembre.equipos e
 on		e.equipoid = pd.equipoid
 where	ip.incidenciapartidoid in (8);
 

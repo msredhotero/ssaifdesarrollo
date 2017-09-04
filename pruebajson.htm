@@ -118,6 +118,22 @@
 	
 </div>
 
+<!--
+para el wireframe de equipo
+
+-->
+<br />
+<p>Equipo Datos Generales</p>
+<div id="equipodatos">
+	
+</div>
+
+
+<br />
+<p>Equipo Ultimos 5 Partidos</p>
+<div id="equipoultimospartidos">
+	
+</div>
 
 
 </div>
@@ -650,6 +666,77 @@ $(document).ready(function(){
 	}
 	
 	
+	function traerEquipoDatos(idequipo) {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequipospartido.php', // devuelve "equipo", "arbitro","juez1","juez2","cancha" y "estado" con parametro obligatorio "idequipo" y "limite" : 1_ para los datos del equipo, 1,5: para los ultimos 5 partidos jugados
+			data: {idequipo: idequipo, limite: '1'},
+			beforeSend: function (XMLHttpRequest) {
+				$('#equipodatos').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>Equipo</th> \
+									<th>Arbitro</th> \
+									<th>Juez 1</th> \
+									<th>Juez 2</th> \
+									<th>Cancha</th> \
+									<th>Estado</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+
+						for (var clave in datos) {
+							cad += '<tr><td>' + datos[clave].equipo + '</td> \
+									<td>' + datos[clave].arbitro + '</td> \
+									<td>' + datos[clave].juez1 + '</td> \
+									<td>' + datos[clave].juez2 + '</td> \
+									<td>' + datos[clave].cancha + '</td> \
+									<td>' + datos[clave].estado + '</td></tr>';
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#equipodatos').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+	}
+	
+	
+	function traerEquipoUltimosCincoPartidos(idequipo) {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsequipospartido.php', // devuelve "equipo", "arbitro","juez1","juez2","cancha" y "estado" con parametro obligatorio "idequipo" y "limite" : 1_ para los datos del equipo, 1,5: para los ultimos 5 partidos jugados
+			data: {idequipo: idequipo, limite: '1,5'},
+			beforeSend: function (XMLHttpRequest) {
+				$('#equipoultimospartidos').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>Resultado</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+
+						for (var clave in datos) {
+							cad += '<tr><td>' + datos[clave].resultado + '</td></tr>';
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#equipoultimospartidos').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero jsonP"); }
+		});
+	}
+	
+	
+	
 	traerEstadisticas();
 	traerGoleador();
 	traerPartidoDestacado();
@@ -693,6 +780,8 @@ $(document).ready(function(){
 	
 	$('#lstEquipos').change(function() {
 		traerTorneosEquipos( $(this).val(), '','','');
+		traerEquipoDatos($(this).val());
+		traerEquipoUltimosCincoPartidos($(this).val());
 	});
 	
 	$('#lstEquiposCountries').change(function() {
