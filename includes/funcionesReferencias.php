@@ -650,7 +650,7 @@ from (select
         inner join tbcategorias ca on ca.idtcategoria = t.refcategorias
 		where t.idtorneo = ".$refTorneo." and e.activo=1 and t.activo = 1) ev
 inner join tbcategorias ca ON ca.idtcategoria = ev.refcategorias
-left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.refconectorvisitante) and f.reftorneos = ".$refTorneo." and f.refestadospartidos is not null
+left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.refconectorvisitante) and f.reftorneos = ".$refTorneo." and f.refestadospartidos is not null and f.reffechas= 1
 
 where f.idfixture is null
 ) p
@@ -5701,6 +5701,70 @@ function traerUltimosResultadosPorEquipo($idequipo) {
 	$res = $this->query($sql,0); 
 	return $res; 
 }
+
+function traerPartidosGPEporEquipo($idEquipo) {
+	$sql = "SELECT 
+			sum(CASE
+				WHEN
+					f.refconectorlocal = ".$idEquipo."
+				THEN
+					(CASE
+						WHEN f.puntoslocal > f.puntosvisita THEN 1
+					END)
+				WHEN
+					f.refconectorvisitante = ".$idEquipo."
+				THEN
+					(CASE
+						WHEN f.puntoslocal < f.puntosvisita THEN 1
+					END)
+			END) AS ganados,
+			sum(CASE
+				WHEN
+					f.refconectorlocal = ".$idEquipo."
+				THEN
+					(CASE
+						WHEN f.puntoslocal < f.puntosvisita THEN 1
+					END)
+				WHEN
+					f.refconectorvisitante = ".$idEquipo."
+				THEN
+					(CASE
+						WHEN f.puntoslocal > f.puntosvisita THEN 1
+					END)
+			END) AS perdidos,
+			sum(CASE
+				WHEN
+					f.refconectorlocal = ".$idEquipo."
+				THEN
+					(CASE
+						WHEN f.puntoslocal = f.puntosvisita THEN 1
+					END)
+				WHEN
+					f.refconectorvisitante = ".$idEquipo."
+				THEN
+					(CASE
+						WHEN f.puntoslocal = f.puntosvisita THEN 1
+					END)
+			END) AS empatados,
+			count(*) as partidos
+		FROM
+			dbfixture f
+				INNER JOIN
+			dbequipos el ON el.idequipo = f.refconectorlocal
+				INNER JOIN
+			dbequipos ev ON ev.idequipo = f.refconectorvisitante
+				INNER JOIN
+			tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+				AND est.finalizado = 1
+		WHERE
+			f.refestadospartidos IS NOT NULL
+				AND (f.refconectorlocal = ".$idEquipo."
+				OR f.refconectorvisitante = ".$idEquipo.")";
+				
+	$res = $this->query($sql,0); 
+	return $res; 	
+}
+
 
 function traerPlantelEstadisticasPorEquipo($idequipo) {
 	$sql = "select

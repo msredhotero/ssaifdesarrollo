@@ -908,6 +908,35 @@ where	ip.incidenciapartidoid in (8);
 
 
 
+INSERT INTO `ssaif_local_septiembre`.`dbsancionesfechascumplidas`
+(`idsancionfechacumplida`,
+`reffixture`,
+`refjugadores`,
+`cumplida`,
+`refsancionesfallos`,
+`refsancionesfallosacumuladas`)
+
+SELECT 
+	'',
+	sc.`partidoidcumplimiento`,
+	sj.jugadorid,
+	1,
+	sc.`sancionfalloid`,
+	0
+FROM `aif_backup_septiembre`.`partidoscumplimientosanciones` sc
+inner
+join	aif_backup_septiembre.sancionesfallos sf
+on 		sf.sancionfalloid = sc.sancionfalloid
+inner
+join	aif_backup_septiembre.sancionesjugadores sj
+on		sj.sancionjugadorid = sf.sancionjugadorid
+
+group by sc.`partidoidcumplimiento`,
+    sc.`sancionfalloid`,
+sj.jugadorid,
+	sf.sancionfalloid
+
+
 
 
     
