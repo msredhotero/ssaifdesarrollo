@@ -14,7 +14,7 @@ if ((isset($_GET['idjugador'])) && ($_GET['idjugador'] > 0)) {
 	$resTraerJugadores = $serviciosReferencias->SuspendidosTotalPorJugador($_GET['idjugador']);
 } else {
 	$resTraerJugadores = $serviciosReferencias->SuspendidosTotalPorJugador(0);	
-
+}
 $token = $_GET['callback'];
 
 header("content-type: Access-Control-Allow-Origin: *");
@@ -32,5 +32,5 @@ $ar = array();
 
 echo $token.'('.json_encode($ar).');';
 
-}
+
 ?>

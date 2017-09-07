@@ -7237,10 +7237,108 @@ from	(
 	order by cou.nombre,rr.apyn";	
 	$res = $this->query($sql,0);
 	return $res;
-
-
 			
-				
+}
+
+
+
+function traerJugadoresEquiposPorJugador($idJugador) {
+	
+	$resTemporada  = $this->traerUltimaTemporada();
+	
+	if (mysql_num_rows($resTemporada)>0) {
+		$idtemporada = mysql_result($resTemporada,0,0);	
+	} else {
+		$idtemporada = 0;
+	}
+	
+	$sql = "select
+	rr.nrodocumento,
+	rr.apyn,
+	rr.email,
+	rr.fechanacimiento,
+    cou.nombre as country,
+    equ.nombre as equipo,
+    cat.categoria,
+    divi.division,
+    rr.idjugador,
+    cat.idtcategoria,
+    coc.reftipojugadores,
+    coc.refequipos,
+    cou.idcountrie
+from	(
+	select
+		j.nrodocumento,
+		concat(j.apellido,', ',j.nombres) as apyn,
+		j.email,
+		j.fechanacimiento,
+		count(r.refequipos) as cantidad,
+		j.idjugador,
+        j.refcountries
+		
+		from	
+		(
+		select 
+			c.refjugadores,
+			c.refequipos
+		from
+			dbconector c
+				inner join
+			dbjugadores jug ON jug.idjugador = c.refjugadores
+				inner join
+			tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+				inner join
+			dbcountries co ON co.idcountrie = jug.refcountries
+				inner join
+			tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+				inner join
+			dbequipos equ ON equ.idequipo = c.refequipos
+				inner join
+			tbdivisiones di ON di.iddivision = equ.refdivisiones
+				inner join
+			dbcontactos con ON con.idcontacto = equ.refcontactos
+				inner join
+			tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+				inner join
+			tbcategorias cat ON cat.idtcategoria = c.refcategorias
+				inner join
+			(select distinct fix.refconectorlocal 
+				from dbfixture fix 
+				inner join dbtorneos t ON t.idtorneo = fix.reftorneos
+				where t.reftemporadas = ".$idtemporada.") as fe
+			on fe.refconectorlocal = c.refequipos
+		where
+			c.activo = 1 and (jug.fechabaja = '1900-01-01' or jug.fechabaja = '0000-00-00') and equ.activo = 1 and jug.idjugador = ".$idJugador."
+		group by c.refjugadores,
+			c.refequipos
+		) as r
+		inner
+		join		dbjugadores j
+		on			j.idjugador = r.refjugadores
+		group by j.nrodocumento,
+		j.apellido,
+		j.nombres,
+		j.email,
+		j.fechanacimiento,
+		j.idjugador,
+        j.refcountries
+        ) rr
+	inner
+    join		dbconector coc
+    on			coc.refjugadores = rr.idjugador
+    inner join
+			dbequipos equ ON equ.idequipo = coc.refequipos and equ.activo = 1
+    inner join
+			dbcountries cou ON cou.idcountrie = rr.refcountries	
+	inner join
+			tbdivisiones divi ON divi.iddivision = equ.refdivisiones
+	inner join
+			tbcategorias cat ON cat.idtcategoria = coc.refcategorias
+            
+	order by cou.nombre,rr.apyn";	
+	$res = $this->query($sql,0);
+	return $res;
+			
 }
 
 
@@ -7303,6 +7401,72 @@ function traerEstadisticaPorJugador($idJugador) {
 				jug.nombres,
 				jug.idjugador
 				order by 4 desc,6,5
+				";	
+				
+	$res = $this->query($sql,0); 
+	return $res; 
+}
+
+
+
+function traerEstadisticaTemporadasPorJugador($idJugador) {
+
+	
+	$sql = "select
+				jug.apellido,
+				jug.nombres,
+				jug.idjugador,
+				coalesce( sum(r.goles),0) + coalesce( sum(r.penal),0) as goles,
+				coalesce( sum(r.amarillas),0) as amarillas,
+				coalesce( sum(r.rojas),0) as rojas,
+				r.temporada
+				from dbjugadores jug
+				left join
+					(	
+						select sum(go.goles) as goles, sum(go.encontra) as encontra,0 as penal,0 as amarillas, 0 as rojas,go.reffixture, jug.idjugador, tem.temporada
+								from dbgoleadores go 
+								inner join dbjugadores jug on jug.idjugador = go.refjugadores
+								inner join dbfixture fix ON fix.idfixture = go.reffixture
+								inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+								inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas
+								where jug.idjugador = ".$idJugador."
+								group by go.reffixture, jug.idjugador, tem.temporada
+						union all
+						select 0 as goles,0 as encontra,sum(go.penalconvertido) as penal,0 as amarillas, 0 as rojas, go.reffixture , jug.idjugador, tem.temporada
+								from dbpenalesjugadores go 
+								inner join dbjugadores jug on jug.idjugador = go.refjugadores
+								inner join dbfixture fix ON fix.idfixture = go.reffixture
+								inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+								inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas
+								where jug.idjugador = ".$idJugador."
+								group by go.reffixture, jug.idjugador, tem.temporada
+						union all
+						select 0 as goles,0 as encontra,0 as penal,sum(go.cantidad) as amarillas,0 as rojas,go.reffixture, jug.idjugador, tem.temporada
+								from dbsancionesjugadores go 
+								inner join dbjugadores jug on jug.idjugador = go.refjugadores
+								inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
+								inner join dbfixture fix ON fix.idfixture = go.reffixture
+								inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+								inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas
+								where ts.amonestacion = 1 AND jug.idjugador = ".$idJugador."
+								group by go.reffixture, jug.idjugador, tem.temporada
+						union all
+						select 0 as goles,0 as encontra,0 as penal,0 as amarillas, sum(go.cantidad) as rojas,go.reffixture , jug.idjugador, tem.temporada
+								from dbsancionesjugadores go
+								inner join dbjugadores jug on jug.idjugador = go.refjugadores
+								inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
+								inner join dbfixture fix ON fix.idfixture = go.reffixture
+								inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
+								inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas
+								where ts.expulsion = 1 AND jug.idjugador = ".$idJugador."
+								group by go.reffixture, jug.idjugador, tem.temporada
+								
+				) r on r.idjugador = jug.idjugador
+				where jug.idjugador = ".$idJugador."
+				group by jug.apellido,
+				jug.nombres,
+				jug.idjugador, r.temporada
+				order by r.temporada
 				";	
 				
 	$res = $this->query($sql,0); 

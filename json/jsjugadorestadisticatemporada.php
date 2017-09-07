@@ -14,7 +14,7 @@ if ((isset($_GET['idjugador'])) && ($_GET['idjugador'] > 0)) {
 	$resTraerJugadores = $serviciosReferencias->traerEstadisticaPorJugador($_GET['idjugador']);
 } else {
 	$resTraerJugadores = $serviciosReferencias->traerEstadisticaPorJugador(0);	
-
+}
 $token = $_GET['callback'];
 
 header("content-type: Access-Control-Allow-Origin: *");
@@ -28,5 +28,5 @@ $ar = array();
 
 echo $token.'('.json_encode($ar).');';
 
-}
+
 ?>
