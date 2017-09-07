@@ -648,6 +648,8 @@ from (select
 		from dbequipos e 
 		inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
         inner join tbcategorias ca on ca.idtcategoria = t.refcategorias
+		inner join (select ff.refconectorlocal from dbfixture ff where ff.reftorneos=".$refTorneo." group by ff.refconectorlocal) fl
+        on fl.refconectorlocal = e.idequipo
 		where t.idtorneo = ".$refTorneo." and e.activo=1 and t.activo = 1) ev
 inner join tbcategorias ca ON ca.idtcategoria = ev.refcategorias
 left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.refconectorvisitante) and f.reftorneos = ".$refTorneo." and f.refestadospartidos is not null and f.reffechas= 1
@@ -903,6 +905,8 @@ from (select
 		from dbequipos e 
 		inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
         inner join tbcategorias ca on ca.idtcategoria = t.refcategorias
+		inner join (select ff.refconectorlocal from dbfixture ff where ff.reftorneos=".$refTorneo." group by ff.refconectorlocal) fl
+        on fl.refconectorlocal = e.idequipo
 		where t.idtorneo = ".$refTorneo." and e.activo=1 and t.activo = 1) ev
 inner join tbcategorias ca ON ca.idtcategoria = ev.refcategorias
 left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.refconectorvisitante) and f.reftorneos = ".$refTorneo." and f.refestadospartidos is not null
