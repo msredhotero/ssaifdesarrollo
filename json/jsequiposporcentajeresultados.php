@@ -27,10 +27,11 @@ $porcEmpatado = 0;
 
 	while ($row = mysql_fetch_array($resTraerDatos)) {
 		if ($row['partidos'] > 0) {
-			$porcGanado = 	$row['ganados'] * 100 / $row['partidos'];	
-			$porcPerdido = 	$row['perdidos'] * 100 / $row['partidos'];	
-			$porcEmpatado = 	$row['empatados'] * 100 / $row['partidos'];		
-			array_push($ar,array('porcentajeganados'=>round($porcGanado,0,PHP_ROUND_HALF_UP), 'porcentajeperdidos'=> round($porcPerdido,0,PHP_ROUND_HALF_UP), 'porcentajeempatados'=> round($porcEmpatado,0,PHP_ROUND_HALF_UP)));
+			$porcGanado = 	round($row['ganados'] * 100 / $row['partidos'],2,PHP_ROUND_HALF_UP);	
+			$porcPerdido = 	round($row['perdidos'] * 100 / $row['partidos'],2,PHP_ROUND_HALF_DOWN);	
+			$porcEmpatado = round($row['empatados'] * 100 / $row['partidos'],2,PHP_ROUND_HALF_DOWN);	
+			
+			array_push($ar,array('porcentajeganados'=> $porcGanado, 'porcentajeperdidos'=> $porcPerdido, 'porcentajeempatados'=> $porcEmpatado));
 		} else {
 			array_push($ar,array('porcentajeganados'=>$porcGanado, 'porcentajeperdidos'=> $porcPerdido, 'porcentajeempatados'=> $porcEmpatado));
 		}
