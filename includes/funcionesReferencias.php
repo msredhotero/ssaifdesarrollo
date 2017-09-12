@@ -5581,7 +5581,8 @@ e.fachebaja,
 e.refcountries,
 e.refcategorias,
 e.refdivisiones,
-e.refcontactos
+e.refcontactos,
+concat('archivos/countries/',cast(c.idcountrie as UNSIGNED),'/',i.imagen) as imagen
 from dbequipos e 
 inner join dbcountries cou ON cou.idcountrie = e.refcountries 
 inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
@@ -5589,6 +5590,7 @@ inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias
 inner join tbdivisiones di ON di.iddivision = e.refdivisiones 
 inner join dbcontactos con ON con.idcontacto = e.refcontactos 
 inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos 
+left join images i ON i.refproyecto = c.idcountrie
 order by e.nombre"; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -5790,8 +5792,13 @@ function traerEquipoPorCategoriaDivision($idCategoria, $idDivision) {
 $sql = "select 
 e.idequipo,
 e.nombre,
-(case when e.activo = 1 then 'Si' else 'No' end) as activo
+(case when e.activo = 1 then 'Si' else 'No' end) as activo,
+cat.categoria,
+concat('archivos/countries/',cast(c.idcountrie as UNSIGNED),'/',i.imagen) as imagen
 from dbequipos e 
+inner join dbcountries c ON c.idcountrie = e.refcountries
+inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias
+left join images i ON i.refproyecto = c.idcountrie
 where e.refcategorias = ".$idCategoria." and e.refdivisiones = ".$idDivision." and e.activo = 1 
 order by e.nombre"; 
 $res = $this->query($sql,0); 
@@ -7758,7 +7765,7 @@ left join dbequipos ev ON ev.idequipo = f.refconectorvisitante
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
-where tor.idtorneo = ".$idTorneo." and (el.idequipo = ".$idEquipo." or ev.idequipo = ".$idEquipo.") and est.idestadopartido is null
+where tor.idtorneo = ".$idTorneo." and (el.idequipo = ".$idEquipo." or ev.idequipo = ".$idEquipo.")
 order by f.fecha, f.idfixture";
 $res = $this->query($sql,0);
 return $res;

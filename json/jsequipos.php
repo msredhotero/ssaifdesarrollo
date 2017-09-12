@@ -26,10 +26,10 @@ $cad = '';
 		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
 		if ($datos == 1) {
 
-			array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'], 'id'=> $row[0]));
+			array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'], 'id'=> $row[0], 'categoria'=>$row['categoria'], 'imagen'=>$row['imagen']));
 		} else {
 
-			array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'].' - '.$row['categoria'].' - '.$row['division'], 'id'=> $row[0]));
+			array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'].' - '.$row['categoria'].' - '.$row['division'], 'id'=> $row[0], 'categoria'=>$row['categoria'], 'imagen'=>$row['imagen']));
 		}
 	}
 

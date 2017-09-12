@@ -118,6 +118,14 @@
 	
 </div>
 
+
+
+<br />
+<p>Tabla Conformada Torneos (* en "Asc-Desc" el 0 es para el igual, el 1 es porque subio y el -1 es porque bajo de posicion)</p>
+<div id="posicionesconformadatorneos">
+	
+</div>
+
 <!--
 para el wireframe de equipo
 
@@ -666,6 +674,60 @@ $(document).ready(function(){
 	}
 	
 	
+	
+	function traerPosicionesConformadaTorneos(idtorneo) {
+		$.ajax({
+			dataType: 'jsonp',
+			url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jsposicionesconformadatorneos.php', // devuelve "posicion", "mejora", "equipos", "pts", "ptsb", "ptsn" , "pj" , "pg" , "pe" , "pp" , "gf" , "amonestados" , "expulsados", "ultimoresultado1", "ultimoresultado2" y "ultimoresultado3" con parametros obligatorios idtorneo
+			data: {idtorneo: idtorneo},
+			beforeSend: function (XMLHttpRequest) {
+				$('#posicionesconformadatorneos').html(''); //Nothing happnes
+			},
+			success: function(datos) {
+					var cad = '<table border="1"> \
+								<thead> \
+								<tr> \
+									<th>Posicion</th> \
+									<th>Equipos</th> \
+									<th>Pts</th> \
+									<th>Pts B</th> \
+									<th>Pts N</th> \
+									<th>PJ</th> \
+									<th>PG</th> \
+									<th>PE</th> \
+									<th>PP</th> \
+									<th>GF</th> \
+									<th>Amonestados</th> \
+									<th>Expulsados</th> \
+								</tr> \
+								</thead> \
+								<tbody>';
+						var i = 1;
+						for (var clave in datos) {
+							cad += '<tr><td>' + datos[clave].posicion + '</td> \
+									<td>' + datos[clave].equipos + '</td> \
+									<td>' + datos[clave].pts + '</td> \
+									<td>' + datos[clave].ptsb + '</td> \
+									<td>' + datos[clave].ptsn + '</td> \
+									<td>' + datos[clave].pj + '</td> \
+									<td>' + datos[clave].pg + '</td> \
+									<td>' + datos[clave].pe + '</td> \
+									<td>' + datos[clave].pp + '</td> \
+									<td>' + datos[clave].gf + '</td> \
+									<td>' + datos[clave].amonestados + '</td> \
+									<td>' + datos[clave].expulsados + '</td></tr>';
+							i = i + 1; 
+						}
+						
+						cad += '</tbody></table>';
+						
+						$('#posicionesconformadatorneos').html(cad);
+					 },
+			 error: function() { alert("Error leyendo fichero Posiciones"); }
+		});
+	}
+	
+	
 	function traerEquipoDatos(idequipo) {
 		$.ajax({
 			dataType: 'jsonp',
@@ -794,7 +856,17 @@ $(document).ready(function(){
 		traerFixtureTorneosEquipos( $(this).val(), $('#lstEquiposCountries').val());
 		traerGoleadoresTorneos($(this).val());
 		traerPosicionesTorneos($(this).val());
+		traerPosicionesConformadaTorneos($(this).val());
 	});
+	
+	$('#lstEquiposCatgoriaDivision').change(function() {
+		traerFixtureTorneosEquipos( $('#lstTorneosEquipos').val(), $(this).val());
+		traerGoleadoresTorneos($(this).val());
+		traerPosicionesTorneos($(this).val());
+		traerPosicionesConformadaTorneos($(this).val());
+	});
+	
+	
 	
 	
 	
