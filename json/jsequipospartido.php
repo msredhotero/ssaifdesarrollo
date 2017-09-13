@@ -22,7 +22,7 @@ $ar = array();
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerDatos)) {
 
-		array_push($ar,array('equipo'=>$row['equipo'], 'arbitro'=> $row['arbitro'], 'juez1'=> $row['juez1'], 'juez2'=> $row['juez2'], 'cancha'=> $row['cancha'], 'estado'=> $row['estado'], 'resultado'=> $row['resultado']));
+		array_push($ar,array('equipo'=>$row['equipo'],'contra'=>$row['contra'], 'arbitro'=> $row['arbitro'], 'juez1'=> $row['juez1'], 'juez2'=> $row['juez2'], 'cancha'=> $row['cancha'], 'estado'=> $row['estado'], 'resultado'=> $row['resultado'], 'imagenlocal'=>$row['imagenlocal'], 'imagenvisitante'=>$row['imagenvisitante']));
 
 	}
 

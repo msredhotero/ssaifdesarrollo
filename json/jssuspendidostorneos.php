@@ -27,9 +27,9 @@ $ar = array();
 
 	while ($row = mysql_fetch_array($resDatos)) {
 		if ($row['pendientesfallo'] == 1) {
-			array_push($ar,array('country'=>$row['nombre'], 'nombre'=>$row['apyn'],'fecha'=>$row['fecha'],'partido'=>$row['equiposcontra'],'tiposancion'=>'Pendiente','sancion'=>'Pendiente','cumplido'=>$row['fechascumplidas']));
+			array_push($ar,array('country'=>$row['nombre'], 'nombre'=>$row['apyn'],'fecha'=>$row['fecha'],'partido'=>$row['equiposcontra'],'tiposancion'=>'Pendiente','sancion'=>'Pendiente','cumplido'=>$row['fechascumplidas'],'imagen'=>$row['imagen']));
 		} else {
-			array_push($ar,array('country'=>$row['nombre'], 'nombre'=>$row['apyn'],'fecha'=>$row['fecha'],'partido'=>$row['equiposcontra'],'tiposancion'=>'Expulsado','sancion'=>($row['dias']==0 ? $row['cantidadfechas'].' fechas' : $row['dias'].' dias'),'cumplido'=>$row['fechascumplidas']));
+			array_push($ar,array('country'=>$row['nombre'], 'nombre'=>$row['apyn'],'fecha'=>$row['fecha'],'partido'=>$row['equiposcontra'],'tiposancion'=>'Expulsado','sancion'=>($row['dias']==0 ? $row['cantidadfechas'].' fechas' : $row['dias'].' dias'),'cumplido'=>$row['fechascumplidas'],'imagen'=>$row['imagen']));
 		}
 	}
 

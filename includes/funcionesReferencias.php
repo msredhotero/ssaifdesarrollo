@@ -1392,7 +1392,8 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
 			    r.cumplidas,
 				r.fechascumplidas,
 			    r.categoria,
-				r.pendientesfallo
+				r.pendientesfallo,
+				r.imagen
 			from (
 			SELECT 
 			    cc.nombre,
@@ -1416,7 +1417,8 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
 			        end),0) cumplidas,
 				sf.fechascumplidas,
 			    ca.categoria,
-				sf.pendientesfallo
+				sf.pendientesfallo,
+				concat('archivos/countries/',cast(cc.idcountrie as UNSIGNED),'/',i.imagen) as imagen
 			FROM
 			    dbsancionesfallos sf
 			        INNER JOIN
@@ -1431,6 +1433,8 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
 			    dbjugadores j ON j.idjugador = sj.refjugadores
 			        INNER JOIN
 			    dbcountries cc ON cc.idcountrie = j.refcountries
+					left join 
+				images i ON i.refproyecto = cc.idcountrie and i.reftabla = 1
 			        INNER JOIN
 			    dbtorneos t ON t.idtorneo = fix.reftorneos
 			        INNER JOIN
@@ -1478,7 +1482,8 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
 			    sf.fechascumplidas cumplidas,
 				sf.fechascumplidas,
 			    ca.categoria,
-				sf.pendientesfallo
+				sf.pendientesfallo,
+				concat('archivos/countries/',cast(cc.idcountrie as UNSIGNED),'/',i.imagen) as imagen
 			FROM
 			    dbsancionesfallosacumuladas sf
 			        INNER JOIN
@@ -1493,6 +1498,8 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
 			    dbjugadores j ON j.idjugador = sj.refjugadores
 			        INNER JOIN
 			    dbcountries cc ON cc.idcountrie = j.refcountries
+					left join 
+				images i ON i.refproyecto = cc.idcountrie and i.reftabla = 1
 			        INNER JOIN
 			    dbtorneos t ON t.idtorneo = fix.reftorneos
 			        INNER JOIN
@@ -5590,7 +5597,7 @@ inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias
 inner join tbdivisiones di ON di.iddivision = e.refdivisiones 
 inner join dbcontactos con ON con.idcontacto = e.refcontactos 
 inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos 
-left join images i ON i.refproyecto = c.idcountrie
+left join images i ON i.refproyecto = c.idcountrie and i.reftabla = 1
 order by e.nombre"; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -5798,7 +5805,7 @@ concat('archivos/countries/',cast(c.idcountrie as UNSIGNED),'/',i.imagen) as ima
 from dbequipos e 
 inner join dbcountries c ON c.idcountrie = e.refcountries
 inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias
-left join images i ON i.refproyecto = c.idcountrie
+left join images i ON i.refproyecto = c.idcountrie and i.reftabla = 1
 where e.refcategorias = ".$idCategoria." and e.refdivisiones = ".$idDivision." and e.activo = 1 
 order by e.nombre"; 
 $res = $this->query($sql,0); 
@@ -5809,11 +5816,17 @@ function traerUltimaFechaJugadaEquipoPorId($idEquipo, $limit) {
 	$sql = "SELECT 
 				f.fecha,
 				f.idfixture,
-				352,
+				".$idEquipo.",
 				(CASE
 					WHEN f.refconectorlocal = ".$idEquipo." THEN el.nombre
 					ELSE ev.nombre
 				END) AS equipo,
+				concat('archivos/countries/',cast(coul.idcountrie as UNSIGNED),'/',il.imagen) as imagenlocal,
+				(CASE
+					WHEN f.refconectorlocal = ".$idEquipo." THEN ev.nombre
+					ELSE el.nombre
+				END) AS contra,
+				concat('archivos/countries/',cast(couv.idcountrie as UNSIGNED),'/',iv.imagen) as imagenvisitante,
 				arb.nombrecompleto as arbitro,
 				f.juez1,
 				f.juez2,
@@ -5827,8 +5840,16 @@ function traerUltimaFechaJugadaEquipoPorId($idEquipo, $limit) {
 				dbfixture f
 					INNER JOIN
 				dbequipos el ON el.idequipo = f.refconectorlocal
+					inner join
+				dbcountries coul ON coul.idcountrie = el.refcountries
+					left join 
+				images il ON il.refproyecto = coul.idcountrie and il.reftabla = 1
 					INNER JOIN
 				dbequipos ev ON ev.idequipo = f.refconectorvisitante
+					inner join
+				dbcountries couv ON couv.idcountrie = ev.refcountries
+					left join 
+				images iv ON iv.refproyecto = couv.idcountrie and il.reftabla = 1				
 					INNER JOIN
 				tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 					AND est.finalizado = 1
@@ -5855,7 +5876,12 @@ function traerUltimosResultadosPorEquipo($idequipo) {
 					when f.refconectorvisitante = ".$idequipo." then (case when f.puntoslocal < f.puntosvisita then 'G'
 									  when f.puntoslocal > f.puntosvisita then 'P'
 									  when f.puntoslocal = f.puntosvisita then 'E'
-								 end) end) as resultado
+								 end) end) as resultado,
+				el.nombre as equipolocal,
+				f.goleslocal,
+				ev.nombre as equipovisitante,
+				f.golesvisitantes,
+				date_format(f.fecha,'%d/%m/%Y') as fechajuego
 			FROM
 				dbfixture f
 					INNER JOIN

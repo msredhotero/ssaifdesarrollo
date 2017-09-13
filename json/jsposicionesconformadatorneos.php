@@ -33,7 +33,7 @@ $i = 1;
 
 	foreach ($resDatos as $row) {
 
-		array_push($ar,array('posicion'=>$i, 'equipos'=>$row['equipo'],'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas']));
+		array_push($ar,array('posicion'=>$i, 'equipos'=>$row['equipo'],'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'], 'asterisco'=>0, 'observacion'=> ''));
 		
 		$i += 1;
 
