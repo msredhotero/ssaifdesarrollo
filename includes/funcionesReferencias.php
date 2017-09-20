@@ -5853,7 +5853,7 @@ function traerUltimaFechaJugadaEquipoPorId($idEquipo, $limit) {
 					INNER JOIN
 				tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 					AND est.finalizado = 1
-					INNER JOIN
+					LEFT JOIN
 				dbarbitros arb ON arb.idarbitro = f.refarbitros
 					INNER JOIN
 				tbcanchas can ON can.idcancha = f.refcanchas

@@ -29,11 +29,11 @@ $ar = array();
 
 $cad = '';
 $i=1;
-	while ($row = mysql_fetch_array($resDatos)) {
-		if ($i==3) {
+	foreach ($resDatos as $row) {
+		if ($i==4) {
 			break;	
 		}
-		array_push($ar,array('posicion'=>$row['posicion'],'equipos'=>$row['equipos'],'pts'=>$row['pts'],'pj'=>$row['pj']));
+		array_push($ar,array('posicion'=>$row['posicion'],'equipos'=>$row['equipo'],'pts'=>$row['puntos'],'pj'=>$row['pj']));
 		$i += 1;
 	}
 
