@@ -22,7 +22,7 @@ $ar = array();
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerDatos)) {
 
-		array_push($ar,array('resultado'=>$row['resultado'], "equipolocal"=>$row['equipolocal'], "goleslocal"=>$row['goleslocal'], "equipovisitante"=>$row['equipovisitante'], "golesvisitantes"=>$row['golesvisitantes'], 'fechajuego'=>$row['fechajuego']));
+		array_push($ar,array('resultado'=>$row['resultado'], "equipolocal"=>$row['equipolocal'], "goleslocal"=>$row['goleslocal'], "equipovisitante"=>$row['equipovisitante'], "golesvisitantes"=>$row['golesvisitantes'], 'fechajuego'=>$row['fechajuego'], 'idequipolocal'=> $row['idequipolocal'],'idequipovisitante'=> $row['idequipovisitante']));
 
 	}
 

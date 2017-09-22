@@ -5881,7 +5881,9 @@ function traerUltimosResultadosPorEquipo($idequipo) {
 				f.goleslocal,
 				ev.nombre as equipovisitante,
 				f.golesvisitantes,
-				date_format(f.fecha,'%d/%m/%Y') as fechajuego
+				date_format(f.fecha,'%d/%m/%Y') as fechajuego,
+				el.idequipo as idequipolocal,
+				ev.idequipo as idequipovisitante
 			FROM
 				dbfixture f
 					INNER JOIN
