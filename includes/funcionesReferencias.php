@@ -5479,6 +5479,30 @@ return $res;
 } 
 
 
+
+function traerTorneosPorEquipoTemporadaCategoriaDivision($idEquipo, $idTemporada, $idCategoria, $idDivision) { 
+$sql = "SELECT 
+			t.idtorneo,
+			t.descripcion,
+			tem.temporada
+		FROM
+			dbtorneos t
+				inner join
+			tbtemporadas tem ON tem.idtemporadas = t.reftemporadas
+				INNER JOIN
+			dbfixture fix ON fix.reftorneos = t.idtorneo
+				AND (fix.refconectorlocal = ".$idEquipo."
+				OR fix.refconectorvisitante = ".$idEquipo.")
+		WHERE
+			t.activo = 1 and t.reftemporadas = ".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision."
+		group by t.idtorneo,
+			t.descripcion,tem.temporada
+		order by 1 desc"; 
+$res = $this->query($sql,0); 
+return $res;
+} 
+
+
 function traerTorneosPorTemporadaCategoriaDivision($idTemporada, $idCategoria, $idDivision) { 
 $sql = "SELECT 
 			t.idtorneo,
