@@ -8,8 +8,8 @@ $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
 
 $dato = 0;
-if ((isset($_GET['idequipo'])) && ($_GET['idequipo'] > 0)) {
-	$resTraerDatos = $serviciosReferencias->traerTorneosPorEquipo($_GET['idequipo']);
+if ((isset($_GET['idequipo'])) && ($_GET['idequipo'] > 0) && ((isset($_GET['idtemporada'])) && ($_GET['idtemporada'] > 0)) && ((isset($_GET['idcategoria'])) && ($_GET['idcategoria'] > 0)) && ((isset($_GET['iddivision'])) && ($_GET['iddivision'] > 0))) {
+	$resTraerDatos = $serviciosReferencias->traerTorneosPorEquipoTemporadaCategoriaDivision($_GET['idequipo'], $_GET['idtemporada'], $_GET['idcategoria'], $_GET['iddivision']);
 	$dato = 0;
 } else {
 	if (((isset($_GET['idtemporada'])) && ($_GET['idtemporada'] > 0)) && ((isset($_GET['idcategoria'])) && ($_GET['idcategoria'] > 0)) && ((isset($_GET['iddivision'])) && ($_GET['iddivision'] > 0))) {
@@ -30,7 +30,7 @@ $ar = array();
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerDatos)) {
 		if ($dato == 0) {
-			array_push($ar,array('id'=>$row['idtorneo'], 'torneo'=> $row['descripcion'].' - '.$row['temporada']));
+			array_push($ar,array('id'=>$row['idtorneo'], 'torneo'=> $row['descripcion']));
 		} else {
 			array_push($ar,array('id'=>$row['idtorneo'], 'torneo'=> $row['descripcion']));
 		}
