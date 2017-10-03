@@ -7,11 +7,12 @@ include ('../includes/funcionesReferencias.php');
 $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
 
-if ((isset($_GET['idequipo'])) && ($_GET['idequipo'] > 0)) {
-	$resTraerDatos = $serviciosReferencias->traerPlantelEstadisticasPorEquipo($_GET['idequipo']);
+if ((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) {
+	$resTraerDatos = $serviciosReferencias->traerFechasFixturePorTorneo($_GET['idtorneo']);
 } else {
-	$resTraerDatos = $serviciosReferencias->traerPlantelEstadisticasPorEquipo(0);	
+	$resTraerDatos = $serviciosReferencias->traerFechasFixturePorTorneo(0);
 }
+
 
 $token = $_GET['callback'];
 
@@ -22,11 +23,10 @@ $ar = array();
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerDatos)) {
 
-		array_push($ar,array('id'=>$row['idjugador'],'apellido'=>$row['apellido'], 'nombre'=> $row['nombres'], 'goles'=> $row['goles'], 'amonestaciones'=> $row['amarillas'], 'expulsiones'=> $row['rojas']));
-
+		array_push($ar,array('id'=> $row['reffechas'], 
+							'fecha'=> $row['fecha']));
 	}
 
 //echo "[".substr($cad,0,-1)."]";
 echo $token.'('.json_encode($ar).');';
-
 ?>

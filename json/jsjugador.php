@@ -23,7 +23,7 @@ $ar = array();
 
 	while ($row = mysql_fetch_array($resTraerJugadores)) {
 		
-		array_push($ar,array('apellido'=>$row['apellido'], 'nombre'=> $row['nombre'], 'country'=> $row['country']));
+		array_push($ar,array('apellido'=>$row['apellido'], 'nombre'=> $row['nombres'], 'country'=> $row['country']));
 	}
 
 echo $token.'('.json_encode($ar).');';

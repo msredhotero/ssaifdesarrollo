@@ -172,6 +172,47 @@ function ResultadosPartidosAnteriores($refTorneo, $idequipo) {
 	
 }
 
+// web lucio -- para la conformada
+function ResultadosPartidosAnterioresPorCategoriaDivision($refCategoria, $refDivision, $idequipo) {
+	$sql = "select
+				r.idfecha, r.fecha, r.resultado
+			from (
+			select 
+					f.reffechas as idfecha,f.fecha,
+					(case when f.puntoslocal > f.puntosvisita then 'G'
+						  when f.puntoslocal < f.puntosvisita then 'P'
+						  when f.puntoslocal = f.puntosvisita then 'E'
+					 end) resultado
+				from
+					dbfixture f
+				inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+				inner join tbfechas fec ON fec.idfecha = f.reffechas
+				inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+				where
+					tor.refcategorias = ".$refCategoria." and refdivisiones = ".$refDivision." and f.refconectorlocal = ".$idequipo." and est.finalizado = 1
+			union all
+			select 
+					f.reffechas as idfecha,f.fecha,
+					(case when f.puntosvisita > f.puntoslocal then 'G'
+						  when f.puntosvisita < f.puntoslocal then 'P'
+						  when f.puntosvisita = f.puntoslocal then 'E'
+					 end) resultado
+				from
+					dbfixture f
+				inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+				inner join tbfechas fec ON fec.idfecha = f.reffechas
+				inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+				where
+					tor.refcategorias = ".$refCategoria." and refdivisiones = ".$refDivision." and f.refconectorvisitante = ".$idequipo." and est.finalizado = 1
+			) r
+				order by r.fecha desc
+			limit 1,3";	
+			
+	$res = $this->query($sql,0);
+	return $res;
+	
+}
+
 function PosicionFechaAnterior($refTorneo) {
 	$sql = "
 select 
@@ -8433,7 +8474,8 @@ return $res;
 function traerFechasFixturePorTorneo($idTorneo) {
 $sql = "select
 f.reffechas,
-fec.fecha
+fec.fecha,
+max(est.idestadopartido) as idestadopartido
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
@@ -8445,7 +8487,7 @@ inner join dbequipos el ON el.idequipo = f.refconectorlocal
 inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
-left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
 where tor.idtorneo = ".$idTorneo."
 group by f.reffechas,fec.fecha
 order by f.reffechas";

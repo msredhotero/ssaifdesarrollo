@@ -30,10 +30,38 @@ header("content-type: Access-Control-Allow-Origin: *");
 $ar = array();
 
 $i = 1;
+$arResultados = array('','','');
+$k = 0;
 
 	foreach ($resDatos as $row) {
+		
+		//traigo los ultimos tres partidos
+		$resResultadosAnteriores = $serviciosReferencias->ResultadosPartidosAnterioresPorCategoriaDivision(mysql_result($resTorneo,0,'refcategorias'),mysql_result($resTorneo,0,'refdivisiones') , $row['idequipo']);
+		//die(print_r($resResultadosAnteriores));
+		//completo los arrays con los resultados
+		while ($rowR = mysql_fetch_array($resResultadosAnteriores)) {
+			$arResultados[$k] = $rowR['resultado'];	
+			$k += 1;	
+		}
+		
+		//obtengo el indice de la fecha anterior
+		//$indice = array_search($row['idequipo'],$resDatosExtra['idequipo'],true);
+		foreach ($resDatosExtra as $rowE) {
+			if ($row['idequipo'] == $rowE['idequipo']) {
+				if ($rowE['posicion'] == $row['posicion']) {
+					$mejora = 0;	
+				} else {
+					if ($rowE['posicion'] > $row['posicion']) {
+						$mejora = 1;	
+					} else {
+						$mejora = -1;
+					}
+				}
+				break;
+			}
+		}
 
-		array_push($ar,array('posicion'=>$i, 'equipos'=>$row['equipo'],'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'], 'asterisco'=>0, 'observacion'=> ''));
+		array_push($ar,array('posicion'=>$i, 'equipos'=>$row['equipo'],'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'],'ultimoresultado1'=>$arResultados[0],'ultimoresultado2'=>$arResultados[1],'ultimoresultado3'=>$arResultados[2], 'asterisco'=>0, 'observacion'=> ''));
 		
 		$i += 1;
 
