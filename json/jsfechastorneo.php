@@ -21,12 +21,31 @@ header("content-type: Access-Control-Allow-Origin: *");
 $ar = array();
 
 $cad = '';
+$actual = 0;
+$parar = 0;
+$i=0;
 	while ($row = mysql_fetch_array($resTraerDatos)) {
-
+		
+		if ($parar == 0) {
+			$i += 1;
+			if ($row['idestadopartido'] != 0) {
+				$actual = $i;				
+			} else {
+				$actual = $i;
+				$parar = 1;
+			}
+		}
 		array_push($ar,array('id'=> $row['reffechas'], 
-							'fecha'=> $row['fecha']));
+							'fecha'=> $row['fecha'],
+							'actual'=>0));
+		
 	}
 
+if ($i == 1) {
+	$ar[$i - 1]['actual'] = 1;
+} else {
+	$ar[$i - 2]['actual'] = 1;
+}
 //echo "[".substr($cad,0,-1)."]";
 echo $token.'('.json_encode($ar).');';
 ?>

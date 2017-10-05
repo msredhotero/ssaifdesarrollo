@@ -8475,7 +8475,7 @@ function traerFechasFixturePorTorneo($idTorneo) {
 $sql = "select
 f.reffechas,
 fec.fecha,
-max(est.idestadopartido) as idestadopartido
+coalesce( max(est.idestadopartido),0) as idestadopartido
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo

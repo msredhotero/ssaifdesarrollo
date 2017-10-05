@@ -34,7 +34,7 @@ $i=0;
 		if ($_GET['idequipo'] == $row['idequipo']) {
 			$posicion = $i;	
 		}
-		array_push($ar,array('posicion'=>$i,'equipos'=>$row['equipo'],'pts'=>$row['puntos'],'pj'=>$row['pj'],'id'=>$row['idequipo']));
+		array_push($ar,array('posicion'=>$i + 1,'equipos'=>$row['equipo'],'pts'=>$row['puntos'],'pj'=>$row['pj'],'id'=>$row['idequipo']));
 		$i += 1;
 	}
 
