@@ -1034,7 +1034,8 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 								  'pe'=> $pe,
 								  'amarillas'=> $amarillas,
 								  'rojas'=> $rojas,
-								  'puntobonus'=> $puntobonus);
+								  'puntobonus'=> $puntobonus,
+								  'idequipo'=> $tblFinal['idequipo']);
 				
 				$primero = 0;
 			}
@@ -1077,7 +1078,8 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 							  'pe'=> $pe,
 							  'amarillas'=> $amarillas,
 							  'rojas'=> $rojas,
-							  'puntobonus'=> $puntobonus);
+							  'puntobonus'=> $puntobonus,
+							  'idequipo'=> $tblFinal['idequipo']);
 			
 			$primero = 0;
 		} else {
@@ -1099,10 +1101,10 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 
 function Goleadores($idTorneo) {
 	$sql = "select
-			t.equipo, t.apyn, t.nrodocumento, sum(t.goles) as goles
+			t.equipo, t.apyn, t.nrodocumento, sum(t.goles) as goles, t.idjugador
 			from (
 				select
-				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles
+				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles, j.idjugador
 				from		dbgoleadores g
 				inner
 				join		dbfixture fix
@@ -1122,13 +1124,13 @@ function Goleadores($idTorneo) {
 				join		dbjugadores j
 				on			j.idjugador = g.refjugadores
 				where		t.idtorneo = ".$idTorneo." and g.goles > 0
-				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+				group by el.nombre , j.apellido, j.nombres, j.nrodocumento, j.idjugador
 				
 				union all
 				
 				
 				select
-				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles
+				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles, j.idjugador
 				from		dbgoleadores g
 				inner
 				join		dbfixture fix
@@ -1148,14 +1150,14 @@ function Goleadores($idTorneo) {
 				join		dbjugadores j
 				on			j.idjugador = g.refjugadores
 				where		t.idtorneo = ".$idTorneo." and g.goles > 0
-				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+				group by el.nombre , j.apellido, j.nombres, j.nrodocumento, j.idjugador
 				
 				UNION ALL 
 				SELECT 
 					el.nombre AS equipo,
 						CONCAT(j.apellido, ', ', j.nombres) AS apyn,
 						j.nrodocumento,
-						SUM(g.penalconvertido) AS goles
+						SUM(g.penalconvertido) AS goles, j.idjugador
 				FROM
 					dbpenalesjugadores g
 				INNER JOIN dbfixture fix ON g.reffixture = fix.idfixture
@@ -1166,7 +1168,7 @@ function Goleadores($idTorneo) {
 				WHERE
 					t.idtorneo = ".$idTorneo."
 						AND g.penalconvertido > 0
-				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento
+				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento, j.idjugador
 				
 				
 				UNION ALL 
@@ -1174,7 +1176,7 @@ function Goleadores($idTorneo) {
 					el.nombre AS equipo,
 						CONCAT(j.apellido, ', ', j.nombres) AS apyn,
 						j.nrodocumento,
-						SUM(g.penalconvertido) AS goles
+						SUM(g.penalconvertido) AS goles, j.idjugador
 				FROM
 					dbpenalesjugadores g
 				INNER JOIN dbfixture fix ON g.reffixture = fix.idfixture
@@ -1185,9 +1187,9 @@ function Goleadores($idTorneo) {
 				WHERE
 					t.idtorneo = ".$idTorneo."
 						AND g.penalconvertido > 0
-				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento
+				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento, j.idjugador
 			) t
-				group by t.equipo, t.apyn, t.nrodocumento
+				group by t.equipo, t.apyn, t.nrodocumento, t.idjugador
 				order by sum(t.goles) desc, t.apyn";	
 				
 	$res = $this->query($sql,0);
@@ -1198,10 +1200,10 @@ function Goleadores($idTorneo) {
 function GoleadoresConformada($idTemporada, $idCategoria, $idDivision) {
 	
 	$sql = "select
-			t.equipo, t.apyn, t.nrodocumento, sum(t.goles) as goles
+			t.equipo, t.apyn, t.nrodocumento, sum(t.goles) as goles, t.idjugador
 			from (
 				select
-				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles
+				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles,j.idjugador
 				from		dbgoleadores g
 				inner
 				join		dbfixture fix
@@ -1221,13 +1223,13 @@ function GoleadoresConformada($idTemporada, $idCategoria, $idDivision) {
 				join		dbjugadores j
 				on			j.idjugador = g.refjugadores
 				where		t.reftemporadas =".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.acumulagoleadores = 1 and g.goles > 0
-				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+				group by el.nombre , j.apellido, j.nombres, j.nrodocumento,j.idjugador
 				
 				union all
 				
 				
 				select
-				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles
+				 el.nombre as equipo, concat(j.apellido, ', ', j.nombres) as apyn, j.nrodocumento, sum(g.goles) as goles,j.idjugador
 				from		dbgoleadores g
 				inner
 				join		dbfixture fix
@@ -1247,14 +1249,15 @@ function GoleadoresConformada($idTemporada, $idCategoria, $idDivision) {
 				join		dbjugadores j
 				on			j.idjugador = g.refjugadores
 				where		t.reftemporadas =".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.acumulagoleadores = 1 and g.goles > 0
-				group by el.nombre , j.apellido, j.nombres, j.nrodocumento
+				group by el.nombre , j.apellido, j.nombres, j.nrodocumento,j.idjugador
 				
 				UNION ALL 
 				SELECT 
 					el.nombre AS equipo,
 						CONCAT(j.apellido, ', ', j.nombres) AS apyn,
 						j.nrodocumento,
-						SUM(g.penalconvertido) AS goles
+						SUM(g.penalconvertido) AS goles,
+						j.idjugador
 				FROM
 					dbpenalesjugadores g
 				INNER JOIN dbfixture fix ON g.reffixture = fix.idfixture
@@ -1264,7 +1267,7 @@ function GoleadoresConformada($idTemporada, $idCategoria, $idDivision) {
 				INNER JOIN dbjugadores j ON j.idjugador = g.refjugadores
 				WHERE
 					t.reftemporadas =".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.acumulagoleadores = 1 AND g.penalconvertido > 0
-				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento
+				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento, j.idjugador
 				
 				
 				UNION ALL 
@@ -1272,7 +1275,8 @@ function GoleadoresConformada($idTemporada, $idCategoria, $idDivision) {
 					el.nombre AS equipo,
 						CONCAT(j.apellido, ', ', j.nombres) AS apyn,
 						j.nrodocumento,
-						SUM(g.penalconvertido) AS goles
+						SUM(g.penalconvertido) AS goles,
+						j.idjugador
 				FROM
 					dbpenalesjugadores g
 				INNER JOIN dbfixture fix ON g.reffixture = fix.idfixture
@@ -1284,7 +1288,7 @@ function GoleadoresConformada($idTemporada, $idCategoria, $idDivision) {
 					t.reftemporadas =".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.acumulagoleadores = 1 AND g.penalconvertido > 0
 				GROUP BY el.nombre , j.apellido , j.nombres , j.nrodocumento
 			) t
-				group by t.equipo, t.apyn, t.nrodocumento
+				group by t.equipo, t.apyn, t.nrodocumento, t.idjugador
 				order by sum(t.goles) desc, t.apyn";	
 				
 	$res = $this->query($sql,0);
@@ -1434,7 +1438,7 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
 				r.fechascumplidas,
 			    r.categoria,
 				r.pendientesfallo,
-				r.imagen
+				r.imagen, r.idjugador
 			from (
 			SELECT 
 			    cc.nombre,
@@ -1459,7 +1463,7 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
 				sf.fechascumplidas,
 			    ca.categoria,
 				sf.pendientesfallo,
-				concat('archivos/countries/',cast(cc.idcountrie as UNSIGNED),'/',i.imagen) as imagen
+				concat('archivos/countries/',cast(cc.idcountrie as UNSIGNED),'/',i.imagen) as imagen, j.idjugador
 			FROM
 			    dbsancionesfallos sf
 			        INNER JOIN
@@ -1524,7 +1528,7 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
 				sf.fechascumplidas,
 			    ca.categoria,
 				sf.pendientesfallo,
-				concat('archivos/countries/',cast(cc.idcountrie as UNSIGNED),'/',i.imagen) as imagen
+				concat('archivos/countries/',cast(cc.idcountrie as UNSIGNED),'/',i.imagen) as imagen, j.idjugador
 			FROM
 			    dbsancionesfallosacumuladas sf
 			        INNER JOIN
