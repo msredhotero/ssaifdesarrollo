@@ -162,15 +162,15 @@ die(var_dump($serviciosReferencias->calcularPuntoBonus( 165 , (integer)$idEquipo
 
 <h3>Estadisticas</h3>
 
-    <div class="boxInfoLargo">
+    <div class="boxInfoForm">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Tabla de Posiciones</p>
         	
         </div>
-    	<div class="cuerpoBox" style="padding-right:10px;">
+    	<div class="cuerpoBoxLargo" style="padding-right:10px;">
     		<form class="form-inline formulario" role="form">
         	<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-8">
                     <table class="table table-bordered table-responsive">
                     	<thead>
                         	<th>Posicion</th>
@@ -221,6 +221,9 @@ die(var_dump($serviciosReferencias->calcularPuntoBonus( 165 , (integer)$idEquipo
 							?>
                         </tbody>
                     </table>
+                </div>
+                <div class="col-md-4">
+                    <iframe src="http://tercertempo.com.ar/torneos.php?pageclicked=torneos&ttsessid=AIFZNFUTBOL" height="500" width="600"></iframe>
                 </div>
             </div>
 
@@ -315,7 +318,7 @@ die(var_dump($serviciosReferencias->calcularPuntoBonus( 165 , (integer)$idEquipo
     	<div class="cuerpoBox" style="padding-right:10px;">
     		<form class="form-inline formulario" role="form">
         	<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-8">
                     <table class="table table-bordered table-responsive">
                     	<thead>
                         	<th>Posicion</th>
@@ -365,6 +368,9 @@ die(var_dump($serviciosReferencias->calcularPuntoBonus( 165 , (integer)$idEquipo
 							?>
                         </tbody>
                     </table>
+                </div>
+                <div class="col-md-4">
+                    <iframe src="http://tercertempo.com.ar/torneos.php?pageclicked=torneos&ttsessid=AIFZNFUTBOL" height="500" width="600"></iframe>
                 </div>
             </div>
 
