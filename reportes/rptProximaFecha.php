@@ -173,8 +173,30 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	
 	
 	$date = new DateTime($rowE['fechajuego']);
-	
-
+	$dia = '';
+	switch (date('N', strtotime( $rowE['fechajuego']))) {
+		case 1:
+			$dia = 'Lunes';
+			break;
+		case 2:
+			$dia = 'Martes';
+			break;
+		case 3:
+			$dia = 'Miercoles';
+			break;
+		case 4:
+			$dia = 'Jueves';
+			break;
+		case 5:
+			$dia = 'Viernes';
+			break;
+		case 6:
+			$dia = 'Sabado';
+			break;
+		case 7:
+			$dia = 'Domingo';
+			break;
+	}
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->SetFont('Arial','',8);
@@ -182,7 +204,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$pdf->Cell(6,4,'vs',1,0,'L',false);
 	$pdf->Cell(47,4,utf8_decode($rowE['equipoVisitante']),1,0,'L',false);
 	$pdf->Cell(50,4,utf8_decode($rowE['cancha']),0,0,'L',false);
-	$pdf->Cell(15,4,utf8_decode($rowE['dia']),0,0,'L',false);
+	$pdf->Cell(15,4,$dia,0,0,'L',false);
 	$pdf->Cell(20,4,$date->format('d-m-Y'),0,0,'L',false);
 	$pdf->Cell(15,4,utf8_decode($rowE['hora']),0,0,'L',false);
 

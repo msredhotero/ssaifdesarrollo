@@ -28,7 +28,7 @@ $ar = array();
 
 	while ($row = mysql_fetch_array($resDatos)) {
 		
-		array_push($ar,array('jugador'=>$row['apyn'], 'equipo'=>$row['equipo'],'goles'=>$row['goles'], 'idjugador'=>$row['idjugador']));
+		array_push($ar,array('jugador'=>$row['apyn'], 'equipo'=>$row['equipo'],'goles'=>$row['goles'], 'idjugador'=>$row['idjugador'], 'idequipo'=>$row['refequipos']));
 	}
 
 //echo "[".substr($cadJugadores,0,-1)."]";

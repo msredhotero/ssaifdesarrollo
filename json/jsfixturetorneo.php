@@ -19,10 +19,33 @@ $token = $_GET['callback'];
 header("content-type: Access-Control-Allow-Origin: *");
 
 $ar = array();
-
+$dia = '';
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerDatos)) {
 
+		switch (date('N', strtotime( $row['fechajuego']))) {
+			case 1:
+				$dia = 'Lunes';
+				break;
+			case 2:
+				$dia = 'Martes';
+				break;
+			case 3:
+				$dia = 'Miércoles';
+				break;
+			case 4:
+				$dia = 'Jueves';
+				break;
+			case 5:
+				$dia = 'Viernes';
+				break;
+			case 6:
+				$dia = 'Sábado';
+				break;
+			case 7:
+				$dia = 'Domingo';
+				break;
+		}
 		array_push($ar,array('id'=> $row[0], 
 							'equipolocal'=> $row['equipolocal'], 
 							'puntoslocal'=> $row['puntoslocal'],
@@ -41,7 +64,9 @@ $cad = '';
 							'juez1'=> $row['juez1'],
 							'juez2'=> $row['juez2'],
 							'refconectorlocal'=> $row['refconectorlocal'],
-							'refconectorvisitante'=> $row['refconectorvisitante']));
+							'refconectorvisitante'=> $row['refconectorvisitante'],
+							'dia' => $dia));
+							
 	}
 
 //echo "[".substr($cad,0,-1)."]";
