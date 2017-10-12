@@ -97,8 +97,6 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Cell(200,5,'Partidos del '.$dateD->format('d-m-Y')." al ".$dateH->format('d-m-Y')." - Temporada: ".$ultimaTemporada,1,0,'C',true);
 
 	$pdf->SetFont('Arial','',8);
-	$pdf->Ln();
-	$pdf->Ln();
 	$pdf->SetX(5);
 	
 	$categoria  = '';
@@ -137,26 +135,20 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$division = '';
 		$pdf->Ln();
 		$pdf->Ln();
-		$pdf->Ln();
 		$pdf->SetX(5);
 		$pdf->Cell(200,5,utf8_decode($rowE['categoria']),1,0,'C',true);
-		
-		
+
 	}
 	
 	if ($division != $rowE['division']) {	
 		$division = $rowE['division'];
 		$pdf->Ln();
 		$pdf->Ln();
-		$pdf->Ln();
 		$pdf->SetX(5);
 		$pdf->SetFont('Arial','',8);
 		$pdf->Cell(60,4,'Division: '.utf8_decode($rowE['division']),0,0,'L',false);
 		$pdf->Cell(60,4,'Torneo: '.utf8_decode($rowE['torneo']),0,0,'L',false);
-		
 
-		
-		
 	}
 	
 	if ($fecha != $rowE['fecha']) {	

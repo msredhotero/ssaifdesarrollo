@@ -35,7 +35,8 @@ $cad = '';
 							'informados'=> $row['informados'],
 							'penalesconvertidos'=> $row['pc'],
 							'golesvisitantes'=> $row['golesvisitantes'],
-							'localia'=> $row['localia']));
+							'localia'=> $row['localia'],
+							'idjugador'=>$row['refjugadores']));
 
 	}
 
