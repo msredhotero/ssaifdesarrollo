@@ -2784,8 +2784,13 @@ function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugad
 
 // esta funcion me devuelve donde fue sancionado por ultima vez
 function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $idTipoTorneo) {
+
+    $resTorneo = $this->traerTorneosPorId($idTorneo);
+
+    $idTemporada = mysql_result($resTorneo, 0,'reftemporadas');
+
 	$sql	=	"select
-					max(fixc.reffechas) as reffechas
+					max(fixc.fechas) as reffechas
 				from		dbsancionesjugadores sj
 				inner
 				join		dbfixture fix
@@ -2805,7 +2810,7 @@ function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $id
 				where		ms.generadaporacumulacion = 1 
 							and ms.fechascumplidas = 1
 							and sj.refjugadores = ".$idJugador."
-							and fix.reftorneos = ".(integer)$idTorneo." ";
+							and tor.reftemporadas = ".(integer)$idTemporada." ";
 								
 	return $this->existeDevuelveId($sql);
 }
@@ -2838,8 +2843,12 @@ function ultimaFechaSancionadoPorCantidadFechas($idJugador) {
 function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo) {
 	$ultimaFecha = $this->ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $idTipoTorneo);
 
+    $resTorneo = $this->traerTorneosPorId($idTorneo);
+
+    $idTemporada = mysql_result($resTorneo, 0,'reftemporadas');
+
 	if ($ultimaFecha == 0) {
-		$reffechaDesde = 0;	
+		$reffechaDesde = date('Y').'-01-01';	
 		$restoAmarillas = 0;
 	} else {
 		$reffechaDesde = $ultimaFecha;
@@ -2856,13 +2865,13 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorne
 				from		dbsancionesjugadores sj
 				inner
 				join		dbfixture fix
-				on			fix.idfixture = sj.reffixture and fix.reffechas > ".$reffechaDesde." and sj.refjugadores = ".$idJugador."
+				on			fix.idfixture = sj.reffixture and fix.fecha > '".$reffechaDesde."'' and sj.refjugadores = ".$idJugador."
 				inner
 				join		tbtiposanciones ts
 				on			ts.idtiposancion = sj.reftiposanciones
 				inner
 				join		dbtorneos t
-				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo = ".$idTipoTorneo."
+				on			t.reftemporadas = ".$idTemporada." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo = ".$idTipoTorneo."
 				where		ts.amonestacion = 1
 							and sj.cantidad > 0
 							
@@ -2876,10 +2885,10 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorne
 				on			sj.refsancionesfallos = sf.idsancionfallo and sj.refjugadores = ".$idJugador."
 				inner
 				join		dbfixture fix
-				on			fix.idfixture = sj.reffixture and fix.reffechas > ".$reffechaDesde."
+				on			fix.idfixture = sj.reffixture and fix.fecha > '".$reffechaDesde."''
 				inner
 				join		dbtorneos t
-				on			t.idtorneo = ".$idTorneo." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo = ".$idTipoTorneo."
+				on			t.reftemporadas = ".$idTemporada." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo = ".$idTipoTorneo."
 				where		sj.reftiposanciones = 4 or sf.amarillas = 2
 							
 				) t";	
