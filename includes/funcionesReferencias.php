@@ -2222,7 +2222,7 @@ function traerHistoricoIncidenciasPorJugador($idJugador, $where) {
 						END) as localia,
 			            0 AS goles,
 			            0 AS encontra,
-			            1 AS amarillas,
+			            p.cantidad AS amarillas,
 			            0 AS rojas,
 			            0 AS pc,
 			            0 AS pa,
@@ -2252,7 +2252,7 @@ function traerHistoricoIncidenciasPorJugador($idJugador, $where) {
 			            AND p.reftiposanciones IN (1)
 			            AND p.cantidad > 0 
 
-			            UNION ALL 
+			    UNION ALL 
 
 			            SELECT 
 			        CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
@@ -2303,7 +2303,64 @@ function traerHistoricoIncidenciasPorJugador($idJugador, $where) {
 			    WHERE
 			        jug.idjugador = ".$idJugador.$where."
 			            AND p.reftiposanciones IN (2 , 3, 4, 5)
-			            AND p.cantidad > 0) AS r
+			            AND p.cantidad > 0
+
+
+                UNION ALL 
+
+                        SELECT 
+                    CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
+                        jug.nrodocumento,
+                        p.refjugadores,
+                        p.reffixture,
+                        p.refequipos,
+                        p.refcategorias,
+                        p.refdivisiones,
+                        tep.temporada,
+                        tor.descripcion AS torneo,
+                        cat.categoria,
+                        divi.division,
+                        equ.nombre AS equipo,
+                        equV.nombre AS visitante,
+                        fix.fecha,
+                        (CASE
+                            WHEN p.refequipos = fix.refconectorlocal THEN 'L'
+                            ELSE 'V'
+                        END) as localia,
+                        0 AS goles,
+                        0 AS encontra,
+                        2 AS amarillas,
+                        0 AS rojas,
+                        0 AS pc,
+                        0 AS pa,
+                        0 AS pe,
+                        tor.idtorneo,
+                        fe.fecha as fechaaux
+                FROM
+                    dbsancionesjugadores p
+                INNER JOIN dbsancionesfallos sf ON sf.idsancionfallo = p.refsancionesfallos    
+                INNER JOIN dbjugadores jug ON jug.idjugador = p.refjugadores
+                INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+                INNER JOIN dbcountries co ON co.idcountrie = jug.refcountries
+                INNER JOIN dbfixture fix ON fix.idfixture = p.reffixture
+                INNER JOIN dbequipos equV ON equV.idequipo = (CASE
+                    WHEN p.refequipos = fix.refconectorlocal THEN fix.refconectorvisitante
+                    ELSE fix.refconectorlocal
+                END)
+                INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos
+                INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
+                INNER JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+                INNER JOIN dbequipos equ ON equ.idequipo = p.refequipos
+                INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
+                INNER JOIN tbcategorias cat ON cat.idtcategoria = p.refcategorias
+                INNER JOIN tbdivisiones divi ON divi.iddivision = p.refdivisiones
+                INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
+                WHERE
+                    jug.idjugador = ".$idJugador.$where."
+                        AND p.reftiposanciones IN (2 , 3, 4, 5)
+                        AND sf.amarillas = 2
+
+                ) AS r
 			GROUP BY r.apyn,
 			    r.nrodocumento,
 			    r.refjugadores,
@@ -2792,7 +2849,7 @@ function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $id
     $iddivision  = mysql_result($resTorneo, 0,'refdivisiones');
 
 	$sql	=	"select
-					max(fixc.fecha) as reffechas
+					max(coalesce(fixc.fecha,fix.fecha)) as reffechas
 				from		dbsancionesjugadores sj
 				inner
 				join		dbfixture fix
@@ -2800,17 +2857,16 @@ function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $id
 				inner
                 join		dbsancionesfallosacumuladas ms
                 on			ms.refsancionesjugadores = sj.idsancionjugador
-                inner
+                left
                 join		dbsancionesfechascumplidas sc
                 on			sc.refsancionesfallosacumuladas = ms.idsancionfalloacumuladas
-                inner
+                left
 				join		dbfixture fixc
 				on			fixc.idfixture = sc.reffixture
 				inner
 				join		dbtorneos tor
 				on			tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
 				where		ms.generadaporacumulacion = 1 
-							and ms.fechascumplidas = 1
 							and sj.refjugadores = ".$idJugador."
 							and tor.reftemporadas = ".(integer)$idTemporada." 
                             and tor.refcategorias = ".(integer)$idCategoria." 
