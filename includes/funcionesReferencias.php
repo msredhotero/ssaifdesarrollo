@@ -11075,6 +11075,7 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
 			max(r.amarilla) as amarillas,
 			max(r.roja) as rojas,
 			max(r.informado) as informados,
+            max(r.dobleamarilla) as dobleamarillas,
 			sum(r.pc) as pc,
 			sum(r.pa) as pa,
 			sum(r.pe) as pe,
@@ -11094,7 +11095,7 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
 				0 as amarilla,
 				0 as roja,
 				0 as informado,
-				0 as cdtd,
+				0 as dobleamarilla,
 				0 as pc,
 				0 as pa,
 				0 as pe
@@ -11127,7 +11128,7 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
 				0 as amarilla,
 				0 as roja,
 				0 as informado,
-				0 as cdtd,
+				0 as dobleamarilla,
 				p.penalconvertido as pc,
 				p.penalatajado as pa,
 				p.penalerrado as pe
@@ -11161,7 +11162,7 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
 				coalesce((case when p.reftiposanciones = 1 then 1 end),0) as amarilla,
 				coalesce((case when p.reftiposanciones = 2 then 1 end),0) as roja,
 				coalesce((case when p.reftiposanciones = 3 then 1 end),0) as informado,
-				coalesce((case when p.reftiposanciones = 4 then 1 end),0) as cdtd,
+				coalesce((case when p.reftiposanciones = 4 then 1 end),0) as dobleamarilla,
 				0 as pc,
 				0 as pa,
 				0 as pe
