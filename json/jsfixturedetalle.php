@@ -29,6 +29,7 @@ $cad = '';
 							'amonestados'=> $row['amarillas'],
 							'expulsados'=> $row['rojas'],
 							'informados'=> $row['informados'],
+							'dobleamarillas'=> $row['dobleamarillas'],
 							'penalesconvertidos'=> $row['pc'],
 							'golesvisitantes'=> $row['golesvisitantes'],
 							'localia'=> $row['localia'],

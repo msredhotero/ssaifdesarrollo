@@ -18,7 +18,7 @@ if ((isset($_GET['idequipo'])) && ($_GET['idequipo'] > 0)) {
 		$resDatos = $serviciosReferencias->Posiciones(0);	
 	}
 } else {
-	$resTraerDatos = $serviciosReferencias->Posiciones(0);	
+	$resDatos = $serviciosReferencias->Posiciones(0);	
 }
 
 $token = $_GET['callback'];
