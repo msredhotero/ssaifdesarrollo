@@ -1117,9 +1117,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <th style="background-color:#F00;">
                             	
                             </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
+
                             
                             <?php
 
