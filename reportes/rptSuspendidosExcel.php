@@ -235,7 +235,7 @@ while ($fila = mysql_fetch_array($datosP)) {
          ->setCellValue('H'.$i, '')
          ->setCellValue('I'.$i, '')
          ->setCellValue('J'.$i, ($fila['categoria']));
-	//$i++; 
+	$i++; 
  }
 
 

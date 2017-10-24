@@ -1188,11 +1188,12 @@ if ($_SESSION['idroll_predio'] != 1) {
 				?>
                 <div class="row" style="margin-left:25px;">
                 	
-                    <div class="col-md-3">
-                    	<p>Sale: <input class="form-control localsale" type="text" name="salecambioLocal<?php echo $iC; ?>" id="salecambioLocal<?php echo $iC; ?>" value="<?php echo $rowCambio['refdorsalsale']; ?>"/></p>
-                    </div>
+                    
                     <div class="col-md-3">
 						<p>Entra: <input class="form-control localentra" type="text" name="entracambioLocal<?php echo $iC; ?>" id="entracambioLocal<?php echo $iC; ?>" value="<?php echo $rowCambio['refdorsalentra']; ?>"/></p>
+                    </div>
+                    <div class="col-md-3">
+                    	<p>Sale: <input class="form-control localsale" type="text" name="salecambioLocal<?php echo $iC; ?>" id="salecambioLocal<?php echo $iC; ?>" value="<?php echo $rowCambio['refdorsalsale']; ?>"/></p>
                     </div>
                     <div class="col-md-3">
 						<p>Minuto: <input class="form-control localminu" type="text" name="minutocambioLocal<?php echo $iC; ?>" id="minutocambioLocal<?php echo $iC; ?>" value="<?php echo $rowCambio['minuto']; ?>"/></p>
@@ -1208,11 +1209,12 @@ if ($_SESSION['idroll_predio'] != 1) {
 					for ($k = $iC;$k<= 7;$k++) {
 				?>
                 <div class="row" style="margin-left:25px;">
-                    <div class="col-md-3">
-                    	<p>Sale: <input class="form-control localsale" type="text" name="salecambioLocal<?php echo $k; ?>" id="salecambioLocal<?php echo $k; ?>" value=""/></p>
-                    </div>
+                    
                     <div class="col-md-3">
 						<p>Entra: <input class="form-control localentra" type="text" name="entracambioLocal<?php echo $k; ?>" id="entracambioLocal<?php echo $k; ?>" value=""/></p>
+                    </div>
+                    <div class="col-md-3">
+                    	<p>Sale: <input class="form-control localsale" type="text" name="salecambioLocal<?php echo $k; ?>" id="salecambioLocal<?php echo $k; ?>" value=""/></p>
                     </div>
                     <div class="col-md-3">
 						<p>Minuto: <input class="form-control localminu" type="text" name="minutocambioLocal<?php echo $k; ?>" id="minutocambioLocal<?php echo $k; ?>" value=""/></p>
@@ -1678,11 +1680,12 @@ if ($_SESSION['idroll_predio'] != 1) {
 				?>
                 <div class="row" style="margin-left:25px;">
                 	
-                    <div class="col-md-3">
-                    	<p>Sale: <input class="form-control visitsale" type="text" name="salecambioVisitante<?php echo $iC; ?>" id="salecambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambioV['refdorsalsale']; ?>"/></p>
-                    </div>
+                    
                     <div class="col-md-3">
 						<p>Entra: <input class="form-control visitentra" type="text" name="entracambioVisitante<?php echo $iC; ?>" id="entracambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambioV['refdorsalentra']; ?>"/></p>
+                    </div>
+                    <div class="col-md-3">
+                    	<p>Sale: <input class="form-control visitsale" type="text" name="salecambioVisitante<?php echo $iC; ?>" id="salecambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambioV['refdorsalsale']; ?>"/></p>
                     </div>
                     <div class="col-md-3">
 						<p>Minuto: <input class="form-control visitminu" type="text" name="minutocambioVisitante<?php echo $iC; ?>" id="minutocambioVisitante<?php echo $iC; ?>" value="<?php echo $rowCambioV['minuto']; ?>"/></p>
@@ -1699,11 +1702,12 @@ if ($_SESSION['idroll_predio'] != 1) {
 					for ($k = $iC;$k<= 7;$k++) {
 				?>
                 <div class="row" style="margin-left:25px;">
-                    <div class="col-md-3">
-                    	<p>Sale: <input class="form-control visitsale" type="text" name="salecambioVisitante<?php echo $k; ?>" id="salecambioVisitante<?php echo $k; ?>" value=""/></p>
-                    </div>
+                    
                     <div class="col-md-3">
 						<p>Entra: <input class="form-control visitentra" type="text" name="entracambioVisitante<?php echo $k; ?>" id="entracambioVisitante<?php echo $k; ?>" value=""/></p>
+                    </div>
+                    <div class="col-md-3">
+                    	<p>Sale: <input class="form-control visitsale" type="text" name="salecambioVisitante<?php echo $k; ?>" id="salecambioVisitante<?php echo $k; ?>" value=""/></p>
                     </div>
                     <div class="col-md-3">
 						<p>Minuto: <input class="form-control visitminu" type="text" name="minutocambioVisitante<?php echo $k; ?>" id="minutocambioVisitante<?php echo $k; ?>" value=""/></p>
@@ -1932,8 +1936,11 @@ $(document).ready(function(){
 		
 		calcularMinutos();
 		
-		
-		$( "#target" ).submit();
+		if (($('#refestadospartidos').val() == '') || ($('#refestadospartidos').val() == '0')) {
+			alert('Atencion, debe seleccionar un estado para el partido');
+		} else {
+			$( "#target" ).submit();
+		}
        
     });
 	

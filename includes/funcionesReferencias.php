@@ -1411,7 +1411,7 @@ function suspendidosTotal() {
 			    tbdivisiones di ON di.iddivision = t.refdivisiones
 			            
 			WHERE
-			    sf.cantidadfechas <> sf.fechascumplidas  
+			    sf.cantidadfechas <> sf.fechascumplidas
 			    ) r
 			order by r.apyn
 
@@ -1559,7 +1559,7 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
 			    tbdivisiones di ON di.iddivision = t.refdivisiones
 			            
 			WHERE
-			    sf.cantidadfechas <> sf.fechascumplidas  
+			    sf.cantidadfechas <> sf.fechascumplidas and fechadesde <> '0000-00-00'
 				and t.reftemporadas = ".$idTemporada."
 				 and t.refcategorias = ".$idCategoria."
 				 and t.refdivisiones = ".$idDivision."
