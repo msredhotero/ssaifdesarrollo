@@ -542,7 +542,7 @@ left join(SELECT
 			dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorlocal = sj.refequipos
 				INNER JOIN
 		tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
-		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
+		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0) and sj.cantidad <> 2
 		GROUP BY fix.idfixture, sj.refequipos) fixa
 on		fixa.idfixture = f.idfixture and fixa.refequipos = el.idequipo
 
@@ -622,7 +622,7 @@ left join(SELECT
 			dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorvisitante = sj.refequipos
 				INNER JOIN
 		tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
-		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
+		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0) and sj.cantidad <> 2
 		GROUP BY fix.idfixture, sj.refequipos) fixa
 on		fixa.idfixture = f.idfixture and fixa.refequipos = ev.idequipo
 
@@ -799,7 +799,7 @@ left join(SELECT
 			dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorlocal = sj.refequipos
 				INNER JOIN
 		tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
-		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
+		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0) and sj.cantidad <> 2
 		GROUP BY fix.idfixture, sj.refequipos) fixa
 on		fixa.idfixture = f.idfixture and fixa.refequipos = el.idequipo
 
@@ -879,7 +879,7 @@ left join(SELECT
 			dbfixture fix ON sj.reffixture = fix.idfixture and fix.refconectorvisitante = sj.refequipos
 				INNER JOIN
 		tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
-		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0)
+		where ts.amonestacion = 1 and (sj.refsancionesfallos is null or sj.refsancionesfallos = 0) and sj.cantidad <> 2
 		GROUP BY fix.idfixture, sj.refequipos) fixa
 on		fixa.idfixture = f.idfixture and fixa.refequipos = ev.idequipo
 
