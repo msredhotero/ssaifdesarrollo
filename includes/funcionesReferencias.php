@@ -2802,7 +2802,10 @@ function traerUltimoDiaJugado() {
 	$sql = "select
 				max(f.fecha) as fecha
 			from		dbfixture f
-			where		f.refestadospartidos is not null";
+            inner
+            JOIN        dbtorneos t
+            on          t.idtorneo = f.reftorneos
+			where		f.refestadospartidos is not null and t.reftipotorneo = 1";
 			
 	$res = $this->query($sql,0);
 	return $res;	
