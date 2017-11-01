@@ -31,6 +31,7 @@ $idtorneo			=	$_GET['idtorneo'];
 $reffechas			=	$_GET['reffechas'];
 
 $resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
+$resEquiposAux = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
 
 $resTorneo = $serviciosReferencias->traerTorneosDetallePorId($idtorneo);
 
@@ -58,10 +59,10 @@ $dia						= mysql_result($resDefTemp,0,'dia');
 $hora						= mysql_result($resDefTemp,0,'hora');
 
 
-$fechaPartido				= mysql_result($resEquipos,0,'fechapartidocomun');
+$fechaPartido				= mysql_result($resEquiposAux,0,'fechapartido');
 
 
-$numeroDia = date('w', strtotime($fechaPartido));
+$numeroDia = date('w', strtotime(mysql_result($resEquipos,0,'fechapartidocomun')));
 
 switch ($numeroDia) {
 	case 0:
@@ -95,15 +96,15 @@ $pdf->SetMargins(2, 2 , 2);
 #Establecemos el margen inferior: 
 $pdf->SetAutoPageBreak(true,1); 
 
+$partido=0;
 while ($rowE = mysql_fetch_array($resEquipos)) {
-	
 	$pdf->AddPage();
+	$partido +=1;
 	/***********************************    PRIMER CUADRANTE ******************************************/
 	
 	$pdf->Image('../imagenes/aif_logo.png',2,2,25);
 
 	/***********************************    FIN ******************************************/
-	
 	
 	
 	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
@@ -149,7 +150,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->Cell(35,5,'Fecha:',1,0,'L',true);
 	$pdf->Cell(40,5,mysql_result($resFecha,0,'fecha'),1,0,'L',false);
 	$pdf->Cell(40,5,'Partido:',1,0,'L',true);
-	$pdf->Cell(40,5,mysql_result($resFecha,0,'fecha'),1,0,'L',false);
+	$pdf->Cell(40,5,$partido,1,0,'L',false);
 	
 	
 	$pdf->SetFont('Arial','B',10);
@@ -581,8 +582,6 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	
 	
 	/******************** FIN FIRMAS **********************************/
-	
-	
 
 }
 //120 x 109

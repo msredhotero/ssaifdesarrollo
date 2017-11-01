@@ -480,6 +480,7 @@ k.pe,
 k.amarillas,
 k.rojas,
 k.idequipo,
+k.observacionestorneo,
 	@rownum:= @rownum + 1 'posicion'
 from	(
 
@@ -495,7 +496,8 @@ sum(p.pp) as pp,
 sum(p.pe) as pe,
 sum(p.amarillas) as amarillas,
 sum(p.rojas) as rojas,
-p.idequipo
+p.idequipo,
+p.observacionestorneo
 
 
 from (
@@ -521,7 +523,8 @@ sum(case when f.puntoslocal = 0 then 1 else 0 end) as pp,
 sum(case when f.puntoslocal = 1 then 1 else 0 end) as pe,
 sum(coalesce(fixa.amarillas,0)) as amarillas,
 sum(coalesce(fixr.rojas,0)) as rojas,
-el.idequipo    
+el.idequipo,
+tor.observaciones as observacionestorneo
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
@@ -574,7 +577,8 @@ group by el.nombre,
             f.juez2,
             f.observaciones,
             f.publicar,
-			el.idequipo 
+			el.idequipo,
+			tor.observaciones
 
 union all
 
@@ -601,7 +605,8 @@ sum(case when f.puntosvisita = 0 then 1 else 0 end) as pp,
 sum(case when f.puntosvisita = 1 then 1 else 0 end) as pe,
 sum(coalesce(fixa.amarillas,0)) as amarillas,
 sum(coalesce(fixr.rojas,0)) as rojas,
-ev.idequipo    
+ev.idequipo,
+tor.observaciones as observacionestorneo   
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
@@ -654,7 +659,8 @@ group by ev.nombre,
             f.juez2,
             f.observaciones,
             f.publicar,
-			ev.idequipo
+			ev.idequipo,
+			tor.observaciones
 			
 union all
 
@@ -681,11 +687,13 @@ ca.categoria,
 0 as pe,
 0 as amarillas,
 0 as rojas,
-ev.idequipo  
+ev.idequipo,
+ev.observacionestorneo
 from (select 
 		e.idequipo,
 		e.nombre,
-        t.refcategorias
+        t.refcategorias,
+		t.observaciones as observacionestorneo
 		from dbequipos e 
 		inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
         inner join tbcategorias ca on ca.idtcategoria = t.refcategorias
@@ -697,7 +705,7 @@ left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.re
 
 where f.idfixture is null
 ) p
-group by p.equipo, p.idequipo
+group by p.equipo, p.idequipo, p.observacionestorneo
 order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 
 ) k , (SELECT @rownum:=0) R ";
@@ -727,7 +735,8 @@ order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 							  'rojas'=> $row['rojas'],
 							  'puntobonus'=> (integer)$puntosBonus,
 							  'idequipo'=> $row['idequipo'],
-							  'posicion'=> $posicion);
+							  'posicion'=> $posicion,
+							  'observacionestorneo'=>$row['observacionestorneo']);
 		$posicion += 1;					  
 		$puntosBonus = 0;					  
 	}
@@ -1803,7 +1812,9 @@ function traerProximaFechaFiltros($where) {
 			f.idfecha,
 			coalesce(arr.idarbitro,0) as idarbitro,
 			coalesce(arr.nombrecompleto,'') as arbitro,
-			cc.idcancha
+			cc.idcancha,
+			(case when esresaltado = 1 then 'Si' else 'No' end) as esresaltado,
+			(case when esdestacado = 1 then 'Si' else 'No' end) as esdestacado
 		from dbfixture fix 
 		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
 		inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
@@ -1851,7 +1862,9 @@ function traerProximaFechaTodosReal($desde, $hasta) {
 			cc.nombre as cancha,
 			f.fecha,
 			fix.fecha as fechajuego,
-			f.idfecha
+			f.idfecha,
+			(case when fix.esdestacado = 1 then 'Si' else 'No' end) as esdestacado,
+			(case when fix.esresaltado = 1 then 'Si' else 'No' end) as esresaltado
 		from dbfixture fix 
 		inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos 
 		inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
@@ -1865,7 +1878,7 @@ function traerProximaFechaTodosReal($desde, $hasta) {
 		inner join tbfechas f ON f.idfecha = fix.reffechas
 
 		where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha between '".$desde."' and '".$hasta."'
-		order by tor.refcategorias, tor.refdivisiones, f.idfecha
+		order by tor.refcategorias,tor.descripcion, tor.refdivisiones, f.idfecha, fix.idfixture
 		";	
 		
 	
@@ -5633,7 +5646,7 @@ $sql = "SELECT
 		FROM
 			dbtorneos t
 		WHERE
-			t.activo = 1 and t.reftemporadas = ".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." 
+			t.activo = 1 and t.reftemporadas = ".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$idDivision." and t.reftipotorneo in (1,2)
 		order by 1"; 
 $res = $this->query($sql,0); 
 return $res;
@@ -8253,7 +8266,7 @@ left join dbcontactos cl ON cl.idcontacto = el.refcontactos
 left join dbcontactos cv ON cv.idcontacto = ev.refcontactos
 left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
-inner join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 where te.idtemporadas = ".$idTemperada." and f.fecha between '".$desde."' and '".$hasta."' ".$where."
 order by tor.refcategorias, tor.refdivisiones, tor.idtorneo,f.reffechas, f.idfixture";
 $res = $this->query($sql,0);
@@ -8719,7 +8732,7 @@ function traerUltimaFechaFixturePorTorneoEquipo($idTorneo, $idEquipo) {
 }
 
 function traerFixturePorId($id) {
-$sql = "select idfixture,reftorneos,reffechas,refconectorlocal,refconectorvisitante,refarbitros,juez1,juez2,refcanchas,fecha,hora,refestadospartidos,calificacioncancha,puntoslocal,puntosvisita,goleslocal,golesvisitantes,observaciones,publicar from dbfixture where idfixture =".$id;
+$sql = "select idfixture,reftorneos,reffechas,refconectorlocal,refconectorvisitante,refarbitros,juez1,juez2,refcanchas,fecha,hora,refestadospartidos,calificacioncancha,puntoslocal,puntosvisita,goleslocal,golesvisitantes,observaciones,publicar, (case when esresaltado=1 then 'Si' else 'No' end) as esresaltado,(case when esdestacado=1 then 'Si' else 'No' end) as esdestacado from dbfixture where idfixture =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -8823,13 +8836,15 @@ function traerPartidoDestacadoPorFechas($idTemporada,$desde, $hasta) {
 
 /********************  nuevos tablas 20/02/2017 para las ESTADISTICAS ************//////
 
-function guardarPartidoSimple($idFixture, $fecha, $hora, $refcanchas) {
+function guardarPartidoSimple($idFixture, $fecha, $hora, $refcanchas, $esresaltado, $esdestacado) {
 	
 	$sql = "update dbfixture 
 			set	
 				fecha = '".$fecha."',
 				hora = '".$hora."',
-				refcanchas = ".($refcanchas == '' ? 'NULL' : $refcanchas)."
+				refcanchas = ".($refcanchas == '' ? 'NULL' : $refcanchas).",
+				esresaltado = ".$esresaltado.",
+				esdestacado = ".$esdestacado."
 				where idfixture = ".$idFixture;	
 	$res = $this->query($sql,0); 
 	return $res; 
@@ -11078,7 +11093,7 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
 			max(r.amarilla) as amarillas,
 			max(r.roja) as rojas,
 			max(r.informado) as informados,
-            max(r.dobleamarilla) as dobleamarillas,
+			max(r.dobleamarilla) as dobleamarilla,
 			sum(r.pc) as pc,
 			sum(r.pa) as pa,
 			sum(r.pe) as pe,
@@ -11181,7 +11196,7 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
 				inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
 				inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
 				inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
-				where p.reffixture =".$idFixture." and p.reftiposanciones in (1,2,3) and p.cantidad >0
+				where p.reffixture =".$idFixture." and p.reftiposanciones in (1,2,3,4) and p.cantidad >0
 			) as r
 			left join dbdorsales dor 
 				ON	r.refjugadores = dor.refjugadores and
@@ -11248,7 +11263,7 @@ select
 	inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
 	inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
 	inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
-	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo."
+	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and (p.goles > 0 or p.encontra > 0)
 	
 	union all
 	
@@ -11367,7 +11382,7 @@ select
 	inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
 	inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias 
 	inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones 
-	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo."
+	where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and (p.goles > 0 or p.encontra > 0)
 	
 	union all
 	

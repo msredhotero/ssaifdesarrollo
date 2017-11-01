@@ -327,13 +327,24 @@ $(document).ready(function(){
 	$("#proxima").on("click",'.guardarPartidoSimple', function(){
 		
 		idBtn = $(this).attr("id");
-
+		var esresaltado = 0;
+		if ($('#esresaltado'+$(this).attr("id")).prop('checked')) {
+			esresaltado = 1;	
+		}
+		
+		var esdestacado = 0;
+		if ($('#esdestacado'+$(this).attr("id")).prop('checked')) {
+			esdestacado = 1;	
+		}
+		
 		$('#myModal').modal("show");
         $.ajax({
 			data:  {idfixture: $(this).attr("id"), 
 					fecha: $('#fecha'+$(this).attr("id")).val(), 
 					hora: $('#hora'+$(this).attr("id")).val(), 
 					cancha: $('#refcanchas'+$(this).attr("id")).val(), 
+					esresaltado: esresaltado, 
+					esdestacado: esdestacado, 
 					accion: 'guardarPartidoSimple'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',

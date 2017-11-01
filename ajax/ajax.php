@@ -663,6 +663,7 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 
 	$resProximasFechas	= $serviciosReferencias->traerProximaFechaFiltros(substr($where,0,strlen($where)-4));
 	//echo $resProximasFechas;
+	
 	$categorias = '';
 	$fecha = '';
 	$cadCabecera = '';
@@ -685,6 +686,8 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 									<th>Hora</th>
 									<th>Division</th>
 									<th>Cancha</th>
+									<th>Es Resaltado</th>
+									<th>Es Destacado</th>
 									<th></th>
 									<th>Accion</th>
 
@@ -709,6 +712,8 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 								<option value='".$row['idcancha']."'>".$row['cancha']."</option>
 								".$cadCanchas."
 								</select></td>
+							<td><input class='form-control' type='checkbox' name='esresaltado".$row['idfixture']."' id='esresaltado".$row['idfixture']."' ".($row['esresaltado'] == 'Si' ? 'checked' : '')."/></td>
+							<td><input class='form-control' type='checkbox' name='esdestacado".$row['idfixture']."' id='esdestacado".$row['idfixture']."' ".($row['esdestacado'] == 'Si' ? 'checked' : '')."/></td>
 							<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a></td>
 							<td><button type='button' class='btn btn-primary guardarPartidoSimple' id='".$row['idfixture']."'>Guardar</button></td>
 						</tr>";
@@ -718,6 +723,7 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 	$cadCabecera .= '</tbody></table></div></div></div>';
 	
 	echo $cadCabecera;
+	
 }
 
 
@@ -1489,12 +1495,27 @@ function guardarPartidoSimple($serviciosReferencias) {
 	$idfixture		 = $_POST['idfixture'];
 	$fecha			 = $_POST['fecha'];
 	$hora			 = $_POST['hora'];
-	$refcanchas		 = $_POST['cancha'];	
+	$refcanchas		 = $_POST['cancha'];
+	$esresaltado	= $_POST['esresaltado']; 	
+	$esdestacado	= $_POST['esdestacado']; 
 	
+	/*
+	if (isset($_POST['esresaltado'])) { 
+		$esresaltado	= 1; 
+	} else { 
+		$esresaltado = 0; 
+	} 
+	
+	if (isset($_POST['esdestacado'])) { 
+		$esdestacado	= 1; 
+	} else { 
+		$esdestacado = 0; 
+	} 
+	*/
 	$fecha = formatearFechas($fecha);
 	
 	if ($fecha != '***') {
-		$res = $serviciosReferencias->guardarPartidoSimple($idfixture, $fecha, $hora, $refcanchas);
+		$res = $serviciosReferencias->guardarPartidoSimple($idfixture, $fecha, $hora, $refcanchas,$esresaltado,$esdestacado);
 		echo '';
 	} else {
 		echo 'Formato de fecha erroneo'.$_POST['fecha'];
@@ -2865,9 +2886,11 @@ function modificarTorneos($serviciosReferencias) {
 	
 	$res = $serviciosReferencias->modificarTorneos($id,$descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo); 
 	if ($res == true) { 
+		/*
 		if ($activo == 1) {
 			$serviciosReferencias->desactivarTorneos($id,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);	
 		}
+		*/
 		if ($puntobonus == 0) {
 			$serviciosReferencias->eliminarTorneopuntobonusPorTorneo($id);	
 		} else {

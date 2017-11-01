@@ -32,6 +32,8 @@ $i = 1;
 		if ($i == 4) {
 			break;	
 		}
+		
+		if ($row['estado'] == '') {
 		array_push($ar,array('id'=> $row[0], 
 							'equipolocal'=> $row['equipolocal'], 
 							'equipovisitante'=> $row['equipovisitante'],
@@ -46,8 +48,10 @@ $i = 1;
 							'juez2'=> $row['juez2'],
 							'refconectorlocal'=> $row['refconectorlocal'],
 							'refconectorvisitante'=> $row['refconectorvisitante']));
+		
 							
 		$i += 1;
+		}
 	}
 
 //echo "[".substr($cad,0,-1)."]";

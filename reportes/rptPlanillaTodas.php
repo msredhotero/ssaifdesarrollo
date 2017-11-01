@@ -44,6 +44,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 	$reffechas			=	$rowTT['reffechas'];
 
 	$resEquipos = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
+	$resEquiposAux = $serviciosReferencias->traerFixtureTodoPorTorneoFecha($idtorneo,$reffechas);
 
 	$resTorneo = $serviciosReferencias->traerTorneosDetallePorId($idtorneo);
 
@@ -70,12 +71,12 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 	$dia						= mysql_result($resDefTemp,0,'dia');
 	$hora						= mysql_result($resDefTemp,0,'hora');
 
-	$fechaPartido				= mysql_result($resEquipos,0,'fechapartido');
+	$fechaPartido				= mysql_result($resEquiposAux,0,'fechapartido');
 	
-	$fechaPartido				= mysql_result($resEquipos,0,'fechapartidocomun');
+	//$fechaPartido				= mysql_result($resEquipos,0,'fechapartidocomun');
 
 
-	$numeroDia = date('w', strtotime($fechaPartido));
+	$numeroDia = date('w', strtotime(mysql_result($resEquipos,0,'fechapartidocomun')));
 	
 	switch ($numeroDia) {
 		case 0:
@@ -103,9 +104,9 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 	
 	$cantidadJugadores = 0;
 	
-
+	$partido=0;
 	while ($rowE = mysql_fetch_array($resEquipos)) {
-		
+		$partido +=1;
 		$pdf->AddPage();
 		/***********************************    PRIMER CUADRANTE ******************************************/
 		
@@ -158,7 +159,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 		$pdf->Cell(35,5,'Fecha:',1,0,'L',true);
 		$pdf->Cell(40,5,mysql_result($resFecha,0,'fecha'),1,0,'L',false);
 		$pdf->Cell(40,5,'Partido:',1,0,'L',true);
-		$pdf->Cell(40,5,mysql_result($resFecha,0,'fecha'),1,0,'L',false);
+		$pdf->Cell(40,5,$partido,1,0,'L',false);
 		
 		
 		$pdf->SetFont('Arial','B',10);

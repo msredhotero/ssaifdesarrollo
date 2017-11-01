@@ -68,7 +68,7 @@ if (mysql_num_rows($resTemporadas)>0) {
 $pdf = new FPDF();
 $cantidadJugadores = 0;
 #Establecemos los márgenes izquierda, arriba y derecha: 
-$pdf->SetMargins(2, 2 , 2); 
+$pdf->SetMargins(2, 10 , 2); 
 
 #Establecemos el margen inferior: 
 $pdf->SetAutoPageBreak(true,1); 
@@ -99,6 +99,7 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->SetFont('Arial','',8);
 	$pdf->SetX(5);
 	
+	$torneo		= '';
 	$categoria  = '';
 	$division	= '';
 	$fecha		= '';
@@ -129,6 +130,12 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		
 	}
 	*/
+	
+	if ($torneo != $rowE['torneo']) {
+		$torneo = $rowE['torneo'];
+		$division = '';
+
+	}
 	
 	if ($categoria != $rowE['categoria']) {
 		$categoria = $rowE['categoria'];
@@ -191,15 +198,29 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	}
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(47,4,utf8_decode($rowE['equipoLocal']),1,0,'L',false);
-	$pdf->Cell(6,4,'vs',1,0,'L',false);
-	$pdf->Cell(47,4,utf8_decode($rowE['equipoVisitante']),1,0,'L',false);
-	$pdf->Cell(50,4,utf8_decode($rowE['cancha']),0,0,'L',false);
-	$pdf->Cell(15,4,$dia,0,0,'L',false);
-	$pdf->Cell(20,4,$date->format('d-m-Y'),0,0,'L',false);
-	$pdf->Cell(15,4,utf8_decode($rowE['hora']),0,0,'L',false);
+	
+	if ($rowE['esresaltado'] == 'Si') {
+		$pdf->SetFillColor(255,255,0);
+		$pdf->SetFont('Arial','',8);
+		$pdf->Cell(47,4,utf8_decode($rowE['equipoLocal']),1,0,'L',true);
+		$pdf->Cell(6,4,'vs',1,0,'L',true);
+		$pdf->Cell(47,4,utf8_decode($rowE['equipoVisitante']),1,0,'L',true);
+		$pdf->Cell(50,4,utf8_decode(($rowE['cancha']== '' ? 'A confirmar' : $rowE['cancha'])),0,0,'L',true);
+		$pdf->Cell(15,4,$dia,0,0,'L',true);
+		$pdf->Cell(20,4,$date->format('d-m-Y'),0,0,'L',true);
+		$pdf->Cell(15,4,utf8_decode($rowE['hora']),0,0,'L',true);
+	} else {
+		$pdf->SetFillColor(183,183,183);
+		$pdf->SetFont('Arial','',8);
+		$pdf->Cell(47,4,utf8_decode($rowE['equipoLocal']),1,0,'L',false);
+		$pdf->Cell(6,4,'vs',1,0,'L',false);
+		$pdf->Cell(47,4,utf8_decode($rowE['equipoVisitante']),1,0,'L',false);
+		$pdf->Cell(50,4,utf8_decode(($rowE['cancha']== '' ? 'A confirmar' : $rowE['cancha'])),0,0,'L',false);
+		$pdf->Cell(15,4,$dia,0,0,'L',false);
+		$pdf->Cell(20,4,$date->format('d-m-Y'),0,0,'L',false);
+		$pdf->Cell(15,4,utf8_decode($rowE['hora']),0,0,'L',false);
 
+	}
 	
 		
 

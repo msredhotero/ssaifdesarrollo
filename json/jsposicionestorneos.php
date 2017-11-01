@@ -34,7 +34,6 @@ $mejora = 0;
 $arResultados = array('','','');
 $k = 0;
 
-$y = 0;
 
 	foreach ($resDatos as $row) {
 		//traigo los ultimos tres partidos
@@ -63,22 +62,16 @@ $y = 0;
 			}
 		}
 
-		if ($y == 2) {
-			array_push($ar,array('posicion'=>$row['posicion'], 'equipos'=>$row['equipo'],'mejora'=>$mejora,'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'],'ultimoresultado1'=>$arResultados[0],'ultimoresultado2'=>$arResultados[1],'ultimoresultado3'=>$arResultados[2], 'asterisco'=>1, 'observacion'=> 'La cancha no estab en condiciones', 'idequipo'=> $row['idequipo']));
-		} else {
-			if ($y == 3) {
-				array_push($ar,array('posicion'=>$row['posicion'], 'equipos'=>$row['equipo'],'mejora'=>$mejora,'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'],'ultimoresultado1'=>$arResultados[0],'ultimoresultado2'=>$arResultados[1],'ultimoresultado3'=>$arResultados[2], 'asterisco'=>1, 'observacion'=> 'Se suspende por lluvia', 'idequipo'=> $row['idequipo']));
-			} else {
-				array_push($ar,array('posicion'=>$row['posicion'], 'equipos'=>$row['equipo'],'mejora'=>$mejora,'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'],'ultimoresultado1'=>$arResultados[0],'ultimoresultado2'=>$arResultados[1],'ultimoresultado3'=>$arResultados[2], 'asterisco'=>0, 'observacion'=> '', 'idequipo'=> $row['idequipo']));
-			}
-		}
+
+		array_push($ar,array('posicion'=>$row['posicion'], 'equipos'=>$row['equipo'],'mejora'=>$mejora,'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'],'ultimoresultado1'=>$arResultados[0],'ultimoresultado2'=>$arResultados[1],'ultimoresultado3'=>$arResultados[2], 'asterisco'=>0, 'observacion'=> '', 'observacionestorneo'=> $row['observacionestorneo'], 'idequipo'=> $row['idequipo']));
+
 		
 		$arResultados[0] = '';
 		$arResultados[1] = '';
 		$arResultados[2] = '';
 		$k = 0;
 		$mejora = 0;
-		$y += 1;
+
 	}
 
 //echo "[".substr($cadJugadores,0,-1)."]";
