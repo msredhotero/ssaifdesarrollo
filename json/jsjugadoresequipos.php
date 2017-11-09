@@ -23,7 +23,7 @@ $ar = array();
 
 	while ($row = mysql_fetch_array($resTraerJugadores)) {
 		
-		array_push($ar,array('equipo'=>$row['equipo'], 'categoria'=>$row['categoria'],'division'=>$row['division']));
+		array_push($ar,array('equipo'=>$row['equipo'], 'categoria'=>$row['categoria'],'division'=>$row['division'], 'idequipo'=>$row['refequipos']));
 
 	}
 

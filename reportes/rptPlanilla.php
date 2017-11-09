@@ -292,18 +292,25 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->Cell(6,6,'',1,0,'C',false);
 		$pdf->Cell(7,6,'',1,0,'C',false);
 		$pdf->Cell(16,6,$rowJ['nrodocumento'],0,0,'C',false);
-		if (($habilitacion == 'HAB.')) { 
-			if ($tipoTorneo != 3) {
-				if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0) && ($pendiente == 0)) {
-				$pdf->Cell(22,6,'_____________',0,0,'C',false);
+		
+		
+		if (($rowJ['fechabaja'] != '1900-01-01') && ($rowJ['fechabaja'] < date('Y-m-d'))) {
+				$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
+		} else {
+				
+			if (($habilitacion == 'HAB.')) { 
+				if ($tipoTorneo != 3) {
+					if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0) && ($pendiente == 0)) {
+					$pdf->Cell(22,6,'_____________',0,0,'C',false);
+					} else {
+						$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
+					}
 				} else {
-					$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
+					$pdf->Cell(22,6,'_____________',0,0,'C',false);
 				}
 			} else {
-				$pdf->Cell(22,6,'_____________',0,0,'C',false);
+				$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
 			}
-		} else {
-			$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
 		}
 
 
@@ -421,19 +428,23 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->Cell(7,6,'',1,0,'C',false);
 		$pdf->Cell(16,6,$rowV['nrodocumento'],0,0,'C',false);
 		
-		
-		if (($habilitacion == 'HAB.')) { 
-			if ($tipoTorneo != 3) {
-				if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && ($pendienteB == 0)) {
-				$pdf->Cell(22,6,'_____________',0,0,'C',false);
+		if (($rowV['fechabaja'] != '1900-01-01') && ($rowV['fechabaja'] < date('Y-m-d'))) {
+				$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
+		} else {
+			
+			if (($habilitacion == 'HAB.')) { 
+				if ($tipoTorneo != 3) {
+					if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && ($pendienteB == 0)) {
+					$pdf->Cell(22,6,'_____________',0,0,'C',false);
+					} else {
+						$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
+					}
 				} else {
-					$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);		
+					$pdf->Cell(22,6,'_____________',0,0,'C',false);
 				}
 			} else {
-				$pdf->Cell(22,6,'_____________',0,0,'C',false);
+				$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
 			}
-		} else {
-			$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
 		}
 
 

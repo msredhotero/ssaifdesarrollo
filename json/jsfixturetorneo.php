@@ -65,7 +65,9 @@ $cad = '';
 							'juez2'=> $row['juez2'],
 							'refconectorlocal'=> $row['refconectorlocal'],
 							'refconectorvisitante'=> $row['refconectorvisitante'],
-							'dia' => $dia));
+							'dia' => $dia,
+							'esfinalizado'=>$row['esfinalizado'],
+							'espendienterevision'=>$row['espendienterevision']));
 							
 	}
 

@@ -45,6 +45,7 @@ $k = 0;
 			$k += 1;	
 		}
 		
+		$posicion += 1;
 		//obtengo el indice de la fecha anterior
 		//$indice = array_search($row['idequipo'],$resDatosExtra['idequipo'],true);
 		foreach ($resDatosExtra as $rowE) {
@@ -63,7 +64,7 @@ $k = 0;
 		}
 
 
-		array_push($ar,array('posicion'=>$row['posicion'], 'equipos'=>$row['equipo'],'mejora'=>$mejora,'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'],'ultimoresultado1'=>$arResultados[0],'ultimoresultado2'=>$arResultados[1],'ultimoresultado3'=>$arResultados[2], 'asterisco'=>0, 'observacion'=> '', 'observacionestorneo'=> $row['observacionestorneo'], 'idequipo'=> $row['idequipo']));
+		array_push($ar,array('posicion'=>$posicion, 'equipos'=>$row['equipo'],'mejora'=>$mejora,'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'],'ultimoresultado1'=>$arResultados[0],'ultimoresultado2'=>$arResultados[1],'ultimoresultado3'=>$arResultados[2], 'asterisco'=>($row['asterisco']=='' ? '0' : $row['asterisco']), 'observacion'=> $row['observaciones'], 'observacionestorneo'=> $row['observacionestorneo'], 'idequipo'=> $row['idequipo']));
 
 		
 		$arResultados[0] = '';

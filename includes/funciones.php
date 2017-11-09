@@ -166,7 +166,7 @@ class Servicios {
 			case 87:
 				$cantidad = 15;
 				$classMod = '';
-				$classVer = '';
+				$classVer = 'varborraracumulados';
 				$lblVer	  = 'Eliminar';
 				$classEli = 'varborraracumulados';
 				$idresultados = "resultados";

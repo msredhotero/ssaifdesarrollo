@@ -201,7 +201,7 @@ $numero = count($_POST);
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeAmarillas,1,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaLrillas'.$idJugador], $idCategoria, $idDivisiones);
 				}
 			} else {
-				
+
 				//analizo si en un supuesto caso anteriormente tenia una amarilla
 				if ($existeAmarillas != 0) {
 					$serviciosReferencias->eliminarMovimientosancionesPorSancionJugadorAcumuadasAmarillas($existeAmarillas);

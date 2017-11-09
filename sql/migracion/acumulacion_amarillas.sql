@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_local_octubre`.`dbsancionesfallosacumuladas`
+INSERT INTO `dbsancionesfallosacumuladas`
 (`idsancionfalloacumuladas`,
 `refsancionesjugadores`,
 `cantidadfechas`,

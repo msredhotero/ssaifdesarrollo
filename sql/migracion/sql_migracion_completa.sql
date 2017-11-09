@@ -1,4 +1,4 @@
-INSERT INTO `ssaif_local_octubre`.`dbarbitros`
+INSERT INTO `ssaif_local_noviembre`.`dbarbitros`
 (`idarbitro`,
 `nombrecompleto`,
 `telefonoparticular`,
@@ -14,22 +14,22 @@ SELECT `arbitros`.`arbitroid`,
     '',
     '',
     `arbitros`.`email`
-FROM `aif_backup_octubre`.`arbitros`;
+FROM `tempo000000002`.`arbitros`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbposiciontributaria`
+INSERT INTO `ssaif_local_noviembre`.`tbposiciontributaria`
 (`idposiciontributaria`,
 `posiciontributaria`,
 `activo`)
 SELECT `posicionestributarias`.`postributariaid`,
     `posicionestributarias`.`descripcion`,
     1
-FROM `aif_backup_octubre`.`posicionestributarias`;
+FROM `tempo000000002`.`posicionestributarias`;
 
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbcountries`
+INSERT INTO `ssaif_local_noviembre`.`dbcountries`
 (`idcountrie`,
 `nombre`,
 `cuit`,
@@ -64,25 +64,25 @@ SELECT `clubes`.`clubid`,
     '',
     '',
     ''
-FROM `aif_backup_octubre`.`clubes`;
+FROM `tempo000000002`.`clubes`;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`tbcanchas`
+INSERT INTO `ssaif_local_noviembre`.`tbcanchas`
 (`idcancha`,
 `refcountries`,
 `nombre`)
 SELECT c.`canchaid`,
     coalesce(min(cc.`clubid`),0),
     c.`descripcion`
-FROM `aif_backup_octubre`.`canchas` c
+FROM `tempo000000002`.`canchas` c
 left
-join aif_backup_octubre.relclubescanchas cc
+join tempo000000002.relclubescanchas cc
 on c.canchaid = cc.canchaid
 group by c.`canchaid`,c.`descripcion`;
 
 
-INSERT INTO `ssaif_local_octubre`.`dbcountriecanchas`
+INSERT INTO `ssaif_local_noviembre`.`dbcountriecanchas`
 (`idcountriecancha`,
 `refcountries`,
 `refcanchas`)
@@ -90,21 +90,21 @@ INSERT INTO `ssaif_local_octubre`.`dbcountriecanchas`
 SELECT '',
 cc.`clubid`,
 c.`canchaid`
-FROM `aif_backup_octubre`.`canchas` c
+FROM `tempo000000002`.`canchas` c
 inner
-join aif_backup_octubre.relclubescanchas cc
+join tempo000000002.relclubescanchas cc
 on c.canchaid = cc.canchaid;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbcategorias`
+INSERT INTO `ssaif_local_noviembre`.`tbcategorias`
 (`idtcategoria`,
 `categoria`)
 SELECT `categorias`.`categoriaid`,
     `categorias`.`descripcion`
-FROM `aif_backup_octubre`.`categorias`;
+FROM `tempo000000002`.`categorias`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbdias`
+INSERT INTO `ssaif_local_noviembre`.`tbdias`
 (`iddia`,
 `dia`)
 SELECT `tbdias`.`iddia`,
@@ -112,14 +112,14 @@ SELECT `tbdias`.`iddia`,
 FROM `ssaif_desa_host`.`tbdias`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbdivisiones`
+INSERT INTO `ssaif_local_noviembre`.`tbdivisiones`
 (`iddivision`,
 `division`)
 SELECT `divisiones`.`divisionid`,
     `divisiones`.`descripcion`
-FROM `aif_backup_octubre`.`divisiones`;
+FROM `tempo000000002`.`divisiones`;
 
-INSERT INTO `ssaif_local_octubre`.`tbdocumentaciones`
+INSERT INTO `ssaif_local_noviembre`.`tbdocumentaciones`
 (`iddocumentacion`,
 `descripcion`,
 `obligatoria`,
@@ -128,11 +128,11 @@ SELECT `documentacionjugadores`.`docjugadoresid`,
     `documentacionjugadores`.`descripcion`,
     `documentacionjugadores`.`obligatoria`,
     `documentacionjugadores`.`observaciones`
-FROM `aif_backup_octubre`.`documentacionjugadores`;
+FROM `tempo000000002`.`documentacionjugadores`;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`tbestadospartidos`
+INSERT INTO `ssaif_local_noviembre`.`tbestadospartidos`
 (`idestadopartido`,
 `descripcion`,
 `defautomatica`,
@@ -161,11 +161,11 @@ SELECT `estadospartidos`.`estadopartidoid`,
     `estadospartidos`.`visibleparaarbitros`,
     `estadospartidos`.`contabilizalocal`,
     `estadospartidos`.`contabilizavisitante`
-FROM `aif_backup_octubre`.`estadospartidos`
+FROM `tempo000000002`.`estadospartidos`
 where estadopartidoid > 0;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbfechas`
+INSERT INTO `ssaif_local_noviembre`.`tbfechas`
 (`idfecha`,
 `fecha`)
 SELECT `tbfechas`.`idfecha`,
@@ -173,7 +173,7 @@ SELECT `tbfechas`.`idfecha`,
 FROM `ssaif_desa_host`.`tbfechas`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbmotivoshabilitacionestransitorias`
+INSERT INTO `ssaif_local_noviembre`.`tbmotivoshabilitacionestransitorias`
 (`idmotivoshabilitacionestransitoria`,
 `inhabilita`,
 `descripcion`,
@@ -182,10 +182,10 @@ SELECT `motivoshabilitaciontransitoria`.`motivohabtransitoriaid`,
     `motivoshabilitaciontransitoria`.`inhabilitaalvencimiento`,
     `motivoshabilitaciontransitoria`.`descripcion`,
     `motivoshabilitaciontransitoria`.`docjugadoresid`
-FROM `aif_backup_octubre`.`motivoshabilitaciontransitoria`;
+FROM `tempo000000002`.`motivoshabilitaciontransitoria`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbpuntobonus`
+INSERT INTO `ssaif_local_noviembre`.`tbpuntobonus`
 (`idpuntobonus`,
 `descripcion`,
 `cantidadfechas`,
@@ -201,28 +201,28 @@ SELECT `puntobonus`.`puntobonusid`,
     `puntobonus`.`valoracomparar`,
     `puntobonus`.`puntosextra`,
     `puntobonus`.`consecutivas`
-FROM `aif_backup_octubre`.`puntobonus`;
+FROM `tempo000000002`.`puntobonus`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbtemporadas`
+INSERT INTO `ssaif_local_noviembre`.`tbtemporadas`
 (`idtemporadas`,
 `temporada`)
 SELECT `temporadas`.`temporadaid`,
     `temporadas`.`descripcion`
-FROM `aif_backup_octubre`.`temporadas`;
+FROM `tempo000000002`.`temporadas`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbtipocontactos`
+INSERT INTO `ssaif_local_noviembre`.`tbtipocontactos`
 (`idtipocontacto`,
 `tipocontacto`,
 `activo`)
 SELECT `tipocontactosclubes`.`tipocontactoid`,
     `tipocontactosclubes`.`descripcion`,
     1
-FROM `aif_backup_octubre`.`tipocontactosclubes`;
+FROM `tempo000000002`.`tipocontactosclubes`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbtipodocumentos`
+INSERT INTO `ssaif_local_noviembre`.`tbtipodocumentos`
 (`idtipodocumento`,
 `tipodocumento`)
 SELECT `tbtipodocumentos`.`idtipodocumento`,
@@ -230,17 +230,17 @@ SELECT `tbtipodocumentos`.`idtipodocumento`,
 FROM `ssaif_desa_host`.`tbtipodocumentos`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbtipojugadores`
+INSERT INTO `ssaif_local_noviembre`.`tbtipojugadores`
 (`idtipojugador`,
 `tipojugador`,
 `abreviatura`)
 SELECT `tipojugadores`.`tipojugadorid`,
     `tipojugadores`.`descripcion`,
     `tipojugadores`.`abreviatura`
-FROM `aif_backup_octubre`.`tipojugadores`;
+FROM `tempo000000002`.`tipojugadores`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbtiposanciones`
+INSERT INTO `ssaif_local_noviembre`.`tbtiposanciones`
 (`idtiposancion`,
 `descripcion`,
 `cantminfechas`,
@@ -261,18 +261,18 @@ SELECT `tiposanciones`.`tiposancionid`,
     `tiposanciones`.`cumpletodascategorias`,
     `tiposanciones`.`llevapendiente`,
     `tiposanciones`.`ocultardetallepublico`
-FROM `aif_backup_octubre`.`tiposanciones`;
+FROM `tempo000000002`.`tiposanciones`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbtipotorneo`
+INSERT INTO `ssaif_local_noviembre`.`tbtipotorneo`
 (`idtipotorneo`,
 `tipotorneo`)
 SELECT `formatostorneo`.`formatotorneoid`,
     `formatostorneo`.`descripcion`
-FROM `aif_backup_octubre`.`formatostorneo`;
+FROM `tempo000000002`.`formatostorneo`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbvaloreshabilitacionestransitorias`
+INSERT INTO `ssaif_local_noviembre`.`tbvaloreshabilitacionestransitorias`
 (`idvalorhabilitaciontransitoria`,
 `refdocumentaciones`,
 `descripcion`,
@@ -285,10 +285,10 @@ SELECT '',
     `documentacionjugadoresvalores`.`habilita`,
     `documentacionjugadoresvalores`.`esdefault`,
     valorid
-FROM `aif_backup_octubre`.`documentacionjugadoresvalores`;
+FROM `tempo000000002`.`documentacionjugadoresvalores`;
 
 
-INSERT INTO `ssaif_local_octubre`.`dbdefinicionescategoriastemporadas`
+INSERT INTO `ssaif_local_noviembre`.`dbdefinicionescategoriastemporadas`
 (`iddefinicioncategoriatemporada`,
 `refcategorias`,
 `reftemporadas`,
@@ -311,11 +311,11 @@ SELECT '',
     `definicionescategoriastemporadas`.`cantcambiosporpartido`,
     `definicionescategoriastemporadas`.`conreingreso`,
     `definicionescategoriastemporadas`.`observaciones`
-FROM `aif_backup_octubre`.`definicionescategoriastemporadas`;
+FROM `tempo000000002`.`definicionescategoriastemporadas`;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbdefinicionescategoriastemporadastipojugador`
+INSERT INTO `ssaif_local_noviembre`.`dbdefinicionescategoriastemporadastipojugador`
 (`iddefinicionescategoriastemporadastipojugador`,
 `refdefinicionescategoriastemporadas`,
 `reftipojugadores`,
@@ -332,17 +332,17 @@ SELECT '',
     dt.`cantjugadoresporequipo`,
     dt.`cantjugadoresencancha`,
     dt.`observaciones`
-FROM `aif_backup_octubre`.`definicionescategoriastemporadastipojugador` dt
+FROM `tempo000000002`.`definicionescategoriastemporadastipojugador` dt
 inner
-join	aif_backup_octubre.definicionescategoriastemporadas d
+join	tempo000000002.definicionescategoriastemporadas d
 on		d.categoriaid = dt.categoriaid and d.temporadaid = dt.temporadaid
 inner
-join	ssaif_local_octubre.dbdefinicionescategoriastemporadas t
+join	ssaif_local_noviembre.dbdefinicionescategoriastemporadas t
 on		d.categoriaid = t.refcategorias and d.temporadaid = t.reftemporadas;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbdefinicionessancionesacumuladastemporadas`
+INSERT INTO `ssaif_local_noviembre`.`dbdefinicionessancionesacumuladastemporadas`
 (`iddefinicionessancionesacumuladastemporadas`,
 `reftiposanciones`,
 `reftemporadas`,
@@ -353,11 +353,11 @@ SELECT '',
     `definicionessancionesacumuladastemporadas`.`temporadaid`,
     `definicionessancionesacumuladastemporadas`.`cantacumulada`,
     `definicionessancionesacumuladastemporadas`.`cantfechasacumplir`
-FROM `aif_backup_octubre`.`definicionessancionesacumuladastemporadas`;
+FROM `tempo000000002`.`definicionessancionesacumuladastemporadas`;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbtorneos`
+INSERT INTO `ssaif_local_noviembre`.`dbtorneos`
 (`idtorneo`,
 `descripcion`,
 `reftipotorneo`,
@@ -388,11 +388,11 @@ SELECT `torneos`.`torneoid`,
     `torneos`.`acumulatablaconformada`,
     `torneos`.`observaciones`,
     1
-FROM `aif_backup_octubre`.`torneos`;
+FROM `tempo000000002`.`torneos`;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbcontactos`
+INSERT INTO `ssaif_local_noviembre`.`dbcontactos`
 (`idcontacto`,
 `reftipocontactos`,
 `nombre`,
@@ -427,21 +427,21 @@ SELECT '',
 	`relclubescontactos`.clubid,
 	`relclubescontactos`.contactoid,
     `relclubescontactos`.tipocontactoid
-FROM `aif_backup_octubre`.`relclubescontactos`;
+FROM `tempo000000002`.`relclubescontactos`;
 
 
-INSERT INTO `ssaif_local_octubre`.`dbcountriecontactos`
+INSERT INTO `ssaif_local_noviembre`.`dbcountriecontactos`
 (`idcountriecontacto`,
 `refcountries`,
 `refcontactos`)
 SELECT '',
 	`dbcontactos`.`clubid`,
 	`dbcontactos`.`idcontacto`
-FROM `ssaif_local_octubre`.`dbcontactos`;
+FROM `ssaif_local_noviembre`.`dbcontactos`;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbequipos`
+INSERT INTO `ssaif_local_noviembre`.`dbequipos`
 (`idequipo`,
 `refcountries`,
 `nombre`,
@@ -460,20 +460,13 @@ SELECT `equipos`.`equipoid`,
     `equipos`.`fechaalta`,
     `equipos`.`fechabaja`,
     `equipos`.`activo`
-FROM `aif_backup_octubre`.`equipos`;
+FROM `tempo000000002`.`equipos`;
 
 
-UPDATE ssaif_local_octubre.dbequipos e
-JOIN aif_backup_octubre.equipos ee 
-ON ee.equipoid = e.idequipo
-join aif_backup_octubre.relclubescontactos re
-on	ee.contactoclubid = re.contactoid and ee.clubid = re.clubid
-join ssaif_local_octubre.dbcontactos cc
-on cc.clubid = re.clubid and cc.contactoid = re.contactoid and cc.tipocontactoid = re.tipocontactoid
-SET e.refcontactos = cc.idcontacto;
 
 
-INSERT INTO `ssaif_local_octubre`.`dbjugadores`
+
+INSERT INTO `ssaif_local_noviembre`.`dbjugadores`
 (`idjugador`,
 `reftipodocumentos`,
 `nrodocumento`,
@@ -496,10 +489,10 @@ SELECT `jugadores`.`jugadorid`,
     `jugadores`.`fechabaja`,
     `jugadores`.`clubid`,
     `jugadores`.`observaciones`
-FROM `aif_backup_octubre`.`jugadores`;
+FROM `tempo000000002`.`jugadores`;
 
 
-INSERT INTO `ssaif_local_octubre`.`dbjugadoresdocumentacion`
+INSERT INTO `ssaif_local_noviembre`.`dbjugadoresdocumentacion`
 (`idjugadordocumentacion`,
 `refjugadores`,
 `refdocumentaciones`,
@@ -510,16 +503,16 @@ SELECT '',
     s.`docjugadoresid`,
     d.habilita,
     s.`observaciones`
-FROM aif_backup_octubre.reljugadoresdocumentacionjugadores s
+FROM tempo000000002.reljugadoresdocumentacionjugadores s
     inner
-    join aif_backup_octubre.documentacionjugadoresvalores d
+    join tempo000000002.documentacionjugadoresvalores d
     on	d.docjugadoresid = s.docjugadoresid and d.valorid = s.valorid
     where s.docjugadoresid not in (1,2,6,7,9);
     /*where s.docjugadoresid in (1,2,6,7,9)*/
     
     
     
-INSERT INTO `ssaif_local_octubre`.`dbjugadoresdocumentacion`
+INSERT INTO `ssaif_local_noviembre`.`dbjugadoresdocumentacion`
 (`idjugadordocumentacion`,
 `refjugadores`,
 `refdocumentaciones`,
@@ -530,14 +523,14 @@ SELECT '',
     s.`docjugadoresid`,
     d.habilita,
     s.`observaciones`
-FROM aif_backup_octubre.reljugadoresdocumentacionjugadores s
+FROM tempo000000002.reljugadoresdocumentacionjugadores s
     inner
-    join aif_backup_octubre.documentacionjugadoresvalores d
+    join tempo000000002.documentacionjugadoresvalores d
     on	d.docjugadoresid = s.docjugadoresid and d.valorid = s.valorid
     where s.docjugadoresid in (1,2,6,7,9);
     
     
-INSERT INTO `ssaif_local_octubre`.`dbjugadoresvaloreshabilitacionestransitorias`
+INSERT INTO `ssaif_local_noviembre`.`dbjugadoresvaloreshabilitacionestransitorias`
 (`iddbjugadorvalorhabilitaciontransitoria`,
 `refjugadores`,
 `refvaloreshabilitacionestransitorias`)
@@ -546,18 +539,18 @@ SELECT
 s.`jugadorid`,
     v.idvalorhabilitaciontransitoria
     
-FROM aif_backup_octubre.reljugadoresdocumentacionjugadores s
+FROM tempo000000002.reljugadoresdocumentacionjugadores s
     inner
-    join aif_backup_octubre.documentacionjugadoresvalores d
+    join tempo000000002.documentacionjugadoresvalores d
     on	d.docjugadoresid = s.docjugadoresid and d.valorid = s.valorid
     inner
-    join ssaif_local_octubre.tbvaloreshabilitacionestransitorias v
+    join ssaif_local_noviembre.tbvaloreshabilitacionestransitorias v
     on	v.valorviejo = d.valorid and v.refdocumentaciones = s.docjugadoresid
     where s.docjugadoresid not in (1,2,6,7,9) ;
     
     
     
-INSERT INTO `ssaif_local_octubre`.`dbjugadoresmotivoshabilitacionestransitorias`
+INSERT INTO `ssaif_local_noviembre`.`dbjugadoresmotivoshabilitacionestransitorias`
 (`iddbjugadormotivohabilitaciontransitoria`,
 `reftemporadas`,
 `refjugadores`,
@@ -579,17 +572,17 @@ h.`temporadaid`,
     h.`fechalimhabtransitoria`,
     h.`observaciones`
 
-FROM `aif_backup_octubre`.`habilitacionestranjugadores` h
+FROM `tempo000000002`.`habilitacionestranjugadores` h
 inner
-join	aif_backup_octubre.equipos e
+join	tempo000000002.equipos e
 on		e.equipoid = h.equipoid
 inner
-join	ssaif_local_octubre.tbmotivoshabilitacionestransitorias t
+join	ssaif_local_noviembre.tbmotivoshabilitacionestransitorias t
 on		t.idmotivoshabilitacionestransitoria = h.motivohabtransitoriaid;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbconector`
+INSERT INTO `ssaif_local_noviembre`.`dbconector`
 (`idconector`,
 `refjugadores`,
 `reftipojugadores`,
@@ -606,12 +599,12 @@ SELECT '',
 	e.categoriaid,
 	(case when j.clubid <> e.clubid then 1 else 0 end),
 	1
-FROM `aif_backup_octubre`.`reljugadoresequipos` je
+FROM `tempo000000002`.`reljugadoresequipos` je
 inner
-join	aif_backup_octubre.equipos e
+join	tempo000000002.equipos e
 on		je.equipoid = e.equipoid
 inner
-join	aif_backup_octubre.jugadores j
+join	tempo000000002.jugadores j
 on		j.jugadorid = je.jugadorid;
 
 
@@ -635,7 +628,7 @@ WHERE p.idfixture = pp.partidoid
 AND p.fecha > '2017-04-01'
 
 */
-INSERT INTO `ssaif_local_octubre`.`dbfixture`
+INSERT INTO `ssaif_local_noviembre`.`dbfixture`
 (`idfixture`,
 `reftorneos`,
 `reffechas`,
@@ -674,11 +667,11 @@ SELECT `partidos`.`partidoid`,
     `partidos`.`golesvisita`,
     `partidos`.`observaciones`,
     `partidos`.`publicar`
-FROM `aif_backup_octubre`.`partidos`;
+FROM `tempo000000002`.`partidos`;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`predio_menu`
+INSERT INTO `ssaif_local_noviembre`.`predio_menu`
 (`idmenu`,
 `url`,
 `icono`,
@@ -699,10 +692,10 @@ SELECT `predio_menu`.`idmenu`,
     `predio_menu`.`administracion`,
     `predio_menu`.`torneo`,
     `predio_menu`.`reportes`
-FROM `ssaif_local_octubre_hosting`.`predio_menu`;
+FROM `ssaif_local_octubre_hosting2`.`predio_menu`;
 
 
-INSERT INTO `ssaif_local_octubre`.`tbroles`
+INSERT INTO `ssaif_local_noviembre`.`tbroles`
 (`idrol`,
 `descripcion`,
 `activo`)
@@ -712,7 +705,7 @@ SELECT `tbroles`.`idrol`,
 FROM `ssaif_local_octubre_hosting`.`tbroles`;
 
 
-INSERT INTO `ssaif_local_octubre`.`dbtorneopuntobonus`
+INSERT INTO `ssaif_local_noviembre`.`dbtorneopuntobonus`
 (`idtorneopuntobonus`,
 `reftorneos`,
 `refpuntobonus`)
@@ -720,11 +713,11 @@ SELECT '',
 	`reltorneospuntobonus`.`torneoid`,
 	`reltorneospuntobonus`.`puntobonusid`
     
-FROM `aif_backup_octubre`.`reltorneospuntobonus`;
+FROM `tempo000000002`.`reltorneospuntobonus`;
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbusuarios`
+INSERT INTO `ssaif_local_noviembre`.`dbusuarios`
 (`idusuario`,
 `usuario`,
 `password`,
@@ -737,10 +730,10 @@ SELECT `dbusuarios`.`idusuario`,
     `dbusuarios`.`refroles`,
     `dbusuarios`.`email`,
     `dbusuarios`.`nombrecompleto`
-FROM `ssaif_local_octubre_hosting`.`dbusuarios`;
+FROM `ssaif_local_noviembre_hosting`.`dbusuarios`;
 
 
-INSERT INTO `ssaif_local_octubre`.`dbgoleadores`
+INSERT INTO `ssaif_local_noviembre`.`dbgoleadores`
 (`idgoleador`,
 `refjugadores`,
 `reffixture`,
@@ -758,17 +751,17 @@ SELECT '',
     (case when ip.incidenciapartidoid = 1 then pd.valor else 0 end) as goles,
     (case when ip.incidenciapartidoid = 2 then pd.valor else 0 end) as engoles
 FROM
-    aif_backup_octubre.partidosdetalle pd
+    tempo000000002.partidosdetalle pd
 inner
-join	aif_backup_octubre.incidenciaspartidos ip
+join	tempo000000002.incidenciaspartidos ip
 on		pd.incidenciapartidoid = ip.incidenciapartidoid
 inner
-join    aif_backup_octubre.equipos e
+join    tempo000000002.equipos e
 on		e.equipoid = pd.equipoid
 where	ip.incidenciapartidoid in (1,2);
 
 
-INSERT INTO `ssaif_local_octubre`.`dbsancionesjugadores`
+INSERT INTO `ssaif_local_noviembre`.`dbsancionesjugadores`
 (`idsancionjugador`,
 `reftiposanciones`,
 `refjugadores`,
@@ -790,15 +783,15 @@ SELECT s.`sancionjugadorid`,
     s.`categoriasancionorigenid`,
     e.divisionid,
     s.`sancionfalloid`
-FROM `aif_backup_octubre`.`sancionesjugadores` s
+FROM `tempo000000002`.`sancionesjugadores` s
 inner
-join	aif_backup_octubre.equipos e
+join	tempo000000002.equipos e
 on		s.equipoid = e.equipoid;
 
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbsancionesfallos`
+INSERT INTO `ssaif_local_noviembre`.`dbsancionesfallos`
 (`idsancionfallo`,
 `refsancionesjugadores`,
 `cantidadfechas`,
@@ -822,10 +815,10 @@ SELECT `sancionesfallos`.`sancionfalloid`,
     `sancionesfallos`.`pendfallo`,
     `sancionesfallos`.`generadaporacumulacion`,
     `sancionesfallos`.`observaciones`
-FROM `aif_backup_octubre`.`sancionesfallos`;
+FROM `tempo000000002`.`sancionesfallos`;
 
 
-INSERT INTO `ssaif_local_octubre`.`dbpenalesjugadores`
+INSERT INTO `ssaif_local_noviembre`.`dbpenalesjugadores`
 (`idpenaljugador`,
 `refjugadores`,
 `reffixture`,
@@ -847,17 +840,17 @@ SELECT '',
     (case when ip.incidenciapartidoid = 6 then pd.valor else 0 end) as penalerrado,
     (case when ip.incidenciapartidoid = 5 then pd.valor else 0 end) as penalatajado
 FROM
-    aif_backup_octubre.partidosdetalle pd
+    tempo000000002.partidosdetalle pd
 inner
-join	aif_backup_octubre.incidenciaspartidos ip
+join	tempo000000002.incidenciaspartidos ip
 on		pd.incidenciapartidoid = ip.incidenciapartidoid
 inner
-join    aif_backup_octubre.equipos e
+join    tempo000000002.equipos e
 on		e.equipoid = pd.equipoid
 where	ip.incidenciapartidoid in (4,5,6);
 
 
-INSERT INTO ssaif_local_octubre.dbminutosjugados
+INSERT INTO ssaif_local_noviembre.dbminutosjugados
 (`idminutojugado`,
 `refjugadores`,
 `reffixture`,
@@ -873,17 +866,17 @@ SELECT '',
     e.divisionid,
     pd.valor as minutos
 FROM
-    aif_backup_octubre.partidosdetalle pd
+    tempo000000002.partidosdetalle pd
 inner
-join	aif_backup_octubre.incidenciaspartidos ip
+join	tempo000000002.incidenciaspartidos ip
 on		pd.incidenciapartidoid = ip.incidenciapartidoid
 inner
-join    aif_backup_octubre.equipos e
+join    tempo000000002.equipos e
 on		e.equipoid = pd.equipoid
 where	ip.incidenciapartidoid in (3);
 
 
-INSERT INTO `ssaif_local_octubre`.`dbmejorjugador`
+INSERT INTO `ssaif_local_noviembre`.`dbmejorjugador`
 (`idmejorjugador`,
 `refjugadores`,
 `reffixture`,
@@ -897,18 +890,18 @@ SELECT '',
     e.categoriaid,
     e.divisionid
 FROM
-    aif_backup_octubre.partidosdetalle pd
+    tempo000000002.partidosdetalle pd
 inner
-join	aif_backup_octubre.incidenciaspartidos ip
+join	tempo000000002.incidenciaspartidos ip
 on		pd.incidenciapartidoid = ip.incidenciapartidoid
 inner
-join    aif_backup_octubre.equipos e
+join    tempo000000002.equipos e
 on		e.equipoid = pd.equipoid
 where	ip.incidenciapartidoid in (8);
 
 
 
-INSERT INTO `ssaif_local_octubre`.`dbsancionesfechascumplidas`
+INSERT INTO `ssaif_local_noviembre`.`dbsancionesfechascumplidas`
 (`idsancionfechacumplida`,
 `reffixture`,
 `refjugadores`,
@@ -923,12 +916,12 @@ SELECT
 	1,
 	sc.`sancionfalloid`,
 	0
-FROM `aif_backup_octubre`.`partidoscumplimientosanciones` sc
+FROM `tempo000000002`.`partidoscumplimientosanciones` sc
 inner
-join	aif_backup_octubre.sancionesfallos sf
+join	tempo000000002.sancionesfallos sf
 on 		sf.sancionfalloid = sc.sancionfalloid
 inner
-join	aif_backup_octubre.sancionesjugadores sj
+join	tempo000000002.sancionesjugadores sj
 on		sj.sancionjugadorid = sf.sancionjugadorid
 
 group by sc.`partidoidcumplimiento`,
