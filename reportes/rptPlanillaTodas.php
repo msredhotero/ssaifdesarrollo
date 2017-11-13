@@ -76,7 +76,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 	//$fechaPartido				= mysql_result($resEquipos,0,'fechapartidocomun');
 
 
-	$numeroDia = date('w', strtotime(mysql_result($resEquipos,0,'fechapartidocomun')));
+	$numeroDia = date('w', strtotime(mysql_result($resEquiposAux,0,'fechapartidocomun')));
 	
 	switch ($numeroDia) {
 		case 0:

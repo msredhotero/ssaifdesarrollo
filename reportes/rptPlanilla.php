@@ -62,7 +62,7 @@ $hora						= mysql_result($resDefTemp,0,'hora');
 $fechaPartido				= mysql_result($resEquiposAux,0,'fechapartido');
 
 
-$numeroDia = date('w', strtotime(mysql_result($resEquipos,0,'fechapartidocomun')));
+$numeroDia = date('w', strtotime(mysql_result($resEquiposAux,0,'fechapartidocomun')));
 
 switch ($numeroDia) {
 	case 0:

@@ -32,6 +32,14 @@ switch ($accion) {
 		registrar($serviciosUsuarios);
         break;
 
+/* administracion */
+
+	case 'resetearEstudioMedico':
+		resetearEstudioMedico($serviciosReferencias);
+		break;
+
+
+/* fin */
 
 /* PARA Tipocontactos */
 
@@ -512,6 +520,17 @@ case 'eliminarSancionesfallosacumuladas':
 }
 
 /* Fin */
+
+
+/* administracion */
+
+function resetearEstudioMedico($serviciosReferencias) {
+	$res = 	$serviciosReferencias->resetearEstudioMedico();
+	echo $res;
+}
+
+
+/* fin */
 
 
 /*****		Llenar Combos con otros ******/

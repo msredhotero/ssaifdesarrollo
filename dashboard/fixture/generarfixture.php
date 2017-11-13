@@ -1019,6 +1019,17 @@ padding-bottom: 10px;
 	$( "#datepicker18" ).datepicker({ minDate: "", maxDate: "+19M +10D" });
 	$( "#datepicker19" ).datepicker({ minDate: "", maxDate: "+20M +10D" });
 	$( "#datepicker20" ).datepicker({ minDate: "", maxDate: "+21M +10D" });
+	$( "#datepicker21" ).datepicker({ minDate: "", maxDate: "+22M +10D" });
+	$( "#datepicker22" ).datepicker({ minDate: "", maxDate: "+23M +10D" });
+	$( "#datepicker23" ).datepicker({ minDate: "", maxDate: "+24M +10D" });
+	$( "#datepicker24" ).datepicker({ minDate: "", maxDate: "+25M +10D" });
+	$( "#datepicker25" ).datepicker({ minDate: "", maxDate: "+26M +10D" });
+	$( "#datepicker26" ).datepicker({ minDate: "", maxDate: "+27M +10D" });
+	$( "#datepicker27" ).datepicker({ minDate: "", maxDate: "+28M +10D" });
+	$( "#datepicker28" ).datepicker({ minDate: "", maxDate: "+29M +10D" });
+	$( "#datepicker29" ).datepicker({ minDate: "", maxDate: "+30M +10D" });
+	$( "#datepicker30" ).datepicker({ minDate: "", maxDate: "+31M +10D" });
+	$( "#datepicker31" ).datepicker({ minDate: "", maxDate: "+32M +10D" });
   });
   </script>
 

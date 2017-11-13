@@ -6053,7 +6053,7 @@ e.nombre,
 from dbequipos e 
 inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
 where t.idtorneo = ".$idTorneo."
-order by 1"; 
+order by 2"; 
 $res = $this->query($sql,0); 
 return $res; 
 }
@@ -12052,6 +12052,80 @@ function verificaHabilitacionDeportiva($refjugador, $refcategoria, $reftemporada
 }
 
 /***************************           FIN         ******************************/
+
+
+/********** administracion  ***********///
+
+function resetearEstudioMedico() {
+	$sqlDocu = "update dbjugadoresdocumentacion set valor=0 where refdocumentaciones = 5";
+	$this->query($sqlDocu,0);
+	$sqlValores = "update dbjugadoresvaloreshabilitacionestransitorias set refvaloreshabilitacionestransitorias=361 where refvaloreshabilitacionestransitorias = 362";
+	$this->query($sqlValores,0);
+	$filasAfectadas = mysql_affected_rows();
+	
+	echo $filasAfectadas;
+		
+}
+
+/**********  fin   ********************///
+
+
+/* PARA Jugadoresclub */
+
+function insertarJugadoresclub($refjugadores,$fechabaja,$articulo,$numeroserielote,$temporada,$refcountries) { 
+$sql = "insert into dbjugadoresclub(idjugadorclub,refjugadores,fechabaja,articulo,numeroserielote,temporada,refcountries) 
+values ('',".$refjugadores.",".$fechabaja.",".$articulo.",'".utf8_decode($numeroserielote)."',".$temporada.",".$refcountries.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarJugadoresclub($id,$refjugadores,$fechabaja,$articulo,$numeroserielote,$temporada,$refcountries) { 
+$sql = "update dbjugadoresclub 
+set 
+refjugadores = ".$refjugadores.",fechabaja = ".$fechabaja.",articulo = ".$articulo.",numeroserielote = '".utf8_decode($numeroserielote)."',temporada = ".$temporada.",refcountries = ".$refcountries." 
+where idjugadorclub =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarJugadoresclub($id) { 
+$sql = "delete from dbjugadoresclub where idjugadorclub =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresclub() { 
+$sql = "select 
+jc.idjugadorclub,
+j.apellido,
+j.nombres,
+j.nrodocumento,
+(case when jc.fechabaja=1 then 'Si' else 'No' end) as fechabaja,
+(case when jc.articulo=1 then 'Si' else 'No' end) as articulo,
+jc.numeroserielote,
+jc.temporada,
+jc.refcountries,
+jc.refjugadores
+from dbjugadoresclub jc
+inner join dbjugadores j on j.idjugador = jc.refjugadores
+inner join dbcountries c on c.idcountrie = jc.refcountries 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerJugadoresclubPorId($id) { 
+$sql = "select idjugadorclub,refjugadores,(case when fechabaja=1 then 'Si' else 'No' end) as fechabaja,(case when articulo=1 then 'Si' else 'No' end) as articulo,numeroserielote,temporada,refcountries from dbjugadoresclub where idjugadorclub =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbjugadoresclub*/
 
 /************      FIN        **********************************************/
 

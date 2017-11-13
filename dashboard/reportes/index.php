@@ -582,9 +582,9 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         	<li>
                     			<button type="button" class="btn btn-success" id="rptRP" style="margin-left:0px;">Generar</button>
                             </li>
-                            <!--<li>
-                        		<button type="button" class="btn btn-default" id="rptCJExcel" style="margin-left:0px;">Generar Excel</button>
-                            </li>-->
+                            <li>
+                        		<button type="button" class="btn btn-info" id="rptJugadoresPorClub" style="margin-left:0px;">Cargar Planilla Jugadores Por Countries</button>
+                            </li>
                         </ul>
                 </div>
                 
@@ -716,6 +716,15 @@ $(document).ready(function(){
 	$('#fed1').hide();
 	$('#fmj1').hide();
 	$('#fmn1').hide();
+	
+	$('#rptJugadoresPorClub').click(function(e) {
+		if ($('#refcountries1').val() != 0) {
+        	url = "../jugadoresclub/index.php?id=" + $('#refcountries1').val();
+			$(location).attr('href',url);
+		} else {
+			alert('Debe seleccionar un country!!.');	
+		}
+    });
 				
 	
 	$('#tiporeporte').change(function() {

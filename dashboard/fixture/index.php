@@ -230,6 +230,7 @@ $refTorneos		=	$serviciosReferencias->traerTorneos();
                                     <th style="text-align:center">Ver</th>
                                     <th style="text-align:center">Posiciones</th>
                                     <th style="text-align:center">Generar Fixture</th>
+                                    <th style="text-align:center">Fixture Manual</th>
                                     <th style="text-align:center">Correr Fecha</th>
                                 </tr>
                             </thead>
@@ -249,6 +250,7 @@ $refTorneos		=	$serviciosReferencias->traerTorneos();
                                     <td align="center"><img src="../../imagenes/verIco.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varver"></td>
                                     <td align="center"><img src="../../imagenes/posicionesfix.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varposiciones"></td>
                                     <td align="center"><?php if ($existe < 1) { ?><img src="../../imagenes/Icon_Calendar.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="vargenerar"><?php } ?></td>
+                                    <td align="center"><?php if ($existe < 1) { ?><img src="../../imagenes/Icon_Calendar.png" style="cursor:pointer;" id="<?php echo $rowC['idtorneo']; ?>" class="varmanual"><?php } ?></td>
                                     <td align="center"><?php if ($existe > 0) { ?><span id="<?php echo $rowC['idtorneo']; ?>" class="glyphicon glyphicon-transfer correrFecha" style="cursor:pointer;"></span><?php } ?></td>
                                     
                                 </tr>
@@ -383,8 +385,8 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});
         
-        $('#fixtureM').click( function() {
-		url = "fixturemanual.php";
+    $('.varmanual').click( function() {
+		url = "fixturemanual.php?id="+$(this).attr("id");
 		$(location).attr('href',url);
 	});
 	
