@@ -37,17 +37,32 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadis
 	$fecha = date('Y-m-d');
 	
 	$idTorneo = $_POST['idtorneo'];
+	$cantEquipos = $_POST['cantidadEquipos'];
+	$cantPartidos = $_POST['cantidadPartidos'];
+
+
+
+	$lstEquipos = array();
+	$cadModulo = 'modulo';
+	$cadModuloEquipo = 'equipoModulo';
+
+	function devolverIdEquipo($modulo, $cantEquipos) {
+		for ($i=1;$i<= $cantEquipos;$i++) {
+			if ($_POST['modulo'.$i] == $modulo) {
+				return $_POST['equipoModulo'.$i];
+			}
+		}
+
+		return 0;	
+	}
+	
+
 	
 	$resTorneos = $serviciosReferencias->traerTorneosPorId($idTorneo);
 	$tipoTorneo = mysql_result($resTorneos,0,'reftipotorneo');
 	
 	$resEquipos = $serviciosReferencias->traerEquipoPorTorneo($idTorneo);
 	
-	if ((mysql_num_rows($resEquipos) % 2) == 0) {
-		$cantidadFechas = ($resEquipos / 2) * $tipoTorneo;	
-	} else {
-		$cantidadFechas = (($resEquipos / 2) + 1) * $tipoTorneo;
-	}
 	
 	$cadEquipoLocal = 'refconectorlocal';
 	$cadEquipoVisitante = 'refconectorvisitante';
@@ -69,15 +84,15 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadis
 	$refarbitros		= 'NULL';
 	
 	
-for ($i=1;$i<=$cantidadFechas;$i++) {
-    $idEquipoLocal      = $_POST[$cadEquipoLocal.$i];
-    $idEquipoVisitante  = $_POST[$cadEquipoVisitante.$i];
-    
+for ($i=1;$i<=$cantPartidos;$i++) {
+    $idEquipoLocal      = devolverIdEquipo($_POST[$cadEquipoLocal.$i], $cantEquipos);
+    $idEquipoVisitante  = devolverIdEquipo($_POST[$cadEquipoVisitante.$i], $cantEquipos);
+    //die(var_dump($idEquipoLocal));
     $resHorario     = $_POST[$cadHorario.$i];
     $resRefFechas 	= $_POST[$cadRefFechas.$i];
 	$resFechas 		= $_POST[$cadFechas.$i];
     
-    if (($idEquipoLocal != 0) && ($idEquipoVisitante != 0)) {
+    if (($idEquipoLocal != 0) || ($idEquipoVisitante != 0)) {
         if ($idEquipoLocal != $idEquipoVisitante) {
             $serviciosReferencias->insertarFixture($idTorneo,$resRefFechas,$idEquipoLocal,$idEquipoVisitante,$refarbitros,'','','NULL',$resFechas,$resHorario,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,'',0);
 

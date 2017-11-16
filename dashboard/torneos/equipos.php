@@ -298,6 +298,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <button type="submit" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
                     <li>
+                        <button type="button" class="btn btn-success" id="manual" style="margin-left:0px;">Generar Manual</button>
+                    </li>
+                    <li>
                         <button type="button" class="btn btn-default volver" id="volver" style="margin-left:0px;">Volver</button>
                     </li>
                 </ul>
@@ -331,7 +334,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	
+	$("#manual").click(function(){
+        $(".formulario").attr("action","../fixture/fixturemanual.php");
+    });
 	$('.varver').click(function(event){	
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {

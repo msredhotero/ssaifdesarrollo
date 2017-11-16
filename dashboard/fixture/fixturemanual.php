@@ -30,35 +30,71 @@ $fecha = date('Y-m-d');
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Estadisticas",$_SESSION['refroll_predio'],'');
 
 
-$idTorneo = $_GET['id'];
 
-$fechainicio = date('d/m/Y');
+    $numero = count($_POST);
+    $tags = array_keys($_POST);// obtiene los nombres de las varibles
+    $valores = array_values($_POST);// obtiene los valores de las varibles
+    $cantEncontrados = 0;
+    $cantidad = 1;
+    $idEquipos = 0;
+    
+    $cadWhere = '';
+    $cantEquipos = array();
+    
+    for($i=0;$i<$numero;$i++){
+        
+        if (strpos($tags[$i],"equipo") !== false) {
+            
+            if (isset($valores[$i])) {
+                
+                $idEquipos = str_replace("equipo","",$tags[$i]);
+                
+                $cadWhere .= $idEquipos.",";
+                array_push($cantEquipos,$cantidad);
+                $cantidad += 1;
+            }
+        }
+    }
+    
+    if (($cantidad%2)==0) {
+        array_push($cantEquipos,$cantidad);
+    }
+
+
+$idTorneo = $_POST['idtorneo'];
+$fechainicio = $_POST['fechainicio'];
+$hora = $_POST['hora'];
 
 $resTorneos = $serviciosReferencias->traerTorneosPorId($idTorneo);
 $tipoTorneo = mysql_result($resTorneos,0,'reftipotorneo');
 
-$resEquipos = $serviciosReferencias->traerEquipoPorTorneo($idTorneo);
+$resEquipos = $serviciosReferencias->traerEquiposPorEquipoIn(substr($cadWhere,0,-1));
+$lstEquipos = $serviciosReferencias->traerEquiposPorEquipoIn(substr($cadWhere,0,-1));
 
-if ((mysql_num_rows($resEquipos) % 2) == 0) {
-	$cantidadFechas = ($resEquipos / 2) * $tipoTorneo;	
+if ((count($cantEquipos) % 2)==0) {
+    $cantidadFechas = (count($cantEquipos)-1) ;
 } else {
-	$cantidadFechas = (($resEquipos / 2) + 1) * $tipoTorneo;
+    $cantidadFechas = (count($cantEquipos));
 }
+
+$filas = count($cantEquipos)/2;
 
 $idCategoria = mysql_result($resTorneos,0,'refcategorias');
 
-$idTemporada = mysql_result($serviciosReferencias->traerUltimaTemporada(),0,0);
+//$idTemporada = mysql_result($serviciosReferencias->traerUltimaTemporada(),0,0);
 
 // dia que se juega los partidos
-$resDias = $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria);
+//$resDias = $serviciosReferencias->traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria);
 
 // dia que ponen para comenzar el torneo
-$fechainicio = $serviciosFunciones->formatearFechas($fechainicio);
-$numeroDia = date('w', strtotime($fechainicio));
+//$fechainicio = $serviciosFunciones->formatearFechas($fechainicio);
+//$numeroDia = date('w', strtotime($fechainicio));
 
 //die(var_dump($serviciosFunciones->formatearFechas($fechainicio)));
 
+$fechaNueva = date_create($fechainicio);
 
+/*
 switch ($numeroDia) {
 	case 0:
 		$numeroDia = 7;
@@ -82,8 +118,9 @@ switch ($numeroDia) {
 		$numeroDia = 6;
 		break;	
 }
+*/
 //die(var_dump($numeroDia));
-
+/*
 $fechaNueva = date_create($fechainicio);
 
 if (mysql_num_rows($resDias)>0) {
@@ -105,7 +142,7 @@ if (mysql_num_rows($resDias)>0) {
 } else {
 	$hora = '15:30';
 }
-
+*/
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbfixture";
@@ -189,8 +226,8 @@ $fechainicio = $fechaNueva->format('Y-m-d');
     
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
-	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <!-- Latest compiled and minified JavaScript -->
+	<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+     Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="../../css/bootstrap-timepicker.css">
@@ -293,16 +330,80 @@ $fechainicio = $fechaNueva->format('Y-m-d');
                 	<p>Tipo de Torneo: <?php echo mysql_result($serviciosReferencias->traerTipotorneoPorId($tipoTorneo),0,1);?></p>
                 
                 </div>
+
+
+                <div class="row" style="margin-left:5px; margin-right:5px;">
+                <div class="col-md-6">
+                <table class="table table-bordered table-responsive">
+                    <thead>
+                        <tr>
+                            <th>
+                                Numero de Equipo
+                            </th>
+                            <th>
+                                Equipo
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            $canE = 1;
+                            
+                            while ($row = mysql_fetch_array($lstEquipos)) {
+                        ?>
+                        <tr>
+                            <td>
+                                <input style="text-align:center;" type="text" id="modulo<?php echo $canE; ?>" name="modulo<?php echo $canE; ?>" value="<?php echo $canE; ?>"/>
+                            </td>
+                            <td>
+                                <select class="form-control" id="equipoModulo<?php echo $canE; ?>" name="equipoModulo<?php echo $canE; ?>">
+                                    <option value="<?php echo $row[0]; ?>"><?php echo $row[2]; ?></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <?php
+                            $canE += 1;
+                            }
+                            
+                            if (($cantidad%2)==0) {
+                        ?>
+                            <tr>
+                                <td>
+                                    <input class="form-control" style="text-align:center;" type="text" id="modulo<?php echo $canE; ?>" name="modulo<?php echo $canE; ?>" value="<?php echo $canE; ?>"/>
+                                </td>
+                                <td>
+                                    <select class="form-control" id="equipoModulo<?php echo $canE; ?>" name="equipoModulo<?php echo $canE; ?>">
+                                        <option value="0">Vacio</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        <?php       
+                            }
+                        ?>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
                     <div class="row" style="margin-left:25px; margin-right:25px;">
-                        <?php for ($i=1;$i<= $cantidadFechas;$i++) { ?>
+                        <?php 
+
+                        $total = 1;
+                        $k = 1;
+                        $darVuelta = 1;
+                        $totalGral = 1;
+                        $tabulador = 5;
+                        $cantidadFinal = $cantidadFechas * $filas;
+
+                        for ($i=0;$i< $cantidadFechas * $tipoTorneo;$i++) { 
+                            echo '<h3>Fecha '.($i + 1).'</h3>';
+
+                            for ($m=0;$m<$filas;$m++) {
+                        ?>
                         <div class="form-group col-md-3">
                         <label class="control-label" style="text-align:left" for="lbl">Equipo Local</label>
                             <div class="input-group col-md-12">
-                                <select type="text" id="refconectorlocal<?php echo $i; ?>" name="refconectorlocal<?php echo $i; ?>" class="form-control"/>
-                                    <option value="0">-- Seleccionar --</option>
-                                    <?php echo $cadRef; ?>
-                            
-                                </select>
+                                <input tabindex="<?php echo $tabulador; ?>" type="text" id="refconectorlocal<?php echo $k; ?>" name="refconectorlocal<?php echo $k; ?>" class="form-control" value=""/>
                             </div>
                         </div>
 
@@ -312,7 +413,7 @@ $fechainicio = $fechaNueva->format('Y-m-d');
                         <div class="form-group col-md-2">
                         <label class="control-label" style="text-align:left" for="lbl">Hora</label>
                             <div class="input-group col-md-12">
-                                <input type="text" id="horario<?php echo $i; ?>" name="horario<?php echo $i; ?>" class="form-control hora" value="<?php echo $hora; ?>"/>
+                                <input type="text" id="horario<?php echo $k; ?>" name="horario<?php echo $k; ?>" class="form-control hora" value="<?php echo $hora; ?>"/>
                             </div>
                         </div>
 
@@ -323,7 +424,7 @@ $fechainicio = $fechaNueva->format('Y-m-d');
                         <div class="form-group col-md-2">
                         <label class="control-label" style="text-align:left" for="lbl">Fecha Juego</label>
                             <div class="input-group col-md-12">
-                                <input type="text" class="form-control" id="datepicker<?php echo $i; ?>" name="datepicker<?php echo $i; ?>" value="<?php echo $fechainicio; ?>" />
+                                <input type="text" class="form-control" id="datepicker<?php echo $k; ?>" name="datepicker<?php echo $k; ?>" value="<?php echo $fechainicio; ?>" />
                             </div>
                         </div>
 
@@ -333,24 +434,25 @@ $fechainicio = $fechaNueva->format('Y-m-d');
                         <div class="form-group col-md-3">
                         <label class="control-label" style="text-align:left" for="lbl">Equipo Visitante</label>
                             <div class="input-group col-md-12">
-                                <select type="text" id="refconectorvisitante<?php echo $i; ?>" name="refconectorvisitante<?php echo $i; ?>" class="form-control" required/>
-                                    <option value="0">-- Seleccionar --</option>
-                                    <?php echo $cadRef; ?>
-                            
-                                </select>
+                                <input tabindex="<?php echo ($tabulador + 1); ?>" type="text" id="refconectorvisitante<?php echo $k; ?>" name="refconectorvisitante<?php echo $k; ?>" class="form-control" value="" />
                             </div>
                         </div>
                         
                         <div class="form-group col-md-2">
                             <label class="control-label" style="text-align:left" for="lbl">Fecha</label>
                             <div class="input-group col-md-12">
-                                <select class="form-control" id="reffechas<?php echo $i; ?>" name="reffechas<?php echo $i; ?>">
-                                    <?php echo $cadRef2; ?>
+                                <select class="form-control" id="reffechas<?php echo $k; ?>" name="reffechas<?php echo $k; ?>">
+                                    <option value="<?php echo $i + 1; ?>">Fecha <?php echo $i + 1; ?></option>
                                 </select>
                             </div>
                         </div>
                         
                         <?php
+                            $tabulador += 2;
+                            $k += 1;
+                        }
+                        $fechainicio = strtotime ( '+7 day' , strtotime ( $fechainicio ) ) ;
+                        $fechainicio = date ( 'Y-m-d' , $fechainicio );
 							//$fechainicio = strtotime ( '+7 day' , strtotime ( $fechainicio ) ) ;
 							//$fechainicio = date ( 'Y-m-d' , $fechainicio );
 						?>
@@ -373,6 +475,8 @@ $fechainicio = $fechaNueva->format('Y-m-d');
             </div>
 
             <input type="hidden" name="idtorneo" id="idtorneo" value="<?php echo $idTorneo; ?>"/>
+            <input type="hidden" name="cantidadEquipos" id="cantidadEquipos" value="<?php echo count($cantEquipos); ?>"/>
+            <input type="hidden" name="cantidadPartidos" id="cantidadPartidos" value="<?php echo ($k - 1); ?>"/>
             </form>
     	</div>
     </div>
