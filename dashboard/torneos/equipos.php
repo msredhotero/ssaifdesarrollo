@@ -336,6 +336,7 @@ $(document).ready(function(){
 	
 	$("#manual").click(function(){
         $(".formulario").attr("action","../fixture/fixturemanual.php");
+        $( ".formulario" ).submit();
     });
 	$('.varver').click(function(event){	
 		  usersid =  $(this).attr("id");
