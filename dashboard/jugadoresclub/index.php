@@ -59,6 +59,13 @@ $refCampo 	=  array();
 
 $resJugadoresPorCountries = $serviciosReferencias->traerJugadoresPorCountrie($_GET['id']);
 
+$resPermiteRegistrar = $serviciosReferencias->traerVigenciasoperacionesPorModuloVigencias(2,date('Y-m-d'));
+
+if (mysql_num_rows($resPermiteRegistrar)>0) {
+	$permiteRegistrar = 1;
+} else {
+	$permiteRegistrar = 0;
+}
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
 
@@ -188,7 +195,11 @@ if ($_SESSION['refroll_predio'] != 1) {
 										<td><input class='form-control' type='checkbox' name='fechabaja".$row['idjugador']."' id='fechabaja".$row['idjugador']."' /></td>
 										<td><input class='form-control' type='checkbox' name='articulo".$row['idjugador']."' id='articulo".$row['idjugador']."' /></td>
 										
-										<td><button type='button' class='btn btn-primary guardarJugadorClubSimple' id='".$row['idjugador']."'>Guardar</button></td>
+										<td>";
+					if ($permiteRegistrar == 1) {
+						$cadCabecera .=			"<button type='button' class='btn btn-primary guardarJugadorClubSimple' id='".$row['idjugador']."'>Guardar</button>";
+					}
+					$cadCabecera .= "</td>
 									</tr>";
 			
 				}
@@ -345,12 +356,6 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 			
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
-	
-	?>
-	
-
 	
 	
 	//al enviar el formulario

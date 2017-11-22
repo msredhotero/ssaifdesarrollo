@@ -37,7 +37,9 @@ switch ($accion) {
 	case 'resetearEstudioMedico':
 		resetearEstudioMedico($serviciosReferencias);
 		break;
-
+	case 'cargarVigenciasCargaDelegados':
+		cargarVigenciasCargaDelegados($serviciosReferencias);
+		break;
 
 /* fin */
 
@@ -527,6 +529,17 @@ case 'eliminarSancionesfallosacumuladas':
 function resetearEstudioMedico($serviciosReferencias) {
 	$res = 	$serviciosReferencias->resetearEstudioMedico();
 	echo $res;
+}
+
+function cargarVigenciasCargaDelegados($serviciosReferencias) {
+	$idClub			=	$_POST['idclub'];
+	$vigenciaDesde 	=	formatearFechas($_POST['vigenciadesde']);
+	$vigenciaHasta 	=	($_POST['vigenciahasta'] == '' ? 'NULL' : formatearFechas($_POST['vigenciahasta']));
+
+	if (($vigenciaDesde == '***') || ($vigenciaHasta == '***')) {
+
+	}
+
 }
 
 

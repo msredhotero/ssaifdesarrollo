@@ -109,7 +109,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
-	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
@@ -161,6 +161,22 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	<input class="form-control" readonly value="Resetea el valor de Estudio Medico de todos los Jugadores del Sistema" aria-label="Text input with multiple buttons">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-warning resetear">Resetear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">    
+                <div class="col-md-12">
+                	<div class="input-group">
+                    	<input class="form-control" readonly value="Vigencia Desde y Hasta para la carga de Jugadores por Club" aria-label="Text input with multiple buttons">
+                        <div class="input-group-btn">
+                            <input type="text" class="form-control" style="width: 120px;" name="vigenciadesde" id="vigenciadesde">
+                        </div>
+                        <div class="input-group-btn">
+                            <input type="text" class="form-control" style="width: 120px;" name="vigenciahasta" id="vigenciahasta">
+                        </div>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-success vigencias">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -219,7 +235,10 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-	
+
+											
+	$("#vigenciadesde").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+	$("#vigenciahasta").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 
 	$(".resetear").click( function(){
 		$.ajax({
@@ -243,7 +262,37 @@ $(document).ready(function(){
 			
 			}
 		});
+	});//fin del boton resetear
+
+
+	$(".vigencias").click( function(){
+		$.ajax({
+			data:  {idClub: <?php echo $id; ?>,
+					vigenciadesde: $('#vigenciadesde').val(),
+					vigenciahasta: $('#vigenciahasta').val(),
+					accion: 'cargarVigenciasCargaDelegados'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+			
+			},
+			success:  function (response) {
+				$(".alert").removeClass("alert-danger");
+				$(".alert").removeClass("alert-info");
+				$(".alert").addClass("alert-success");
+				$(".alert").html('<strong>Ok!</strong> Se reseteo exitosamente los examenes medicos.');
+				$(".alert").delay(3000).queue(function(){
+					/*aca lo que quiero hacer 
+					  después de los 2 segundos de retraso*/
+					$(this).dequeue(); //continúo con el siguiente ítem en la cola
+					
+				});
+			
+			}
+		});
 	});//fin del boton eliminar
+
+	vigencias
 	
 	$("#example").on("click",'.varmodificar', function(){
 		  usersid =  $(this).attr("id");

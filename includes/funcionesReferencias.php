@@ -12127,6 +12127,111 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: dbjugadoresclub*/
 
+
+/* PARA Modulos */
+
+function insertarModulos($Modulo) {
+$sql = "insert into tbmodulos(idmodulo,Modulo)
+values ('','".utf8_decode($Modulo)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarModulos($id,$Modulo) {
+$sql = "update tbmodulos
+set
+Modulo = '".utf8_decode($Modulo)."'
+where idmodulo =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarModulos($id) {
+$sql = "delete from tbmodulos where idmodulo =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerModulos() {
+$sql = "select
+m.idmodulo,
+m.Modulo
+from tbmodulos m
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerModulosPorId($id) {
+$sql = "select idmodulo,Modulo from tbmodulos where idmodulo =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbmodulos*/
+
+
+/* PARA Vigenciasoperaciones */
+
+function insertarVigenciasoperaciones($refmodulos,$vigenciadesde,$vigenciahasta,$observaciones) {
+$sql = "insert into dbvigenciasoperaciones(idvigenciaoperacion,refmodulos,vigenciadesde,vigenciahasta,observaciones)
+values ('',".$refmodulos.",'".utf8_decode($vigenciadesde)."','".utf8_decode($vigenciahasta)."','".utf8_decode($observaciones)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarVigenciasoperaciones($id,$refmodulos,$vigenciadesde,$vigenciahasta,$observaciones) {
+$sql = "update dbvigenciasoperaciones
+set
+refmodulos = ".$refmodulos.",vigenciadesde = '".utf8_decode($vigenciadesde)."',vigenciahasta = '".utf8_decode($vigenciahasta)."',observaciones = '".utf8_decode($observaciones)."'
+where idvigenciaoperacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarVigenciasoperaciones($id) {
+$sql = "delete from dbvigenciasoperaciones where idvigenciaoperacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerVigenciasoperaciones() {
+$sql = "select
+v.idvigenciaoperacion,
+v.refmodulos,
+v.vigenciadesde,
+v.vigenciahasta,
+v.observaciones
+from dbvigenciasoperaciones v
+inner join tbmodulos mod ON mod.idmodulo = v.refmodulos
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerVigenciasoperacionesPorId($id) {
+$sql = "select idvigenciaoperacion,refmodulos,vigenciadesde,vigenciahasta,observaciones from dbvigenciasoperaciones where idvigenciaoperacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerVigenciasoperacionesPorModuloVigencias($idModulo, $fecha) {
+$sql = "select idvigenciaoperacion,refmodulos,vigenciadesde,vigenciahasta,observaciones from dbvigenciasoperaciones where refmodulos =".$idModulo." and (('".$fecha."' between vigenciadesde and vigenciahasta) or ('".$fecha."' >= vigenciadesde and vigenciahasta is null))";
+$res = $this->query($sql,0);
+return $res;
+}
+/* Fin */
+/* /* Fin de la Tabla: dbvigenciasoperaciones*/
+
 /************      FIN        **********************************************/
 
 /* Fin */
