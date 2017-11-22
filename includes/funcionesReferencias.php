@@ -3037,6 +3037,12 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorne
 			$restoAmarillas = 0;	
 		}
 	}
+
+    if (($idTipoTorneo == 1) || ($idTipoTorneo == 2)) {
+        $idTipoTorneo = '1,2';
+    } else {
+        $idTipoTorneo = '3';
+    }
 	
 	$sql = "select
 				sum(coalesce((cantidad),0)) + ".$restoAmarillas." as cantidad
@@ -3052,7 +3058,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorne
 				on			ts.idtiposancion = sj.reftiposanciones
 				inner
 				join		dbtorneos t
-				on			t.reftemporadas = ".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$iddivision." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo = ".$idTipoTorneo."
+				on			t.reftemporadas = ".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$iddivision." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo in (".$idTipoTorneo.")
 				where		ts.amonestacion = 1
 							and sj.cantidad > 0
 							
@@ -3069,7 +3075,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorne
 				on			fix.idfixture = sj.reffixture and fix.fecha > '".$reffechaDesde."'
 				inner
 				join		dbtorneos t
-				on			t.reftemporadas = ".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$iddivision." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo = ".$idTipoTorneo."
+				on			t.reftemporadas = ".$idTemporada." and t.refcategorias = ".$idCategoria." and t.refdivisiones = ".$iddivision." and sj.refcategorias = t.refcategorias and t.idtorneo = fix.reftorneos and t.reftipotorneo in (".$idTipoTorneo.")
 				where		sj.reftiposanciones = 4 or sf.amarillas = 2
 							
 				) t";	
