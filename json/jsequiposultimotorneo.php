@@ -22,7 +22,7 @@ $ar = array();
 
 $cad = '';
 $i = 1;
-	while ($row = mysql_fetch_array($resTraerDatos)) {
+	while ($row = mysql_fetch_array($resTorneo)) {
 		if ($i == 2) {
 			break;	
 		}

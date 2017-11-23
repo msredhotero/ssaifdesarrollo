@@ -4674,7 +4674,7 @@ j.nrodocumento,
 j.apellido,
 j.nombres,
 j.email,
-j.fechanacimiento,
+date_format(j.fechanacimiento, '%d/%m/%Y') as fechanacimiento,
 j.fechaalta,
 j.fechabaja,
 cou.nombre as countrie,
@@ -4683,14 +4683,15 @@ j.reftipodocumentos,
 j.refcountries,
 (case when jc.fechabaja = 1 then 'Si' else 'No' end) as fechabaja,
 (case when jc.articulo = 1 then 'Si' else 'No' end) as articulo,
-coalesce( jc.numeroserielote,'') as numeroserielote
+coalesce( jc.numeroserielote,'') as numeroserielote,
+concat(j.apellido, ' ', j.nombres) as apyn
 from dbjugadores j 
 inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
 inner join dbcountries cou ON cou.idcountrie = j.refcountries 
 inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
 left join dbjugadoresclub jc on jc.refcountries = cou.idcountrie and jc.refjugadores = j.idjugador
 where j.refcountries = ".$idCountrie."
-order by 1"; 
+order by concat(j.apellido, ' ', j.nombres)"; 
 $res = $this->query($sql,0); 
 return $res; 
 } 

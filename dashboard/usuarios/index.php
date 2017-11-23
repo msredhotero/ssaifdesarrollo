@@ -40,8 +40,8 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Usuario
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbusuarios";
 
-$lblCambio	 	= array("refroles","nombrecompleto");
-$lblreemplazo	= array("Perfil","Nombre Completo");
+$lblCambio	 	= array("refroles","nombrecompleto","refcountries");
+$lblreemplazo	= array("Perfil","Nombre Completo","Club");
 
 if ($_SESSION['idroll_predio'] != 1) {
 	$resRoles 	= $serviciosUsuario->traerRolesSimple();
@@ -53,9 +53,12 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 $cadRef = $serviciosFunciones->devolverSelectBox($resRoles,array(1),'');
 
+$resVar1 = $serviciosReferencias->traerCountries();
+$cadRef2 = "<option value=''>-- Seleccionar --</option>";
+$cadRef2 .= $serviciosFunciones->devolverSelectBox($resVar1,array(1),'');
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("refroles"); 
+$refdescripcion = array(0 => $cadRef,1=> $cadRef2);
+$refCampo 	=  array("refroles","refcountries"); 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -66,7 +69,8 @@ $cabeceras 		= "	<th>Usuario</th>
 				<th>Password</th>
 				<th>Perfil</th>
 				<th>Email</th>
-				<th>Nombre Completo</th>";
+				<th>Nombre Completo</th>
+				<th>Country</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -76,9 +80,9 @@ $cabeceras 		= "	<th>Usuario</th>
 $formulario 	= $serviciosFunciones->camposTabla("insertarUsuario",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
 if ($_SESSION['idroll_predio'] != 1) {
-	$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosUsuario->traerUsuariosSimple(),5);
+	$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosUsuario->traerUsuariosSimple(),6);
 } else {
-	$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosUsuario->traerUsuarios(),5);
+	$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosUsuario->traerUsuarios(),6);
 }
 
 
@@ -115,7 +119,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 

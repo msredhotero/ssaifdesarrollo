@@ -3675,8 +3675,9 @@ function insertarUsuario($serviciosUsuarios) {
 	$refroll			=	$_POST['refroles'];
 	$email				=	$_POST['email'];
 	$nombre				=	$_POST['nombrecompleto'];
+	$refcountries		=	$_POST['refcountries'];
 	
-	$res = $serviciosUsuarios->insertarUsuario($usuario,$password,$refroll,$email,$nombre);
+	$res = $serviciosUsuarios->insertarUsuario($usuario,$password,$refroll,$email,$nombre,$refcountries);
 	if ((integer)$res > 0) {
 		echo '';	
 	} else {
@@ -3692,8 +3693,9 @@ function modificarUsuario($serviciosUsuarios) {
 	$refroll			=	$_POST['refroles'];
 	$email				=	$_POST['email'];
 	$nombre				=	$_POST['nombrecompleto'];
+	$refcountries		=	$_POST['refcountries'];
 	
-	echo $serviciosUsuarios->modificarUsuario($id,$usuario,$password,$refroll,$email,$nombre);
+	echo $serviciosUsuarios->modificarUsuario($id,$usuario,$password,$refroll,$email,$nombre,$refcountries);
 }
 
 

@@ -34,7 +34,7 @@ if (mysql_num_rows($respusu) > 0) {
 	
 	
 	$idUsua = mysql_result($respusu,0,0);
-	$sqlpass = "select nombrecompleto,email,usuario,r.descripcion, r.idrol from dbusuarios u inner join tbroles r on r.idrol = u.refroles where password = '".$pass."' and idusuario = ".$idUsua;
+	$sqlpass = "select nombrecompleto,email,usuario,r.descripcion, r.idrol, u.refcountries from dbusuarios u inner join tbroles r on r.idrol = u.refroles where password = '".$pass."' and idusuario = ".$idUsua;
 
 
 	$resppass = $this->query($sqlpass,0);
@@ -60,6 +60,7 @@ if (mysql_num_rows($respusu) > 0) {
 		$_SESSION['email_predio'] = mysql_result($resppass,0,1);
 		$_SESSION['idroll_predio'] = mysql_result($resppass,0,4);
 		$_SESSION['refroll_predio'] = mysql_result($resppass,0,3);
+		$_SESSION['club_predio'] = mysql_result($resppass,0,'refcountries');
 		
 		return '';
 	}
@@ -196,9 +197,10 @@ function traerUsuario($email) {
 }
 
 function traerUsuarios() {
-	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, u.refroles
+	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles
 			from dbusuarios u
 			inner join tbroles r on u.refroles = r.idrol 
+			left join dbcountries cou on cou.idcountrie = u.refcountries
 			order by nombrecompleto";
 	$res = $this->query($sql,0);
 	if ($res == false) {
@@ -210,9 +212,10 @@ function traerUsuarios() {
 
 
 function traerUsuariosSimple() {
-	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, u.refroles
+	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles
 			from dbusuarios u
 			inner join tbroles r on u.refroles = r.idrol 
+			left join dbcountries cou on cou.idcountrie = u.refcountries
 			where r.idrol <> 1
 			order by nombrecompleto";
 	$res = $this->query($sql,0);
@@ -282,21 +285,23 @@ function enviarEmail($destinatario,$asunto,$cuerpo) {
 }
 
 
-function insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto) {
+function insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto, $refcountries) {
 	$sql = "INSERT INTO dbusuarios
 				(idusuario,
 				usuario,
 				password,
-				refroll,
+				refroles,
 				email,
-				nombrecompleto)
+				nombrecompleto,
+				refcountries)
 			VALUES
 				('',
 				'".utf8_decode($usuario)."',
 				'".utf8_decode($password)."',
 				".$refroll.",
 				'".utf8_decode($email)."',
-				'".utf8_decode($nombrecompleto)."')";
+				'".utf8_decode($nombrecompleto)."',
+				".$refcountries.")";
 	if ($this->existeUsuario($email) == true) {
 		return "Ya existe el usuario";	
 	}
@@ -310,14 +315,15 @@ function insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto) {
 }
 
 
-function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto) {
+function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto,$refcountries) {
 	$sql = "UPDATE dbusuarios
 			SET
 				usuario = '".utf8_decode($usuario)."',
 				password = '".utf8_decode($password)."',
 				email = '".utf8_decode($email)."',
 				refroles = ".$refroll.",
-				nombrecompleto = '".utf8_decode($nombrecompleto)."'
+				nombrecompleto = '".utf8_decode($nombrecompleto)."',
+				refcountries = ".$refcountries."
 			WHERE idusuario = ".$id;
 	$res = $this->query($sql,0);
 	if ($res == false) {

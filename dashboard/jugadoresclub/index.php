@@ -57,7 +57,14 @@ $refdescripcion = array();
 $refCampo 	=  array();
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrie($_GET['id']);
+if ($_SESSION['idroll_predio'] == 4) {
+	$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrie($_SESSION['club_predio']);
+	$refClub = $_SESSION['club_predio'];
+} else {
+	$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrie($_GET['id']);	
+	$refClub = $_GET['id'];
+}
+
 
 $resPermiteRegistrar = $serviciosReferencias->traerVigenciasoperacionesPorModuloVigencias(2,date('Y-m-d'));
 
@@ -154,7 +161,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 				$cadCabecera = '';
 				$primero = 0;
 				while ($row = mysql_fetch_array($resJugadoresPorCountries)) {
-					if ($country != $_GET['id'])  {
+					if ($country != $refClub)  {
 						
 						
 						$cadCabecera .= '<div class="col-md-12">
@@ -174,7 +181,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 										<tbody>';
 										
 						$primero = 1;
-						$country = $_GET['id'];	
+						$country = $refClub;	
 					}
 					
 					$cadCabecera .= "<tr>
@@ -218,12 +225,12 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
                     <li>
-                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
+                        <button type="button" class="btn btn-success" id="btnImprimir" style="margin-left:0px;">Imprimir</button>
                     </li>
                 </ul>
                 </div>
             </div>
-            <input type="hidden" id="refcountries" name="refcountries" value="<?php echo $_GET['id']; ?>"/>
+            <input type="hidden" id="refcountries" name="refcountries" value="<?php echo $refClub; ?>"/>
             </form>
     	</div>
     </div>
@@ -299,6 +306,10 @@ $(document).ready(function(){
 			}
 		  }
 	} );
+
+	$('#btnImprimir').click(function() {
+		window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + <?php echo $refClub; ?> + "&bajas1=0" ,'_blank');
+	});
 	
 	$("#example").on("click",'.guardarJugadorClubSimple', function(){
 		
@@ -316,7 +327,7 @@ $(document).ready(function(){
 		$('#myModal').modal("show");
         $.ajax({
 			data:  {idjugador: $(this).attr("id"), 
-					idclub: <?php echo $_GET['id']; ?>, 
+					idclub: <?php echo $refClub; ?>, 
 					numeroserielote: $('#numeroserielote'+$(this).attr("id")).val(), 
 					fechabaja: fechabaja, 
 					articulo: articulo, 
