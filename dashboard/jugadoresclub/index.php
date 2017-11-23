@@ -57,7 +57,7 @@ $refdescripcion = array();
 $refCampo 	=  array();
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
-$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresPorCountrie($_GET['id']);
+$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrie($_GET['id']);
 
 $resPermiteRegistrar = $serviciosReferencias->traerVigenciasoperacionesPorModuloVigencias(2,date('Y-m-d'));
 
@@ -141,19 +141,13 @@ if ($_SESSION['refroll_predio'] != 1) {
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Jugadores del club</p>
         	
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
         	<div class="row">
-            	<div class="col-md-6">
-                	<select class="form-control" id="temporada" name="temporada">
-                    	<option value="<?php echo (date('Y') + 1); ?>"><?php echo (date('Y') + 1); ?></option>
-                        <option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
-                    </select>
-                    
-                </div>
+
 			<?php 
 				$country = '';
 				$fecha = '';
@@ -162,12 +156,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 				while ($row = mysql_fetch_array($resJugadoresPorCountries)) {
 					if ($country != $_GET['id'])  {
 						
-						if ($primero != 0) {
-							$cadCabecera .= '</tbody></table></div></div></div>';
-						}
-						$cadCabecera .= '<div class="col-md-12"><div class="panel panel-primary">
-										<div class="panel-heading">Jugadores del club '.$row['countrie'].'</div>
-										<div class="panel-body">
+						
+						$cadCabecera .= '<div class="col-md-12">
 										<table class="table table-striped" style="padding:2px;" id="example">
 										<thead>
 											<tr>
@@ -191,9 +181,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 										<td>".$row['apellido']."</td>
 										<td>".$row['nombres']."</td>
 										<td>".$row['nrodocumento']."</td>
-										<td><input class='form-control' type='text' name='numeroserielote".$row['idjugador']."' id='numeroserielote".$row['idjugador']."'/></td>
-										<td><input class='form-control' type='checkbox' name='fechabaja".$row['idjugador']."' id='fechabaja".$row['idjugador']."' /></td>
-										<td><input class='form-control' type='checkbox' name='articulo".$row['idjugador']."' id='articulo".$row['idjugador']."' /></td>
+										<td><input class='form-control' type='text' name='numeroserielote".$row['idjugador']."' id='numeroserielote".$row['idjugador']."' value='".$row['numeroserielote']."'/></td>
+										<td><input class='form-control' type='checkbox' name='fechabaja".$row['idjugador']."' id='fechabaja".$row['idjugador']."' ".($row['fechabaja'] == 'Si' ? 'checked' : '')."/></td>
+										<td><input class='form-control' type='checkbox' name='articulo".$row['idjugador']."' id='articulo".$row['idjugador']."'  ".($row['articulo'] == 'Si' ? 'checked' : '')."/></td>
 										
 										<td>";
 					if ($permiteRegistrar == 1) {
@@ -204,7 +194,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 			
 				}
 				
-				$cadCabecera .= '</tbody></table></div></div></div>';
+				$cadCabecera .= '</tbody></table></div>';
 				
 				echo $cadCabecera;
 			?>
@@ -241,7 +231,26 @@ if ($_SESSION['refroll_predio'] != 1) {
     
 
     
+<!-- Modal del guardar-->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
     
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Guardar Jugador</h4>
+        </div>
+        <div class="modal-body">
+          <p id="error"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div><!-- del modal -->
    
 </div>
 
@@ -291,7 +300,50 @@ $(document).ready(function(){
 		  }
 	} );
 	
-	$('#activo').prop('checked',true);
+	$("#example").on("click",'.guardarJugadorClubSimple', function(){
+		
+		idBtn = $(this).attr("id");
+		var fechabaja = 0;
+		if ($('#fechabaja'+$(this).attr("id")).prop('checked')) {
+			fechabaja = 1;	
+		}
+		
+		var articulo = 0;
+		if ($('#articulo'+$(this).attr("id")).prop('checked')) {
+			articulo = 1;	
+		}
+		
+		$('#myModal').modal("show");
+        $.ajax({
+			data:  {idjugador: $(this).attr("id"), 
+					idclub: <?php echo $_GET['id']; ?>, 
+					numeroserielote: $('#numeroserielote'+$(this).attr("id")).val(), 
+					fechabaja: fechabaja, 
+					articulo: articulo, 
+					accion: 'guardarJugadorClubSimple'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					
+			},
+			success:  function (response) {
+				if (response == '') {
+					$('#error').html('<span class="glyphicon glyphicon-ok"></span> Se guardo correctamente');
+					$('#'+idBtn).removeClass("btn-primary");
+					$('#'+idBtn).removeClass("btn-danger");
+					$('#'+idBtn).addClass("btn-success");
+					$('#'+idBtn).html('<span class="glyphicon glyphicon-ok"></span> Guardado');
+					
+				} else {
+					$('#error').html('Huvo un error al guardar los datos, verifique los datos ingresados '.response);
+					$('#'+idBtn).removeClass("btn-primary");
+					$('#'+idBtn).removeClass("btn-success");
+					$('#'+idBtn).addClass("btn-danger");
+					$('#'+idBtn).html('<span class="glyphicon glyphicon-ban-circle"></span> Guardar');
+				}
+			}
+		});
+    });
 
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");

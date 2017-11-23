@@ -267,8 +267,7 @@ $(document).ready(function(){
 
 	$(".vigencias").click( function(){
 		$.ajax({
-			data:  {idClub: <?php echo $id; ?>,
-					vigenciadesde: $('#vigenciadesde').val(),
+			data:  {vigenciadesde: $('#vigenciadesde').val(),
 					vigenciahasta: $('#vigenciahasta').val(),
 					accion: 'cargarVigenciasCargaDelegados'},
 			url:   '../../ajax/ajax.php',
@@ -280,7 +279,7 @@ $(document).ready(function(){
 				$(".alert").removeClass("alert-danger");
 				$(".alert").removeClass("alert-info");
 				$(".alert").addClass("alert-success");
-				$(".alert").html('<strong>Ok!</strong> Se reseteo exitosamente los examenes medicos.');
+				$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente las vigencias.');
 				$(".alert").delay(3000).queue(function(){
 					/*aca lo que quiero hacer 
 					  después de los 2 segundos de retraso*/
@@ -292,7 +291,7 @@ $(document).ready(function(){
 		});
 	});//fin del boton eliminar
 
-	vigencias
+	
 	
 	$("#example").on("click",'.varmodificar', function(){
 		  usersid =  $(this).attr("id");

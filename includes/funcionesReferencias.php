@@ -4665,6 +4665,36 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+
+function traerJugadoresClubPorCountrie($idCountrie) { 
+$sql = "select 
+j.idjugador,
+tip.tipodocumento,
+j.nrodocumento,
+j.apellido,
+j.nombres,
+j.email,
+j.fechanacimiento,
+j.fechaalta,
+j.fechabaja,
+cou.nombre as countrie,
+j.observaciones,
+j.reftipodocumentos,
+j.refcountries,
+(case when jc.fechabaja = 1 then 'Si' else 'No' end) as fechabaja,
+(case when jc.articulo = 1 then 'Si' else 'No' end) as articulo,
+coalesce( jc.numeroserielote,'') as numeroserielote
+from dbjugadores j 
+inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+left join dbjugadoresclub jc on jc.refcountries = cou.idcountrie and jc.refjugadores = j.idjugador
+where j.refcountries = ".$idCountrie."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
 /* Fin */
 /* /* Fin de la Tabla: dbjugadores*/
 
@@ -12124,6 +12154,50 @@ return $res;
 } 
 
 
+function traerJugadoresclubPorClubJugador($idClub, $idJugador) { 
+$sql = "select 
+jc.idjugadorclub,
+j.apellido,
+j.nombres,
+j.nrodocumento,
+(case when jc.fechabaja=1 then 'Si' else 'No' end) as fechabaja,
+(case when jc.articulo=1 then 'Si' else 'No' end) as articulo,
+jc.numeroserielote,
+jc.temporada,
+jc.refcountries,
+jc.refjugadores
+from dbjugadoresclub jc
+inner join dbjugadores j on j.idjugador = jc.refjugadores
+inner join dbcountries c on c.idcountrie = jc.refcountries 
+where j.refJugador = ".$idJugador." and j.refcountries = ".$idClub."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function existeJugadoresclubPorClubJugador($idClub, $idJugador) { 
+$sql = "select 
+jc.idjugadorclub,
+j.apellido,
+j.nombres,
+j.nrodocumento,
+(case when jc.fechabaja=1 then 'Si' else 'No' end) as fechabaja,
+(case when jc.articulo=1 then 'Si' else 'No' end) as articulo,
+jc.numeroserielote,
+jc.temporada,
+jc.refcountries,
+jc.refjugadores
+from dbjugadoresclub jc
+inner join dbjugadores j on j.idjugador = jc.refjugadores
+inner join dbcountries c on c.idcountrie = jc.refcountries 
+where jc.refJugadores = ".$idJugador." and j.refcountries = ".$idClub."
+order by 1"; 
+$res = $this->existeDevuelveId($sql);
+return $res; 
+} 
+
+
 function traerJugadoresclubPorId($id) { 
 $sql = "select idjugadorclub,refjugadores,(case when fechabaja=1 then 'Si' else 'No' end) as fechabaja,(case when articulo=1 then 'Si' else 'No' end) as articulo,numeroserielote,temporada,refcountries from dbjugadoresclub where idjugadorclub =".$id; 
 $res = $this->query($sql,0); 
@@ -12204,6 +12278,12 @@ return $res;
 
 function eliminarVigenciasoperaciones($id) {
 $sql = "delete from dbvigenciasoperaciones where idvigenciaoperacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function eliminarVigenciasoperacionesTodas() {
+$sql = "delete from dbvigenciasoperaciones";
 $res = $this->query($sql,0);
 return $res;
 }

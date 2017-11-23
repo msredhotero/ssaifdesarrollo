@@ -42,6 +42,11 @@ switch ($accion) {
 		break;
 
 /* fin */
+/* delegados */
+	case 'guardarJugadorClubSimple':
+		guardarJugadorClubSimple($serviciosReferencias);
+		break;
+/* fin */
 
 /* PARA Tipocontactos */
 
@@ -532,17 +537,50 @@ function resetearEstudioMedico($serviciosReferencias) {
 }
 
 function cargarVigenciasCargaDelegados($serviciosReferencias) {
-	$idClub			=	$_POST['idclub'];
 	$vigenciaDesde 	=	formatearFechas($_POST['vigenciadesde']);
 	$vigenciaHasta 	=	($_POST['vigenciahasta'] == '' ? 'NULL' : formatearFechas($_POST['vigenciahasta']));
 
 	if (($vigenciaDesde == '***') || ($vigenciaHasta == '***')) {
-
+		echo 'Error en el formato de las fechas';
+		
+	} else {
+		$res = $serviciosReferencias->insertarVigenciasoperaciones(2,$vigenciaDesde,$vigenciaHasta,'Carga de vigencias para los delegados');
+		echo $res;
 	}
 
 }
+/* fin */
+/* Delegados */
+function guardarJugadorClubSimple($serviciosReferencias) {
+	$idClub 		= $_POST['idclub'];
+	$idJugador 		= $_POST['idjugador'];
+	$numeroSerie 	= $_POST['numeroserielote'];
+	$fechabaja 		= $_POST['fechabaja'];
+	$articulo 		= $_POST['articulo'];
+
+	$existe = $serviciosReferencias->existeJugadoresclubPorClubJugador($idClub, $idJugador);
+
+	if ($existe > 0) {
+		/* modifico */
+		$res = $serviciosReferencias->modificarJugadoresclub($existe,$idJugador,$fechabaja,$articulo,$numeroSerie,date('Y'),$idClub);
+		if ($res == true) {
+			echo '';
+		} else {
+			echo 'Hubo un error al modificar datos';
+		}
+	} else {
+		/* inserto */
+		$res = $serviciosReferencias->insertarJugadoresclub($idJugador,$fechabaja,$articulo,$numeroSerie,date('Y'),$idClub);
+
+		if ($res >0) {
+			echo '';
+		} else {
+			echo 'Hubo un error al modificar datos';
+		}
+	}
 
 
+}
 /* fin */
 
 
