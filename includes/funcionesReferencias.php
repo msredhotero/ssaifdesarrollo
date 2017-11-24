@@ -5736,7 +5736,10 @@ function traerTorneosPorEquipo($idEquipo) {
 $sql = "SELECT 
 			t.idtorneo,
 			t.descripcion,
-			tem.temporada
+			tem.temporada,
+            t.reftemporadas,
+            t.refcategorias,
+            t.refdivisiones
 		FROM
 			dbtorneos t
 				inner join
@@ -5748,7 +5751,9 @@ $sql = "SELECT
 		WHERE
 			t.activo = 1
 		group by t.idtorneo,
-			t.descripcion,tem.temporada
+			t.descripcion,tem.temporada,t.reftemporadas,
+            t.refcategorias,
+            t.refdivisiones
 		order by 1 desc"; 
 $res = $this->query($sql,0); 
 return $res;

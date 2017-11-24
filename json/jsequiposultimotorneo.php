@@ -27,7 +27,7 @@ $i = 1;
 			break;	
 		}
 		
-		array_push($ar,array('idtorneo'=> $row[0]));
+		array_push($ar,array('idtorneo'=> $row[0], 'idtemporada'=> $row['reftemporadas'], 'idcategoria'=> $row['refcategorias'], 'iddivision'=> $row['refdivisiones']));
 						
 		$i += 1;
 
