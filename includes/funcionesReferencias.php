@@ -165,7 +165,7 @@ function ResultadosPartidosAnteriores($refTorneo, $idequipo) {
 					tor.idtorneo = ".$refTorneo." and f.refconectorvisitante = ".$idequipo." and est.finalizado = 1
 			) r
 				order by r.fecha desc
-			limit 1,3";	
+			limit 0,3";	
 			
 	$res = $this->query($sql,0);
 	return $res;
@@ -10611,36 +10611,71 @@ function hayPendienteDeFallo($idJugador, $idFixture, $idTipoTorneo) {
 }
 
 function hayMovimientos($idJugador, $idFixture, $idTipoTorneo) {
-	$sql = "SELECT 
-				coalesce(sf.cantidadfechas -  coalesce(sfc.cumplidas,0),0) as faltan
-			FROM
-				dbsancionesjugadores san
-					INNER JOIN
-				dbsancionesfallos sf ON sf.idsancionfallo = san.refsancionesfallos
-					INNER JOIN
-				dbjugadores ju ON ju.idjugador = san.refjugadores
-					INNER JOIN
-				tbtiposanciones tip ON tip.idtiposancion = san.reftiposanciones
-					INNER JOIN
-				dbfixture fix ON fix.idfixture = ".$idFixture." AND fix.fecha > san.fecha
-					INNER JOIN
-				dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
-					INNER JOIN
-				dbfixture fixv ON fixv.idfixture = san.reffixture
-					inner join
-				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
-					left join
-				(select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas 
-					from dbsancionesfechascumplidas fc
-					inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-					inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos 
-					group by fc.refsancionesfallos,torc.refcategorias) sfc
-				ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = san.refcategorias
-			WHERE
-				ju.idjugador = ".$idJugador."
-					AND tip.cumpletodascategorias = 1
-					AND sf.fechascumplidas <> sf.cantidadfechas
-					AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
+
+    if (($idTipoTorneo == 1) || ($idTipoTorneo == 2)) {
+        $sql = "SELECT 
+                coalesce(sf.cantidadfechas -  coalesce(sfc.cumplidas,0),0) as faltan
+            FROM
+                dbsancionesjugadores san
+                    INNER JOIN
+                dbsancionesfallos sf ON sf.idsancionfallo = san.refsancionesfallos
+                    INNER JOIN
+                dbjugadores ju ON ju.idjugador = san.refjugadores
+                    INNER JOIN
+                tbtiposanciones tip ON tip.idtiposancion = san.reftiposanciones
+                    INNER JOIN
+                dbfixture fix ON fix.idfixture = ".$idFixture." AND fix.fecha > san.fecha
+                    INNER JOIN
+                dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo in (1,2)
+                    INNER JOIN
+                dbfixture fixv ON fixv.idfixture = san.reffixture
+                    inner join
+                dbtorneos torv ON torv.idtorneo = fixv.reftorneos
+                    left join
+                (select fc.refsancionesfallos,torc.refcategorias, coalesce(count(*),0) as cumplidas
+                    from dbsancionesfechascumplidas fc
+                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
+                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos 
+                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = san.refcategorias
+            WHERE
+                ju.idjugador = ".$idJugador."
+                    AND tip.cumpletodascategorias = 1
+                    AND (sf.fechascumplidas + sfc.cumplidas) < sf.cantidadfechas
+                    AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
+    } else {
+        $sql = "SELECT 
+                coalesce(sf.cantidadfechas -  coalesce(sfc.cumplidas,0),0) as faltan
+            FROM
+                dbsancionesjugadores san
+                    INNER JOIN
+                dbsancionesfallos sf ON sf.idsancionfallo = san.refsancionesfallos
+                    INNER JOIN
+                dbjugadores ju ON ju.idjugador = san.refjugadores
+                    INNER JOIN
+                tbtiposanciones tip ON tip.idtiposancion = san.reftiposanciones
+                    INNER JOIN
+                dbfixture fix ON fix.idfixture = ".$idFixture." AND fix.fecha > san.fecha
+                    INNER JOIN
+                dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
+                    INNER JOIN
+                dbfixture fixv ON fixv.idfixture = san.reffixture
+                    inner join
+                dbtorneos torv ON torv.idtorneo = fixv.reftorneos
+                    left join
+                (select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas 
+                    from dbsancionesfechascumplidas fc
+                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
+                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos 
+                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = san.refcategorias
+            WHERE
+                ju.idjugador = ".$idJugador."
+                    AND tip.cumpletodascategorias = 1
+                    AND sf.fechascumplidas <> sf.cantidadfechas
+                    AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
+    }
+	
 			
 	return $this->existeDevuelveId($sql);			
 }
@@ -10666,14 +10701,14 @@ function hayMovimientosDevuelveId($idJugador, $idFixture, $idTipoTorneo) {
 					inner join
 				dbtorneos torv ON torv.idtorneo = fixv.reftorneos
 					left join
-				(select fc.refsancionesfallos, count(*) as cumplidas 
+				(select fc.refsancionesfallos, coalesce(count(*),0) as cumplidas 
 					from dbsancionesfechascumplidas fc 
 					group by fc.refsancionesfallos) sfc
 				ON  sfc.refsancionesfallos = sf.idsancionfallo
 			WHERE
 				ju.idjugador = ".$idJugador."
 					AND tip.cumpletodascategorias = 1
-					AND sf.fechascumplidas <> sf.cantidadfechas
+					AND (sf.fechascumplidas + sfc.cumplidas) < sf.cantidadfechas
 					AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
 			
 	return $this->existeDevuelveId($sql);			
