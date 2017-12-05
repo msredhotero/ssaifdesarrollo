@@ -10641,7 +10641,7 @@ function hayMovimientos($idJugador, $idFixture, $idTipoTorneo) {
             WHERE
                 ju.idjugador = ".$idJugador."
                     AND tip.cumpletodascategorias = 1
-                    AND (sf.fechascumplidas + sfc.cumplidas) < sf.cantidadfechas
+                    AND coalesce((sf.fechascumplidas + sfc.cumplidas),0) < sf.cantidadfechas
                     AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
     } else {
         $sql = "SELECT 

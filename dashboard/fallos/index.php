@@ -84,9 +84,13 @@ $cabeceras 		= "	<th bgcolor='#E0ECF8'>Jugador</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerSancionesJugadoresConFallos(),15);
 
-$lstCargadosAcumulados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerSancionesJugadoresConFallosAcumulados(),87);
+
+$resFallosAcu = $serviciosReferencias->traerSancionesJugadoresConFallosAcumulados();
+$lstCargadosAcumulados 	= $serviciosFunciones->camposTablaView($cabeceras,$resFallosAcu,87);
+
+$resFallos = $serviciosReferencias->traerSancionesJugadoresConFallos();
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras, $resFallos,15);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
