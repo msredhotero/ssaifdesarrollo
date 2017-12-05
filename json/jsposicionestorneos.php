@@ -15,7 +15,7 @@ $fecha = date('Y-m-d');
 
 if ((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) {
 	$resDatos = $serviciosReferencias->Posiciones($_GET['idtorneo']);
-	$resDatosExtra = $serviciosReferencias->Posiciones($_GET['idtorneo']);
+	$resDatosExtra = $serviciosReferencias->PosicionFechaAnterior($_GET['idtorneo']);
 } else {
 	$resDatos = $serviciosReferencias->Posiciones(0);
 	$resDatosExtra = $serviciosReferencias->PosicionFechaAnterior(0);

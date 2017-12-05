@@ -9974,7 +9974,7 @@ function traerSancionesjugadoresPorJugadorConValor($idJugador, $idFixture, $idCa
 }
 
 function traerSancionesjugadoresPorJugadorFixtureConValor($idJugador, $idFixture) {
-	$sql = "select idsancionjugador,reftiposanciones,refjugadores,refequipos,reffixture,fecha,cantidad,refcategorias,refdivisiones,refsancionesfallos from dbsancionesjugadores where refjugadores =".$idJugador." and refsancionesfallos is not null and reffixture =".$idFixture;
+	$sql = "select idsancionjugador,reftiposanciones,refjugadores,refequipos,reffixture,fecha,cantidad,refcategorias,refdivisiones,refsancionesfallos from dbsancionesjugadores where refjugadores =".$idJugador." and (refsancionesfallos is not null and refsancionesfallos <> 0) and reffixture =".$idFixture;
 	
 	$res = $this->query($sql,0);
 	if (mysql_num_rows($res)>0) {
