@@ -444,6 +444,7 @@ order by sum(p.puntos) desc , sum(p.rojas) asc , sum(p.amarillas) asc, sum(p.gol
 		if (mysql_num_rows($resPuntosBonus)>0) {
 			$puntosBonus = $this->calcularPuntoBonus($refTorneo, $row['idequipo']);	
 		}
+
 		$arPosiciones[] = array('equipo'=> $row['equipo'],
 							  'puntos'=> (integer)$row['puntos'] + (integer)$puntosBonus,
 							  'goles'=> $row['goles'],
@@ -735,6 +736,7 @@ inner join tbestadospartidos ep on ep.idestadopartido = fix.refestadospartidos
 		if (mysql_num_rows($resPuntosBonus)>0) {
 			$puntosBonus = $this->calcularPuntoBonus($refTorneo, $row['idequipo']);	
 		}
+        //die(var_dump($puntosBonus));
 		$arPosiciones[] = array('equipo'=> $row['equipo'],
 							  'puntos'=> (integer)$row['puntos'] + (integer)$puntosBonus,
 							  'goles'=> $row['goles'],
@@ -770,7 +772,7 @@ inner join tbestadospartidos ep on ep.idestadopartido = fix.refestadospartidos
 							  'pe'=> $row['pe'],
 							  'amarillas'=> $row['amarillas'],
 							  'rojas'=> $row['rojas'],
-							  'puntobonus'=> (integer)$puntosBonus,
+							  'puntobonus'=> $row['puntobonus'],
 							  'idequipo'=> $row['idequipo'],
 							  'posicion'=> $posicion,
 							  'observacionestorneo'=>$row['observacionestorneo'],
