@@ -1377,7 +1377,7 @@ function suspendidosTotal() {
 			    sj.fecha,
 			    sf.cantidadfechas,
 			    coalesce((case when cantidadfechas < 1 then -1 * datediff(sf.fechadesde, sf.fechahasta) end),0) as dias,
-			    coalesce((case when cantidadfechas > 0 then spp.cumplidas
+			    coalesce((case when cantidadfechas > 0 then sfc.cumplidas
 					  when year(sf.fechadesde) > 1950 then -1 * datediff(sf.fechadesde, now())
 			        end),0) cumplidas,
 				sf.fechascumplidas,
@@ -1402,16 +1402,19 @@ function suspendidosTotal() {
 			    tbcategorias ca ON ca.idtcategoria = t.refcategorias
 			        INNER JOIN
 			    tbdivisiones di ON di.iddivision = t.refdivisiones
+                    INNER JOIN
+                tbtiposanciones tip ON tip.idtiposancion = sj.reftiposanciones
 					left join
-				(select count(ss.reffixture) as cumplidas, ss.refjugadores, ss.refsancionesfallos, tt.refcategorias 
-						from dbsancionesfechascumplidas ss
-							inner join dbfixture ff ON ff.idfixture = ss.reffixture
-			                inner join dbtorneos tt ON tt.idtorneo = ff.reftorneos
-						group by ss.refjugadores, ss.refsancionesfallos, tt.refcategorias) spp 
-				ON sj.refjugadores = spp.refjugadores and spp.refsancionesfallos = sf.idsancionfallo and spp.refcategorias = sj.refcategorias
+				(select fc.refsancionesfallos,torc.refcategorias, coalesce(count(*),0) as cumplidas
+                    from dbsancionesfechascumplidas fc
+                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
+                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos 
+                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = sj.refcategorias
 			            
 			WHERE
-			    sf.cantidadfechas <> sf.fechascumplidas
+			    (tip.cumpletodascategorias = 1
+                    AND (coalesce(sf.fechascumplidas,0) + coalesce(sfc.cumplidas,0)) < sf.cantidadfechas) 
 			        OR (sf.fechahasta >= NOW()
 			        AND sf.fechadesde <> '1900-01-01')
 					OR sf.pendientesfallo = 1
@@ -10643,7 +10646,7 @@ function hayMovimientos($idJugador, $idFixture, $idTipoTorneo) {
             WHERE
                 ju.idjugador = ".$idJugador."
                     AND tip.cumpletodascategorias = 1
-                    AND coalesce((sf.fechascumplidas + sfc.cumplidas),0) < sf.cantidadfechas
+                    AND (coalesce(sf.fechascumplidas,0) + coalesce(sfc.cumplidas,0)) < sf.cantidadfechas
                     AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
     } else {
         $sql = "SELECT 

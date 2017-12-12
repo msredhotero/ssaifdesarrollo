@@ -159,7 +159,7 @@ class Servicios {
 				$classMod = '';
 				$classVer = 'varver';
 				$lblVer	  = 'Fallar';
-				$classEli = '';
+				$classEli = 'varborrar';
 				$idresultados = "resultados";
 				$icoVar	  = "glyphicon-check";
 				break;

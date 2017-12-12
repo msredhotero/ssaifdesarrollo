@@ -523,6 +523,9 @@ case 'eliminarSancionesfallos':
 case 'eliminarSancionesfallosacumuladas':
 	eliminarSancionesfallosacumuladas($serviciosReferencias);
 	break;
+case 'eliminarPreFallo':
+	eliminarPreFallo($serviciosReferencias);
+	break;
 /*****			FIN				**********/
 }
 
@@ -1116,6 +1119,12 @@ function eliminarSancionesfallosacumuladas($serviciosReferencias) {
 	echo $res;
 }
 
+function eliminarPreFallo($serviciosReferencias) {
+	$id = $_POST['id'];
+
+	$res = $serviciosReferencias->eliminarSancionesjugadores($id);
+	echo $res;
+}
 /**********************                        FIN                     ***********************************/
 function insertarFalloPorFecha($serviciosReferencias) {
 	$refsancionesjugadores = $_POST['refsancionesjugadores']; 
