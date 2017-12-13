@@ -7,7 +7,7 @@ class appconfig {
 function conexion() {
 		
 		$hostname = "localhost";
-		$database = "ssaif_local_junio_final";
+		$database = "ssaif_local_noviembre";
 		$username = "root";
 		$password = "";
 		
