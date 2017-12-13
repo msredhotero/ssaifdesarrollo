@@ -467,6 +467,17 @@ order by sum(p.puntos) desc , sum(p.rojas) asc , sum(p.amarillas) asc, sum(p.gol
 	return $sorted;
 }
 
+function devolverPuntoBonusFijo($reftorneos, $refequipos) {
+    $sql = "select puntos from tbpuntosbonusfijo where reftorneos =".$reftorneos." and refequipos =".$refequipos;
+
+    $res = $this->query($sql,0);
+
+    if (mysql_num_rows($res)>0) {
+        return mysql_result($res, 0,0);
+    }
+
+    return 0;
+}
 
 function Posiciones($refTorneo) {
 	$sql = "select
@@ -727,14 +738,18 @@ inner join tbestadospartidos ep on ep.idestadopartido = fix.refestadospartidos
 	$arPosicionesAux = array();
 	
 	$puntosBonus = 0;
+    $puntoBonusFijo = 0;
 	
 	$resPuntosBonus	=	$this->traerTorneopuntobonusPorTorneo($refTorneo);
 	
 	$posicion = 1;
 	while ($row = mysql_fetch_array($res)) {
 		$puntosBonus = 0;
+        $puntoBonusFijo = 0;
 		if (mysql_num_rows($resPuntosBonus)>0) {
+            $puntoBonusFijo = $this->devolverPuntoBonusFijo($refTorneo, $row['idequipo']);
 			$puntosBonus = $this->calcularPuntoBonus($refTorneo, $row['idequipo']);	
+            $puntosBonus = $puntosBonus + $puntoBonusFijo;
 		}
         //die(var_dump($puntosBonus));
 		$arPosiciones[] = array('equipo'=> $row['equipo'],
