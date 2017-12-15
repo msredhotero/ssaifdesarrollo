@@ -6204,7 +6204,7 @@ function traerUltimaFechaJugadaEquipoPorId($idEquipo, $limit) {
 				f.refestadospartidos IS NOT NULL
 					AND (f.refconectorlocal = ".$idEquipo."
 					OR f.refconectorvisitante = ".$idEquipo.")
-			ORDER BY f.fecha DESC
+			ORDER BY f.reffechas DESC
 			LIMIT ".$limit;	
 	$res = $this->query($sql,0); 
 	return $res; 
