@@ -60,6 +60,7 @@ if (mysql_num_rows($respusu) > 0) {
 		$_SESSION['email_predio'] = mysql_result($resppass,0,1);
 		$_SESSION['idroll_predio'] = mysql_result($resppass,0,4);
 		$_SESSION['refroll_predio'] = mysql_result($resppass,0,3);
+		$_SESSION['id_usuariopredio'] = $idUsua;
 		$_SESSION['club_predio'] = mysql_result($resppass,0,'refcountries');
 		
 		return '';
@@ -239,7 +240,7 @@ function traerTodosUsuarios() {
 }
 
 function traerUsuarioId($id) {
-	$sql = "select idusuario,usuario,refroll,nombrecompleto,email,password from dbusuarios where idusuario = ".$id;
+	$sql = "select idusuario,usuario,refroles,nombrecompleto,email,password from dbusuarios where idusuario = ".$id;
 	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';

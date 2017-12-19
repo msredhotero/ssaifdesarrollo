@@ -81,7 +81,8 @@ $tablasAr	= array("contactos"        => "dbcontactos",
 "cambios"=>"dbcambios",
 "jugadoresclub"=>"dbjugadoresclub",
 "modulos"=>"tbmodulos",
-"vigenciasoperaciones"=>"dbvigenciasoperaciones");
+"vigenciasoperaciones"=>"dbvigenciasoperaciones",
+"jugadorespre"=>"dbjugadorespre");
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
@@ -132,7 +133,8 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "cambios"=>"dbcambios",
 "jugadoresclub"=>"dbjugadoresclub",
 "modulos"=>"tbmodulos",
-"vigenciasoperaciones"=>"dbvigenciasoperaciones");
+"vigenciasoperaciones"=>"dbvigenciasoperaciones",
+"jugadorespre"=>"dbjugadorespre");
 
 	$tablasArAux	= array("contactos"        => 2,        
 "tipocontactos"=> 1,
@@ -180,7 +182,8 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "cambios"=>4,
 "jugadoresclub"=>1,
 "modulos"=>1,
-"vigenciasoperaciones"=>2);
+"vigenciasoperaciones"=>2,
+"jugadorespre"=>3);
 	
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
@@ -210,7 +213,7 @@ $ajaxFuncionesController = '';
 
 $servicios	= "Referencias";
 
-$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_local_junio_final";
+$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_local_diciembre_host";
 $resMapeo 	=	query($sqlMapaer,0);
 
 $aliasTablaMadre = '';

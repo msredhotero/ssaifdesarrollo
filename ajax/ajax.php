@@ -527,10 +527,87 @@ case 'eliminarPreFallo':
 	eliminarPreFallo($serviciosReferencias);
 	break;
 /*****			FIN				**********/
+
+/*****			SATELITES		**********/
+case 'insertarJugadorespre':
+	insertarJugadorespre($serviciosReferencias);
+	break;
+case 'modificarJugadorespre':
+	modificarJugadorespre($serviciosReferencias);
+	break;
+case 'eliminarJugadorespre':
+	eliminarJugadorespre($serviciosReferencias);
+	break; 
+/*****			fin 			**********/
 }
 
 /* Fin */
 
+
+/*****			SATELITES		**********/
+
+
+function insertarJugadorespre($serviciosReferencias) {
+	$reftipodocumentos = $_POST['reftipodocumentos'];
+	$nrodocumento = $_POST['nrodocumento'];
+	$apellido = $_POST['apellido'];
+	$nombres = $_POST['nombres'];
+	$email = $_POST['email'];
+	$fechanacimiento = formatearFechas($_POST['fechanacimiento']);
+	$fechaalta = formatearFechas($_POST['fechaalta']);
+	$refcountries = $_POST['refcountries'];
+	$observaciones = $_POST['observaciones'];
+	$refusuarios = $_POST['refusuarios'];
+	
+	if (($fechaalta == '***') || ($fechanacimiento == '***')) {
+		echo 'Formato de fecha incorrecto';
+	} else {
+		if (($serviciosReferencias->existeJugador($nrodocumento) == 0) && ($serviciosReferencias->existeJugadorPre($nrodocumento) == 0)) {
+			$res = $serviciosReferencias->insertarJugadorespre($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$refcountries,$observaciones,$refusuarios); 
+			
+			if ((integer)$res > 0) { 
+				echo $res; 
+			} else { 
+				echo 'Huvo un error al insertar datos';	 
+			} 
+		} else {
+			echo 'Ya existe ese numero de documento';	
+		}
+	}
+}
+
+
+function modificarJugadorespre($serviciosReferencias) {
+	$id = $_POST['id'];
+	$reftipodocumentos = $_POST['reftipodocumentos'];
+	$nrodocumento = $_POST['nrodocumento'];
+	$apellido = $_POST['apellido'];
+	$nombres = $_POST['nombres'];
+	$email = $_POST['email'];
+	$fechanacimiento = $_POST['fechanacimiento'];
+	$fechaalta = $_POST['fechaalta'];
+	$refcountries = $_POST['refcountries'];
+	$observaciones = $_POST['observaciones'];
+	$refusuarios = $_POST['refusuarios'];
+	
+	$res = $serviciosReferencias->modificarJugadorespre($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$refcountries,$observaciones,$refusuarios);
+	
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+
+
+function eliminarJugadorespre($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarJugadorespre($id);
+	echo $res;
+} 
+
+
+/*****			fin 			**********/
 
 /* administracion */
 
@@ -2449,6 +2526,18 @@ function existeJugador($serviciosReferencias) {
 	}
 }
 
+
+function existeJugadorPre($serviciosReferencias) {
+	$nrodocumento = $_POST['nrodocumento']; 
+	
+	$res = $serviciosReferencias->existeJugadorPre($nrodocumento);
+	
+	if ($res == 0) {
+		echo '';	
+	} else {
+		echo 'Ya existe este Nro de Documento';	
+	}
+}
 
 function insertarJugadores($serviciosReferencias) { 
 	$reftipodocumentos = $_POST['reftipodocumentos']; 
