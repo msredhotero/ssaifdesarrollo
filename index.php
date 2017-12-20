@@ -166,11 +166,13 @@ $servicios = new Servicios();
 </div>-->
 
 
-<div class="logueo" align="center">
+<div class="logueo row" align="center">
 <br>
 <br>
 <br>
-	<section style="width:700px; padding-top:10px; padding-top:60px;padding:25px;
+<div class="col-md-2"></div>
+<div class="col-md-8">
+	<section style="padding-top:10px; padding-top:60px;padding:25px;
 background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #333;-webkit-box-shadow: 2px 2px 3px #333;-moz-box-shadow: 2px 2px 3px #333;">
 			<div id="error" style="text-align:left; color:#666;">
             
@@ -183,15 +185,17 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
             </div>
 			<form role="form" class="form-horizontal">
               
-
+              <div class="row">
               <div class="form-group">
                 <label for="usuario" class="col-md-2 control-label" style="color:#363636;text-align:left;">E-Mail</label>
-                <div class="col-lg-7">
+                <div class="col-md-7">
                   <input type="email" class="form-control" id="email" name="email" 
                          placeholder="E-Mail">
                 </div>
               </div>
+              </div>
 
+              <div class="row">
               <div class="form-group">
                 <label for="ejemplo_password_2" class="col-md-2 control-label" style="color:#363636;text-align:left;">Contraseña</label>
                 <div class="col-lg-7">
@@ -199,9 +203,9 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
                          placeholder="password">
                 </div>
               </div>
+              </div>
               
-              
-              
+              <div class="row">
               <div class="form-group">
               	<label for="olvido" class="control-label" style="color:#363636">¿Has olvidado tu contraseña?. <a href="recuperarpassword.php">Recuperar.</a></label>
               </div>
@@ -211,7 +215,7 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
                   <button type="button" class="btn btn-default" id="login">Login</button>
                 </div>
               </div>
-				
+				      </div>
                 <div id="load">
                 
                 </div>
@@ -219,6 +223,8 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
             </form>
 
      </section>
+</div>
+<div class="col-md-2"></div>
      <br>
      <br>
      <br>
