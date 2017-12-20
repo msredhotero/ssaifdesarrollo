@@ -12406,9 +12406,9 @@ return $res;
 
 /* PARA Jugadorespre */
 
-function insertarJugadorespre($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$refcountries,$observaciones,$refusuarios) {
-$sql = "insert into dbjugadorespre(idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios)
-values ('',".$reftipodocumentos.",".$nrodocumento.",'".utf8_decode($apellido)."','".utf8_decode($nombres)."','".utf8_decode($email)."','".utf8_decode($fechanacimiento)."','".utf8_decode($fechaalta)."',".$refcountries.",'".utf8_decode($observaciones)."',".$refusuarios.")";
+function insertarJugadorespre($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$numeroserielote,$refcountries,$observaciones,$refusuarios) {
+$sql = "insert into dbjugadorespre(idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,numeroserielote,refcountries,observaciones,refusuarios)
+values ('',".$reftipodocumentos.",".$nrodocumento.",'".utf8_decode($apellido)."','".utf8_decode($nombres)."','".utf8_decode($email)."','".utf8_decode($fechanacimiento)."','".utf8_decode($fechaalta)."','".utf8_decode($numeroserielote)."',".$refcountries.",'".utf8_decode($observaciones)."',".$refusuarios.")";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -12461,6 +12461,7 @@ j.nombres,
 j.email,
 j.fechanacimiento,
 j.fechaalta,
+j.numeroserielote,
 j.observaciones,
 j.refusuarios,
 j.refcountries

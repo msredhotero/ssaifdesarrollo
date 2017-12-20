@@ -555,6 +555,7 @@ function insertarJugadorespre($serviciosReferencias) {
 	$email = $_POST['email'];
 	$fechanacimiento = formatearFechas($_POST['fechanacimiento']);
 	$fechaalta = formatearFechas($_POST['fechaalta']);
+	$numeroserielote = $_POST['numeroserielote'];
 	$refcountries = $_POST['refcountries'];
 	$observaciones = $_POST['observaciones'];
 	$refusuarios = $_POST['refusuarios'];
@@ -563,7 +564,7 @@ function insertarJugadorespre($serviciosReferencias) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if (($serviciosReferencias->existeJugador($nrodocumento) == 0) && ($serviciosReferencias->existeJugadorPre($nrodocumento) == 0)) {
-			$res = $serviciosReferencias->insertarJugadorespre($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$refcountries,$observaciones,$refusuarios); 
+			$res = $serviciosReferencias->insertarJugadorespre($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$numeroserielote,$refcountries,$observaciones,$refusuarios); 
 			
 			if ((integer)$res > 0) { 
 				echo $res; 

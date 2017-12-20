@@ -84,8 +84,8 @@ if (mysql_num_rows($resPermiteRegistrar)>0) {
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla2			= "dbjugadorespre";
 
-$lblCambio2	 	= array("reftipodocumentos","nrodocumento","fechanacimiento","fechaalta","fechabaja","refcountries","refusuarios");
-$lblreemplazo2	= array("Tipo Documento","Nro Documento","Fecha Nacimiento","Fecha Alta","Fecha Baja","Countries","Usuario");
+$lblCambio2	 	= array("reftipodocumentos","nrodocumento","fechanacimiento","fechaalta","fechabaja","refcountries","refusuarios","numeroserielote");
+$lblreemplazo2	= array("Tipo Documento","Nro Documento","Fecha Nacimiento","Fecha Alta","Fecha Baja","Countries","Usuario","Nro Serie Lote");
 
 
 $resTipoDoc 	= $serviciosReferencias->traerTipodocumentos();
@@ -111,9 +111,10 @@ $cabeceras 		= "	<th>Tipo Documento</th>
 					<th>Email</th>
 					<th>Fecha Nac.</th>
 					<th>Fecha Alta</th>
+					<th>Nro Serie Lote</th>
 					<th>Obs.</th>";
 
-$lstNuevosJugadores = $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadoresprePorCountries($_GET['id']),8);
+$lstNuevosJugadores = $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadoresprePorCountries($_GET['id']),9);
 
 
 
@@ -265,11 +266,18 @@ if ($_SESSION['refroll_predio'] != 1) {
             <div class="row">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
+                	
                     <li>
                         <button type="button" class="btn btn-danger" id="btnImprimir" style="margin-left:0px;">Imprimir</button>
                     </li>
                     <li>
                     	<button type="button" data-toggle="modal" data-target="#myModal3" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Agregar Jugador</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-info" id="btnExcel1" style="margin-left:0px;" onClick="location.href = 'http://www.aif.org.ar/wp-content/uploads/2016/09/buenafe.xlsx'"><span class="glyphicon glyphicon-save"></span> Lista de Buena Fe/Altas de equipos</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-info" id="btnExcel2" style="margin-left:0px;" onClick="location.href = 'http://www.aif.org.ar/wp-content/uploads/2016/09/buenafemo.xlsx'"><span class="glyphicon glyphicon-save"></span> Modificaciones de Lista de Buena Fe/Altas de equipos</button>
                     </li>
                 </ul>
                 </div>
