@@ -161,6 +161,19 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 }
 
 
+$pdf->Ln();
+$pdf->Ln();
+$pdf->Ln();
+$pdf->Ln();
+$pdf->SetFont('Arial','',7);
+$pdf->MultiCell(190, 3, 'Certifico que los arriba Inscriptos son Socios-Propietarios de Lotes del Country (titulares, cónyugues, ascendientes, descendientes o yernos únicamente), y/o jugadores que se enmarcan dentro del artículo 2 incisos "a", "b" y "d" de vuestro reglamento de torneos, estando estatutariamente habilitados para representar a la Institución en competencias deportivas. Manifiesto conocer y aceptar en todas sus partes el Reglamento de los Torneos y el Reglamento del Tribunal de Disciplina, comprometiéndose el Country al que represento, a cumplir y hacer cumplir los derechos y obligaciones obrantes en los mismos y a comunicar a la Asociación, en forma inmediata, cualquier modificación en la condición o categoría de los socios-propietarios y/o familiares inscriptos en la presente lista.',0,'','');
+$pdf->Ln();
+$pdf->Ln();
+$pdf->Ln();
+$pdf->SetFont('Arial','b',8);
+$pdf->MultiCell(190, 4, 'Nota: El Padrón deberá estar firmado por el Presidente y/o Secretario de la Institución, con sellos aclaratorios y certificación Bancaria o de un Escribano público acerca de las identidades de los Firmantes, adjuntando además un elemento probatorio del carácter de su función (fotocopia certificada del libro de Actas, certificación Bancaria u otras).',0,'','');
+
+
 Footer($pdf);
 
 $pdf->AddPage();
@@ -234,6 +247,18 @@ while ($rowE = mysql_fetch_array($lstNuevosJugadores)) {
 
 
 }
+
+$pdf->Ln();
+$pdf->Ln();
+$pdf->Ln();
+$pdf->Ln();
+$pdf->SetFont('Arial','',7);
+$pdf->MultiCell(190, 3, 'Certifico que los arriba Inscriptos son Socios-Propietarios de Lotes del Country (titulares, cónyugues, ascendientes, descendientes o yernos únicamente), y/o jugadores que se enmarcan dentro del artículo 2 incisos "a", "b" y "d" de vuestro reglamento de torneos, estando estatutariamente habilitados para representar a la Institución en competencias deportivas. Manifiesto conocer y aceptar en todas sus partes el Reglamento de los Torneos y el Reglamento del Tribunal de Disciplina, comprometiéndose el Country al que represento, a cumplir y hacer cumplir los derechos y obligaciones obrantes en los mismos y a comunicar a la Asociación, en forma inmediata, cualquier modificación en la condición o categoría de los socios-propietarios y/o familiares inscriptos en la presente lista.',0,'','');
+$pdf->Ln();
+$pdf->Ln();
+$pdf->Ln();
+$pdf->SetFont('Arial','b',8);
+$pdf->MultiCell(190, 4, 'Nota: El Padrón deberá estar firmado por el Presidente y/o Secretario de la Institución, con sellos aclaratorios y certificación Bancaria o de un Escribano público acerca de las identidades de los Firmantes, adjuntando además un elemento probatorio del carácter de su función (fotocopia certificada del libro de Actas, certificación Bancaria u otras).',0,'','');
 
 
 Footer($pdf);
@@ -512,20 +537,6 @@ while ($rowE = mysql_fetch_array($resDatosBaja)) {
 }
 */
 //120 x 109
-
-/*
-$pdf->Ln();
-$pdf->Ln();
-$pdf->Ln();
-$pdf->Ln();
-$pdf->SetFont('Arial','',7);
-$pdf->MultiCell(190, 3, 'Certifico que los arriba Inscriptos son Socios-Propietarios de Lotes del Country (titulares, cónyugues, ascendientes, descendientes o yernos únicamente), y/o jugadores que se enmarcan dentro del artículo 2 incisos "a", "b" y "d" de vuestro reglamento de torneos, estando estatutariamente habilitados para representar a la Institución en competencias deportivas. Manifiesto conocer y aceptar en todas sus partes el Reglamento de los Torneos y el Reglamento del Tribunal de Disciplina, comprometiéndose el Country al que represento, a cumplir y hacer cumplir los derechos y obligaciones obrantes en los mismos y a comunicar a la Asociación, en forma inmediata, cualquier modificación en la condición o categoría de los socios-propietarios y/o familiares inscriptos en la presente lista.',0,'','');
-$pdf->Ln();
-$pdf->Ln();
-$pdf->Ln();
-$pdf->SetFont('Arial','b',8);
-$pdf->MultiCell(190, 4, 'Nota: El Padrón deberá estar firmado por el Presidente y/o Secretario de la Institución, con sellos aclaratorios y certificación Bancaria o de un Escribano público acerca de las identidades de los Firmantes, adjuntando además un elemento probatorio del carácter de su función (fotocopia certificada del libro de Actas, certificación Bancaria u otras).',0,'','');
-*/
 
 
 $nombreTurno = "JUGADORES-COUNTRIES-".$fecha.".pdf";

@@ -12124,12 +12124,49 @@ function verificarEdad($refjugador) {
     
     return $edad;   
 }
+
+function verificarEdadAnioManual($refjugador, $anio) {
+    $sql = "select DATE_FORMAT(fechanacimiento, '%Y') as fechanacimiento from dbjugadores where idjugador =".$refjugador;
+    $res = $this->query($sql,0);
+    
+    $fechactual = $anio;
+    $edadJuagador = mysql_result($res,0,'fechanacimiento');
+    
+    $edad = $fechactual - $edadJuagador;
+    
+    return $edad;   
+}
 /******   FIN   *****///////////////
 
 /******   COMPRUEBO SI PUEDO JUGAR EN ESA CATEGORIA Y TIPO DE JUGADOR, POR LA EDAD     *************/
 function verificaEdadCategoriaJugador($refjugador, $refcategoria, $tipoJugador) {
     //## falta chocar contra una temporada
     $edad = $this->verificarEdad($refjugador);
+    
+    $sql = "SELECT 
+                count(*) as verificado
+            FROM
+                dbdefinicionescategoriastemporadastipojugador dc
+                    INNER JOIN
+                (SELECT 
+                    iddefinicioncategoriatemporada
+                FROM
+                    dbdefinicionescategoriastemporadas ct
+                WHERE
+                    ct.refcategorias = ".$refcategoria."
+                ORDER BY iddefinicioncategoriatemporada DESC
+                LIMIT 1) c
+                on c.iddefinicioncategoriatemporada = dc.refdefinicionescategoriastemporadas
+                where dc.reftipojugadores = ".$tipoJugador." and ".$edad." between dc.edadminima and dc.edadmaxima";
+    $res = $this->query($sql,0);
+    
+    return mysql_result($res,0,0);
+}
+
+
+function verificaEdadCategoriaJugadorAnioManual($refjugador, $refcategoria, $tipoJugador, $anio) {
+    //## falta chocar contra una temporada
+    $edad = $this->verificarEdadAnioManual($refjugador, $anio);
     
     $sql = "SELECT 
                 count(*) as verificado

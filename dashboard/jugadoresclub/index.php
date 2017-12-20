@@ -74,6 +74,15 @@ if (mysql_num_rows($resPermiteRegistrar)>0) {
 	$permiteRegistrar = 0;
 }
 
+
+$resTemporadas = $serviciosReferencias->traerUltimaTemporada(); 
+
+if (mysql_num_rows($resTemporadas)>0) {
+    $ultimaTemporada = mysql_result($resTemporadas,0,0);    
+} else {
+    $ultimaTemporada = 0;   
+}
+
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
 
 
@@ -251,6 +260,13 @@ if ($_SESSION['refroll_predio'] != 1) {
 				  <div class="panel-body"><?php echo str_replace('example','example1', $lstNuevosJugadores); ?></div>
 				</div>
             	
+            	<div class="col-md-6">
+            		<label class="control-label">Seleccione un año para generar el reporte</label>
+            		<select id="anio" name="anio" class="form-control">
+            			<option value="<?php echo date('Y') + 1; ?>"><?php echo date('Y') + 1; ?></option>
+            			<option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
+            		</select>
+            	</div>
 
             </div>
 
@@ -278,6 +294,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </li>
                     <li>
                         <button type="button" class="btn btn-info" id="btnExcel2" style="margin-left:0px;" onClick="location.href = 'http://www.aif.org.ar/wp-content/uploads/2016/09/buenafemo.xlsx'"><span class="glyphicon glyphicon-save"></span> Modificaciones de Lista de Buena Fe/Altas de equipos</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-danger" id="btnCondicionJugador" style="margin-left:0px;">Reporte Condicion de Jugadores</button>
                     </li>
                 </ul>
                 </div>
@@ -369,6 +388,14 @@ $(document).ready(function(){
 	$('#btnImprimir').click(function() {
 		window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + <?php echo $refClub; ?> + "&bajas1=0" ,'_blank');
 	});
+
+
+	$('#btnCondicionJugador').click(function() {
+		window.open("../../reportes/rptCondicionJugadorManual.php?id=0&reftemporada=" + <?php echo $ultimaTemporada; ?> + "&bajaequipos=1" + "&refcountries=" + <?php echo $refClub; ?> + "&anio=" + $('#anio').val() ,'_blank');
+	});
+
+
+	
 	
 	$("#example").on("click",'.guardarJugadorClubSimple', function(){
 		
