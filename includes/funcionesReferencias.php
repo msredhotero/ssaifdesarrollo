@@ -4731,6 +4731,37 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+
+function traerJugadoresClubPorCountrieActivos($idCountrie) { 
+$sql = "select 
+j.idjugador,
+tip.tipodocumento,
+j.nrodocumento,
+j.apellido,
+j.nombres,
+j.email,
+date_format(j.fechanacimiento, '%d/%m/%Y') as fechanacimiento,
+j.fechaalta,
+j.fechabaja,
+cou.nombre as countrie,
+j.observaciones,
+j.reftipodocumentos,
+j.refcountries,
+(case when jc.fechabaja = 1 then 'Si' else 'No' end) as fechabaja,
+(case when jc.articulo = 1 then 'Si' else 'No' end) as articulo,
+coalesce( jc.numeroserielote,'') as numeroserielote,
+concat(j.apellido, ' ', j.nombres) as apyn
+from dbjugadores j 
+inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+left join dbjugadoresclub jc on jc.refcountries = cou.idcountrie and jc.refjugadores = j.idjugador
+where j.refcountries = ".$idCountrie." and (j.fechabaja is null or j.fechabaja = '1900-01-01' or j.fechabaja = '0000-00-00' or j.fechabaja >= now())
+order by concat(j.apellido, ' ', j.nombres)"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
 /* Fin */
 /* /* Fin de la Tabla: dbjugadores*/
 

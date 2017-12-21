@@ -24,7 +24,7 @@ $idCountries		=	$_GET['refcountries1'];
 /////////////////////////////  fin parametross  ///////////////////////////
 
 
-$resDatos = $serviciosReferencias->traerJugadoresClubPorCountrie($idCountries);
+$resDatos = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($idCountries);
 
 if ($_GET['bajas1'] == 'true') {
 	$resDatosBaja = $serviciosReferencias->traerJugadoresPorCountriesBaja($idCountries);
@@ -96,9 +96,9 @@ $pdf->SetAutoPageBreak(false,1);
 	$pdf->Cell(60,4,'Apellido y Nombre',1,0,'C',false);
 	$pdf->Cell(15,4,'Nro. Doc.',1,0,'C',false);
 	$pdf->Cell(15,4,'Fec. Nac',1,0,'C',false);
-	$pdf->Cell(40,4,'Nro Serie Lote',1,0,'C',false);
+	$pdf->Cell(40,4,'Numero Socio/Lote',1,0,'C',false);
 	$pdf->Cell(16,4,'Baja',1,0,'C',false);
-	$pdf->Cell(16,4,'Art 2',1,0,'C',false);
+	$pdf->Cell(30,4,'Art 2 Inciso D',1,0,'C',false);
 
 	$cantPartidos = 0;
 	$i=0;
@@ -130,9 +130,9 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->Cell(60,4,'Apellido y Nombre',0,0,'C',false);
 		$pdf->Cell(15,4,'Nro. Doc.',0,0,'C',false);
 		$pdf->Cell(15,4,'Fec. Nac',1,0,'C',false);
-		$pdf->Cell(40,4,'Nro Serie Lote',1,0,'C',false);
+		$pdf->Cell(40,4,'Numero de Socio/Lote',1,0,'C',false);
 		$pdf->Cell(16,4,'Baja',1,0,'C',false);
-		$pdf->Cell(16,4,'Art 2',1,0,'C',false);
+		$pdf->Cell(30,4,'Art 2 Inciso D',1,0,'C',false);
 
 	}
 	
@@ -146,7 +146,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$pdf->Cell(15,4,$rowE['fechanacimiento'],1,0,'C',false);
 	$pdf->Cell(40,4,$rowE['numeroserielote'],1,0,'C',false);
 	$pdf->Cell(16,4,$rowE['fechabaja'],1,0,'C',false);
-	$pdf->Cell(16,4,$rowE['articulo'],1,0,'C',false);
+	$pdf->Cell(30,4,$rowE['articulo'],1,0,'C',false);
 
 	
 	
@@ -195,7 +195,7 @@ $pdf->AddPage();
 	$pdf->Cell(60,4,'Apellido y Nombre',1,0,'C',false);
 	$pdf->Cell(15,4,'Nro. Doc.',1,0,'C',false);
 	$pdf->Cell(15,4,'Fec. Nac',1,0,'C',false);
-	$pdf->Cell(40,4,'Nro Serie Lote',1,0,'C',false);
+	$pdf->Cell(40,4,'Numero de Socio/Lote',1,0,'C',false);
 
 	$cantPartidos = 0;
 	$i=0;

@@ -219,7 +219,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		}
 		
 		
-		if ($yN >= 250) {
+		if ($yN >= 270) {
 			$this->AddPage();
 			
 			
@@ -307,7 +307,7 @@ while ($rowC = mysql_fetch_array($lstEquipos)) {
 
 	$pdf->SetMargins(3, 5 , 3); 
 
-	$pdf->Image('../imagenes/aif_logo.png',2,2,20);
+	$pdf->Image('../imagenes/aif_logo.png',2,2,30);
 	$pdf->SetFont('Arial','U',17);
 	$pdf->Cell(188,7,strtoupper('Condicion de Jugador'),0,0,'C',false);
 	$pdf->Ln();

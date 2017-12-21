@@ -187,7 +187,7 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
               
               <div class="row">
               <div class="form-group">
-                <label for="usuario" class="col-md-2 control-label" style="color:#363636;text-align:left;">E-Mail</label>
+                <label for="usuario" class="col-md-2 control-label" style="color:#363636;text-align:left;">Usuario:</label>
                 <div class="col-md-7">
                   <input type="email" class="form-control" id="email" name="email" 
                          placeholder="E-Mail">
@@ -197,7 +197,7 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
 
               <div class="row">
               <div class="form-group">
-                <label for="ejemplo_password_2" class="col-md-2 control-label" style="color:#363636;text-align:left;">Contraseña</label>
+                <label for="ejemplo_password_2" class="col-md-2 control-label" style="color:#363636;text-align:left;">Contraseña:</label>
                 <div class="col-lg-7">
                   <input type="password" class="form-control" id="pass" name="pass" 
                          placeholder="password">
@@ -212,7 +212,7 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
              
               <div class="form-group">
                 <div class="col-md-12">
-                  <button type="button" class="btn btn-default" id="login">Login</button>
+                  <button type="button" class="btn btn-default" id="login">Ingresar</button>
                 </div>
               </div>
 				      </div>
