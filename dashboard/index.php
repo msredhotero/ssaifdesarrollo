@@ -218,7 +218,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 												<th>Nro Documento</th>
 												<th>Numero Serie Lote</th>
 												<th>Baja</th>
-												<th>Art 2</th>
+												<th>Art 2 Inciso D</th>
 												<th>Accion</th>
 			
 											</tr>

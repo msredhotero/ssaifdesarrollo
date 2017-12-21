@@ -1,5 +1,13 @@
 <?php
 
+
+session_start();
+
+if (!isset($_SESSION['usua_predio']))
+{
+	header('Location: ../error.php');
+} else {
+
 date_default_timezone_set('America/Buenos_Aires');
 
 include ('../includes/funcionesUsuarios.php');
@@ -18,6 +26,14 @@ $fecha = date('Y-m-d');
 require('fpdf.php');
 
 //$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
+
+
+if ($_SESSION['idroll_predio'] == 4) {
+	$refClub = $_SESSION['club_predio'];
+} else {
+	$refClub = $_GET['refcountries'];
+}
+
 
 
 $idTemporada = $_GET['reftemporada'];	
@@ -45,9 +61,9 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 
 	$this->SetFont('Arial','',11);
     // Colores, ancho de línea y fuente en negrita
-    $this->SetFillColor(255,0,0);
+    $this->SetFillColor(72,72,72);
     $this->SetTextColor(255);
-    $this->SetDrawColor(128,0,0);
+    $this->SetDrawColor(85,85,85);
     $this->SetLineWidth(.3);
 	$this->Ln();
 	
@@ -86,6 +102,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	
 	$aumentoNombre = 0;
 	
+	$tieneAlgunaHabilitacionTrans = 0;
 	
     while ($row = mysql_fetch_array($data))
     {
@@ -97,6 +114,8 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		$transitoria= '';
 		$valorDocumentacion = 0;
 		$documentaciones = '';
+
+		$tieneAlgunaHabilitacionTrans = 0;
 	
 		$yInicial = $this->GetY();
 		
@@ -126,6 +145,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 						$valorDocumentacion += 1;
 						if (mysql_num_rows($servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($row['refjugadores'],$rowH['refdocumentaciones']))>0) {
 							$valorDocumentacion -= 1;	
+							$tieneAlgunaHabilitacionTrans = 1;	
 						}
 					}
 					if ($rowH['contravalordesc'] == '') {
@@ -179,10 +199,21 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$yN = $this->GetY();
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3], $y);
-		$this->MultiCell($w[4],5,$errorDoc,'','C');
-		if ($this->GetY() > $yN + 5) {
-			$yN = $this->GetY();
+
+		if ($tieneAlgunaHabilitacionTrans == 1) {
+			$this->SetFont('Arial','',6);
+			$this->MultiCell($w[4],5,'HAB TRANSi.','','C');
+			if ($this->GetY() > $yN + 5) {
+				$yN = $this->GetY();
+			}
+		} else {
+			$this->SetFont('Arial','',8);
+			$this->MultiCell($w[4],5,$errorDoc,'','C');
+			if ($this->GetY() > $yN + 5) {
+				$yN = $this->GetY();
+			}
 		}
+		
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4], $y);
 		$this->MultiCell($w[5],5,$cadErrorDoc,'','L');
 		if ($this->GetY() >= $yN + 5) {
@@ -212,9 +243,9 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			
 			$this->SetFont('Arial','',11);
 			// Colores, ancho de línea y fuente en negrita
-			$this->SetFillColor(255,0,0);
+			$this->SetFillColor(72,72,72);
 			$this->SetTextColor(255);
-			$this->SetDrawColor(128,0,0);
+			$this->SetDrawColor(85,85,85);
 			$this->SetLineWidth(.3);
 			for($i=0;$i<count($header);$i++)
 				$this->Cell($w[$i],6,$header[$i],1,0,'C',true);
@@ -268,7 +299,7 @@ $headerFacturacion = array("Carnet", "Jugador", "Fec. Nac.", "Country","Est. Doc
 // Carga de datos
 
 
-$idCountry  = 	$_GET['refcountries'];
+$idCountry  = 	$refClub;
 
 if ($id == 0) {
 	$lstEquipos =	$serviciosReferencias->traerEquiposPorCountriesActivosInactivos($idCountry, $_GET['bajaequipos']);
@@ -329,5 +360,6 @@ $nombreTurno = "rptCondicionJugador-".$fecha.".pdf";
 $pdf->Output($nombreTurno,'I');
 
 
+}
 ?>
 
