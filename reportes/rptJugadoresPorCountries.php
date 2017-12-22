@@ -56,7 +56,7 @@ $pdf->Cell(0,10,'Firma Presidente o Secretario: ________________________________
 
 
 $cantidadJugadores = 0;
-#Establecemos los m·rgenes izquierda, arriba y derecha: 
+#Establecemos los m√°rgenes izquierda, arriba y derecha: 
 //$pdf->SetMargins(2, 2 , 2); 
 
 #Establecemos el margen inferior: 
@@ -166,12 +166,12 @@ $pdf->Ln();
 $pdf->Ln();
 $pdf->Ln();
 $pdf->SetFont('Arial','',7);
-$pdf->MultiCell(190, 3, 'Certifico que los arriba Inscriptos son Socios-Propietarios de Lotes del Country (titulares, cÛnyugues, ascendientes, descendientes o yernos ˙nicamente), y/o jugadores que se enmarcan dentro del artÌculo 2 incisos "a", "b" y "d" de vuestro reglamento de torneos, estando estatutariamente habilitados para representar a la InstituciÛn en competencias deportivas. Manifiesto conocer y aceptar en todas sus partes el Reglamento de los Torneos y el Reglamento del Tribunal de Disciplina, comprometiÈndose el Country al que represento, a cumplir y hacer cumplir los derechos y obligaciones obrantes en los mismos y a comunicar a la AsociaciÛn, en forma inmediata, cualquier modificaciÛn en la condiciÛn o categorÌa de los socios-propietarios y/o familiares inscriptos en la presente lista.',0,'','');
+$pdf->MultiCell(190, 3, utf8_decode('Certifico que los arriba Inscriptos son Socios-Propietarios de Lotes del Country (titulares, c√≥nyugues, ascendientes, descendientes o yernos √∫nicamente), y/o jugadores que se enmarcan dentro del art√≠culo 2 incisos "a", "b" y "d" de vuestro reglamento de torneos, estando estatutariamente habilitados para representar a la Instituci√≥n en competencias deportivas. Manifiesto conocer y aceptar en todas sus partes el Reglamento de los Torneos y el Reglamento del Tribunal de Disciplina, comprometi√©ndose el Country al que represento, a cumplir y hacer cumplir los derechos y obligaciones obrantes en los mismos y a comunicar a la Asociaci√≥n, en forma inmediata, cualquier modificaci√≥n en la condici√≥n o categor√≠a de los socios-propietarios y/o familiares inscriptos en la presente lista.'),0,'','');
 $pdf->Ln();
 $pdf->Ln();
 $pdf->Ln();
 $pdf->SetFont('Arial','b',8);
-$pdf->MultiCell(190, 4, 'Nota: El PadrÛn deber· estar firmado por el Presidente y/o Secretario de la InstituciÛn, con sellos aclaratorios y certificaciÛn Bancaria o de un Escribano p˙blico acerca de las identidades de los Firmantes, adjuntando adem·s un elemento probatorio del car·cter de su funciÛn (fotocopia certificada del libro de Actas, certificaciÛn Bancaria u otras).',0,'','');
+$pdf->MultiCell(190, 4, utf8_decode('Nota: El Padr√≥n deber√° estar firmado por el Presidente y/o Secretario de la Instituci√≥n, con sellos aclaratorios y certificaci√≥n Bancaria o de un Escribano p√∫blico acerca de las identidades de los Firmantes, adjuntando adem√°s un elemento probatorio del car√°cter de su funci√≥n (fotocopia certificada del libro de Actas, certificaci√≥n Bancaria u otras).'),0,'','');
 
 
 Footer($pdf);
@@ -253,12 +253,12 @@ $pdf->Ln();
 $pdf->Ln();
 $pdf->Ln();
 $pdf->SetFont('Arial','',7);
-$pdf->MultiCell(190, 3, 'Certifico que los arriba Inscriptos son Socios-Propietarios de Lotes del Country (titulares, cÛnyugues, ascendientes, descendientes o yernos ˙nicamente), y/o jugadores que se enmarcan dentro del artÌculo 2 incisos "a", "b" y "d" de vuestro reglamento de torneos, estando estatutariamente habilitados para representar a la InstituciÛn en competencias deportivas. Manifiesto conocer y aceptar en todas sus partes el Reglamento de los Torneos y el Reglamento del Tribunal de Disciplina, comprometiÈndose el Country al que represento, a cumplir y hacer cumplir los derechos y obligaciones obrantes en los mismos y a comunicar a la AsociaciÛn, en forma inmediata, cualquier modificaciÛn en la condiciÛn o categorÌa de los socios-propietarios y/o familiares inscriptos en la presente lista.',0,'','');
+$pdf->MultiCell(190, 3, utf8_decode('Certifico que los arriba Inscriptos son Socios-Propietarios de Lotes del Country (titulares, c√≥nyugues, ascendientes, descendientes o yernos √∫nicamente), y/o jugadores que se enmarcan dentro del art√≠culo 2 incisos "a", "b" y "d" de vuestro reglamento de torneos, estando estatutariamente habilitados para representar a la Instituci√≥n en competencias deportivas. Manifiesto conocer y aceptar en todas sus partes el Reglamento de los Torneos y el Reglamento del Tribunal de Disciplina, comprometi√©ndose el Country al que represento, a cumplir y hacer cumplir los derechos y obligaciones obrantes en los mismos y a comunicar a la Asociaci√≥n, en forma inmediata, cualquier modificaci√≥n en la condici√≥n o categor√≠a de los socios-propietarios y/o familiares inscriptos en la presente lista.'),0,'','');
 $pdf->Ln();
 $pdf->Ln();
 $pdf->Ln();
 $pdf->SetFont('Arial','b',8);
-$pdf->MultiCell(190, 4, 'Nota: El PadrÛn deber· estar firmado por el Presidente y/o Secretario de la InstituciÛn, con sellos aclaratorios y certificaciÛn Bancaria o de un Escribano p˙blico acerca de las identidades de los Firmantes, adjuntando adem·s un elemento probatorio del car·cter de su funciÛn (fotocopia certificada del libro de Actas, certificaciÛn Bancaria u otras).',0,'','');
+$pdf->MultiCell(190, 4, utf8_decode('Nota: El Padr√≥n deber√° estar firmado por el Presidente y/o Secretario de la Instituci√≥n, con sellos aclaratorios y certificaci√≥n Bancaria o de un Escribano p√∫blico acerca de las identidades de los Firmantes, adjuntando adem√°s un elemento probatorio del car√°cter de su funci√≥n (fotocopia certificada del libro de Actas, certificaci√≥n Bancaria u otras).'),0,'','');
 
 
 Footer($pdf);
@@ -267,31 +267,31 @@ Footer($pdf);
 $pdf->AddPage();
 
 $pdf->SetFont('Arial','',12);
-$pdf->Cell(200,5,'ACTUALIZACI”N DE DATOS A—O 2017',0,0,'C',false);
+$pdf->Cell(200,5,utf8_decode('ACTUALIZACI√ìN DE DATOS A√ëO 2017'),0,0,'C',false);
 $pdf->Ln();
 $pdf->Ln();
 $pdf->Ln();
 $pdf->Cell(200,5,'COUNTRY:',0,0,'L',false);
 $pdf->Ln();
 $pdf->Ln();
-$pdf->Cell(200,5,'1∫ DELEGADO:',0,0,'L',false);
+$pdf->Cell(200,5,utf8_decode('1¬∫ DELEGADO:'),0,0,'L',false);
 $pdf->Ln();
-$pdf->Cell(200,5,'N⁄MERO PARTICULAR:',0,0,'L',false);
+$pdf->Cell(200,5,utf8_decode('N√öMERO PARTICULAR:'),0,0,'L',false);
 $pdf->Ln();
-$pdf->Cell(200,5,'N⁄MERO LABORAL:',0,0,'L',false);
+$pdf->Cell(200,5,utf8_decode('N√öMERO LABORAL:'),0,0,'L',false);
 $pdf->Ln();
-$pdf->Cell(200,5,'N⁄MERO DE CELULAR:',0,0,'L',false);
+$pdf->Cell(200,5,utf8_decode('N√öMERO DE CELULAR:'),0,0,'L',false);
 $pdf->Ln();
 $pdf->Cell(200,5,'E-MAIL:',0,0,'L',false);
 $pdf->Ln();
 $pdf->Ln();
-$pdf->Cell(200,5,'2∫ DELEGADO:',0,0,'L',false);
+$pdf->Cell(200,5,utf8_decode('2¬∫ DELEGADO:'),0,0,'L',false);
 $pdf->Ln();
-$pdf->Cell(200,5,'N⁄MERO PARTICULAR:',0,0,'L',false);
+$pdf->Cell(200,5,utf8_decode('N√öMERO PARTICULAR:'),0,0,'L',false);
 $pdf->Ln();
-$pdf->Cell(200,5,'N⁄MERO LABORAL:',0,0,'L',false);
+$pdf->Cell(200,5,utf8_decode('N√öMERO LABORAL:'),0,0,'L',false);
 $pdf->Ln();
-$pdf->Cell(200,5,'N⁄MERO DE CELULAR:',0,0,'L',false);
+$pdf->Cell(200,5,utf8_decode('N√öMERO DE CELULAR:'),0,0,'L',false);
 $pdf->Ln();
 $pdf->Cell(200,5,'E-MAIL:',0,0,'L',false);
 
@@ -302,25 +302,25 @@ $pdf->AddPage();
 
 $pdf->SetFont('Arial','b',10);
 $pdf->Cell(200,5,'DATOS COMPLEMENTARIOS ALTA DE EQUIPO',0,0,'C',false);$pdf->Ln();
-$pdf->Cell(200,5,'AÒo: _____		',0,0,'L',false);$pdf->Ln();
+$pdf->Cell(200,5,utf8_decode('A√±o: _____		'),0,0,'L',false);$pdf->Ln();
 $pdf->Cell(200,5,'Country: ______________________________',0,0,'L',false);$pdf->Ln();
 $pdf->Cell(200,5,'Nombre del equipo : ______________________________',0,0,'L',false);$pdf->Ln();
-$pdf->Cell(200,5,'CategorÌa: ______________________________',0,0,'L',false);$pdf->Ln();
+$pdf->Cell(200,5,utf8_decode('Categor√≠a: ______________________________'),0,0,'L',false);$pdf->Ln();
 $pdf->Ln();
-$pdf->Cell(200,5,'DirecciÛn de la AdministraciÛn: _________________________________________________________________________',0,0,'L',false);$pdf->Ln();$pdf->Ln();
+$pdf->Cell(200,5,utf8_decode('Direcci√≥n de la Administraci√≥n: _________________________________________________________________________'),0,0,'L',false);$pdf->Ln();$pdf->Ln();
 $pdf->SetFont('Arial','',10);
-$pdf->Cell(200,5,'Localidad: __________________________  CÛdigo Postal: _____  Tel.: __________________  Fax: ___________________',0,0,'L',false);$pdf->Ln(); 
+$pdf->Cell(200,5,utf8_decode('Localidad: __________________________  C√≥digo Postal: _____  Tel.: __________________  Fax: ___________________'),0,0,'L',false);$pdf->Ln(); 
 $pdf->Cell(200,5,'E-mail: _________________________________________________',0,0,'L',false);$pdf->Ln();
 $pdf->SetFont('Arial','b',10);
-$pdf->Cell(200,5,'DirecciÛn del Country: _________________________________________________________________________________',0,0,'L',false);$pdf->Ln();$pdf->Ln();
+$pdf->Cell(200,5,utf8_decode('Direcci√≥n del Country: _________________________________________________________________________________'),0,0,'L',false);$pdf->Ln();$pdf->Ln();
 $pdf->SetFont('Arial','',10);
-$pdf->Cell(200,5,'Localidad: __________________________  CÛdigo Postal: _____  Tel.: __________________  Fax: ___________________',0,0,'L',false);$pdf->Ln(); 
+$pdf->Cell(200,5,utf8_decode('Localidad: __________________________  C√≥digo Postal: _____  Tel.: __________________  Fax: ___________________'),0,0,'L',false);$pdf->Ln(); 
 $pdf->Cell(200,5,'E-mail: _________________________________________________',0,0,'L',false);$pdf->Ln();$pdf->Ln();
-$pdf->Cell(200,5,'CondiciÛn de IVA: _____________________	CUIT: ______________________',0,0,'L',false);$pdf->Ln();$pdf->Ln();
+$pdf->Cell(200,5,utf8_decode('Condici√≥n de IVA: _____________________	CUIT: ______________________'),0,0,'L',false);$pdf->Ln();$pdf->Ln();
 $pdf->SetFont('Arial','b',10);
 $pdf->Cell(200,5,'Servicio de Emergencias (nombre y tel.): ________________________________________________________________',0,0,'L',false);$pdf->Ln();
 $pdf->Cell(200,5,' ___________________________________________________________________________________________________',0,0,'L',false);$pdf->Ln();$pdf->Ln();                                
-$pdf->Cell(200,5,'Camisetas (detallar colores y descripciÛn):',0,0,'L',false);$pdf->Ln();$pdf->Ln();
+$pdf->Cell(200,5,utf8_decode('Camisetas (detallar colores y descripci√≥n):'),0,0,'L',false);$pdf->Ln();$pdf->Ln();
 $pdf->SetFont('Arial','',10);
 $pdf->Cell(200,5,'	Juego 1: ___________________________________________________________________________',0,0,'L',false);$pdf->Ln();
 $pdf->Cell(200,5,'	Juego 2: ___________________________________________________________________________',0,0,'L',false);$pdf->Ln();
@@ -346,7 +346,7 @@ $pdf->Cell(50,5,'____________________',0,0,'L',false);
 $pdf->Cell(50,5,'____________________',0,0,'L',false);
 $pdf->Ln();
 
-$pdf->Cell(50,5,'TelÈfono',0,0,'L',false);
+$pdf->Cell(50,5,utf8_decode('Tel√©fono'),0,0,'L',false);
 $pdf->Cell(50,5,'____________________',0,0,'L',false);
 $pdf->Cell(50,5,'____________________',0,0,'L',false);
 $pdf->Cell(50,5,'____________________',0,0,'L',false);
@@ -365,14 +365,14 @@ $pdf->Cell(50,5,'____________________',0,0,'L',false);
 $pdf->Ln();
 
 
-$pdf->Cell(50,5,'UbicaciÛn dentro del club',0,0,'L',false);
+$pdf->Cell(50,5,utf8_decode('Ubicaci√≥n dentro del club'),0,0,'L',false);
 $pdf->Cell(50,5,'____________________',0,0,'L',false);
 $pdf->Cell(50,5,'____________________',0,0,'L',false);
 $pdf->Cell(50,5,'____________________',0,0,'L',false);
 $pdf->Ln();
 
 $pdf->SetFont('Arial','b',8);
-$pdf->Cell(200,5,'Nota: Se deber· adjuntar un croquis con la ubicaciÛn de las canchas habilitadas dentro del country',0,0,'L',false);$pdf->Ln();$pdf->Ln();
+$pdf->Cell(200,5,utf8_decode('Nota: Se deber√° adjuntar un croquis con la ubicaci√≥n de las canchas habilitadas dentro del country'),0,0,'L',false);$pdf->Ln();$pdf->Ln();
 $pdf->SetFont('Arial','b',10);
 $pdf->Ln();
 $pdf->Cell(60,5,'DELEGADOS DEL COUNTRY',0,0,'L',false);
@@ -393,7 +393,7 @@ $pdf->Cell(70,5,'______________________________',0,0,'L',false);
 $pdf->Ln();
 
 
-$pdf->Cell(60,5,'TelÈfono y e-mail',0,0,'L',false);
+$pdf->Cell(60,5,utf8_decode('Tel√©fono y e-mail'),0,0,'L',false);
 $pdf->Cell(70,5,'______________________________',0,0,'L',false);
 $pdf->Cell(70,5,'______________________________',0,0,'L',false);
 $pdf->Ln();
@@ -425,7 +425,7 @@ $pdf->Cell(70,5,'______________________________',0,0,'L',false);
 $pdf->Ln();
 
 
-$pdf->Cell(60,5,'TelÈfono y e-mail',0,0,'L',false);
+$pdf->Cell(60,5,utf8_decode('Tel√©fono y e-mail'),0,0,'L',false);
 $pdf->Cell(70,5,'______________________________',0,0,'L',false);
 $pdf->Cell(70,5,'______________________________',0,0,'L',false);
 $pdf->Ln();
@@ -445,7 +445,13 @@ Footer($pdf);
 $pdf->AddPage();
 
 $pdf->SetFont('Arial','',14);
-$pdf->MultiCell(200,6,'Recuerde presentar junto con el padron de socios/propietarios la nota institucional especificando los datos del servicio medico brindados por el country, el acta de designaciÛn de autoridades y controlar que todas las hojas esten firmadas (con una sola certificaciÛn basta), caso contrario no se recibira el mismo',0,'L',false);
+$pdf->MultiCell(200,6,utf8_decode('Recuerde presentar la siguiente documentaci√≥n junto con el padr√≥n de socios/propietarios.'),0,'L',false);
+$pdf->Ln();
+$pdf->MultiCell(200,6,utf8_decode('* Nota institucional especificando los datos del servicio m√©dico brindados por el country.'),0,'L',false);
+$pdf->Ln();
+$pdf->MultiCell(200,6,utf8_decode('* El acta de designaci√≥n de autoridades y controlar que todas las hojas est√©n firmadas (con una sola certificaci√≥n basta).'),0,'L',false);
+$pdf->Ln();
+$pdf->MultiCell(200,6,utf8_decode('* Los datos complementarios podr√°n ser completados a mano al igual que la actualizaci√≥n de datos.'),0,'L',false);
 
 Footer($pdf);
 
