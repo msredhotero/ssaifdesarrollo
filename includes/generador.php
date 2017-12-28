@@ -82,7 +82,11 @@ $tablasAr	= array("contactos"        => "dbcontactos",
 "jugadoresclub"=>"dbjugadoresclub",
 "modulos"=>"tbmodulos",
 "vigenciasoperaciones"=>"dbvigenciasoperaciones",
-"jugadorespre"=>"dbjugadorespre");
+"jugadorespre"=>"dbjugadorespre",
+"cabeceracopia"=>"dbcabeceracopia",
+"jugadoresdocumentacion_copia"=>"dbjugadoresdocumentacion_copia",
+"jugadoresmotivoshabilitacionestransitorias_copia"=>"dbjugadoresmotivoshabilitacionestransitorias_copia",
+"jugadoresvaloreshabilitacionestransitorias_copia"=>"dbjugadoresvaloreshabilitacionestransitorias_copia");
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
@@ -134,7 +138,11 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresclub"=>"dbjugadoresclub",
 "modulos"=>"tbmodulos",
 "vigenciasoperaciones"=>"dbvigenciasoperaciones",
-"jugadorespre"=>"dbjugadorespre");
+"jugadorespre"=>"dbjugadorespre",
+"cabeceracopia"=>"dbcabeceracopia",
+"jugadoresdocumentacion_copia"=>"dbjugadoresdocumentacion_copia",
+"jugadoresmotivoshabilitacionestransitorias_copia"=>"dbjugadoresmotivoshabilitacionestransitorias_copia",
+"jugadoresvaloreshabilitacionestransitorias_copia"=>"dbjugadoresvaloreshabilitacionestransitorias_copia");
 
 	$tablasArAux	= array("contactos"        => 2,        
 "tipocontactos"=> 1,
@@ -183,7 +191,11 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresclub"=>1,
 "modulos"=>1,
 "vigenciasoperaciones"=>2,
-"jugadorespre"=>3);
+"jugadorespre"=>3,
+"cabeceracopia"=>2,
+"jugadoresdocumentacion_copia"=>2,
+"jugadoresmotivoshabilitacionestransitorias_copia"=>2,
+"jugadoresvaloreshabilitacionestransitorias_copia"=>2);
 	
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
@@ -213,7 +225,7 @@ $ajaxFuncionesController = '';
 
 $servicios	= "Referencias";
 
-$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_local_diciembre_host";
+$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_local_noviembre";
 $resMapeo 	=	query($sqlMapaer,0);
 
 $aliasTablaMadre = '';

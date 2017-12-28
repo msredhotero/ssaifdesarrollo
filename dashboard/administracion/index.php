@@ -13,11 +13,13 @@ include ('../../includes/funciones.php');
 include ('../../includes/funcionesUsuarios.php');
 include ('../../includes/funcionesHTML.php');
 include ('../../includes/funcionesReferencias.php');
+include ('../../includes/funcionesCopia.php');
 
 $serviciosFunciones 	= new Servicios();
 $serviciosUsuario 		= new ServiciosUsuarios();
 $serviciosHTML 			= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
+$serviciosCopia 		= new ServiciosCopia();
 
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
@@ -66,7 +68,11 @@ $cabeceras 		= "	<th>Categorias</th>";
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
+$resTemporadas	= $serviciosReferencias->traerTemporadas();
+$cadTempordas 	= $serviciosFunciones->devolverSelectBox($resTemporadas,array(1),'');
 
+$resCopia	= $serviciosCopia->traerCabeceracopia();
+$cadCopias 	= $serviciosFunciones->devolverSelectBox($resCopia,array(1,3),' - ');
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
@@ -150,11 +156,40 @@ if ($_SESSION['refroll_predio'] != 1) {
                 	<div class="input-group">
                     	<input class="form-control" readonly value="Realizar una copia de todas las documentaciones" aria-label="Text input with multiple buttons">
                         <div class="input-group-btn">
+                            <input type="text" class="form-control" style="width: 120px;" name="lblTemp" id="lblTemp" readonly value="Temporada">
+                        </div>
+                        <div class="input-group-btn">
+                            <select class="form-control" style="width: 120px;" name="reftemporadas" id="reftemporadas">
+                            	<?php echo $cadTempordas; ?>
+                            </select>
+                        </div>
+                        <div class="input-group-btn">
                             <button type="button" class="btn btn-primary copia">Copia</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row" style="margin-bottom:10px;">
+				<div class="col-md-12">
+                	<div class="input-group">
+                    	<input class="form-control" readonly value="Regresar de una copia todas las documentaciones" aria-label="Text input with multiple buttons">
+                        <div class="input-group-btn">
+                            <input type="text" class="form-control" style="width: 160px;" name="lblTemp" id="lblTemp" readonly value="Copia - Temporada">
+                        </div>
+                        <div class="input-group-btn">
+                            <select class="form-control" style="width: 120px;" name="refcopia" id="refcopia">
+                            	<?php echo $cadCopias; ?>
+                            </select>
+                        </div>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-danger regresarCopia">Regresar Copia</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="row" style="margin-bottom:10px;">    
                 <div class="col-md-12">
                 	<div class="input-group">
@@ -264,6 +299,63 @@ $(document).ready(function(){
 		});
 	});//fin del boton resetear
 
+
+	$(".copia").click( function(){
+		$.ajax({
+			data:  {reftemporadas: $('#reftemporadas').val(),
+					accion: 'realizarCopia'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+			
+			},
+			success:  function (response) {
+				$(".alert").removeClass("alert-danger");
+				$(".alert").removeClass("alert-info");
+				$(".alert").addClass("alert-success");
+				$(".alert").html('<strong>Ok!</strong> ' + response);
+				$(".alert").delay(3000).queue(function(){
+					/*aca lo que quiero hacer 
+					  después de los 2 segundos de retraso*/
+					$(this).dequeue(); //continúo con el siguiente ítem en la cola
+					
+				});
+			
+			}
+		});
+	});//fin del boton copia
+
+
+	$(".regresarCopia").click( function(){
+		$.ajax({
+			data:  {refcopia: $('#refcopia').val(),
+					accion: 'regresarCopia'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+				$(".alert").removeClass("alert-danger");
+				$(".alert").addClass("alert-info");
+				$(".alert").removeClass("alert-success");
+				$(".alert").html('Procesando....');
+			},
+			success:  function (response) {
+				$(".alert").removeClass("alert-danger");
+				$(".alert").removeClass("alert-info");
+				$(".alert").addClass("alert-success");
+				$(".alert").html('<strong>Ok!</strong> ' + response);
+				$(".alert").delay(3000).queue(function(){
+					/*aca lo que quiero hacer 
+					  después de los 2 segundos de retraso*/
+					$(this).dequeue(); //continúo con el siguiente ítem en la cola
+					
+				});
+			
+			}
+		});
+	});//fin del boton copia
+	
+
+	
 
 	$(".vigencias").click( function(){
 		$.ajax({

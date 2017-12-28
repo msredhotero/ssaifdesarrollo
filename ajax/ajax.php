@@ -4,13 +4,14 @@ include ('../includes/funcionesUsuarios.php');
 include ('../includes/funciones.php');
 include ('../includes/funcionesHTML.php');
 include ('../includes/funcionesReferencias.php');
+include ('../includes/funcionesCopia.php');
 
 
 $serviciosUsuarios  		= new ServiciosUsuarios();
 $serviciosFunciones 		= new Servicios();
 $serviciosHTML				= new ServiciosHTML();
 $serviciosReferencias		= new ServiciosReferencias();
-
+$serviciosCopia				= new ServiciosCopia();
 
 $accion = $_POST['accion'];
 
@@ -39,6 +40,12 @@ switch ($accion) {
 		break;
 	case 'cargarVigenciasCargaDelegados':
 		cargarVigenciasCargaDelegados($serviciosReferencias);
+		break;
+	case 'realizarCopia':
+		realizarCopia($serviciosCopia);
+		break;
+	case 'regresarCopia':
+		regresarCopia($serviciosCopia);
 		break;
 
 /* fin */
@@ -628,6 +635,38 @@ function cargarVigenciasCargaDelegados($serviciosReferencias) {
 		$res = $serviciosReferencias->insertarVigenciasoperaciones(2,$vigenciaDesde,$vigenciaHasta,'Carga de vigencias para los delegados');
 		echo $res;
 	}
+
+}
+
+function realizarCopia($serviciosCopia) {
+	$refTemporadas = $_POST['reftemporadas'];
+
+	$copia = $serviciosCopia->generarCopia();
+
+	$resCopia = $serviciosCopia->insertarCabeceracopia($copia,$refTemporadas);
+
+	$resA = $serviciosCopia->insertarJugadoresdocumentacion_origen($resCopia);
+	$resB = $serviciosCopia->insertarJugadoresmotivoshabilitacionestransitorias_origen($resCopia);
+	$resC = $serviciosCopia->insertarJugadoresvaloreshabilitacionestransitorias_origen($resCopia);
+
+	echo 'Se realizo correctamente la copia: '.$copia;
+
+}
+
+
+function regresarCopia($serviciosCopia) {
+	$refCabeceraCopia = $_POST['refcopia'];
+
+	$resEliminarA = $serviciosCopia->eliminarJugadoresdocumentacion_todo();
+	$resEliminarB = $serviciosCopia->eliminarJugadoresmotivoshabilitacionestransitorias_todo();
+	$resEliminarC = $serviciosCopia->eliminarJugadoresvaloreshabilitacionestransitorias_todo();
+
+
+	$resRegresoA = $serviciosCopia->insertarJugadoresdocumentacion_regreso($refCabeceraCopia);
+	$resRegresoB = $serviciosCopia->insertarJugadoresmotivoshabilitacionestransitorias_regreso($refCabeceraCopia);
+	$resRegresoC = $serviciosCopia->insertarJugadoresvaloreshabilitacionestransitorias_regreso($refCabeceraCopia);
+
+	echo 'Se regreso correctamente';
 
 }
 /* fin */
