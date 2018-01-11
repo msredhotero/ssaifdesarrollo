@@ -219,7 +219,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		}
 		
 		
-		if ($yN >= 270) {
+		if ($yN >= 250) {
 			$this->AddPage();
 			
 			

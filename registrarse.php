@@ -126,15 +126,25 @@ $servicios = new Servicios();
                 }
         });
         
-		$('#registrarse').click(function() {
-			$(location).attr('href','registrarse.php');
-		});
     });/* fin del document ready */
 
 </script>
 
 
-        
+<style type="text/css">
+	.toast{cursor:default;background-color:#f5f5f5;font-size:11.25pt;font-weight:normal;color:#202020;box-shadow:0 0 1px 1px rgba(0,0,0,0.5);padding:0px}
+	.toast .row{width:100%}
+	.toast .row .col{word-break:normal;word-wrap:normal}
+	.toast .row .col.s4{width:20%;min-height:100px;position:absolute;bottom:0px;top:0px}
+	.toast .row .col.s8{width:80%;min-height:100px;padding:10px;vertical-align:middle;margin-left:20%}
+	.toast .row{margin:0px}
+	.toast .material-icons,.toast .dataTables_filter label:after,.dataTables_filter .toast label:after,.toast .breadcrumb:before{color:#fafafa;font-size:18pt;vertical-align:middle;margin-top:37px}
+	#toast-container{top:auto !important;left:auto !important;right:70px;bottom:10px;width:400px;padding:2px}
+	#toast-container .toast .row .s8 i{position:absolute;float:right;top:0px;right:0px;margin:4px;cursor:pointer;color:rgba(0,0,0,0.5);will-change:color;transition:color 0.3s ease;-webkit-transition:color 0.3s}
+	#toast-container .toast .row .s8 i:hover{color:#202020;will-change:color;transition:color 0.3s ease;-webkit-transition:color 0.3s}
+	.chip{cursor:default;font-size:11.25pt;height:26px;line-height:26px;padding:0 6px;border-radius:6px;margin-bottom:0px;margin-right:4px;margin-left:4px;min-width:30px;text-align:center}
+
+</style>    
         
 </head>
 
@@ -165,35 +175,47 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
 
             <div align="center">
             	<img src="imagenes/aif_logo.png" width="22%">
-				<div align="center"><p style="color:#363636; font-size:28px;">Acceso al panel de control</p></div>
+				<div align="center"><p style="color:#363636; font-size:28px;">Complete el registro comenzando con su Numero de Documento</p></div>
                 <br>
             </div>
 			<form role="form" class="form-horizontal">
-              
               <div class="row">
-                <div class="input-field col s12">
+                <div class="input-field col s6">
+                  <input id="nrodocumento" name="nrodocumento" type="number" class="validate">
+                  <label for="nrodocumento" data-error="Error" data-success="Ok">Nro Documento</label>
+                </div>
+                <div class="input-field col s6">
+                	<a class="waves-effect waves-light blue btn" id="buscar"><i class="material-icons left">search</i>Buscar</a>
+                </div>
+              </div>
+              
+              
+              <div class="row primero">
+                <div class="input-field col s6">
+                  <h4>Ingrese los datos para poder generarle un usuario</h4>
+                </div>
+
+              </div>
+              
+              <div class="row primero">
+                <div class="input-field col s6">
                   <input id="email" name="email" type="email" class="validate">
                   <label for="password">Email</label>
                 </div>
-              </div>
-      
-              
-              <div class="row">
-                <div class="input-field col s12">
+                <div class="input-field col s6">
                   <input id="pass" name="pass" type="password" class="validate">
                   <label for="password">Password</label>
                 </div>
               </div>
+
               
-              <div class="row">
-              <div class="form-group">
-              	<label for="olvido" class="control-label" style="color:#363636">¿Has olvidado tu contraseña?. <a href="recuperarpassword.php">Recuperar.</a></label>
-              </div>
+              <div class="row btnAcciones">
              
               <div class="form-group">
                 <div class="col-md-12">
-                  <a class="waves-effect waves-light btn" id="login"><i class="material-icons left">cloud</i>Ingresar</a>
                   <a class="waves-effect red btn" id="registrarse"><i class="material-icons left">group_add</i>Registrate</a>
+                  <a class="waves-effect waves-light btn" id="login"><i class="material-icons left">assignment_ind</i>Ingresar</a>
+                  
                   
                 </div>
               </div>
@@ -214,7 +236,29 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
 </div><!-- fin del content -->
 
 <script type="text/javascript" src="js/materialize.min.js"></script>
-
+<script language="javascript" src="js/commons.js"></script>
+<script>
+var request_login = false;
+$(document).ready(function () {
+	
+	$('.primero').hide();
+	
+	function validaDocumento() {
+		//Documento
+		
+		dni = $('#nrodocumento').val();
+		if (dni == '') {
+			alerta(MSG_CAMPO_NRO_DOCUMENTO, "error");
+			setInputInvalid('#nrodocumento');
+			return request_login = false;
+		}
+	}
+	
+	$('#buscar').click(function(e) {
+        validaDocumento();
+    });
+});
+</script>
 </body>
 
 </html>
