@@ -32,6 +32,15 @@ switch ($accion) {
 	case 'registrar':
 		registrar($serviciosUsuarios);
         break;
+    case 'buscarSocio':
+    	buscarSocio($serviciosUsuarios, $serviciosReferencias);
+    	break;
+    case 'traerDatosSocio':
+    	traerDatosSocio($serviciosReferencias);
+    	break;
+    case 'registrarSocio':
+    	registrarSocio($serviciosUsuarios, $serviciosReferencias);
+    	break;
 
 /* administracion */
 
@@ -3804,6 +3813,60 @@ function registrar($serviciosUsuarios) {
 	} else {
 		echo $res;	
 	}
+}
+
+function buscarSocio($serviciosUsuarios, $serviciosReferencias) {
+	$nrodocumento = $_POST['nrodocumento'];
+
+	$existeJugador = $serviciosReferencias->existeJugador($nrodocumento);
+
+	if ($existeJugador == 1) {
+		echo 'Socio ya cargado, cualquier consulta comuniquese con la Asociación.';
+	} else {
+		$existeJugadorPre = $serviciosReferencias->existeJugadorPre($nrodocumento);
+		if ($existeJugadorPre == 0) {
+			echo 'Sus datos no fueron cargados por su Delegado, cualquier consulta comuniquese con la Asociación.';
+		} else {
+			echo '';
+		}
+	}
+}
+
+function traerDatosSocio($serviciosReferencias) {
+	$nrodocumento = $_POST['nrodocumento'];
+
+	$res = $serviciosReferencias->traerJugadoresprePorNroDocumento($nrodocumento);
+
+	$ar = array();
+	//apellido,nombres,email,fechanacimiento
+	while ($row = mysql_fetch_array($res)) {
+
+		array_push($ar,array('id'=>$row[0],'apellido'=>$row['apellido'], 'nombres'=> $row['nombres'], 'email'=> $row['email'], 'fechanacimiento'=> $row['fechanacimiento']));
+	}
+
+	//echo "[".substr($cad,0,-1)."]";
+	echo json_encode($ar);
+}
+
+
+function registrarSocio($ServiciosUsuarios, $ServiciosReferencias) {
+	$email				=	$_POST['email'];
+	$password			=	$_POST['password'];
+	$apellido			=	$_POST['apellido'];
+	$nombre				=	$_POST['nombre'];
+	$fechanacimiento	=	$_POST['fechanacimiento'];
+	$id					=	$_POST['id'];
+
+	//doy de alta en usuarios alagente
+	$res = $ServiciosUsuarios->registrarSocio($email, $password,$apellido, $nombre, $nrodocumento, $fechanacimiento);
+	if ((integer)$res > 0) {
+		//modifico los datos que le solicite en el login
+		$ServiciosReferencias->modificarJugadorespreRegistro($id,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento);
+		echo '';	
+	} else {
+		echo $res;	
+	}
+
 }
 
 

@@ -4675,6 +4675,32 @@ return $res;
 } 
 
 
+function traerJugadoresPorNroDocumento($nrodocumento) { 
+$sql = "select 
+j.idjugador,
+tip.tipodocumento,
+j.nrodocumento,
+j.apellido,
+j.nombres,
+j.email,
+j.fechanacimiento,
+j.fechaalta,
+j.fechabaja,
+cou.nombre as country,
+j.observaciones,
+j.reftipodocumentos,
+j.refcountries
+from dbjugadores j 
+inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+where j.nrodocumento = ".$nrodocumento."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+}
+
+
 function traerJugadoresPorCountrie($idCountrie) { 
 $sql = "select 
 j.idjugador,
@@ -5562,7 +5588,7 @@ inner join tbdocumentaciones doc ON doc.iddocumentacion = v.refdocumentaciones
 left join dbjugadoresvaloreshabilitacionestransitorias jvh 
 on jvh.refvaloreshabilitacionestransitorias = v.idvalorhabilitaciontransitoria and jvh.refjugadores = ".$idJugador."
 where doc.iddocumentacion = ".$idDocumentacion."
-order by 1";
+order by v.predeterminado desc";
 $res = $this->query($sql,0); 
 return $res;    
 }
@@ -12492,6 +12518,15 @@ return $res;
 }
 
 
+function modificarJugadorespreRegistro($id,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento) {
+$sql = "update dbjugadorespre
+set
+nrodocumento = ".$nrodocumento.",apellido = '".utf8_decode($apellido)."',nombres = '".utf8_decode($nombres)."',email = '".utf8_decode($email)."',fechanacimiento = '".utf8_decode($fechanacimiento)."'
+where idjugadorpre =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
 function eliminarJugadorespre($id) {
 $sql = "delete from dbjugadorespre where idjugadorpre =".$id;
 $res = $this->query($sql,0);
@@ -12544,6 +12579,12 @@ return $res;
 
 function traerJugadoresprePorId($id) {
 $sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios from dbjugadorespre where idjugadorpre =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerJugadoresprePorNroDocumento($nroDocumento) {
+$sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios from dbjugadorespre where nrodocumento =".$nroDocumento;
 $res = $this->query($sql,0);
 return $res;
 }

@@ -39,8 +39,8 @@ $servicios = new Servicios();
 <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
 
 <link rel="stylesheet" href="css/materialize.min.css">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+<!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">-->
 <!-- Latest compiled and minified JavaScript -->
 <script src="bootstrap/js/bootstrap.min.js"></script>
 
@@ -173,13 +173,13 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
             
             </div>
 
-            <div align="center">
+            <div align="center" class="segundo">
             	<img src="imagenes/aif_logo.png" width="22%">
 				<div align="center"><p style="color:#363636; font-size:28px;">Complete el registro comenzando con su Numero de Documento</p></div>
                 <br>
             </div>
 			<form role="form" class="form-horizontal">
-              <div class="row">
+              <div class="row segundo">
                 <div class="input-field col s6">
                   <input id="nrodocumento" name="nrodocumento" type="number" class="validate">
                   <label for="nrodocumento" data-error="Error" data-success="Ok">Nro Documento</label>
@@ -191,7 +191,7 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
               
               
               <div class="row primero">
-                <div class="input-field col s6">
+                <div class="input-field col s12">
                   <h4>Ingrese los datos para poder generarle un usuario</h4>
                 </div>
 
@@ -199,12 +199,31 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
               
               <div class="row primero">
                 <div class="input-field col s6">
-                  <input id="email" name="email" type="email" class="validate">
+                  <input id="txtEmail" name="txtEmail" type="email" class="validate tooltipped" data-position="top" data-delay="50" data-tooltip="Campo Obligatorio, sera su modo de ingreso">
                   <label for="password">Email</label>
                 </div>
                 <div class="input-field col s6">
-                  <input id="pass" name="pass" type="password" class="validate">
+                  <input id="txtPassword" name="txtPassword" type="password" class="validate tooltipped"  data-position="top" data-delay="50" data-tooltip="La contraseña debe tener entre 8 y 12 caracteres">
                   <label for="password">Password</label>
+                </div>
+              </div>
+
+
+              <div class="row primero">
+                <div class="input-field col s6">
+                  <input id="txtApellido" name="txtApellido" type="text" class="validate">
+                  <label for="password">Apellido</label>
+                </div>
+                <div class="input-field col s6">
+                  <input id="txtNombre" name="txtNombre" type="text" class="validate">
+                  <label for="password">Nombre</label>
+                </div>
+              </div>
+
+              <div class="row primero">
+                <div class="input-field col s6">
+                  <input id="txtFechaNacimiento" name="txtFechaNacimiento" type="text" class="datepicker">
+                  <label for="password">Fecha Nacimiento</label>
                 </div>
               </div>
 
@@ -221,7 +240,16 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
               </div>
 				      </div>
                 <div id="load">
-                
+                  <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
                 </div>
 
             </form>
@@ -235,28 +263,197 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
      </div>
 </div><!-- fin del content -->
 
-<script type="text/javascript" src="js/materialize.min.js"></script>
+<script type="text/javascript" src="js/materialize.js"></script>
 <script language="javascript" src="js/commons.js"></script>
 <script>
 var request_login = false;
+var request_documento = false;
+var id_pre = 0;
 $(document).ready(function () {
 	
 	$('.primero').hide();
+  $('#load').hide();
 	
-	function validaDocumento() {
+  function validaDocumento() {
 		//Documento
 		
-		dni = $('#nrodocumento').val();
-		if (dni == '') {
-			alerta(MSG_CAMPO_NRO_DOCUMENTO, "error");
-			setInputInvalid('#nrodocumento');
-			return request_login = false;
-		}
-	}
-	
-	$('#buscar').click(function(e) {
-        validaDocumento();
+    dni = $('#nrodocumento').val();
+    if (dni == '') {
+      alerta(MSG_CAMPO_NRO_DOCUMENTO, "error");
+      setInputInvalid('#nrodocumento');
+      return request_documento = false;
+    }
+  }
+
+
+
+  function validaRegistro() {
+    //Documento
+    
+    email = $('#txtEmail').val();
+    if (email == '') {
+      alerta(MSG_CAMPO_EMAIL_NO_VACIO, "error");
+      setInputInvalid('#txtEmail');
+      return request_login = false;
+    } else {
+
+      if (validarEmail(email)==false) {
+        alerta(MSG_CAMPO_EMAIL_FORMATO_VALIDO, "error");
+        setInputInvalid('#txtEmail');
+        return request_login = false;
+      }
+    }
+
+
+    apellido = $('#txtApellido').val();
+    if (apellido == '') {
+      alerta('El campo Apellido es obligatorio', "error");
+      setInputInvalid('#txtApellido');
+      return request_login = false;
+    }
+
+    nombre = $('#txtNombre').val();
+    if (nombre == '') {
+      alerta('El campo Nombre es obligatorio', "error");
+      setInputInvalid('#txtNombre');
+      return request_login = false;
+    }
+
+
+    if ($('#txtPassword').val() == '') {
+      alerta('El campo Contraseña es obligatorio', "error");
+      setInputInvalid('#txtPassword');
+      return request_login = false;
+    }
+
+    var longitudClave = $('#txtPassword').val().length;
+    if ((longitudClave < 8) || (longitudClave > 12)) {
+      alerta(MSG_CAMPO_LONGITUD_CONTRASENA, "error");
+      setInputInvalid('#txtPassword');
+      return request_login = false;
+    }
+
+    return request_login = true;
+  }
+
+  $("#registrarse").click(function(event) {
+    validaRegistro();
+    if (request_login) {
+      $.ajax({
+          data:  {id : id_pre,
+                  email:    $("#txtEmail").val(),
+                  password:    $("#txtPassword").val(),
+                  apellido:    $("#txtApellido").val(),
+                  nombre:    $("#txtNombre").val(),
+                  fechanacimiento:    $("#txtFechaNacimiento").val(),
+                  accion:   'registrarSocio'},
+          url:   'ajax/ajax.php',
+          type:  'post',
+          beforeSend: function () {
+            $("#load").show();
+          },
+          success:  function (response) {
+            
+            if (response != '') {
+                
+                alerta(response, "error");
+
+                $("#load").hide();
+
+            } else {
+                alerta('Le enviamos un email a su correo para que active su cuenta.', "done");
+                $('#registrarse').hide(200);
+                $('.segundo').hide(200);
+                $('.primero').hide(200);
+                $("#load").hide(100);
+
+            }
+            
+          }
+        });
+    }
+  });
+
+
+  $("#buscar").click(function(event) {
+      request_documento = true;
+      validaDocumento();
+
+      if (request_documento)
+      {
+        $.ajax({
+          data:  {nrodocumento:    $("#nrodocumento").val(),
+                  accion:   'buscarSocio'},
+          url:   'ajax/ajax.php',
+          type:  'post',
+          beforeSend: function () {
+            $("#load").show();
+          },
+          success:  function (response) {
+            
+            if (response != '') {
+                
+                alerta(response, "error");
+
+                $("#load").hide();
+                id_pre = 0;
+
+            } else {
+                traerDatosSocio($("#nrodocumento").val());
+            }
+            
+          }
+        });
+      }
+  });
+
+
+  function traerDatosSocio(nroDocumento) {
+    
+    $.ajax({
+      type: "POST",
+      dataType: 'json',
+      url: 'ajax/ajax.php', // devuelve "jugador", "equipo" y "goles" con parametros obligatorio idtorneo
+      data: {nrodocumento: nroDocumento,
+              accion:'traerDatosSocio'},
+      beforeSend: function (XMLHttpRequest) {
+        $("#load").show();
+      },
+      success: function(datos) {
+        
+        alerta(MSG_DATOS_OBLIGATORIOS, "done");
+
+        for (var clave in datos) {
+          $('#txtApellido').val(datos[clave].apellido);
+          $('#txtNombre').val(datos[clave].nombres);
+          $('#txtEmail').val(datos[clave].email);
+          $('#txtFechaNacimiento').val(datos[clave].fechanacimiento);
+          id_pre = datos[clave].id;
+        }
+
+        $('.primero').show(300);
+        Materialize.showStaggeredList('.primero');
+        $("#load").hide();
+        Materialize.updateTextFields();
+
+       },
+        error: function() { alert("Error leyendo fichero"); }
     });
+      
+  }
+
+  $('#login').click(function() {
+    $(location).attr('href','index.php');
+  });
+
+  $('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15, // Creates a dropdown of 15 years to control year,
+    today: 'Today',
+    clear: 'Clear',
+    close: 'Ok',
+    closeOnSelect: false // Close upon selecting a date,
+  });
 });
 </script>
 </body>

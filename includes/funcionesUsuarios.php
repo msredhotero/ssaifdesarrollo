@@ -240,7 +240,7 @@ function traerTodosUsuarios() {
 }
 
 function traerUsuarioId($id) {
-	$sql = "select idusuario,usuario,refroles,nombrecompleto,email,password from dbusuarios where idusuario = ".$id;
+	$sql = "select idusuario,usuario,refroles,nombrecompleto,email,password,(case when activo= 1 then 'Si' else 'No' end) as activo from dbusuarios where idusuario = ".$id;
 	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -274,17 +274,67 @@ function enviarEmail($destinatario,$asunto,$cuerpo) {
 	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 	
 	//dirección del remitente
-	$headers .= "From: Daniel Eduardo Duranti <info@carnesacasa.com.ar>\r\n";
+	$headers .= "From: ASOCIACIÓN INTERCOUNTRY DE FÚTBOL ZONA NORTE <aif@intercountryfutbol.com.ar>\r\n";
 	
 	//ruta del mensaje desde origen a destino
 	$headers .= "Return-path: ".$destinatario."\r\n";
 	
 	//direcciones que recibirán copia oculta
-	$headers .= "Bcc: info@carnesacasa.com.ar,msredhotero@msn.com\r\n";
+	$headers .= "Bcc: aif@intercountryfutbol.com.ar\r\n";
 	
 	mail($destinatario,$asunto,$cuerpo,$headers); 	
 }
 
+
+function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fechanacimiento) {
+
+	$token = $this->GUID();
+	$cuerpo = '';
+
+	$fecha = date_create(date('Y').'-'.date('m').'-'.date('d'));
+	date_add($fecha, date_interval_create_from_date_string('2 days'));
+	$fechaprogramada =  date_format($fecha, 'Y-m-d');
+
+	$cuerpo .= '<p>Antes que nada por favor no responda este mail ya que no recibirá respuesta.</p>';
+	$cuerpo .= '<p>Recibimos su solicitud de alta como socio/jugador en la Asociación Intercountry de Fútbol Zona Norte. Para verificar(activar) tu casilla de correo por favor ingresá al siguiente link: <a href="saupureinconsulting.com.ar/activacion/index.php?token='.$token.'">AQUI</a>.</p>';
+	$cuerpo .= '<p>Este link estara vigente hasta la fecha '.$fechaprogramada.', pasada esta fecha deberá solicitar mas tiempo para activar su cuenta.</p>';
+	$cuerpo .= '<p>Una vez hecho esto, el personal administrativo se pondrá en contacto mediante esta misma via para notificarle si su estado de alta se encuentra aprobado, de no ser así se detallará la causa.</p>';
+
+	$cuerpo .= '<p>Atte.</p>';
+	$cuerpo .= '<p>AIFZN</p>';
+
+
+	$sql = "INSERT INTO dbusuarios
+				(idusuario,
+				usuario,
+				password,
+				refroles,
+				email,
+				nombrecompleto,
+				refcountries,
+				activo)
+			VALUES
+				('',
+				'".utf8_decode($apellido).' '.utf8_decode($nombre)."',
+				'".utf8_decode($password)."',
+				5,
+				'".utf8_decode($email)."',
+				'".utf8_decode($nombrecompleto)."',
+				NULL,
+				0)";
+	if ($this->existeUsuario($email) == true) {
+		return "Ya existe el usuario";	
+	}
+	$res = $this->query($sql,1);
+	if ($res == false) {
+		return 'Error al insertar datos';
+	} else {
+		$this->insertarActivacionusuarios($res,$token,'','');
+		//$this->enviarEmail($email,'Alta de Usuario',$cuerpo);
+
+		return $res;
+	}
+}
 
 function insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto, $refcountries) {
 	$sql = "INSERT INTO dbusuarios
@@ -333,6 +383,103 @@ function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto
 		return '';
 	}
 }
+
+
+/* PARA Activacionusuarios */
+
+function insertarActivacionusuarios($refusuarios,$token,$vigenciadesde,$vigenciahasta) { 
+$sql = "insert into dbactivacionusuarios(idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta) 
+values ('',".$refusuarios.",'".utf8_decode($token)."',now(),ADDDATE(now(), INTERVAL 2 DAY))"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarActivacionusuarios($id,$refusuarios,$token,$vigenciadesde,$vigenciahasta) { 
+$sql = "update dbactivacionusuarios 
+set 
+refusuarios = ".$refusuarios.",token = '".($token)."',vigenciadesde = '".utf8_decode($vigenciadesde)."',vigenciahasta = '".utf8_decode($vigenciahasta)."' 
+where idactivacionusuario =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function modificarActivacionusuariosConcretada($token) { 
+$sql = "update dbactivacionusuarios 
+set 
+vigenciadesde = 'NULL',vigenciahasta = 'NULL' 
+where token =".$token; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function modificarActivacionusuariosRenovada($refusuarios,$token,$vigenciadesde,$vigenciahasta) { 
+$sql = "update dbactivacionusuarios 
+set 
+vigenciadesde = now(),vigenciahasta = ADDDATE(now(), INTERVAL 2 DAY),token = '".($token)."'
+where refusuarios =".$refusuarios; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarActivacionusuarios($id) { 
+$sql = "delete from dbactivacionusuarios where idactivacionusuario =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function eliminarActivacionusuariosPorUsuario($refusuarios) { 
+$sql = "delete from dbactivacionusuarios where refusuarios =".$refusuarios; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerActivacionusuarios() { 
+$sql = "select 
+a.idactivacionusuario,
+a.refusuarios,
+a.token,
+a.vigenciadesde,
+a.vigenciahasta
+from dbactivacionusuarios a 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerActivacionusuariosPorId($id) { 
+$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where idactivacionusuario =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerActivacionusuariosPorToken($token) { 
+$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where token =".$token; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerActivacionusuariosPorTokenFechas($token) { 
+$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where token ='".$token."' and now() between vigenciadesde and vigenciahasta "; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerActivacionusuariosPorUsuarioFechas($usuario) { 
+$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where refusuarios =".$usuario." and now() between vigenciadesde and vigenciahasta "; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbactivacionusuarios*/
 
 
 

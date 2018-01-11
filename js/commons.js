@@ -111,7 +111,7 @@ function setInputInvalid(selector){
 	}else{
 		$(selector).addClass("invalid");
 	}
-	setTimeout(function () { removeInputValidation(selector); }, 1000);
+	setTimeout(function () { removeInputValidation(selector); }, 10000);
 }
 
 function removeInputValidation(selector){
