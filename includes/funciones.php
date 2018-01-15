@@ -729,6 +729,7 @@ class Servicios {
 
 			default:
 				$sqlMod = "select * from ".$tabla." where ".$lblid." = ".$id;
+				//die(var_dump($sqlMod));
 				$resMod = $this->query($sqlMod,0);
 		}
 		/*if ($tabla == 'dbtorneos') {
@@ -740,7 +741,7 @@ class Servicios {
 		$sql	=	"show columns from ".$tabla;
 		$res 	=	$this->query($sql,0);
 		
-		$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad","refsancionesfallos");
+		$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad","refsancionesfallos","idusuario");
 		
 		$camposEscondido = "";
 		/* Analizar para despues */
@@ -883,36 +884,7 @@ class Servicios {
 										});
 										</script>
 										';
-									/*
-									} else {
-										
-										$form	=	$form.'
-										
-										<div class="form-group col-md-6" style="display:'.$lblOculta.'">
-											<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-											<div class="input-group date form_date col-md-6" data-date="" data-date-format="dd MM yyyy" data-link-field="'.$campo.'" data-link-format="yyyy-mm-dd">
-												<input class="form-control" value="'.mysql_result($resMod,0,$row[0]).'" size="50" type="text" value="" readonly>
-												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-											</div>
-											<input type="hidden" name="'.$campo.'" id="'.$campo.'" value="'.mysql_result($resMod,0,$row[0]).'" />
-										</div>
-										
-										';*/
-									/*}*/
-									
-									/*
-									$form	=	$form.'
-									
-									<div class="form-group col-md-6">
-										<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-										<div class="input-group col-md-6">
-											<input class="form-control" type="text" name="'.$campo.'" id="'.$campo.'" value="Date"/>
-										</div>
-										
-									</div>
-									
-									';
-									*/
+
 								} else {
 									
 									if (strpos($row[1],"time") !== false) {
@@ -1043,6 +1015,7 @@ class Servicios {
 												} else {
 													$label = ucwords($label);
 													$campo = strtolower($row[0]);
+													
 													
 													$form	=	$form.'
 													

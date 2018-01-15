@@ -307,7 +307,7 @@ function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fech
 	$fechaprogramada =  date_format($fecha, 'Y-m-d');
 
 	$cuerpo .= '<p>Antes que nada por favor no responda este mail ya que no recibirá respuesta.</p>';
-	$cuerpo .= '<p>Recibimos su solicitud de alta como socio/jugador en la Asociación Intercountry de Fútbol Zona Norte. Para verificar(activar) tu casilla de correo por favor ingresá al siguiente link: <a href="saupureinconsulting.com.ar/activacion/index.php?token='.$token.'">AQUI</a>.</p>';
+	$cuerpo .= "<p>Recibimos su solicitud de alta como socio/jugador en la Asociación Intercountry de Fútbol Zona Norte. Para verificar(activar) tu casilla de correo por favor ingresá al siguiente link: <a href='saupureinconsulting.com.ar/activacion/index.php?token=".$token."'>AQUI</a>.</p>";
 	$cuerpo .= '<p>Este link estara vigente hasta la fecha '.$fechaprogramada.', pasada esta fecha deberá solicitar mas tiempo para activar su cuenta.</p>';
 	$cuerpo .= '<p>Una vez hecho esto, el personal administrativo se pondrá en contacto mediante esta misma via para notificarle si su estado de alta se encuentra aprobado, de no ser así se detallará la causa.</p>';
 
@@ -341,9 +341,21 @@ function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fech
 		return 'Error al insertar datos';
 	} else {
 		$this->insertarActivacionusuarios($res,$token,'','');
-		$this->enviarEmail($email,'Alta de Usuario',$cuerpo);
+		$this->actualizarUsuarioUusarioPre($nroDocumento, $res);
+		$this->enviarEmail($email,'Alta de Usuario',utf8_encode($cuerpo));
 
 		return $res;
+	}
+}
+
+function actualizarUsuarioUusarioPre($nroDocumento, $idUsuario) {
+	$sql = "UPDATE dbjugadorespre SET idusuario = ".$idusuario." where nrodocumento =".$nrodocumento;
+
+	$res = $this->query($sql,0);
+	if ($res == false) {
+		return 'Error al modificar datos';
+	} else {
+		return '';
 	}
 }
 

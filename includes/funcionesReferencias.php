@@ -12599,6 +12599,12 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function traerJugadoresprePorIdUsuario($idUsuario) {
+$sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios from dbjugadorespre where idusuario =".$idUsuario;
+$res = $this->query($sql,0);
+return $res;
+}
+
 /* Fin */
 /* /* Fin de la Tabla: dbjugadorespre*/
 
