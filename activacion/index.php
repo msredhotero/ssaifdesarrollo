@@ -7,7 +7,10 @@ require '../includes/funcionesReferencias.php';
 $ServiciosReferencias   = new ServiciosReferencias();
 $serviciosUsuario = new ServiciosUsuarios();
 
-
+if (!isset($_GET['token']))
+{
+    header('Location: ../index.php');
+} else {
 $token = $_GET['token'];
 
 $codActivacion = $serviciosUsuario->traerActivacionusuariosPorTokenFechas($token);
@@ -18,7 +21,7 @@ if (mysql_num_rows($codActivacion) > 0) {
     
     $resUsuario = $serviciosUsuario->traerUsuarioId($idUsuario);
     
-    if (mysql_result($resUsuario,0,7) == 'Si') {
+    if (mysql_result($resUsuario,0,6) == 'Si') {
         $error = 2;
     } else {
     
@@ -39,6 +42,32 @@ if (mysql_num_rows($codActivacion) > 0) {
     }
 } else {
 	$error = 1;
+    
+    $resVencido = $serviciosUsuarios->traerActivacionusuariosPorToken($token);
+    
+    $idUsuario = mysql_result($resVencido,0,'refusuarios');
+    
+    $resUsuario = $serviciosUsuario->traerUsuarioId($idUsuario);
+    
+    $email = mysql_result($resUsuario,0,'email');
+    
+    $token = $this->GUID();
+	$cuerpo = '';
+
+	$fecha = date_create(date('Y').'-'.date('m').'-'.date('d'));
+	date_add($fecha, date_interval_create_from_date_string('2 days'));
+	$fechaprogramada =  date_format($fecha, 'Y-m-d');
+
+	$cuerpo .= '<p>Antes que nada por favor no responda este mail ya que no recibirá respuesta.</p>';
+	$cuerpo .= '<p>Recibimos su solicitud de alta como socio/jugador en la Asociación Intercountry de Fútbol Zona Norte. Para verificar(activar) tu casilla de correo por favor ingresá al siguiente link: <a href="saupureinconsulting.com.ar/activacion/index.php?token='.$token.'">AQUI</a>.</p>';
+	$cuerpo .= '<p>Este link estara vigente hasta la fecha '.$fechaprogramada.', pasada esta fecha deberá solicitar mas tiempo para activar su cuenta.</p>';
+	$cuerpo .= '<p>Una vez hecho esto, el personal administrativo se pondrá en contacto mediante esta misma via para notificarle si su estado de alta se encuentra aprobado, de no ser así se detallará la causa.</p>';
+
+	$cuerpo .= '<p>Atte.</p>';
+	$cuerpo .= '<p>AIFZN</p>';
+    
+    $this->insertarActivacionusuarios($idUsuario,$token,'','');
+    $this->enviarEmail($email,'Alta de Usuario',$cuerpo);
 }
 
  
@@ -75,8 +104,8 @@ if (mysql_num_rows($codActivacion) > 0) {
 <link rel="stylesheet" href="../bootstrap/css/bootstrap-theme.min.css">
 
 <link rel="stylesheet" href="../css/materialize.min.css">
-<!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 <!-- Latest compiled and minified JavaScript -->
 <script src="../bootstrap/js/bootstrap.min.js"></script>
 
@@ -106,65 +135,33 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
             </div>
 
             <div align="center" class="segundo">
-              <img src="imagenes/aif_logo.png" width="22%">
-        <div align="center"><p style="color:#363636; font-size:28px;">Complete el registro comenzando con su Numero de Documento</p></div>
+              <img src="../imagenes/aif_logo.png" width="22%">
+               <?php 
+                    switch ($error) {
+
+                        case 0:
+                            echo '<div align="center"><p style="color:#363636; font-size:28px;">Se registro correctamente en el sistema.</p></div>';
+                            break;
+                        case 1: 
+                            echo '<div align="center"><p style="color:#363636; font-size:28px;">Vencio su registro al sistema, debera generar otro.</p></div>';
+                            break;
+                        case 2: 
+                            echo '<div align="center"><p style="color:#363636; font-size:28px;">El usuario ya fue activado.</p></div>';
+                            break;
+
+                    }
+                ?>
+                
+                
                 <br>
             </div>
       <form role="form" class="form-horizontal">
-              <div class="row segundo">
-                <div class="input-field col s6">
-                  <input id="nrodocumento" name="nrodocumento" type="number" class="validate">
-                  <label for="nrodocumento" data-error="Error" data-success="Ok">Nro Documento</label>
-                </div>
-                <div class="input-field col s6">
-                  <a class="waves-effect waves-light blue btn" id="buscar"><i class="material-icons left">search</i>Buscar</a>
-                </div>
-              </div>
-              
-              
-              <div class="row primero">
-                <div class="input-field col s12">
-                  <h4>Ingrese los datos para poder generarle un usuario</h4>
-                </div>
-
-              </div>
-              
-              <div class="row primero">
-                <div class="input-field col s6">
-                  <input id="txtEmail" name="txtEmail" type="email" class="validate tooltipped" data-position="top" data-delay="50" data-tooltip="Campo Obligatorio, sera su modo de ingreso">
-                  <label for="password">Email</label>
-                </div>
-                <div class="input-field col s6">
-                  <input id="txtPassword" name="txtPassword" type="password" class="validate tooltipped"  data-position="top" data-delay="50" data-tooltip="La contraseña debe tener entre 8 y 12 caracteres">
-                  <label for="password">Password</label>
-                </div>
-              </div>
-
-
-              <div class="row primero">
-                <div class="input-field col s6">
-                  <input id="txtApellido" name="txtApellido" type="text" class="validate">
-                  <label for="password">Apellido</label>
-                </div>
-                <div class="input-field col s6">
-                  <input id="txtNombre" name="txtNombre" type="text" class="validate">
-                  <label for="password">Nombre</label>
-                </div>
-              </div>
-
-              <div class="row primero">
-                <div class="input-field col s6">
-                  <input id="txtFechaNacimiento" name="txtFechaNacimiento" type="text" class="datepicker">
-                  <label for="password">Fecha Nacimiento</label>
-                </div>
-              </div>
 
               
               <div class="row btnAcciones">
              
               <div class="form-group">
                 <div class="col-md-12">
-                  <a class="waves-effect red btn" id="registrarse"><i class="material-icons left">group_add</i>Registrate</a>
                   <a class="waves-effect waves-light btn" id="login"><i class="material-icons left">assignment_ind</i>Ingresar</a>
                   
                   
@@ -172,16 +169,7 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
               </div>
               </div>
                 <div id="load">
-                  <div class="preloader-wrapper big active">
-                    <div class="spinner-layer spinner-blue">
-                      <div class="circle-clipper left">
-                        <div class="circle"></div>
-                      </div><div class="gap-patch">
-                        <div class="circle"></div>
-                      </div><div class="circle-clipper right">
-                        <div class="circle"></div>
-                      </div>
-                    </div>
+
                 </div>
 
             </form>
@@ -197,7 +185,21 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
 
 <script type="text/javascript" src="../js/materialize.js"></script>
 <script language="javascript" src="../js/commons.js"></script>
+<script>
+var request_login = false;
+var request_documento = false;
+var id_pre = 0;
+$(document).ready(function () {
 
+  $('#login').click(function() {
+    $(location).attr('href','../index.php');
+  });
+
+});
+</script>
 </body>
 
 </html>
+<?php
+}
+?>

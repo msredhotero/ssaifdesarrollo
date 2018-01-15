@@ -39,96 +39,9 @@ $servicios = new Servicios();
 <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
 
 <link rel="stylesheet" href="css/materialize.min.css">
-<!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Latest compiled and minified JavaScript -->
 <script src="bootstrap/js/bootstrap.min.js"></script>
-
-<script type="text/javascript">
-
-    $(document).ready(function(){
-        
-        
-            
-            
-        
-        function validador(){
-
-                $error = "";
-
-                if ($("#email").val() == "") {
-                    $error = "Es obligatorio el campo E-Mail.";
-
-                    $("#error").addClass("alert alert-danger");
-                    $("#error").attr('placeholder',$error);
-                }
-                
-                if ($("#pass").val() == "") {
-                    $error = "Es obligatorio el campo Password.";
-
-                    $("#pass").addClass("alert alert-danger");
-                    $("#pass").attr('placeholder',$error);
-                }
-                
-
-                
-                
-                var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-                
-                if( !emailReg.test( $("#email").val() ) ) {
-                    $error = "El E-Mail ingresado es inválido.";
-
-                    $("#error").addClass("alert alert-danger");
-                    $("#error").text($error);
-                  }
-
-                return $error;
-        }
-        
-        $('body').keyup(function(e) {
-            if(e.keyCode == 13) {
-                $("#login").click();
-            }
-        });
-        
-        
-        $("#login").click(function(event) {
-            
-                if (validador() == "")
-                {
-                        $.ajax({
-                        data:  {email:		$("#email").val(),
-                                pass:		$("#pass").val(),
-                                idempresa:	$('#idempresa').val(),
-                                accion:		'login'},
-                        url:   'ajax/ajax.php',
-                        type:  'post',
-                        beforeSend: function () {
-                                $("#load").html('<img src="imagenes/load13.gif" width="50" height="50" />');
-                        },
-                        success:  function (response) {
-                                
-                                if (response != '') {
-                                    
-                                    $("#error").removeClass("alert alert-danger");
-
-                                    $("#error").addClass("alert alert-danger");
-                                    $("#error").html('<strong>Error!</strong> '+response);
-                                    $("#load").html('');
-
-                                } else {
-                                    url = "dashboard/";
-                                    $(location).attr('href',url);
-                                }
-                                
-                        }
-                });
-                }
-        });
-        
-    });/* fin del document ready */
-
-</script>
 
 
 <style type="text/css">
@@ -173,9 +86,9 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
             
             </div>
 
-            <div align="center" class="segundo">
+            <div align="center">
             	<img src="imagenes/aif_logo.png" width="22%">
-				<div align="center"><p style="color:#363636; font-size:28px;">Complete el registro comenzando con su Numero de Documento</p></div>
+				<div align="center"><p class="tituloF" style="color:#363636; font-size:28px;">Complete el registro comenzando con su Numero de Documento</p></div>
                 <br>
             </div>
 			<form role="form" class="form-horizontal">
@@ -345,6 +258,7 @@ $(document).ready(function () {
                   password:    $("#txtPassword").val(),
                   apellido:    $("#txtApellido").val(),
                   nombre:    $("#txtNombre").val(),
+                  nrodocumento: $("#nrodocumento").val(),
                   fechanacimiento:    $("#txtFechaNacimiento").val(),
                   accion:   'registrarSocio'},
           url:   'ajax/ajax.php',
@@ -366,6 +280,7 @@ $(document).ready(function () {
                 $('.segundo').hide(200);
                 $('.primero').hide(200);
                 $("#load").hide(100);
+                $('.tituloF').html('Si ya activo su cuenta ingrese al sistema')
 
             }
             

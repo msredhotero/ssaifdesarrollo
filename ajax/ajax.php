@@ -3827,7 +3827,19 @@ function buscarSocio($serviciosUsuarios, $serviciosReferencias) {
 		if ($existeJugadorPre == 0) {
 			echo 'Sus datos no fueron cargados por su Delegado, cualquier consulta comuniquese con la Asociación.';
 		} else {
-			echo '';
+            $email = $serviciosReferencias->traerJugadorPrePorDocumento($nrodocumento);
+            $existePreRegistro = $serviciosUsuarios->existeUsuarioPreRegistrado($email);
+            
+            if ($existePreRegistro == '') {
+                echo '';
+            } else {
+                if ($existePreRegistro == 'Si') {
+                    echo 'Usuario ya activo';
+                } else {
+                    echo 'El usuario debe activar su cuenta!!!';
+                }
+            }
+			
 		}
 	}
 }
@@ -3853,19 +3865,26 @@ function registrarSocio($ServiciosUsuarios, $ServiciosReferencias) {
 	$email				=	$_POST['email'];
 	$password			=	$_POST['password'];
 	$apellido			=	$_POST['apellido'];
+    $nrodocumento		=	$_POST['nrodocumento'];
 	$nombre				=	$_POST['nombre'];
 	$fechanacimiento	=	$_POST['fechanacimiento'];
 	$id					=	$_POST['id'];
-
-	//doy de alta en usuarios alagente
-	$res = $ServiciosUsuarios->registrarSocio($email, $password,$apellido, $nombre, $nrodocumento, $fechanacimiento);
-	if ((integer)$res > 0) {
-		//modifico los datos que le solicite en el login
-		$ServiciosReferencias->modificarJugadorespreRegistro($id,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento);
-		echo '';	
+    
+    $existeEmail = $ServiciosUsuarios->existeUsuario($email);
+    
+    if ($existeEmail == true) {
+		echo "Ya existe un usuario con ese email";	
 	} else {
-		echo $res;	
-	}
+        //doy de alta en usuarios alagente
+        $res = $ServiciosUsuarios->registrarSocio($email, $password,$apellido, $nombre, $nrodocumento, $fechanacimiento);
+        if ((integer)$res > 0) {
+            //modifico los datos que le solicite en el login
+            $ServiciosReferencias->modificarJugadorespreRegistro($id,$nrodocumento,$apellido,$nombre,$email,$fechanacimiento);
+            echo '';	
+        } else {
+            echo $res;	
+        }
+    }
 
 }
 

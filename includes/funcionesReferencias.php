@@ -4545,6 +4545,16 @@ function existeJugadorPre($nroDocumento) {
     }
     return 0;
 }
+    
+    function traerJugadorPrePorDocumento($nroDocumento) {
+    $sql = "select email from dbjugadorespre where nrodocumento = ".$nroDocumento;
+    $res = $this->query($sql,0);
+    
+    if (mysql_num_rows($res)>0) {
+        return mysql_result($res,0,0);   
+    }
+    return '';
+}
 
 function existeJugadorConIdJugador($nroDocumento, $idJugador) {
     $sql = "select idjugador from dbjugadores where nrodocumento = ".$nroDocumento." and idjugador <>".$idJugador;

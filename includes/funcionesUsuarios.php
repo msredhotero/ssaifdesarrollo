@@ -34,7 +34,7 @@ if (mysql_num_rows($respusu) > 0) {
 	
 	
 	$idUsua = mysql_result($respusu,0,0);
-	$sqlpass = "select nombrecompleto,email,usuario,r.descripcion, r.idrol, u.refcountries from dbusuarios u inner join tbroles r on r.idrol = u.refroles where password = '".$pass."' and idusuario = ".$idUsua;
+	$sqlpass = "select nombrecompleto,email,usuario,r.descripcion, r.idrol, u.refcountries from dbusuarios u inner join tbroles r on r.idrol = u.refroles where password = '".$pass."' and u.activo = 1 and idusuario = ".$idUsua;
 
 
 	$resppass = $this->query($sqlpass,0);
@@ -258,6 +258,17 @@ function existeUsuario($usuario) {
 		return false;	
 	}
 }
+    
+    
+function existeUsuarioPreRegistrado($email) {
+	$sql = "select (case when activo=1 then 'Si' else 'No' end) as activo from dbusuarios where email = '".$email."'";
+	$res = $this->query($sql,0);
+	if (mysql_num_rows($res)>0) {
+		return mysql_result($res,0,0);	
+	} else {
+		return '';	
+	}
+}
 
 function enviarEmail($destinatario,$asunto,$cuerpo) {
 
@@ -319,7 +330,7 @@ function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fech
 				'".utf8_decode($password)."',
 				5,
 				'".utf8_decode($email)."',
-				'".utf8_decode($nombrecompleto)."',
+				'".utf8_decode($apellido).' '.utf8_decode($nombre)."',
 				NULL,
 				0)";
 	if ($this->existeUsuario($email) == true) {
@@ -330,7 +341,7 @@ function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fech
 		return 'Error al insertar datos';
 	} else {
 		$this->insertarActivacionusuarios($res,$token,'','');
-		//$this->enviarEmail($email,'Alta de Usuario',$cuerpo);
+		$this->enviarEmail($email,'Alta de Usuario',$cuerpo);
 
 		return $res;
 	}
@@ -477,6 +488,20 @@ $sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta
 $res = $this->query($sql,0); 
 return $res; 
 } 
+    
+    
+function activarUsuario($refusuario) {
+	$sql = "update dbusuarios 
+	set 
+		activo = 1
+	where idusuario =".$refusuario; 
+	$res = $this->query($sql,0);
+	if ($res == false) {
+		return 'Error al modificar datos';
+	} else {
+		return '';
+	}
+}
 
 /* Fin */
 /* /* Fin de la Tabla: dbactivacionusuarios*/
