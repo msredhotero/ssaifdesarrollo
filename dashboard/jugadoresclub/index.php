@@ -263,8 +263,21 @@ if ($_SESSION['refroll_predio'] != 1) {
             	<div class="col-md-6">
             		<label class="control-label">Seleccione un año para generar el reporte</label>
             		<select id="anio" name="anio" class="form-control">
-            			<option value="<?php echo date('Y') + 1; ?>"><?php echo date('Y') + 1; ?></option>
-            			<option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
+            			<?php
+	            			if (date('m') >= 6) {
+	            		?>
+	            			<option value="<?php echo date('Y') + 1; ?>"><?php echo date('Y') + 1; ?></option>
+	            			<option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
+	            		<?php
+	            			} else {
+	            		?>
+	            			<option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
+	            			<option value="<?php echo date('Y') + 1; ?>"><?php echo date('Y') + 1; ?></option>
+	            			
+
+	            		<?php
+	            			}
+	            		?>
             		</select>
             	</div>
 
