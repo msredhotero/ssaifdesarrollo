@@ -33,7 +33,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Categor
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerCategoriasPorId($id);
+$resResultado = $serviciosReferencias->traerJugadoresPrePorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////

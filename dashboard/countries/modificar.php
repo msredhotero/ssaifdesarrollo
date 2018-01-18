@@ -54,16 +54,27 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbcountries";
 
-$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria","telefonoadministrativo","telefonocampo","codigopostal");
-$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Tel. Administrativo","Tel. Campo","Cod.Postal");
+$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria","telefonoadministrativo","telefonocampo","codigopostal","refusuarios");
+$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Tel. Administrativo","Tel. Campo","Cod.Postal","Usuario Referente");
 
 
 $resPosTri 	= $serviciosReferencias->traerPosiciontributaria();
 $cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resPosTri,array(1),'', mysql_result($resResultado,0,'refposiciontributaria'));
 
+$idUsuario = mysql_result($resResultado,0,'refusuarios');
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("refposiciontributaria");
+$resUsuarios= $serviciosUsuario->traerUsuariosPorRol(1);
+if (($idUsuario == '') || ($idUsuario == 0)) {
+	$cadRef2	= "<option value='0'>-- Seleccionar --</option>";
+	$cadRef2	.= $serviciosFunciones->devolverSelectBox($resUsuarios,array(5,4),'');
+} else {
+	$cadRef2	= $serviciosFunciones->devolverSelectBoxActivo($resUsuarios,array(5,4),'', $idUsuario);
+	$cadRef2	.= "<option value='0'>-- Seleccionar --</option>";
+}
+
+
+$refdescripcion = array(0 => $cadRef,1=> $cadRef2);
+$refCampo 	=  array("refposiciontributaria","refusuarios");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 

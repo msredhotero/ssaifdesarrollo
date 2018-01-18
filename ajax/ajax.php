@@ -601,18 +601,23 @@ function modificarJugadorespre($serviciosReferencias) {
 	$apellido = $_POST['apellido'];
 	$nombres = $_POST['nombres'];
 	$email = $_POST['email'];
-	$fechanacimiento = $_POST['fechanacimiento'];
-	$fechaalta = $_POST['fechaalta'];
+	$fechanacimiento = formatearFechas($_POST['fechanacimiento']);
+	$fechaalta = formatearFechas($_POST['fechaalta']);
+	$numeroserielote = $_POST['numeroserielote'];
 	$refcountries = $_POST['refcountries'];
 	$observaciones = $_POST['observaciones'];
 	$refusuarios = $_POST['refusuarios'];
 	
-	$res = $serviciosReferencias->modificarJugadorespre($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$refcountries,$observaciones,$refusuarios);
-	
-	if ($res == true) {
-		echo '';
+	if (($fechaalta == '***') || ($fechanacimiento == '***')) {
+		echo 'Formato de fecha incorrecto';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		$res = $serviciosReferencias->modificarJugadorespre($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$numeroserielote,$refcountries,$observaciones,$refusuarios);
+		
+		if ($res == true) {
+			echo '';
+		} else {
+			echo 'Huvo un error al modificar datos';
+		}
 	}
 }
 
@@ -2035,6 +2040,7 @@ function insertarCountries($serviciosReferencias) {
 	$direccion = $_POST['direccion']; 
 	$telefonoadministrativo = $_POST['telefonoadministrativo']; 
 	$telefonocampo = $_POST['telefonocampo']; 
+	$refusuarios = $_POST['refusuarios']; 
 	
 	if (isset($_POST['activo'])) {
 		$activo = 1;
@@ -2055,7 +2061,7 @@ function insertarCountries($serviciosReferencias) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeCountrie($cuit)==0) {
-			$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal);
+			$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal, $refusuarios);
 			
 			if ((integer)$res > 0) {
 				$resUser = $serviciosReferencias->traerContactos();
@@ -2094,6 +2100,8 @@ function modificarCountries($serviciosReferencias) {
 	$direccion = $_POST['direccion']; 
 	$telefonoadministrativo = $_POST['telefonoadministrativo']; 
 	$telefonocampo = $_POST['telefonocampo']; 
+
+	$refusuarios = $_POST['refusuarios']; 
 	
 	if (isset($_POST['activo'])) {
 		$activo = 1;
@@ -2113,7 +2121,7 @@ function modificarCountries($serviciosReferencias) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeCountriePorId($cuit,$id)==0) {
-			$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal);
+			$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal, $refusuarios);
 			
 			if ($res == true) {
 				$serviciosReferencias->eliminarCountriecontactosPorCountrie($id);

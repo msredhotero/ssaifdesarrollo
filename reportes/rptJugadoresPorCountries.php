@@ -267,7 +267,7 @@ Footer($pdf);
 $pdf->AddPage();
 
 $pdf->SetFont('Arial','',12);
-$pdf->Cell(200,5,utf8_decode('ACTUALIZACIÓN DE DATOS AÑO 2017'),0,0,'C',false);
+$pdf->Cell(200,5,utf8_decode('ACTUALIZACIÓN DE DATOS AÑO 2018'),0,0,'C',false);
 $pdf->Ln();
 $pdf->Ln();
 $pdf->Ln();

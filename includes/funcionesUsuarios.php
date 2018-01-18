@@ -211,6 +211,21 @@ function traerUsuarios() {
 	}
 }
 
+function traerUsuariosPorRol($idRol) {
+	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles
+			from dbusuarios u
+			inner join tbroles r on u.refroles = r.idrol 
+			left join dbcountries cou on cou.idcountrie = u.refcountries
+			where r.idrol = ".$idRol."
+			order by nombrecompleto";
+	$res = $this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
 
 function traerUsuariosSimple() {
 	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles
@@ -367,15 +382,17 @@ function insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto, $re
 				refroles,
 				email,
 				nombrecompleto,
-				refcountries)
+				refcountries,
+				activo)
 			VALUES
 				('',
-				'".utf8_decode($usuario)."',
-				'".utf8_decode($password)."',
+				'".($usuario)."',
+				'".($password)."',
 				".$refroll.",
-				'".utf8_decode($email)."',
-				'".utf8_decode($nombrecompleto)."',
-				".$refcountries.")";
+				'".($email)."',
+				'".($nombrecompleto)."',
+				".$refcountries.",
+				1)";
 	if ($this->existeUsuario($email) == true) {
 		return "Ya existe el usuario";	
 	}
@@ -389,15 +406,16 @@ function insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto, $re
 }
 
 
-function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto,$refcountries) {
+function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto,$refcountries, $activo) {
 	$sql = "UPDATE dbusuarios
 			SET
-				usuario = '".utf8_decode($usuario)."',
-				password = '".utf8_decode($password)."',
-				email = '".utf8_decode($email)."',
+				usuario = '".($usuario)."',
+				password = '".($password)."',
+				email = '".($email)."',
 				refroles = ".$refroll.",
-				nombrecompleto = '".utf8_decode($nombrecompleto)."',
+				nombrecompleto = '".($nombrecompleto)."',
 				refcountries = ".$refcountries."
+				activo = ".$activo."
 			WHERE idusuario = ".$id;
 	$res = $this->query($sql,0);
 	if ($res == false) {

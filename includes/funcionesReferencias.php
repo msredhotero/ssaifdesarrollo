@@ -3578,18 +3578,18 @@ function existeCountriePorId($cuit, $id) {
 }
 
 
-function insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal) { 
-$sql = "insert into dbcountries(idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,imagen,direccion,telefonoadministrativo,telefonocampo,email,localidad,codigopostal) 
-values ('','".($nombre)."','".($cuit)."',".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'").",".$refposiciontributaria.",'".($latitud)."','".($longitud)."',".$activo.",'".($referencia)."','".($imagen)."','".($direccion)."','".($telefonoadministrativo)."','".($telefonocampo)."','".($email)."','".($localidad)."','".($codigopostal)."')"; 
+function insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal, $refusuarios) { 
+$sql = "insert into dbcountries(idcountrie,nombre,cuit,fechaalta,fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,imagen,direccion,telefonoadministrativo,telefonocampo,email,localidad,codigopostal, refusuarios) 
+values ('','".($nombre)."','".($cuit)."',".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'").",".$refposiciontributaria.",'".($latitud)."','".($longitud)."',".$activo.",'".($referencia)."','".($imagen)."','".($direccion)."','".($telefonoadministrativo)."','".($telefonocampo)."','".($email)."','".($localidad)."','".($codigopostal)."',".($refusuarios).")"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
 
 
-function modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal) { 
+function modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal, $refusuarios) { 
 $sql = "update dbcountries 
 set 
-nombre = '".($nombre)."',cuit = '".($cuit)."',fechaalta = ".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",fechabaja = ".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'").",refposiciontributaria = ".$refposiciontributaria.",latitud = '".($latitud)."',longitud = '".($longitud)."',activo = ".$activo.",referencia = '".($referencia)."',imagen = '".($imagen)."',direccion = '".($direccion)."',telefonoadministrativo = '".($telefonoadministrativo)."',telefonocampo = '".($telefonocampo)."',email = '".utf8_decode($email)."',localidad = '".utf8_decode($localidad)."',codigopostal = '".utf8_decode($codigopostal)."'  
+nombre = '".($nombre)."',cuit = '".($cuit)."',fechaalta = ".($fechaalta == '' ? 'NULL' : "'".$fechaalta."'").",fechabaja = ".($fechabaja == '' ? 'NULL' : "'".$fechabaja."'").",refposiciontributaria = ".$refposiciontributaria.",latitud = '".($latitud)."',longitud = '".($longitud)."',activo = ".$activo.",referencia = '".($referencia)."',imagen = '".($imagen)."',direccion = '".($direccion)."',telefonoadministrativo = '".($telefonoadministrativo)."',telefonocampo = '".($telefonocampo)."',email = '".($email)."',localidad = '".($localidad)."',codigopostal = '".utf8_decode($codigopostal)."',refusuarios = ".($refusuarios)."
 where idcountrie =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -3622,6 +3622,7 @@ c.telefonocampo,
 c.email,
 c.localidad,
 c.codigopostal
+,c.refusuarios
 from dbcountries c
 inner join tbposiciontributaria pos ON pos.idposiciontributaria = c.refposiciontributaria
 order by c.nombre";
@@ -3632,7 +3633,7 @@ return $res;
 
 function traerCountriesPorId($id) {
 $sql = "select idcountrie,nombre,cuit,fechaalta,
-    fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,direccion,telefonoadministrativo,telefonocampo,email,localidad,codigopostal from dbcountries where idcountrie =".$id;
+    fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,direccion,telefonoadministrativo,telefonocampo,email,localidad,codigopostal,refusuarios from dbcountries where idcountrie =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -3652,6 +3653,7 @@ c.email,
 c.publico,
 c.observaciones,
 c.reftipocontactos
+,c.refusuarios
 from dbcontactos c
 inner join tbtipocontactos tip ON tip.idtipocontacto = c.reftipocontactos
 inner join dbcountriecontactos cc on cc.refcontactos = c.idcontacto
@@ -4798,6 +4800,22 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+function traerCantidadJugadores() {
+    $sql = "select count(*) from dbjugadores";
+    $res = $this->query($sql,0); 
+
+    if (mysql_num_rows($res)>0) {
+        return mysql_result($res,0,0);
+    }
+    return 0;
+}
+
+function traerJugadoresAutocompletar() {
+    $sql = "select idjugador,concat(apellido, ' ', nombres, ' - ', nrodocumento) as nombrecompleto from dbjugadores";
+    $res = $this->query($sql,0); 
+
+    return $res; 
+}
 /* Fin */
 /* /* Fin de la Tabla: dbjugadores*/
 
@@ -12511,17 +12529,17 @@ return $res;
 /* PARA Jugadorespre */
 
 function insertarJugadorespre($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$numeroserielote,$refcountries,$observaciones,$refusuarios) {
-$sql = "insert into dbjugadorespre(idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,numeroserielote,refcountries,observaciones,refusuarios)
-values ('',".$reftipodocumentos.",".$nrodocumento.",'".utf8_decode($apellido)."','".utf8_decode($nombres)."','".utf8_decode($email)."','".utf8_decode($fechanacimiento)."','".utf8_decode($fechaalta)."','".utf8_decode($numeroserielote)."',".$refcountries.",'".utf8_decode($observaciones)."',".$refusuarios.")";
+$sql = "insert into dbjugadorespre(idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,numeroserielote,refcountries,observaciones,refusu|arios)
+values ('',".$reftipodocumentos.",".$nrodocumento.",'".strtoupper($apellido)."','".strtoupper($nombres)."','".($email)."','".($fechanacimiento)."','".($fechaalta)."','".($numeroserielote)."',".$refcountries.",'".($observaciones)."',".$refusuarios.")";
 $res = $this->query($sql,1);
 return $res;
 }
 
 
-function modificarJugadorespre($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$refcountries,$observaciones,$refusuarios) {
+function modificarJugadorespre($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$numeroserielote,$refcountries,$observaciones,$refusuarios) {
 $sql = "update dbjugadorespre
 set
-reftipodocumentos = ".$reftipodocumentos.",nrodocumento = ".$nrodocumento.",apellido = '".utf8_decode($apellido)."',nombres = '".utf8_decode($nombres)."',email = '".utf8_decode($email)."',fechanacimiento = '".utf8_decode($fechanacimiento)."',fechaalta = '".utf8_decode($fechaalta)."',refcountries = ".$refcountries.",observaciones = '".utf8_decode($observaciones)."',refusuarios = ".$refusuarios."
+reftipodocumentos = ".$reftipodocumentos.",nrodocumento = ".$nrodocumento.",apellido = '".strtoupper($apellido)."',nombres = '".strtoupper($nombres)."',email = '".($email)."',fechanacimiento = '".utf8_decode($fechanacimiento)."',fechaalta = '".($fechaalta)."',numeroserielote = '".($numeroserielote)."',refcountries = ".$refcountries.",observaciones = '".($observaciones)."',refusuarios = ".$refusuarios."
 where idjugadorpre =".$id;
 $res = $this->query($sql,0);
 return $res;

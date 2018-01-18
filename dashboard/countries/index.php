@@ -47,18 +47,22 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbcountries";
 
-$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria","refcontactos","telefonoadministrativo","telefonocampo","codigopostal");
-$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Contacto","Tel. Administrativo","Tel. Campo","Cod.Postal");
+$lblCambio	 	= array("fechaalta","fechabaja","refposiciontributaria","refcontactos","telefonoadministrativo","telefonocampo","codigopostal","refusuarios");
+$lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Contacto","Tel. Administrativo","Tel. Campo","Cod.Postal","Usuario Referente");
 
 
 $resPosTri 	= $serviciosReferencias->traerPosiciontributaria();
 $cadRef 	= $serviciosFunciones->devolverSelectBox($resPosTri,array(1),'');
 
+$resUsuarios= $serviciosUsuario->traerUsuariosPorRol(1);
+$cadRef2	= "<option value='0'>-- Seleccionar --</option>";
+$cadRef2	.= $serviciosFunciones->devolverSelectBox($resUsuarios,array(5,4),' - ');
+
 $resContacto 	= $serviciosReferencias->traerContactos();
 //$cadRef2 	= $serviciosFunciones->devolverSelectBox($resContacto,array(1,2),' - ');
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("refposiciontributaria");
+$refdescripcion = array(0 => $cadRef,1=> $cadRef2);
+$refCampo 	=  array("refposiciontributaria","refusuarios");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
