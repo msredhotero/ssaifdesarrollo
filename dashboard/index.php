@@ -1188,7 +1188,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		<h3>Bienvenido</h3>
 			
 		    <?php
-			if ($_SESSION['idroll_predio'] == 1) {
+			if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 				$resCantidadJugadores = $serviciosReferencias->traerCantidadJugadores();
 				$resJuga = $serviciosReferencias->traerJugadoresAutocompletar();
 				$cadJugadores = '<option value="0"></option>';

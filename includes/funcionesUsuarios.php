@@ -285,9 +285,11 @@ function existeUsuarioPreRegistrado($email) {
 	}
 }
 
-function enviarEmail($destinatario,$asunto,$cuerpo) {
+function enviarEmail($destinatario,$asunto,$cuerpo, $referencia) {
 
-	
+	if ($referencia == '') {
+		$referencia = 'aif@intercountryfutbol.com.ar';
+	}
 	# Defina el número de e-mails que desea enviar por periodo. Si es 0, el proceso por lotes
 	# se deshabilita y los mensajes son enviados tan rápido como sea posible.
 	define("MAILQUEUE_BATCH_SIZE",0);
@@ -306,7 +308,7 @@ function enviarEmail($destinatario,$asunto,$cuerpo) {
 	$headers .= "Return-path: ".$destinatario."\r\n";
 	
 	//direcciones que recibirán copia oculta
-	$headers .= "Bcc: aif@intercountryfutbol.com.ar\r\n";
+	$headers .= "Bcc: ".$referencia."\r\n";
 	
 	mail($destinatario,$asunto,$cuerpo,$headers); 	
 }
@@ -322,7 +324,7 @@ function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fech
 	$fechaprogramada =  date_format($fecha, 'Y-m-d');
 
 	$cuerpo .= '<p>Antes que nada por favor no responda este mail ya que no recibirá respuesta.</p>';
-	$cuerpo .= "<p>Recibimos su solicitud de alta como socio/jugador en la Asociación Intercountry de Fútbol Zona Norte. Para verificar(activar) tu casilla de correo por favor ingresá al siguiente link: <a href='saupureinconsulting.com.ar/activacion/index.php?token=".$token."'>AQUI</a>.</p>";
+	$cuerpo .= "<p>Recibimos su solicitud de alta como socio/jugador en la Asociación Intercountry de Fútbol Zona Norte. Para verificar(activar) tu casilla de correo por favor ingresá al siguiente link: <a href='saupureinconsulting.com.ar/aifzn/activacion/index.php?token=".$token."'>AQUI</a>.</p>";
 	$cuerpo .= '<p>Este link estara vigente hasta la fecha '.$fechaprogramada.', pasada esta fecha deberá solicitar mas tiempo para activar su cuenta.</p>';
 	$cuerpo .= '<p>Una vez hecho esto, el personal administrativo se pondrá en contacto mediante esta misma via para notificarle si su estado de alta se encuentra aprobado, de no ser así se detallará la causa.</p>';
 
@@ -356,8 +358,8 @@ function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fech
 		return 'Error al insertar datos';
 	} else {
 		$this->insertarActivacionusuarios($res,$token,'','');
-		$this->actualizarUsuarioUusarioPre($nroDocumento, $res);
-		$this->enviarEmail($email,'Alta de Usuario',utf8_encode($cuerpo));
+		$this->actualizarUsuarioUusarioPre($nrodocumento, $res);
+		$this->enviarEmail($email,'Alta de Usuario',utf8_encode($cuerpo), $this->traerReferente($nrodocumento));
 
 		return $res;
 	}
@@ -372,6 +374,25 @@ function actualizarUsuarioUusarioPre($nroDocumento, $idUsuario) {
 	} else {
 		return '';
 	}
+}
+
+function traerReferente($nrodocumento) {
+	$sql = "select
+				coalesce(u.email,'') as email
+			from		dbjugadorespre j
+			left
+			join		dbcountries c
+			on			j.refcountries = c.idcountrie
+			left
+			join		dbusuarios u
+			on			u.idusuario = c.refusuarios
+			where		j.nrodocumento = ".$nrodocumento;
+	$res = $this->query($sql,0);
+
+	if (mysql_num_rows($res)>0) {
+		return mysql_result($res,0,0);
+	}
+	return '';
 }
 
 function insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto, $refcountries) {
@@ -391,14 +412,14 @@ function insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto, $re
 				".$refroll.",
 				'".($email)."',
 				'".($nombrecompleto)."',
-				".$refcountries.",
+				".($refcountries == '' ? 'NULL' : $refcountries).",
 				1)";
 	if ($this->existeUsuario($email) == true) {
 		return "Ya existe el usuario";	
 	}
 	$res = $this->query($sql,1);
 	if ($res == false) {
-		return 'Error al insertar datos';
+		return 'Error al insertar datos '.$sql;
 	} else {
 		
 		return $res;
@@ -414,7 +435,7 @@ function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto
 				email = '".($email)."',
 				refroles = ".$refroll.",
 				nombrecompleto = '".($nombrecompleto)."',
-				refcountries = ".$refcountries."
+				refcountries = ".($refcountries == '' ? 'NULL' : $refcountries)."
 				activo = ".$activo."
 			WHERE idusuario = ".$id;
 	$res = $this->query($sql,0);
