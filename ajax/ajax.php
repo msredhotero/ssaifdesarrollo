@@ -591,7 +591,7 @@ function insertarJugadorespre($serviciosReferencias) {
 			if ((integer)$res > 0) { 
 				echo $res; 
 			} else { 
-				echo 'Huvo un error al insertar datos';	 
+				echo 'Huvo un error al insertar datos ';	 
 			} 
 		} else {
 			echo 'Ya existe ese numero de documento';	
