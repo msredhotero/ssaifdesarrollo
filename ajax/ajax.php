@@ -115,6 +115,9 @@ case 'existeCuit':
 case 'eliminarFoto':
 	eliminarFoto($serviciosReferencias);
 	break;
+case 'eliminarFotoJugadores':
+	eliminarFotoJugadores($serviciosReferencias);
+	break;
 case 'traerContactosPorCountries':
 	traerContactosPorCountries($serviciosFunciones,$serviciosReferencias);
 	break;
@@ -554,6 +557,9 @@ case 'modificarJugadorespre':
 case 'eliminarJugadorespre':
 	eliminarJugadorespre($serviciosReferencias);
 	break; 
+case 'modificarJugadorespreRegistro':
+	modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios);
+	break;
 /*****			fin 			**********/
 }
 
@@ -627,6 +633,28 @@ function eliminarJugadorespre($serviciosReferencias) {
 	$res = $serviciosReferencias->eliminarJugadorespre($id);
 	echo $res;
 } 
+
+function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios) {
+	$id = $_POST['id'];
+
+	$apellido = $_POST['apellido'];
+	$nombres = $_POST['nombres'];
+	$fechanacimiento = formatearFechas($_POST['fechanacimiento']);
+	$observaciones = $_POST['observaciones'];
+	if ($fechanacimiento == '***') {
+		echo 'Formato de fecha incorrecto';
+	} else {
+		$res = $serviciosReferencias->modificarJugadorespreRegistro($id, $apellido, $nombres, $fechanacimiento, $observaciones);
+		if ($res == true) {
+			$nuevoId = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
+			$error = $serviciosReferencias->subirArchivoJugadores('avatar-1',$id,$nuevoId,1,$id);
+			echo '';
+		} else {
+			echo 'Huvo un error al modificar datos';
+		}
+	}
+
+}
 
 
 /*****			fin 			**********/
@@ -2156,6 +2184,12 @@ echo $res;
 function eliminarFoto($serviciosReferencias) {
 	$id			=	$_POST['id'];
 	echo $serviciosReferencias->eliminarFoto($id,'countries');
+}
+
+function eliminarFotoJugadores($serviciosReferencias) {
+	$refdocumentaciones			=	$_POST['documentacion'];
+	$refjugadorespre			=	$_POST['jugador'];
+	echo $serviciosReferencias->eliminarFotoJugadores($refdocumentaciones,$refjugadorespre);
 }
 
 function traerContactosPorCountries($serviciosFunciones, $serviciosReferencias) {

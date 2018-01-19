@@ -694,8 +694,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 		/////////////////////// Opciones para la creacion del formulario  /////////////////////
 		$tabla 			= "dbjugadorespre";
 
-		$lblCambio	 	= array("reftipodocumentos","fechanacimiento","refcountries","refusuarios");
-		$lblreemplazo	= array("Tipo Documento","Fecha Nacimiento","Club","Delegado");
+		$lblCambio	 	= array("reftipodocumentos","fechanacimiento","refcountries","refusuarios","numeroserielote");
+		$lblreemplazo	= array("Tipo Documento","Fecha Nacimiento","Club","Delegado","Nro Serie Lote");
 
 
 		$resTipoDoc 	= $serviciosReferencias->traerTipodocumentos();
@@ -824,41 +824,16 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            </div>
 					<div class="row">
 					<?php echo $formulario; ?>
-		            </div>
-		            
-		            
-		            <div class='row' style="margin-left:25px; margin-right:25px;">
-		                <div class='alert'>
-		                
-		                </div>
-		                <div id='load'>
-		                
-		                </div>
+					<input type="hidden" id="nrodocumento" name="nrodocumento" value="<?php echo mysql_result($resResultado, 0,'nrodocumento'); ?>">
+					<input type="hidden" id="fechaalta" name="fechaalta" value="<?php echo mysql_result($resResultado, 0,'fechaalta'); ?>">
+					<input type="hidden" id="email" name="email" value="<?php echo mysql_result($resResultado, 0,'email'); ?>">
+					<input type="hidden" id="numeroserielote" name="numeroserielote" value="<?php echo mysql_result($resResultado, 0,'numeroserielote'); ?>">
+					<input type="hidden" id="id" name="id" value="<?php echo mysql_result($resResultado, 0,0); ?>">
 		            </div>
 		            
 		            <div class="row">
-		                <div class="col-md-12">
-		                <ul class="list-inline" style="margin-top:15px;">
-		                    <li>
-		                        <button type="button" class="btn btn-warning" id="cargar" style="margin-left:0px;">Modificar</button>
-		                    </li>
-		                </ul>
-		                </div>
-		            </div>
-		            </form>
-		    	</div>
-		    </div>
-
-		    <div class="boxInfoLargo">
-		        <div id="headBoxInfo">
-		        	<p style="color: #fff; font-size:18px; height:16px;">Suba la Foto del Documento (frente y dorso)</p>
-		        	
-		        </div>
-		    	<div class="cuerpoBox">
-		        	<form class="form-inline formulario" role="form">
-		        	
-					<div class="row">
 						<div class="col-sm-6 text-center">
+							<h4>Foto del Documento del frente</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-2" name="avatar-2" type="file" required>
@@ -868,6 +843,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				        </div>
 
 				        <div class="col-sm-6 text-center">
+				        	<h4>Foto del Documento del dorso</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-3" name="avatar-3" type="file" required>
@@ -887,15 +863,29 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                </div>
 		            </div>
 		            
+		            
 		            <div class="row">
 		                <div class="col-md-12">
 		                <ul class="list-inline" style="margin-top:15px;">
 		                    <li>
-		                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
+		                        <button type="button" class="btn btn-warning" id="cargar" style="margin-left:0px;">Guardar</button>
 		                    </li>
 		                </ul>
 		                </div>
 		            </div>
+		            </form>
+		    	</div>
+		    </div>
+
+		    <div class="boxInfoLargo">
+		        <div id="headBoxInfo">
+		        	<p style="color: #fff; font-size:18px; height:16px;">Suba la Foto del Documento (frente y dorso)</p>
+		        	
+		        </div>
+		    	<div class="cuerpoBox">
+		        	<form class="form-inline formulario" role="form">
+		        	
+					
 		            </form>
 		    	</div>
 		    </div>
@@ -906,71 +896,111 @@ if ($_SESSION['idroll_predio'] == 4) {
 		</div>
 
 
-
 		<script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 		<script src="../bootstrap/js/dataTables.bootstrap.js"></script>
 		<script type="text/javascript" src="../js/fileinput/fileinput.js"></script>
 		<script>
-		var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' + 
-		    'onclick="alert(\'Call your custom code here.\')">' +
-		    '<i class="glyphicon glyphicon-tag"></i>' +
-		    '</button>'; 
-		$("#avatar-1").fileinput({
-		    overwriteInitial: true,
-		    maxFileSize: 5500,
-		    showClose: false,
-		    showCaption: false,
-		    browseLabel: '',
-		    removeLabel: '',
-		    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
-		    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
-		    removeTitle: 'Cancel or reset changes',
-		    elErrorContainer: '#kv-avatar-errors-1',
-		    msgErrorClass: 'alert alert-block alert-danger',
-		    defaultPreviewContent: '<img src="../uploads/default_avatar_male.jpg" alt="Your Avatar">',
-		    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-		    allowedFileExtensions: ["jpg", "png", "gif"]
-		});
-
-		$("#avatar-2").fileinput({
-		    overwriteInitial: true,
-		    maxFileSize: 5500,
-		    showClose: false,
-		    showCaption: false,
-		    browseLabel: '',
-		    removeLabel: '',
-		    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
-		    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
-		    removeTitle: 'Cancel or reset changes',
-		    elErrorContainer: '#kv-avatar-errors-1',
-		    msgErrorClass: 'alert alert-block alert-danger',
-		    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
-		    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-		    allowedFileExtensions: ["jpg", "png", "gif"]
-		});
-
-		$("#avatar-3").fileinput({
-		    overwriteInitial: true,
-		    maxFileSize: 1500,
-		    showClose: false,
-		    showCaption: false,
-		    browseLabel: '',
-		    removeLabel: '',
-		    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
-		    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
-		    removeTitle: 'Cancel or reset changes',
-		    elErrorContainer: '#kv-avatar-errors-1',
-		    msgErrorClass: 'alert alert-block alert-danger',
-		    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
-		    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-		    allowedFileExtensions: ["jpg", "png", "gif"]
-		});
+		
 		</script>
 
 		<script type="text/javascript">
 		$(document).ready(function(){
+
+			function eliminarFoto(documentacion, jugador) {
+				$.ajax({
+					data:  {documentacion: documentacion, 
+							jugador: jugador,
+							accion: 'eliminarFotoJugadores'},
+					url:   '../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							alert(response);
+							//url = "index.php";
+							//$(location).attr('href',url);
+							
+					}
+				});
+			}
+
+			var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' + 
+			    'onclick="alert(\'Call your custom code here.\')">' +
+			    '<i class="glyphicon glyphicon-tag"></i>' +
+			    '</button>'; 
+			$("#avatar-1").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 1500,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-1',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/default_avatar_male.jpg" alt="Your Avatar">',
+			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["jpg", "png", "gif"],
+			    initialPreview: [
+			    	"<img src='../data/1/IMG_20160805_155004.jpg' width='120' class='file-preview-image' alt='Desert' title='Desert'>",
+			    ],
+			    initialPreviewConfig: [
+				    {
+				        caption: 'IMG_20160805_155004.jpg', 
+				        width: '120px', 
+				        key: 100, 
+				        extra: {id: 100}
+				    }
+				]
+			}).on('filecleared', function(event) {
+	          eliminarFoto(1,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
+	        });
+
+			$("#avatar-2").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 5500,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-1',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["jpg", "png", "gif"]
+			});
+
+			$("#avatar-3").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 5500,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-1',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["jpg", "png", "gif"]
+			});
+
 			
 			$('#colapsarMenu').click();
+
+
+			$('#numeroserielote').prop('disabled',true);
+			$('#nrodocumento').prop('disabled',true);
+			$('#email').prop('disabled',true);
+			$('#fechaalta').prop('disabled',true);
 			
 			$(document).on('click', '.panel-heading span.clickable', function(e){
 				var $this = $(this);
@@ -1005,7 +1035,62 @@ if ($_SESSION['idroll_predio'] == 4) {
 			});
 			
 			
-			
+			//al enviar el formulario
+		    $('#cargar').click(function(){
+				
+
+				//información del formulario
+				var formData = new FormData($(".formulario")[0]);
+				var message = "";
+				//hacemos la petición ajax  
+				$.ajax({
+					url: '../ajax/ajax.php',  
+					type: 'POST',
+					// Form data
+					//datos del formulario
+					data: formData,
+					//necesario para subir archivos via ajax
+					cache: false,
+					contentType: false,
+					processData: false,
+					//mientras enviamos el archivo
+					beforeSend: function(){
+						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');       
+					},
+					//una vez finalizado correctamente
+					success: function(data){
+
+						if (data == '') {
+		                                        $(".alert").removeClass("alert-danger");
+												$(".alert").removeClass("alert-info");
+		                                        $(".alert").addClass("alert-success");
+		                                        $(".alert").html('<strong>Ok!</strong> Sus datos fueron guardados correctamente. ');
+												$(".alert").delay(3000).queue(function(){
+													/*aca lo que quiero hacer 
+													  después de los 2 segundos de retraso*/
+													$(this).dequeue(); //continúo con el siguiente ítem en la cola
+													
+												});
+												$("#load").html('');
+												//url = "index.php";
+												//$(location).attr('href',url);
+		                                        
+												
+		                                    } else {
+		                                    	$(".alert").removeClass("alert-danger");
+		                                        $(".alert").addClass("alert-danger");
+		                                        $(".alert").html('<strong>Error!</strong> '+data);
+		                                        $("#load").html('');
+		                                    }
+					},
+					//si ha ocurrido un error
+					error: function(){
+						$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+		                $("#load").html('');
+					}
+				});
+				
+		    });
 			
 			
 

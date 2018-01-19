@@ -3251,10 +3251,36 @@ function existeDevuelveId($sql) {
         }
         return $res;
     }
+
+
+    function borrarArchivoJugadores($id,$archivo) {
+        $sql    =   "delete from dbdocumentacionjugadorimagenes where iddocumentacionjugadorimagen =".$id;
+        
+        $res =  unlink("./../".$archivo);
+        if ($res)
+        {
+            $this->query($sql,0);   
+        }
+        return $res;
+    }
     
     
     function existeArchivo($id,$nombre,$type,$idtabla) {
         $sql        =   "select * from images where reftabla = ".$idtabla." and refproyecto =".$id." and imagen = '".$nombre."' and type = '".$type."'";
+        $resultado  =   $this->query($sql,0);
+               
+               if(mysql_num_rows($resultado)>0){
+    
+                   return mysql_result($resultado,0,0);
+    
+               }
+    
+               return 0;    
+    }
+
+
+    function existeArchivoJugadores($id,$nombre,$type) {
+        $sql        =   "select * from dbdocumentacionjugadorimagenes where iddocumentacionjugadorimagen =".$id." and imagen = '".$nombre."' and type = '".$type."'";
         $resultado  =   $this->query($sql,0);
                
                if(mysql_num_rows($resultado)>0){
@@ -3381,6 +3407,70 @@ function existeDevuelveId($sql) {
     }
 
 
+    function obtenerNuevoId($tabla) {
+        $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
+                WHERE TABLE_SCHEMA = 'ssaif_local_noviembre' 
+                AND TABLE_NAME = '".$tabla."'";
+        $res = $this->query($sql,0);
+        return mysql_result($res, 0,0);
+    }
+
+    function subirArchivoJugadores($file,$carpeta,$id,$refdocumentaciones,$refjugadorespre) {
+        
+        $dir_destino = '../data/'.$id.'/';
+        $imagen_subida = $dir_destino . $this->sanear_string(str_replace(' ','',basename($_FILES[$file]['name'])));
+        
+        $noentrar = '../imagenes/index.php';
+        $nuevo_noentrar = '../data/'.$id.'/'.'index.php';
+        
+        if (!file_exists($dir_destino)) {
+            mkdir($dir_destino, 0777);
+        }
+        
+         
+        if(!is_writable($dir_destino)){
+            
+            echo "no tiene permisos";
+            
+        }   else    {
+            if ($_FILES[$file]['tmp_name'] != '') {
+                if(is_uploaded_file($_FILES[$file]['tmp_name'])){
+                    $this->eliminarFotoPorObjeto($id,$carpeta);
+                    
+                    if ($this->find_filesize($imagen_subida) < 1900000) {
+                        /*echo "Archivo ". $_FILES['foto']['name'] ." subido con éxtio.\n";
+                        echo "Mostrar contenido\n";
+                        echo $imagen_subida;*/
+                        if (move_uploaded_file($_FILES[$file]['tmp_name'], $imagen_subida)) {
+                            
+                            $archivo = $this->sanear_string($_FILES[$file]["name"]);
+                            $tipoarchivo = $_FILES[$file]["type"];
+                            
+                            if ($this->existeArchivoJugadores($id,$archivo,$tipoarchivo) == 0) {
+                                $sql    =   "insert into 
+                                dbdocumentacionjugadorimagenes(iddocumentacionjugadorimagen,refdocumentaciones,refjugadorespre,imagen,type,refestados) 
+                                values ('',".$refdocumentaciones.",".$refjugadorespre.",'".str_replace(' ','',$archivo)."','".$tipoarchivo."',1)";
+                                $this->query($sql,1);
+                            }
+                            echo '';
+                            
+                            copy($noentrar, $nuevo_noentrar);
+            
+                        } else {
+                            echo "Posible ataque de carga de archivos!\n";
+                        }
+                    } else {
+                        echo "El archivo supera los limites de carga.";
+                    }
+                }else{
+                    echo "Posible ataque del archivo subido: ";
+                    echo "nombre del archivo '". $_FILES[$file]['tmp_name'] . "'.";
+                }
+            }
+        }   
+    }
+
+
     
     function TraerFotosRelacion($id, $carpeta) {
         $sql    =   "select '".$carpeta."',s.idcountrie,f.imagen,f.idfoto,f.type
@@ -3420,6 +3510,24 @@ function existeDevuelveId($sql) {
             return '';
         }
     }
+
+    function eliminarFotoJugadores($refdocumentaciones, $refjugadorespre) {
+        $sql        =   "select concat('data','/',s.iddocumentacionjugadorimagen,'/',s.imagen) as archivo, s.iddocumentacionjugadorimagen
+                            from dbdocumentacionjugadorimagenes s
+                            where s.refdocumentaciones =".$refdocumentaciones." and s.refjugadorespre =".$refjugadorespre;
+        $resImg     =   $this->query($sql,0);
+        
+        if (mysql_num_rows($resImg)>0) {
+            $res        =   $this->borrarArchivoJugadores(mysql_result($resImg,0,1),mysql_result($resImg,0,0));
+        } else {
+            $res = true;
+        }
+        if ($res == false) {
+            return 'Error al eliminar datos';
+        } else {
+            return '';
+        }
+    }
     
     
     function eliminarFotoPorObjeto($id, $carpeta)
@@ -3450,7 +3558,56 @@ function existeDevuelveId($sql) {
 /* fin archivos */
 
 
+/* PARA Documentacionjugadorimagenes */
 
+function insertarDocumentacionjugadorimagenes($refdocumentaciones,$refjugadorespre,$imagen,$type,$refestados) { 
+$sql = "insert into dbdocumentacionjugadorimagenes(iddocumentacionjugadorimagen,refdocumentaciones,refjugadorespre,imagen,type,refestados) 
+values ('',".$refdocumentaciones.",".$refjugadorespre.",'".($imagen)."','".($type)."',".$refestados.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarDocumentacionjugadorimagenes($id,$refdocumentaciones,$refjugadorespre,$imagen,$type,$refestados) { 
+$sql = "update dbdocumentacionjugadorimagenes 
+set 
+refdocumentaciones = ".$refdocumentaciones.",refjugadorespre = ".$refjugadorespre.",imagen = '".($imagen)."',type = '".($type)."',refestados = ".$refestados." 
+where iddocumentacionjugadorimagen =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarDocumentacionjugadorimagenes($id) { 
+$sql = "delete from dbdocumentacionjugadorimagenes where iddocumentacionjugadorimagen =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDocumentacionjugadorimagenes() { 
+$sql = "select 
+d.iddocumentacionjugadorimagen,
+d.refdocumentaciones,
+d.refjugadorespre,
+d.imagen,
+d.type,
+d.refestados
+from dbdocumentacionjugadorimagenes d 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDocumentacionjugadorimagenesPorId($id) { 
+$sql = "select iddocumentacionjugadorimagen,refdocumentaciones,refjugadorespre,imagen,type,refestados from dbdocumentacionjugadorimagenes where iddocumentacionjugadorimagen =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbdocumentacionjugadorimagenes*/
 
 
 /* PARA Contactos */
@@ -12529,8 +12686,8 @@ return $res;
 /* PARA Jugadorespre */
 
 function insertarJugadorespre($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$numeroserielote,$refcountries,$observaciones,$refusuarios) {
-$sql = "insert into dbjugadorespre(idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,numeroserielote,refcountries,observaciones,refusu|arios)
-values ('',".$reftipodocumentos.",".$nrodocumento.",'".strtoupper($apellido)."','".strtoupper($nombres)."','".($email)."','".($fechanacimiento)."','".($fechaalta)."','".($numeroserielote)."',".$refcountries.",'".($observaciones)."',".$refusuarios.")";
+$sql = "insert into dbjugadorespre(idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,numeroserielote,refcountries,observaciones,refusuarios, refestados)
+values ('',".$reftipodocumentos.",".$nrodocumento.",'".strtoupper($apellido)."','".strtoupper($nombres)."','".($email)."','".($fechanacimiento)."','".($fechaalta)."','".($numeroserielote)."',".$refcountries.",'".($observaciones)."',".$refusuarios.",1)";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -12546,14 +12703,15 @@ return $res;
 }
 
 
-function modificarJugadorespreRegistro($id,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento) {
+function modificarJugadorespreRegistro($id,$apellido,$nombres,$fechanacimiento,$observaciones) {
 $sql = "update dbjugadorespre
 set
-nrodocumento = ".$nrodocumento.",apellido = '".utf8_decode($apellido)."',nombres = '".utf8_decode($nombres)."',email = '".utf8_decode($email)."',fechanacimiento = '".utf8_decode($fechanacimiento)."'
+apellido = '".strtoupper($apellido)."',nombres = '".strtoupper($nombres)."',fechanacimiento = '".($fechanacimiento)."',observaciones = '".($observaciones)."'
 where idjugadorpre =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
+
 
 function eliminarJugadorespre($id) {
 $sql = "delete from dbjugadorespre where idjugadorpre =".$id;
@@ -12574,7 +12732,8 @@ j.fechanacimiento,
 j.fechaalta,
 j.refcountries,
 j.observaciones,
-j.refusuarios
+j.refusuarios,
+j.refestados
 from dbjugadorespre j
 order by 1";
 $res = $this->query($sql,0);
@@ -12595,7 +12754,8 @@ j.fechaalta,
 j.numeroserielote,
 j.observaciones,
 j.refusuarios,
-j.refcountries
+j.refcountries,
+j.refestados
 from dbjugadorespre j
 inner join tbtipodocumentos td on td.idtipodocumento = j.reftipodocumentos
 where   j.refcountries = ".$refCountries."
@@ -12618,7 +12778,13 @@ return $res;
 }
 
 function traerJugadoresprePorIdUsuario($idUsuario) {
-$sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios from dbjugadorespre where idusuario =".$idUsuario;
+$sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios,numeroserielote from dbjugadorespre where idusuario =".$idUsuario;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerEstadoJugadoresprePorIdUsuario($idUsuario) {
+$sql = "select e.estado, e.descripcion from dbjugadorespre j inner join tbestados e on e.idestado=j.refestados where j.idusuario =".$idUsuario;
 $res = $this->query($sql,0);
 return $res;
 }
