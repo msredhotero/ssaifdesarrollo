@@ -647,7 +647,19 @@ function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios
 		$res = $serviciosReferencias->modificarJugadorespreRegistro($id, $apellido, $nombres, $fechanacimiento, $observaciones);
 		if ($res == true) {
 			$nuevoId = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
+
+			$resFoto = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
+			$resFotoDocumento = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
+
+			if (mysql_num_rows($resFoto)>0) {
+				$ServiciosReferencias->eliminarFotoJugadores(1,$id);
+			}
+
+			if (mysql_num_rows($resFotoDocumento)>0) {
+				$ServiciosReferencias->eliminarFotoJugadores(2,$id);
+			}
 			$error = $serviciosReferencias->subirArchivoJugadores('avatar-1',$id,$nuevoId,1,$id);
+			$error .= $serviciosReferencias->subirArchivoJugadores('avatar-2',$id,$nuevoId,2,$id);
 			echo '';
 		} else {
 			echo 'Huvo un error al modificar datos';

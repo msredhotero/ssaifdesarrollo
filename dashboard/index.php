@@ -715,6 +715,13 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		$formulario 	= $serviciosFunciones->camposTablaModificar($_SESSION['id_usuariopredio'], 'idusuario', 'modificarJugadorespreRegistro',$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
+		// traer foto
+		$resFoto = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion(mysql_result($resResultado,0,0),1);
+
+		// traer imagen
+		$resFotoDocumento = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion(mysql_result($resResultado,0,0),2);
+
+		$ServiciosUsuarios->enviarEmailPrueba();
 
 		?>
 
@@ -832,8 +839,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            </div>
 		            
 		            <div class="row">
-						<div class="col-sm-6 text-center">
-							<h4>Foto del Documento del frente</h4>
+						<div class="col-sm-12 text-center">
+							<h4>Foto del Documento del frente y dorso</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-2" name="avatar-2" type="file" required>
@@ -842,15 +849,6 @@ if ($_SESSION['idroll_predio'] == 4) {
 				            <div class="kv-avatar-hint"><small>Select file < 5500 KB</small></div>
 				        </div>
 
-				        <div class="col-sm-6 text-center">
-				        	<h4>Foto del Documento del dorso</h4>
-				            <div class="kv-avatar">
-				                <div class="file-loading">
-				                    <input id="avatar-3" name="avatar-3" type="file" required>
-				                </div>
-				            </div>
-				            <div class="kv-avatar-hint"><small>Select file < 5500 KB</small></div>
-				        </div>
 		            </div>
 		            
 		            
@@ -929,6 +927,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    'onclick="alert(\'Call your custom code here.\')">' +
 			    '<i class="glyphicon glyphicon-tag"></i>' +
 			    '</button>'; 
+
+			<?php
+				if (mysql_num_rows($resFoto)>0) {
+				$urlImg = "../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+			?>
 			$("#avatar-1").fileinput({
 			    overwriteInitial: true,
 			    maxFileSize: 1500,
@@ -945,12 +948,12 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
-			    	"<img src='../data/1/IMG_20160805_155004.jpg' width='120' class='file-preview-image' alt='Desert' title='Desert'>",
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
 			    ],
 			    initialPreviewConfig: [
 				    {
 				        caption: 'IMG_20160805_155004.jpg', 
-				        width: '120px', 
+				        width: '50%', 
 				        key: 100, 
 				        extra: {id: 100}
 				    }
@@ -959,6 +962,33 @@ if ($_SESSION['idroll_predio'] == 4) {
 	          eliminarFoto(1,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
 	        });
 
+	        <?php
+	    	} else {
+	    	?>
+	    	$("#avatar-1").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 1500,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-1',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/default_avatar_male.jpg" alt="Your Avatar">',
+			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["jpg", "png", "gif"]
+			});
+	    	<?php	
+	    	}
+	    	?>
+
+	    	<?php
+				if (mysql_num_rows($resFotoDocumento)>0) {
+				$urlImg = "../data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
+			?>
 			$("#avatar-2").fileinput({
 			    overwriteInitial: true,
 			    maxFileSize: 5500,
@@ -973,10 +1003,26 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
 			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["jpg", "png", "gif"]
-			});
+			    allowedFileExtensions: ["jpg", "png", "gif"],
+			    initialPreview: [
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    ],
+			    initialPreviewConfig: [
+				    {
+				        caption: 'IMG_20160805_155004.jpg', 
+				        width: '150px', 
+				        key: 100, 
+				        extra: {id: 100}
+				    }
+				]
+			}).on('filecleared', function(event) {
+	          eliminarFoto(2,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
+	        });
 
-			$("#avatar-3").fileinput({
+	        <?php
+	    	} else {
+	    	?>
+	    	$("#avatar-2").fileinput({
 			    overwriteInitial: true,
 			    maxFileSize: 5500,
 			    showClose: false,
@@ -992,6 +1038,10 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
+
+	    	<?php	
+	    	}
+	    	?>
 
 			
 			$('#colapsarMenu').click();
@@ -1072,8 +1122,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 													
 												});
 												$("#load").html('');
-												//url = "index.php";
-												//$(location).attr('href',url);
+												url = "index.php";
+												$(location).attr('href',url);
 		                                        
 												
 		                                    } else {

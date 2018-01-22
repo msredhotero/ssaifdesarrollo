@@ -3253,15 +3253,15 @@ function existeDevuelveId($sql) {
     }
 
 
-    function borrarArchivoJugadores($id,$archivo) {
+    function borrarArchivoJugadores($id,$directorio) {
         $sql    =   "delete from dbdocumentacionjugadorimagenes where iddocumentacionjugadorimagen =".$id;
         
-        $res =  unlink("./../".$archivo);
-        if ($res)
-        {
-            $this->query($sql,0);   
-        }
-        return $res;
+        $res =  $this->borrarDirecctorio("./../".$directorio);
+
+        rmdir("./../".$directorio);
+        $this->query($sql,0);
+
+        return '';
     }
     
     
@@ -3409,7 +3409,7 @@ function existeDevuelveId($sql) {
 
     function obtenerNuevoId($tabla) {
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = 'ssaif_local_noviembre' 
+                WHERE TABLE_SCHEMA = 'ssaif_local_diciembre_host' 
                 AND TABLE_NAME = '".$tabla."'";
         $res = $this->query($sql,0);
         return mysql_result($res, 0,0);
@@ -3512,7 +3512,7 @@ function existeDevuelveId($sql) {
     }
 
     function eliminarFotoJugadores($refdocumentaciones, $refjugadorespre) {
-        $sql        =   "select concat('data','/',s.iddocumentacionjugadorimagen,'/',s.imagen) as archivo, s.iddocumentacionjugadorimagen
+        $sql        =   "select concat('data','/',s.iddocumentacionjugadorimagen) as archivo, s.iddocumentacionjugadorimagen
                             from dbdocumentacionjugadorimagenes s
                             where s.refdocumentaciones =".$refdocumentaciones." and s.refjugadorespre =".$refjugadorespre;
         $resImg     =   $this->query($sql,0);
@@ -3522,10 +3522,10 @@ function existeDevuelveId($sql) {
         } else {
             $res = true;
         }
-        if ($res == false) {
+        if ($res != '') {
             return 'Error al eliminar datos';
         } else {
-            return '';
+            return 'Se elimino la imagen correctamente';
         }
     }
     
@@ -3606,6 +3606,13 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+
+
+function traerDocumentacionjugadorimagenesPorJugadorDocumentacion($idJugador, $idDocumentacion) { 
+$sql = "select iddocumentacionjugadorimagen,refdocumentaciones,refjugadorespre,imagen,type,refestados from dbdocumentacionjugadorimagenes where refjugadorespre =".$idJugador." and refdocumentaciones = ".$idDocumentacion; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
 /* Fin */
 /* /* Fin de la Tabla: dbdocumentacionjugadorimagenes*/
 

@@ -313,6 +313,25 @@ function enviarEmail($destinatario,$asunto,$cuerpo, $referencia) {
 	mail($destinatario,$asunto,$cuerpo,$headers); 	
 }
 
+function enviarEmailPrueba() {
+	$token = $this->GUID();
+	$cuerpo = '';
+
+	$fecha = date_create(date('Y').'-'.date('m').'-'.date('d'));
+	date_add($fecha, date_interval_create_from_date_string('2 days'));
+	$fechaprogramada =  date_format($fecha, 'Y-m-d');
+
+	$cuerpo .= '<p>Antes que nada por favor no responda este mail ya que no recibirá respuesta.</p>';
+	$cuerpo .= '<p>Recibimos su solicitud de alta como socio/jugador en la Asociación Intercountry de Fútbol Zona Norte. Para verificar(activar) tu casilla de correo por favor ingresá al siguiente link: <a href="http://www.saupureinconsulting.com.ar/aifzn/activacion/index.php?token='.$token.'" target="_blank">AQUI</a>.</p>';
+	$cuerpo .= '<p>Este link estara vigente hasta la fecha '.$fechaprogramada.', pasada esta fecha deberá solicitar mas tiempo para activar su cuenta.</p>';
+	$cuerpo .= '<p>Una vez hecho esto, el personal administrativo se pondrá en contacto mediante esta misma via para notificarle si su estado de alta se encuentra aprobado, de no ser así se detallará la causa.</p>';
+
+	$cuerpo .= '<p>Atte.</p>';
+	$cuerpo .= '<p>AIFZN</p>';
+
+	enviarEmail('msredhotero@msn.com','Prueba',$cuerpo, 'msredhotero@msn.com');
+}
+
 
 function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fechanacimiento) {
 
@@ -324,7 +343,7 @@ function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fech
 	$fechaprogramada =  date_format($fecha, 'Y-m-d');
 
 	$cuerpo .= '<p>Antes que nada por favor no responda este mail ya que no recibirá respuesta.</p>';
-	$cuerpo .= "<p>Recibimos su solicitud de alta como socio/jugador en la Asociación Intercountry de Fútbol Zona Norte. Para verificar(activar) tu casilla de correo por favor ingresá al siguiente link: <a href='saupureinconsulting.com.ar/aifzn/activacion/index.php?token=".$token."'>AQUI</a>.</p>";
+	$cuerpo .= '<p>Recibimos su solicitud de alta como socio/jugador en la Asociación Intercountry de Fútbol Zona Norte. Para verificar(activar) tu casilla de correo por favor ingresá al siguiente link: <a href="http://www.saupureinconsulting.com.ar/aifzn/activacion/index.php?token='.$token.'" target="_blank">AQUI</a>.</p>';
 	$cuerpo .= '<p>Este link estara vigente hasta la fecha '.$fechaprogramada.', pasada esta fecha deberá solicitar mas tiempo para activar su cuenta.</p>';
 	$cuerpo .= '<p>Una vez hecho esto, el personal administrativo se pondrá en contacto mediante esta misma via para notificarle si su estado de alta se encuentra aprobado, de no ser así se detallará la causa.</p>';
 
