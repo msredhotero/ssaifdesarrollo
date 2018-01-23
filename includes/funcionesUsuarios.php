@@ -302,7 +302,7 @@ function enviarEmail($destinatario,$asunto,$cuerpo, $referencia) {
 	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 	
 	//dirección del remitente
-	$headers .= "From: ASOCIACIÓN INTERCOUNTRY DE FÚTBOL ZONA NORTE <aif@intercountryfutbol.com.ar>\r\n";
+	$headers .= utf8_decode("From: ASOCIACIÓN INTERCOUNTRY DE FÚTBOL ZONA NORTE <aif@intercountryfutbol.com.ar>\r\n");
 	
 	//ruta del mensaje desde origen a destino
 	$headers .= "Return-path: ".$destinatario."\r\n";
@@ -329,7 +329,7 @@ function enviarEmailPrueba() {
 	$cuerpo .= '<p>Atte.</p>';
 	$cuerpo .= '<p>AIFZN</p>';
 
-	enviarEmail('msredhotero@msn.com','Prueba',$cuerpo, 'msredhotero@msn.com');
+	$this->enviarEmail('msredhotero@msn.com','Prueba',utf8_decode($cuerpo), 'msredhotero@msn.com');
 }
 
 

@@ -721,7 +721,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		// traer imagen
 		$resFotoDocumento = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion(mysql_result($resResultado,0,0),2);
 
-		$ServiciosUsuarios->enviarEmailPrueba();
+		//$serviciosUsuario->enviarEmailPrueba();
 
 		?>
 
@@ -808,10 +808,34 @@ if ($_SESSION['idroll_predio'] == 4) {
 			
 		    <div class="boxInfoLargo">
 		        <div id="headBoxInfo">
-		        	<p style="color: #fff; font-size:18px; height:16px;">Alta de Usuario (Datos Cargados)</p>
+		        	<p style="color: #fff; font-size:18px; height:16px;">Bienvenido al panel de alta de socios/jugadores nuevos.</p>
 		        	
 		        </div>
 		    	<div class="cuerpoBox">
+		    		<div class="panel-group">
+					  <div class="panel panel-info">
+					    <div class="panel-heading">
+					      <h4 class="panel-title">
+					        <a data-toggle="collapse" href="#collapse1">Para mas informacion hacer click Aqui <spam class="glyphicon glyphicon-hand-left"></spam></a>
+					      </h4>
+					    </div>
+					    <div id="collapse1" class="panel-collapse collapse">
+					      	<h4 style="padding: 15px;">Antes de continuar le dejamos el enlace a nuestro reglamento donde podrá consultar los requisitos individuales para poder participar de los torneos <a href="http://www.aif.org.ar/como-inscribirse/" target="_blank">(link)</a></h4>
+							<p style="padding: 15px;">Para continuar con el registro y quedar habilitado le pedimos que nos envíe las siguientes documentaciones en buena calidad:</p>
+ 							<ul class="list-group">
+								<li class="list-group-item">** Foto tipo carnet con fondo liso (recuadro para adjuntar) formatos de imágenes tipo JPG</li>
+								<li class="list-group-item">** Scan de Documento Nacional de Identidad (anverso y reverso) (recuadro para adj) formato JPG</li>
+								<li class="list-group-item">Scan de Escritura de compraventa (recuadro para adj) formato PDF</li>
+								<li class="list-group-item">Scan de Expensas o servicio a la fecha correspondiente a la propiedad (recuadro para adj) formato PDF</li>
+								<li class="list-group-item">Scan de Partida de nacimiento/matrimonio (obligatorio solamente para quienes deban demostrar el vínculo con el propietario) (recuadro para adj) formato PDF</li>
+							</ul>
+							<p style="padding: 15px;">** Una vez enviadas la foto y el DNI, el personal de la AIFZN evaluará los archivos enviados y en caso de estar aprobados se adjuntará en un correo electrónico la FICHA DEL JUGADOR. Esta ficha deberá ser impresa y firmada en el recuadro correspondiente por el socio/jugador nuevo. Luego el delegado del country/barrio privado será el encargado de acercar la misma a nuestra oficina.</p>
+ 
+
+							<p style="padding: 15px;">La documentación enviada será revisada por el personal de la AIFZN y el mismo responderá con un mail detallando los pasos siguientes para finalizar con el alta.</p>
+					    </div>
+					  </div>
+					</div>
 		        	<form class="form-inline formulario" role="form">
 		        	<div class="row">
 		        		<div class="col-sm-3 text-center">

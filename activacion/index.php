@@ -43,7 +43,7 @@ if (mysql_num_rows($codActivacion) > 0) {
 } else {
 	$error = 1;
     
-    $resVencido = $serviciosUsuarios->traerActivacionusuariosPorToken($token);
+    $resVencido = $serviciosUsuario->traerActivacionusuariosPorToken($token);
     
     $idUsuario = mysql_result($resVencido,0,'refusuarios');
     
