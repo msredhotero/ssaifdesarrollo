@@ -54,7 +54,7 @@ $lblreemplazo	= array("Fecha Alta","Fecha Baja","Posicion Tributaria","Contacto"
 $resPosTri 	= $serviciosReferencias->traerPosiciontributaria();
 $cadRef 	= $serviciosFunciones->devolverSelectBox($resPosTri,array(1),'');
 
-$resUsuarios= $serviciosUsuario->traerUsuariosPorRol(1,2);
+$resUsuarios= $serviciosUsuario->traerUsuariosPorRol('1,2');
 $cadRef2	= "<option value='0'>-- Seleccionar --</option>";
 $cadRef2	.= $serviciosFunciones->devolverSelectBox($resUsuarios,array(5,4),' - ');
 
