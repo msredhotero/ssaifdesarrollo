@@ -3876,7 +3876,7 @@ return $res;
 
 
 function traerUsuariosPorId($id) {
-$sql = "select idusuario,usuario,password,refroles,email,nombrecompleto from dbusuarios where idusuario =".$id;
+$sql = "select idusuario,usuario,password,refroles,email,nombrecompleto,refcountries from dbusuarios where idusuario =".$id;
 $res = $this->query($sql,0);
 return $res;
 }

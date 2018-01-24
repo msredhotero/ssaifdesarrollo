@@ -58,9 +58,21 @@ while ($rowTT = mysql_fetch_array($resRoles)) {
 	
 }
 
+$idCountries = mysql_result($resResultado,0,'refcountries');
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("refroles"); 
+$resVar1 = $serviciosReferencias->traerCountries();
+
+if (($idCountries == '') || ($idCountries == 0)) {
+	$cadRef2 = "<option value=''>-- Seleccionar --</option>";
+	$cadRef2 .= $serviciosFunciones->devolverSelectBox($resVar1,array(1),'');
+} else {
+	$cadRef2 = "<option value=''>-- Seleccionar --</option>";
+	$cadRef2 .= $serviciosFunciones->devolverSelectBoxActivo($resVar1,array(1),'',$idCountries);
+}
+
+
+$refdescripcion = array(0 => $cadRef,1=> $cadRef2);
+$refCampo 	=  array("refroles","refcountries"); 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 

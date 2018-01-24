@@ -216,7 +216,7 @@ function traerUsuariosPorRol($idRol) {
 			from dbusuarios u
 			inner join tbroles r on u.refroles = r.idrol 
 			left join dbcountries cou on cou.idcountrie = u.refcountries
-			where r.idrol = ".$idRol."
+			where r.idrol in (".$idRol.")
 			order by nombrecompleto";
 	$res = $this->query($sql,0);
 	if ($res == false) {
@@ -378,7 +378,7 @@ function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fech
 	} else {
 		$this->insertarActivacionusuarios($res,$token,'','');
 		$this->actualizarUsuarioUusarioPre($nrodocumento, $res);
-		$this->enviarEmail($email,'Alta de Usuario',utf8_encode($cuerpo), $this->traerReferente($nrodocumento));
+		$this->enviarEmail($email,'Alta de Usuario',utf8_decode($cuerpo), $this->traerReferente($nrodocumento));
 
 		return $res;
 	}

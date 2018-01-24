@@ -63,7 +63,8 @@ $cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resPosTri,array(1),'', 
 
 $idUsuario = mysql_result($resResultado,0,'refusuarios');
 
-$resUsuarios= $serviciosUsuario->traerUsuariosPorRol(1);
+$resUsuarios= $serviciosUsuario->traerUsuariosPorRol(1,2);
+
 if (($idUsuario == '') || ($idUsuario == 0)) {
 	$cadRef2	= "<option value='0'>-- Seleccionar --</option>";
 	$cadRef2	.= $serviciosFunciones->devolverSelectBox($resUsuarios,array(5,4),'');
