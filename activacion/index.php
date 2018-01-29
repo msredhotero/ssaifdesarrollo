@@ -34,11 +34,11 @@ if (mysql_num_rows($codActivacion) > 0) {
 
         $destinatario = $email;
         $asunto = "Cuenta Activada Correctamente";
-        $cuerpo = "<h3>Gracias por registrarse en Crovan Kegs.</h3><br>
-                    <p>Ya puede comenzar a comprar ingresando con su email y contraseña, visite nuestros productos <a href=''>AQUI</a></p>";
+        $cuerpo = "<h3>Gracias por registrarse en AIFZN.</h3><br>
+                    <p>Ya puede comenzar a cargar sus datos personales <a href='http://www.saupureinconsulting.com.ar/aifzn/'>AQUI</a></p>";
 
         $serviciosUsuario->modificarActivacionusuariosConcretada($token);
-        //$serviciosUsuario->enviarMail($destinatario,$asunto,$cuerpo);
+        $serviciosUsuario->enviarEmailConReferente($destinatario,$asunto,$cuerpo , $serviciosUsuario->traerReferente(mysql_result($resUsuario,0,'nrodocumento')));
     }
 } else {
 	$error = 1;

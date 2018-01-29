@@ -816,7 +816,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 					  <div class="panel panel-info">
 					    <div class="panel-heading">
 					      <h4 class="panel-title">
-					        <a data-toggle="collapse" href="#collapse1">Para mas informacion hacer click Aqui <spam class="glyphicon glyphicon-hand-left"></spam></a>
+					        <a data-toggle="collapse" href="#collapse1" class="abrir">Para mas informacion hacer click Aqui <spam class="glyphicon glyphicon-hand-left"></spam></a>
 					      </h4>
 					    </div>
 					    <div id="collapse1" class="panel-collapse collapse">
@@ -927,6 +927,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		<script type="text/javascript">
 		$(document).ready(function(){
+
+			$('.abrir').click();
 
 			function eliminarFoto(documentacion, jugador) {
 				$.ajax({
