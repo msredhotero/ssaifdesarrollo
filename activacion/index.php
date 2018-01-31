@@ -32,21 +32,23 @@ if (mysql_num_rows($codActivacion) > 0) {
 
         $email = mysql_result($resUsuario,0,'email');
         $nombrecompleto = mysql_result($resUsuario,0,'nombrecompleto');
+        $nrodocumento = mysql_result($resUsuario,0,'nrodocumento');
 
+        $JugadorPre = $ServiciosReferencias->traerJugadoresprePorNroDocumento($nrodocumento);
 
         $destinatario = $email;
         $asunto = "El Usuario ".$nombrecompleto." se Activo Correctamente";
-        $cuerpo = "<h3>Gracias por registrarse en AIFZN.</h3><br>";
-        $cuerpo = "<h4>Sus datos actuales son:</h4><br>";
-        $cuerpo = "<p>Apellido:</p><br>";
-        $cuerpo = "<p>Nombre:</p><br>";
-        $cuerpo = "<p>Nro Documento:</p><br>";
-        $cuerpo = "<p>Fecha Nacimiento:</p><br>";
+        $cuerpo .= "<h3>Gracias por registrarse en AIFZN.</h3><br>";
+        $cuerpo .= "<h4>Sus datos actuales son:</h4><br>";
+        $cuerpo .= "<p>Apellido: <b>".mysql_result($JugadorPre,0,'apellido')."</b></p><br>";
+        $cuerpo .= "<p>Nombre: <b>".mysql_result($JugadorPre,0,'nombres')."</b></p><br>";
+        $cuerpo .= "<p>Nro Documento: <b>".$nrodocumento."</b></p><br>";
+        $cuerpo .= "<p>Fecha Nacimiento: <b>".mysql_result($JugadorPre,0,'fechanacimiento')."</b></p><br><br><br>";
 
-        $cuerpo .= "<p>Ya puede comenzar a cargar sus datos personales <a href='http://www.saupureinconsulting.com.ar/aifzn/'>AQUI</a></p>";
+        $cuerpo .= "<h4>Ya puede comenzar a cargar sus datos personales <a href='http://www.saupureinconsulting.com.ar/aifzn/'>AQUI</a></h4>";
 
 
-        $emailReferente = $serviciosUsuario->traerReferente(mysql_result($resUsuario,0,'nrodocumento'));
+        $emailReferente = $serviciosUsuario->traerReferente($nrodocumento);
         $serviciosUsuario->modificarActivacionusuariosConcretada($token);
         $serviciosUsuario->enviarEmailConReferente($destinatario,$asunto,$cuerpo , $emailReferente);
     }

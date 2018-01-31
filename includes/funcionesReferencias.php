@@ -3609,7 +3609,11 @@ return $res;
 
 
 function traerDocumentacionjugadorimagenesPorJugadorDocumentacion($idJugador, $idDocumentacion) { 
-$sql = "select iddocumentacionjugadorimagen,refdocumentaciones,refjugadorespre,imagen,type,refestados from dbdocumentacionjugadorimagenes where refjugadorespre =".$idJugador." and refdocumentaciones = ".$idDocumentacion; 
+$sql = "select 
+                dj.iddocumentacionjugadorimagen,dj.refdocumentaciones,dj.refjugadorespre,dj.imagen,dj.type,dj.refestados, e.estado 
+            from dbdocumentacionjugadorimagenes dj
+            inner join tbestados e ON e.idestado = dj.refestados
+        where refjugadorespre =".$idJugador." and refdocumentaciones = ".$idDocumentacion; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
