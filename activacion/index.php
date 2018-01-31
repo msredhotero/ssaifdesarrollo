@@ -31,14 +31,24 @@ if (mysql_num_rows($codActivacion) > 0) {
         $resUsuario = $serviciosUsuario->traerUsuarioId($idUsuario);
 
         $email = mysql_result($resUsuario,0,'email');
+        $nombrecompleto = mysql_result($resUsuario,0,'nombrecompleto');
+
 
         $destinatario = $email;
-        $asunto = "Cuenta Activada Correctamente";
-        $cuerpo = "<h3>Gracias por registrarse en AIFZN.</h3><br>
-                    <p>Ya puede comenzar a cargar sus datos personales <a href='http://www.saupureinconsulting.com.ar/aifzn/'>AQUI</a></p>";
+        $asunto = "El Usuario ".$nombrecompleto." se Activo Correctamente";
+        $cuerpo = "<h3>Gracias por registrarse en AIFZN.</h3><br>";
+        $cuerpo = "<h4>Sus datos actuales son:</h4><br>";
+        $cuerpo = "<p>Apellido:</p><br>";
+        $cuerpo = "<p>Nombre:</p><br>";
+        $cuerpo = "<p>Nro Documento:</p><br>";
+        $cuerpo = "<p>Fecha Nacimiento:</p><br>";
 
+        $cuerpo .= "<p>Ya puede comenzar a cargar sus datos personales <a href='http://www.saupureinconsulting.com.ar/aifzn/'>AQUI</a></p>";
+
+
+        $emailReferente = $serviciosUsuario->traerReferente(mysql_result($resUsuario,0,'nrodocumento'));
         $serviciosUsuario->modificarActivacionusuariosConcretada($token);
-        $serviciosUsuario->enviarEmailConReferente($destinatario,$asunto,$cuerpo , $serviciosUsuario->traerReferente(mysql_result($resUsuario,0,'nrodocumento')));
+        $serviciosUsuario->enviarEmailConReferente($destinatario,$asunto,$cuerpo , $emailReferente);
     }
 } else {
 	$error = 1;

@@ -3409,7 +3409,7 @@ function existeDevuelveId($sql) {
 
     function obtenerNuevoId($tabla) {
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = 'ssaif_local_diciembre_host' 
+                WHERE TABLE_SCHEMA = 'u235498999_aif' 
                 AND TABLE_NAME = '".$tabla."'";
         $res = $this->query($sql,0);
         return mysql_result($res, 0,0);

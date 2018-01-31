@@ -3936,7 +3936,8 @@ function registrarSocio($ServiciosUsuarios, $ServiciosReferencias) {
         $res = $ServiciosUsuarios->registrarSocio($email, $password,$apellido, $nombre, $nrodocumento, $fechanacimiento);
         if ((integer)$res > 0) {
             //modifico los datos que le solicite en el login
-            $ServiciosReferencias->modificarJugadorespreRegistro($id,$nrodocumento,$apellido,$nombre,$email,$fechanacimiento);
+            $ServiciosReferencias->modificarJugadorespreRegistro($id,$apellido,$nombre,$fechanacimiento,'');
+
             echo '';	
         } else {
             echo $res;	
