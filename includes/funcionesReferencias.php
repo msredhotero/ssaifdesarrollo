@@ -3409,7 +3409,7 @@ function existeDevuelveId($sql) {
 
     function obtenerNuevoId($tabla) {
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = 'u235498999_aif' 
+                WHERE TABLE_SCHEMA = 'ssaif_local_diciembre_host' 
                 AND TABLE_NAME = '".$tabla."'";
         $res = $this->query($sql,0);
         return mysql_result($res, 0,0);
@@ -12752,6 +12752,31 @@ return $res;
 }
 
 
+function traerJugadorespreGrid() {
+$sql = "select
+j.idjugadorpre,
+j.nrodocumento,
+j.apellido,
+j.nombres,
+j.email,
+j.fechanacimiento,
+j.numeroserielote,
+c.nombre as countries,
+coalesce(e.estado,'Cargado') as estado,
+j.fechaalta,
+j.refcountries,
+j.observaciones,
+j.refusuarios,
+j.refestados
+from dbjugadorespre j
+inner join dbcountries c ON c.idcountrie = j.refcountries
+left join tbestados e ON e.idestado = j.refestados
+order by 3";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
 function traerJugadoresprePorCountries($refCountries) {
 $sql = "select
 j.idjugadorpre,
@@ -12794,6 +12819,12 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function traerJugadoresprePorIdUsuarioPre($id) {
+$sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios,numeroserielote from dbjugadorespre where idusuario =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
 function traerEstadoJugadoresprePorIdUsuario($idUsuario) {
 $sql = "select e.estado, e.descripcion from dbjugadorespre j inner join tbestados e on e.idestado=j.refestados where j.idusuario =".$idUsuario;
 $res = $this->query($sql,0);
@@ -12802,6 +12833,125 @@ return $res;
 
 /* Fin */
 /* /* Fin de la Tabla: dbjugadorespre*/
+
+
+/* PARA Notificaciones */
+
+function insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha) {
+$sql = "insert into dbnotificaciones(idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha)
+values ('','".utf8_decode($mensaje)."',".$idpagina.",'".utf8_decode($autor)."','".utf8_decode($destinatario)."',".$id1.",".$id2.",".$id3.",'".utf8_decode($icono)."','".utf8_decode($estilo)."','".utf8_decode($fecha)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarNotificaciones($id,$mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha) {
+$sql = "update dbnotificaciones
+set
+mensaje = '".utf8_decode($mensaje)."',idpagina = ".$idpagina.",autor = '".utf8_decode($autor)."',destinatario = '".utf8_decode($destinatario)."',id1 = ".$id1.",id2 = ".$id2.",id3 = ".$id3.",icono = '".utf8_decode($icono)."',estilo = '".utf8_decode($estilo)."',fecha = '".utf8_decode($fecha)."'
+where idnotificacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarNotificaciones($id) {
+$sql = "delete from dbnotificaciones where idnotificacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerNotificaciones() {
+$sql = "select
+n.idnotificacion,
+n.mensaje,
+n.idpagina,
+n.autor,
+n.destinatario,
+n.id1,
+n.id2,
+n.id3,
+n.icono,
+n.estilo,
+n.fecha
+from dbnotificaciones n
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerNotificacionesPorParametrosTodos($idPagina,$id1, $id2, $id3) {
+$sql = "select
+n.idnotificacion,
+n.mensaje,
+n.idpagina,
+n.autor,
+n.destinatario,
+n.id1,
+n.id2,
+n.id3,
+n.icono,
+n.estilo,
+n.fecha
+from dbnotificaciones n
+WHERE n.idpagina = ".$idpagina." and n.id1 = ".$id1." and n.id2 = ".$id2." and n.id3 = ".$id3."
+order by n.fecha desc";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerNotificacionesPorParametrosDos($idPagina,$id1, $id2) {
+$sql = "select
+n.idnotificacion,
+n.mensaje,
+n.idpagina,
+n.autor,
+n.destinatario,
+n.id1,
+n.id2,
+n.id3,
+n.icono,
+n.estilo,
+n.fecha
+from dbnotificaciones n
+WHERE n.idpagina = ".$idpagina." and n.id1 = ".$id1." and n.id2 = ".$id2."
+order by n.fecha desc";
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerNotificacionesPorParametrosUno($idPagina,$id1) {
+$sql = "select
+n.idnotificacion,
+n.mensaje,
+n.idpagina,
+n.autor,
+n.destinatario,
+n.id1,
+n.id2,
+n.id3,
+n.icono,
+n.estilo,
+n.fecha
+from dbnotificaciones n
+WHERE n.idpagina = ".$idpagina." and n.id1 = ".$id1."
+order by n.fecha desc";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerNotificacionesPorId($id) {
+$sql = "select idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha from dbnotificaciones where idnotificacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbnotificaciones*/
 
 
 

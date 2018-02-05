@@ -666,6 +666,21 @@ function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios
 
 				$nuevoId = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 				$error = $serviciosReferencias->subirArchivoJugadores('avatar-1',$id,$nuevoId,1,$id);
+
+				//** creo la notificacion **//
+				$mensaje = 'Se cargo una imagen';
+				$idpagina = 1;
+				$autor = $apellido.' '.$nombres;
+				$destinatario = 'AIFZN';
+				$id1 = '';
+				$id2 = '';
+				$id3 = '';
+				$icono = '';
+				$estilo = '';
+				$fecha = date('Y-m-d H:i:s');
+
+				$serviciosReferencias->insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha);
+				//** fin notificaion 	  **//
 			}
 
 			if ($_FILES['avatar-2']['tmp_name'] != '') {
