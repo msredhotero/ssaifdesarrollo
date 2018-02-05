@@ -637,6 +637,8 @@ function eliminarJugadorespre($serviciosReferencias) {
 function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios) {
 	$id = $_POST['id'];
 
+	$error = '';
+
 	$apellido = $_POST['apellido'];
 	$nombres = $_POST['nombres'];
 	$fechanacimiento = formatearFechas($_POST['fechanacimiento']);
@@ -648,22 +650,76 @@ function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios
 		if ($res == true) {
 			
 
-			$resFoto = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
-			$resFotoDocumento = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
+			$resFoto 				= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
+			$resFotoDocumento 		= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
+			$resFotoDocumentoDorso 	= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,99);
+			
+			$resTitulo 			   	= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,4);
+			$resExpensa				= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,6);
+			$resPartidaNacimiento	= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,9);
 
-			if (mysql_num_rows($resFoto)>0) {
-				$ServiciosReferencias->eliminarFotoJugadores(1,$id);
+
+			if ($_FILES['avatar-1']['tmp_name'] != '') {
+				if (mysql_num_rows($resFoto)>0) {
+					$serviciosReferencias->eliminarFotoJugadores(1,$id);
+				}
+
+				$nuevoId = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
+				$error = $serviciosReferencias->subirArchivoJugadores('avatar-1',$id,$nuevoId,1,$id);
 			}
 
-			if (mysql_num_rows($resFotoDocumento)>0) {
-				$ServiciosReferencias->eliminarFotoJugadores(2,$id);
+			if ($_FILES['avatar-2']['tmp_name'] != '') {
+				if (mysql_num_rows($resFotoDocumento)>0) {
+					$serviciosReferencias->eliminarFotoJugadores(2,$id);
+				}
+
+				$nuevoId2 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
+				$error .= $serviciosReferencias->subirArchivoJugadores('avatar-2',$id,$nuevoId2,2,$id);
+
 			}
 
-			$nuevoId = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
-			$error = $serviciosReferencias->subirArchivoJugadores('avatar-1',$id,$nuevoId,1,$id);
-			$nuevoId2 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
-			$error .= $serviciosReferencias->subirArchivoJugadores('avatar-2',$id,$nuevoId2,2,$id);
-			echo '';
+			if ($_FILES['avatar-3']['tmp_name'] != '') {
+				if (mysql_num_rows($resFotoDocumentoDorso)>0) {
+					$serviciosReferencias->eliminarFotoJugadores(99,$id);
+				}
+
+				$nuevoId3 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
+				$error .= $serviciosReferencias->subirArchivoJugadores('avatar-3',$id,$nuevoId3,99,$id);
+			}
+
+
+			if ($_FILES['avatar-4']['tmp_name'] != '') {
+				if (mysql_num_rows($resTitulo)>0) {
+					$serviciosReferencias->eliminarFotoJugadores(4,$id);
+				}
+
+				$nuevoId4 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
+				$error .= $serviciosReferencias->subirArchivoJugadores('avatar-4',$id,$nuevoId4,4,$id);
+			}
+
+
+			if ($_FILES['avatar-5']['tmp_name'] != '') {
+				if (mysql_num_rows($resExpensa)>0) {
+					$serviciosReferencias->eliminarFotoJugadores(6,$id);
+				}
+
+				$nuevoId5 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
+				$error .= $serviciosReferencias->subirArchivoJugadores('avatar-5',$id,$nuevoId5,6,$id);
+			}
+
+
+			if ($_FILES['avatar-6']['tmp_name'] != '') {
+				if (mysql_num_rows($resPartidaNacimiento)>0) {
+					$serviciosReferencias->eliminarFotoJugadores(9,$id);
+				}
+
+				$nuevoId6 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
+				$error .= $serviciosReferencias->subirArchivoJugadores('avatar-6',$id,$nuevoId6,9,$id);
+			}
+			
+			
+			
+			echo ''.$error;
 		} else {
 			echo 'Huvo un error al modificar datos';
 		}

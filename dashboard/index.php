@@ -715,14 +715,20 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		$formulario 	= $serviciosFunciones->camposTablaModificar($_SESSION['id_usuariopredio'], 'idusuario', 'modificarJugadorespreRegistro',$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
+		$foto1 = '';
+		$foto2 = '';
+		$foto3 = '';
+
 		// traer foto
 		$resFoto = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion(mysql_result($resResultado,0,0),1);
 		if (mysql_num_rows($resFoto) > 0) {
 			$estadoFoto = mysql_result($resFoto, 0,'estado');
 			$idEstadoFoto = mysql_result($resFoto, 0,'refestados');
+			$foto1 = mysql_result($resFoto, 0,'imagen');
 		} else {
 			$estadoFoto = 'Sin carga';
 			$idEstadoFoto = 0;
+			$foto1 = '';
 		}
 
 		$spanFoto = '';
@@ -753,9 +759,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 		if (mysql_num_rows($resFotoDocumento) > 0) {
 			$estadoNroDoc = mysql_result($resFotoDocumento, 0,'estado');
 			$idEstadoNroDoc = mysql_result($resFotoDocumento, 0,'refestados');
+			$foto2 = mysql_result($resFotoDocumento, 0,'imagen');
 		} else {
 			$estadoNroDoc = 'Sin carga';
 			$idEstadoNroDoc = 0;
+			$foto2= '';
 		}
 
 
@@ -783,9 +791,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 		if (mysql_num_rows($resFotoDocumentoDorso) > 0) {
 			$estadoNroDocDorso = mysql_result($resFotoDocumentoDorso, 0,'estado');
 			$idEstadoNroDocDorso = mysql_result($resFotoDocumentoDorso, 0,'refestados');
+			$foto3 = mysql_result($resFotoDocumentoDorso, 0,'imagen');
 		} else {
 			$estadoNroDocDorso = 'Sin carga';
 			$idEstadoNroDocDorso = 0;
+			$foto3 = '';
 		}
 
 
@@ -805,6 +815,113 @@ if ($_SESSION['idroll_predio'] == 4) {
 				break;
 			case 4:
 				$spanNroDocDorso = 'text-danger glyphicon glyphicon-remove-sign';
+				break;
+		}
+
+
+		/*******-------------------------------------------------------*/
+
+		$resTitulo = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion(mysql_result($resResultado,0,0),4);
+
+		if (mysql_num_rows($resTitulo) > 0) {
+			$estadoTitulo = mysql_result($resTitulo, 0,'estado');
+			$idEstadoTitulo = mysql_result($resTitulo, 0,'refestados');
+			$foto4 = mysql_result($resTitulo, 0,'imagen');
+		} else {
+			$estadoTitulo = 'Sin carga';
+			$idEstadoTitulo = 0;
+			$foto4 = '';
+		}
+
+
+		$spanTitulo = '';
+		switch ($idEstadoTitulo) {
+			case 0:
+				$spanTitulo = 'text-muted glyphicon glyphicon-exclamation-sign';
+				break;
+			case 1:
+				$spanTitulo = 'text-info glyphicon glyphicon-plus-sign';
+				break;
+			case 2:
+				$spanTitulo = 'text-primary glyphicon glyphicon-ban-circle';
+				break;
+			case 3:
+				$spanTitulo = 'text-success glyphicon glyphicon-ok-sign';
+				break;
+			case 4:
+				$spanTitulo = 'text-danger glyphicon glyphicon-remove-sign';
+				break;
+		}
+
+
+
+		/*******-------------------------------------------------------*/
+
+		$resExpensa = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion(mysql_result($resResultado,0,0),6);
+
+		if (mysql_num_rows($resExpensa) > 0) {
+			$estadoExpensa = mysql_result($resExpensa, 0,'estado');
+			$idEstadoExpensa = mysql_result($resExpensa, 0,'refestados');
+			$foto5 = mysql_result($resExpensa, 0,'imagen');
+		} else {
+			$estadoExpensa = 'Sin carga';
+			$idEstadoExpensa = 0;
+			$foto5 = '';
+		}
+
+
+		$spanExpensa = '';
+		switch ($idEstadoExpensa) {
+			case 0:
+				$spanExpensa = 'text-muted glyphicon glyphicon-exclamation-sign';
+				break;
+			case 1:
+				$spanExpensa = 'text-info glyphicon glyphicon-plus-sign';
+				break;
+			case 2:
+				$spanExpensa = 'text-primary glyphicon glyphicon-ban-circle';
+				break;
+			case 3:
+				$spanExpensa = 'text-success glyphicon glyphicon-ok-sign';
+				break;
+			case 4:
+				$spanExpensa = 'text-danger glyphicon glyphicon-remove-sign';
+				break;
+		}
+
+
+
+		/*******-------------------------------------------------------*/
+
+		$resPartidaNacimiento = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion(mysql_result($resResultado,0,0),9);
+
+		if (mysql_num_rows($resPartidaNacimiento) > 0) {
+			$estadoPartidaNacimiento = mysql_result($resPartidaNacimiento, 0,'estado');
+			$idEstadoPartidaNacimiento = mysql_result($resPartidaNacimiento, 0,'refestados');
+			$foto6 = mysql_result($resPartidaNacimiento, 0,'imagen');
+		} else {
+			$estadoPartidaNacimiento = 'Sin carga';
+			$idEstadoPartidaNacimiento = 0;
+			$foto6 = '';
+		}
+
+
+		$spanPartidaNacimiento = '';
+		switch ($idEstadoPartidaNacimiento) {
+			case 0:
+				$spanPartidaNacimiento = 'text-muted glyphicon glyphicon-exclamation-sign';
+				break;
+			case 1:
+				$spanPartidaNacimiento = 'text-info glyphicon glyphicon-plus-sign';
+				break;
+			case 2:
+				$spanPartidaNacimiento = 'text-primary glyphicon glyphicon-ban-circle';
+				break;
+			case 3:
+				$spanPartidaNacimiento = 'text-success glyphicon glyphicon-ok-sign';
+				break;
+			case 4:
+				$spanPartidaNacimiento = 'text-danger glyphicon glyphicon-remove-sign';
 				break;
 		}
 
@@ -921,7 +1038,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 					    </div>
 					  </div>
 					</div>
-		        	<form class="form-inline formulario" role="form">
+		        	<form class="form-inline formulario" role="form" enctype="multipart/form-data">
 		        	<div class="row">
 		        		<div class="col-sm-3 text-center">
 
@@ -929,10 +1046,10 @@ if ($_SESSION['idroll_predio'] == 4) {
 						<div class="col-sm-6 text-center">
 				            <div class="kv-avatar">
 				                <div class="file-loading">
-				                    <input id="avatar-1" name="avatar-1" type="file" required>
+				                    <input id="avatar-1" name="avatar-1" type="file" value="<?php echo $foto1; ?>" required>
 				                </div>
 				            </div>
-				            <div class="kv-avatar-hint"><small>Select file < 1500 KB</small></div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 2000 KB</small></div>
 				        </div>
 				        <div class="col-sm-3 text-center">
 				        <h4><span class="<?php echo $spanFoto; ?>"></span> Estado: <b><?php echo $estadoFoto; ?></b></h4>
@@ -955,10 +1072,10 @@ if ($_SESSION['idroll_predio'] == 4) {
 							<h4>Foto del Documento del frente</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
-				                    <input id="avatar-2" name="avatar-2" type="file" required>
+				                    <input id="avatar-2" name="avatar-2" value="<?php echo $foto2; ?>" type="file" required>
 				                </div>
 				            </div>
-				            <div class="kv-avatar-hint"><small>Select file < 5500 KB</small></div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
 
 				            <h4><span class="<?php echo $spanNroDoc; ?>"></span> Estado: <b><?php echo $estadoNroDoc; ?></b></h4>
 				            <ul class="list-form mensajesDocumento">
@@ -973,13 +1090,67 @@ if ($_SESSION['idroll_predio'] == 4) {
 				                    <input id="avatar-3" name="avatar-3" type="file" required>
 				                </div>
 				            </div>
-				            <div class="kv-avatar-hint"><small>Select file < 5500 KB</small></div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
 
 				            <h4><span class="<?php echo $spanNroDocDorso; ?>"></span> Estado: <b><?php echo $estadoNroDocDorso; ?></b></h4>
 				            <ul class="list-form mensajesDocumentoDorso">
 
 				        	</ul>
 				        </div>
+
+		            </div>
+
+
+		            <div class="row">
+						<div class="col-sm-6 text-center">
+							<h4>Escritura (Comprimido)</h4>
+				            <div class="kv-avatar">
+				                <div class="file-loading">
+				                    <input id="avatar-4" name="avatar-4" type="file" required>
+				                </div>
+				            </div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 30000 KB</small></div>
+
+				            <h4><span class="<?php echo $spanTitulo; ?>"></span> Estado: <b><?php echo $estadoTitulo; ?></b></h4>
+				            <ul class="list-form mensajesTitulo">
+
+				        	</ul>
+				        </div>
+
+				        <div class="col-sm-6 text-center">
+							<h4>Expensas (.pdf)</h4>
+				            <div class="kv-avatar">
+				                <div class="file-loading">
+				                    <input id="avatar-5" name="avatar-5" type="file" required>
+				                </div>
+				            </div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
+
+				            <h4><span class="<?php echo $spanExpensa; ?>"></span> Estado: <b><?php echo $estadoExpensa; ?></b></h4>
+				            <ul class="list-form mensajesExpensa">
+
+				        	</ul>
+				        </div>
+
+		            </div>
+
+
+		            <div class="row">
+						<div class="col-sm-6 text-center">
+							<h4>Partida de Nacimiento (Comprimido)</h4>
+				            <div class="kv-avatar">
+				                <div class="file-loading">
+				                    <input id="avatar-6" name="avatar-6" type="file" required>
+				                </div>
+				            </div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 30000 KB</small></div>
+
+				            <h4><span class="<?php echo $spanPartidaNacimiento; ?>"></span> Estado: <b><?php echo $estadoPartidaNacimiento; ?></b></h4>
+				            <ul class="list-form mensajesPartidaNacimiento">
+
+				        	</ul>
+				        </div>
+
 
 		            </div>
 		            
@@ -1007,18 +1178,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		    	</div>
 		    </div>
 
-		    <div class="boxInfoLargo">
-		        <div id="headBoxInfo">
-		        	<p style="color: #fff; font-size:18px; height:16px;">Suba la Foto del Documento (frente y dorso)</p>
-		        	
-		        </div>
-		    	<div class="cuerpoBox">
-		        	<form class="form-inline formulario" role="form">
-		        	
-					
-		            </form>
-		    	</div>
-		    </div>
+
 		   
 		</div>
 
@@ -1068,7 +1228,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			?>
 			$("#avatar-1").fileinput({
 			    overwriteInitial: true,
-			    maxFileSize: 1500,
+			    maxFileSize: 2000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -1079,14 +1239,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/jugador.png" alt="Your Avatar">',
-			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
 			    ],
 			    initialPreviewConfig: [
 				    {
-				        caption: 'IMG_20160805_155004.jpg', 
+				        caption: '<?php echo mysql_result($resFoto,0,'imagen'); ?>', 
 				        width: '50%', 
 				        key: 100, 
 				        extra: {id: 100}
@@ -1101,7 +1261,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 	    	?>
 	    	$("#avatar-1").fileinput({
 			    overwriteInitial: true,
-			    maxFileSize: 1500,
+			    maxFileSize: 2000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -1112,7 +1272,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/jugador.png" alt="Your Avatar">',
-			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 	    	<?php	
@@ -1136,14 +1296,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
-			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
 			    ],
 			    initialPreviewConfig: [
 				    {
-				        caption: 'IMG_20160805_155004.jpg', 
+				        caption: '<?php echo mysql_result($resFotoDocumento,0,'imagen'); ?>', 
 				        width: '150px', 
 				        key: 100, 
 				        extra: {id: 100}
@@ -1169,7 +1329,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
-			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
@@ -1198,7 +1358,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
-			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
@@ -1231,8 +1391,191 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
-			    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"]
+			});
+
+	    	<?php	
+	    	}
+	    	?>
+
+
+
+
+
+	    	<?php
+				if (mysql_num_rows($resTitulo)>0) {
+				$urlImg = "../data/".mysql_result($resTitulo,0,0)."/".mysql_result($resTitulo,0,'imagen');
+			?>
+			$("#avatar-4").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 30000,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-1',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["rar","jpg", "png", "gif"],
+			    initialPreview: [
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    ],
+			    initialPreviewConfig: [
+				    {
+				        caption: 'IMG_20160805_155004.jpg', 
+				        width: '150px', 
+				        key: 100, 
+				        extra: {id: 100}
+				    }
+				]
+			}).on('filecleared', function(event) {
+	          eliminarFoto(4,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
+	        });
+
+	        <?php
+	    	} else {
+	    	?>
+	    	$("#avatar-4").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 30000,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-1',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["rar"]
+			});
+
+	    	<?php	
+	    	}
+	    	?>
+
+
+
+	    	<?php
+				if (mysql_num_rows($resExpensa)>0) {
+				$urlImg = "../data/".mysql_result($resExpensa,0,0)."/".mysql_result($resExpensa,0,'imagen');
+			?>
+			$("#avatar-5").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 10000,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-5',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["pdf"],
+			    initialPreview: [
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    ],
+			    initialPreviewConfig: [
+				    {
+				        caption: 'IMG_20160805_155004.jpg', 
+				        width: '150px', 
+				        key: 100, 
+				        extra: {id: 100}
+				    }
+				]
+			}).on('filecleared', function(event) {
+	          eliminarFoto(6,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
+	        });
+
+	        <?php
+	    	} else {
+	    	?>
+	    	$("#avatar-5").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 10000,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-5',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["pdf"]
+			});
+
+	    	<?php	
+	    	}
+	    	?>
+
+
+
+
+	    	<?php
+				if (mysql_num_rows($resPartidaNacimiento)>0) {
+				$urlImg = "../data/".mysql_result($resPartidaNacimiento,0,0)."/".mysql_result($resPartidaNacimiento,0,'imagen');
+			?>
+			$("#avatar-6").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 10000,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-6',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["rar"],
+			    initialPreview: [
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    ],
+			    initialPreviewConfig: [
+				    {
+				        caption: 'IMG_20160805_155004.jpg', 
+				        width: '150px', 
+				        key: 100, 
+				        extra: {id: 100}
+				    }
+				]
+			}).on('filecleared', function(event) {
+	          eliminarFoto(9,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
+	        });
+
+	        <?php
+	    	} else {
+	    	?>
+	    	$("#avatar-6").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 10000,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-6',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["rar"]
 			});
 
 	    	<?php	
@@ -1302,7 +1645,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 					processData: false,
 					//mientras enviamos el archivo
 					beforeSend: function(){
-						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');       
+						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');  
+						$('#cargar').hide();     
 					},
 					//una vez finalizado correctamente
 					success: function(data){
