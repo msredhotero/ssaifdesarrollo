@@ -672,9 +672,9 @@ function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios
 				$idpagina = 1;
 				$autor = $apellido.' '.$nombres;
 				$destinatario = 'AIFZN';
-				$id1 = '';
-				$id2 = '';
-				$id3 = '';
+				$id1 = $id;
+				$id2 = 1;
+				$id3 = $nuevoId;
 				$icono = '';
 				$estilo = '';
 				$fecha = date('Y-m-d H:i:s');
