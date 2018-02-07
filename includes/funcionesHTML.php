@@ -186,6 +186,12 @@ function menu($usuario,$titulo,$rol,$empresa) {
 						'.$cad7.'
 					  </ul>
 					</li>
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-bell"></span> Notificaciones <span class="caret"></span></a>
+					  <ul class="dropdown-menu dropdown-alerts notificaciones">
+						
+					  </ul>
+					</li>
 					<li><a href="#"><span class="glyphicon glyphicon-user"></span> '.$usuario.'</a></li>
 					<li><a href="../logout.php"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
 				  </ul>

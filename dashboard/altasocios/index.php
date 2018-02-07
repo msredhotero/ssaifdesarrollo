@@ -63,6 +63,17 @@ $cabeceras 		= "	<th>Nro Documento</th>
 
 $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadorespreGrid(),91);
 
+$lstNotificaciones = $serviciosReferencias->traerNotificacionesPorParametrosCompleto(1,0,0,0);
+
+
+	$cadNotificaciones = '';
+	while ($row = mysql_fetch_array($lstNotificaciones)) {
+
+
+	$cadNotificaciones .= '<li><div><a href="../'.$row['url'].'" class="list-group-item notifi">        <i class="'.$row['icono'].'"></i> '.$row['mensaje'].' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+
+
+	}
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -118,6 +129,21 @@ if ($_SESSION['refroll_predio'] != 1) {
         $('#navigation').perfectScrollbar();
       });
     </script>
+
+    <style type="text/css">
+    	.notifi {
+		    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		    font-size: 13px;
+		    line-height: 1.42857143;
+		    color: #333;
+		    background-color: #fff;
+		}
+
+		.dropdown-alerts {
+		  width: 380px;
+		  min-width: 0;
+		}
+    </style>
     
     
  
@@ -132,16 +158,23 @@ if ($_SESSION['refroll_predio'] != 1) {
 <h3><?php echo $plural; ?></h3>
 
     
-    
-    <div class="boxInfoLargo">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
-        	
-        </div>
-    	<div class="cuerpoBox">
-        	<?php echo $lstCargados; ?>
+    <div class="row">
+    	<div class="col-md-12">
+		    <div class="panel panel-success">
+		        <div class="panel-heading">
+		        	<?php echo $plural; ?> Cargados
+		        	
+		        </div>
+		    	<div class="panel-body">
+		        	
+		        		<?php echo $lstCargados; ?>
+
+		    	</div>
+		    </div>
     	</div>
-    </div>
+
+
+	</div>
     
     
 
@@ -168,6 +201,10 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+
+	$('.notificaciones').append('<?php echo $cadNotificaciones; ?>');
+
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],
 		"language": {

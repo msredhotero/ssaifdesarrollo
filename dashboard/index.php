@@ -741,7 +741,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				$spanFoto = 'text-info glyphicon glyphicon-plus-sign';
 				break;
 			case 2:
-				$spanFoto = 'text-primary glyphicon glyphicon-ban-circle';
+				$spanFoto = 'text-warning glyphicon glyphicon-ban-circle';
 				break;
 			case 3:
 				$spanFoto = 'text-success glyphicon glyphicon-ok-sign';
@@ -776,7 +776,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				$spanNroDoc = 'text-info glyphicon glyphicon-plus-sign';
 				break;
 			case 2:
-				$spanNroDoc = 'text-primary glyphicon glyphicon-ban-circle';
+				$spanNroDoc = 'text-warning glyphicon glyphicon-ban-circle';
 				break;
 			case 3:
 				$spanNroDoc = 'text-success glyphicon glyphicon-ok-sign';
@@ -808,7 +808,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				$spanNroDocDorso = 'text-info glyphicon glyphicon-plus-sign';
 				break;
 			case 2:
-				$spanNroDocDorso = 'text-primary glyphicon glyphicon-ban-circle';
+				$spanNroDocDorso = 'text-warning glyphicon glyphicon-ban-circle';
 				break;
 			case 3:
 				$spanNroDocDorso = 'text-success glyphicon glyphicon-ok-sign';
@@ -843,7 +843,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				$spanTitulo = 'text-info glyphicon glyphicon-plus-sign';
 				break;
 			case 2:
-				$spanTitulo = 'text-primary glyphicon glyphicon-ban-circle';
+				$spanTitulo = 'text-warning glyphicon glyphicon-ban-circle';
 				break;
 			case 3:
 				$spanTitulo = 'text-success glyphicon glyphicon-ok-sign';
@@ -879,7 +879,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				$spanExpensa = 'text-info glyphicon glyphicon-plus-sign';
 				break;
 			case 2:
-				$spanExpensa = 'text-primary glyphicon glyphicon-ban-circle';
+				$spanExpensa = 'text-warning glyphicon glyphicon-ban-circle';
 				break;
 			case 3:
 				$spanExpensa = 'text-success glyphicon glyphicon-ok-sign';
@@ -915,7 +915,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				$spanPartidaNacimiento = 'text-info glyphicon glyphicon-plus-sign';
 				break;
 			case 2:
-				$spanPartidaNacimiento = 'text-primary glyphicon glyphicon-ban-circle';
+				$spanPartidaNacimiento = 'text-warning glyphicon glyphicon-ban-circle';
 				break;
 			case 3:
 				$spanPartidaNacimiento = 'text-success glyphicon glyphicon-ok-sign';
@@ -1100,6 +1100,27 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		            </div>
 
+		            <hr>
+		            <div class="row">
+		            	<div class="col-sm-12">
+		            		<div class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> Si ya cargo sus datos persoales foto, foto del documento (frente y dorsal), entonces puede presentar la documentación para que la Asociacion la apruebe y puede generar la "FICHA DEL JUGADOR"</div>
+		            	</div>
+		            	<div class="col-sm-12">
+		            		<div class="alert alert-warning"><span class="glyphicon glyphicon-info-sign"></span> Una vez presenada la documentación no podrá volver a moificarla. En caso de rechazo sera notificado por email y deberá corregir los datos necesarios.-</div>
+		            	</div>
+		            	<div class="col-sm-12">
+		            		<ul class="list-inline">
+		            			<li>Acciones: </li>
+		            			<li>
+		            				<button type="button" class="btn btn-warning" id="presentar" data-toggle="modal" data-target="#myModal3" style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Presentar</button>
+		            			</li>
+		            		</ul>
+		            	</div>
+		            </div>
+		            <hr>
+
+
+
 
 		            <div class="row">
 						<div class="col-sm-6 text-center">
@@ -1185,6 +1206,27 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		</div>
 
+		<!-- Modal -->
+		<div class="modal fade" id="myModal3" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog modal-lg" role="document">
+		    <div class="modal-content">
+		      <form class="form-inline formulario" role="form">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Estado Documentación</h4>
+		      </div>
+		      <div class="modal-body" id="resultadoPresentacion">
+		        
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <input type="hidden" name="refcountries" id="refcountries" value="0"/>
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+
 
 		<script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 		<script src="../bootstrap/js/dataTables.bootstrap.js"></script>
@@ -1217,6 +1259,28 @@ if ($_SESSION['idroll_predio'] == 4) {
 				});
 			}
 
+			function presentardocumentacion(id) {
+				$.ajax({
+					data:  {id: id, 
+							accion: 'presentardocumentacion'},
+					url:   '../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							$('#resultadoPresentacion').html(response);
+							//url = "index.php";
+							//$(location).attr('href',url);
+							
+					}
+				});
+			}
+
+			$('#presentar').click(function() {
+				presentardocumentacion(<?php echo mysql_result($resResultado,0,0); ?>);
+			});
+
 			var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' + 
 			    'onclick="alert(\'Call your custom code here.\')">' +
 			    '<i class="glyphicon glyphicon-tag"></i>' +
@@ -1242,7 +1306,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
-			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' height='100%' class='file-preview-image' alt='Desert' title='Desert'>",
 			    ],
 			    initialPreviewConfig: [
 				    {
@@ -1454,7 +1518,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar"]
+			    allowedFileExtensions: ["rar","jpg", "png", "gif"]
 			});
 
 	    	<?php	
@@ -1481,7 +1545,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["pdf"],
+			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
 			    initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
 			    ],
@@ -1514,7 +1578,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["pdf"]
+			    allowedFileExtensions: ["pdf","jpg", "png", "gif"]
 			});
 
 	    	<?php	
@@ -1542,7 +1606,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar"],
+			    allowedFileExtensions: ["rar","jpg", "png"],
 			    initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
 			    ],
@@ -1575,7 +1639,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar"]
+			    allowedFileExtensions: ["rar","jpg", "png"]
 			});
 
 	    	<?php	

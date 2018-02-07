@@ -3409,7 +3409,7 @@ function existeDevuelveId($sql) {
 
     function obtenerNuevoId($tabla) {
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = 'ssaif_local_diciembre_host' 
+                WHERE TABLE_SCHEMA = 'ssaif_local_noviembre' 
                 AND TABLE_NAME = '".$tabla."'";
         $res = $this->query($sql,0);
         return mysql_result($res, 0,0);
@@ -3573,6 +3573,16 @@ $sql = "update dbdocumentacionjugadorimagenes
 set 
 refdocumentaciones = ".$refdocumentaciones.",refjugadorespre = ".$refjugadorespre.",imagen = '".($imagen)."',type = '".($type)."',refestados = ".$refestados." 
 where iddocumentacionjugadorimagen =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function modificarEstadoDocumentacionjugadorimagenesPorJugadorDocumentacion($idjugador,$iddocumentacion,$refestados) { 
+$sql = "update dbdocumentacionjugadorimagenes 
+set 
+refestados = ".$refestados." 
+where refjugadorespre =".$idjugador." and refdocumentaciones =".$iddocumentacion; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -12725,6 +12735,7 @@ return $res;
 
 
 function eliminarJugadorespre($id) {
+	
 $sql = "delete from dbjugadorespre where idjugadorpre =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -12831,38 +12842,131 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+
+function presentardocumentacion($id) {
+
+    $resJugador = $this->traerJugadoresprePorId($id);
+
+    $emailReferente = $this->traerReferente(mysql_result($resJugador, 0, 'nrodocumento'));
+
+    $sql = "select refestados,refdocumentaciones from dbdocumentacionjugadorimagenes where refjugadorespre = ".$id." and refdocumentaciones in (1,2,99)";
+    $resDocumentaciones = $this->query($sql,0);
+
+    $cantidad = 0;
+
+    if (mysql_num_rows($resDocumentaciones) == 3) {
+        while ($row = mysql_fetch_array($resDocumentaciones)) {
+            if (($row['refestados'] == 1) || ($row['refestados'] == 4)) {
+                $this->modificarEstadoDocumentacionjugadorimagenesPorJugadorDocumentacion($id,$row['refdocumentaciones'], 2);
+            }
+        }
+
+
+        //** creo la notificacion **//
+        $mensaje = 'Se presento una documentacion';
+        $idpagina = 1;
+        $autor = mysql_result($resJugador, 0, 'apellido').' '.mysql_result($resJugador, 0, 'nombres');
+        $destinatario = $emailReferente;
+        $id1 = $id;
+        $id2 = 0;
+        $id3 = 0;
+        $icono = 'glyphicon glyphicon-eye-open';
+        $estilo = 'alert alert-success';
+        $fecha = date('Y-m-d H:i:s');
+        $url = "altasocios/modificar.php?id=".$id;
+
+        $res = $this->insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url);
+        //** fin notificaion      **//
+
+        //$this->enviarEmail($emailReferente,$mensaje,$url, $referencia='');
+
+        echo 'La documentacion fue enviada correctamente para su posterior revision, cualquier notificacion sera enviada por email.';
+    } else {
+        echo 'Falta cargar datos para poder presentar la documentacion';
+    }
+
+}
+
+function traerReferente($nrodocumento) {
+    $sql = "select
+                coalesce(u.email,'') as email
+            from        dbjugadorespre j
+            left
+            join        dbcountries c
+            on          j.refcountries = c.idcountrie
+            left
+            join        dbusuarios u
+            on          u.idusuario = c.refusuarios
+            where       j.nrodocumento = ".$nrodocumento;
+    $res = $this->query($sql,0);
+
+    if (mysql_num_rows($res)>0) {
+        return mysql_result($res,0,0);
+    }
+    return 'aif@intercountryfutbol.com.ar';
+}
+
 /* Fin */
 /* /* Fin de la Tabla: dbjugadorespre*/
 
 
 /* PARA Notificaciones */
 
-function insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha) {
-$sql = "insert into dbnotificaciones(idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha)
-values ('','".utf8_decode($mensaje)."',".$idpagina.",'".utf8_decode($autor)."','".utf8_decode($destinatario)."',".$id1.",".$id2.",".$id3.",'".utf8_decode($icono)."','".utf8_decode($estilo)."','".utf8_decode($fecha)."')";
-$res = $this->query($sql,1);
-return $res;
-}
+/* PARA Notificaciones */
+
+function insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url) { 
+$sql = "insert into dbnotificaciones(idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha,url) 
+values ('','".utf8_decode($mensaje)."',".$idpagina.",'".utf8_decode($autor)."','".utf8_decode($destinatario)."',".$id1.",".$id2.",".$id3.",'".utf8_decode($icono)."','".utf8_decode($estilo)."','".utf8_decode($fecha)."','".utf8_decode($url)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
 
 
-function modificarNotificaciones($id,$mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha) {
-$sql = "update dbnotificaciones
-set
-mensaje = '".utf8_decode($mensaje)."',idpagina = ".$idpagina.",autor = '".utf8_decode($autor)."',destinatario = '".utf8_decode($destinatario)."',id1 = ".$id1.",id2 = ".$id2.",id3 = ".$id3.",icono = '".utf8_decode($icono)."',estilo = '".utf8_decode($estilo)."',fecha = '".utf8_decode($fecha)."'
-where idnotificacion =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
+function modificarNotificaciones($id,$mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url) { 
+$sql = "update dbnotificaciones 
+set 
+mensaje = '".utf8_decode($mensaje)."',idpagina = ".$idpagina.",autor = '".utf8_decode($autor)."',destinatario = '".utf8_decode($destinatario)."',id1 = ".$id1.",id2 = ".$id2.",id3 = ".$id3.",icono = '".utf8_decode($icono)."',estilo = '".utf8_decode($estilo)."',fecha = '".utf8_decode($fecha)."',url = '".utf8_decode($url)."' 
+where idnotificacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
 
 
-function eliminarNotificaciones($id) {
-$sql = "delete from dbnotificaciones where idnotificacion =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
+function eliminarNotificaciones($id) { 
+$sql = "delete from dbnotificaciones where idnotificacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
 
 
-function traerNotificaciones() {
+function traerNotificaciones() { 
+$sql = "select 
+n.idnotificacion,
+n.mensaje,
+n.idpagina,
+n.autor,
+n.destinatario,
+n.id1,
+n.id2,
+n.id3,
+n.icono,
+n.estilo,
+n.fecha,
+n.url
+from dbnotificaciones n 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerNotificacionesPorId($id) { 
+$sql = "select idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha,url from dbnotificaciones where idnotificacion =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerNotificacionesPorParametrosCompleto($idpagina,$id1, $id2, $id3) {
 $sql = "select
 n.idnotificacion,
 n.mensaje,
@@ -12874,15 +12978,17 @@ n.id2,
 n.id3,
 n.icono,
 n.estilo,
-n.fecha
+n.fecha,
+n.url
 from dbnotificaciones n
-order by 1";
+WHERE n.idpagina = ".$idpagina." or (n.id1 = ".$id1." or n.id2 = ".$id2." or n.id3 = ".$id3.")
+order by n.fecha desc";
 $res = $this->query($sql,0);
 return $res;
 }
 
 
-function traerNotificacionesPorParametrosTodos($idPagina,$id1, $id2, $id3) {
+function traerNotificacionesPorParametrosTodos($idpagina,$id1, $id2, $id3) {
 $sql = "select
 n.idnotificacion,
 n.mensaje,
@@ -12894,7 +13000,8 @@ n.id2,
 n.id3,
 n.icono,
 n.estilo,
-n.fecha
+n.fecha,
+n.url
 from dbnotificaciones n
 WHERE n.idpagina = ".$idpagina." and n.id1 = ".$id1." and n.id2 = ".$id2." and n.id3 = ".$id3."
 order by n.fecha desc";
@@ -12903,7 +13010,7 @@ return $res;
 }
 
 
-function traerNotificacionesPorParametrosDos($idPagina,$id1, $id2) {
+function traerNotificacionesPorParametrosDos($idpagina,$id1, $id2) {
 $sql = "select
 n.idnotificacion,
 n.mensaje,
@@ -12915,7 +13022,8 @@ n.id2,
 n.id3,
 n.icono,
 n.estilo,
-n.fecha
+n.fecha,
+n.url
 from dbnotificaciones n
 WHERE n.idpagina = ".$idpagina." and n.id1 = ".$id1." and n.id2 = ".$id2."
 order by n.fecha desc";
@@ -12923,7 +13031,7 @@ $res = $this->query($sql,0);
 return $res;
 }
 
-function traerNotificacionesPorParametrosUno($idPagina,$id1) {
+function traerNotificacionesPorParametrosUno($idpagina,$id1) {
 $sql = "select
 n.idnotificacion,
 n.mensaje,
@@ -12935,7 +13043,8 @@ n.id2,
 n.id3,
 n.icono,
 n.estilo,
-n.fecha
+n.fecha,
+n.url
 from dbnotificaciones n
 WHERE n.idpagina = ".$idpagina." and n.id1 = ".$id1."
 order by n.fecha desc";
@@ -12944,16 +13053,65 @@ return $res;
 }
 
 
-function traerNotificacionesPorId($id) {
-$sql = "select idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha from dbnotificaciones where idnotificacion =".$id;
-$res = $this->query($sql,0);
-return $res;
-}
-
 /* Fin */
 /* /* Fin de la Tabla: dbnotificaciones*/
 
 
+function enviarEmailConReferente($destinatario,$asunto,$cuerpo, $referencia) {
+
+    if ($referencia == '') {
+        $referencia = 'aif@intercountryfutbol.com.ar';
+    }
+    # Defina el número de e-mails que desea enviar por periodo. Si es 0, el proceso por lotes
+    # se deshabilita y los mensajes son enviados tan rápido como sea posible.
+    define("MAILQUEUE_BATCH_SIZE",0);
+
+    //para el envío en formato HTML
+    //$headers = "MIME-Version: 1.0\r\n";
+    
+    // Cabecera que especifica que es un HMTL
+    $headers  = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+    
+    //dirección del remitente
+    $headers .= utf8_decode("From: ASOCIACIÓN INTERCOUNTRY DE FÚTBOL ZONA NORTE <aif@intercountryfutbol.com.ar>\r\n");
+    
+    //ruta del mensaje desde origen a destino
+    $headers .= "Return-path: ".$destinatario."\r\n";
+    
+    //direcciones que recibirán copia oculta
+    $headers .= "Bcc: ".$referencia."\r\n";
+    
+    mail($destinatario,$asunto,$cuerpo,$headers);   
+}
+
+function enviarEmail($destinatario,$asunto,$cuerpo, $referencia='') {
+
+    if ($referencia == '') {
+        $referencia = 'aif@intercountryfutbol.com.ar';
+    }
+    # Defina el número de e-mails que desea enviar por periodo. Si es 0, el proceso por lotes
+    # se deshabilita y los mensajes son enviados tan rápido como sea posible.
+    define("MAILQUEUE_BATCH_SIZE",0);
+
+    //para el envío en formato HTML
+    //$headers = "MIME-Version: 1.0\r\n";
+    
+    // Cabecera que especifica que es un HMTL
+    $headers  = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+    
+    //dirección del remitente
+    $headers .= utf8_decode("From: ASOCIACIÓN INTERCOUNTRY DE FÚTBOL ZONA NORTE <aif@intercountryfutbol.com.ar>\r\n");
+    
+    //ruta del mensaje desde origen a destino
+    $headers .= "Return-path: ".$destinatario."\r\n";
+    
+    //direcciones que recibirán copia oculta
+    $headers .= "Bcc: ".$referencia."\r\n";
+    
+    mail($destinatario,$asunto,$cuerpo,$headers);   
+}
 
 /*****************               FIN                **************************/
 /* Fin */

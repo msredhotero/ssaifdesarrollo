@@ -560,6 +560,9 @@ case 'eliminarJugadorespre':
 case 'modificarJugadorespreRegistro':
 	modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios);
 	break;
+case 'presentardocumentacion':
+	presentardocumentacion($serviciosReferencias);
+	break; 
 /*****			fin 			**********/
 }
 
@@ -567,7 +570,15 @@ case 'modificarJugadorespreRegistro':
 
 
 /*****			SATELITES		**********/
+function presentardocumentacion($serviciosReferencias) {
+	$id = $_POST['id'];
 
+	$res = $serviciosReferencias->presentardocumentacion($id);
+
+	echo $res;
+
+
+}
 
 function insertarJugadorespre($serviciosReferencias) {
 	$reftipodocumentos = $_POST['reftipodocumentos'];
@@ -630,8 +641,16 @@ function modificarJugadorespre($serviciosReferencias) {
 
 function eliminarJugadorespre($serviciosReferencias) {
 	$id = $_POST['id'];
-	$res = $serviciosReferencias->eliminarJugadorespre($id);
-	echo $res;
+
+	$res = $serviciosReferencias->traerJugadoresprePorId($id);	
+
+	if ( (integer)msql_result($res, 0,'idusuario') > 0) {
+		echo 'No se puede borrar el jugador ya que se registro como usuario en el sistema, comunicarse con la Asociacion para resolverlo.';
+
+	} else {
+		$res = $serviciosReferencias->eliminarJugadorespre($id);
+		echo $res;
+	}
 } 
 
 function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios) {
@@ -643,6 +662,9 @@ function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios
 	$nombres = $_POST['nombres'];
 	$fechanacimiento = formatearFechas($_POST['fechanacimiento']);
 	$observaciones = $_POST['observaciones'];
+
+
+
 	if ($fechanacimiento == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
@@ -667,20 +689,6 @@ function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios
 				$nuevoId = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 				$error = $serviciosReferencias->subirArchivoJugadores('avatar-1',$id,$nuevoId,1,$id);
 
-				//** creo la notificacion **//
-				$mensaje = 'Se cargo una imagen';
-				$idpagina = 1;
-				$autor = $apellido.' '.$nombres;
-				$destinatario = 'AIFZN';
-				$id1 = $id;
-				$id2 = 1;
-				$id3 = $nuevoId;
-				$icono = '';
-				$estilo = '';
-				$fecha = date('Y-m-d H:i:s');
-
-				$serviciosReferencias->insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha);
-				//** fin notificaion 	  **//
 			}
 
 			if ($_FILES['avatar-2']['tmp_name'] != '') {
