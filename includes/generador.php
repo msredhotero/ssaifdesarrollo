@@ -88,7 +88,8 @@ $tablasAr	= array("contactos"        => "dbcontactos",
 "jugadoresmotivoshabilitacionestransitorias_copia"=>"dbjugadoresmotivoshabilitacionestransitorias_copia",
 "jugadoresvaloreshabilitacionestransitorias_copia"=>"dbjugadoresvaloreshabilitacionestransitorias_copia",
 "documentacionjugadorimagenes"=>"dbdocumentacionjugadorimagenes",
-"notificaciones" => "dbnotificaciones");
+"notificaciones" => "dbnotificaciones",
+"cierrepadrones"=>"tbcierrepadrones");
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
@@ -146,7 +147,8 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresmotivoshabilitacionestransitorias_copia"=>"dbjugadoresmotivoshabilitacionestransitorias_copia",
 "jugadoresvaloreshabilitacionestransitorias_copia"=>"dbjugadoresvaloreshabilitacionestransitorias_copia",
 "documentacionjugadorimagenes"=>"dbdocumentacionjugadorimagenes",
-"notificaciones" => "dbnotificaciones");
+"notificaciones" => "dbnotificaciones",
+"cierrepadrones"=>"tbcierrepadrones");
 
 	$tablasArAux	= array("contactos"        => 2,        
 "tipocontactos"=> 1,
@@ -201,7 +203,8 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresmotivoshabilitacionestransitorias_copia"=>2,
 "jugadoresvaloreshabilitacionestransitorias_copia"=>2,
 "documentacionjugadorimagenes"=>1,
-"notificaciones" => 1);
+"notificaciones" => 1,
+"cierrepadrones"=>3);
 	
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
