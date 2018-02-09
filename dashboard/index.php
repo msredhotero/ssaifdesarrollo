@@ -123,7 +123,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		$lstNuevosJugadores = $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadoresprePorCountries($refClub),9);
 
+		$resHabilitado = $serviciosReferencias->traerCierrepadronesPorCountry($refClub);
 
+		$habilitado = 0;
+		if (mysql_num_rows($resHabilitado)>0) {
+			$habilitado = 0;
+		} else {
+			$habilitado = 1;
+		}
 
 		if ($_SESSION['refroll_predio'] != 1) {
 
@@ -239,7 +246,9 @@ if ($_SESSION['idroll_predio'] == 4) {
 												
 												<td>";
 							if ($permiteRegistrar == 1) {
-								$cadCabecera .=			"<button type='button' class='btn btn-primary guardarJugadorClubSimple' id='".$row['idjugador']."'>Guardar</button>";
+								if ($habilitado == 1) {
+									$cadCabecera .=			"<button type='button' class='btn btn-primary guardarJugadorClubSimple' id='".$row['idjugador']."'>Guardar</button>";
+								}
 							}
 							$cadCabecera .= "</td>
 											</tr>";
@@ -300,9 +309,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                    <li>
 		                        <button type="button" class="btn btn-danger" id="btnImprimir" style="margin-left:0px;">Imprimir</button>
 		                    </li>
+		                    <?php if ($habilitado == 1) { ?>
 		                    <li>
 		                    	<button type="button" data-toggle="modal" data-target="#myModal3" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Agregar Jugador</button>
 		                    </li>
+		                    <?php } ?>
 		                    <li>
 		                        <button type="button" class="btn btn-info" id="btnExcel1" style="margin-left:0px;" onClick="location.href = 'http://www.aif.org.ar/wp-content/uploads/2017/12/buenafe.xlsx'"><span class="glyphicon glyphicon-save"></span> Lista de Buena Fe/Altas de equipos</button>
 		                    </li>
@@ -321,7 +332,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		    </div>
 		    
 		    
-
+		<?php if ($habilitado == 1) { ?>
 		<div id="dialog2" title="Eliminar Jugadores">
 		    	<p>
 		        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
@@ -355,7 +366,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		</div>
 
 		  <!-- del modal -->
-		   
+		<?php } ?>
 		</div>
 
 
@@ -452,7 +463,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 					}
 				});
 		    });
-
+			<?php if ($habilitado == 1) { ?>
 			$("#example1").on("click",'.varborrar', function(){
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
@@ -512,7 +523,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				 
 			 		}); //fin del dialogo para eliminar
 					
-			
+			<?php } ?>
 			
 			//al enviar el formulario
 		    $('#cargar').click(function(){

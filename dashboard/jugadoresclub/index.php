@@ -83,6 +83,15 @@ if (mysql_num_rows($resTemporadas)>0) {
     $ultimaTemporada = 0;   
 }
 
+
+$resHabilitado = $serviciosReferencias->traerCierrepadronesPorCountry($refClub);
+
+$habilitado = 0;
+if (mysql_num_rows($resHabilitado)>0) {
+	$habilitado = 0;
+} else {
+	$habilitado = 1;
+}
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
 
 
@@ -241,6 +250,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 										
 										<td>";
 					if ($permiteRegistrar == 1) {
+						
 						$cadCabecera .=			"<button type='button' class='btn btn-primary guardarJugadorClubSimple' id='".$row['idjugador']."'>Guardar</button>";
 					}
 					$cadCabecera .= "</td>
@@ -299,6 +309,15 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-danger" id="btnImprimir" style="margin-left:0px;">Imprimir</button>
                     </li>
+                    <?php if ($habilitado == 0) { ?>
+                    <li>
+                        <button type="button" class="btn btn-success cerrar" id="btnAbrir" style="margin-left:0px;">Abrir</button>
+                    </li>
+                    <?php } else { ?>
+                    <li>
+                        <button type="button" class="btn btn-warning cerrar" id="btnCerrar" style="margin-left:0px;">Cerrar</button>
+                    </li>
+                    <?php } ?>
                     <li>
                     	<button type="button" data-toggle="modal" data-target="#myModal3" class="btn btn-success" id="agregarContacto"><span class="glyphicon glyphicon-plus"></span> Agregar Jugador</button>
                     </li>
@@ -395,6 +414,66 @@ $(document).ready(function(){
 			}
 		  }
 	} );
+
+	<?php if ($habilitado == 0) { ?>
+    $(document).on("click",'.cerrar', function(){
+		
+        $.ajax({
+			data:  {id: <?php echo $refClub; ?>, 
+					accion: 'eliminarCierrepadrones'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+				
+			},
+			success:  function (response) {
+
+				$(".cerrar").removeClass("btn-success");
+				$(".cerrar").addClass("btn-warning");
+				$(".cerrar").html("Cerrar");
+
+				url = "index.php?id=<?php echo $_GET['id']; ?>";
+				$(location).attr('href',url);
+
+			}
+		});
+    });
+    <?php } else { ?>
+    $(document).on("click",'.cerrar', function(){
+		
+        $.ajax({
+			data:  {refcountries: <?php echo $refClub; ?>, 
+					refusuarios: <?php echo $_SESSION['id_usuariopredio']; ?>,
+					accion: 'insertarCierrepadrones'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+				$(".cerrar").hide();
+			},
+			success:  function (response) {
+				if (response == '') {
+
+
+					$(".cerrar").addClass("btn-success");
+					$(".cerrar").removeClass("btn-warning");
+					$(".cerrar").html("Abrir");
+					$(".cerrar").show();
+					url = "index.php?id=<?php echo $_GET['id']; ?>";
+					$(location).attr('href',url);
+
+					
+				} else {
+					$('#error').html('Huvo un error al guardar los datos, verifique los datos ingresados '.response);
+
+				}
+
+				
+
+			}
+		});
+    });
+
+    <?php } ?>
 
 	$('#fechaalta').val('<?php echo date('d/m/Y'); ?>');
 

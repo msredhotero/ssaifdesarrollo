@@ -13055,7 +13055,68 @@ return $res;
 
 /* Fin */
 /* /* Fin de la Tabla: dbnotificaciones*/
+/* PARA Cierrepadrones */
 
+function insertarCierrepadrones($refcountries,$refusuarios,$fechacierre) {
+$sql = "insert into tbcierrepadrones(idcierrepadron,refcountries,refusuarios,fechacierre)
+values ('',".$refcountries.",".$refusuarios.",'".utf8_decode($fechacierre)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarCierrepadrones($id,$refcountries,$refusuarios,$fechacierre) {
+$sql = "update tbcierrepadrones
+set
+refcountries = ".$refcountries.",refusuarios = ".$refusuarios.",fechacierre = '".utf8_decode($fechacierre)."'
+where idcierrepadron =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarCierrepadrones($id) {
+$sql = "delete from tbcierrepadrones where idcierrepadron =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function eliminarCierrepadronesPorCountry($id) {
+
+$sql = "delete from tbcierrepadrones where refcountries =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCierrepadrones() {
+$sql = "select
+c.idcierrepadron,
+c.refcountries,
+c.refusuarios,
+c.fechacierre
+from tbcierrepadrones c
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCierrepadronesPorId($id) {
+$sql = "select idcierrepadron,refcountries,refusuarios,fechacierre from tbcierrepadrones where idcierrepadron =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCierrepadronesPorCountry($idcountry) {
+$sql = "select idcierrepadron,refcountries,refusuarios,fechacierre from tbcierrepadrones where refcountries =".$idcountry;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbcierrepadrones*/
 
 function enviarEmailConReferente($destinatario,$asunto,$cuerpo, $referencia) {
 

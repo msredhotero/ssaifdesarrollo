@@ -62,6 +62,15 @@ switch ($accion) {
 	case 'guardarJugadorClubSimple':
 		guardarJugadorClubSimple($serviciosReferencias);
 		break;
+	case 'insertarCierrepadrones':
+		insertarCierrepadrones($serviciosReferencias);
+		break;
+	case 'modificarCierrepadrones':
+		modificarCierrepadrones($serviciosReferencias);
+		break;
+	case 'eliminarCierrepadrones':
+		eliminarCierrepadrones($serviciosReferencias);
+		break; 
 /* fin */
 
 /* PARA Tipocontactos */
@@ -568,6 +577,39 @@ case 'presentardocumentacion':
 
 /* Fin */
 
+
+function insertarCierrepadrones($serviciosReferencias) {
+$refcountries = $_POST['refcountries'];
+$refusuarios = $_POST['refusuarios'];
+$fechacierre = date('Y-m-d');
+
+$serviciosReferencias->eliminarCierrepadronesPorCountry($refcountries);
+
+$res = $serviciosReferencias->insertarCierrepadrones($refcountries,$refusuarios,$fechacierre);
+if ((integer)$res > 0) {
+echo '';
+} else {
+echo 'Huvo un error al insertar datos';
+}
+}
+function modificarCierrepadrones($serviciosReferencias) {
+$id = $_POST['id'];
+$refcountries = $_POST['refcountries'];
+$refusuarios = $_POST['refusuarios'];
+$fechacierre = $_POST['fechacierre'];
+$res = $serviciosReferencias->modificarCierrepadrones($id,$refcountries,$refusuarios,$fechacierre);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarCierrepadrones($serviciosReferencias) {
+$id = $_POST['id'];
+
+$res = $serviciosReferencias->eliminarCierrepadronesPorCountry($id);
+echo $res;
+} 
 
 /*****			SATELITES		**********/
 function presentardocumentacion($serviciosReferencias) {
