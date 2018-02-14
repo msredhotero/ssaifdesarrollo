@@ -27,7 +27,7 @@ $serviciosSeguridad = new ServiciosSeguridad();
 $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../usuarios/');
 //*** FIN  ****/
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Usuarios",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Usuarios",$_SESSION['refroll_predio'],$_SESSION['email_predio']);
 
 
 $id = $_GET['id'];

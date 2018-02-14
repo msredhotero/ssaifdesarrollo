@@ -28,7 +28,7 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../jugadores/')
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Jugadores",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Jugadores",$_SESSION['refroll_predio'],$_SESSION['email_predio']);
 
 
 $id	= $_GET['id'];

@@ -27,7 +27,7 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../estadisticas
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Carga de Partidos",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Carga de Partidos",$_SESSION['refroll_predio'],$_SESSION['email_predio']);
 
 $idFixture = $_GET['id'];
 
