@@ -497,6 +497,9 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 		            		<ul class="list-inline">
 		            			<li>Acciones: </li>
 		            			<li>
+		            				<button type="button" class="btn btn-success" id="generarFicha"style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Generar Ficha Jugador</button>
+		            			</li>
+		            			<li>
 		            				<button type="button" class="btn btn-success" id="notificar" style="margin-left:0px;"><span class="glyphicon glyphicon-envelope"></span> Generar Notificacion</button>
 		            			</li>
 		            		</ul>
@@ -593,7 +596,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 		                <div class="col-md-12">
 		                <ul class="list-inline" style="margin-top:15px;">
 		                    <li>
-		                        <button type="button" class="btn btn-warning" id="cargar" style="margin-left:0px;">Guardar</button>
+		                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
 		                    </li>
 		                </ul>
 		                </div>

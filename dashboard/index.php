@@ -23,7 +23,7 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menuD($_SESSION['nombre_predio'],"Dashboard",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menuD($_SESSION['nombre_predio'],"Dashboard",$_SESSION['refroll_predio'],$_SESSION['email_predio']);
 
 
 if ($_SESSION['idroll_predio'] == 4) {
@@ -1122,9 +1122,33 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            	<div class="col-sm-12">
 		            		<ul class="list-inline">
 		            			<li>Acciones: </li>
+		            			<?php
+		            				if (($idEstadoFoto == 1) && ($idEstadoNroDoc == 1) && ($idEstadoNroDocDorso == 1)) {
+		            			?>
 		            			<li>
 		            				<button type="button" class="btn btn-warning" id="presentar" data-toggle="modal" data-target="#myModal3" style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Presentar</button>
 		            			</li>
+		            			<?php
+		            				}
+		            			?>
+		            			<?php
+		            				if (($idEstadoFoto == 4) || ($idEstadoNroDoc == 4) || ($idEstadoNroDocDorso == 4)) {
+		            			?>
+		            			<li>
+		            				<button type="button" class="btn btn-warning" id="presentar" data-toggle="modal" data-target="#myModal3" style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Presentar</button>
+		            			</li>
+		            			<?php
+		            				}
+		            			?>
+		            			<?php
+		            				if (($idEstadoFoto == 3) && ($idEstadoNroDoc == 3) && ($idEstadoNroDocDorso == 3)) {
+		            			?>
+		            			<li>
+		            				<button type="button" class="btn btn-success" id="generarFicha"style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Generar Ficha Jugador</button>
+		            			</li>
+		            			<?php
+		            				}
+		            			?>
 		            		</ul>
 		            	</div>
 		            </div>
@@ -1201,7 +1225,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                <div class="col-md-12">
 		                <ul class="list-inline" style="margin-top:15px;">
 		                    <li>
-		                        <button type="button" class="btn btn-warning" id="cargar" style="margin-left:0px;">Guardar</button>
+		                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
 		                    </li>
 		                </ul>
 		                </div>
@@ -1248,6 +1272,10 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		<script type="text/javascript">
 		$(document).ready(function(){
+
+			$('#generarFicha').click(function() {
+				window.open("../reportes/rptAltaSocio.php?id=<?php echo mysql_result($resResultado,0,0); ?>" ,'_blank');	
+			});
 
 			$('.abrir').click();
 
@@ -1314,7 +1342,17 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/jugador.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoFoto == 0) || ($idEstadoFoto == 1) || ($idEstadoFoto == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' height='100%' class='file-preview-image' alt='Desert' title='Desert'>",
@@ -1347,7 +1385,17 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/jugador.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoFoto == 0) || ($idEstadoFoto == 1) || ($idEstadoFoto == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 	    	<?php	
@@ -1371,7 +1419,17 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoNroDoc == 0) || ($idEstadoNroDoc == 1) || ($idEstadoNroDoc == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
@@ -1404,7 +1462,17 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoNroDoc == 0) || ($idEstadoNroDoc == 1) || ($idEstadoNroDoc == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
@@ -1433,7 +1501,17 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoNroDocDorso == 0) || ($idEstadoNroDocDorso == 1) || ($idEstadoNroDocDorso == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
@@ -1466,7 +1544,17 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoNroDocDorso == 0) || ($idEstadoNroDocDorso == 1) || ($idEstadoNroDocDorso == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
