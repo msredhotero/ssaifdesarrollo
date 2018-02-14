@@ -3409,7 +3409,7 @@ function existeDevuelveId($sql) {
 
     function obtenerNuevoId($tabla) {
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = 'ssaif_local_noviembre' 
+                WHERE TABLE_SCHEMA = 'ssaif_local_diciembre_host' 
                 AND TABLE_NAME = '".$tabla."'";
         $res = $this->query($sql,0);
         return mysql_result($res, 0,0);
@@ -12828,6 +12828,17 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+
+function traerJugadoresprePorIdCompleto($id) {
+$sql = "select j.idjugadorpre,j.reftipodocumentos,j.nrodocumento,j.apellido,j.nombres,j.email,j.fechanacimiento,j.fechaalta,j.refcountries,j.observaciones,j.refusuarios,j.numeroserielote , cc.nombre as country, td.tipodocumento
+        from dbjugadorespre j 
+        inner join dbcountries cc on cc.idcountrie = j.refcountries
+        inner join tbtipodocumentos td on td.idtipodocumento = j.reftipodocumentos
+        where idjugadorpre =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
 function traerJugadoresprePorNroDocumento($nroDocumento) {
 $sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios from dbjugadorespre where nrodocumento =".$nroDocumento;
 $res = $this->query($sql,0);
@@ -12990,6 +13001,84 @@ $sql = "select
 count(*)
 from dbnotificaciones
 where leido = 0"; 
+$res = $this->query($sql,0); 
+if (mysql_num_rows($res)>0) {
+    return mysql_result($res, 0,0);
+}
+return 0; 
+} 
+
+
+function traerNotificacionesPorUsuarios($email) { 
+$sql = "select 
+n.idnotificacion,
+n.mensaje,
+n.idpagina,
+n.autor,
+n.destinatario,
+n.id1,
+n.id2,
+n.id3,
+n.icono,
+n.estilo,
+n.fecha,
+n.url,
+(case when n.leido = 1 then 'Si' else 'No' end) as leido
+from dbnotificaciones n 
+where n.destinatario = '".$email."'
+order by n.leido, n.fecha desc"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerNotificacionesGrid() {
+$sql = "select 
+n.idnotificacion,
+n.mensaje,
+n.autor,
+n.destinatario,
+n.fecha,
+(case when n.leido = 1 then 'Si' else 'No' end) as leido,
+n.idpagina,
+n.id1,
+n.id2,
+n.id3,
+n.icono,
+n.estilo,
+n.url
+from dbnotificaciones n 
+order by n.leido, n.fecha desc"; 
+$res = $this->query($sql,0); 
+return $res; 
+}
+
+function traerNotificacionesPorUsuariosGrid($email) { 
+$sql = "select 
+n.idnotificacion,
+n.mensaje,
+n.autor,
+n.destinatario,
+n.fecha,
+(case when n.leido = 1 then 'Si' else 'No' end) as leido,
+n.idpagina,
+n.id1,
+n.id2,
+n.id3,
+n.icono,
+n.estilo,
+n.url
+from dbnotificaciones n 
+where n.destinatario = '".$email."'
+order by n.leido, n.fecha desc"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerNotificacionesNoLeidaPorUsuarios($email) { 
+$sql = "select 
+count(*)
+from dbnotificaciones
+where leido = 0 and destinatario = '".$email."'"; 
 $res = $this->query($sql,0); 
 if (mysql_num_rows($res)>0) {
     return mysql_result($res, 0,0);

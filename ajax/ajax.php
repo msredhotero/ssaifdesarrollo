@@ -613,7 +613,7 @@ function generarNotificacion($serviciosReferencias) {
 	$id3 = $_POST['id3']; 
 	$icono = $_POST['icono']; 
 	$estilo = $_POST['estilo']; 
-	$fecha = $_POST['fecha']; 
+	$fecha = date('Y-m-d H:i:s'); 
 	$url = $_POST['url']; 
 	
 

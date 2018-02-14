@@ -172,6 +172,14 @@ class Servicios {
 				$idresultados = "resultados";
 				$idTable = 'example2';
 				break;
+			case 86:
+				$cantidad = 5;
+				$classMod = '';
+				$classVer = 'varver';
+				$lblVer	  = 'Ver';
+				$classEli = '';
+				$idresultados = "resultados";
+				break;
 			default:
 				$classMod = 'varmodificar';
 				$classEli = 'varborrar';
@@ -1204,6 +1212,8 @@ class Servicios {
 		$sql	=	"show columns from ".$tabla;
 		$res 	=	$this->query($sql,0);
 		
+		$ocultar = array("idpagina","id1","id2","id3","icono","estilo","url");
+		
 		$camposEscondido = "";
 		/* Analizar para despues */
 		/*if (count($refencias) > 0) {
@@ -1236,12 +1246,18 @@ class Servicios {
 					}
 					$i = $i + 1;
 				}
+
+				if (in_array($row[0],$ocultar)) {
+					$lblOculta = "none";	
+				} else {
+					$lblOculta = "block";
+				}
 				
 				if ($row[3] != 'PRI') {
 					if (strpos($row[1],"decimal") !== false) {
 						$form	=	$form.'
 						
-						<div class="form-group col-md-6 col-xs-6">
+						<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
 							<label for="'.$label.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.ucwords($label).'</b></label>
 							<div class="input-group col-md-12">
 								
@@ -1272,7 +1288,7 @@ class Servicios {
 							
 							$form	=	$form.'
 							
-							<div class="form-group col-md-6 col-xs-6">
+							<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
 								<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 								<div class="input-group col-md-12">
 									<p>
@@ -1301,7 +1317,7 @@ class Servicios {
 								
 								$form	=	$form.'
 								
-								<div class="form-group col-md-6 col-xs-6">
+								<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
 									<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 									<div class="input-group col-md-12">
 										<p>'.$activo.'</p>
@@ -1333,7 +1349,7 @@ class Servicios {
 									
 									$form	=	$form.'
 									
-									<div class="form-group col-md-6 col-xs-6">
+									<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
 										<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 										<div class="input-group col-md-6">
 											<p>'.mysql_result($resMod,0,$row[0]).'</p>
@@ -1351,7 +1367,7 @@ class Servicios {
 										
 										$form	=	$form.'
 										
-										<div class="form-group col-md-6 col-xs-6">
+										<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
 											<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
 											<div class="input-group col-md-6">
 												<p>'.mysql_result($resMod,0,$row[0]).'</p>
@@ -1368,10 +1384,10 @@ class Servicios {
 											
 											$form	=	$form.'
 											
-											<div class="form-group col-md-6 col-xs-6">
+											<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
 												<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 												<div class="input-group col-md-12">
-													<p>'.(htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_HTML5) == '' ? ".............." : htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_HTML5)).'</p>
+													<p>'.(htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_QUOTES) == '' ? ".............." : htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_QUOTES)).'</p>
 												</div>
 												
 											</div>
@@ -1386,7 +1402,7 @@ class Servicios {
 											
 											$form	=	$form.'
 											
-											<div class="form-group col-md-12 col-xs-12">
+											<div class="form-group col-md-12 col-xs-12" style="display: '.$lblOculta.'">
 												<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;"><b>'.$label.'</b></label>
 												<div class="input-group col-md-12 col-xs-12">
 													<p>'.(htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_HTML5) == '' ? ".............." : htmlspecialchars(mysql_result($resMod,0,$row[0]),ENT_HTML5)).'</p>
@@ -1417,7 +1433,7 @@ class Servicios {
 
 													}
 													
-													$form	=	$form.'<div class="form-group col-md-6 col-xs-6">
+													$form	=	$form.'<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
 														<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
 														<div class="input-group col-md-12">';
 													
@@ -1445,7 +1461,7 @@ class Servicios {
 													
 													$form	=	$form.'
 													
-													<div class="form-group col-md-6 col-xs-6">
+													<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
 														<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
 														<div class="input-group col-md-12">
 															<p>'.(utf8_encode(mysql_result($resMod,0,$row[0])) == '' ? ".............." : utf8_encode(mysql_result($resMod,0,$row[0]))).'</p>

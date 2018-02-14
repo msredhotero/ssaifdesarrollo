@@ -102,22 +102,22 @@ function menu($usuario,$titulo,$rol,$empresa) {
 	$referencias	= new ServiciosReferencias();
 
 
-	$lstNotificaciones = $referencias->traerNotificaciones();
+	$lstNotificaciones = $referencias->traerNotificacionesPorUsuarios($empresa);
 
-	$nuevas = $referencias->traerNotificacionesNoLeida();
+	$nuevas = $referencias->traerNotificacionesNoLeidaPorUsuarios($empresa);
 
 	$cadNotificaciones = '';
 	while ($row = mysql_fetch_array($lstNotificaciones)) {
 		if ($row['leido'] == 'Si') {
-			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" style="background-color:#D3D3D3;" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,40).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" style="background-color:#D3D3D3;" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,80).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
 		} else {
-			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,40).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,80).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
 		}
 
 		
 	}
 
-	$cadNotificaciones .= '<li><div><a href="../notificaiones/" class="list-group-item notifi" id="0"><i class="glyphicon glyphicon-inbox"></i> VER TODAS LAS NOTIFICAIONES.</a></div></li>';
+	$cadNotificaciones .= '<li><div><a href="../notificaciones/" class="list-group-item notifi" id="0"><i class="glyphicon glyphicon-inbox"></i> VER TODAS LAS NOTIFICAIONES.</a></div></li>';
 	
 	$sqlGrupo1 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 1 order by orden";
 	$resGrupo1 = $this->query($sqlGrupo1,0);
@@ -209,7 +209,7 @@ function menu($usuario,$titulo,$rol,$empresa) {
 					  </ul>
 					</li>
 					<li class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-bell"></span> Notificaciones <span class="caret"></span></a>
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-bell"></span> Notificaciones <span class="label label-danger">'.$nuevas.'</span><span class="caret"></span></a>
 					  <ul class="dropdown-menu dropdown-alerts notificaciones">
 						
 					  </ul>
@@ -260,22 +260,22 @@ function menuD($usuario,$titulo,$rol,$empresa) {
 	$referencias	= new ServiciosReferencias();
 
 
-	$lstNotificaciones = $referencias->traerNotificaciones();
+	$lstNotificaciones = $referencias->traerNotificacionesPorUsuarios($empresa);
 
-	$nuevas = $referencias->traerNotificacionesNoLeida();
+	$nuevas = $referencias->traerNotificacionesNoLeidaPorUsuarios($empresa);
 
 	$cadNotificaciones = '';
 	while ($row = mysql_fetch_array($lstNotificaciones)) {
 		if ($row['leido'] == 'Si') {
-			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" style="background-color:#D3D3D3;" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,40).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" style="background-color:#D3D3D3;" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,80).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
 		} else {
-			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,40).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,80).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
 		}
 
 		
 	}
 
-	$cadNotificaciones .= '<li><div><a href="../notificaiones/" class="list-group-item notifi" id="0"><i class="glyphicon glyphicon-inbox"></i> VER TODAS LAS NOTIFICAIONES.</a></div></li>';
+	$cadNotificaciones .= '<li><div><a href="../notificaciones/" class="list-group-item notifi" id="0"><i class="glyphicon glyphicon-inbox"></i> VER TODAS LAS NOTIFICAIONES.</a></div></li>';
 	
 	
 	$sqlGrupo1 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 1 order by orden";

@@ -45,10 +45,13 @@ h5 {
 }
 
 .dropdown-alerts {
-  width: 380px;
-  min-width: 0;
+  width: 550px;
+  min-width: 380px;
 }
 
+.dropdown-alerts li div a {
+	height: 65px;
+}
 .badge {
   padding: 1px 9px 2px;
   font-size: 12.025px;
