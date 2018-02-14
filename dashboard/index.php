@@ -59,7 +59,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_SESSION['club_predio']);
 			$refClub = $_SESSION['club_predio'];
 		} else {
-			$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrie($_GET['id']);	
+			$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_GET['id']);	
 			$refClub = $_GET['id'];
 		}
 
@@ -1013,7 +1013,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		<body>
 
 		 
-		<?php echo str_replace('..','../dashboard',$resMenu); ?>
+		<?php echo str_replace('****','..', str_replace('..','../dashboard',$resMenu)); ?>
 
 		<div id="content">
 
@@ -1847,7 +1847,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		<body>
 
 		 
-		<?php echo str_replace('..','../dashboard',$resMenu); ?>
+		<?php echo str_replace('****','..', str_replace('..','../dashboard',$resMenu)); ?>
 
 		<div id="content">
 

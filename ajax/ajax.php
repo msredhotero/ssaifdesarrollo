@@ -572,9 +572,59 @@ case 'modificarJugadorespreRegistro':
 case 'presentardocumentacion':
 	presentardocumentacion($serviciosReferencias);
 	break; 
+case 'guardarEstado':
+	guardarEstado($serviciosReferencias);
+	break;
 /*****			fin 			**********/
+
+/****   	notificaciones * *************/
+case 'marcarNotificacion':
+	marcarNotificacion($serviciosReferencias);
+	break;
+case 'generarNotificacion':
+	generarNotificacion($serviciosReferencias);
+	break;
+/****			fin 				******/
 }
 
+
+
+/****   	notificaciones * *************/
+function marcarNotificacion($serviciosReferencias) {
+	$id = $_POST['id'];
+
+	$res = $serviciosReferencias->marcarNotificacion($id);
+
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+
+}
+
+function generarNotificacion($serviciosReferencias) {
+	$mensaje = $_POST['mensaje']; 
+	$idpagina = $_POST['idpagina']; 
+	$autor = $_POST['autor']; 
+	$destinatario = $_POST['destinatario']; 
+	$id1 = $_POST['id1']; 
+	$id2 = $_POST['id2']; 
+	$id3 = $_POST['id3']; 
+	$icono = $_POST['icono']; 
+	$estilo = $_POST['estilo']; 
+	$fecha = $_POST['fecha']; 
+	$url = $_POST['url']; 
+	
+
+	$res = $serviciosReferencias->insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url); 
+	
+	if ((integer)$res > 0) { 
+		echo ''; 
+	} else { 
+		echo 'Huvo un error al insertar datos';	 
+	} 
+}
 /* Fin */
 
 
@@ -612,6 +662,16 @@ echo $res;
 } 
 
 /*****			SATELITES		**********/
+
+function guardarEstado($serviciosReferencias) {
+	$id = $_POST['id'];
+	$refestados = $_POST['refestados'];
+	
+	$res = $serviciosReferencias->modificarEstadoDocumentacionjugadorimagenesPorId($id, $refestados);
+
+	echo $res;
+}
+
 function presentardocumentacion($serviciosReferencias) {
 	$id = $_POST['id'];
 

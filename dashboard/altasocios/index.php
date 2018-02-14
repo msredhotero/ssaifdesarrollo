@@ -130,20 +130,6 @@ if ($_SESSION['refroll_predio'] != 1) {
       });
     </script>
 
-    <style type="text/css">
-    	.notifi {
-		    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-		    font-size: 13px;
-		    line-height: 1.42857143;
-		    color: #333;
-		    background-color: #fff;
-		}
-
-		.dropdown-alerts {
-		  width: 380px;
-		  min-width: 0;
-		}
-    </style>
     
     
  

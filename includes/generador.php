@@ -234,7 +234,7 @@ $ajaxFuncionesController = '';
 
 $servicios	= "Referencias";
 
-$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_local_diciembre_host";
+$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_local_noviembre";
 $resMapeo 	=	query($sqlMapaer,0);
 
 $aliasTablaMadre = '';

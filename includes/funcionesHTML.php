@@ -96,6 +96,28 @@ function menu3($usuario,$titulo,$rol,$empresa) {
 
 
 function menu($usuario,$titulo,$rol,$empresa) {
+
+	require_once 'funcionesReferencias.php';
+
+	$referencias	= new ServiciosReferencias();
+
+
+	$lstNotificaciones = $referencias->traerNotificaciones();
+
+	$nuevas = $referencias->traerNotificacionesNoLeida();
+
+	$cadNotificaciones = '';
+	while ($row = mysql_fetch_array($lstNotificaciones)) {
+		if ($row['leido'] == 'Si') {
+			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" style="background-color:#D3D3D3;" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,40).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+		} else {
+			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,40).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+		}
+
+		
+	}
+
+	$cadNotificaciones .= '<li><div><a href="../notificaiones/" class="list-group-item notifi" id="0"><i class="glyphicon glyphicon-inbox"></i> VER TODAS LAS NOTIFICAIONES.</a></div></li>';
 	
 	$sqlGrupo1 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 1 order by orden";
 	$resGrupo1 = $this->query($sqlGrupo1,0);
@@ -193,12 +215,38 @@ function menu($usuario,$titulo,$rol,$empresa) {
 					  </ul>
 					</li>
 					<li><a href="#"><span class="glyphicon glyphicon-user"></span> '.$usuario.'</a></li>
-					<li><a href="../logout.php"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+					<li><a href="../../logout.php"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
 				  </ul>
 				  
 				</div><!-- /.navbar-collapse -->
 			  </div><!-- /.container-fluid -->
-			</nav>';
+			</nav>
+			<script type="text/javascript">';
+			$cad .= "$(document).ready(function(){
+				
+				function notificacionLeida(id) {
+					$.ajax({
+						data:  {id: id, accion: 'marcarNotificacion'},
+						url:   '****/ajax/ajax.php',
+						type:  'post',
+						beforeSend: function () {
+								
+						},
+						success:  function (response) {
+								//url = 'index.php';
+								//$(location).attr('href',url);
+								
+						}
+					});
+				}
+
+				$(document).on('click','.notifi', function(){
+					usersid =  $(this).attr('id');
+					notificacionLeida(usersid);
+				});
+				$('.notificaciones').append('".$cadNotificaciones."');
+			});
+			</script>";	
 			
 			
 				
@@ -206,6 +254,29 @@ function menu($usuario,$titulo,$rol,$empresa) {
 }
 
 function menuD($usuario,$titulo,$rol,$empresa) {
+
+	require_once 'funcionesReferencias.php';
+
+	$referencias	= new ServiciosReferencias();
+
+
+	$lstNotificaciones = $referencias->traerNotificaciones();
+
+	$nuevas = $referencias->traerNotificacionesNoLeida();
+
+	$cadNotificaciones = '';
+	while ($row = mysql_fetch_array($lstNotificaciones)) {
+		if ($row['leido'] == 'Si') {
+			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" style="background-color:#D3D3D3;" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,40).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+		} else {
+			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,40).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+		}
+
+		
+	}
+
+	$cadNotificaciones .= '<li><div><a href="../notificaiones/" class="list-group-item notifi" id="0"><i class="glyphicon glyphicon-inbox"></i> VER TODAS LAS NOTIFICAIONES.</a></div></li>';
+	
 	
 	$sqlGrupo1 = "select idmenu,url,icono, nombre, permiso from predio_menu where permiso like '%".$rol."%' and grupo = 1 order by orden";
 	$resGrupo1 = $this->query($sqlGrupo1,0);
@@ -256,7 +327,7 @@ function menuD($usuario,$titulo,$rol,$empresa) {
 		$cad7 .= '<li><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';	
 	}
 	
-	$cad = '<nav class="navbar navbar-default">
+	$cad = '<form role="form"><nav class="navbar navbar-default">
 			  <div class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
@@ -295,13 +366,48 @@ function menuD($usuario,$titulo,$rol,$empresa) {
 						'.$cad7.'
 					  </ul>
 					</li>
+					
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-bell"></span> Notificaciones <span class="label label-danger">'.$nuevas.'</span><span class="caret"></span></a>
+					  <ul class="dropdown-menu dropdown-alerts notificaciones">
+						
+					  </ul>
+					</li>
+
 					<li><a href="#"><span class="glyphicon glyphicon-user"></span> '.$usuario.'</a></li>
 					<li><a href="../logout.php"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
 				  </ul>
 				  
 				</div><!-- /.navbar-collapse -->
 			  </div><!-- /.container-fluid -->
-			</nav>';	
+			</nav>
+			</form>
+			<script type="text/javascript">';
+			$cad .= "$(document).ready(function(){
+				
+				function notificacionLeida(id) {
+					$.ajax({
+						data:  {id: id, accion: 'marcarNotificacion'},
+						url:   '****/ajax/ajax.php',
+						type:  'post',
+						beforeSend: function () {
+								
+						},
+						success:  function (response) {
+								//url = 'index.php';
+								//$(location).attr('href',url);
+								
+						}
+					});
+				}
+
+				$(document).on('click','.notifi', function(){
+					usersid =  $(this).attr('id');
+					notificacionLeida(usersid);
+				});
+				$('.notificaciones').append('".$cadNotificaciones."');
+			});
+			</script>";	
 	return $cad;
 }
 

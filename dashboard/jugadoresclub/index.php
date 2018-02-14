@@ -58,10 +58,10 @@ $refCampo 	=  array();
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 if ($_SESSION['idroll_predio'] == 4) {
-	$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrie($_SESSION['club_predio']);
+	$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_SESSION['club_predio']);
 	$refClub = $_SESSION['club_predio'];
 } else {
-	$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrie($_GET['id']);	
+	$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_GET['id']);	
 	$refClub = $_GET['id'];
 }
 

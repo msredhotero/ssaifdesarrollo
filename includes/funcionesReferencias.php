@@ -3588,6 +3588,16 @@ return $res;
 } 
 
 
+function modificarEstadoDocumentacionjugadorimagenesPorId($id,$refestados) { 
+$sql = "update dbdocumentacionjugadorimagenes 
+set 
+refestados = ".$refestados." 
+where iddocumentacionjugadorimagen =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
 function eliminarDocumentacionjugadorimagenes($id) { 
 $sql = "delete from dbdocumentacionjugadorimagenes where iddocumentacionjugadorimagen =".$id; 
 $res = $this->query($sql,0); 
@@ -12813,7 +12823,7 @@ return $res;
 
 
 function traerJugadoresprePorId($id) {
-$sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios from dbjugadorespre where idjugadorpre =".$id;
+$sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios,numeroserielote from dbjugadorespre where idjugadorpre =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -12842,6 +12852,11 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function traerEstados() {
+    $sql = "select * from tbestados";
+    $res = $this->query($sql,0);
+    return $res;
+}
 
 function presentardocumentacion($id) {
 
@@ -12915,8 +12930,8 @@ function traerReferente($nrodocumento) {
 /* PARA Notificaciones */
 
 function insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url) { 
-$sql = "insert into dbnotificaciones(idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha,url) 
-values ('','".utf8_decode($mensaje)."',".$idpagina.",'".utf8_decode($autor)."','".utf8_decode($destinatario)."',".$id1.",".$id2.",".$id3.",'".utf8_decode($icono)."','".utf8_decode($estilo)."','".utf8_decode($fecha)."','".utf8_decode($url)."')"; 
+$sql = "insert into dbnotificaciones(idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha,url,leido) 
+values ('','".utf8_decode($mensaje)."',".$idpagina.",'".utf8_decode($autor)."','".utf8_decode($destinatario)."',".$id1.",".$id2.",".$id3.",'".utf8_decode($icono)."','".utf8_decode($estilo)."','".utf8_decode($fecha)."','".utf8_decode($url)."',0)"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -12931,12 +12946,22 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+function marcarNotificacion($id) {
+    $sql = "update dbnotificaciones 
+    set 
+    leido = 1
+    where idnotificacion =".$id; 
+    $res = $this->query($sql,0); 
+    return $res; 
+}
+
 
 function eliminarNotificaciones($id) { 
 $sql = "delete from dbnotificaciones where idnotificacion =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
+
 
 
 function traerNotificaciones() { 
@@ -12952,16 +12977,29 @@ n.id3,
 n.icono,
 n.estilo,
 n.fecha,
-n.url
+n.url,
+(case when n.leido = 1 then 'Si' else 'No' end) as leido
 from dbnotificaciones n 
-order by 1"; 
+order by n.leido, n.fecha desc"; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
 
+function traerNotificacionesNoLeida() { 
+$sql = "select 
+count(*)
+from dbnotificaciones
+where leido = 0"; 
+$res = $this->query($sql,0); 
+if (mysql_num_rows($res)>0) {
+    return mysql_result($res, 0,0);
+}
+return 0; 
+} 
+
 
 function traerNotificacionesPorId($id) { 
-$sql = "select idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha,url from dbnotificaciones where idnotificacion =".$id; 
+$sql = "select idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha,url,(case when leido = 1 then 'Si' else 'No' end) as leido from dbnotificaciones where idnotificacion =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
@@ -12979,7 +13017,8 @@ n.id3,
 n.icono,
 n.estilo,
 n.fecha,
-n.url
+n.url,
+(case when n.leido = 1 then 'Si' else 'No' end) as leido
 from dbnotificaciones n
 WHERE n.idpagina = ".$idpagina." or (n.id1 = ".$id1." or n.id2 = ".$id2." or n.id3 = ".$id3.")
 order by n.fecha desc";
@@ -13001,7 +13040,8 @@ n.id3,
 n.icono,
 n.estilo,
 n.fecha,
-n.url
+n.url,
+(case when n.leido = 1 then 'Si' else 'No' end) as leido
 from dbnotificaciones n
 WHERE n.idpagina = ".$idpagina." and n.id1 = ".$id1." and n.id2 = ".$id2." and n.id3 = ".$id3."
 order by n.fecha desc";
@@ -13023,7 +13063,8 @@ n.id3,
 n.icono,
 n.estilo,
 n.fecha,
-n.url
+n.url,
+(case when n.leido = 1 then 'Si' else 'No' end) as leido
 from dbnotificaciones n
 WHERE n.idpagina = ".$idpagina." and n.id1 = ".$id1." and n.id2 = ".$id2."
 order by n.fecha desc";
@@ -13044,7 +13085,8 @@ n.id3,
 n.icono,
 n.estilo,
 n.fecha,
-n.url
+n.url,
+(case when n.leido = 1 then 'Si' else 'No' end) as leido
 from dbnotificaciones n
 WHERE n.idpagina = ".$idpagina." and n.id1 = ".$id1."
 order by n.fecha desc";
