@@ -646,6 +646,10 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 
 			$('.abrir').click();
 
+			$('#generarFicha').click(function() {
+				window.open("../../reportes/rptAltaSocio.php?id=<?php echo $id; ?>" ,'_blank');	
+			});
+
 			function eliminarFoto(documentacion, jugador) {
 				$.ajax({
 					data:  {documentacion: documentacion, 
