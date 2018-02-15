@@ -746,7 +746,7 @@ function eliminarJugadorespre($serviciosReferencias) {
 
 	$res = $serviciosReferencias->traerJugadoresprePorId($id);	
 
-	if ( (integer)msql_result($res, 0,'idusuario') > 0) {
+	if ( (integer)mysql_result($res, 0,'idusuario') > 0) {
 		echo 'No se puede borrar el jugador ya que se registro como usuario en el sistema, comunicarse con la Asociacion para resolverlo.';
 
 	} else {
