@@ -1126,7 +1126,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            	<div class="col-sm-12">
 		            		<div class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> Si ya cargo sus datos persoales foto, foto del documento (frente y dorsal), entonces puede presentar la documentación para que la Asociacion la apruebe y puede generar la "FICHA DEL JUGADOR"</div>
 		            	</div>
-		            	
+
 		            	<div class="col-sm-12">
 		            		<div class="alert alert-warning"><span class="glyphicon glyphicon-info-sign"></span> PRESIONE EL BOTON AMARILLO DE PRESENTAR PARA QUE LA AIF VALIDE SU DOCUMENTACION Y SE LE GENERE LA FICHA DEL JUGADOR LA CUAL DEBERA SER FIRMADA POR UD Y ENTREGADA POR SU DELEGADO EN LAS OFICINAS DE LA AIF.</div>
 		            	</div>
@@ -1672,14 +1672,40 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
+			    <?php 
+			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    ?>
 			    initialPreview: [
+			    	'https://www.saupureinconsulting.com.ar/data/<?php echo $id; ?>/<?php echo mysql_result($resExpensa,0,'imagen'); ?>'
+			    ],
+
+			    <?php
+				} else {
+				?>
+				initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
 			    ],
+				<?php
+				}
+				?>
 			    initialPreviewAsData: false, // allows you to set a raw markup
+    			<?php 
+			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    ?>
+			    initialPreviewFileType: 'pdf',
+			    initialPreviewConfig: [
+				    {type: "pdf", size: 8000, caption: "<?php echo mysql_result($resExpensa,0,'imagen'); ?>",  key: 1}
+				],
+			    <?php
+				} else {
+				?>
     			initialPreviewFileType: 'image',
 			    initialPreviewConfig: [
 				    {caption: "<?php echo mysql_result($resTitulo,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resTitulo,0,0); ?>', key: 1}
 				],
+				<?php
+				}
+				?>
 				purifyHtml: true, // this by default purifies HTML data for preview
 			    uploadExtraData: {
 			        img_key: "1000",
