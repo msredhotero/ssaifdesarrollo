@@ -1685,11 +1685,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 				initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
 			    ],
-			    initialPreviewFileType: 'image',
 				<?php
 				}
 				?>
-			    initialPreviewAsData: false, // allows you to set a raw markup
+				initialPreviewFileType: 'image',
+			    initialPreviewAsData: true, // allows you to set a raw markup
     			<?php 
 			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
 			    ?>
