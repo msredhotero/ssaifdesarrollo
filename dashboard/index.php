@@ -1676,7 +1676,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreview: [
-			    	'https://www.saupureinconsulting.com.ar/data/<?php echo $id; ?>/<?php echo mysql_result($resExpensa,0,'imagen'); ?>'
+			    	'https://www.saupureinconsulting.com.ar/aifzn/data/<?php echo mysql_result($resExpensa,0,0); ?>/<?php echo mysql_result($resExpensa,0,'imagen'); ?>'
 			    ],
 
 			    <?php
