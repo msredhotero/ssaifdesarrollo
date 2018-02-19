@@ -1723,9 +1723,9 @@ if ($_SESSION['idroll_predio'] == 4) {
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
 			        // note for these file types below no extension determination logic 
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<i class="fa fa-file-photo-o text-danger"></i>', 
+			        'jpg': '<img src="../imagenes/sin_img.jpg">', 
 			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<i class="fa fa-file-photo-o text-primary"></i>'    
+			        'png': '<img src="../imagenes/sin_img.jpg">'    
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
