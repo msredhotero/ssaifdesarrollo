@@ -1715,7 +1715,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			        'doc': '<i class="fa fa-file-word-o text-primary"></i>',
 			        'xls': '<i class="fa fa-file-excel-o text-success"></i>',
 			        'ppt': '<i class="fa fa-file-powerpoint-o text-danger"></i>',
-			        'pdf': '<i class="fa fa-file-pdf-o text-danger"></i>',
+			        'pdf': '<img src="../imagenes/pdf.png">',
 			        'zip': '<i class="fa fa-file-archive-o text-muted"></i>',
 			        'htm': '<i class="fa fa-file-code-o text-info"></i>',
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
