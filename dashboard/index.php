@@ -1052,26 +1052,12 @@ if ($_SESSION['idroll_predio'] == 4) {
 					    </div>
 					  </div>
 					</div>
+
+					<div class="alert alert-predio">
+					<p><b><span class="glyphicon glyphicon-info-sign"></span> PASO 1</b> POR FAVOR CONTROLE TODOS SUS DATOS PERSONALES. SOLO SE PUEDEN MODIFICAR LOS CAMPOS HABILITADOS EN BLANCO</p>
+					</div>
 		        	<form class="form-inline formulario" role="form" enctype="multipart/form-data">
-		        	<div class="row">
-		        		<div class="col-sm-3 text-center">
-
-		        		</div>
-						<div class="col-sm-6 text-center">
-				            <div class="kv-avatar">
-				                <div class="file-loading">
-				                    <input id="avatar-1" name="avatar-1" type="file" value="<?php echo $foto1; ?>" required>
-				                </div>
-				            </div>
-				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 2000 KB</small></div>
-				        </div>
-				        <div class="col-sm-3 text-center">
-				        <h4><span class="<?php echo $spanFoto; ?>"></span> Estado: <b><?php echo $estadoFoto; ?></b></h4>
-				        <ul class="list-form mensajesFoto">
-
-				        </ul>
-				        </div>
-		            </div>
+		        	
 					<div class="row">
 					<?php echo $formulario; ?>
 					<input type="hidden" id="nrodocumento" name="nrodocumento" value="<?php echo mysql_result($resResultado, 0,'nrodocumento'); ?>">
@@ -1080,51 +1066,76 @@ if ($_SESSION['idroll_predio'] == 4) {
 					<input type="hidden" id="numeroserielote" name="numeroserielote" value="<?php echo mysql_result($resResultado, 0,'numeroserielote'); ?>">
 					<input type="hidden" id="id" name="id" value="<?php echo mysql_result($resResultado, 0,0); ?>">
 		            </div>
-		            
+
 		            <div class="row">
-						<div class="col-sm-6 text-center">
-							<h4>Foto del Documento del frente</h4>
-				            <div class="kv-avatar">
+		        		<div class="col-md-4 text-center">
+		        			<div class="alert alert-predio" role="alert">
+		        			<strong><span class="glyphicon glyphicon-info-sign"></span> PASO 2</strong> PROCEDA A CARGAR SU FOTO PERSONAL. LA MISMA DEBE TENER UN FONDO LISO. PUEDE OPTAR POR TOMARSE UNA FOTO CON SU SMARTPHONE O SUBIR UNA EXISTENTE. (RECOMENDACIÓN ADICIONAL, SUBIR LA FOTO VISTIENDO LA CAMISETA DEL COUNTRY) PARA SUBIR LA FOTO DEBE HACER CLICK EN LA CARPETA AZUL.
+		        			</div>
+		        			<div class="kv-avatar">
 				                <div class="file-loading">
-				                    <input id="avatar-2" name="avatar-2" value="<?php echo $foto2; ?>" type="file" required>
+				                    <input id="avatar-1" name="avatar-1" type="file" value="<?php echo $foto1; ?>" required>
 				                </div>
 				            </div>
-				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
+				            <h4><span class="<?php echo $spanFoto; ?>"></span> Estado: <b><?php echo $estadoFoto; ?></b></h4>
+					        <ul class="list-form mensajesFoto">
 
-				            <h4><span class="<?php echo $spanNroDoc; ?>"></span> Estado: <b><?php echo $estadoNroDoc; ?></b></h4>
-				            <ul class="list-form mensajesDocumento">
+					        </ul>
+		        		</div>
+						<div class="col-sm-8 text-center">
+							<div class="col-md-12">
+								<div class="alert alert-predio" role="alert">
+			        			<strong><span class="glyphicon glyphicon-info-sign"></span> PASO 3</strong> SUBA UNA FOTO DE SU DNI TARJETA DE AMBOS LADOS. PROCURE QUE TODOS LOS DATOS SEAN LEGIBLES Y QUE LA CAMARA ESTE LO MAS CERCA POSIBLE DENTRO DE LOS LIMITES DEL DNI. SAQUE LA FOTO CON EL CELULAR EN HORIZONTAL.
+			        			</div>
+							</div>
+							<div class="col-md-6">
+					            <h4>Foto del Documento del frente</h4>
+					            <div class="kv-avatar">
+					                <div class="file-loading">
+					                    <input id="avatar-2" name="avatar-2" value="<?php echo $foto2; ?>" type="file" required>
+					                </div>
+					            </div>
+					            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
 
-				        	</ul>
+					            <h4><span class="<?php echo $spanNroDoc; ?>"></span> Estado: <b><?php echo $estadoNroDoc; ?></b></h4>
+					            <ul class="list-form mensajesDocumento">
+
+					        	</ul>
+					        </div>
+					        <div class="col-md-6">
+
+					        	<h4>Foto del Documento del dorso</h4>
+					            <div class="kv-avatar">
+					                <div class="file-loading">
+					                    <input id="avatar-3" name="avatar-3" type="file" required>
+					                </div>
+					            </div>
+					            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
+
+					            <h4><span class="<?php echo $spanNroDocDorso; ?>"></span> Estado: <b><?php echo $estadoNroDocDorso; ?></b></h4>
+					            <ul class="list-form mensajesDocumentoDorso">
+
+					        	</ul>
+					        </div>
 				        </div>
-
-				        <div class="col-sm-6 text-center">
-							<h4>Foto del Documento del dorso</h4>
-				            <div class="kv-avatar">
-				                <div class="file-loading">
-				                    <input id="avatar-3" name="avatar-3" type="file" required>
-				                </div>
-				            </div>
-				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
-
-				            <h4><span class="<?php echo $spanNroDocDorso; ?>"></span> Estado: <b><?php echo $estadoNroDocDorso; ?></b></h4>
-				            <ul class="list-form mensajesDocumentoDorso">
-
-				        	</ul>
-				        </div>
-
 		            </div>
-
+		            
 		            <hr>
 		            <div class="row">
 		            	<div class="col-sm-12">
 		            		<div class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> Si ya cargo sus datos persoales foto, foto del documento (frente y dorsal), entonces puede presentar la documentación para que la Asociacion la apruebe y puede generar la "FICHA DEL JUGADOR"</div>
 		            	</div>
+		            	
 		            	<div class="col-sm-12">
-		            		<div class="alert alert-warning"><span class="glyphicon glyphicon-info-sign"></span> Una vez presenada la documentación no podrá volver a moificarla. En caso de rechazo sera notificado por email y deberá corregir los datos necesarios.-</div>
+		            		<div class="alert alert-warning"><span class="glyphicon glyphicon-info-sign"></span> PRESIONE EL BOTON AMARILLO DE PRESENTAR PARA QUE LA AIF VALIDE SU DOCUMENTACION Y SE LE GENERE LA FICHA DEL JUGADOR LA CUAL DEBERA SER FIRMADA POR UD Y ENTREGADA POR SU DELEGADO EN LAS OFICINAS DE LA AIF.</div>
 		            	</div>
 		            	<div class="col-sm-12">
 		            		<ul class="list-inline">
 		            			<li>Acciones: </li>
+		            			<li>
+			                    	<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
+			                    </li>
 		            			<?php
 		            				if (($idEstadoFoto == 1) && ($idEstadoNroDoc == 1) && ($idEstadoNroDocDorso == 1)) {
 		            			?>
@@ -1159,10 +1170,19 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 
 
+		            <div class="row">
+						<div class="col-md-12 text-center">
+
+							<div class="alert alert-predio" role="alert">
+		        			<strong><span class="glyphicon glyphicon-info-sign"></span> PASO 4</strong> ADEMAS DEBERA PRESENTAR LA SIGUIENTE DOCUMENTACION. ESCRITURA, EXPENSA Y EN EL CASO QUE CORRESPONDA PARTIDA DE NACIMIENTO/LIBRETA DE MATRIMONIO (ESTAS TRES EN FORMA ONLINE Y SEGUIDAMENTE SE DETALLAN LOS ESPACIOS PARA CARGAR LA MISMA) SE RECOMIENDA LA UTILIZACION DE LA APP CAMSCANNER PARA REALIZAR ESTOS PASOS.
+		        			</div>
+
+						</div>
+					</div>
 
 		            <div class="row">
-						<div class="col-sm-6 text-center">
-							<h4>Escritura (Comprimido)</h4>
+						<div class="col-sm-4 text-center">
+							<h4>Escritura (COMPRIMIDO DEL TIPO .RAR )</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-4" name="avatar-4" type="file" required>
@@ -1176,8 +1196,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 				        	</ul>
 				        </div>
 
-				        <div class="col-sm-6 text-center">
-							<h4>Expensas (.pdf)</h4>
+				        <div class="col-sm-4 text-center">
+							<h4>Expensas (imagen o pdf)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-5" name="avatar-5" type="file" required>
@@ -1191,12 +1211,9 @@ if ($_SESSION['idroll_predio'] == 4) {
 				        	</ul>
 				        </div>
 
-		            </div>
 
-
-		            <div class="row">
-						<div class="col-sm-6 text-center">
-							<h4>Partida de Nacimiento (Comprimido)</h4>
+				        <div class="col-sm-4 text-center">
+							<h4>Partida de Nacimiento (pdf)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-6" name="avatar-6" type="file" required>
@@ -1210,8 +1227,17 @@ if ($_SESSION['idroll_predio'] == 4) {
 				        	</ul>
 				        </div>
 
-
 		            </div>
+
+		            <div class="row" style="margin-top:30px;">
+						<div class="col-md-12 text-center">
+
+							<div class="alert alert-predio" role="alert">
+		        			<strong><span class="glyphicon glyphicon-info-sign"></span></strong> ADEMAS DEBERA PRESENTAR POR MEDIO DE SU DELEGADO LA SIGUIETE DOCUMENTACION EN ORIGINAL: EL ESTUDIO/APTO MEDICO (VER LO ESTIPULADO EN EL REGLAMENTO), EL INFORME DE DOMINIO, LA FICHA DEL JUGADOR IMPRESA Y FIRMADA ANTERIORMENTE, Y EN LOS CASOS QUE CORRESPONDAN LA UNION CONVIVENCIAL Y LIBROS RUBRICADOS DE S.A.
+		        			</div>
+
+						</div>
+					</div>
 		            
 		            
 		            <div class='row' style="margin-left:25px; margin-right:25px;">
@@ -1222,17 +1248,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                
 		                </div>
 		            </div>
-		            
-		            
-		            <div class="row">
-		                <div class="col-md-12">
-		                <ul class="list-inline" style="margin-top:15px;">
-		                    <li>
-		                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
-		                    </li>
-		                </ul>
-		                </div>
-		            </div>
+
 		            </form>
 		    	</div>
 		    </div>
@@ -1344,7 +1360,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoFoto == 0) || ($idEstadoFoto == 1) || ($idEstadoFoto == 4)) {
 			    ?>
@@ -1423,7 +1439,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoNroDoc == 0) || ($idEstadoNroDoc == 1) || ($idEstadoNroDoc == 4)) {
 			    ?>
@@ -1468,7 +1484,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoNroDoc == 0) || ($idEstadoNroDoc == 1) || ($idEstadoNroDoc == 4)) {
 			    ?>
@@ -1507,7 +1523,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoNroDocDorso == 0) || ($idEstadoNroDocDorso == 1) || ($idEstadoNroDocDorso == 4)) {
 			    ?>
@@ -1552,7 +1568,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoNroDocDorso == 0) || ($idEstadoNroDocDorso == 1) || ($idEstadoNroDocDorso == 4)) {
 			    ?>
@@ -1591,7 +1607,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["rar","jpg", "png", "gif"],
 			    initialPreview: [
@@ -1626,7 +1642,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["rar","jpg", "png", "gif"]
 			});
@@ -1653,7 +1669,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-5',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
 			    initialPreview: [
@@ -1688,7 +1704,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-5',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"]
 			});
@@ -1716,7 +1732,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-6',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png"],
 			    initialPreview: [
@@ -1751,7 +1767,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-6',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["rar","jpg", "png"]
 			});

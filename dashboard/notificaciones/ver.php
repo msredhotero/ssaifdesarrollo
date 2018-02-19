@@ -35,6 +35,8 @@ $id = $_GET['id'];
 
 $resResultado = $serviciosReferencias->traerNotificacionesPorId($id);
 
+$serviciosReferencias->marcarNotificacion($id);
+
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Notificacion";

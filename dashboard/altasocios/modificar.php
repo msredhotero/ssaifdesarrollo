@@ -467,8 +467,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 		            		<div class="form-group col-md-6" style="display:block">
 								<label for="apellido" class="control-label" style="text-align:left">Mensaje</label>
 								<div class="input-group col-md-12">
-									<textarea class="form-control" name="mensaje" id="mensaje" col="50" row="10">
-									</textarea>
+									<input type="text" class="form-control" name="mensaje" id="mensaje">
 								</div>
 							</div>
 							<input type="hidden" name="idpagina" id="idpagina" value="0"/>
@@ -497,7 +496,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 		            		<ul class="list-inline">
 		            			<li>Acciones: </li>
 		            			<li>
-		            				<button type="button" class="btn btn-success" id="generarFicha"style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Generar Ficha Jugador</button>
+		            				<button type="button" class="btn btn-info" id="generarFicha"style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Generar Ficha Jugador</button>
 		            			</li>
 		            			<li>
 		            				<button type="button" class="btn btn-success" id="notificar" style="margin-left:0px;"><span class="glyphicon glyphicon-envelope"></span> Generar Notificacion</button>
@@ -511,7 +510,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 
 
 		            <div class="row">
-						<div class="col-sm-6 text-center">
+						<div class="col-sm-4 text-center">
 							<h4>Escritura (Comprimido)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
@@ -532,7 +531,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 							</div>
 				        </div>
 
-				        <div class="col-sm-6 text-center">
+				        <div class="col-sm-4 text-center">
 							<h4>Expensas (.pdf)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
@@ -553,11 +552,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 							</div>
 				        </div>
 
-		            </div>
-
-
-		            <div class="row">
-						<div class="col-sm-6 text-center">
+				        <div class="col-sm-4 text-center">
 							<h4>Partida de Nacimiento (Comprimido)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
@@ -577,7 +572,6 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 								<button type="button" class="btn btn-primary guardarEstado" id="<?php echo $id6; ?>" style="margin-left:0px;">Guardar Estado</button>
 							</div>
 				        </div>
-
 
 		            </div>
 		            
@@ -700,6 +694,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 							estilo: estilo,
 							fecha: fecha,
 							url: url,
+							email: '<?php echo mysql_result($resResultado,0,'email'); ?>',
 							accion: 'generarNotificacion'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
@@ -770,7 +765,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoFoto == 0) || ($idEstadoFoto == 1) || ($idEstadoFoto == 4)) {
 			    ?>
@@ -849,7 +844,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoNroDoc == 0) || ($idEstadoNroDoc == 1) || ($idEstadoNroDoc == 4)) {
 			    ?>
@@ -894,7 +889,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoNroDoc == 0) || ($idEstadoNroDoc == 1) || ($idEstadoNroDoc == 4)) {
 			    ?>
@@ -933,7 +928,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoNroDocDorso == 0) || ($idEstadoNroDocDorso == 1) || ($idEstadoNroDocDorso == 4)) {
 			    ?>
@@ -978,7 +973,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    <?php
 			    if (($idEstadoNroDocDorso == 0) || ($idEstadoNroDocDorso == 1) || ($idEstadoNroDocDorso == 4)) {
 			    ?>
@@ -1017,7 +1012,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["rar","jpg", "png", "gif"],
 			    initialPreview: [
@@ -1052,7 +1047,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["rar","jpg", "png", "gif"]
 			});
@@ -1079,7 +1074,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-5',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
 			    initialPreview: [
@@ -1114,7 +1109,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-5',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"]
 			});
@@ -1142,7 +1137,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-6',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png"],
 			    initialPreview: [
@@ -1177,7 +1172,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-6',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["rar","jpg", "png"]
 			});

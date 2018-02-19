@@ -1465,7 +1465,7 @@ class Servicios {
 														<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
 															<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
 															<div class="input-group col-md-12">
-																<a href="../'.(utf8_encode(mysql_result($resMod,0,$row[0])) == '' ? "#" : utf8_encode(mysql_result($resMod,0,$row[0]))).'">Ir</a>
+																<span class="glyphicon glyphicon-link"></span> <a href="../'.(utf8_encode(mysql_result($resMod,0,$row[0])) == '' ? "#" : utf8_encode(mysql_result($resMod,0,$row[0]))).'">Acceder</a>
 															</div>
 														</div>
 														

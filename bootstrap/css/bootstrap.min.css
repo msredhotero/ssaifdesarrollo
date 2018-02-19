@@ -8,11 +8,27 @@
 .panel-predio{border-color: #af7100}
 .panel-predio>.panel-heading{color:#000;background-color:#cf8a0d;border-color: #af7100; text-shadow:1px 1px 1px #a2800a; font-weight:bold;}
 .panel-predio>.panel-heading+.panel-collapse .panel-body{border-top-color:#af7100}
-.panel-predio>.panel-footer+.panel-collapse .panel-body{border-bottom-color:#af7100} .alert-predio{background: rgba(255,175,75,1);
-background: -moz-linear-gradient(top, rgba(255,175,75,1) 0%, rgba(255,146,10,1) 100%);
-background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,175,75,1)), color-stop(100%, rgba(255,146,10,1)));
-background: -webkit-linear-gradient(top, rgba(255,175,75,1) 0%, rgba(255,146,10,1) 100%);
-background: -o-linear-gradient(top, rgba(255,175,75,1) 0%, rgba(255,146,10,1) 100%);
-background: -ms-linear-gradient(top, rgba(255,175,75,1) 0%, rgba(255,146,10,1) 100%);
-background: linear-gradient(to bottom, rgba(255,175,75,1) 0%, rgba(255,146,10,1) 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffaf4b', endColorstr='#ff920a', GradientType=0 );}
+.panel-predio>.panel-footer+.panel-collapse .panel-body{border-bottom-color:#af7100} .alert-predio{color:#FFF;
+text-shadow: 1px 1px #45813f;
+background: linear-gradient(177deg, #5cbf52, #224e1d);
+background-size: 400% 400%;
+
+-webkit-animation: AnimationName 24s ease infinite;
+-moz-animation: AnimationName 24s ease infinite;
+animation: AnimationName 24s ease infinite;
+
+@-webkit-keyframes AnimationName {
+    0%{background-position:0% 37%}
+    50%{background-position:100% 64%}
+    100%{background-position:0% 37%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:0% 37%}
+    50%{background-position:100% 64%}
+    100%{background-position:0% 37%}
+}
+@keyframes AnimationName { 
+    0%{background-position:0% 37%}
+    50%{background-position:100% 64%}
+    100%{background-position:0% 37%}
+}}

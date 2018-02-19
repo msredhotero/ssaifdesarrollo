@@ -615,11 +615,18 @@ function generarNotificacion($serviciosReferencias) {
 	$estilo = $_POST['estilo']; 
 	$fecha = date('Y-m-d H:i:s'); 
 	$url = $_POST['url']; 
-	
+	$email = $_POST['email']; 
 
 	$res = $serviciosReferencias->insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url); 
 	
 	if ((integer)$res > 0) { 
+		$destinatario = $email;
+		$asunto = "Su Ficha se encuantra en estado: ".$icono;
+		$cuerpo = '<p>'.$mensaje.'</p>';
+		if ($icono == 'Aceptado') {
+			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>';
+		}
+		$serviciosReferencias->enviarEmail($destinatario,$asunto,$cuerpo, $referencia='');
 		echo ''; 
 	} else { 
 		echo 'Huvo un error al insertar datos';	 
