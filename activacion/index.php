@@ -39,11 +39,7 @@ if (mysql_num_rows($codActivacion) > 0) {
         $destinatario = $email;
         $asunto = "El Usuario ".$nombrecompleto." se Activo Correctamente";
         $cuerpo .= "<h3>Gracias por registrarse en AIFZN.</h3><br>";
-        $cuerpo .= "<h4>Sus datos actuales son:</h4><br>";
-        $cuerpo .= "<p>Apellido: <b>".mysql_result($JugadorPre,0,'apellido')."</b></p><br>";
-        $cuerpo .= "<p>Nombre: <b>".mysql_result($JugadorPre,0,'nombres')."</b></p><br>";
-        $cuerpo .= "<p>Nro Documento: <b>".$nrodocumento."</b></p><br>";
-        $cuerpo .= "<p>Fecha Nacimiento: <b>".mysql_result($JugadorPre,0,'fechanacimiento')."</b></p><br><br><br>";
+        
 
         $cuerpo .= "<h4>Ya puede comenzar a cargar sus datos personales <a href='http://www.saupureinconsulting.com.ar/aifzn/'>AQUI</a></h4>";
 

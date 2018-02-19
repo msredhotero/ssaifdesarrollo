@@ -759,8 +759,8 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 				$urlImg = "../../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
 			?>
 			$("#avatar-1").fileinput({
-			    overwriteInitial: true,
-			    maxFileSize: 2000,
+			    overwriteInitial: false,
+			    maxFileSize: 6000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -770,20 +770,32 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
-			    defaultPreviewContent: '<img src="../../uploads/jugador.png" alt="Your Avatar">',
+			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoFoto == 0) || ($idEstadoFoto == 1) || ($idEstadoFoto == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
-			    	"<img src='<?php echo $urlImg; ?>' width='100%' height='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    	"<img src='<?php echo $urlImg; ?>' class='kv-preview-data file-preview-image' alt='Foto Perfil' title='Foto Perfil'>"
 			    ],
+			    initialPreviewAsData: false, // allows you to set a raw markup
+    			initialPreviewFileType: 'image',
 			    initialPreviewConfig: [
-				    {
-				        caption: '<?php echo mysql_result($resFoto,0,'imagen'); ?>', 
-				        width: '50%', 
-				        key: 100, 
-				        extra: {id: 100}
-				    }
-				]
+				    {caption: "<?php echo mysql_result($resFoto,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resFoto,0,0); ?>', key: 1}
+				],
+				purifyHtml: true, // this by default purifies HTML data for preview
+			    uploadExtraData: {
+			        img_key: "1000",
+			        img_keywords: "happy, places"
+			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(1,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
 	        });
@@ -793,7 +805,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 	    	?>
 	    	$("#avatar-1").fileinput({
 			    overwriteInitial: true,
-			    maxFileSize: 2000,
+			    maxFileSize: 6000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -804,7 +816,17 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/jugador.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoFoto == 0) || ($idEstadoFoto == 1) || ($idEstadoFoto == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 	    	<?php	
@@ -816,8 +838,8 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 				$urlImg = "../../data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
 			?>
 			$("#avatar-2").fileinput({
-			    overwriteInitial: true,
-			    maxFileSize: 5500,
+			    overwriteInitial: false,
+			    maxFileSize: 6000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -828,19 +850,31 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoNroDoc == 0) || ($idEstadoNroDoc == 1) || ($idEstadoNroDoc == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
-			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    	"<img src='<?php echo $urlImg; ?>' class='kv-preview-data file-preview-image' alt='Foto Documento Frente' title='Foto Documento Frente'>"
 			    ],
+			    initialPreviewAsData: false, // allows you to set a raw markup
+    			initialPreviewFileType: 'image',
 			    initialPreviewConfig: [
-				    {
-				        caption: '<?php echo mysql_result($resFotoDocumento,0,'imagen'); ?>', 
-				        width: '150px', 
-				        key: 100, 
-				        extra: {id: 100}
-				    }
-				]
+				    {caption: "<?php echo mysql_result($resFotoDocumento,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resFotoDocumento,0,0); ?>', key: 1}
+				],
+				purifyHtml: true, // this by default purifies HTML data for preview
+			    uploadExtraData: {
+			        img_key: "1000",
+			        img_keywords: "happy, places"
+			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(2,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
 	        });
@@ -850,7 +884,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 	    	?>
 	    	$("#avatar-2").fileinput({
 			    overwriteInitial: true,
-			    maxFileSize: 5500,
+			    maxFileSize: 6000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -861,7 +895,17 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoNroDoc == 0) || ($idEstadoNroDoc == 1) || ($idEstadoNroDoc == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
@@ -879,7 +923,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			?>
 			$("#avatar-3").fileinput({
 			    overwriteInitial: true,
-			    maxFileSize: 5500,
+			    maxFileSize: 6000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -890,19 +934,31 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoNroDocDorso == 0) || ($idEstadoNroDocDorso == 1) || ($idEstadoNroDocDorso == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
-			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Foto Documento Dorso' title='Foto Documento Dorso'>",
 			    ],
+			    initialPreviewAsData: false, // allows you to set a raw markup
+    			initialPreviewFileType: 'image',
 			    initialPreviewConfig: [
-				    {
-				        caption: 'IMG_20160805_155004.jpg', 
-				        width: '150px', 
-				        key: 100, 
-				        extra: {id: 100}
-				    }
-				]
+				    {caption: "<?php echo mysql_result($resFotoDocumentoDorso,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resFotoDocumentoDorso,0,0); ?>', key: 1}
+				],
+				purifyHtml: true, // this by default purifies HTML data for preview
+			    uploadExtraData: {
+			        img_key: "1000",
+			        img_keywords: "happy, places"
+			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(99,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
 	        });
@@ -912,7 +968,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 	    	?>
 	    	$("#avatar-3").fileinput({
 			    overwriteInitial: true,
-			    maxFileSize: 5500,
+			    maxFileSize: 6000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -923,7 +979,17 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    elErrorContainer: '#kv-avatar-errors-1',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
+			    <?php
+			    if (($idEstadoNroDocDorso == 0) || ($idEstadoNroDocDorso == 1) || ($idEstadoNroDocDorso == 4)) {
+			    ?>
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    <?php
+				} else {
+				?>
+				layoutTemplates: {actionDelete: "", main2: '{preview}'},
+				<?php
+				} 
+				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
@@ -940,7 +1006,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 				$urlImg = "../../data/".mysql_result($resTitulo,0,0)."/".mysql_result($resTitulo,0,'imagen');
 			?>
 			$("#avatar-4").fileinput({
-			    overwriteInitial: true,
+			    overwriteInitial: false,
 			    maxFileSize: 30000,
 			    showClose: false,
 			    showCaption: false,
@@ -955,16 +1021,18 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["rar","jpg", "png", "gif"],
 			    initialPreview: [
-			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
 			    ],
+			    initialPreviewAsData: false, // allows you to set a raw markup
+    			initialPreviewFileType: 'rar',
 			    initialPreviewConfig: [
-				    {
-				        caption: 'IMG_20160805_155004.jpg', 
-				        width: '150px', 
-				        key: 100, 
-				        extra: {id: 100}
-				    }
-				]
+				    {caption: "<?php echo mysql_result($resTitulo,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resTitulo,0,0); ?>', key: 1}
+				],
+				purifyHtml: true, // this by default purifies HTML data for preview
+			    uploadExtraData: {
+			        img_key: "1000",
+			        img_keywords: "happy, places"
+			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(4,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
 	        });
@@ -1000,7 +1068,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 				$urlImg = "../../data/".mysql_result($resExpensa,0,0)."/".mysql_result($resExpensa,0,'imagen');
 			?>
 			$("#avatar-5").fileinput({
-			    overwriteInitial: true,
+			    overwriteInitial: false,
 			    maxFileSize: 10000,
 			    showClose: false,
 			    showCaption: false,
@@ -1015,16 +1083,18 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
 			    initialPreview: [
-			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
 			    ],
+			    initialPreviewAsData: false, // allows you to set a raw markup
+    			initialPreviewFileType: 'image',
 			    initialPreviewConfig: [
-				    {
-				        caption: 'IMG_20160805_155004.jpg', 
-				        width: '150px', 
-				        key: 100, 
-				        extra: {id: 100}
-				    }
-				]
+				    {caption: "<?php echo mysql_result($resTitulo,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resTitulo,0,0); ?>', key: 1}
+				],
+				purifyHtml: true, // this by default purifies HTML data for preview
+			    uploadExtraData: {
+			        img_key: "1000",
+			        img_keywords: "happy, places"
+			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(6,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
 	        });
@@ -1061,7 +1131,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 				$urlImg = "../../data/".mysql_result($resPartidaNacimiento,0,0)."/".mysql_result($resPartidaNacimiento,0,'imagen');
 			?>
 			$("#avatar-6").fileinput({
-			    overwriteInitial: true,
+			    overwriteInitial: false,
 			    maxFileSize: 10000,
 			    showClose: false,
 			    showCaption: false,
@@ -1074,18 +1144,20 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/documento_img.png" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar","jpg", "png"],
+			    allowedFileExtensions: ["pdf","jpg", "png"],
 			    initialPreview: [
-			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='file-preview-image' alt='Desert' title='Desert'>",
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
 			    ],
+			    initialPreviewAsData: false, // allows you to set a raw markup
+    			initialPreviewFileType: 'pdf',
 			    initialPreviewConfig: [
-				    {
-				        caption: 'IMG_20160805_155004.jpg', 
-				        width: '150px', 
-				        key: 100, 
-				        extra: {id: 100}
-				    }
-				]
+				    {caption: "<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resPartidaNacimiento,0,0); ?>', key: 1}
+				],
+				purifyHtml: true, // this by default purifies HTML data for preview
+			    uploadExtraData: {
+			        img_key: "1000",
+			        img_keywords: "happy, places"
+			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(9,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
 	        });

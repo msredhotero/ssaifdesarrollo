@@ -1212,7 +1212,7 @@ class Servicios {
 		$sql	=	"show columns from ".$tabla;
 		$res 	=	$this->query($sql,0);
 		
-		$ocultar = array("idpagina","id1","id2","id3","icono","estilo","url");
+		$ocultar = array("idpagina","id1","id2","id3","icono","estilo");
 		
 		$camposEscondido = "";
 		/* Analizar para despues */
@@ -1456,19 +1456,35 @@ class Servicios {
 													
 														
 												} else {
-													$label = ucwords($label);
-													$campo = strtolower($row[0]);
-													
-													$form	=	$form.'
-													
-													<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
-														<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
-														<div class="input-group col-md-12">
-															<p>'.(utf8_encode(mysql_result($resMod,0,$row[0])) == '' ? ".............." : utf8_encode(mysql_result($resMod,0,$row[0]))).'</p>
+													if ($row[0]== 'url') {
+														$label = ucwords($label);
+														$campo = strtolower($row[0]);
+														
+														$form	=	$form.'
+														
+														<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
+															<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
+															<div class="input-group col-md-12">
+																<a href="../'.(utf8_encode(mysql_result($resMod,0,$row[0])) == '' ? "#" : utf8_encode(mysql_result($resMod,0,$row[0]))).'">Ir</a>
+															</div>
 														</div>
-													</div>
-													
-													';
+														
+														';
+													} else {
+														$label = ucwords($label);
+														$campo = strtolower($row[0]);
+														
+														$form	=	$form.'
+														
+														<div class="form-group col-md-6 col-xs-6" style="display: '.$lblOculta.'">
+															<label for="'.$campo.'" class="control-label" style="text-align:left; font-size:1.4em;">'.$label.'</label>
+															<div class="input-group col-md-12">
+																<p>'.(utf8_encode(mysql_result($resMod,0,$row[0])) == '' ? ".............." : utf8_encode(mysql_result($resMod,0,$row[0]))).'</p>
+															</div>
+														</div>
+														
+														';
+													}
 												}
 											}
 										}

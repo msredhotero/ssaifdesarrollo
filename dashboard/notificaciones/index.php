@@ -183,7 +183,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	$('#example').dataTable({
-		"order": [[ 0, "asc" ]],
+		"order": [[ 5, "desc" ],[ 4, "asc" ]],
 		"language": {
 			"emptyTable":     "No hay datos cargados",
 			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
