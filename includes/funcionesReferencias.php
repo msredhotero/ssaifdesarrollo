@@ -3408,23 +3408,51 @@ function existeDevuelveId($sql) {
 
     function rotarImagen($imagen, $direccion, $directorio) {
 
-        
-        //Imagen inicial horizontal
-        $image = $imagen;
-        //Destino de la nueva imagen vertical
-        $image_rotate = $directorio.'/imagen_rotate.jpg';
-         
-        //Definimos los grados de rotacion
-        $degrees = $direccion;
-         
-        //Creamos una nueva imagen a partir del fichero inicial
-        $source = imagecreatefromjpeg($image);
-         
-        //Rotamos la imagen 90 grados
-        $rotate = imagerotate($source, $degrees, 0);
-         
-        //Creamos el archivo jpg vertical
-        imagejpeg($rotate, $image_rotate);
+        //imagecreatefrompng
+
+        $mystring = $imagen;
+        $findme   = 'jpg';
+        $pos = strpos($mystring, $findme);
+
+        // El operador !== también puede ser usado. Puesto que != no funcionará como se espera
+        // porque la posición de 'a' es 0. La declaración (0 != false) se evalúa a 
+        // false.
+        if ($pos !== false) {
+
+            //Imagen inicial horizontal
+            $image = $imagen;
+            //Destino de la nueva imagen vertical
+            $image_rotate = $directorio.'/imagen_rotate.jpg';
+             
+            //Definimos los grados de rotacion
+            $degrees = $direccion;
+             
+            //Creamos una nueva imagen a partir del fichero inicial
+            $source = imagecreatefromjpeg($image);
+             
+            //Rotamos la imagen 90 grados
+            $rotate = imagerotate($source, $degrees, 0);
+             
+            //Creamos el archivo jpg vertical
+            imagejpeg($rotate, $image_rotate);
+        } else {
+            //Imagen inicial horizontal
+            $image = $imagen;
+            //Destino de la nueva imagen vertical
+            $image_rotate = $directorio.'/imagen_rotate.png';
+             
+            //Definimos los grados de rotacion
+            $degrees = $direccion;
+             
+            //Creamos una nueva imagen a partir del fichero inicial
+            $source = imagecreatefrompng($image);
+             
+            //Rotamos la imagen 90 grados
+            $rotate = imagerotate($source, $degrees, 0);
+             
+            //Creamos el archivo jpg vertical
+            imagepng($rotate, $image_rotate);
+        }
 
         //borro la imagen anterior
         unlink("./../".$imagen);
@@ -3436,6 +3464,7 @@ function existeDevuelveId($sql) {
 
 
     function obtenerNuevoId($tabla) {
+        //u235498999_aif
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
                 WHERE TABLE_SCHEMA = 'u235498999_aif' 
                 AND TABLE_NAME = '".$tabla."'";
@@ -12766,6 +12795,15 @@ function modificarJugadorespreRegistro($id,$apellido,$nombres,$fechanacimiento,$
 $sql = "update dbjugadorespre
 set
 apellido = '".strtoupper($apellido)."',nombres = '".strtoupper($nombres)."',fechanacimiento = '".($fechanacimiento)."',observaciones = '".($observaciones)."'
+where idjugadorpre =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function modificarJugadorespreRegistroNuevo($id,$apellido,$nombres,$fechanacimiento,$observaciones,$email) {
+$sql = "update dbjugadorespre
+set
+apellido = '".strtoupper($apellido)."',nombres = '".strtoupper($nombres)."',fechanacimiento = '".($fechanacimiento)."',observaciones = '".($observaciones)."',email = '".($email)."'
 where idjugadorpre =".$id;
 $res = $this->query($sql,0);
 return $res;

@@ -578,6 +578,9 @@ case 'guardarEstado':
 case 'rotarImagen':
 	rotarImagen($serviciosReferencias);
 	break;
+case 'jugadorNuevo':
+	jugadorNuevo($serviciosReferencias);
+	break;
 /*****			fin 			**********/
 
 /****   	notificaciones * *************/
@@ -685,6 +688,58 @@ echo $res;
 } 
 
 /*****			SATELITES		**********/
+
+function jugadorNuevo($serviciosReferencias) {
+	$id = $_POST['id'];
+	$idEstadoEscritura 		= $_POST['idEstadoEscritura'];
+	$idEstadoExpensas 		= $_POST['idEstadoExpensas'];
+	$idEstadoPartidaDeNacimiento = $_POST['idEstadoPartidaDeNacimiento'];
+
+	$sql = "INSERT INTO dbjugadores
+				(idjugador,
+				reftipodocumentos,
+				nrodocumento,
+				apellido,
+				nombres,
+				email,
+				fechanacimiento,
+				fechaalta,
+				refcountries,
+				observaciones)
+				select
+				'',
+				reftipodocumentos,
+				nrodocumento,
+				apellido,
+				nombres,
+				email,
+				fechanacimiento,
+				fechaalta,
+				refcountries,
+				observaciones
+				from		dbjugadorespre
+				where		idjugadorpre = ".$id;
+	$res = $serviciosReferencias->query($sql,1);
+
+	//inserto la documentacion y los valores de la documentacion
+	$serviciosReferencias->insertarJugadoresdocumentacion($res,1,1,'');
+	$serviciosReferencias->insertarJugadoresdocumentacion($res,2,1,'');
+
+	if ($idEstadoEscritura != 0) {
+		$serviciosReferencias->insertarJugadoresdocumentacion($res,4,1,'');
+	}
+
+	if ($idEstadoExpensas != 0) {
+		$serviciosReferencias->insertarJugadoresdocumentacion($res,6,1,'');
+	}
+
+	if ($idEstadoPartidaDeNacimiento != 0) {
+		$serviciosReferencias->insertarJugadoresdocumentacion($res,9,1,'');
+	}
+
+	//$serviciosReferencias->insertarva
+
+}
 
 function guardarEstado($serviciosReferencias) {
 	$id = $_POST['id'];
@@ -4140,7 +4195,7 @@ function registrarSocio($ServiciosUsuarios, $ServiciosReferencias) {
         $res = $ServiciosUsuarios->registrarSocio($email, $password,$apellido, $nombre, $nrodocumento, $fechanacimiento);
         if ((integer)$res > 0) {
             //modifico los datos que le solicite en el login
-            $ServiciosReferencias->modificarJugadorespreRegistro($id,$apellido,$nombre,$fechanacimiento,'');
+            $ServiciosReferencias->modificarJugadorespreRegistroNuevo($id,$apellido,$nombre,$fechanacimiento,'',$email);
 
             echo '';	
         } else {

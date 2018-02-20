@@ -322,6 +322,10 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			<script src='../../js/jquery.maskedinput.min.js' type='text/javascript'></script>
 
 			<link rel="stylesheet" href="../../css/fileinput/fileinput.css"/>
+
+			<script src="../../js/fileinput/plugins/sortable.min.js"></script>
+			<!-- purify plugin for safe rendering HTML content in preview -->
+			<script src="../../js/fileinput/plugins/purify.min.js"></script>
 			
 		    <script src="../../js/liquidmetal.js" type="text/javascript"></script>
 		    <script src="../../js/jquery.flexselect.js" type="text/javascript"></script>
@@ -389,7 +393,8 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 				                    <input id="avatar-1" name="avatar-1" type="file" value="<?php echo $foto1; ?>" required>
 				                </div>
 				            </div>
-				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 2000 KB</small></div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
+				            <p>Rotar la imagen <button type="button" class="btn btn-default" id="rotarIzquierda" style="margin-left:0px;">Izquierda</button></p>
 				        </div>
 				        <div class="col-sm-3 text-center">
 				        <h4><span class="<?php echo $spanFoto; ?>"></span> Estado: <b><?php echo $estadoFoto; ?></b></h4>
@@ -421,7 +426,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 				                    <input id="avatar-2" name="avatar-2" value="<?php echo $foto2; ?>" type="file" required>
 				                </div>
 				            </div>
-				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
 
 				            <h4><span class="<?php echo $spanNroDoc; ?>"></span> Estado: <b><?php echo $estadoNroDoc; ?></b></h4>
 				            <div class="form-group col-md-12" style="display:block">
@@ -442,7 +447,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 				                    <input id="avatar-3" name="avatar-3" type="file" required>
 				                </div>
 				            </div>
-				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
 
 				            <h4><span class="<?php echo $spanNroDocDorso; ?>"></span> Estado: <b><?php echo $estadoNroDocDorso; ?></b></h4>
 				            <div class="form-group col-md-12" style="display:block">
@@ -502,9 +507,16 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 		            			<li>
 		            				<button type="button" class="btn btn-success" id="notificar" style="margin-left:0px;"><span class="glyphicon glyphicon-envelope"></span> Generar Notificacion</button>
 		            			</li>
+		            			<?php
+		            			if (($idEstadoFoto == 3) && ($idEstadoNroDoc == 3) && ($idEstadoNroDocDorso == 3)) {
+		            			?>
 		            			<li>
 		            				<button type="button" class="btn btn-danger" id="jugadorNuevo" style="margin-left:0px;"><span class="glyphicon glyphicon-plus"></span> Generar Jugador Nuevo</button>
 		            			</li>
+		            			<li>** Recuerde que una vez que apriete este boton ya se generara el jugador y sus documentaciones.</li>
+		            			<?php
+		            			}
+		            			?>
 		            		</ul>
 		            	</div>
 		            </div>
@@ -515,7 +527,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 
 		            <div class="row">
 						<div class="col-sm-4 text-center">
-							<h4>Escritura (Comprimido)</h4>
+							<h4>Escritura (pdf)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-4" name="avatar-4" type="file" required>
@@ -536,13 +548,13 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 				        </div>
 
 				        <div class="col-sm-4 text-center">
-							<h4>Expensas (.pdf)</h4>
+							<h4>Expensas (pdf)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-5" name="avatar-5" type="file" required>
 				                </div>
 				            </div>
-				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 30000 KB</small></div>
 
 				            <h4><span class="<?php echo $spanExpensa; ?>"></span> Estado: <b><?php echo $estadoExpensa; ?></b></h4>
 				            <div class="form-group col-md-12" style="display:block">
@@ -557,7 +569,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 				        </div>
 
 				        <div class="col-sm-4 text-center">
-							<h4>Partida de Nacimiento (Comprimido)</h4>
+							<h4>Partida de Nacimiento (pdf)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-6" name="avatar-6" type="file" required>
@@ -660,12 +672,66 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 					},
 					success:  function (response) {
 							alert(response);
-							//url = "index.php";
-							//$(location).attr('href',url);
+							url = "modificar.php?id=<?php echo $id; ?>";
+							$(location).attr('href',url);
 							
 					}
 				});
 			}
+
+
+			<?php
+				if (mysql_num_rows($resFoto)>0) {
+				$urlImg = "./../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+				$direc = "./../data/".mysql_result($resFoto,0,0);
+			?>
+			function rotarImagenIzquierda() {
+				
+				$.ajax({
+					data:  {imagen: '<?php echo $urlImg; ?>', 
+							rotar: 90,
+							directorio: '<?php echo $direc; ?>',
+							accion: 'rotarImagen'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							url = "modificar.php?id=<?php echo $id; ?>";
+							$(location).attr('href',url);
+							
+					}
+				});
+			}
+
+
+			function rotarImagenDerecha() {
+				
+				$.ajax({
+					data:  {imagen: '<?php echo $urlImg; ?>', 
+							rotar: 270,
+							directorio: '<?php echo $direc; ?>',
+							accion: 'rotarImagen'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							url = "modificar.php?id=<?php echo $id; ?>";
+							$(location).attr('href',url);
+							
+					}
+				});
+			}
+
+			$('#rotarIzquierda').click(function() {
+				rotarImagenIzquierda();
+			});
+			<?php
+			}
+			?>
 
 			function presentardocumentacion(id) {
 				$.ajax({
@@ -813,7 +879,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			    initialPreviewAsData: false, // allows you to set a raw markup
     			initialPreviewFileType: 'image',
 			    initialPreviewConfig: [
-				    {caption: "<?php echo mysql_result($resFoto,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resFoto,0,0); ?>', key: 1}
+				    {caption: "<?php echo mysql_result($resFoto,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../../data/".mysql_result($resFoto,0,0); ?>', key: 1}
 				],
 				purifyHtml: true, // this by default purifies HTML data for preview
 			    uploadExtraData: {
@@ -829,6 +895,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 	    	?>
 	    	$("#avatar-1").fileinput({
 			    overwriteInitial: true,
+			    autoOrientImage: true,
 			    maxFileSize: 6000,
 			    showClose: false,
 			    showCaption: false,
@@ -892,7 +959,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			    initialPreviewAsData: false, // allows you to set a raw markup
     			initialPreviewFileType: 'image',
 			    initialPreviewConfig: [
-				    {caption: "<?php echo mysql_result($resFotoDocumento,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resFotoDocumento,0,0); ?>', key: 1}
+				    {caption: "<?php echo mysql_result($resFotoDocumento,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../../data/".mysql_result($resFotoDocumento,0,0); ?>', key: 1}
 				],
 				purifyHtml: true, // this by default purifies HTML data for preview
 			    uploadExtraData: {
@@ -976,7 +1043,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			    initialPreviewAsData: false, // allows you to set a raw markup
     			initialPreviewFileType: 'image',
 			    initialPreviewConfig: [
-				    {caption: "<?php echo mysql_result($resFotoDocumentoDorso,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resFotoDocumentoDorso,0,0); ?>', key: 1}
+				    {caption: "<?php echo mysql_result($resFotoDocumentoDorso,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../../data/".mysql_result($resFotoDocumentoDorso,0,0); ?>', key: 1}
 				],
 				purifyHtml: true, // this by default purifies HTML data for preview
 			    uploadExtraData: {
@@ -1031,7 +1098,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			?>
 			$("#avatar-4").fileinput({
 			    overwriteInitial: false,
-			    maxFileSize: 30000,
+			    maxFileSize: 10000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -1039,23 +1106,66 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
 			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
 			    removeTitle: 'Cancel or reset changes',
-			    elErrorContainer: '#kv-avatar-errors-1',
+			    elErrorContainer: '#kv-avatar-errors-5',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar","jpg", "png", "gif"],
+			    allowedFileExtensions: ["pdf"],
 			    initialPreview: [
-			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
+			    	'../../data/<?php echo mysql_result($resTitulo,0,0); ?>/<?php echo mysql_result($resTitulo,0,'imagen'); ?>'
 			    ],
-			    initialPreviewAsData: false, // allows you to set a raw markup
-    			initialPreviewFileType: 'rar',
+				initialPreviewFileType: 'image',
+			    initialPreviewAsData: true, // allows you to set a raw markup
 			    initialPreviewConfig: [
-				    {caption: "<?php echo mysql_result($resTitulo,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resTitulo,0,0); ?>', key: 1}
+				    {type: "pdf", size: 8000, caption: "PDF Sample", filename: "<?php echo mysql_result($resTitulo,0,'imagen'); ?>",  key: 1}
 				],
 				purifyHtml: true, // this by default purifies HTML data for preview
 			    uploadExtraData: {
 			        img_key: "1000",
 			        img_keywords: "happy, places"
+			    },
+			    preferIconicPreview: true, // this will force thumbnails to display icons for following file extensions
+			    previewFileIconSettings: { // configure your icon file extensions
+			        'doc': '<i class="fa fa-file-word-o text-primary"></i>',
+			        'xls': '<i class="fa fa-file-excel-o text-success"></i>',
+			        'ppt': '<i class="fa fa-file-powerpoint-o text-danger"></i>',
+			        'pdf': '<img src="../../imagenes/pdf.png">',
+			        'zip': '<i class="fa fa-file-archive-o text-muted"></i>',
+			        'htm': '<i class="fa fa-file-code-o text-info"></i>',
+			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
+			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
+			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
+			        // note for these file types below no extension determination logic 
+			        // has been configured (the keys itself will be used as extensions)
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
+			        'png': '<img src="../../imagenes/sin_img.jpg">'    
+			    },
+			    previewFileExtSettings: { // configure the logic for determining icon file extensions
+			        'doc': function(ext) {
+			            return ext.match(/(doc|docx)$/i);
+			        },
+			        'xls': function(ext) {
+			            return ext.match(/(xls|xlsx)$/i);
+			        },
+			        'ppt': function(ext) {
+			            return ext.match(/(ppt|pptx)$/i);
+			        },
+			        'zip': function(ext) {
+			            return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+			        },
+			        'htm': function(ext) {
+			            return ext.match(/(htm|html)$/i);
+			        },
+			        'txt': function(ext) {
+			            return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+			        },
+			        'mov': function(ext) {
+			            return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+			        },
+			        'mp3': function(ext) {
+			            return ext.match(/(mp3|wav)$/i);
+			        }
 			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(4,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
@@ -1078,7 +1188,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar","jpg", "png", "gif"]
+			    allowedFileExtensions: ["pdf"]
 			});
 
 	    	<?php	
@@ -1106,18 +1216,86 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
+			    <?php 
+			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    ?>
 			    initialPreview: [
+			    	'../../data/<?php echo mysql_result($resExpensa,0,0); ?>/<?php echo mysql_result($resExpensa,0,'imagen'); ?>'
+			    ],
+
+			    <?php
+				} else {
+				?>
+				initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
 			    ],
-			    initialPreviewAsData: false, // allows you to set a raw markup
-    			initialPreviewFileType: 'image',
+				<?php
+				}
+				?>
+				initialPreviewFileType: 'image',
+			    initialPreviewAsData: true, // allows you to set a raw markup
+    			<?php 
+			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    ?>
 			    initialPreviewConfig: [
-				    {caption: "<?php echo mysql_result($resTitulo,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resTitulo,0,0); ?>', key: 1}
+				    {type: "pdf", size: 8000, caption: "PDF Sample", filename: "<?php echo mysql_result($resExpensa,0,'imagen'); ?>",  key: 1}
 				],
+			    <?php
+				} else {
+				?>
+			    initialPreviewConfig: [
+				    {caption: "<?php echo mysql_result($resExpensa,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../../data/".mysql_result($resExpensa,0,0); ?>', key: 1}
+				],
+				<?php
+				}
+				?>
 				purifyHtml: true, // this by default purifies HTML data for preview
 			    uploadExtraData: {
 			        img_key: "1000",
 			        img_keywords: "happy, places"
+			    },
+			    preferIconicPreview: true, // this will force thumbnails to display icons for following file extensions
+			    previewFileIconSettings: { // configure your icon file extensions
+			        'doc': '<i class="fa fa-file-word-o text-primary"></i>',
+			        'xls': '<i class="fa fa-file-excel-o text-success"></i>',
+			        'ppt': '<i class="fa fa-file-powerpoint-o text-danger"></i>',
+			        'pdf': '<img src="../../imagenes/pdf.png">',
+			        'zip': '<i class="fa fa-file-archive-o text-muted"></i>',
+			        'htm': '<i class="fa fa-file-code-o text-info"></i>',
+			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
+			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
+			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
+			        // note for these file types below no extension determination logic 
+			        // has been configured (the keys itself will be used as extensions)
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
+			        'png': '<img src="../../imagenes/sin_img.jpg">'    
+			    },
+			    previewFileExtSettings: { // configure the logic for determining icon file extensions
+			        'doc': function(ext) {
+			            return ext.match(/(doc|docx)$/i);
+			        },
+			        'xls': function(ext) {
+			            return ext.match(/(xls|xlsx)$/i);
+			        },
+			        'ppt': function(ext) {
+			            return ext.match(/(ppt|pptx)$/i);
+			        },
+			        'zip': function(ext) {
+			            return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+			        },
+			        'htm': function(ext) {
+			            return ext.match(/(htm|html)$/i);
+			        },
+			        'txt': function(ext) {
+			            return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+			        },
+			        'mov': function(ext) {
+			            return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+			        },
+			        'mp3': function(ext) {
+			            return ext.match(/(mp3|wav)$/i);
+			        }
 			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(6,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
@@ -1164,23 +1342,91 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
 			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
 			    removeTitle: 'Cancel or reset changes',
-			    elErrorContainer: '#kv-avatar-errors-6',
+			    elErrorContainer: '#kv-avatar-errors-5',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["pdf","jpg", "png"],
+			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
+			    <?php 
+			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    ?>
 			    initialPreview: [
+			    	'../../data/<?php echo mysql_result($resPartidaNacimiento,0,0); ?>/<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>'
+			    ],
+
+			    <?php
+				} else {
+				?>
+				initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
 			    ],
-			    initialPreviewAsData: false, // allows you to set a raw markup
-    			initialPreviewFileType: 'pdf',
+				<?php
+				}
+				?>
+				initialPreviewFileType: 'image',
+			    initialPreviewAsData: true, // allows you to set a raw markup
+    			<?php 
+			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    ?>
 			    initialPreviewConfig: [
-				    {caption: "<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resPartidaNacimiento,0,0); ?>', key: 1}
+				    {type: "pdf", size: 8000, caption: "PDF Sample", filename: "<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>",  key: 1}
 				],
+			    <?php
+				} else {
+				?>
+			    initialPreviewConfig: [
+				    {caption: "<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../../data/".mysql_result($resPartidaNacimiento,0,0); ?>', key: 1}
+				],
+				<?php
+				}
+				?>
 				purifyHtml: true, // this by default purifies HTML data for preview
 			    uploadExtraData: {
 			        img_key: "1000",
 			        img_keywords: "happy, places"
+			    },
+			    preferIconicPreview: true, // this will force thumbnails to display icons for following file extensions
+			    previewFileIconSettings: { // configure your icon file extensions
+			        'doc': '<i class="fa fa-file-word-o text-primary"></i>',
+			        'xls': '<i class="fa fa-file-excel-o text-success"></i>',
+			        'ppt': '<i class="fa fa-file-powerpoint-o text-danger"></i>',
+			        'pdf': '<img src="../../imagenes/pdf.png">',
+			        'zip': '<i class="fa fa-file-archive-o text-muted"></i>',
+			        'htm': '<i class="fa fa-file-code-o text-info"></i>',
+			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
+			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
+			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
+			        // note for these file types below no extension determination logic 
+			        // has been configured (the keys itself will be used as extensions)
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
+			        'png': '<img src="../../imagenes/sin_img.jpg">'    
+			    },
+			    previewFileExtSettings: { // configure the logic for determining icon file extensions
+			        'doc': function(ext) {
+			            return ext.match(/(doc|docx)$/i);
+			        },
+			        'xls': function(ext) {
+			            return ext.match(/(xls|xlsx)$/i);
+			        },
+			        'ppt': function(ext) {
+			            return ext.match(/(ppt|pptx)$/i);
+			        },
+			        'zip': function(ext) {
+			            return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+			        },
+			        'htm': function(ext) {
+			            return ext.match(/(htm|html)$/i);
+			        },
+			        'txt': function(ext) {
+			            return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+			        },
+			        'mov': function(ext) {
+			            return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+			        },
+			        'mp3': function(ext) {
+			            return ext.match(/(mp3|wav)$/i);
+			        }
 			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(9,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
@@ -1203,7 +1449,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar","jpg", "png"]
+			    allowedFileExtensions: ["pdf","jpg", "png"]
 			});
 
 	    	<?php	

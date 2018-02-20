@@ -103,7 +103,7 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(180,5,'FECHA DE ALTA: ',0,0,'L',false);
+	$pdf->Cell(180,5,'FECHA DE ALTA: '.mysql_result($resSocio,0,'fechaalta'),0,0,'L',false);
 
 	$pdf->Image($urlImg1,210,10,50,67);
 
