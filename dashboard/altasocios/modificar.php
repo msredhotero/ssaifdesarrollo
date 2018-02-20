@@ -34,6 +34,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Alta So
 $id = $_GET['id'];
 
 $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
+$resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 
 		/////////////////////// Opciones para la creacion del formulario  /////////////////////
 		$tabla 			= "dbjugadorespre";
@@ -501,6 +502,9 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 		            			<li>
 		            				<button type="button" class="btn btn-success" id="notificar" style="margin-left:0px;"><span class="glyphicon glyphicon-envelope"></span> Generar Notificacion</button>
 		            			</li>
+		            			<li>
+		            				<button type="button" class="btn btn-danger" id="jugadorNuevo" style="margin-left:0px;"><span class="glyphicon glyphicon-plus"></span> Generar Jugador Nuevo</button>
+		            			</li>
 		            		</ul>
 		            	</div>
 		            </div>
@@ -694,7 +698,7 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 							estilo: estilo,
 							fecha: fecha,
 							url: url,
-							email: '<?php echo mysql_result($resResultado,0,'email'); ?>',
+							email: '<?php echo mysql_result($resResultadoAux,0,"email"); ?>',
 							accion: 'generarNotificacion'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
@@ -739,6 +743,31 @@ $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 
 				guardarEstado(usersid, $('#refestados'+usersid).val());
 			});
+
+			function jugadorNuevo(id) {
+				$.ajax({
+					data:  {id: id, 
+							accion: 'jugadorNuevo'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							alert('El Jugador Ya fue creado y su documentacion también.')
+							url = "../jugadores/modificar.php?id=<?php echo $id; ?>";
+							$(location).attr('href',url);
+							
+					}
+				});
+			}
+
+			$('.jugadorNuevo').click(function() {
+				usersid =  $(this).attr("id");
+
+				jugadorNuevo(usersid);
+			});
+			
 
 			$('#presentar').click(function() {
 				presentardocumentacion(<?php echo mysql_result($resResultado,0,0); ?>);

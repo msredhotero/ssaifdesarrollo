@@ -3406,6 +3406,34 @@ function existeDevuelveId($sql) {
         }   
     }
 
+    function rotarImagen($imagen, $direccion, $directorio) {
+
+        
+        //Imagen inicial horizontal
+        $image = $imagen;
+        //Destino de la nueva imagen vertical
+        $image_rotate = $directorio.'/imagen_rotate.jpg';
+         
+        //Definimos los grados de rotacion
+        $degrees = $direccion;
+         
+        //Creamos una nueva imagen a partir del fichero inicial
+        $source = imagecreatefromjpeg($image);
+         
+        //Rotamos la imagen 90 grados
+        $rotate = imagerotate($source, $degrees, 0);
+         
+        //Creamos el archivo jpg vertical
+        imagejpeg($rotate, $image_rotate);
+
+        //borro la imagen anterior
+        unlink("./../".$imagen);
+
+        //lo renombro al archivos
+        rename ($image_rotate, $imagen);
+
+    }
+
 
     function obtenerNuevoId($tabla) {
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
@@ -12846,7 +12874,7 @@ return $res;
 }
 
 function traerJugadoresprePorIdUsuario($idUsuario) {
-$sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios,numeroserielote from dbjugadorespre where idusuario =".$idUsuario;
+$sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios,numeroserielote, refestados from dbjugadorespre where idusuario =".$idUsuario;
 $res = $this->query($sql,0);
 return $res;
 }

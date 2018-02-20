@@ -575,6 +575,9 @@ case 'presentardocumentacion':
 case 'guardarEstado':
 	guardarEstado($serviciosReferencias);
 	break;
+case 'rotarImagen':
+	rotarImagen($serviciosReferencias);
+	break;
 /*****			fin 			**********/
 
 /****   	notificaciones * *************/
@@ -587,7 +590,15 @@ case 'generarNotificacion':
 /****			fin 				******/
 }
 
+function rotarImagen($serviciosReferencias) {
+	$imagen = $_POST['imagen'];
+	$direccion = $_POST['rotar'];
+	$directorio = $_POST['directorio'];
 
+	$res = $serviciosReferencias->rotarImagen($imagen, $direccion, $directorio);
+
+	echo $res;
+}
 
 /****   	notificaciones * *************/
 function marcarNotificacion($serviciosReferencias) {
@@ -621,10 +632,15 @@ function generarNotificacion($serviciosReferencias) {
 	
 	if ((integer)$res > 0) { 
 		$destinatario = $email;
-		$asunto = "Su Ficha se encuantra en estado: ".$icono;
+		if ($icono == 'glyphicon glyphicon-ok') {
+			$asunto = "Su Ficha se encuantra en estado: Aceptado";
+		} else {
+			$asunto = "Su Ficha se encuantra en estado: Rechazado";
+		}
+		
 		$cuerpo = '<p>'.$mensaje.'</p>';
-		if ($icono == 'Aceptado') {
-			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>';
+		if ($icono == 'glyphicon glyphicon-ok') {
+			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/aifzn/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>';
 		}
 		$serviciosReferencias->enviarEmail($destinatario,$asunto,$cuerpo, $referencia='');
 		echo ''; 

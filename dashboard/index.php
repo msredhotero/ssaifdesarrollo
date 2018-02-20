@@ -702,6 +702,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		$resResultado = $serviciosReferencias->traerJugadoresprePorIdUsuario($_SESSION['id_usuariopredio']);
 
+		$estadoJugador = mysql_result($resResultado,0,'refestados');
+
 		/////////////////////// Opciones para la creacion del formulario  /////////////////////
 		$tabla 			= "dbjugadorespre";
 
@@ -1028,30 +1030,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		        	
 		        </div>
 		    	<div class="cuerpoBox">
-		    		<div class="panel-group">
-					  <div class="panel panel-info">
-					    <div class="panel-heading">
-					      <h4 class="panel-title">
-					        <a data-toggle="collapse" href="#collapse1" class="abrir">Para mas informacion hacer click Aqui <spam class="glyphicon glyphicon-hand-left"></spam></a>
-					      </h4>
-					    </div>
-					    <div id="collapse1" class="panel-collapse collapse">
-					      	<h4 style="padding: 15px;">Antes de continuar le dejamos el enlace a nuestro reglamento donde podrá consultar los requisitos individuales para poder participar de los torneos <a href="http://www.aif.org.ar/como-inscribirse/" target="_blank">(link)</a></h4>
-							<p style="padding: 15px;">Para continuar con el registro y quedar habilitado le pedimos que nos envíe las siguientes documentaciones en buena calidad:</p>
- 							<ul class="list-group">
-								<li class="list-group-item">** Foto tipo carnet con fondo liso (recuadro para adjuntar) formatos de imágenes tipo JPG</li>
-								<li class="list-group-item">** Scan de Documento Nacional de Identidad (anverso y reverso) (recuadro para adj) formato JPG</li>
-								<li class="list-group-item">Scan de Escritura de compraventa (recuadro para adj) formato PDF</li>
-								<li class="list-group-item">Scan de Expensas o servicio a la fecha correspondiente a la propiedad (recuadro para adj) formato PDF</li>
-								<li class="list-group-item">Scan de Partida de nacimiento/matrimonio (obligatorio solamente para quienes deban demostrar el vínculo con el propietario) (recuadro para adj) formato PDF</li>
-							</ul>
-							<p style="padding: 15px;">** Una vez enviadas la foto y el DNI, el personal de la AIFZN evaluará los archivos enviados y en caso de estar aprobados se adjuntará en un correo electrónico la FICHA DEL JUGADOR. Esta ficha deberá ser impresa y firmada en el recuadro correspondiente por el socio/jugador nuevo. Luego el delegado del country/barrio privado será el encargado de acercar la misma a nuestra oficina.</p>
- 
-
-							<p style="padding: 15px;">La documentación enviada será revisada por el personal de la AIFZN y el mismo responderá con un mail detallando los pasos siguientes para finalizar con el alta.</p>
-					    </div>
-					  </div>
-					</div>
+		    		
 
 					<div class="alert alert-predio">
 					<p><b><span class="glyphicon glyphicon-info-sign"></span> PASO 1</b> POR FAVOR CONTROLE TODOS SUS DATOS PERSONALES. SOLO SE PUEDEN MODIFICAR LOS CAMPOS HABILITADOS EN BLANCO</p>
@@ -1078,6 +1057,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				                </div>
 				            </div>
 				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
+				            <p>Rotar la imagen <button type="button" class="btn btn-default" id="rotarIzquierda" style="margin-left:0px;">Izquierda</button></p>
 				            <h4><span class="<?php echo $spanFoto; ?>"></span> Estado: <b><?php echo $estadoFoto; ?></b></h4>
 					        <ul class="list-form mensajesFoto">
 
@@ -1096,7 +1076,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 					                    <input id="avatar-2" name="avatar-2" value="<?php echo $foto2; ?>" type="file" required>
 					                </div>
 					            </div>
-					            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
+					            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
 
 					            <h4><span class="<?php echo $spanNroDoc; ?>"></span> Estado: <b><?php echo $estadoNroDoc; ?></b></h4>
 					            <ul class="list-form mensajesDocumento">
@@ -1111,7 +1091,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 					                    <input id="avatar-3" name="avatar-3" type="file" required>
 					                </div>
 					            </div>
-					            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
+					            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
 
 					            <h4><span class="<?php echo $spanNroDocDorso; ?>"></span> Estado: <b><?php echo $estadoNroDocDorso; ?></b></h4>
 					            <ul class="list-form mensajesDocumentoDorso">
@@ -1128,11 +1108,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            	</div>
 
 		            	<div class="col-sm-12">
-		            		<div class="alert alert-warning"><span class="glyphicon glyphicon-info-sign"></span> PRESIONE EL BOTON AMARILLO DE PRESENTAR PARA QUE LA AIF VALIDE SU DOCUMENTACION Y SE LE GENERE LA FICHA DEL JUGADOR LA CUAL DEBERA SER FIRMADA POR UD Y ENTREGADA POR SU DELEGADO EN LAS OFICINAS DE LA AIF.</div>
+		            		<div class="alert alert-warning"><span class="glyphicon glyphicon-info-sign"></span>PRESIONE GUARDAR Y LUEGO PRESIONE EL BOTON AMARILLO DE PRESENTAR PARA QUE LA AIF VALIDE SU DOCUMENTACION Y SE LE GENERE LA FICHA DEL JUGADOR LA CUAL DEBERA SER FIRMADA POR UD Y ENTREGADA POR SU DELEGADO EN LAS OFICINAS DE LA AIF. ESTE PROCESO PUEDE DEMORAR UNOS MINUTOS</div>
 		            	</div>
 		            	<div class="col-sm-12">
 		            		<ul class="list-inline">
 		            			<li>Acciones: </li>
+		            			<?php
+		            			if ($estadoJugador == 1) {
+		            			?>
 		            			<li>
 			                    	<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
 			                    </li>
@@ -1146,14 +1129,16 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            				}
 		            			?>
 		            			<?php
-		            				if (($idEstadoFoto == 4) || ($idEstadoNroDoc == 4) || ($idEstadoNroDocDorso == 4)) {
+		            				if (($idEstadoFoto == 3) || ($idEstadoNroDoc == 3) || ($idEstadoNroDocDorso == 3)) {
 		            			?>
 		            			<li>
 		            				<button type="button" class="btn btn-warning" id="presentar" data-toggle="modal" data-target="#myModal3" style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Presentar</button>
 		            			</li>
 		            			<?php
 		            				}
+		            			}
 		            			?>
+
 		            			<?php
 		            				if (($idEstadoFoto == 3) && ($idEstadoNroDoc == 3) && ($idEstadoNroDocDorso == 3)) {
 		            			?>
@@ -1182,7 +1167,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		            <div class="row">
 						<div class="col-sm-4 text-center">
-							<h4>Escritura (COMPRIMIDO DEL TIPO .RAR )</h4>
+							<h4>Escritura (pdf)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-4" name="avatar-4" type="file" required>
@@ -1203,7 +1188,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				                    <input id="avatar-5" name="avatar-5" type="file" required>
 				                </div>
 				            </div>
-				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 5500 KB</small></div>
+				            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 30000 KB</small></div>
 
 				            <h4><span class="<?php echo $spanExpensa; ?>"></span> Estado: <b><?php echo $estadoExpensa; ?></b></h4>
 				            <ul class="list-form mensajesExpensa">
@@ -1246,6 +1231,22 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                </div>
 		                <div id='load'>
 		                
+		                </div>
+		            </div>
+
+		            <div class="row">
+		                <div class="col-md-12">
+		                <ul class="list-inline" style="margin-top:15px;">
+		                	<?php
+	            			if ($estadoJugador == 1) {
+	            			?>
+		                    <li>
+		                        <button type="button" class="btn btn-primary" id="cargar2" style="margin-left:0px;">Guardar</button>
+		                    </li>
+		                    <?php
+		                	}
+		                	?>
+		                </ul>
 		                </div>
 		            </div>
 
@@ -1298,6 +1299,59 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 			$('.abrir').click();
 
+			<?php
+				if (mysql_num_rows($resFoto)>0) {
+				$urlImg = "./../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+				$direc = "./../data/".mysql_result($resFoto,0,0);
+			?>
+			function rotarImagenIzquierda() {
+				
+				$.ajax({
+					data:  {imagen: '<?php echo $urlImg; ?>', 
+							rotar: 90,
+							directorio: '<?php echo $direc; ?>',
+							accion: 'rotarImagen'},
+					url:   '../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							url = "index.php";
+							$(location).attr('href',url);
+							
+					}
+				});
+			}
+
+
+			function rotarImagenDerecha() {
+				
+				$.ajax({
+					data:  {imagen: '<?php echo $urlImg; ?>', 
+							rotar: 270,
+							directorio: '<?php echo $direc; ?>',
+							accion: 'rotarImagen'},
+					url:   '../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							url = "index.php";
+							$(location).attr('href',url);
+							
+					}
+				});
+			}
+
+			$('#rotarIzquierda').click(function() {
+				rotarImagenIzquierda();
+			});
+			<?php
+			}
+			?>
+
 			function eliminarFoto(documentacion, jugador) {
 				$.ajax({
 					data:  {documentacion: documentacion, 
@@ -1310,8 +1364,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 					},
 					success:  function (response) {
 							alert(response);
-							//url = "index.php";
-							//$(location).attr('href',url);
+							url = "index.php";
+							$(location).attr('href',url);
 							
 					}
 				});
@@ -1395,6 +1449,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 	    	?>
 	    	$("#avatar-1").fileinput({
 			    overwriteInitial: true,
+			    autoOrientImage: true,
 			    maxFileSize: 6000,
 			    showClose: false,
 			    showCaption: false,
@@ -1597,7 +1652,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			?>
 			$("#avatar-4").fileinput({
 			    overwriteInitial: false,
-			    maxFileSize: 30000,
+			    maxFileSize: 10000,
 			    showClose: false,
 			    showCaption: false,
 			    browseLabel: '',
@@ -1605,23 +1660,66 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
 			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
 			    removeTitle: 'Cancel or reset changes',
-			    elErrorContainer: '#kv-avatar-errors-1',
+			    elErrorContainer: '#kv-avatar-errors-5',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar","jpg", "png", "gif"],
+			    allowedFileExtensions: ["pdf"],
 			    initialPreview: [
-			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
+			    	'https://www.saupureinconsulting.com.ar/aifzn/data/<?php echo mysql_result($resTitulo,0,0); ?>/<?php echo mysql_result($resTitulo,0,'imagen'); ?>'
 			    ],
-			    initialPreviewAsData: false, // allows you to set a raw markup
-    			initialPreviewFileType: 'rar',
+				initialPreviewFileType: 'image',
+			    initialPreviewAsData: true, // allows you to set a raw markup
 			    initialPreviewConfig: [
-				    {caption: "<?php echo mysql_result($resTitulo,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resTitulo,0,0); ?>', key: 1}
+				    {type: "pdf", size: 8000, caption: "PDF Sample", filename: "<?php echo mysql_result($resTitulo,0,'imagen'); ?>",  key: 1}
 				],
 				purifyHtml: true, // this by default purifies HTML data for preview
 			    uploadExtraData: {
 			        img_key: "1000",
 			        img_keywords: "happy, places"
+			    },
+			    preferIconicPreview: true, // this will force thumbnails to display icons for following file extensions
+			    previewFileIconSettings: { // configure your icon file extensions
+			        'doc': '<i class="fa fa-file-word-o text-primary"></i>',
+			        'xls': '<i class="fa fa-file-excel-o text-success"></i>',
+			        'ppt': '<i class="fa fa-file-powerpoint-o text-danger"></i>',
+			        'pdf': '<img src="../imagenes/pdf.png">',
+			        'zip': '<i class="fa fa-file-archive-o text-muted"></i>',
+			        'htm': '<i class="fa fa-file-code-o text-info"></i>',
+			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
+			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
+			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
+			        // note for these file types below no extension determination logic 
+			        // has been configured (the keys itself will be used as extensions)
+			        'jpg': '<img src="../imagenes/sin_img.jpg">', 
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
+			        'png': '<img src="../imagenes/sin_img.jpg">'    
+			    },
+			    previewFileExtSettings: { // configure the logic for determining icon file extensions
+			        'doc': function(ext) {
+			            return ext.match(/(doc|docx)$/i);
+			        },
+			        'xls': function(ext) {
+			            return ext.match(/(xls|xlsx)$/i);
+			        },
+			        'ppt': function(ext) {
+			            return ext.match(/(ppt|pptx)$/i);
+			        },
+			        'zip': function(ext) {
+			            return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+			        },
+			        'htm': function(ext) {
+			            return ext.match(/(htm|html)$/i);
+			        },
+			        'txt': function(ext) {
+			            return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+			        },
+			        'mov': function(ext) {
+			            return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+			        },
+			        'mp3': function(ext) {
+			            return ext.match(/(mp3|wav)$/i);
+			        }
 			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(4,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
@@ -1644,7 +1742,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar","jpg", "png", "gif"]
+			    allowedFileExtensions: ["pdf"]
 			});
 
 	    	<?php	
@@ -1700,7 +1798,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				} else {
 				?>
 			    initialPreviewConfig: [
-				    {caption: "<?php echo mysql_result($resTitulo,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resTitulo,0,0); ?>', key: 1}
+				    {caption: "<?php echo mysql_result($resExpensa,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resExpensa,0,0); ?>', key: 1}
 				],
 				<?php
 				}
@@ -1798,23 +1896,91 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
 			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
 			    removeTitle: 'Cancel or reset changes',
-			    elErrorContainer: '#kv-avatar-errors-6',
+			    elErrorContainer: '#kv-avatar-errors-5',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["pdf","jpg", "png"],
+			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
+			    <?php 
+			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    ?>
 			    initialPreview: [
+			    	'https://www.saupureinconsulting.com.ar/aifzn/data/<?php echo mysql_result($resPartidaNacimiento,0,0); ?>/<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>'
+			    ],
+
+			    <?php
+				} else {
+				?>
+				initialPreview: [
 			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
 			    ],
-			    initialPreviewAsData: false, // allows you to set a raw markup
-    			initialPreviewFileType: 'pdf',
+				<?php
+				}
+				?>
+				initialPreviewFileType: 'image',
+			    initialPreviewAsData: true, // allows you to set a raw markup
+    			<?php 
+			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    ?>
+			    initialPreviewConfig: [
+				    {type: "pdf", size: 8000, caption: "PDF Sample", filename: "<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>",  key: 1}
+				],
+			    <?php
+				} else {
+				?>
 			    initialPreviewConfig: [
 				    {caption: "<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../data/".mysql_result($resPartidaNacimiento,0,0); ?>', key: 1}
 				],
+				<?php
+				}
+				?>
 				purifyHtml: true, // this by default purifies HTML data for preview
 			    uploadExtraData: {
 			        img_key: "1000",
 			        img_keywords: "happy, places"
+			    },
+			    preferIconicPreview: true, // this will force thumbnails to display icons for following file extensions
+			    previewFileIconSettings: { // configure your icon file extensions
+			        'doc': '<i class="fa fa-file-word-o text-primary"></i>',
+			        'xls': '<i class="fa fa-file-excel-o text-success"></i>',
+			        'ppt': '<i class="fa fa-file-powerpoint-o text-danger"></i>',
+			        'pdf': '<img src="../imagenes/pdf.png">',
+			        'zip': '<i class="fa fa-file-archive-o text-muted"></i>',
+			        'htm': '<i class="fa fa-file-code-o text-info"></i>',
+			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
+			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
+			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
+			        // note for these file types below no extension determination logic 
+			        // has been configured (the keys itself will be used as extensions)
+			        'jpg': '<img src="../imagenes/sin_img.jpg">', 
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
+			        'png': '<img src="../imagenes/sin_img.jpg">'    
+			    },
+			    previewFileExtSettings: { // configure the logic for determining icon file extensions
+			        'doc': function(ext) {
+			            return ext.match(/(doc|docx)$/i);
+			        },
+			        'xls': function(ext) {
+			            return ext.match(/(xls|xlsx)$/i);
+			        },
+			        'ppt': function(ext) {
+			            return ext.match(/(ppt|pptx)$/i);
+			        },
+			        'zip': function(ext) {
+			            return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+			        },
+			        'htm': function(ext) {
+			            return ext.match(/(htm|html)$/i);
+			        },
+			        'txt': function(ext) {
+			            return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+			        },
+			        'mov': function(ext) {
+			            return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+			        },
+			        'mp3': function(ext) {
+			            return ext.match(/(mp3|wav)$/i);
+			        }
 			    }
 			}).on('filecleared', function(event) {
 	          eliminarFoto(9,<?php echo mysql_result($resResultado, 0,'idjugadorpre'); ?>);
@@ -1837,7 +2003,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
-			    allowedFileExtensions: ["rar","jpg", "png"]
+			    allowedFileExtensions: ["pdf","jpg", "png"]
 			});
 
 	    	<?php	
@@ -1909,6 +2075,66 @@ if ($_SESSION['idroll_predio'] == 4) {
 					beforeSend: function(){
 						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');  
 						$('#cargar').hide();     
+					},
+					//una vez finalizado correctamente
+					success: function(data){
+
+						if (data == '') {
+		                                        $(".alert").removeClass("alert-danger");
+												$(".alert").removeClass("alert-info");
+		                                        $(".alert").addClass("alert-success");
+		                                        $(".alert").html('<strong>Ok!</strong> Sus datos fueron guardados correctamente. ');
+												$(".alert").delay(3000).queue(function(){
+													/*aca lo que quiero hacer 
+													  después de los 2 segundos de retraso*/
+													$(this).dequeue(); //continúo con el siguiente ítem en la cola
+													
+												});
+												$("#load").html('');
+												url = "index.php";
+												$(location).attr('href',url);
+		                                        
+												
+		                                    } else {
+		                                    	$(".alert").removeClass("alert-danger");
+		                                        $(".alert").addClass("alert-danger");
+		                                        $(".alert").html('<strong>Error!</strong> '+data);
+		                                        $("#load").html('');
+		                                    }
+					},
+					//si ha ocurrido un error
+					error: function(){
+						$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+		                $("#load").html('');
+					}
+				});
+				
+		    });
+
+
+
+			//al enviar el formulario
+		    $('#cargar2').click(function(){
+				
+
+				//información del formulario
+				var formData = new FormData($(".formulario")[0]);
+				var message = "";
+				//hacemos la petición ajax  
+				$.ajax({
+					url: '../ajax/ajax.php',  
+					type: 'POST',
+					// Form data
+					//datos del formulario
+					data: formData,
+					//necesario para subir archivos via ajax
+					cache: false,
+					contentType: false,
+					processData: false,
+					//mientras enviamos el archivo
+					beforeSend: function(){
+						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');  
+						$('#cargar2').hide();     
 					},
 					//una vez finalizado correctamente
 					success: function(data){
