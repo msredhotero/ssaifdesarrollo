@@ -61,7 +61,7 @@ $lblreemplazo	= array("Countrie","Contacto","Categoria","Division","Fecha Alta",
 $resCountries 	= $serviciosReferencias->traerCountries();
 $cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resCountries,array(1),'', mysql_result($resResultado,0,'refcountries'));
 
-$resContactos 	= $serviciosReferencias->traerContactosAsignadosPorCountrie(mysql_result($resResultado,0,'refcountries'));
+$resContactos 	= $serviciosReferencias->traerContactos();
 $cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resContactos,array(1,2),' - ', mysql_result($resResultado,0,'refcontactos'));
 
 $resCategorias 	= $serviciosReferencias->traerCategorias();

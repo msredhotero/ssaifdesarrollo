@@ -691,7 +691,7 @@ echo $res;
 
 function jugadorNuevo($serviciosReferencias) {
 	$id = $_POST['id'];
-	$idEstadoEscritura 		= $_POST['idEstadoEscritura'];
+
 	$idEstadoExpensas 		= $_POST['idEstadoExpensas'];
 	$idEstadoPartidaDeNacimiento = $_POST['idEstadoPartidaDeNacimiento'];
 

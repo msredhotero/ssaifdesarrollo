@@ -6230,7 +6230,7 @@ return $res;
 function modificarEquipos($id,$refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo) { 
 $sql = "update dbequipos 
 set 
-refcountries = ".$refcountries.",nombre = '".($nombre)."',refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",refcontactos = ".$refcontactos.",fechaalta = '".($fechaalta)."',fachebaja = '".($fachebaja)."',activo = ".$activo." 
+refcountries = ".$refcountries.",nombre = '".($nombre)."',refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",refcontactos = ".($refcontactos == '' ? NULL : $refcontactos).",fechaalta = '".($fechaalta)."',fachebaja = '".($fachebaja)."',activo = ".$activo." 
 where idequipo =".$id; 
 $res = $this->query($sql,0); 
 return $res; 

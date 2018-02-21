@@ -810,9 +810,11 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 				guardarEstado(usersid, $('#refestados'+usersid).val());
 			});
 
-			function jugadorNuevo(id) {
+			function jugadorNuevo(id, idEstadoExpensas) {
 				$.ajax({
 					data:  {id: id, 
+							idEstadoExpensas: idEstadoExpensas,
+							idEstadoPartidaDeNacimiento: idEstadoPartidaDeNacimiento,
 							accion: 'jugadorNuevo'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
