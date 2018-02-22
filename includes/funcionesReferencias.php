@@ -5106,6 +5106,12 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+function eliminarJugadoresdocumentacionPorJugadorDocumen($refjugador, $refdocumentacion) { 
+$sql = "delete from dbjugadoresdocumentacion where refjugadores =".$refjugador." and refdocumentaciones=".$refdocumentacion; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
 
 function traerJugadoresdocumentacion() { 
 $sql = "select 
@@ -5712,6 +5718,21 @@ $sql = "delete from dbjugadoresvaloreshabilitacionestransitorias where refjugado
 $res = $this->query($sql,0); 
 return $res; 
 } 
+
+function eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($refjugador, $refdocumentacion) {
+    $sql = "delete FROM dbjugadoresvaloreshabilitacionestransitorias
+where refjugadores = ".$refjugador." and refvaloreshabilitacionestransitorias = (SELECT 
+    idvalorhabilitaciontransitoria
+FROM
+    tbvaloreshabilitacionestransitorias v
+    inner join dbjugadoresvaloreshabilitacionestransitorias va on v.idvalorhabilitaciontransitoria = va.refvaloreshabilitacionestransitorias
+WHERE
+    va.refjugadores = ".$refjugador." 
+        AND v.refdocumentaciones = ".$refdocumentacion.")";
+    
+    $res = $this->query($sql,0); 
+    return $res; 
+}
 
 
 function traerJugadoresvaloreshabilitacionestransitorias() { 

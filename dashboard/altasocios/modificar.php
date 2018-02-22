@@ -36,6 +36,8 @@ $id = $_GET['id'];
 $resResultado = $serviciosReferencias->traerJugadoresprePorId($id);
 $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 
+$existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultadoAux,0,'nrodocumento'));
+
 		/////////////////////// Opciones para la creacion del formulario  /////////////////////
 		$tabla 			= "dbjugadorespre";
 
@@ -508,7 +510,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 		            				<button type="button" class="btn btn-success" id="notificar" style="margin-left:0px;"><span class="glyphicon glyphicon-envelope"></span> Generar Notificacion</button>
 		            			</li>
 		            			<?php
-		            			if (($idEstadoFoto == 3) && ($idEstadoNroDoc == 3) && ($idEstadoNroDocDorso == 3)) {
+		            			if (($idEstadoFoto == 3) && ($idEstadoNroDoc == 3) && ($idEstadoNroDocDorso == 3) && ($existeJugador == 0)) {
 		            			?>
 		            			<li>
 		            				<button type="button" class="btn btn-danger" id="jugadorNuevo" style="margin-left:0px;"><span class="glyphicon glyphicon-plus"></span> Generar Jugador Nuevo</button>
@@ -789,6 +791,7 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 				$.ajax({
 					data:  {id: id, 
 							refestados: refestados,
+							existeJugador: <?php echo $existeJugador; ?>,
 							accion: 'guardarEstado'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
@@ -810,11 +813,12 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 				guardarEstado(usersid, $('#refestados'+usersid).val());
 			});
 
-			function jugadorNuevo(id, idEstadoExpensas) {
+			function jugadorNuevo(id, idEstadoExpensas, idEstadoPartidaDeNacimiento, idTitulo) {
 				$.ajax({
 					data:  {id: id, 
 							idEstadoExpensas: idEstadoExpensas,
 							idEstadoPartidaDeNacimiento: idEstadoPartidaDeNacimiento,
+							idTitulo: idTitulo,
 							accion: 'jugadorNuevo'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
@@ -823,17 +827,29 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 					},
 					success:  function (response) {
 							alert('El Jugador Ya fue creado y su documentacion también.')
-							url = "../jugadores/modificar.php?id=<?php echo $id; ?>";
+							url = "../jugadores/modificar.php?id="+response;
 							$(location).attr('href',url);
 							
 					}
 				});
 			}
 
-			$('.jugadorNuevo').click(function() {
-				usersid =  $(this).attr("id");
+			$('#jugadorNuevo').click(function() {
 
-				jugadorNuevo(usersid);
+				var expensa = 0;
+				var partidaNaci = 0;
+				var titulo = 0;
+
+				if (<?php echo $idEstadoExpensa; ?> == 3) {
+					expensa = 1;
+				}
+				if (<?php echo $idEstadoPartidaNacimiento; ?> == 3) {
+					partidaNaci = 1;
+				}
+				if (<?php echo $idEstadoTitulo; ?> == 3) {
+					titulo = 1;
+				}
+				jugadorNuevo(<?php echo $id; ?>, expensa, partidaNaci, titulo);
 			});
 			
 

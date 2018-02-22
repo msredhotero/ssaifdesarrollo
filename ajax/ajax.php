@@ -694,6 +694,7 @@ function jugadorNuevo($serviciosReferencias) {
 
 	$idEstadoExpensas 		= $_POST['idEstadoExpensas'];
 	$idEstadoPartidaDeNacimiento = $_POST['idEstadoPartidaDeNacimiento'];
+	$idTitulo = $_POST['idTitulo'];
 
 	$sql = "INSERT INTO dbjugadores
 				(idjugador,
@@ -719,33 +720,123 @@ function jugadorNuevo($serviciosReferencias) {
 				observaciones
 				from		dbjugadorespre
 				where		idjugadorpre = ".$id;
+			
+
 	$res = $serviciosReferencias->query($sql,1);
 
-	//inserto la documentacion y los valores de la documentacion
+	//inserto la documentacion
+
+	//inserto la foto y el documento
 	$serviciosReferencias->insertarJugadoresdocumentacion($res,1,1,'');
 	$serviciosReferencias->insertarJugadoresdocumentacion($res,2,1,'');
 
-	if ($idEstadoEscritura != 0) {
-		$serviciosReferencias->insertarJugadoresdocumentacion($res,4,1,'');
+	//ficha
+	$serviciosReferencias->insertarJugadoresdocumentacion($res,3,0,'');
+
+	//escritura
+	$serviciosReferencias->insertarJugadoresdocumentacion($res,4,0,'');
+	
+	//examen medico
+	$serviciosReferencias->insertarJugadoresdocumentacion($res,5,0,'');
+
+	//expensa
+	$serviciosReferencias->insertarJugadoresdocumentacion($res,6,$idEstadoExpensas,'');
+
+	//inhabilita country
+	$serviciosReferencias->insertarJugadoresdocumentacion($res,7,0,'');
+
+	//partida nacimiento
+	$serviciosReferencias->insertarJugadoresdocumentacion($res,9,1,'');
+
+
+	//inserto los valores de la documentacion
+
+	//foto
+	$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,331);
+
+	//documento
+	$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,333);
+
+	//ficha
+	$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,334);
+
+	//escritura
+	if ($idTitulo == 1) {
+		$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,338);
+	} else {
+		$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,339);
 	}
 
-	if ($idEstadoExpensas != 0) {
-		$serviciosReferencias->insertarJugadoresdocumentacion($res,6,1,'');
-	}
+	//examen medico
+	$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,361);
 
-	if ($idEstadoPartidaDeNacimiento != 0) {
-		$serviciosReferencias->insertarJugadoresdocumentacion($res,9,1,'');
+	//expensa
+	if ($idEstadoExpensas == 1) {
+		$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,365);
+	} else {
+		$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,364);
 	}
+	
 
-	//$serviciosReferencias->insertarva
+	//inhabilita country
+	$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,366);
+
+	//partida nacimiento
+	$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,368);
+
+	echo $res;
 
 }
 
 function guardarEstado($serviciosReferencias) {
 	$id = $_POST['id'];
 	$refestados = $_POST['refestados'];
+	$existeJugador = $_POST['existeJugador'];
 	
 	$res = $serviciosReferencias->modificarEstadoDocumentacionjugadorimagenesPorId($id, $refestados);
+
+	if (($existeJugador == 1) && ($refestados == 3)) {
+		//borro la documentacion y el valor
+		$resDIJ = $serviciosReferencias->traerDocumentacionjugadorimagenesPorId($id);
+
+		$nroDocumento = mysql_result($resDIJ,0,'nrodocumento');
+
+		$refdocumentaciones = mysql_result($resDIJ,0,'refdocumentaciones');
+
+		$resJugador = $serviciosReferencias->traerJugadoresPorNroDocumento($nroDocumento);
+
+		$idJugador = mysql_result($resJugador,0,0);
+
+		//elimino la documentacion
+		$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($idJugador, $refdocumentaciones);
+
+		//elimino el valor
+		$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($idJugador, $refdocumentaciones);
+
+		//inserto documentacion
+		if ($refdocumentaciones == 4) {
+			$serviciosReferencias->insertarJugadoresdocumentacion($id,$refdocumentaciones,0,'');
+		} else {
+			$serviciosReferencias->insertarJugadoresdocumentacion($id,$refdocumentaciones,1,'');
+		}
+		
+
+		//inserto valoracion
+		switch ($refdocumentaciones) {
+			case 4:
+				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,338);
+				break;
+			case 6:
+				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,365);
+				break;
+			case 9:
+				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,368);
+				break;
+		}
+		
+
+
+	}
 
 	echo $res;
 }
