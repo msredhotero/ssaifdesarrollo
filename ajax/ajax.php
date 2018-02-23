@@ -127,6 +127,9 @@ case 'eliminarFoto':
 case 'eliminarFotoJugadores':
 	eliminarFotoJugadores($serviciosReferencias);
 	break;
+case 'eliminarFotoJugadoresID':
+	eliminarFotoJugadoresID($serviciosReferencias);
+	break;
 case 'traerContactosPorCountries':
 	traerContactosPorCountries($serviciosFunciones,$serviciosReferencias);
 	break;
@@ -723,6 +726,8 @@ function jugadorNuevo($serviciosReferencias) {
 			
 
 	$res = $serviciosReferencias->query($sql,1);
+
+	$serviciosReferencias->modificarDocumentacionjugadorimagenesIDjugador($id, $res)
 
 	//inserto la documentacion
 
@@ -2557,6 +2562,13 @@ function eliminarFotoJugadores($serviciosReferencias) {
 	echo $serviciosReferencias->eliminarFotoJugadores($refdocumentaciones,$refjugadorespre);
 }
 
+
+function eliminarFotoJugadoresID($serviciosReferencias) {
+	$refdocumentaciones			=	$_POST['documentacion'];
+	$refjugadorespre			=	$_POST['jugador'];
+	echo $serviciosReferencias->eliminarFotoJugadoresID($refdocumentaciones,$refjugadorespre);
+}
+
 function traerContactosPorCountries($serviciosFunciones, $serviciosReferencias) {
 	$id				=	$_POST['id'];
 	$resContactos	=	$serviciosReferencias->traerContactosAsignadosPorCountrie($id);
@@ -3141,6 +3153,7 @@ function insertarJugadoresdocumentacion($serviciosReferencias) {
 	*/
 	 
 	if ((integer)$resV > 0) { 
+
 		echo ''; 
 	} else { 
 		echo 'Huvo un error al insertar datos'.$resV.' ---- ';	 
