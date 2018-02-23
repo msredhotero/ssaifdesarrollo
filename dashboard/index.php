@@ -2285,6 +2285,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 							<span class="pull-right clickable panel-collapsed" style="margin-top:-15px; cursor:pointer;"><i class="glyphicon glyphicon-chevron-up"></i></span>
 						</div>
 		                    <div class="panel-body">
+		                    	<!--
 		                    	<div class="row">
 
 		                            
@@ -2307,7 +2308,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                            </div>
 		                            
 		                            
-							</div><!-- fin del contenedor detalle -->
+							</div>-->
+							<!-- fin del contenedor detalle -->
 							<div class="row">
 							    <div class="col s12">
 							      <div class="row">
@@ -2349,8 +2351,73 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 
 		$(document).ready(function(){
+			/*
 			$("select.flexselect").flexselect();
 
+			
+
+			$("select.flexselect").change(function() {
+				
+				$('#selction-ajax').html('<button type="button" class="btn btn-warning varJugadorModificar" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Modificar</button>');
+			});
+			*/
+
+
+			$('#autocomplete-input').keypress(function() {
+				if ($('#autocomplete-input').val().length > 3) {
+					$.ajax({
+					  dataType: 'json',
+				      type: 'post',
+				      data: {busqueda: $('#autocomplete-input').val()},
+				      url: '../json/jsbuscarjugadores.php',
+				      success: function(datos) {
+
+				      	//alert(datos[0][0].id);
+				      	
+				      	var dataJugadores = {};
+				      	for (var clave in datos[0]) {
+				      		//alert(datos[0][clave].apellido);
+				      		dataJugadores[datos[0][clave].id] = datos[0][clave].apellido;
+				      		
+				      	}
+/*
+				      	for (var c in dataJugadores) {
+				      		alert(dataJugadores[c]);
+				      	}
+				      	*/
+
+				      	$('#autocomplete-input').autocomplete({
+				          data: dataJugadores,
+				          limit: 20, 
+				          onAutocomplete: function(val) {
+						      // Callback function when value is autcompleted.
+						    },
+				          // The max amount of results that can be shown at once. Default: Infinity.
+				        });
+				        
+				      }
+				    });
+				}
+			});
+			$('#buscar').click(function(e) {
+		        $.ajax({
+						data:  {busqueda: $('#busqueda').val(),
+								tipobusqueda: $('#tipobusqueda').val(),
+								accion: 'buscarJugadores'},
+						url:   '../ajax/ajax.php',
+						type:  'post',
+						beforeSend: function () {
+								
+						},
+						success:  function (response) {
+								$('#resultadosJuagadores').html(response);
+								
+						}
+				});
+				
+			});
+
+/*
 			$('input.autocomplete').autocomplete({
 			    data: {
 			      "Apple Juan 31552466": null,
@@ -2363,12 +2430,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    },
 			    minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
 			  });
-
-			$("select.flexselect").change(function() {
-				
-				$('#selction-ajax').html('<button type="button" class="btn btn-warning varJugadorModificar" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Modificar</button>');
-			});
-
+*/
 			$('#colapsarMenu').click();
 			
 			$(document).on('click', '.panel-heading span.clickable', function(e){

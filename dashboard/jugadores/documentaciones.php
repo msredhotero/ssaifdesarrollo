@@ -112,8 +112,22 @@ if (!$_POST){
 
 		$nuevoId = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 		$error = $serviciosReferencias->subirArchivoJugadoresID('avatar-1',$idPre,$nuevoId,1,$idPre,$id);
+
+		if ($error == '') {
+			//elimino la documentacion
+			$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($id, 1);
+
+			//elimino el valor
+			$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($id, 1);
+
+			$serviciosReferencias->insertarJugadoresdocumentacion($id,1,1,'');
+
+			//foto
+			$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,331);
+		}
 	}
 
+	$cantidadDocumento = 0;
 	if ($_FILES['avatar-2']['tmp_name'] != '') {
 		if (mysql_num_rows($resFotoDocumento)>0) {
 			$serviciosReferencias->eliminarFotoJugadoresID(2,$id,$idPre);
@@ -122,6 +136,8 @@ if (!$_POST){
 		$nuevoId2 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 		$error .= $serviciosReferencias->subirArchivoJugadoresID('avatar-2',$idPre,$nuevoId2,2,$idPre,$id);
 
+		$cantidadDocumento += 1;
+		
 	}
 
 	if ($_FILES['avatar-3']['tmp_name'] != '') {
@@ -129,8 +145,23 @@ if (!$_POST){
 			$serviciosReferencias->eliminarFotoJugadoresID(99,$id,$idPre);
 		}
 
+		$cantidadDocumento += 1;
+
 		$nuevoId3 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 		$error .= $serviciosReferencias->subirArchivoJugadoresID('avatar-3',$idPre,$nuevoId3,99,$idPre,$id);
+	}
+
+	if ($cantidadDocumento >= 2) {
+		//elimino la documentacion
+		$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($id, 2);
+
+		//elimino el valor
+		$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($id, 2);
+
+		$serviciosReferencias->insertarJugadoresdocumentacion($id,2,1,'');
+
+		//foto
+		$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,333);
 	}
 
 
@@ -141,6 +172,19 @@ if (!$_POST){
 
 		$nuevoId4 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 		$error .= $serviciosReferencias->subirArchivoJugadoresID('avatar-4',$idPre,$nuevoId4,4,$idPre,$id);
+
+		if ($error == '') {
+			//elimino la documentacion
+			$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($id, 4);
+
+			//elimino el valor
+			$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($id, 4);
+
+			$serviciosReferencias->insertarJugadoresdocumentacion($id,4,1,'');
+
+			//foto
+			$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,338);
+		}
 	}
 
 
@@ -151,6 +195,20 @@ if (!$_POST){
 
 		$nuevoId5 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 		$error .= $serviciosReferencias->subirArchivoJugadoresID('avatar-5',$idPre,$nuevoId5,6,$idPre,$id);
+
+
+		if ($error == '') {
+			//elimino la documentacion
+			$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($id, 6);
+
+			//elimino el valor
+			$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($id, 6);
+
+			$serviciosReferencias->insertarJugadoresdocumentacion($id,6,1,'');
+
+			//foto
+			$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,365);
+		}
 	}
 
 
@@ -161,6 +219,19 @@ if (!$_POST){
 
 		$nuevoId6 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 		$error .= $serviciosReferencias->subirArchivoJugadoresID('avatar-6',$idPre,$nuevoId6,9,$idPre,$id);
+
+		if ($error == '') {
+			//elimino la documentacion
+			$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($id, 9);
+
+			//elimino el valor
+			$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($id, 9);
+
+			$serviciosReferencias->insertarJugadoresdocumentacion($id,9,1,'');
+
+			//foto
+			$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,368);
+		}
 	}
 	
 }

@@ -594,7 +594,9 @@ case 'generarNotificacion':
 	generarNotificacion($serviciosReferencias);
 	break;
 /****			fin 				******/
+
 }
+
 
 function rotarImagen($serviciosReferencias) {
 	$imagen = $_POST['imagen'];

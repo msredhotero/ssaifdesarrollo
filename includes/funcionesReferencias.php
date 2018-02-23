@@ -4776,6 +4776,29 @@ return $res;
 
 
 /* PARA Jugadores */
+function nuevoBuscador($busqueda) {
+    $sql = "SELECT 
+                j.idjugador,
+                tip.tipodocumento,
+                j.nrodocumento,
+                j.apellido,
+                j.nombres,
+                j.email,
+                j.fechanacimiento,
+                j.fechaalta,
+                j.fechabaja,
+                cou.nombre AS countrie
+            FROM
+                dbjugadores j
+                    INNER JOIN
+                tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos
+                    INNER JOIN
+                dbcountries cou ON cou.idcountrie = j.refcountries
+            WHERE
+                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda."'";
+    return $this->query($sql,0);
+}
+
 function traerApellidoNombreMalos() {
     $sql = "select
                 j.idjugador,
