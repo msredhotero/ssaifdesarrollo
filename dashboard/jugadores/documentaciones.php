@@ -103,6 +103,7 @@ if (!$_POST){
 
 	
 
+	$error = '';
 
 	if ($_FILES['avatar-1']['tmp_name'] != '') {
 		if (mysql_num_rows($resFoto)>0) {
@@ -111,7 +112,6 @@ if (!$_POST){
 
 		$nuevoId = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 		$error = $serviciosReferencias->subirArchivoJugadoresID('avatar-1',$idPre,$nuevoId,1,$idPre,$id);
-
 	}
 
 	if ($_FILES['avatar-2']['tmp_name'] != '') {
@@ -169,7 +169,7 @@ $resResultado = $serviciosReferencias->traerJugadoresPorId($id);
 
 $resResultadoPre = $serviciosReferencias->traerJugadoresprePorNroDocumento(mysql_result($resResultado,0,'nrodocumento'));
 
-$idJugadorPre = mysql_result($resResultadoPre,0,0);
+
 
 $resJugadores = $serviciosReferencias->traerJugadoresdocumentacionPorJugador($id);
 
@@ -177,6 +177,7 @@ $resJugadores = $serviciosReferencias->traerJugadoresdocumentacionPorJugador($id
 //si ya existe un jugador precargado
 	if (mysql_num_rows($resResultadoPre)> 0) {
 		$idPre = mysql_result($resResultadoPre,0,0);
+		$idJugadorPre = mysql_result($resResultadoPre,0,0);
 	} else {
 		$idPre = 0;
 	}
@@ -738,13 +739,13 @@ $(document).ready(function(){
 					rotar: 90,
 					directorio: '<?php echo $direc; ?>',
 					accion: 'rotarImagen'},
-			url:   '../ajax/ajax.php',
+			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
 					
 			},
 			success:  function (response) {
-					url = "index.php";
+					url = "modificar.php?id=<?php echo $id; ?>";
 					$(location).attr('href',url);
 					
 			}
@@ -759,13 +760,13 @@ $(document).ready(function(){
 					rotar: 270,
 					directorio: '<?php echo $direc; ?>',
 					accion: 'rotarImagen'},
-			url:   '../ajax/ajax.php',
+			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
 					
 			},
 			success:  function (response) {
-					url = "index.php";
+					url = "modificar.php?id=<?php echo $id; ?>";
 					$(location).attr('href',url);
 					
 			}
@@ -785,14 +786,14 @@ $(document).ready(function(){
 			data:  {documentacion: documentacion, 
 					jugador: jugador,
 					accion: 'eliminarFotoJugadoresID'},
-			url:   '../ajax/ajax.php',
+			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
 					
 			},
 			success:  function (response) {
 					alert(response);
-					url = "index.php";
+					url = "modificar.php?id=<?php echo $id; ?>";
 					$(location).attr('href',url);
 					
 			}

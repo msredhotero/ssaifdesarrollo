@@ -727,7 +727,7 @@ function jugadorNuevo($serviciosReferencias) {
 
 	$res = $serviciosReferencias->query($sql,1);
 
-	$serviciosReferencias->modificarDocumentacionjugadorimagenesIDjugador($id, $res)
+	$serviciosReferencias->modificarDocumentacionjugadorimagenesIDjugador($id, $res);
 
 	//inserto la documentacion
 

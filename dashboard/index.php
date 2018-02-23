@@ -2236,7 +2236,9 @@ if ($_SESSION['idroll_predio'] == 4) {
 			<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
 		    <!-- Latest compiled and minified JavaScript -->
 		    <script src="../bootstrap/js/bootstrap.min.js"></script>
-			
+			<link rel="stylesheet" href="../css/materialize.min.css">
+			<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 
 
 			
@@ -2295,6 +2297,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 		        						</select>
 		        						<div id="selction-ajax" style="margin-top: 10px;"></div>
 		                            </div>
+
+		                            
 		                            
 		                            <div class="form-group col-md-12">
 		                                <div class="cuerpoBox" id="resultadosJuagadores">
@@ -2304,6 +2308,17 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                            
 		                            
 							</div><!-- fin del contenedor detalle -->
+							<div class="row">
+							    <div class="col s12">
+							      <div class="row">
+							        <div class="input-field col s12">
+							          <i class="material-icons prefix">textsms</i>
+							          <input type="text" id="autocomplete-input" class="autocomplete">
+							          <label for="autocomplete-input">Busqueda por Nombre Completo o Nro Documento</label>
+							        </div>
+							      </div>
+							    </div>
+							  </div>
 		                    </div>		
 						</div>
 		            </div>
@@ -2328,9 +2343,26 @@ if ($_SESSION['idroll_predio'] == 4) {
 		<script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 		<script src="../bootstrap/js/dataTables.bootstrap.js"></script>
 
+		<script type="text/javascript" src="../js/materialize.min.js"></script>
+
 		<script type="text/javascript">
+
+
 		$(document).ready(function(){
 			$("select.flexselect").flexselect();
+
+			$('input.autocomplete').autocomplete({
+			    data: {
+			      "Apple Juan 31552466": null,
+			      "Microsoft Juan 657987": null,
+			      "Google Pedro 789653": 'https://placehold.it/250x250'
+			    },
+			    limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
+			    onAutocomplete: function(val) {
+			      // Callback function when value is autcompleted.
+			    },
+			    minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+			  });
 
 			$("select.flexselect").change(function() {
 				

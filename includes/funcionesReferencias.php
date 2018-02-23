@@ -3466,7 +3466,7 @@ function existeDevuelveId($sql) {
     function obtenerNuevoId($tabla) {
         //u235498999_aif
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = 'u235498999_aif' 
+                WHERE TABLE_SCHEMA = 'ssaif_local_diciembre_host' 
                 AND TABLE_NAME = '".$tabla."'";
         $res = $this->query($sql,0);
         return mysql_result($res, 0,0);
@@ -3530,11 +3530,11 @@ function existeDevuelveId($sql) {
 
     function subirArchivoJugadoresID($file,$carpeta,$id,$refdocumentaciones,$refjugadorespre, $idjugador) {
         
-        $dir_destino = '../data/'.$id.'/';
+        $dir_destino = '../../data/'.$id.'/';
         $imagen_subida = $dir_destino . $this->sanear_string(str_replace(' ','',basename($_FILES[$file]['name'])));
         
-        $noentrar = '../imagenes/index.php';
-        $nuevo_noentrar = '../data/'.$id.'/'.'index.php';
+        $noentrar = '../../imagenes/index.php';
+        $nuevo_noentrar = '../../data/'.$id.'/'.'index.php';
         
         if (!file_exists($dir_destino)) {
             mkdir($dir_destino, 0777);
@@ -3562,7 +3562,7 @@ function existeDevuelveId($sql) {
                             if ($this->existeArchivoJugadores($id,$archivo,$tipoarchivo) == 0) {
                                 $sql    =   "insert into 
                                 dbdocumentacionjugadorimagenes(iddocumentacionjugadorimagen,refdocumentaciones,refjugadorespre,imagen,type,refestados, idjugador) 
-                                values ('',".$refdocumentaciones.",".$refjugadorespre.",'".str_replace(' ','',$archivo)."','".$tipoarchivo."',1,".$idjugador.")";
+                                values ('',".$refdocumentaciones.",".($refjugadorespre == 0 ? 'NULL' : $refjugadorespre).",'".str_replace(' ','',$archivo)."','".$tipoarchivo."',1,".$idjugador.")";
                                 $this->query($sql,1);
                             }
                             echo '';
