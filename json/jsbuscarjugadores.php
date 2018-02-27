@@ -22,7 +22,27 @@ $fecha = date('Y-m-d');
 
 $busqueda = $_POST['busqueda'];
 
-$resTraerJugadores = $serviciosReferencias->nuevoBuscador($busqueda);
+$arBusqueda = explode(" ", $busqueda);
+
+$cantidad = count($arBusqueda);
+
+switch ($cantidad) {
+	case 1:
+		$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0]);
+		break;
+	case 2:
+		$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1]);
+		break;
+	case 3:
+		$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1],$arBusqueda[2]);
+		break;
+	
+	default:
+		$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1],$arBusqueda[2],$arBusqueda[3]);
+		break;
+}
+
+
 
 $ar = array();
 

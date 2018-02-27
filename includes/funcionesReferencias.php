@@ -3410,7 +3410,7 @@ function existeDevuelveId($sql) {
 
         //imagecreatefrompng
 
-        $mystring = $imagen;
+        $mystring = strtolower($imagen);
         $findme   = 'jpg';
         $pos = strpos($mystring, $findme);
 
@@ -4776,7 +4776,7 @@ return $res;
 
 
 /* PARA Jugadores */
-function nuevoBuscador($busqueda) {
+function nuevoBuscador($busqueda,$busqueda2='%',$busqueda3='%',$busqueda4='%') {
     $sql = "SELECT 
                 j.idjugador,
                 tip.tipodocumento,
@@ -4795,7 +4795,11 @@ function nuevoBuscador($busqueda) {
                     INNER JOIN
                 dbcountries cou ON cou.idcountrie = j.refcountries
             WHERE
-                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda."'";
+                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda."' or
+                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda2."' or
+                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda3."' or
+                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda4."' 
+                limit 15";
     return $this->query($sql,0);
 }
 

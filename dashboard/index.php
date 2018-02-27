@@ -2271,11 +2271,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		    <?php
 			if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 				$resCantidadJugadores = $serviciosReferencias->traerCantidadJugadores();
-				$resJuga = $serviciosReferencias->traerJugadoresAutocompletar();
-				$cadJugadores = '<option value="0"></option>';
-				while ($rowJ = mysql_fetch_array($resJuga)) {
-					$cadJugadores .= '<option value="'.$rowJ[0].'">'.$rowJ[1].'</option>';
-				}
+				
 			?>
 			<div class="row" style="margin-right:15px;">
 		    <div class="col-md-12">
@@ -2294,7 +2290,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                                
 		        							
 		        						<select id="lstjugadores" class="flexselect form-control">
-		        							<?php echo $cadJugadores; ?>
+		        							<?php //echo $cadJugadores; ?>
 		        						</select>
 		        						<div id="selction-ajax" style="margin-top: 10px;"></div>
 		                            </div>
@@ -2349,7 +2345,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		<script type="text/javascript">
 
-
+		
 		$(document).ready(function(){
 			/*
 			$("select.flexselect").flexselect();
@@ -2364,20 +2360,20 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 
 			$('#autocomplete-input').keypress(function() {
-				if ($('#autocomplete-input').val().length > 3) {
+
 					$.ajax({
 					  dataType: 'json',
 				      type: 'post',
 				      data: {busqueda: $('#autocomplete-input').val()},
 				      url: '../json/jsbuscarjugadores.php',
 				      success: function(datos) {
-
+				      	var dataJugadores = {};
 				      	//alert(datos[0][0].id);
 				      	
-				      	var dataJugadores = {};
+				      	
 				      	for (var clave in datos[0]) {
 				      		//alert(datos[0][clave].apellido);
-				      		dataJugadores[datos[0][clave].id] = datos[0][clave].apellido;
+				      		dataJugadores[datos[0][clave].apellido + ' ' + datos[0][clave].nombres + ' ' + datos[0][clave].nrodocumento] = 'jugadores/modificar.php?id=' + datos[0][clave].id;
 				      		
 				      	}
 /*
@@ -2397,7 +2393,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				        
 				      }
 				    });
-				}
+				
 			});
 			$('#buscar').click(function(e) {
 		        $.ajax({
