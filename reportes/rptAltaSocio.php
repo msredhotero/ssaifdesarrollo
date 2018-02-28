@@ -2,6 +2,8 @@
 
 date_default_timezone_set('America/Buenos_Aires');
 
+ini_set('max_execution_time', 1000);
+
 include ('../includes/funcionesUsuarios.php');
 include ('../includes/funciones.php');
 include ('../includes/funcionesHTML.php');
@@ -28,13 +30,15 @@ $resSocio = $serviciosReferencias->traerJugadoresprePorIdCompleto($id);
 
 $resFoto = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
 $urlImg1 = "../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+$urlImgType1 = mysql_result($resFoto,0,'type');
 
 $resFotoDocumento = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
 $urlImg2 = "../data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
+$urlImgType2 = mysql_result($resFotoDocumento,0,'type');
 
 $resFotoDocumentoDorso = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,99);
 $urlImg3 = "../data/".mysql_result($resFotoDocumentoDorso,0,0)."/".mysql_result($resFotoDocumentoDorso,0,'imagen');
-
+$urlImgType3 = mysql_result($resFotoDocumentoDorso,0,'type');
 
 $pdf = new FPDF();
 
@@ -105,11 +109,19 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->SetX(5);
 	$pdf->Cell(180,5,'FECHA DE ALTA: '.mysql_result($resSocio,0,'fechaalta'),0,0,'L',false);
 
-	$pdf->Image($urlImg1,210,10,50,67);
+	$res1 = $serviciosReferencias->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
 
-	$pdf->Image($urlImg2,190,80,80);
 
-	$pdf->Image($urlImg3,190,140,80);
+	//die(var_dump($res1));
+	$pdf->Image($res1,210,10,40,54);
+
+	$res2 = $serviciosReferencias->devolverImagen(($urlImg2), $urlImgType2,'imagenTemp2');
+
+	$pdf->Image($res2,190,80,70);
+
+	$res3 = $serviciosReferencias->devolverImagen(($urlImg3), $urlImgType3,'imagenTemp3');
+
+	$pdf->Image($res3,190,140,70);
 
 
 	$pdf->SetXY(20,150);
@@ -124,8 +136,30 @@ $pdf->SetAutoPageBreak(true,1);
 
 $nombreTurno = "ALTA-JUGADOR-".$fecha.".pdf";
 
-$pdf->Output($nombreTurno,'I');
+$pdf->Output($nombreTurno,'D');
 
+
+// Creamos un instancia de la clase ZipArchive
+ //$zip = new ZipArchive();
+// Creamos y abrimos un archivo zip temporal
+ //$zip->open("Alta-Jugador.zip",ZipArchive::CREATE);
+ // Añadimos un directorio
+ //$dir = 'miDirectorio';
+ //$zip->addEmptyDir($dir);
+ // Añadimos un archivo en la raid del zip.
+ //$zip->addFile($nombreTurno);
+ //Añadimos un archivo dentro del directorio que hemos creado
+ //$zip->addFile("imagen2.jpg",$dir."/mi_imagen2.jpg");
+ // Una vez añadido los archivos deseados cerramos el zip.
+ //$zip->close();
+
+ // Creamos las cabezeras que forzaran la descarga del archivo como archivo zip.
+ //header("Content-type: application/octet-stream");
+ //header("Content-disposition: attachment; filename=Alta-Jugador.zip");
+ // leemos el archivo creado
+ //readfile('Alta-Jugador.zip');
+ // Por último eliminamos el archivo temporal creado
+ //unlink('Alta-Jugador.zip');//Destruye el archivo temporal
 
 ?>
 

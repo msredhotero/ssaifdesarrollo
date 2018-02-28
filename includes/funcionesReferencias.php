@@ -13125,6 +13125,39 @@ function presentardocumentacion($id) {
 
 }
 
+function presentardocumentacionAparte($id) {
+    $resJugador = $this->traerJugadoresprePorId($id);
+
+    $emailReferente = $this->traerReferente(mysql_result($resJugador, 0, 'nrodocumento'));
+
+    $sql = "select refestados,refdocumentaciones from dbdocumentacionjugadorimagenes where refjugadorespre = ".$id." and refdocumentaciones in (1,2,99)";
+    $resDocumentaciones = $this->query($sql,0);
+
+
+
+
+    //** creo la notificacion **//
+    $mensaje = 'Se presento la documentación extra';
+    $idpagina = 1;
+    $autor = mysql_result($resJugador, 0, 'apellido').' '.mysql_result($resJugador, 0, 'nombres');
+    $destinatario = $emailReferente;
+    $id1 = $id;
+    $id2 = 0;
+    $id3 = 0;
+    $icono = 'glyphicon glyphicon-eye-open';
+    $estilo = 'alert alert-success';
+    $fecha = date('Y-m-d H:i:s');
+    $url = "altasocios/modificar.php?id=".$id;
+
+    $res = $this->insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url);
+    //** fin notificaion      **//
+
+    //$this->enviarEmail($emailReferente,$mensaje,$url, $referencia='');
+
+    echo 'La documentacion fue enviada correctamente para su posterior revision, cualquier notificacion sera enviada por email.';
+
+}
+
 function traerReferente($nrodocumento) {
     $sql = "select
                 coalesce(u.email,'') as email
@@ -13154,7 +13187,7 @@ function traerReferente($nrodocumento) {
 
 function insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url) { 
 $sql = "insert into dbnotificaciones(idnotificacion,mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha,url,leido) 
-values ('','".utf8_decode($mensaje)."',".$idpagina.",'".utf8_decode($autor)."','".utf8_decode($destinatario)."',".$id1.",".$id2.",".$id3.",'".utf8_decode($icono)."','".utf8_decode($estilo)."','".utf8_decode($fecha)."','".utf8_decode($url)."',0)"; 
+values ('','".($mensaje)."',".$idpagina.",'".($autor)."','".($destinatario)."',".$id1.",".$id2.",".$id3.",'".($icono)."','".($estilo)."','".($fecha)."','".($url)."',0)"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -13519,6 +13552,128 @@ function enviarEmail($destinatario,$asunto,$cuerpo, $referencia='') {
 
 /*****************               FIN                **************************/
 /* Fin */
+
+function comprimirEnZip(array $files)
+{
+    $zipPath = tempnam(sys_get_temp_dir(), 'zip');
+    $zip = new ZipArchive();
+    $zip->open($zipPath, ZipArchive::CREATE);
+    foreach ($files as $k => $v) {
+
+        if (!is_numeric($k)) {
+            $path = $k;
+            $nombre = $v;
+        } else {
+            $path = $v;
+            $nombre = basename($v);
+        }
+
+        if (!is_file($path)) {
+            throw new Exception(__('No se ha encontrado uno de los ficheros a comprimir.'));
+        }
+
+        if (!$zip->addFile($path, $nombre)) {
+            throw new Exception(__('No se ha podido agregar el fichero [%s] al zip', $nombre));
+        }
+    }
+    if (!$zip->close()) {
+        throw new Exception(__('No se ha podido generar el fichero .ZIP con el contenido.'));
+    }
+    return $zipPath;
+}
+
+
+
+function devolverImagen($name, $type, $nombrenuevo) {
+    
+    //if( $_FILES[$archivo]['name'] != null && $_FILES[$archivo]['size'] > 0 ){
+    // Nivel de errores
+      error_reporting(E_ALL);
+      $altura = 300;
+      // Constantes
+      # Altura de el thumbnail en píxeles
+      //define("ALTURA", 100);
+      # Nombre del archivo temporal del thumbnail
+      //define("NAMETHUMB", "/tmp/thumbtemp"); //Esto en servidores Linux, en Windows podría ser:
+      //define("NAMETHUMB", "c:/windows/temp/thumbtemp"); //y te olvidas de los problemas de permisos
+      $NAMETHUMB = "c:/windows/temp/";
+      # Servidor de base de datos
+      //define("DBHOST", "localhost");
+      # nombre de la base de datos
+      //define("DBNAME", "portalinmobiliario");
+      # Usuario de base de datos
+      //define("DBUSER", "root");
+      # Password de base de datos
+      //define("DBPASSWORD", "");
+      // Mime types permitidos
+      $mimetypes = array("image/jpeg", "image/pjpeg", "image/gif", "image/png");
+      // Variables de la foto
+      $name = $name;
+      $type = $type;
+      $tmp_name = $name;
+      //$size = $_FILES[$archivo]["size"];
+      // Verificamos si el archivo es una imagen válida
+      if(!in_array($type, $mimetypes))
+        die("El archivo que subiste no es una imagen válida");
+      // Creando el thumbnail
+      switch($type) {
+        case $mimetypes[0]:
+        case $mimetypes[1]:
+          $img = imagecreatefromjpeg($tmp_name);
+          $NAMETHUMB .= $nombrenuevo.".jpg";
+          break;
+        case $mimetypes[2]:
+          $img = imagecreatefromgif($tmp_name);
+          $NAMETHUMB .= $nombrenuevo.".gif";
+          break;
+        case $mimetypes[3]:
+          $img = imagecreatefrompng($tmp_name);
+          $NAMETHUMB .= $nombrenuevo.".png";
+          break;
+      }
+      
+      $datos = getimagesize($tmp_name);
+      
+      $ratio = ($datos[1]/$altura);
+      $ancho = round($datos[0]/$ratio);
+      $thumb = imagecreatetruecolor($ancho, $altura);
+      imagecopyresized($thumb, $img, 0, 0, 0, 0, $ancho, $altura, $datos[0], $datos[1]);
+      switch($type) {
+        case $mimetypes[0]:
+        case $mimetypes[1]:
+          imagejpeg($thumb, $NAMETHUMB);
+              break;
+        case $mimetypes[2]:
+          imagegif($thumb, $NAMETHUMB);
+          break;
+        case $mimetypes[3]:
+          imagepng($thumb, $NAMETHUMB);
+          break;
+      }
+      // Extrae los contenidos de las fotos
+      # contenido de la foto original
+      $fp = fopen($tmp_name, "rb");
+      $tfoto = fread($fp, filesize($tmp_name));
+      $tfoto = addslashes($tfoto);
+      fclose($fp);
+      # contenido del thumbnail
+      $fp = fopen($NAMETHUMB, "rb");
+      $tthumb = fread($fp, filesize($NAMETHUMB));
+      $tthumb = addslashes($tthumb);
+      fclose($fp);
+      // Borra archivos temporales si es que existen
+      //@unlink($tmp_name);
+      //@unlink(NAMETHUMB);
+    /*
+    } else {
+        $tfoto = '';
+        $type = '';
+    }
+    */
+    $tfoto = utf8_decode($tfoto);
+    //return array('tfoto' => $tfoto, 'type' => $NAMETHUMB);
+    return $NAMETHUMB;
+}
 
 function query($sql,$accion) {
         

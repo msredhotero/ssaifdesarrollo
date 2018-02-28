@@ -575,6 +575,9 @@ case 'modificarJugadorespreRegistro':
 case 'presentardocumentacion':
 	presentardocumentacion($serviciosReferencias);
 	break; 
+case 'presentardocumentacionAparte':
+	presentardocumentacionAparte($serviciosReferencias);
+	break;
 case 'guardarEstado':
 	guardarEstado($serviciosReferencias);
 	break;
@@ -857,6 +860,19 @@ function presentardocumentacion($serviciosReferencias) {
 
 
 }
+
+function presentardocumentacionAparte($serviciosReferencias) {
+	$id = $_POST['id'];
+
+	$res = $serviciosReferencias->presentardocumentacionAparte($id);
+
+	echo $res;
+
+
+}
+
+
+
 
 function insertarJugadorespre($serviciosReferencias) {
 	$reftipodocumentos = $_POST['reftipodocumentos'];

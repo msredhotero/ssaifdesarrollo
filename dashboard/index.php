@@ -1246,6 +1246,16 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                    <?php
 		                	}
 		                	?>
+
+		                	<?php
+	            				if (($idEstadoFoto == 3) && ($idEstadoNroDoc == 3) && ($idEstadoNroDocDorso == 3)) {
+	            			?>
+	            			<li>
+	            				<button type="button" class="btn btn-warning" id="presentar2" data-toggle="modal" data-target="#myModal3" style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Presentar</button>
+	            			</li>
+	            			<?php
+	            				}
+	            			?>
 		                </ul>
 		                </div>
 		            </div>
@@ -1389,8 +1399,32 @@ if ($_SESSION['idroll_predio'] == 4) {
 				});
 			}
 
+
+			function presentardocumentacionAparte(id) {
+				$.ajax({
+					data:  {id: id, 
+							accion: 'presentardocumentacionAparte'},
+					url:   '../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							$('#resultadoPresentacion').html(response);
+							//url = "index.php";
+							//$(location).attr('href',url);
+							
+					}
+				});
+			}
+
 			$('#presentar').click(function() {
 				presentardocumentacion(<?php echo mysql_result($resResultado,0,0); ?>);
+			});
+
+
+			$('#presentar2').click(function() {
+				presentardocumentacionAparte(<?php echo mysql_result($resResultado,0,0); ?>);
 			});
 
 			var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' + 
