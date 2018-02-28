@@ -761,6 +761,9 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </li>
                     <?php } ?>
                     <li>
+                        <button type="button" class="btn btn-default" id="fichablanco" style="margin-left:0px;">Generar Ficha en Blanco</button>
+                    </li>
+                    <li>
                         <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
                     </li>
                 </ul>
@@ -797,6 +800,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 
+	$('#fichablanco').click(function() {
+		window.open("../../reportes/rptAltaSocioBlanco.php?id=<?php echo $id; ?>" ,'_blank');
+	});
 
 	<?php
 		if (mysql_num_rows($resFoto)>0) {
