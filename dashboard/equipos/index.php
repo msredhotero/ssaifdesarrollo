@@ -262,7 +262,7 @@ $(document).ready(function(){
 	$('#activo').prop('checked',true);
 	
 	$('#fechaalta').val('<?php echo date('d/m/Y'); ?>');
-	
+	/*
 	function traerContactosPorCountries(id) {
 		$.ajax({
 				data:  {id: id, 
@@ -283,7 +283,7 @@ $(document).ready(function(){
 	});
 	
 	traerContactosPorCountries($(this).val());
-	
+	*/
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
