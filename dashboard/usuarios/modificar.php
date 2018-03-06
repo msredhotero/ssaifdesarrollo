@@ -33,12 +33,13 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Usuario
 $id = $_GET['id'];
 
 $resResultado = $serviciosReferencias->traerUsuariosPorId($id);
+$resResultadoAux = $serviciosReferencias->traerUsuariosPorId($id);
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbusuarios";
 
-$lblCambio	 	= array("refroles","nombrecompleto");
-$lblreemplazo	= array("Perfil","Nombre Completo");
+$lblCambio	 	= array("refroles","nombrecompleto","refcountries");
+$lblreemplazo	= array("Perfil","Nombre Completo","Club");
 
 if ($_SESSION['idroll_predio'] != 1) {
 	$resRoles 	= $serviciosUsuario->traerRolesSimple();
@@ -212,6 +213,12 @@ if ($_SESSION['idroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 
+    if ('<?php echo mysql_result($resResultado,0,7); ?>' == 'Si') {
+		$('#activo').prop('checked',true);
+	} else {
+		$('#activo').prop('checked',false);
+	}
+	
 	$('.volver').click(function(event){
 		 
 		url = "index.php";

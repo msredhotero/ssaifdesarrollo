@@ -20,7 +20,7 @@ $serviciosReferencias 	= new ServiciosReferencias();
 
 $fecha = date('Y-m-d');
 
-$busqueda = $_POST['busqueda'];
+$busqueda = trim($_POST['busqueda']);
 
 $arBusqueda = explode(" ", $busqueda);
 

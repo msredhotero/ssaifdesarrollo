@@ -3466,7 +3466,7 @@ function existeDevuelveId($sql) {
     function obtenerNuevoId($tabla) {
         //u235498999_aif
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = 'ssaif_local_diciembre_host' 
+                WHERE TABLE_SCHEMA = 'u235498999_aif' 
                 AND TABLE_NAME = '".$tabla."'";
         $res = $this->query($sql,0);
         return mysql_result($res, 0,0);
@@ -4055,7 +4055,7 @@ return $res;
 
 
 function traerUsuariosPorId($id) {
-$sql = "select idusuario,usuario,password,refroles,email,nombrecompleto,refcountries from dbusuarios where idusuario =".$id;
+$sql = "select idusuario,usuario,password,refroles,email,nombrecompleto,refcountries, (case when activo=1 then 'Si' else 'No' end) from dbusuarios where idusuario =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -4776,33 +4776,6 @@ return $res;
 
 
 /* PARA Jugadores */
-function nuevoBuscador($busqueda,$busqueda2='%',$busqueda3='%',$busqueda4='%') {
-    $sql = "SELECT 
-                j.idjugador,
-                tip.tipodocumento,
-                j.nrodocumento,
-                j.apellido,
-                j.nombres,
-                j.email,
-                j.fechanacimiento,
-                j.fechaalta,
-                j.fechabaja,
-                cou.nombre AS countrie
-            FROM
-                dbjugadores j
-                    INNER JOIN
-                tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos
-                    INNER JOIN
-                dbcountries cou ON cou.idcountrie = j.refcountries
-            WHERE
-                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda."' or
-                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda2."' or
-                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda3."' or
-                CONCAT(j.apellido, ' ', j.nombres, ' ', j.nrodocumento) REGEXP '".$busqueda4."' 
-                limit 15";
-    return $this->query($sql,0);
-}
-
 function traerApellidoNombreMalos() {
     $sql = "select
                 j.idjugador,
@@ -13051,6 +13024,18 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+
+function traerJugadoresPorIdCompleto($id) {
+$sql = "select j.idjugador,j.reftipodocumentos,j.nrodocumento,j.apellido,j.nombres,j.email,j.fechanacimiento,j.fechaalta,j.refcountries,j.observaciones,jp.refusuarios,jp.numeroserielote , cc.nombre as country, td.tipodocumento
+        from dbjugadores j 
+        inner join dbcountries cc on cc.idcountrie = j.refcountries
+        inner join tbtipodocumentos td on td.idtipodocumento = j.reftipodocumentos
+        left join dbjugadorespre jp on jp.nrodocumento = j.nrodocumento
+        where idjugador =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
 function traerJugadoresprePorNroDocumento($nroDocumento) {
 $sql = "select idjugadorpre,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,refcountries,observaciones,refusuarios from dbjugadorespre where nrodocumento =".$nroDocumento;
 $res = $this->query($sql,0);
@@ -13124,6 +13109,8 @@ function presentardocumentacion($id) {
     }
 
 }
+
+
 
 function presentardocumentacionAparte($id) {
     $resJugador = $this->traerJugadoresprePorId($id);
@@ -13553,34 +13540,6 @@ function enviarEmail($destinatario,$asunto,$cuerpo, $referencia='') {
 /*****************               FIN                **************************/
 /* Fin */
 
-function comprimirEnZip(array $files)
-{
-    $zipPath = tempnam(sys_get_temp_dir(), 'zip');
-    $zip = new ZipArchive();
-    $zip->open($zipPath, ZipArchive::CREATE);
-    foreach ($files as $k => $v) {
-
-        if (!is_numeric($k)) {
-            $path = $k;
-            $nombre = $v;
-        } else {
-            $path = $v;
-            $nombre = basename($v);
-        }
-
-        if (!is_file($path)) {
-            throw new Exception(__('No se ha encontrado uno de los ficheros a comprimir.'));
-        }
-
-        if (!$zip->addFile($path, $nombre)) {
-            throw new Exception(__('No se ha podido agregar el fichero [%s] al zip', $nombre));
-        }
-    }
-    if (!$zip->close()) {
-        throw new Exception(__('No se ha podido generar el fichero .ZIP con el contenido.'));
-    }
-    return $zipPath;
-}
 
 
 
@@ -13596,7 +13555,7 @@ function devolverImagen($name, $type, $nombrenuevo) {
       # Nombre del archivo temporal del thumbnail
       //define("NAMETHUMB", "/tmp/thumbtemp"); //Esto en servidores Linux, en Windows podría ser:
       //define("NAMETHUMB", "c:/windows/temp/thumbtemp"); //y te olvidas de los problemas de permisos
-      $NAMETHUMB = "c:/windows/temp/";
+      $NAMETHUMB = "";
       # Servidor de base de datos
       //define("DBHOST", "localhost");
       # nombre de la base de datos

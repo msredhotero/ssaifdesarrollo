@@ -1129,7 +1129,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            				}
 		            			?>
 		            			<?php
-		            				if (($idEstadoFoto == 3) || ($idEstadoNroDoc == 3) || ($idEstadoNroDocDorso == 3)) {
+		            				if (($idEstadoFoto != 3) && ($idEstadoNroDoc != 3) && ($idEstadoNroDocDorso != 3)) {
 		            			?>
 		            			<li>
 		            				<button type="button" class="btn btn-warning" id="presentar" data-toggle="modal" data-target="#myModal3" style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Presentar</button>
@@ -1198,7 +1198,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 
 				        <div class="col-sm-4 text-center">
-							<h4>Partida de Nacimiento (pdf)</h4>
+							<h4>Partida de Nacimiento/Libreta de Matrimonio (pdf)</h4>
 				            <div class="kv-avatar">
 				                <div class="file-loading">
 				                    <input id="avatar-6" name="avatar-6" type="file" required>
@@ -1246,7 +1246,6 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                    <?php
 		                	}
 		                	?>
-
 		                	<?php
 	            				if (($idEstadoFoto == 3) && ($idEstadoNroDoc == 3) && ($idEstadoNroDocDorso == 3)) {
 	            			?>
@@ -1398,8 +1397,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 					}
 				});
 			}
-
-
+			
 			function presentardocumentacionAparte(id) {
 				$.ajax({
 					data:  {id: id, 
@@ -1421,8 +1419,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$('#presentar').click(function() {
 				presentardocumentacion(<?php echo mysql_result($resResultado,0,0); ?>);
 			});
-
-
+			
 			$('#presentar2').click(function() {
 				presentardocumentacionAparte(<?php echo mysql_result($resResultado,0,0); ?>);
 			});
@@ -1936,7 +1933,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
 			    <?php 
-			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreview: [
 			    	'https://www.saupureinconsulting.com.ar/aifzn/data/<?php echo mysql_result($resPartidaNacimiento,0,0); ?>/<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>'
@@ -1957,7 +1954,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreviewConfig: [
-				    {type: "pdf", size: 80000, caption: "PDF Sample", filename: "<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>",  key: 1}
+				    {type: "pdf", size: 8000, caption: "PDF Sample", filename: "<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>",  key: 1}
 				],
 			    <?php
 				} else {
@@ -2270,9 +2267,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
 		    <!-- Latest compiled and minified JavaScript -->
 		    <script src="../bootstrap/js/bootstrap.min.js"></script>
-			<link rel="stylesheet" href="../css/materialize.min.css">
-			<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+			
 
 
 			
@@ -2305,7 +2300,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 		    <?php
 			if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 				$resCantidadJugadores = $serviciosReferencias->traerCantidadJugadores();
-				
+				$resJuga = $serviciosReferencias->traerJugadoresAutocompletar();
+				$cadJugadores = '<option value="0"></option>';
+				while ($rowJ = mysql_fetch_array($resJuga)) {
+					$cadJugadores .= '<option value="'.$rowJ[0].'">'.$rowJ[1].'</option>';
+				}
 			?>
 			<div class="row" style="margin-right:15px;">
 		    <div class="col-md-12">
@@ -2315,7 +2314,6 @@ if ($_SESSION['idroll_predio'] == 4) {
 							<span class="pull-right clickable panel-collapsed" style="margin-top:-15px; cursor:pointer;"><i class="glyphicon glyphicon-chevron-up"></i></span>
 						</div>
 		                    <div class="panel-body">
-		                    	<!--
 		                    	<div class="row">
 
 		                            
@@ -2324,12 +2322,10 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                                
 		        							
 		        						<select id="lstjugadores" class="flexselect form-control">
-		        							<?php //echo $cadJugadores; ?>
+		        							<?php echo $cadJugadores; ?>
 		        						</select>
 		        						<div id="selction-ajax" style="margin-top: 10px;"></div>
 		                            </div>
-
-		                            
 		                            
 		                            <div class="form-group col-md-12">
 		                                <div class="cuerpoBox" id="resultadosJuagadores">
@@ -2338,19 +2334,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                            </div>
 		                            
 		                            
-							</div>-->
-							<!-- fin del contenedor detalle -->
-							<div class="row">
-							    <div class="col s12">
-							      <div class="row">
-							        <div class="input-field col s12">
-							          <i class="material-icons prefix">textsms</i>
-							          <input type="text" id="autocomplete-input" class="autocomplete">
-							          <label for="autocomplete-input">Busqueda por Nombre Completo o Nro Documento</label>
-							        </div>
-							      </div>
-							    </div>
-							  </div>
+							</div><!-- fin del contenedor detalle -->
 		                    </div>		
 						</div>
 		            </div>
@@ -2375,92 +2359,18 @@ if ($_SESSION['idroll_predio'] == 4) {
 		<script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 		<script src="../bootstrap/js/dataTables.bootstrap.js"></script>
 
-		<script type="text/javascript" src="../js/materialize.min.js"></script>
-
 		<script type="text/javascript">
-
-		
 		$(document).ready(function(){
-			/*
 			$("select.flexselect").flexselect();
-
-			
 
 			$("select.flexselect").change(function() {
 				
-				$('#selction-ajax').html('<button type="button" class="btn btn-warning varJugadorModificar" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Modificar</button>');
-			});
-			*/
-
-
-			$('#autocomplete-input').keypress(function() {
-
-					$.ajax({
-					  dataType: 'json',
-				      type: 'post',
-				      data: {busqueda: $('#autocomplete-input').val()},
-				      url: '../json/jsbuscarjugadores.php',
-				      success: function(datos) {
-				      	var dataJugadores = {};
-				      	//alert(datos[0][0].id);
-				      	
-				      	
-				      	for (var clave in datos[0]) {
-				      		//alert(datos[0][clave].apellido);
-				      		dataJugadores[datos[0][clave].apellido + ' ' + datos[0][clave].nombres + ' ' + datos[0][clave].nrodocumento] = 'jugadores/modificar.php?id=' + datos[0][clave].id;
-				      		
-				      	}
-/*
-				      	for (var c in dataJugadores) {
-				      		alert(dataJugadores[c]);
-				      	}
-				      	*/
-
-				      	$('#autocomplete-input').autocomplete({
-				          data: dataJugadores,
-				          limit: 20, 
-				          onAutocomplete: function(val) {
-						      // Callback function when value is autcompleted.
-						    },
-				          // The max amount of results that can be shown at once. Default: Infinity.
-				        });
-				        
-				      }
-				    });
-				
-			});
-			$('#buscar').click(function(e) {
-		        $.ajax({
-						data:  {busqueda: $('#busqueda').val(),
-								tipobusqueda: $('#tipobusqueda').val(),
-								accion: 'buscarJugadores'},
-						url:   '../ajax/ajax.php',
-						type:  'post',
-						beforeSend: function () {
-								
-						},
-						success:  function (response) {
-								$('#resultadosJuagadores').html(response);
-								
-						}
-				});
-				
+				$('#selction-ajax').html('<button type="button" class="btn btn-warning varJugadorModificar" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Modificar</button> \
+					<button type="button" class="btn btn-success varJugadorDocumentaciones" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Documentaciones</button> \
+					<button type="button" class="btn btn-success varJugadorEquipos" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Equipos</button> \
+					<button type="button" class="btn btn-success varJugadorHabilitaciones" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Habilitaciones</button>');
 			});
 
-/*
-			$('input.autocomplete').autocomplete({
-			    data: {
-			      "Apple Juan 31552466": null,
-			      "Microsoft Juan 657987": null,
-			      "Google Pedro 789653": 'https://placehold.it/250x250'
-			    },
-			    limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
-			    onAutocomplete: function(val) {
-			      // Callback function when value is autcompleted.
-			    },
-			    minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
-			  });
-*/
 			$('#colapsarMenu').click();
 			
 			$(document).on('click', '.panel-heading span.clickable', function(e){
@@ -2530,6 +2440,42 @@ if ($_SESSION['idroll_predio'] == 4) {
 				  if (!isNaN(usersid)) {
 					
 					url = "jugadores/modificar.php?id=" + usersid;
+					$(location).attr('href',url);
+				  } else {
+					alert("Error, vuelva a realizar la acción.");	
+				  }
+			});//fin del boton eliminar
+
+
+			$('#selction-ajax').on("click",'.varJugadorDocumentaciones', function(){
+				  usersid =  $(this).attr("id");
+				  if (!isNaN(usersid)) {
+					
+					url = "jugadores/documentaciones.php?id=" + usersid;
+					$(location).attr('href',url);
+				  } else {
+					alert("Error, vuelva a realizar la acción.");	
+				  }
+			});//fin del boton eliminar
+
+
+			$('#selction-ajax').on("click",'.varJugadorEquipos', function(){
+				  usersid =  $(this).attr("id");
+				  if (!isNaN(usersid)) {
+					
+					url = "jugadores/equipos.php?id=" + usersid;
+					$(location).attr('href',url);
+				  } else {
+					alert("Error, vuelva a realizar la acción.");	
+				  }
+			});//fin del boton eliminar
+
+
+			$('#selction-ajax').on("click",'.varJugadorHabilitaciones', function(){
+				  usersid =  $(this).attr("id");
+				  if (!isNaN(usersid)) {
+					
+					url = "jugadores/habilitaciones.php?id=" + usersid;
 					$(location).attr('href',url);
 				  } else {
 					alert("Error, vuelva a realizar la acción.");	

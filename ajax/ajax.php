@@ -344,6 +344,9 @@ case 'eliminarJugadoresmotivoshabilitacionestransitorias':
 eliminarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias); 
 break; 
 
+case 'buscarJugadoresNuevo':
+	buscarJugadoresNuevo($serviciosReferencias, $serviciosFunciones);
+	break;
 
 /**************  ETAPA 3 Y 4 **************************************/
 case 'insertarTorneos': 
@@ -1344,6 +1347,38 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 	
 	echo $cadCabecera;
 	
+}
+
+function buscarJugadoresNuevo($serviciosReferencias, $serviciosFunciones) {
+
+	$busqueda = trim($_POST['busqueda']);
+	
+	$arBusqueda = explode(" ", $busqueda);
+
+	$cantidad = count($arBusqueda);
+
+	switch ($cantidad) {
+		case 1:
+			$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0]);
+			break;
+		case 2:
+			$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1]);
+			break;
+		case 3:
+			$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1],$arBusqueda[2]);
+			break;
+		
+		default:
+			$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1],$arBusqueda[2],$arBusqueda[3]);
+			break;
+	}
+	
+	//$resTraerJugadores = $serviciosReferencias->traerJugadores();
+	$lstJuagdores = '';
+	$lstJuagdores .= '<option value="0">'.$busqueda.'</option>';
+	$lstJuagdores .= $serviciosFunciones->devolverSelectBox( $resTraerJugadores,array(3,4,2),' - ');
+
+	echo $lstJuagdores;
 }
 
 
@@ -2616,11 +2651,12 @@ $refroles = $_POST['refroles'];
 $email = $_POST['email'];
 $nombrecompleto = $_POST['nombrecompleto'];
 $res = $serviciosReferencias->modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+	
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
 }
 function eliminarUsuarios($serviciosReferencias) {
 $id = $_POST['id'];
@@ -4353,8 +4389,14 @@ function modificarUsuario($serviciosUsuarios) {
 	$email				=	$_POST['email'];
 	$nombre				=	$_POST['nombrecompleto'];
 	$refcountries		=	$_POST['refcountries'];
+
+	if (isset($_POST['activo'])) {
+		$activo = 1;
+	} else {
+		$activo = 0;
+	}
 	
-	echo $serviciosUsuarios->modificarUsuario($id,$usuario,$password,$refroll,$email,$nombre,$refcountries);
+	echo $serviciosUsuarios->modificarUsuario($id,$usuario,$password,$refroll,$email,$nombre,$refcountries,$activo);
 }
 
 

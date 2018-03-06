@@ -56,7 +56,7 @@ $cadRef		= '<option value="0">-- Seleccionar --</option>';
 $cadRef 	.= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
 $resContactos 	= $serviciosReferencias->traerContactos();
-$cadRef2 	= $serviciosFunciones->devolverSelectBox($resContactos,array(1),'');
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resContactos,array(1,2,11),' - ');
 
 $resCategorias 	= $serviciosReferencias->traerCategorias();
 $cadRef3 	= $serviciosFunciones->devolverSelectBox($resCategorias,array(1),'');

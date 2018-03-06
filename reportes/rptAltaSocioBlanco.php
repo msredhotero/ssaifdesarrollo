@@ -25,21 +25,39 @@ require('fpdf.php');
 $id		=	$_GET['id'];
 /////////////////////////////  fin parametross  ///////////////////////////
 
-/*
-$resSocio = $serviciosReferencias->traerJugadoresprePorIdCompleto($id);
 
-$resFoto = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
-$urlImg1 = "../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
-$urlImgType1 = mysql_result($resFoto,0,'type');
 
-$resFotoDocumento = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
-$urlImg2 = "../data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
-$urlImgType2 = mysql_result($resFotoDocumento,0,'type');
 
-$resFotoDocumentoDorso = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,99);
-$urlImg3 = "../data/".mysql_result($resFotoDocumentoDorso,0,0)."/".mysql_result($resFotoDocumentoDorso,0,'imagen');
-$urlImgType3 = mysql_result($resFotoDocumentoDorso,0,'type');
-*/
+$resSocio = $serviciosReferencias->traerJugadoresPorIdCompleto($id);
+
+$resFoto = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($id,1);
+if (mysql_num_rows($resFoto) > 0) {
+	$urlImg1 = "../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+	$urlImgType1 = mysql_result($resFoto,0,'type');
+} else {
+	$urlImg1 = '';
+	$urlImgType1 = '';
+}
+
+
+$resFotoDocumento = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($id,2);
+if (mysql_num_rows($resFotoDocumento) > 0) {
+	$urlImg2 = "../data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
+	$urlImgType2 = mysql_result($resFotoDocumento,0,'type');
+} else {
+	$urlImg2 = '';
+	$urlImgType2 = '';
+}
+
+$resFotoDocumentoDorso = $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($id,99);
+if (mysql_num_rows($resFotoDocumentoDorso) > 0) {
+	$urlImg3 = "../data/".mysql_result($resFotoDocumentoDorso,0,0)."/".mysql_result($resFotoDocumentoDorso,0,'imagen');
+	$urlImgType3 = mysql_result($resFotoDocumentoDorso,0,'type');
+} else {
+	$urlImg3 = '';
+	$urlImgType3 = '';
+}
+
 $pdf = new FPDF();
 
 #Establecemos los márgenes izquierda, arriba y derecha: 
@@ -64,7 +82,7 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->SetFont('Arial','U',18);
 
 	$pdf->SetX(5);
-	$pdf->Cell(50,5,'',0,0,'L',false);
+	$pdf->Cell(50,5,mysql_result($resSocio,0,'nrodocumento'),0,0,'L',false);
 
 	$pdf->Image('../imagenes/logoparainformes.png',5,10,40);
 	
@@ -79,50 +97,53 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->SetFont('Arial','',12);
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(180,5,'APELLIDO: ',0,0,'L',false);
+	$pdf->Cell(180,5,'APELLIDO: '.mysql_result($resSocio,0,'apellido'),0,0,'L',false);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(180,5,'NOMBRE: ',0,0,'L',false);
+	$pdf->Cell(180,5,'NOMBRE: '.mysql_result($resSocio,0,'nombres'),0,0,'L',false);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(180,5,'TIPO Y NRO DE DOCUMENTO: ',0,0,'L',false);
+	$pdf->Cell(180,5,'TIPO Y NRO DE DOCUMENTO: '.mysql_result($resSocio,0,'tipodocumento').' '.mysql_result($resSocio,0,'nrodocumento'),0,0,'L',false);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(180,5,'FECHA NACIMIENTO: ',0,0,'L',false);
+	$pdf->Cell(180,5,'FECHA NACIMIENTO: '.mysql_result($resSocio,0,'fechanacimiento'),0,0,'L',false);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(180,5,'COUNTRY: ',0,0,'L',false);
+	$pdf->Cell(180,5,'COUNTRY: '.mysql_result($resSocio,0,'country'),0,0,'L',false);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(180,5,'NRO DE LOTE: ',0,0,'L',false);
+	$pdf->Cell(180,5,'NRO DE LOTE: '.mysql_result($resSocio,0,'numeroserielote'),0,0,'L',false);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(180,5,'EMAIL: ',0,0,'L',false);
+	$pdf->Cell(180,5,'EMAIL: '.mysql_result($resSocio,0,'email'),0,0,'L',false);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(180,5,'FECHA DE ALTA: ',0,0,'L',false);
-/*
-	$res1 = $serviciosReferencias->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
+	$pdf->Cell(180,5,'FECHA DE ALTA: '.mysql_result($resSocio,0,'fechaalta'),0,0,'L',false);
 
+	if ($urlImg1 != '') {
+		$res1 = $serviciosReferencias->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
 
-	//die(var_dump($res1));
-	$pdf->Image($res1,210,10,40,54);
+		$pdf->Image($res1,210,10,40,54);
+	}
 
-	$res2 = $serviciosReferencias->devolverImagen(($urlImg2), $urlImgType2,'imagenTemp2');
+	if ($urlImg2 != '') {
+		$res2 = $serviciosReferencias->devolverImagen(($urlImg2), $urlImgType2,'imagenTemp2');
 
-	$pdf->Image($res2,190,80,70);
+		$pdf->Image($res2,190,80,70);
+	}
 
-	$res3 = $serviciosReferencias->devolverImagen(($urlImg3), $urlImgType3,'imagenTemp3');
+	if ($urlImg3 != '') {
+		$res3 = $serviciosReferencias->devolverImagen(($urlImg3), $urlImgType3,'imagenTemp3');
 
-	$pdf->Image($res3,190,140,70);
-*/
+		$pdf->Image($res3,190,140,70);
+	}
 
 	$pdf->SetXY(20,150);
 	$pdf->Cell(110,5,'Registre en el recuadro la firma a utilizar en la planilla del partido',0,0,'L',false);

@@ -483,7 +483,7 @@ function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto
 				email = '".($email)."',
 				refroles = ".$refroll.",
 				nombrecompleto = '".($nombrecompleto)."',
-				refcountries = ".($refcountries == '' ? 'NULL' : $refcountries)."
+				refcountries = ".($refcountries == '' ? 'NULL' : $refcountries).",
 				activo = ".$activo."
 			WHERE idusuario = ".$id;
 	$res = $this->query($sql,0);

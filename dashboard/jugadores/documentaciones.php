@@ -800,10 +800,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 
-	$('#fichablanco').click(function() {
+    $('#fichablanco').click(function() {
 		window.open("../../reportes/rptAltaSocioBlanco.php?id=<?php echo $id; ?>" ,'_blank');
 	});
-
 	<?php
 		if (mysql_num_rows($resFoto)>0) {
 		$urlImg = "./../../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
@@ -1326,7 +1325,7 @@ $(document).ready(function(){
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
 			    <?php 
-			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreview: [
 			    	'../../data/<?php echo mysql_result($resPartidaNacimiento,0,0); ?>/<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>'
@@ -1344,7 +1343,7 @@ $(document).ready(function(){
 				initialPreviewFileType: 'image',
 			    initialPreviewAsData: true, // allows you to set a raw markup
     			<?php 
-			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
+			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreviewConfig: [
 				    {type: "pdf", size: 8000, caption: "PDF Sample", filename: "<?php echo mysql_result($resPartidaNacimiento,0,'imagen'); ?>",  key: 1}
