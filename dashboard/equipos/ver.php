@@ -435,6 +435,9 @@ tr {
                         <button type="button" class="btn btn-warning modificar" id="<?php echo $id; ?>" style="margin-left:0px;">Modificar</button>
                     </li>
                     <li>
+                        <button type="button" class="btn btn-danger eliminarTodosLosJugadores" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar todos los Jugadores</button>
+                    </li>
+                    <li>
                         <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
                     </li>
                 </ul>
@@ -542,7 +545,34 @@ $(document).ready(function(){
 		}
 	});
 
+    function eliminarTodosLosJugadores() {
+        $.ajax({
+            data:  {id: <?php echo $id; ?>, 
+                    accion: 'eliminarTodosLosJugadores'},
+            url:   '../../ajax/ajax.php',
+            type:  'post',
+            beforeSend: function () {
+            
+            },
+            success:  function (response) {
+                
+                url = "ver.php?id=<?php echo $id; ?>";
+                $(location).attr('href',url);
+                
+                
+            }
+        }); 
+    }
 
+    $('.eliminarTodosLosJugadores').click(function() {
+        var txt;
+        var r = confirm("Esta seguro de querer borrar todos los jugadores de forma logica!");
+        if (r == true) {
+            eliminarTodosLosJugadores();
+        } else {
+            alert("La operacion se cancelo correctamente!");
+        }
+    });
 
 	function agregarJugador(refjugadores, reftipojugadores, refequipos, refcountries, refcategorias, esfusion, refcountriesaux, reftemporada) {
 		

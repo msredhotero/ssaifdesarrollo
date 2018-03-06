@@ -474,7 +474,11 @@ break;
 
 case 'eliminarConectorDefinitivamente': 
 eliminarConectorDefinitivamente($serviciosReferencias); 
-break; 
+break;
+
+case 'eliminarTodosLosJugadores':
+	eliminarTodosLosJugadores($serviciosReferencias);
+	break; 
 
 /***************  FIN  ********************************************/
 
@@ -2128,6 +2132,15 @@ $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarConector($id); 
 echo $res; 
 } 
+
+
+function eliminarTodosLosJugadores($serviciosReferencias) {
+	$id = $_POST['id'];
+
+	$res = $serviciosReferencias->eliminarTodosLosJugadores($id);
+
+	echo '';
+}
 
 
 
