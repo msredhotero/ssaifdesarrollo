@@ -20,12 +20,19 @@ $serviciosReferencias 	= new ServiciosReferencias();
 
 $fecha = date('Y-m-d');
 
-$busqueda = trim($_POST['busqueda']);
+$busqueda = trim($_GET['busqueda']);
 
-$arBusqueda = explode(" ", $busqueda);
+//$busqueda = 'a';
 
-$cantidad = count($arBusqueda);
 
+//$arBusqueda = explode(" ", $busqueda);
+
+//$cantidad = count($arBusqueda);
+
+$ar = array();
+
+if ($busqueda != '') {
+/*
 switch ($cantidad) {
 	case 1:
 		$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0]);
@@ -41,10 +48,10 @@ switch ($cantidad) {
 		$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1],$arBusqueda[2],$arBusqueda[3]);
 		break;
 }
+*/
 
+$resTraerJugadores = $serviciosReferencias->nuevoBuscador($busqueda);
 
-
-$ar = array();
 
 $cad = '';
 	while ($row = mysql_fetch_array($resTraerJugadores)) {
@@ -52,8 +59,9 @@ $cad = '';
 		array_push($ar,array('id'=>$row['idjugador'], 'apellido'=> $row['apellido'], 'nombres'=> $row['nombres'], 'nrodocumento'=> $row['nrodocumento']));
 	}
 
+}
 //echo "[".substr($cad,0,-1)."]";
-echo "[".json_encode($ar)."]";
-
+//echo "[".json_encode($ar)."]";
+echo json_encode($ar);
 }
 ?>

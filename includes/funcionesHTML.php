@@ -109,9 +109,9 @@ function menu($usuario,$titulo,$rol,$empresa) {
 	$cadNotificaciones = '';
 	while ($row = mysql_fetch_array($lstNotificaciones)) {
 		if ($row['leido'] == 'Si') {
-			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" style="background-color:#D3D3D3;" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,80).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+			$cadNotificaciones .= '<li><div><a href="../'.$row['url'].'" class="list-group-item notifi" style="background-color:#D3D3D3;" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,80).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
 		} else {
-			$cadNotificaciones .= '<li><div><a href="'.$row['url'].'" class="list-group-item notifi" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,80).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
+			$cadNotificaciones .= '<li><div><a href="../'.$row['url'].'" class="list-group-item notifi" id="'.$row[0].'">        <i class="'.$row['icono'].'"></i> '.substr($row['mensaje'],0,80).' - '.$row['autor'].'        <span class="pull-right text-muted small"><em>'.$row['fecha'].'</em>         </span>    </a></div></li>';
 		}
 
 		

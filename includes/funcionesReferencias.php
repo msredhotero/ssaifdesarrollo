@@ -4969,6 +4969,32 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+function nuevoBuscador($busqueda) { 
+$sql = "select 
+j.idjugador,
+tip.tipodocumento,
+j.nrodocumento,
+j.apellido,
+j.nombres,
+j.email,
+j.fechanacimiento,
+j.fechaalta,
+j.fechabaja,
+cou.nombre as countrie,
+j.observaciones,
+j.reftipodocumentos,
+j.refcountries
+from dbjugadores j 
+inner join tbtipodocumentos tip ON tip.idtipodocumento = j.reftipodocumentos 
+inner join dbcountries cou ON cou.idcountrie = j.refcountries 
+inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria 
+where concat(j.apellido,' ',j.nombres,' ',j.nrodocumento) like '%".$busqueda."%'
+order by j.apellido,j.nombres
+limit 15"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
 
 function traerJugadoresPorId($id) { 
 $sql = "select idjugador,reftipodocumentos,nrodocumento,apellido,nombres,email,fechanacimiento,fechaalta,fechabaja,refcountries,observaciones from dbjugadores where idjugador =".$id; 
