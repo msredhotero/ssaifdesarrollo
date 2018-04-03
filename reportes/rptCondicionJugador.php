@@ -19,6 +19,8 @@ require('fpdf.php');
 
 //$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
 
+$generalTotalJugadores = 0;
+$generalTotalJugadoresHabilitados = 0;
 
 $idTemporada = $_GET['reftemporada'];	
 
@@ -41,6 +43,8 @@ class PDF extends FPDF
 function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refcategoria, $idTemporada)
 {
 
+	$totalhabilitadoscuenta = 0;
+	$totalJugadores = 0;
 	$this->Ln();
 
 	$this->SetFont('Arial','',11);
@@ -90,6 +94,8 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	
     while ($row = mysql_fetch_array($data))
     {
+
+    	$totalJugadores += 1;
 
 		$cadCumpleEdad = '';
 		$errorDoc = 'FALTA';
@@ -154,6 +160,7 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 				$habilitacion= 'INHAB.';	
 			} else {
 				$habilitacion= 'HAB.';	
+				$totalhabilitadoscuenta += 1;
 			}
 		} else {
 			$habilitacion= 'INHAB.';
@@ -264,8 +271,11 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	$this->SetFont('Arial','',12);
 	$this->Ln();
 
+	return array(0=>$totalJugadores, $totalhabilitadoscuenta);
+
 }
 
+	
 }
 
 
@@ -331,12 +341,17 @@ while ($rowC = mysql_fetch_array($lstEquipos)) {
 
 	$pdf->SetFont('Arial','',10);
 
-	$pdf->ingresosFacturacion($headerFacturacion,$datos,$TotalFacturacion,$serviciosReferencias, $idCategoria, $idTemporada);
+	$res = $pdf->ingresosFacturacion($headerFacturacion,$datos,$TotalFacturacion,$serviciosReferencias, $idCategoria, $idTemporada);
+
+	$generalTotalJugadores += $res[0];
+	$generalTotalJugadoresHabilitados += $res[1];
 
 }
 $pdf->Ln();
 
 $pdf->SetFont('Arial','',9);
+
+$pdf->Cell(60,5,'Jugadores/Habilitados: '.$generalTotalJugadores.'/'.$generalTotalJugadoresHabilitados,1,0,'L',false);
 
 $nombreTurno = "rptCondicionJugador-".$fecha.".pdf";
 

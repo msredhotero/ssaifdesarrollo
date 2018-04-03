@@ -5692,7 +5692,7 @@ inner join dbjugadores jug ON jug.idjugador = j.refjugadores
 inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
 inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
 left join dbequipos equ ON equ.idequipo = j.refequipos 
-inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
+left join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
 where j.refjugadores = ".$idJugador."
 order by 1"; 
 $res = $this->query($sql,0); 
@@ -6587,10 +6587,27 @@ return $res;
 function traerEquipoPorCategoriaCountrie($idCategoria, $idCountrie) { 
 $sql = "select 
 e.idequipo,
-e.nombre
+e.nombre,
+d.division
 from dbequipos e 
 inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias 
+inner join tbdivisiones d ON d.iddivision = e.refdivisiones
 where cat.idtcategoria = ".$idCategoria." and e.refcountries = ".$idCountrie."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerEquipoPorCategoriaCountrieActivo($idCategoria, $idCountrie) { 
+$sql = "select 
+e.idequipo,
+e.nombre,
+d.division
+from dbequipos e 
+inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias 
+inner join tbdivisiones d ON d.iddivision = e.refdivisiones
+where cat.idtcategoria = ".$idCategoria." and e.refcountries = ".$idCountrie." and e.activo = 1
 order by 1"; 
 $res = $this->query($sql,0); 
 return $res; 
@@ -6823,7 +6840,7 @@ function traerPlantelEstadisticasPorEquipo($idequipo) {
                 coalesce( sum(r.amarillas),0) as amarillas,
                 coalesce( sum(r.rojas),0) as rojas
                 from dbconector c
-                inner join dbjugadores jug on jug.idjugador = c.refjugadores and c.refequipos = ".$idequipo." 
+                inner join dbjugadores jug on jug.idjugador = c.refjugadores and c.refequipos = ".$idequipo." and c.activo =1
                 left join
                     (   
                         select sum(go.goles) as goles, sum(go.encontra) as encontra,0 as penal,0 as amarillas, 0 as rojas,go.reffixture, jug.idjugador
@@ -7662,7 +7679,7 @@ function traerConector($refJugador) {
 $sql = "select 
     c.idconector,
     cat.categoria,
-    equ.nombre as equipo,
+    concat(equ.idequipo, ' ',equ.nombre) as equipo,
     co.nombre as countrie,
     tip.tipojugador,
     (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
@@ -9293,27 +9310,53 @@ return $res;
 
 
 function traerFechasFixturePorTorneo($idTorneo) {
-$sql = "select
-f.reffechas,
-fec.fecha,
-coalesce( max(est.idestadopartido),0) as idestadopartido
-from dbfixture f
-inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
-inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
-inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
-inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
-inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
-inner join tbfechas fec ON fec.idfecha = f.reffechas
-inner join dbequipos el ON el.idequipo = f.refconectorlocal
-inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
-left join dbarbitros arb ON arb.idarbitro = f.refarbitros
-left join tbcanchas can ON can.idcancha = f.refcanchas
-left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
-where tor.idtorneo = ".$idTorneo."
-group by f.reffechas,fec.fecha
-order by f.reffechas";
-$res = $this->query($sql,0);
-return $res;
+    $sql = "select
+    f.reffechas,
+    fec.fecha,
+    coalesce( max(est.idestadopartido),0) as idestadopartido
+    from dbfixture f
+    inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+    inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+    inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+    inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+    inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+    inner join tbfechas fec ON fec.idfecha = f.reffechas
+    inner join dbequipos el ON el.idequipo = f.refconectorlocal
+    inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+    left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+    left join tbcanchas can ON can.idcancha = f.refcanchas
+    left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
+    where tor.idtorneo = ".$idTorneo."
+    group by f.reffechas,fec.fecha
+    order by f.reffechas";
+    $res = $this->query($sql,0);
+
+    if (mysql_num_rows($res)>0) {
+        return $res;
+    } else {
+        $sql = "select
+        f.reffechas,
+        fec.fecha,
+        coalesce( max(est.idestadopartido),0) as idestadopartido
+        from dbfixture f
+        inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+        inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+        inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+        inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+        inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+        inner join tbfechas fec ON fec.idfecha = f.reffechas
+        inner join dbequipos el ON el.idequipo = f.refconectorlocal
+        inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+        left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+        left join tbcanchas can ON can.idcancha = f.refcanchas
+        left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+        where tor.idtorneo = ".$idTorneo."
+        group by f.reffechas,fec.fecha
+        order by f.reffechas";
+        $res = $this->query($sql,0);
+        return $res;
+    }
+
 }
 
 

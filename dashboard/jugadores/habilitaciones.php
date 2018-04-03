@@ -347,7 +347,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Documentaciones</label>
                         <div class="input-group col-md-12">
                             <select class="form-control" id="refdocumentacionesA" name="refdocumentacionesA">
-                            	<?php echo $cadRef4; ?>
+                            	<option value="2">Documentacion</option>
                             </select>
                         </div>
                     </div>

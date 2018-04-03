@@ -3697,8 +3697,8 @@ function traerEquipoPorCategoria($serviciosFunciones,$serviciosReferencias) {
 	$id = $_POST['id']; 
 	$idCountrie = $_POST['idCountrie']; 
 	
-	$resCategoria		=	$serviciosReferencias->traerEquipoPorCategoriaCountrie($id, $idCountrie);
-	$cadRefCategoria	=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
+	$resCategoria		=	$serviciosReferencias->traerEquipoPorCategoriaCountrieActivo($id, $idCountrie);
+	$cadRefCategoria	=	$serviciosFunciones->devolverSelectBox($resCategoria,array(0,1,2),' - ');
 	
 	echo $cadRefCategoria;	
 }

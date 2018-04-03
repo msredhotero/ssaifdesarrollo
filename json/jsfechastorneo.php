@@ -24,8 +24,9 @@ $cad = '';
 $actual = 0;
 $parar = 0;
 $i=0;
+$cantFechas = 0;
 	while ($row = mysql_fetch_array($resTraerDatos)) {
-		
+		$cantFechas += 1;
 		if ($parar == 0) {
 			
 			if ($row['idestadopartido'] != 0) {
@@ -45,7 +46,12 @@ $i=0;
 if ($i == 1) {
 	$ar[$i - 1]['actual'] = 1;
 } else {
-	$ar[$i - 1]['actual'] = 1;
+	if ($i == 0) {
+		$ar[0]['actual'] = 1;
+	} else {
+		$ar[$i - 1]['actual'] = 1;
+	}
+	
 }
 //echo "[".substr($cad,0,-1)."]";
 echo $token.'('.json_encode($ar).');';
