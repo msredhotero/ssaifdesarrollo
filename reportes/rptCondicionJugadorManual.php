@@ -362,13 +362,15 @@ while ($rowC = mysql_fetch_array($lstEquipos)) {
 
 	$generalTotalJugadores += $res[0];
 	$generalTotalJugadoresHabilitados += $res[1];
+	$pdf->Ln();
+	$pdf->Cell(70,7,'Jugadores/Habilitados: '.$res[0].'/'.$res[1],1,0,'L',false);
 
 }
 $pdf->Ln();
 
-$pdf->SetFont('Arial','',9);
+$pdf->SetFont('Arial','',12);
 
-$pdf->Cell(60,5,'Jugadores/Habilitados: '.$generalTotalJugadores.'/'.$generalTotalJugadoresHabilitados,1,0,'L',false);
+$pdf->Cell(110,7,'Totales Generales Jugadores/Habilitados: '.$generalTotalJugadores.'/'.$generalTotalJugadoresHabilitados,1,0,'L',false);
 
 $nombreTurno = "rptCondicionJugador-".$fecha.".pdf";
 
