@@ -1226,8 +1226,17 @@ padding-bottom: 10px;
 						$darVuelta = 2;
 					}
 				}
+
+
 				$fechainicio = strtotime ( '+7 day' , strtotime ( $fechainicio ) ) ;
 				$fechainicio = date ( 'Y-m-d' , $fechainicio );
+
+				$resFechaExcluida = $serviciosReferencias->traerFechasexcluidasPorFecha($fechainicio);
+
+				if (mysql_num_rows($resFechaExcluida)>0) {
+					$fechainicio = strtotime ( '+7 day' , strtotime ( $fechainicio ) ) ;
+					$fechainicio = date ( 'Y-m-d' , $fechainicio );
+				}
 				echo "<hr><br>";
 				
 				

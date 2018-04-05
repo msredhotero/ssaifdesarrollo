@@ -1882,7 +1882,7 @@ function traerProximaFechaFiltros($where) {
         inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
         inner join tbfechas fe ON fe.idfecha = fix.reffechas 
         left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
-        inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+        left join dbequipos equ ON equ.idequipo = fix.refconectorlocal
         left join tbcanchas cc ON cc.idcancha = fix.refcanchas
         inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
         inner join tbdias dia ON dia.iddia = dct.refdias
@@ -7148,6 +7148,13 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+
+function calcularFechasexcluidasPorFecha($fecha) { 
+$sql = "select idfechaexcluida,fecha,descripcion from tbfechasexcluidas where fecha ='".$fecha."'"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
 /* Fin */
 /* /* Fin de la Tabla: tbfechasexcluidas*/
 
@@ -8705,10 +8712,10 @@ return $res;
 function traerFixtureTodoPorTorneosFechas($idTorneo, $idFecha) {
 $sql = "select
 f.idfixture,
-el.nombre as equipolocal,
+coalesce(el.nombre,'Libre') as equipolocal,
 f.puntoslocal,
 f.puntosvisita,
-ev.nombre as equipovisitante,
+coalesce(ev.nombre, 'Libre') as equipovisitante,
 ca.categoria,
 arb.nombrecompleto as arbitro,
 f.goleslocal,
