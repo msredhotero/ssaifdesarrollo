@@ -128,15 +128,31 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Cell(180,5,'FECHA DE ALTA: '.mysql_result($resSocio,0,'fechaalta'),0,0,'L',false);
 
 	if ($urlImg1 != '') {
-		$res1 = $serviciosReferencias->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
 
+		$res1 = $serviciosReferencias->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
 		$pdf->Image($res1,210,10,40,54);
+		
+
+		// El operador !== también puede ser usado. Puesto que != no funcionará como se espera
+		// porque la posición de 'a' es 0. La declaración (0 != false) se evalúa a 
+		// false.
+		if ($pos !== false) {
+			//die(var_dump($urlImgType1));
+
+			//$pdf->Image($res1,210,10,40,54,'PNG');
+		} else {
+			//$pdf->Image($res1,210,10,40,54);
+		}
 	}
 
 	if ($urlImg2 != '') {
+
+
 		$res2 = $serviciosReferencias->devolverImagen(($urlImg2), $urlImgType2,'imagenTemp2');
 
 		$pdf->Image($res2,190,80,70);
+
+
 	}
 
 	if ($urlImg3 != '') {

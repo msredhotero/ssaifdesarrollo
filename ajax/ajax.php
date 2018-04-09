@@ -268,6 +268,10 @@ case 'eliminarJugadoresdocumentacion':
 eliminarJugadoresdocumentacion($serviciosReferencias); 
 break; 
 
+case 'modificarEstudioMedico':
+	modificarEstudioMedico($serviciosReferencias);
+	break;
+
 ////*** traer datos completos ***////
 case 'traerDatosJugador':
 	traerDatosJugador($serviciosReferencias);
@@ -474,12 +478,11 @@ break;
 
 case 'eliminarConectorDefinitivamente': 
 eliminarConectorDefinitivamente($serviciosReferencias); 
-break;
+break; 
 
 case 'eliminarTodosLosJugadores':
 	eliminarTodosLosJugadores($serviciosReferencias);
 	break; 
-
 /***************  FIN  ********************************************/
 
 /*****         FUNCIONES       **********/
@@ -584,7 +587,7 @@ case 'presentardocumentacion':
 	break; 
 case 'presentardocumentacionAparte':
 	presentardocumentacionAparte($serviciosReferencias);
-	break;
+	break; 
 case 'guardarEstado':
 	guardarEstado($serviciosReferencias);
 	break;
@@ -604,9 +607,7 @@ case 'generarNotificacion':
 	generarNotificacion($serviciosReferencias);
 	break;
 /****			fin 				******/
-
 }
-
 
 function rotarImagen($serviciosReferencias) {
 	$imagen = $_POST['imagen'];
@@ -877,9 +878,6 @@ function presentardocumentacionAparte($serviciosReferencias) {
 
 
 }
-
-
-
 
 function insertarJugadorespre($serviciosReferencias) {
 	$reftipodocumentos = $_POST['reftipodocumentos'];
@@ -1351,38 +1349,6 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 	
 	echo $cadCabecera;
 	
-}
-
-function buscarJugadoresNuevo($serviciosReferencias, $serviciosFunciones) {
-
-	$busqueda = trim($_POST['busqueda']);
-	
-	$arBusqueda = explode(" ", $busqueda);
-
-	$cantidad = count($arBusqueda);
-
-	switch ($cantidad) {
-		case 1:
-			$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0]);
-			break;
-		case 2:
-			$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1]);
-			break;
-		case 3:
-			$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1],$arBusqueda[2]);
-			break;
-		
-		default:
-			$resTraerJugadores = $serviciosReferencias->nuevoBuscador($arBusqueda[0],$arBusqueda[1],$arBusqueda[2],$arBusqueda[3]);
-			break;
-	}
-	
-	//$resTraerJugadores = $serviciosReferencias->traerJugadores();
-	$lstJuagdores = '';
-	$lstJuagdores .= '<option value="0">'.$busqueda.'</option>';
-	$lstJuagdores .= $serviciosFunciones->devolverSelectBox( $resTraerJugadores,array(3,4,2),' - ');
-
-	echo $lstJuagdores;
 }
 
 
@@ -2664,12 +2630,11 @@ $refroles = $_POST['refroles'];
 $email = $_POST['email'];
 $nombrecompleto = $_POST['nombrecompleto'];
 $res = $serviciosReferencias->modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto);
-	
-	if ($res == true) {
-		echo '';
-	} else {
-		echo 'Huvo un error al modificar datos';
-	}
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
 }
 function eliminarUsuarios($serviciosReferencias) {
 $id = $_POST['id'];
@@ -3175,6 +3140,19 @@ function traerJugadoresPorCountrie($serviciosReferencias) {
 	echo json_encode(toArray($res));	
 }
 
+
+function traerDatosJugador($serviciosReferencias) {
+	$id = $_POST['id']; 
+	$res = $serviciosReferencias->traerJugadoresPorIdCompleto($id); 
+	$cad = '';
+
+	if (mysql_num_rows($res)>0) {
+		$edad = $serviciosReferencias->verificarEdad($id);
+		$cad = "<h3>Edad: ".$edad."</h3><h4>Country: ".mysql_result($res,0,'country')."</h4>";
+	}
+	echo $cad;
+}
+
 function insertarJugadoresdocumentacion($serviciosReferencias) { 
 	$refjugadores = $_POST['refjugadores']; 
 	$observaciones = '';
@@ -3251,6 +3229,20 @@ echo '';
 echo 'Huvo un error al modificar datos'; 
 } 
 } 
+
+
+function modificarEstudioMedico($serviciosReferencias) { 
+	$refjugadores = $_POST['id']; 
+	
+	$res = $serviciosReferencias->modificarEstudioMedico($refjugadores); 
+	if ($res == true) { 
+		echo ''; 
+	} else { 
+		echo 'Huvo un error al modificar datos'; 
+	} 
+} 
+
+
 function eliminarJugadoresdocumentacion($serviciosReferencias) { 
 $id = $_POST['id']; 
 $res = $serviciosReferencias->eliminarJugadoresdocumentacion($id); 
@@ -4211,7 +4203,7 @@ function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferenci
 	$refjugadores = $_POST['refjugadores']; 
 	$refdocumentaciones = $_POST['refdocumentacionesB']; 
 	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasB']; 
-	$refequipos = formatearEntero(''); 
+	$refequipos = formatearEntero('');  
 	$refcategorias = $_POST['refcategoriasB']; 
 	$fechalimite = formatearFechas($_POST['fechalimiteB']); 
 	$observaciones = $_POST['observacionesB']; 
@@ -4225,7 +4217,7 @@ function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferenci
 			if ((integer)$res > 0) { 
 				echo ''; 
 			} else { 
-				echo 'Huvo un error al insertar datos';	 
+				echo 'Huvo un error al insertar datos '.$res;	 
 			} 
 		} else {
 			echo 'Ya existe esta habilitación';	
@@ -4402,7 +4394,7 @@ function modificarUsuario($serviciosUsuarios) {
 	$email				=	$_POST['email'];
 	$nombre				=	$_POST['nombrecompleto'];
 	$refcountries		=	$_POST['refcountries'];
-
+	
 	if (isset($_POST['activo'])) {
 		$activo = 1;
 	} else {
@@ -4410,6 +4402,7 @@ function modificarUsuario($serviciosUsuarios) {
 	}
 	
 	echo $serviciosUsuarios->modificarUsuario($id,$usuario,$password,$refroll,$email,$nombre,$refcountries,$activo);
+
 }
 
 

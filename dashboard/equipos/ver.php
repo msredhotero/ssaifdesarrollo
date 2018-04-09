@@ -544,8 +544,9 @@ $(document).ready(function(){
 		   $('#round').val('');
 		}
 	});
-
-    function eliminarTodosLosJugadores() {
+	
+	
+	function eliminarTodosLosJugadores() {
         $.ajax({
             data:  {id: <?php echo $id; ?>, 
                     accion: 'eliminarTodosLosJugadores'},
@@ -573,6 +574,8 @@ $(document).ready(function(){
             alert("La operacion se cancelo correctamente!");
         }
     });
+
+
 
 	function agregarJugador(refjugadores, reftipojugadores, refequipos, refcountries, refcategorias, esfusion, refcountriesaux, reftemporada) {
 		

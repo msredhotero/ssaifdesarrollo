@@ -82,14 +82,7 @@ $tablasAr	= array("contactos"        => "dbcontactos",
 "jugadoresclub"=>"dbjugadoresclub",
 "modulos"=>"tbmodulos",
 "vigenciasoperaciones"=>"dbvigenciasoperaciones",
-"jugadorespre"=>"dbjugadorespre",
-"cabeceracopia"=>"dbcabeceracopia",
-"jugadoresdocumentacion_copia"=>"dbjugadoresdocumentacion_copia",
-"jugadoresmotivoshabilitacionestransitorias_copia"=>"dbjugadoresmotivoshabilitacionestransitorias_copia",
-"jugadoresvaloreshabilitacionestransitorias_copia"=>"dbjugadoresvaloreshabilitacionestransitorias_copia",
-"documentacionjugadorimagenes"=>"dbdocumentacionjugadorimagenes",
-"notificaciones" => "dbnotificaciones",
-"cierrepadrones"=>"tbcierrepadrones");
+"jugadorespre"=>"dbjugadorespre");
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
@@ -141,14 +134,7 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresclub"=>"dbjugadoresclub",
 "modulos"=>"tbmodulos",
 "vigenciasoperaciones"=>"dbvigenciasoperaciones",
-"jugadorespre"=>"dbjugadorespre",
-"cabeceracopia"=>"dbcabeceracopia",
-"jugadoresdocumentacion_copia"=>"dbjugadoresdocumentacion_copia",
-"jugadoresmotivoshabilitacionestransitorias_copia"=>"dbjugadoresmotivoshabilitacionestransitorias_copia",
-"jugadoresvaloreshabilitacionestransitorias_copia"=>"dbjugadoresvaloreshabilitacionestransitorias_copia",
-"documentacionjugadorimagenes"=>"dbdocumentacionjugadorimagenes",
-"notificaciones" => "dbnotificaciones",
-"cierrepadrones"=>"tbcierrepadrones");
+"jugadorespre"=>"dbjugadorespre");
 
 	$tablasArAux	= array("contactos"        => 2,        
 "tipocontactos"=> 1,
@@ -197,14 +183,7 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresclub"=>1,
 "modulos"=>1,
 "vigenciasoperaciones"=>2,
-"jugadorespre"=>3,
-"cabeceracopia"=>2,
-"jugadoresdocumentacion_copia"=>2,
-"jugadoresmotivoshabilitacionestransitorias_copia"=>2,
-"jugadoresvaloreshabilitacionestransitorias_copia"=>2,
-"documentacionjugadorimagenes"=>1,
-"notificaciones" => 1,
-"cierrepadrones"=>3);
+"jugadorespre"=>3);
 	
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
@@ -234,7 +213,7 @@ $ajaxFuncionesController = '';
 
 $servicios	= "Referencias";
 
-$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_local_noviembre";
+$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_local_diciembre_host";
 $resMapeo 	=	query($sqlMapaer,0);
 
 $aliasTablaMadre = '';

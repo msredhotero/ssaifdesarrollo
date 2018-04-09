@@ -2,13 +2,12 @@
 
 date_default_timezone_set('America/Buenos_Aires');
 
-ini_set('max_execution_time', 1000);
-
 include ('../includes/funcionesUsuarios.php');
 include ('../includes/funciones.php');
 include ('../includes/funcionesHTML.php');
 include ('../includes/funcionesReferencias.php');
 
+ini_set('max_execution_time', 1000);
 
 $serviciosUsuarios  		= new ServiciosUsuarios();
 $serviciosFunciones 		= new Servicios();
@@ -42,7 +41,7 @@ $urlImgType3 = mysql_result($resFotoDocumentoDorso,0,'type');
 
 $pdf = new FPDF();
 
-#Establecemos los márgenes izquierda, arriba y derecha: 
+#Establecemos los mÃ¡rgenes izquierda, arriba y derecha: 
 $pdf->SetMargins(2, 2 , 2); 
 
 #Establecemos el margen inferior: 
@@ -108,12 +107,15 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->Cell(180,5,'FECHA DE ALTA: '.mysql_result($resSocio,0,'fechaalta'),0,0,'L',false);
-
-	$res1 = $serviciosReferencias->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
-
-
-	//die(var_dump($res1));
-	$pdf->Image($res1,210,10,40,54);
+    
+    $res1 = $serviciosReferencias->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
+    
+    if ($res1 == 'No se pudo cargar correctamente la imagen') {
+        $pdf->Image($urlImg1,210,10,40,54);
+    } else {
+        $pdf->Image($res1,210,10,40,54);    
+    }
+	
 
 	$res2 = $serviciosReferencias->devolverImagen(($urlImg2), $urlImgType2,'imagenTemp2');
 
@@ -143,14 +145,14 @@ $pdf->Output($nombreTurno,'D');
  //$zip = new ZipArchive();
 // Creamos y abrimos un archivo zip temporal
  //$zip->open("Alta-Jugador.zip",ZipArchive::CREATE);
- // Añadimos un directorio
+ // AÃ±adimos un directorio
  //$dir = 'miDirectorio';
  //$zip->addEmptyDir($dir);
- // Añadimos un archivo en la raid del zip.
+ // AÃ±adimos un archivo en la raid del zip.
  //$zip->addFile($nombreTurno);
- //Añadimos un archivo dentro del directorio que hemos creado
+ //AÃ±adimos un archivo dentro del directorio que hemos creado
  //$zip->addFile("imagen2.jpg",$dir."/mi_imagen2.jpg");
- // Una vez añadido los archivos deseados cerramos el zip.
+ // Una vez aÃ±adido los archivos deseados cerramos el zip.
  //$zip->close();
 
  // Creamos las cabezeras que forzaran la descarga del archivo como archivo zip.
@@ -158,8 +160,9 @@ $pdf->Output($nombreTurno,'D');
  //header("Content-disposition: attachment; filename=Alta-Jugador.zip");
  // leemos el archivo creado
  //readfile('Alta-Jugador.zip');
- // Por último eliminamos el archivo temporal creado
+ // Por Ãºltimo eliminamos el archivo temporal creado
  //unlink('Alta-Jugador.zip');//Destruye el archivo temporal
+
 
 ?>
 

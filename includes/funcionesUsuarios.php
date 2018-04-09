@@ -492,6 +492,7 @@ function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto
 	} else {
 		return '';
 	}
+	
 }
 
 

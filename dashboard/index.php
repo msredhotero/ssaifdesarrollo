@@ -2262,6 +2262,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		    <script src="../js/jquery-ui.js"></script>
 		    
+		    <script src="../js/jquery.easy-autocomplete.min.js"></script> 
+
+			<!-- CSS file -->
+			<link rel="stylesheet" href="../css/easy-autocomplete.min.css"> 
+
+			<!-- Additional CSS Themes file - not required-->
+			<link rel="stylesheet" href="../css/easy-autocomplete.themes.min.css"> 
+		    
 			<!-- Latest compiled and minified CSS -->
 		    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css"/>
 			<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
@@ -2300,11 +2308,13 @@ if ($_SESSION['idroll_predio'] == 4) {
 		    <?php
 			if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 				$resCantidadJugadores = $serviciosReferencias->traerCantidadJugadores();
+				/*
 				$resJuga = $serviciosReferencias->traerJugadoresAutocompletar();
 				$cadJugadores = '<option value="0"></option>';
 				while ($rowJ = mysql_fetch_array($resJuga)) {
 					$cadJugadores .= '<option value="'.$rowJ[0].'">'.$rowJ[1].'</option>';
 				}
+				*/
 			?>
 			<div class="row" style="margin-right:15px;">
 		    <div class="col-md-12">
@@ -2321,9 +2331,9 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                                 <h4>Busqueda por Nombre Completo o Nro Documento</h4>
 		                                
 		        							
-		        						<select id="lstjugadores" class="flexselect form-control">
-		        							<?php echo $cadJugadores; ?>
-		        						</select>
+		        						<input id="lstjugadores" style="width:75%;">
+		        							
+		        						
 		        						<div id="selction-ajax" style="margin-top: 10px;"></div>
 		                            </div>
 		                            
@@ -2351,6 +2361,28 @@ if ($_SESSION['idroll_predio'] == 4) {
 		   
 		</div>
 
+		<!-- Modal -->
+		<div class="modal fade" id="myModal3" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog modal-lg" role="document">
+		    <div class="modal-content">
+		      <form class="form-inline formulario" role="form">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Desea cargarle los estudios medicos?</h4>
+		      </div>
+		      <div class="modal-body" id="datosEstudioMedico">
+		        
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary" data-dismiss="modal" id="cargarEstudioMedico">Si</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        <input type="hidden" name="refjugadorestudiomedico" id="refjugadorestudiomedico" value="0"/>
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+
 
 		</div>
 
@@ -2361,6 +2393,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		<script type="text/javascript">
 		$(document).ready(function(){
+			/*
 			$("select.flexselect").flexselect();
 
 			$("select.flexselect").change(function() {
@@ -2370,6 +2403,89 @@ if ($_SESSION['idroll_predio'] == 4) {
 					<button type="button" class="btn btn-success varJugadorEquipos" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Equipos</button> \
 					<button type="button" class="btn btn-success varJugadorHabilitaciones" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Habilitaciones</button>');
 			});
+*/
+
+			$('#colapsarMenu').click();
+			
+			$(document).on('click', '.panel-heading span.clickable', function(e){
+				var $this = $(this);
+				if(!$this.hasClass('panel-collapsed')) {
+					$this.parents('.panel').find('.panel-body').slideUp();
+					$this.addClass('panel-collapsed');
+					$this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+				} else {
+					$this.parents('.panel').find('.panel-body').slideDown();
+					$this.removeClass('panel-collapsed');
+					$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+				}
+			});
+
+			/*
+			$("#lstjugadores").autocomplete({
+			    source: function (request, response) {
+			        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+			        $.ajax({
+			        	data:  {busqueda: $('#lstjugadores').val()},
+			        	type:  'post',
+			            url: "../json/jsbuscarjugadores.php",
+			            dataType: "json",
+			            success: function (data) {
+			                response($.map(data, function(v,i){
+			                    var text = v.MainName;
+			                    if ( text && ( !request.term || matcher.test(text) ) ) {
+			                        return {
+			                                label: v.apellido,
+			                                value: v.id
+			                               };
+			                    }
+			                }));
+			            }
+			        });
+			    }
+			});
+
+*/
+
+		var options = {
+
+			url: "../json/jsbuscarjugadores.php",
+
+			getValue: function(element) {
+				return element.apellido + ' ' + element.nombres + ' ' + element.nrodocumento;
+			},
+
+			ajaxSettings: {
+		        dataType: "json",
+		        method: "POST",
+		        data: {
+		            busqueda: $("#lstjugadores").val()
+		        }
+		    },
+		    
+		    preparePostData: function (data) {
+		        data.busqueda = $("#lstjugadores").val();
+		        return data;
+		    },
+			
+			list: {
+			    maxNumberOfElements: 15,
+				match: {
+					enabled: true
+				},
+				onClickEvent: function() {
+					var value = $("#lstjugadores").getSelectedItemData().id;
+					
+					$("#selction-ajax").html('<button type="button" class="btn btn-warning varJugadorModificar" id="' + value + '" style="margin-left:0px;">Modificar</button> \
+					<button type="button" class="btn btn-success varJugadorDocumentaciones" id="' + value + '" style="margin-left:0px;">Documentaciones</button> \
+					<button type="button" class="btn btn-success varJugadorEquipos" id="' + value + '" style="margin-left:0px;">Equipos</button> \
+					<button type="button" data-toggle="modal" data-target="#myModal3" class="btn btn-info varJugadorEstudiosMedicos" id="' + value + '" style="margin-left:0px;"><span class="glyphicon glyphicon-heart-empty"></span> Estudio Medico</button> \
+					<button type="button" class="btn btn-success varJugadorHabilitaciones" id="' + value + '" style="margin-left:0px;">Habilitaciones</button>');
+				}
+			},
+			theme: "square"
+		};
+
+		$("#lstjugadores").easyAutocomplete(options);
 
 			$('#colapsarMenu').click();
 			
@@ -2434,6 +2550,40 @@ if ($_SESSION['idroll_predio'] == 4) {
 				  }
 			} );
 			
+
+			
+			$('#cargarEstudioMedico').click(function() {
+				$.ajax({
+					data:  {id: $('#refjugadorestudiomedico').val(), accion: 'modificarEstudioMedico'},
+					url:   '../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+						alert('El Estudio Medico fue modificado Correctamente');
+							
+					}
+				});
+			});
+
+
+			$('#selction-ajax').on("click",'.varJugadorEstudiosMedicos', function(){
+			    usersid =  $(this).attr("id");
+			    $('#refjugadorestudiomedico').val(usersid);
+			    $.ajax({
+					data:  {id: usersid, accion: 'traerDatosJugador'},
+					url:   '../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							$('#datosEstudioMedico').html(response);
+							
+					}
+				});
+			});//fin del boton eliminar
 
 			$('#selction-ajax').on("click",'.varJugadorModificar', function(){
 				  usersid =  $(this).attr("id");

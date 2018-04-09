@@ -526,7 +526,7 @@ function validacion($tabla) {
 			$("#idEliminar").val(usersid);
 			$("#dialog2").dialog("open");
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acciÃ³n.");	
 		  }
 	});//fin del boton eliminar
 	
@@ -536,7 +536,7 @@ function validacion($tabla) {
 			url = "modificar.php?id=" + usersid;
 			$(location).attr("href",url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acciÃ³n.");	
 		  }
 	});//fin del boton modificar';
 	
@@ -689,7 +689,7 @@ function footer() {
 <li><a href='http://www.eldia.com.ar/'>El Dia</a></li>
 <li><a href='http://www.clarin.com/'>Clarin</a></li>
 <li><a href='http://diariohoy.net/'>Hoy</a></li>
-<li><a href='http://www.lanacion.com.ar/'>La Nación</a></li>
+<li><a href='http://www.lanacion.com.ar/'>La NaciÃ³n</a></li>
 </ul>
 </td>
 <td align='left'>
@@ -708,7 +708,7 @@ function footer() {
 
    <div id='yo' align='center'>
    <br />
-<p>© Copyright 2013 | ComplejoShowBol - La PLata, Buenos Aires. Diseño Web: Saupurein Marcos y Saupurein Javier .Tel:(0221)15-6184415</p>
+<p>Â© Copyright 2013 | ComplejoShowBol - La PLata, Buenos Aires. DiseÃ±o Web: Saupurein Marcos y Saupurein Javier .Tel:(0221)15-6184415</p>
 </div>
 </div><!--fin del footer-->";
 }

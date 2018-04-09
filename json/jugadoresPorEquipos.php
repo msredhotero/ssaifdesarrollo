@@ -32,7 +32,7 @@ $cadJugadores = '';
 		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
 		$cadJugadores .= '
 		      {
-				"name": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",
+				"name": "'.str_replace("'","",str_replace('"','',$row['apellido'])).', '.str_replace("'","",str_replace('"','',$row['nombres'].' - '.$row['nrodocumento'])).'",
 				"id": "'.$row[0].'"
 			  },';
 	}
