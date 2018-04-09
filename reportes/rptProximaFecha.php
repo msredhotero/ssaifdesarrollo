@@ -205,20 +205,24 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->Cell(47,4,utf8_decode($rowE['equipoLocal']),1,0,'L',true);
 		$pdf->Cell(6,4,'vs',1,0,'L',true);
 		$pdf->Cell(47,4,utf8_decode($rowE['equipoVisitante']),1,0,'L',true);
-		$pdf->Cell(50,4,utf8_decode(($rowE['cancha']== '' ? 'A confirmar' : $rowE['cancha'])),0,0,'L',true);
-		$pdf->Cell(15,4,$dia,0,0,'L',true);
-		$pdf->Cell(20,4,$date->format('d-m-Y'),0,0,'L',true);
-		$pdf->Cell(15,4,utf8_decode($rowE['hora']),0,0,'L',true);
+		if (($rowE['equipoLocal'] != 'Libre') && ($rowE['equipoVisitante'] != 'Libre')) {
+			$pdf->Cell(50,4,utf8_decode(($rowE['cancha']== '' ? 'A confirmar' : $rowE['cancha'])),0,0,'L',true);
+			$pdf->Cell(15,4,$dia,0,0,'L',true);
+			$pdf->Cell(20,4,$date->format('d-m-Y'),0,0,'L',true);
+			$pdf->Cell(15,4,utf8_decode($rowE['hora']),0,0,'L',true);
+		}
 	} else {
 		$pdf->SetFillColor(183,183,183);
 		$pdf->SetFont('Arial','',8);
 		$pdf->Cell(47,4,utf8_decode($rowE['equipoLocal']),1,0,'L',false);
 		$pdf->Cell(6,4,'vs',1,0,'L',false);
 		$pdf->Cell(47,4,utf8_decode($rowE['equipoVisitante']),1,0,'L',false);
-		$pdf->Cell(50,4,utf8_decode(($rowE['cancha']== '' ? 'A confirmar' : $rowE['cancha'])),0,0,'L',false);
-		$pdf->Cell(15,4,$dia,0,0,'L',false);
-		$pdf->Cell(20,4,$date->format('d-m-Y'),0,0,'L',false);
-		$pdf->Cell(15,4,utf8_decode($rowE['hora']),0,0,'L',false);
+		if (($rowE['equipoLocal'] != 'Libre') && ($rowE['equipoVisitante'] != 'Libre')) {
+			$pdf->Cell(50,4,utf8_decode(($rowE['cancha']== '' ? 'A confirmar' : $rowE['cancha'])),0,0,'L',false);
+			$pdf->Cell(15,4,$dia,0,0,'L',false);
+			$pdf->Cell(20,4,$date->format('d-m-Y'),0,0,'L',false);
+			$pdf->Cell(15,4,utf8_decode($rowE['hora']),0,0,'L',false);
+		}
 
 	}
 	
