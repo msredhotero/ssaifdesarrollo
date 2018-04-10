@@ -10693,9 +10693,9 @@ if (mysql_num_rows($resTemporadas)>0) {
                     inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos 
                     group by fc.refsancionesfallos,torc.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = p.refcategorias
-        where tor.reftemporadas = ".$ultimaTemporada."      
+        where tor.reftemporadas in (6,7)
         ";  
-        
+        /*where tor.reftemporadas = ".$ultimaTemporada."*/
         $res = $this->query($sql,0);
         return $res;
 }

@@ -29,7 +29,7 @@ $ar = array();
 		if ($row['pendientesfallo'] == 1) {
 			array_push($ar,array('idjugador'=>$row['idjugador'],'country'=>$row['nombre'], 'nombre'=>$row['apyn'],'fecha'=>$row['fecha'],'partido'=>$row['equiposcontra'],'tiposancion'=>'Pendiente','sancion'=>'Pendiente','cumplido'=>$row['fechascumplidas'],'imagen'=>$row['imagen'], 'idequipo'=>$row['idequipo']));
 		} else {
-			array_push($ar,array('idjugador'=>$row['idjugador'],'country'=>$row['nombre'], 'nombre'=>$row['apyn'],'fecha'=>$row['fecha'],'partido'=>$row['equiposcontra'],'tiposancion'=>$row['tiposancion'],'sancion'=>($row['dias']==0 ? $row['cantidadfechas'].' fechas' : $row['dias'].' dias'),'cumplido'=>$row['fechascumplidas'],'imagen'=>$row['imagen'], 'idequipo'=>$row['idequipo']));
+			array_push($ar,array('idjugador'=>$row['idjugador'],'country'=>$row['nombre'], 'nombre'=>$row['apyn'],'fecha'=>$row['fecha'],'partido'=>$row['equiposcontra'],'tiposancion'=>$row['tiposancion'],'sancion'=>($row['dias']==0 ? $row['cantidadfechas'].' fechas' : $row['dias'].' dias'),'cumplido'=>($row['dias']==0 ? $row['fechascumplidas'] : $row['cumplidas'].' dias'),'imagen'=>$row['imagen'], 'idequipo'=>$row['idequipo']));
 		}
 	}
 
