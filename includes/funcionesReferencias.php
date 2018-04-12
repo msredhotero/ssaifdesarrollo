@@ -10466,6 +10466,12 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function modificarCategoriaFallo($id, $idCategoria) {
+    $sql = "update dbsancionesjugadores set refcategorias = ".$idCategoria." where idsancionjugador =".$id;
+    $res = $this->query($sql,0);
+    return '';
+}
+
 
 function traerSancionesjugadoresPorFixtureEquipoTotales($idFixture, $idEquipo) {
 $sql = "select

@@ -607,6 +607,19 @@ case 'generarNotificacion':
 	generarNotificacion($serviciosReferencias);
 	break;
 /****			fin 				******/
+
+case 'modificarCategoriaFallo':
+	modificarCategoriaFallo($serviciosReferencias);
+	break;
+}
+
+function modificarCategoriaFallo($serviciosReferencias) {
+	$id = $_POST['id'];
+	$idCategoria = $_POST['idcategoria'];
+
+	$res = $serviciosReferencias->modificarCategoriaFallo($id, $idCategoria);
+
+	echo $res;
 }
 
 function rotarImagen($serviciosReferencias) {

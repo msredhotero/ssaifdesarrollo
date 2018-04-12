@@ -92,6 +92,10 @@ if ($amarillas > 0) {
 $resCambio = $serviciosReferencias->traerSancionesfallosacumuladasCambioPorEquipoFechaDesdeHasta(mysql_result($resResultado,0,'refequipos'),mysql_result($resResultado,0,'fecha'),date('Y-m-d'),mysql_result($resResultado,0,'refcategorias'));
 
 
+$resCategorias  = $serviciosReferencias->traerCategorias();
+$cadRef3    = $serviciosFunciones->devolverSelectBoxActivo($resCategorias,array(1),'', mysql_result($resDetalles,0,'refcategorias'));
+
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
@@ -171,6 +175,13 @@ if ($_SESSION['refroll_predio'] != 1) {
               <li class="list-group-item list-group-item-default">Fecha de la sación: <?php echo mysql_result($resDetalles,0,'fecha'); ?></li>
               <li class="list-group-item list-group-item-default">Sanción: <?php echo mysql_result($resDetalles,0,'tiposancion'); ?></li>
               <li class="list-group-item list-group-item-default">Cumplidas: <?php echo $cumplidas; ?></li>
+              <li class="list-group-item list-group-item-default">
+                <ul class="list-inline">
+                    <li>Modificar Categoria:</li>
+                    <li><select id="categoriaNueva" name="categoriaNueva" class="form-control"><?php echo $cadRef3; ?></select></li>
+                    <li><button type="button" class="btn btn-warning" id="modificarCategoriaFallo" style="margin-left:0px;">Modificar</button></li>
+                </ul>
+              </li>
               <li class="list-group-item list-group-item-default"><a href="../estadisticas/estadisticas.php?id=<?php echo mysql_result($resResultado,0,'reffixture'); ?>">Ir Estadistica</a></li>
               
             </ul>
@@ -380,6 +391,22 @@ $(document).ready(function(){
 			alert("Error, vuelva a realizar la acción.");	
 		  }
 	});//fin del boton modificar
+
+    $('#modificarCategoriaFallo').click(function() {
+        $.ajax({
+            data:  {id: <?php echo $id; ?>, idcategoria: $('#categoriaNueva').val(), accion: 'modificarCategoriaFallo'},
+            url:   '../../ajax/ajax.php',
+            type:  'post',
+            beforeSend: function () {
+                    
+            },
+            success:  function (response) {
+                    url = "modificar.php?id=<?php echo $id; ?>";
+                    $(location).attr('href',url);
+                    
+            }
+        });
+    });
 
 		
 	$("#fechadesde").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
