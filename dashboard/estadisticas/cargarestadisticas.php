@@ -655,7 +655,7 @@ if	($refEstadoPartido != 0) {
 			$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
 
 			
-			if ($_SESSION['idroll_predio'] == 1) {
+			if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 				$resEstados		= $serviciosReferencias->traerEstadospartidos();
 				$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
 			} else {
@@ -703,7 +703,7 @@ if	($refEstadoPartido != 0) {
 				} else {
 					$resM = $serviciosReferencias->modificarFixturePorEstados($idFixture, 'NULL', $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 0);
 					
-					if ($_SESSION['idroll_predio'] == 1) {
+					if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 						$resEstados		= $serviciosReferencias->traerEstadospartidos();
 						$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
 					} else {
@@ -726,7 +726,7 @@ if	($refEstadoPartido != 0) {
 					
 					$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
 					
-					if ($_SESSION['idroll_predio'] == 1) {
+					if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 						$resEstados		= $serviciosReferencias->traerEstadospartidos();
 						$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
 					} else {
@@ -742,7 +742,7 @@ if	($refEstadoPartido != 0) {
 } else { //else de si no selecciono un estado para el partido
 
 	
-	if ($_SESSION['idroll_predio'] == 1) {
+	if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 		$resEstados		= $serviciosReferencias->traerEstadospartidos();
 		$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
 	} else {
@@ -1674,7 +1674,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                              <?php
 							
 							
-							if ($_SESSION['idroll_predio'] == 1) {
+							if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 								if ($falloA > 0) {
 									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA, $idTipoTorneo);
 									
@@ -1760,7 +1760,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                             
                             <?php
 
-							if ($_SESSION['idroll_predio'] == 1) {
+							if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 
 							?>
                             <th style="text-align:center">Fallo</th>
@@ -1952,7 +1952,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                         <?php
 							
 							
-							if ($_SESSION['idroll_predio'] == 1) {
+							if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 								if ($falloB > 0) {
 									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB, $idTipoTorneo);
 									
@@ -2061,7 +2061,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                             
                             <?php
 
-							if ($_SESSION['idroll_predio'] == 1) {
+							if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 								if ($falloB > 0) {
 									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB, $idTipoTorneo);
 									

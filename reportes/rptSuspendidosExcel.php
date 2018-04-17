@@ -102,7 +102,7 @@ $i = 4; //Numero de fila donde se va a comenzar a rellenar
     }
 
     if ($fila[8] > 0) {
-        $valor = $fila[9].' dias';
+        $valor = $fila[10].' dias';
     } else {
         $valor = $fila[9].' fechas';
     }

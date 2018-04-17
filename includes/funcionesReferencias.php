@@ -7926,7 +7926,7 @@ $sql = "select
     jug.fechanacimiento,
     tip.idtipojugador,
     year(now()) - year(jug.fechanacimiento) as edad,
-    jug.fechabaja
+    (case when jug.fechabaja = '0000-00-00' then '1900-01-01' else coalesce(jug.fechabaja,'1900-01-01') end) as fechabaja
     
 from
     dbconector c
@@ -11278,13 +11278,13 @@ function hayMovimientosDevuelveId($idJugador, $idFixture, $idTipoTorneo) {
                 dbtorneos torv ON torv.idtorneo = fixv.reftorneos
                     left join
                 (select fc.refsancionesfallos, coalesce(count(*),0) as cumplidas 
-                    from dbsancionesfechascumplidas fc 
+                    from dbsancionesfechascumplidas fc where fc.cumplida = 1
                     group by fc.refsancionesfallos) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo
             WHERE
                 ju.idjugador = ".$idJugador."
                     AND tip.cumpletodascategorias = 1
-                    AND (sf.fechascumplidas + sfc.cumplidas) < sf.cantidadfechas
+                    AND (sf.fechascumplidas + coalesce( sfc.cumplidas,0)) < sf.cantidadfechas
                     AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
             
     return $this->existeDevuelveId($sql);           
