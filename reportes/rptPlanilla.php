@@ -116,7 +116,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->SetFillColor(155,155,155);
 	$pdf->Cell(35,5,'Temporada:',1,0,'L',true);
 	$pdf->Cell(70,5,'Temporada '.$temporada,1,0,'L',false);
-	$pdf->Cell(50,5,$dia." ".$fechaPartido." ".$hora,1,0,'L',false);
+	$pdf->Cell(50,5,$rowE['fechapartidonueva']." ".$rowE['hora'],1,0,'L',false);
 	
 	
 	$pdf->Ln();
@@ -295,7 +295,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		
 		
 		if (($rowJ['fechabaja'] != '1900-01-01') && ($rowJ['fechabaja'] < date('Y-m-d'))) {
-				$pdf->Cell(22,6,'INHAB.',0,0,'C',false);	
+				$pdf->Cell(22,6,'INHAB/Baja',0,0,'C',false);	
 		} else {
 				
 			if (($habilitacion == 'HAB.')) { 

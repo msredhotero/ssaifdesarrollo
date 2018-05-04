@@ -173,15 +173,19 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
 		}
 		
-		if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
-			if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
-				$habilitacion= 'INHAB.';	
-			} else {
-				$habilitacion= 'HAB.';	
-				$totalhabilitadoscuenta += 1;
-			}
+		if (($row['fechabaja'] != '1900-01-01') && ($row['fechabaja'] < date('Y-m-d'))) {
+			$habilitacion= 'INHAB/Baja';
 		} else {
-			$habilitacion= 'INHAB.';
+			if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+				if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+					$habilitacion= 'INHAB.';	
+				} else {
+					$habilitacion= 'HAB.';	
+					$totalhabilitadoscuenta += 1;
+				}
+			} else {
+				$habilitacion= 'INHAB.';
+			}
 		}
 		
 		

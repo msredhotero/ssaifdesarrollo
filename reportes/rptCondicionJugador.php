@@ -155,17 +155,20 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
 		}
 		
-		if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
-			if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
-				$habilitacion= 'INHAB.';	
-			} else {
-				$habilitacion= 'HAB.';	
-				$totalhabilitadoscuenta += 1;
-			}
+		if (($row['fechabaja'] != '1900-01-01') && ($row['fechabaja'] != '') && ($row['fechabaja'] < date('Y-m-d'))) {
+			$habilitacion= 'INHAB/Baja';
 		} else {
-			$habilitacion= 'INHAB.';
+			if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+				if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+					$habilitacion= 'INHAB.';	
+				} else {
+					$habilitacion= 'HAB.';	
+					$totalhabilitadoscuenta += 1;
+				}
+			} else {
+				$habilitacion= 'INHAB.';
+			}
 		}
-		
 		
 		$this->SetXY($x, $y);
 		$yN = $y;
@@ -220,6 +223,8 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		}
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4] + $w[5] + $w[6], $y);
 		$this->SetFont('Arial','',9);
+
+
 		$this->MultiCell($w[7],5,$habilitacion,'','C');
         if ($this->GetY() > $yN + 5) {
 			$yN = $this->GetY();

@@ -1813,7 +1813,7 @@ function traerProximaFechaTodos() {
         inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
         inner join tbfechas fe ON fe.idfecha = fix.reffechas 
         left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
-        inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+        left join dbequipos equ ON equ.idequipo = fix.refconectorlocal
         left join tbcanchas cc ON cc.idcancha = fix.refcanchas
         inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
         inner join tbdias dia ON dia.iddia = dct.refdias
@@ -1932,7 +1932,7 @@ function traerProximaFechaTodosReal($desde, $hasta) {
         inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
         inner join tbfechas fe ON fe.idfecha = fix.reffechas 
         left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
-        inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+        left join dbequipos equ ON equ.idequipo = fix.refconectorlocal
         left join tbcanchas cc ON cc.idcancha = fix.refcanchas
         inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
         inner join tbdias dia ON dia.iddia = dct.refdias
@@ -7878,8 +7878,8 @@ $sql = "select
     jug.nrodocumento,
     jug.fechanacimiento,
     tip.idtipojugador,
-    year(now()) - year(jug.fechanacimiento) as edad
-    
+    year(now()) - year(jug.fechanacimiento) as edad,
+    jug.fechabaja
 from
     dbconector c
         inner join
@@ -8914,7 +8914,8 @@ return $res;
 }
 
 function traerFixtureTodoPorTorneoFecha($idTorneo, $refFechas) {
-$sql = "select
+$sql = "SET lc_time_names = 'es_ES';
+select
 f.idfixture,
 el.nombre as equipolocal,
 f.puntoslocal,
@@ -8945,7 +8946,8 @@ f.refarbitros,
 coalesce(cl.nombre,'') as contactoLocal,
 coalesce(cv.nombre,'') as contactoVisitante,
 date_format(f.fecha,'%Y-%m-%d') as fechapartidocomun,
-coalesce(cl.telefono,'') as telefonoLocal
+coalesce(cl.telefono,'') as telefonoLocal,
+date_format(f.fecha,'%W %d/%m/%Y') as fechapartidonueva
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
