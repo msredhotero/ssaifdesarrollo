@@ -1568,8 +1568,8 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = sj.refcategorias
                         
             WHERE
-                 t.refcategorias = ".$idCategoria."
-                 and t.refdivisiones = ".$idDivision."
+                 sj.refcategorias = ".$idCategoria."
+                 and sj.refdivisiones = ".$idDivision."
                  
                  and ( (tip.cumpletodascategorias = 1 and (coalesce(sf.fechascumplidas,0) + coalesce(sfc.cumplidas,0)) < sf.cantidadfechas)
                     OR (sf.fechahasta >= NOW()
@@ -1629,8 +1629,8 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
                         
             WHERE
                 sf.cantidadfechas <> sf.fechascumplidas
-                 and t.refcategorias = ".$idCategoria."
-                 and t.refdivisiones = ".$idDivision."
+                 and sj.refcategorias = ".$idCategoria."
+                 and sj.refdivisiones = ".$idDivision."
                 ) r
             order by r.nombre, r.apyn";
             
@@ -13722,6 +13722,91 @@ function devolverImagen($name, $type, $nombrenuevo) {
     $tfoto = utf8_decode($tfoto);
     //return array('tfoto' => $tfoto, 'type' => $NAMETHUMB);
     return $NAMETHUMB;
+}
+
+
+function traerJugadoresParaCarnet() {
+    $sql = "select
+                m.idjugador,
+                m.categoria,
+                m.equipo,
+                m.countrie,
+                m.nombrecompleto,
+                m.nrodocumento,
+                m.fechanacimiento,
+                m.edad,
+                m.fechaalta
+            from (
+            select 
+                jug.idjugador,
+                cat.categoria,
+                equ.nombre as equipo,
+                co.nombre as countrie,
+                concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+                jug.nrodocumento,
+                jug.fechanacimiento,
+                year(now()) - year(jug.fechanacimiento) as edad,
+                jug.fechaalta
+            from
+                dbconector c
+                    inner join
+                dbjugadores jug ON jug.idjugador = c.refjugadores
+                    inner join
+                tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+                    inner join
+                dbcountries co ON co.idcountrie = jug.refcountries
+                    inner join
+                tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+                    inner join
+                dbequipos equ ON equ.idequipo = c.refequipos
+                    inner join
+                tbdivisiones di ON di.iddivision = equ.refdivisiones
+                    inner join
+                dbcontactos con ON con.idcontacto = equ.refcontactos
+                    inner join
+                tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+                    inner join
+                tbcategorias cat ON cat.idtcategoria = c.refcategorias
+                where cat.idtcategoria in (6,7) and year(jug.fechaalta) = year(current_date())
+
+            union all
+            select 
+                jug.idjugador,
+                cat.categoria,
+                equ.nombre as equipo,
+                co.nombre as countrie,
+                concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+                jug.nrodocumento,
+                jug.fechanacimiento,
+                year(now()) - year(jug.fechanacimiento) as edad,
+                jug.fechaalta
+            from
+                dbconector c
+                    inner join
+                dbjugadores jug ON jug.idjugador = c.refjugadores
+                    inner join
+                tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+                    inner join
+                dbcountries co ON co.idcountrie = jug.refcountries
+                    inner join
+                tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+                    inner join
+                dbequipos equ ON equ.idequipo = c.refequipos
+                    inner join
+                tbdivisiones di ON di.iddivision = equ.refdivisiones
+                    inner join
+                dbcontactos con ON con.idcontacto = equ.refcontactos
+                    inner join
+                tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+                    inner join
+                tbcategorias cat ON cat.idtcategoria = c.refcategorias
+                where cat.idtcategoria in (6,7) and year(jug.fechaalta) <> year(current_date()) and year(jug.fechaalta) >= 2016
+                ) m order by m.fechaalta desc
+            ";
+
+    $res = $this->query($sql,0);
+
+    return $res;
 }
 
 function query($sql,$accion) {
