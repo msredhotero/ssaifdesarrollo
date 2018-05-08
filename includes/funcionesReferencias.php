@@ -13809,6 +13809,23 @@ function traerJugadoresParaCarnet() {
     return $res;
 }
 
+function traerJugadoresPorWhere($where) {
+
+    $sql = "select
+                j.apellido,
+                j.nombres,
+                j.nrodocumento,
+                j.fechanacimiento,
+                c.nombre as country
+            from dbjugadores j
+            inner join dbcountries c on c.idcountrie = j.refcountries
+            where idjugador in (".$where.")";
+
+    $res = $this->query($sql,0);
+
+    return $res;
+}
+
 function query($sql,$accion) {
         
         

@@ -122,7 +122,7 @@ $resEquipos = $serviciosReferencias->traerJugadoresParaCarnet();
 
             
             
-            <form class="form-inline formulario" role="form" method="post" action="ver.php">
+            <form class="form-inline formulario" role="form" method="post" action="../../reportes/rptCarnet.php" target="_blank">
         	<div class="row">
             
 			<div class="col-md-12">
