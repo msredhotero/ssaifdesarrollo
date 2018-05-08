@@ -52,15 +52,13 @@ $resDatos = $serviciosReferencias->traerJugadoresPorWhere( substr( $cadWhere,0,-
 
 
 $xAbs = 0;
-$xMov = 100.5;
+$xMov = 101.5;
 $xMov2 = 20.3;
 $xMov3 = 50;
 
 $yAbs = 0;
-$yMov = 70.55;
-$yMov2 = 30.8;
-
-
+$yMov = 38.7;
+$yMov2 = 33.8;
 
 $pdf = new FPDF('P','mm',array(340,210));
 $cantidadJugadores = 0;
@@ -70,56 +68,50 @@ $pdf->SetMargins(0, 3 , 0);
 #Establecemos el margen inferior: 
 $pdf->SetAutoPageBreak(true,1); 
 
-
-	
 	$pdf->AddPage();
-	/***********************************    PRIMER CUADRANTE ******************************************/
-	
-	//$pdf->Image('../imagenes/logoparainformes.png',2,2,40);
-
-	/***********************************    FIN ******************************************/
-	
-	
-	
-	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
-
-	
-
 
 $i=0;
+$yPar = 0;
+
 $contadorY1=0;
 while ($rowE = mysql_fetch_array($resDatos)) {
 	$i+=1;	
 
-	if (($i % 2) == 0) {
+	if (($i % 2) == 1) {
 		$pdf->SetFont('Arial','',9);
-		$pdf->SetXY($xMov2, $yMov2);
+		$pdf->SetXY($xMov2, $yMov2 + (($i - 1) * $yMov));
 		$pdf->Cell(30,4,$rowE['nrodocumento'],1,0,'L',false);
-		$pdf->SetXY($xMov2, $yMov2 + 5);
+		$pdf->SetXY($xMov2, $yMov2 + 4.8 + (($i - 1) * $yMov));
 		$pdf->Cell(60,4,strtoupper($rowE['apellido']).' '.strtoupper($rowE['nombres']),1,0,'L',false);
-		$pdf->SetXY($xMov2, $yMov2 + 10);
+		$pdf->SetXY($xMov2, $yMov2 + 9.8 + (($i - 1) * $yMov));
 		$pdf->Cell(30,4,$rowE['nrodocumento'],1,0,'L',false);
-		$pdf->SetXY($xMov3, $yMov2 + 10);
-		$pdf->Cell(30,4,$rowE['fechanacimiento'],1,0,'C',false);
-		$pdf->SetXY($xMov2, $yMov2 + 15);
+		$pdf->SetXY($xMov3, $yMov2 + 9.8 + (($i - 1) * $yMov));
+		$pdf->Cell(30,4,$rowE['fechanacimiento'],1,0,'R',false);
+		$pdf->SetXY($xMov2, $yMov2 + 14.8 + (($i - 1) * $yMov));
 		$pdf->Cell(60,4,$rowE['country'],1,0,'L',false);
+
+		$yPar = (($i - 1) * $yMov);
 	} else {
 		$pdf->SetFont('Arial','',9);
-		$pdf->SetXY($xMov2 + $xMov, $yMov2);
+		$pdf->SetXY($xMov2 + $xMov, $yMov2 + $yPar);
 		$pdf->Cell(30,4,$rowE['nrodocumento'],1,0,'L',false);
-		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 5);
+		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 4.8 + $yPar);
 		$pdf->Cell(60,4,strtoupper($rowE['apellido']).' '.strtoupper($rowE['nombres']),1,0,'L',false);
-		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 10);
+		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 9.8 + $yPar);
 		$pdf->Cell(30,4,$rowE['nrodocumento'],1,0,'L',false);
-		$pdf->SetXY($xMov3 + $xMov, $yMov2 + 10);
-		$pdf->Cell(30,4,$rowE['fechanacimiento'],1,0,'C',false);
-		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 15);
+		$pdf->SetXY($xMov3 + $xMov, $yMov2 + 9.8 + $yPar);
+		$pdf->Cell(30,4,$rowE['fechanacimiento'],1,0,'R',false);
+		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 14.8 + $yPar);
 		$pdf->Cell(60,4,$rowE['country'],1,0,'L',false);
 	}
 	
 
 	$contadorY1 += 4;
 
+	if ($i == 9) {
+		$i=0;
+		$pdf->AddPage();
+	}
 	//$pdf->SetY($contadorY1);		
 
 

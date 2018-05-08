@@ -13819,7 +13819,8 @@ function traerJugadoresPorWhere($where) {
                 c.nombre as country
             from dbjugadores j
             inner join dbcountries c on c.idcountrie = j.refcountries
-            where idjugador in (".$where.")";
+            where idjugador in (".$where.") 
+            order by j.apellido, j.nombres";
 
     $res = $this->query($sql,0);
 
