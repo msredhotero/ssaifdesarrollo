@@ -7879,7 +7879,8 @@ $sql = "select
     jug.fechanacimiento,
     tip.idtipojugador,
     year(now()) - year(jug.fechanacimiento) as edad,
-    jug.fechabaja
+    jug.fechabaja,
+    jug.fechaalta
 from
     dbconector c
         inner join

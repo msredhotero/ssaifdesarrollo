@@ -51,7 +51,23 @@ $tabla 			= "dbtorneos";
 
 $resEquipos = $serviciosReferencias->traerJugadoresParaCarnet();
 
+$resEquipos2 = $serviciosReferencias->traerEquipos();
+$cadRefE = $serviciosFunciones->devolverSelectBox($resEquipos2,array(1,2,3,4),' - ');
 
+$resTorneosActivos = $serviciosReferencias->traerTorneos();
+$cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivos,array(1,2,3,4,5),' - ');
+
+$resTemporadas  =   $serviciosReferencias->traerTemporadas();
+$cadRefTemporadas   =   $serviciosFunciones->devolverSelectBox($resTemporadas,array(1),'');
+
+$resCategorias  =   $serviciosReferencias->traerCategorias();
+$cadRefCategorias   =   $serviciosFunciones->devolverSelectBox($resCategorias,array(1),'');
+
+$resDivisiones  =   $serviciosReferencias->traerDivisiones();
+$cadRefDivisiones   =   $serviciosFunciones->devolverSelectBox($resDivisiones,array(1),'');
+
+$resCountries   =   $serviciosReferencias->traerCountries();
+$cadRefCountries    =   $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
 
 //die(var_dump($numeroDia));
@@ -84,7 +100,7 @@ $resEquipos = $serviciosReferencias->traerJugadoresParaCarnet();
     
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
-	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
@@ -128,7 +144,30 @@ $resEquipos = $serviciosReferencias->traerJugadoresParaCarnet();
 			<div class="col-md-12">
             	<div class="col-md-12" style="margin-bottom:10px;">
                     <h3>Elegir los Juagdores para generarles el carnet</h3>
-
+                    <div class="form-group col-md-10" style="display:'.$lblOculta.'">
+                        <label class="control-label" style="text-align:left" for="refcliente">Seleccione Temporada | Country | Equipo | Baja</label>
+                        <div class="input-group col-md-12">
+                            <span class="input-group-addon">
+                                <select id="cjreftemporada" name="cjreftemporada" class="form-control" tabindex="2">
+                                    
+                                    <?php echo $cadRefTemporadas; ?>
+                        
+                                </select>
+                            </span>
+                            <span class="input-group-addon">
+                                <select id="cjrefcountries" name="cjrefcountries" class="form-control" tabindex="2">
+                                    <option value="0">-- Seleccione --</option>
+                                    <?php echo $cadRefCountries; ?>
+                                </select>
+                            </span>
+                            
+                            
+                            <span class="input-group-addon">
+                                <select id="cjrefequipos" name="cjrefequipos" class="form-control" tabindex="2">
+                                </select>
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 
                 <input type="buttom" class="btn btn-default tildarvisibles" value="Tildar Visibles">
@@ -145,31 +184,8 @@ $resEquipos = $serviciosReferencias->traerJugadoresParaCarnet();
                     <th>Fecha Alta</th>
                     
                 </thead>
-                <tbody>
-				<?php
-					$cantidad = 0;
-					while ($row = mysql_fetch_array($resEquipos)) {
-						$cantidad += 1;
-				?>
-
-                	<tr>
-                    	<td align="center">
-                        
-                            <input class="form-control tildar" type="checkbox" name="equipo<?php echo $row[0]; ?>" id="equipo<?php echo $row[0]; ?>"/>
-                        
-                        </td>
-                        <td><?php echo $row['categoria']; ?></td>
-                        <td><?php echo $row['equipo']; ?></td>
-                        <td><?php echo $row['countrie']; ?></td>
-                        <td><?php echo $row['nombrecompleto']; ?></td>
-                        <td><?php echo $row['nrodocumento']; ?></td>
-                        <td><?php echo $row['fechanacimiento']; ?></td>
-                        <td><?php echo $row['fechaalta']; ?></td>
-                    </tr>
-
-                <?php
-					}
-				?>
+                <tbody id="lstJugadores">
+				
                 </tbody>
                 </table>
                 </div>
@@ -223,10 +239,69 @@ $resEquipos = $serviciosReferencias->traerJugadoresParaCarnet();
 $(document).ready(function(){
 
 
-    
-	
-	
+    $('#cjrefcountries').change(function(e) {
+        
+        $.ajax({
+                data:  {id: $('#cjrefcountries').val(),
+                        accion: 'traerEquiposPorCountries'},
+                url:   '../../ajax/ajax.php',
+                type:  'post',
+                beforeSend: function () {
+                    $('#cjrefequipos').html('');    
+                },
+                success:  function (response) {
 
+                    if (response != '') {
+                        $('#cjrefequipos').prepend('<option value="">-- Seleccionar --</option>');
+                        $('#cjrefequipos').append(response);
+                        
+                    } else {
+
+                        $('#cjrefequipos').html('<option value="">-- Seleccionar --</option>');
+                        
+                    } 
+                }
+        });
+    });
+
+    $('#cjrefequipos').change(function(e) {
+
+        if ($(this).val() != '') {
+            $.ajax({
+                    data:  {refequipo: $('#cjrefequipos').val(),
+                            accion: 'traerJugadoresPorEquipo'},
+                    url:   '../../ajax/ajax.php',
+                    type:  'post',
+                    beforeSend: function () {
+                        borrarInput();
+                    },
+                    success:  function (response) {
+
+                        if (response != '') {
+                            
+                            $('#lstJugadores').append(response);
+                            
+                        }
+                    }
+            });
+        }
+    });
+	
+	
+    function borrarInput() {
+
+        $('#lstJugadores .tildar').each(function(intIndex){
+            usersid =  $(this).attr("id");
+
+            if ($(this).prop( 'checked' )) {
+
+            } else {
+                
+                $('.' + usersid).remove();
+            }
+        });
+
+    }
 
     $('.tildarvisibles').click(function() {
         $('.tildar').each(function(intIndex){

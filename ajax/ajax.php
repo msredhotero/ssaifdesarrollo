@@ -521,6 +521,9 @@ case 'buscarJugadoresNombresFiltro':
 case 'filtrosGenerales':
 	filtrosGenerales($serviciosReferencias, $serviciosFunciones);
 	break;
+case 'traerJugadoresPorEquipo':
+	traerJugadoresPorEquipo($serviciosReferencias);
+	break;
 /*****          FIN            ***********/
 
 
@@ -3153,6 +3156,34 @@ function traerJugadoresPorCountrie($serviciosReferencias) {
 	echo json_encode(toArray($res));	
 }
 
+
+function traerJugadoresPorEquipo($serviciosReferencias) {
+	$id		=	$_POST['refequipo'];
+	
+	$res 	=	$serviciosReferencias->traerConectorActivosPorEquipos($id);
+	
+	$cadJugadores = '';
+	while ($row = mysql_fetch_array($res)) {
+		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
+		$cadJugadores .= '<tr class="equipox'.$row['refjugadores'].'">
+                    	<td align="center">
+                        
+                            <input class="form-control tildar" type="checkbox" name="equipox'.$row['refjugadores'].'" id="equipox'.$row['refjugadores'].'"/>
+                        
+                        </td>
+                        <td>'.$row["categoria"].'</td>
+                        <td>'.$row["equipo"].'</td>
+                        <td>'.$row["countrie"].'</td>
+                        <td>'.$row["nombrecompleto"].'</td>
+                        <td>'.$row["nrodocumento"].'</td>
+                        <td>'.$row["fechanacimiento"].'</td>
+                        <td>'.$row["fechaalta"].'</td>
+                    </tr>';
+	}
+	
+	echo substr($cadJugadores,0,-1);
+
+}
 
 function traerDatosJugador($serviciosReferencias) {
 	$id = $_POST['id']; 
