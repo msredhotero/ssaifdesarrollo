@@ -1874,6 +1874,7 @@ $(document).ready(function(){
 		
 		// para restarle los minutos jugados al que sale y entra
 		/* localsale - salecambioLocal - minutocambioLocal */
+		var cambio = 0;
 		$('.dorsalEA').each(function(intIndex){
 			idJugador = $(this).attr("id");
 			idJugador = idJugador.replace("dorsal", "");
@@ -1883,10 +1884,16 @@ $(document).ready(function(){
 				
 				if (existeCambioSaleLocal($(this).val(),'localsale','salecambioLocal','minutocambioLocal')>0) {
 					$('#minutos'+idJugador).val(existeCambioSaleLocal($(this).val(),'localsale','salecambioLocal','minutocambioLocal'));
+					cambio = 1;
 				}
 				
 				if (existeCambioEntraLocal($(this).val(),minutosPartido,'localentra','entracambioLocal','minutocambioLocal')>0) {
 					$('#minutos'+idJugador).val(existeCambioEntraLocal($(this).val(),minutosPartido,'localentra','entracambioLocal','minutocambioLocal'));
+					cambio = 1;
+				}
+
+				if (cambio == 0) {
+					$('#minutos'+idJugador).val(minutosPartido);
 				}
 				
 			}
@@ -1895,6 +1902,7 @@ $(document).ready(function(){
 		
 		// para restarle los minutos jugados al que sale
 		/* visitsale - salecambioVisitante - minutocambioVisitante */
+		var cambioV = 0;
 		$('.dorsalEB').each(function(intIndex){
 			idJugador = $(this).attr("id");
 			idJugador = idJugador.replace("dorbsal", "");
@@ -1904,10 +1912,16 @@ $(document).ready(function(){
 				
 				if (existeCambioSaleLocal($(this).val(),'visitsale','salecambioVisitante','minutocambioVisitante')>0) {
 					$('#minbutos'+idJugador).val(existeCambioSaleLocal($(this).val(),'visitsale','salecambioVisitante','minutocambioVisitante'));
+					cambioV = 1;
 				}
 				
 				if (existeCambioEntraLocal($(this).val(),minutosPartido,'visitentra','entracambioVisitante','minutocambioVisitante')>0) {
 					$('#minbutos'+idJugador).val(existeCambioEntraLocal($(this).val(),minutosPartido,'visitentra','entracambioVisitante','minutocambioVisitante'));
+					cambioV = 1;
+				}
+
+				if (cambioV == 0) {
+					$('#minbutos'+idJugador).val(minutosPartido);
 				}
 				
 			}

@@ -156,7 +156,7 @@ class Servicios {
 				break;
 			case 88:
 				$cantidad = 6;
-				$classMod = '';
+				$classMod = 'varmodificar';
 				$classVer = 'varver';
 				$lblVer	  = 'Fallar';
 				$classEli = 'varborrar';
