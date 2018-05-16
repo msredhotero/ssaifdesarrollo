@@ -20,82 +20,16 @@ require('fpdf.php');
 //$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
 
 ////***** Parametros ****////////////////////////////////
-$idTemporada		=	$_GET['reftemporada1'];
+$ultimaTemporada = $_GET['reftemporada1'];    
+
 /////////////////////////////  fin parametross  ///////////////////////////
 
 
 
 
-$resTemporadas = $serviciosReferencias->traerTemporadasPorId($idTemporada);
+$resDatos = $serviciosReferencias->traerJugadoresHabilitacionesTransitoriosPorTemporada($ultimaTemporada);
 
-$fpartidos = '';
-$famarillas = '';
-$frojas = '';
-
-$fpartidosvalor = '';
-$famarillasvalor = '';
-$frojasvalor = '';
-
-$where  = '';
-
-if (($_GET['filtropartidos'] != 0) && (isset($_GET['filtropartidosvalor']))) {
-	switch ($_GET['filtropartidos']) {
-		case 1:
-			$where .= ' and r.cantidad > '.$_GET['filtropartidosvalor'];
-			break;
-		case 2:
-			$where .= ' and r.cantidad < '.$_GET['filtropartidosvalor'];
-			break;
-		case 3:
-			$where .= ' and r.cantidad = '.$_GET['filtropartidosvalor'];
-			break;
-		case 4:
-			$where .= ' and r.cantidad between '.$_GET['filtropartidosvalor'].' and '.$_GET['filtropartidosvalor2'];
-			break;
-	}
-}
-
-
-if (($_GET['filtroamarillas'] != 0) && (isset($_GET['filtroamarillasvalor']))) {
-	switch ($_GET['filtroamarillas']) {
-		case 1:
-			$where .= ' and coalesce(r.amarillas,0) > '.$_GET['filtroamarillasvalor'];
-			break;
-		case 2:
-			$where .= ' and coalesce(r.amarillas,0) < '.$_GET['filtroamarillasvalor'];
-			break;
-		case 3:
-			$where .= ' and coalesce(r.amarillas,0) = '.$_GET['filtroamarillasvalor'];
-			break;
-		case 4:
-			$where .= ' and coalesce(r.amarillas,0) between '.$_GET['filtroamarillasvalor'].' and '.$_GET['filtroamarillasvalor2'];
-			break;
-	}
-}
-
-
-if (($_GET['filtrorojas'] != 0) && (isset($_GET['filtrorojasvalor']))) {
-	switch ($_GET['filtrorojas']) {
-		case 1:
-			$where .= ' and coalesce(r.rojas,0) > '.$_GET['filtrorojasvalor'];
-			break;
-		case 2:
-			$where .= ' and coalesce(r.rojas,0) < '.$_GET['filtrorojasvalor'];
-			break;
-		case 3:
-			$where .= ' and coalesce(r.rojas,0) = '.$_GET['filtrorojasvalor'];
-			break;
-		case 4:
-			$where .= ' and coalesce(r.rojas,0) between '.$_GET['filtrorojasvalor'].' and '.$_GET['filtrorojasvalor2'];
-			break;
-	}
-}
-
-
-$resDatos = $serviciosReferencias->traerEstadisticaArbitrosPorTemporadaWhere($idTemporada, $where);
-
-//die(print_r($resDatos));
-//echo $resEquipos;
+$resTemporadas = $serviciosReferencias->traerTemporadasPorId($ultimaTemporada); 
 
 $nombre 	= mysql_result($resTemporadas,0,'temporada');
 
@@ -147,12 +81,11 @@ $pdf->SetAutoPageBreak(true,1);
 
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(70,4,'Apellido y Nombre',1,0,'L',false);
-	$pdf->Cell(25,4,'Partidos',1,0,'C',false);
-	$pdf->Cell(25,4,'Amonestaciones',1,0,'C',false);
-	$pdf->Cell(25,4,'Rojas',1,0,'C',false);
-	$pdf->Cell(25,4,'% Amarillas',1,0,'C',false);
-	$pdf->Cell(25,4,'% Rojas',1,0,'C',false);
+	$pdf->Cell(60,4,'Apellido y Nombre',1,0,'L',false);
+	$pdf->Cell(22,4,'Nro Doc.',1,0,'C',false);
+	$pdf->Cell(22,4,'Fec. Limite',1,0,'C',false);
+	$pdf->Cell(45,4,'Motivo',1,0,'C',false);
+	$pdf->Cell(51,4,'Club',1,0,'C',false);
 
 while ($rowE = mysql_fetch_array($resDatos)) {
 	$i+=1;	
@@ -170,12 +103,11 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->SetFont('Arial','',8);
 		$pdf->Ln();
 		$pdf->SetX(5);
-		$pdf->Cell(70,4,'Apellido y Nombre',1,0,'L',false);
-		$pdf->Cell(25,4,'Partidos',1,0,'C',false);
-		$pdf->Cell(25,4,'Amonestaciones',1,0,'C',false);
-		$pdf->Cell(25,4,'Rojas',1,0,'C',false);
-		$pdf->Cell(25,4,'% Amarillas',1,0,'C',false);
-		$pdf->Cell(25,4,'% Rojas',1,0,'C',false);
+		$pdf->Cell(60,4,'Apellido y Nombre',1,0,'L',false);
+		$pdf->Cell(22,4,'Nro Doc.',1,0,'C',false);
+		$pdf->Cell(22,4,'Fec. Limite',1,0,'C',false);
+		$pdf->Cell(45,4,'Motivo',1,0,'C',false);
+		$pdf->Cell(51,4,'Club',1,0,'C',false);
 
 		$i=0;
 		
@@ -187,13 +119,12 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(70,4,utf8_decode($rowE['nombrecompleto']),1,0,'L',false);
-	$pdf->Cell(25,4,($rowE['cantidad']),1,0,'C',false);
-	$pdf->Cell(25,4,($rowE['amarillas']),1,0,'C',false);
-	$pdf->Cell(25,4,($rowE['rojas']),1,0,'C',false);
-	$pdf->Cell(25,4,($rowE['porcentajeamarillas']),1,0,'C',false);
-	$pdf->Cell(25,4,($rowE['porcentajerojas']),1,0,'C',false);
 
+	$pdf->Cell(60,4,substr(utf8_decode($rowE['apyn']),0,30),1,0,'L',false);
+	$pdf->Cell(22,4,$rowE['nrodocumento'],1,0,'C',false);
+	$pdf->Cell(22,4,$rowE['fechalimite'],1,0,'C',false);
+	$pdf->Cell(45,4,$rowE['descripcion'],1,0,'C',false);
+	$pdf->Cell(51,4,substr($rowE['nombre'],0,27),1,0,'L',false);
 		
 	$acumulador1 = 0;
 	$acumulador2 = 0;
@@ -208,7 +139,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 
 
 
-$nombreTurno = "PROMEDIO-CANCHAS-".$fecha.".pdf";
+$nombreTurno = "rptHabilitacionesTransitorios-".$nombre.".pdf";
 
 $pdf->Output($nombreTurno,'I');
 

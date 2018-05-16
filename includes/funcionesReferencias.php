@@ -1939,7 +1939,7 @@ function traerProximaFechaTodosReal($desde, $hasta) {
         inner join tbfechas f ON f.idfecha = fix.reffechas
 
         where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha between '".$desde."' and '".$hasta."'
-        order by tor.refcategorias,tor.descripcion, tor.refdivisiones, f.idfecha, fix.idfixture
+        order by cat.orden,tor.descripcion, tor.refdivisiones, f.idfecha, fix.idfixture
         ";  
         
     
@@ -3413,11 +3413,16 @@ function existeDevuelveId($sql) {
         $mystring = strtolower($imagen);
         $findme   = 'jpg';
         $pos = strpos($mystring, $findme);
+		
+		
+		$mystring2 = strtolower($imagen);
+        $findme2   = 'jpeg';
+        $pos2 = strpos($mystring, $findme);
 
         // El operador !== también puede ser usado. Puesto que != no funcionará como se espera
         // porque la posición de 'a' es 0. La declaración (0 != false) se evalúa a 
         // false.
-        if ($pos !== false) {
+        if (($pos !== false) || ($pos2 !== false)) {
 
             //Imagen inicial horizontal
             $image = $imagen;
@@ -5217,6 +5222,21 @@ $res = $this->query($sql,0);
 return $res; 
 } 
 
+function modificarEstudioMedico($refjugadores) {
+    $existe = $this->existeDevuelveId("select idjugadordocumentacion from dbjugadoresdocumentacion where refjugadores =".$refjugadores." and refdocumentaciones=5");
+    
+    if ($existe >= 0) {
+        $sql = "update dbjugadoresdocumentacion 
+        set 
+        valor = 1
+        where idjugadordocumentacion =".$existe; 
+        $res = $this->query($sql,0); 
+    } else {
+        $res = $this->insertarJugadoresdocumentacion($refjugadores,5,1,'');
+    }
+    return $res; 
+}
+
 
 function eliminarJugadoresdocumentacion($id) { 
 $sql = "delete from dbjugadoresdocumentacion where idjugadordocumentacion =".$id; 
@@ -5616,7 +5636,7 @@ function existeJugadoresMotivosHabilitacionesTransitorias($reftemporada, $refcat
 
 function insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones) { 
 $sql = "insert into dbjugadoresmotivoshabilitacionestransitorias(iddbjugadormotivohabilitaciontransitoria,reftemporadas,refjugadores,refdocumentaciones,refmotivoshabilitacionestransitorias,refequipos,refcategorias,fechalimite,observaciones) 
-values ('',".$reftemporadas.",".$refjugadores.",".$refdocumentaciones.",".$refmotivoshabilitacionestransitorias.",".$refequipos.",".$refcategorias.",'".($fechalimite)."','".($observaciones)."')"; 
+values ('',".$reftemporadas.",".$refjugadores.",".$refdocumentaciones.",".$refmotivoshabilitacionestransitorias.",".$refequipos.",".($refcategorias == 0 ? 'NULL' : $refcategorias).",'".($fechalimite)."','".($observaciones)."')"; 
 $res = $this->query($sql,1); 
 return $res; 
 } 
@@ -5795,7 +5815,7 @@ inner join dbjugadores jug ON jug.idjugador = j.refjugadores
 inner join tbdocumentaciones doc ON doc.iddocumentacion = j.refdocumentaciones 
 inner join tbmotivoshabilitacionestransitorias mot ON mot.idmotivoshabilitacionestransitoria = j.refmotivoshabilitacionestransitorias 
 left join dbequipos equ ON equ.idequipo = j.refequipos 
-inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
+left join tbcategorias cat ON cat.idtcategoria = j.refcategorias 
 where j.refjugadores = ".$idJugador." and doc.descripcion <> 'Edad' and doc.iddocumentacion = ".$idDocumentacion." and tem.idtemporadas = ".$ultimaTemporada."
 order by 1"; 
 $res = $this->query($sql,0); 
@@ -7686,7 +7706,7 @@ function traerConector($refJugador) {
 $sql = "select 
     c.idconector,
     cat.categoria,
-    concat(equ.idequipo, ' ',equ.nombre) as equipo,
+    concat(equ.idequipo, '- ',equ.nombre) as equipo,
     co.nombre as countrie,
     tip.tipojugador,
     (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
@@ -7881,6 +7901,7 @@ $sql = "select
     year(now()) - year(jug.fechanacimiento) as edad,
     jug.fechabaja,
     jug.fechaalta
+
 from
     dbconector c
         inner join
@@ -8915,7 +8936,8 @@ return $res;
 }
 
 function traerFixtureTodoPorTorneoFecha($idTorneo, $refFechas) {
-$sql = "SET lc_time_names = 'es_ES';
+$this->query("SET lc_time_names = 'es_ES'",0);
+$sql = "
 select
 f.idfixture,
 el.nombre as equipolocal,
@@ -9319,27 +9341,28 @@ return $res;
 }
 
 
+
 function traerFechasFixturePorTorneo($idTorneo) {
-    $sql = "select
-    f.reffechas,
-    fec.fecha,
-    coalesce( max(est.idestadopartido),0) as idestadopartido
-    from dbfixture f
-    inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
-    inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
-    inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
-    inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
-    inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
-    inner join tbfechas fec ON fec.idfecha = f.reffechas
-    inner join dbequipos el ON el.idequipo = f.refconectorlocal
-    inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
-    left join dbarbitros arb ON arb.idarbitro = f.refarbitros
-    left join tbcanchas can ON can.idcancha = f.refcanchas
-    left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
-    where tor.idtorneo = ".$idTorneo."
-    group by f.reffechas,fec.fecha
-    order by f.reffechas";
-    $res = $this->query($sql,0);
+$sql = "select
+f.reffechas,
+fec.fecha,
+coalesce( max(est.idestadopartido),0) as idestadopartido
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
+where tor.idtorneo = ".$idTorneo."
+group by f.reffechas,fec.fecha
+order by f.reffechas";
+$res = $this->query($sql,0);
 
     if (mysql_num_rows($res)>0) {
         return $res;
@@ -10468,6 +10491,7 @@ where idsancionjugador =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
+
 
 function modificarCategoriaFallo($id, $idCategoria) {
     $sql = "update dbsancionesjugadores set refcategorias = ".$idCategoria." where idsancionjugador =".$id;
@@ -13639,7 +13663,7 @@ function devolverImagen($name, $type, $nombrenuevo) {
     //if( $_FILES[$archivo]['name'] != null && $_FILES[$archivo]['size'] > 0 ){
     // Nivel de errores
       error_reporting(E_ALL);
-      $altura = 300;
+      $altura = 500;
       // Constantes
       # Altura de el thumbnail en píxeles
       //define("ALTURA", 100);
@@ -13656,7 +13680,7 @@ function devolverImagen($name, $type, $nombrenuevo) {
       # Password de base de datos
       //define("DBPASSWORD", "");
       // Mime types permitidos
-      $mimetypes = array("image/jpeg", "image/pjpeg", "image/gif", "image/png");
+      $mimetypes = array("image/jpeg", "image/pjpeg", "image/gif", "image/png","image/jpg");
       // Variables de la foto
       $name = $name;
       $type = $type;
@@ -13666,11 +13690,16 @@ function devolverImagen($name, $type, $nombrenuevo) {
       if(!in_array($type, $mimetypes))
         die("El archivo que subiste no es una imagen válida");
       // Creando el thumbnail
+    if ($nombrenuevo == 'imagenTemp2') {
+        //die($type);
+    }
       switch($type) {
         case $mimetypes[0]:
         case $mimetypes[1]:
+        case $mimetypes[4]:
           $img = imagecreatefromjpeg($tmp_name);
           $NAMETHUMB .= $nombrenuevo.".jpg";
+          //die($img);
           break;
         case $mimetypes[2]:
           $img = imagecreatefromgif($tmp_name);
@@ -13682,6 +13711,7 @@ function devolverImagen($name, $type, $nombrenuevo) {
           break;
       }
       
+      if ($img) {
       $datos = getimagesize($tmp_name);
       
       $ratio = ($datos[1]/$altura);
@@ -13691,6 +13721,7 @@ function devolverImagen($name, $type, $nombrenuevo) {
       switch($type) {
         case $mimetypes[0]:
         case $mimetypes[1]:
+        case $mimetypes[4]:
           imagejpeg($thumb, $NAMETHUMB);
               break;
         case $mimetypes[2]:
@@ -13700,17 +13731,29 @@ function devolverImagen($name, $type, $nombrenuevo) {
           imagepng($thumb, $NAMETHUMB);
           break;
       }
+      
+      //die();
+      
+      
       // Extrae los contenidos de las fotos
       # contenido de la foto original
+      
+      
       $fp = fopen($tmp_name, "rb");
       $tfoto = fread($fp, filesize($tmp_name));
       $tfoto = addslashes($tfoto);
       fclose($fp);
+      
+      
       # contenido del thumbnail
+      
+      
       $fp = fopen($NAMETHUMB, "rb");
       $tthumb = fread($fp, filesize($NAMETHUMB));
       $tthumb = addslashes($tthumb);
       fclose($fp);
+      
+      
       // Borra archivos temporales si es que existen
       //@unlink($tmp_name);
       //@unlink(NAMETHUMB);
@@ -13723,6 +13766,10 @@ function devolverImagen($name, $type, $nombrenuevo) {
     $tfoto = utf8_decode($tfoto);
     //return array('tfoto' => $tfoto, 'type' => $NAMETHUMB);
     return $NAMETHUMB;
+    
+    } else {
+        return 'No se pudo cargar correctamente la imagen';
+    }
 }
 
 
@@ -13810,6 +13857,27 @@ function traerJugadoresParaCarnet() {
     return $res;
 }
 
+function traerJugadoresHabilitacionesTransitoriosPorTemporada($idTemporada) {
+    $sql = "SELECT 
+                concat(j.apellido, ' ', j.nombres) as apyn, j.nrodocumento, ht.fechalimite, mh.descripcion, c.nombre
+            FROM
+                dbjugadoresmotivoshabilitacionestransitorias ht
+                    INNER JOIN
+                dbjugadores j ON j.idjugador = ht.refjugadores
+                    inner join
+                dbcountries c on c.idcountrie = j.refcountries
+                    inner join
+                tbdocumentaciones d on d.iddocumentacion = ht.refdocumentaciones
+                    inner join
+                tbmotivoshabilitacionestransitorias mh on mh.idmotivoshabilitacionestransitoria = ht.refmotivoshabilitacionestransitorias
+                    where ht.reftemporadas = ".$idTemporada."
+                order by 1";
+
+    $res = $this->query($sql,0);
+
+    return $res;
+}
+
 function traerJugadoresPorWhere($where) {
 
     $sql = "select
@@ -13827,6 +13895,7 @@ function traerJugadoresPorWhere($where) {
 
     return $res;
 }
+
 
 function query($sql,$accion) {
         
