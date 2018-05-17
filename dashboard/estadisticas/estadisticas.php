@@ -1876,6 +1876,7 @@ $(document).ready(function(){
 		/* localsale - salecambioLocal - minutocambioLocal */
 		var cambio = 0;
 		$('.dorsalEA').each(function(intIndex){
+			cambio = 0;
 			idJugador = $(this).attr("id");
 			idJugador = idJugador.replace("dorsal", "");
 			if ($(this).val()==0) {
@@ -1904,6 +1905,7 @@ $(document).ready(function(){
 		/* visitsale - salecambioVisitante - minutocambioVisitante */
 		var cambioV = 0;
 		$('.dorsalEB').each(function(intIndex){
+			cambioV = 0;
 			idJugador = $(this).attr("id");
 			idJugador = idJugador.replace("dorbsal", "");
 			if ($(this).val()==0) {
