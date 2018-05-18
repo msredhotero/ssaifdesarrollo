@@ -56,8 +56,8 @@ $xMov2 = 23.2;
 $xMov3 = 50;
 
 $yAbs = 0;
-$yMov = 38.0;
-$yMov2 = 11.8;
+$yMov = 39.2;
+$yMov2 = 12.1;
 
 $pdf = new FPDF('P','mm',array(303,200));
 $cantidadJugadores = 0;
@@ -73,34 +73,45 @@ $i=0;
 $yPar = 0;
 
 $contadorY1=0;
+
+$iAgregado = 0;
+
 while ($rowE = mysql_fetch_array($resDatos)) {
 	$i+=1;	
 
+	switch ($i / 2) {
+		case 3:
+			$iAgregado = 1;
+			break;
+		case 4:
+			$iAgregado = -1;
+			break;
+	}
 	if (($i % 2) == 1) {
 		$pdf->SetFont('Arial','',8);
-		$pdf->SetXY($xMov2, $yMov2 + (($i - 1) * $yMov));
+		$pdf->SetXY($xMov2, $yMov2 + (($i - 1) * $yMov) + $iAgregado);
 		$pdf->Cell(30,4,$rowE['nrodocumento'],0,0,'L',false);
-		$pdf->SetXY($xMov2, $yMov2 + 4 + (($i - 1) * $yMov));
+		$pdf->SetXY($xMov2, $yMov2 + 5 + (($i - 1) * $yMov) + $iAgregado);
 		$pdf->Cell(60,4,strtoupper($rowE['apellido']).' '.strtoupper($rowE['nombres']),0,0,'L',false);
-		$pdf->SetXY($xMov2, $yMov2 + 8 + (($i - 1) * $yMov));
+		$pdf->SetXY($xMov2, $yMov2 + 9 + (($i - 1) * $yMov) + $iAgregado);
 		$pdf->Cell(30,4,$rowE['nrodocumento'],0,0,'L',false);
-		$pdf->SetXY($xMov3, $yMov2 + 8 + (($i - 1) * $yMov));
+		$pdf->SetXY($xMov3, $yMov2 + 9 + (($i - 1) * $yMov) + $iAgregado);
 		$pdf->Cell(30,4,$rowE['fechanacimiento'],0,0,'R',false);
-		$pdf->SetXY($xMov2, $yMov2 + 12 + (($i - 1) * $yMov));
+		$pdf->SetXY($xMov2, $yMov2 + 13 + (($i - 1) * $yMov) + $iAgregado);
 		$pdf->Cell(60,4,$rowE['country'],0,0,'L',false);
 
 		$yPar = (($i - 1) * $yMov);
 	} else {
 		$pdf->SetFont('Arial','',8);
-		$pdf->SetXY($xMov2 + $xMov, $yMov2 + $yPar);
+		$pdf->SetXY($xMov2 + $xMov, $yMov2 + $yPar + $iAgregado);
 		$pdf->Cell(30,4,$rowE['nrodocumento'],0,0,'L',false);
-		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 4 + $yPar);
+		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 5 + $yPar + $iAgregado);
 		$pdf->Cell(60,4,strtoupper($rowE['apellido']).' '.strtoupper($rowE['nombres']),0,0,'L',false);
-		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 8 + $yPar);
+		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 9 + $yPar + $iAgregado);
 		$pdf->Cell(30,4,$rowE['nrodocumento'],0,0,'L',false);
-		$pdf->SetXY($xMov3 + $xMov, $yMov2 + 8 + $yPar);
+		$pdf->SetXY($xMov3 + $xMov, $yMov2 + 9 + $yPar + $iAgregado);
 		$pdf->Cell(30,4,$rowE['fechanacimiento'],0,0,'R',false);
-		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 12 + $yPar);
+		$pdf->SetXY($xMov2 + $xMov, $yMov2 + 13 + $yPar + $iAgregado);
 		$pdf->Cell(60,4,$rowE['country'],0,0,'L',false);
 	}
 	
@@ -110,6 +121,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	if ($i == 8) {
 		$i=0;
 		$pdf->AddPage();
+		$iAgregado = 0;
 	}
 	//$pdf->SetY($contadorY1);		
 
