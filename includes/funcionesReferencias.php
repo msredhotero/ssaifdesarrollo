@@ -11279,6 +11279,77 @@ function hayMovimientos($idJugador, $idFixture, $idTipoTorneo) {
     return $this->existeDevuelveId($sql);           
 }
 
+// echo el 22/05/2018
+function hayMovimientosNuevo($idJugador, $idFixture, $idTipoTorneo) {
+
+    if (($idTipoTorneo == 1) || ($idTipoTorneo == 2)) {
+        $sql = "SELECT 
+                san.idsancionjugador, san.refcategorias
+            FROM
+                dbsancionesjugadores san
+                    INNER JOIN
+                dbsancionesfallos sf ON sf.idsancionfallo = san.refsancionesfallos
+                    INNER JOIN
+                dbjugadores ju ON ju.idjugador = san.refjugadores
+                    INNER JOIN
+                tbtiposanciones tip ON tip.idtiposancion = san.reftiposanciones
+                    INNER JOIN
+                dbfixture fix ON fix.idfixture = ".$idFixture." AND fix.fecha > san.fecha
+                    INNER JOIN
+                dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo in (1,2)
+                    INNER JOIN
+                dbfixture fixv ON fixv.idfixture = san.reffixture
+                    inner join
+                dbtorneos torv ON torv.idtorneo = fixv.reftorneos
+                    left join
+                (select fc.refsancionesfallos,torc.refcategorias, coalesce(count(*),0) as cumplidas
+                    from dbsancionesfechascumplidas fc
+                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
+                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos 
+                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = san.refcategorias
+            WHERE
+                ju.idjugador = ".$idJugador."
+                    AND tip.cumpletodascategorias = 1
+                    AND (coalesce(sf.fechascumplidas,0) + coalesce(sfc.cumplidas,0)) < sf.cantidadfechas
+                    AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
+    } else {
+        $sql = "SELECT 
+                coalesce(sf.cantidadfechas -  coalesce(sfc.cumplidas,0),0) as faltan
+            FROM
+                dbsancionesjugadores san
+                    INNER JOIN
+                dbsancionesfallos sf ON sf.idsancionfallo = san.refsancionesfallos
+                    INNER JOIN
+                dbjugadores ju ON ju.idjugador = san.refjugadores
+                    INNER JOIN
+                tbtiposanciones tip ON tip.idtiposancion = san.reftiposanciones
+                    INNER JOIN
+                dbfixture fix ON fix.idfixture = ".$idFixture." AND fix.fecha > san.fecha
+                    INNER JOIN
+                dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
+                    INNER JOIN
+                dbfixture fixv ON fixv.idfixture = san.reffixture
+                    inner join
+                dbtorneos torv ON torv.idtorneo = fixv.reftorneos
+                    left join
+                (select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas 
+                    from dbsancionesfechascumplidas fc
+                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
+                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos 
+                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = san.refcategorias
+            WHERE
+                ju.idjugador = ".$idJugador."
+                    AND tip.cumpletodascategorias = 1
+                    AND sf.fechascumplidas <> sf.cantidadfechas
+                    AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
+    }
+    
+            
+    return $this->query($sql);           
+}
+
 
 function hayMovimientosDevuelveId($idJugador, $idFixture, $idTipoTorneo) {
     $sql = "SELECT 
@@ -11543,6 +11614,8 @@ function insertarSancionesfechascumplidas($reffixture,$refjugadores,$cumplida,$r
     $sqlExiste = "select idsancionfechacumplida from dbsancionesfechascumplidas where reffixture =".$reffixture." and refjugadores =".$refjugadores;
     
     $resExiste = $this->existe($sqlExiste);
+    // nuevo 22/05/2018
+    $idCategoriaNuevo = 0;
     
     if ($resExiste == 0) {
         $resFix = $this->TraerFixturePorId($reffixture);
@@ -11559,6 +11632,10 @@ function insertarSancionesfechascumplidas($reffixture,$refjugadores,$cumplida,$r
         if ($suspendidoCategorias != 0) {
             //busco el refsancionesfallos
             $refsancionesfallos = $this->hayMovimientosDevuelveId($refjugadores,$reffixture, $idTipoTorneo);
+            // funcion nueva 22/05/2018 para marcar como cumplido o no
+            $refSancionNuevo = $this->hayMovimientosNuevo($refjugadores,$reffixture, $idTipoTorneo);
+            $idCategoriaNuevo = mysql_
+            
             $idAcumulado = 0;
         } else {
             if ($suspendidoCategoriasAA != 0) {

@@ -932,8 +932,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 								} else {
 									
 							?>	
-                            <th style="text-align:center"></th>
-                            <th style="text-align:center"></th>
+                            
                             <?php	
 								} 
 							
@@ -1426,8 +1425,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 								} else {
 									
 							?>	
-                            <th style="text-align:center"></th>
-                            <th style="text-align:center"></th>
+                            
                             <?php	
 								} 
 							

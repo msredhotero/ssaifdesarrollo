@@ -1197,7 +1197,7 @@ if ($_SESSION['idroll_predio'] != 1) {
             
             <div class="row">
                 <div class="col-md-3">
-                	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion').$valorB; ?></span></p>
+                	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
                 </div>
 
                 <div class="col-md-3">
