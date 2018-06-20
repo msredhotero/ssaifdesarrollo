@@ -95,8 +95,10 @@ $cadRef3	=	$serviciosFunciones->devolverSelectBox($resTemporados,array(1),'');
 $resDocumentaciones	=	$serviciosReferencias->traerDocumentaciones();
 $cadRef4	=	$serviciosFunciones->devolverSelectBox($resDocumentaciones,array(1),'');
 
+$cadRefCad          = '';
 $resCategoria		=	$serviciosReferencias->traerCategorias();
-$cadRefCad			=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
+$cadRefCad         .=   "<option value='0'>-- Seleccionar --</option>";
+$cadRefCad		   .=	$serviciosFunciones->devolverSelectBox($resCategoria,array(1),'');
 
 $resEquipo			=	$serviciosReferencias->traerEquipos();
 $cadRefEquipo		=	$serviciosFunciones->devolverSelectBox($resEquipo,array(2),'');
@@ -443,7 +445,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Equipo</label>
                         <div class="input-group col-md-12">
                             <select class="form-control" id="refequiposB" name="refequiposB">
-                            	
+                            	<option value="0">-- Activo --</option>
                             </select>
                         </div>
                     </div>
@@ -592,7 +594,11 @@ $(document).ready(function(){
 	traerEquipoPorCategoria($('#refcategoriasA').val(), '#refequiposA', <?php echo mysql_result($resResultado,0,'refcountries'); ?>);
 	
 	$('#refcategoriasA').change(function(e) {
+      if  ($('#esfusion').prop('checked') == false) {
         traerEquipoPorCategoria($(this).val(), '#refequiposA', <?php echo mysql_result($resResultado,0,'refcountries'); ?>);
+      } else {
+        traerEquipoPorCategoria($(this).val(), '#refequiposA', $('#refcountriesaux').chosen().val());
+      }
     });
 	
 	$(document).on('click', '.panel-heading span.clickable', function(e){

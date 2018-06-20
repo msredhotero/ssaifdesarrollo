@@ -5864,12 +5864,12 @@ return $res;
 } 
 
 function eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($refjugador, $refdocumentacion) {
-    
     $sql = "delete va FROM dbjugadoresvaloreshabilitacionestransitorias va
             inner join tbvaloreshabilitacionestransitorias v on
             v.idvalorhabilitaciontransitoria = va.refvaloreshabilitacionestransitorias
             where va.refjugadores = ".$refjugador." 
                     AND v.refdocumentaciones = ".$refdocumentacion;
+    
     $res = $this->query($sql,0); 
     return $res; 
 }
@@ -10245,11 +10245,11 @@ function existeYaLaSancion($reffixture, $refjugadores, $refsancionesfallos) {
 
 function traerSancionesfallosacumuladasCambioPorEquipoFechaDesdeHasta($idEquipo,$fechaDesde, $fechaHasta, $idCategoria) { 
 $sql = "SELECT 
-    ff.fecha, fix.fecha as fechajuego, e.descripcion
+    ff.fecha, fix.fecha as fechajuego, e.descripcion, fix.idfixture
 FROM
     dbfixture fix
         inner join
-    dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftemporadas = 6 and tor.refcategorias = ".$idCategoria."
+    dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftemporadas = 7 and tor.refcategorias = ".$idCategoria."
         inner join
     tbestadospartidos e ON e.idestadopartido = fix.refestadospartidos
         INNER JOIN
@@ -11279,6 +11279,9 @@ function hayMovimientos($idJugador, $idFixture, $idTipoTorneo) {
     return $this->existeDevuelveId($sql);           
 }
 
+
+
+
 // echo el 22/05/2018
 function hayMovimientosNuevo($idJugador, $idFixture, $idTipoTorneo) {
 
@@ -11349,7 +11352,6 @@ function hayMovimientosNuevo($idJugador, $idFixture, $idTipoTorneo) {
             
     return $this->query($sql);           
 }
-
 
 function hayMovimientosDevuelveId($idJugador, $idFixture, $idTipoTorneo) {
     $sql = "SELECT 
@@ -11632,11 +11634,15 @@ function insertarSancionesfechascumplidas($reffixture,$refjugadores,$cumplida,$r
         if ($suspendidoCategorias != 0) {
             //busco el refsancionesfallos
             $refsancionesfallos = $this->hayMovimientosDevuelveId($refjugadores,$reffixture, $idTipoTorneo);
+            $idAcumulado = 0;
+            
             // funcion nueva 22/05/2018 para marcar como cumplido o no
             $refSancionNuevo = $this->hayMovimientosNuevo($refjugadores,$reffixture, $idTipoTorneo);
-            $idCategoriaNuevo = mysql_
-            
-            $idAcumulado = 0;
+            $idCategoriaNuevo = mysql_result($refSancionNuevo,0,1);
+
+            if ($idCategoria <> $idCategoriaNuevo) {
+                $cumplida = 0;
+            }
         } else {
             if ($suspendidoCategoriasAA != 0) {
                 $refsancionesJugadores = $this->hayMovimientosAmarillasAcumuladasDevuelveId($refjugadores,$reffixture, $idCategoria, $idTipoTorneo);
@@ -13963,6 +13969,33 @@ function traerJugadoresPorWhere($where) {
             inner join dbcountries c on c.idcountrie = j.refcountries
             where idjugador in (".$where.") 
             order by j.apellido, j.nombres";
+
+    $res = $this->query($sql,0);
+
+    return $res;
+}
+
+
+
+function traerUltimaFechaDestacada() {
+    $sql = 'select desde, hasta from tbfechadestacada order by idfechadestacada desc limit 1';
+
+    $res = $this->query($sql,0);
+
+    return $res;
+}
+
+
+function insertarFechaDestacada($desde, $hasta) {
+    $sql = "INSERT INTO tbfechadestacada
+                (idfechadestacada,
+                desde,
+                hasta)
+                VALUES
+                ('', 
+                '".$desde."',
+                '".$hasta."');
+                ";
 
     $res = $this->query($sql,0);
 

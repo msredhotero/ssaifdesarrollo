@@ -284,7 +284,11 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		
 		$pdf->SetX(5);
 		
-		$pdf->Cell(6,6,'',1,0,'C',false);
+		if ($rowJ['reftipojugadores'] == 2) {
+			$pdf->Cell(6,6,'ARQ',1,0,'C',false);
+		} else {
+			$pdf->Cell(6,6,'',1,0,'C',false);
+		}
 		$pdf->SetFont('Arial','',7);
 		$pdf->Cell(35,6,substr(utf8_decode($rowJ['nombrecompleto']),0,20),0,0,'L',false);
 		$pdf->SetFont('Arial','',8);
@@ -419,7 +423,12 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->Ln();
 		$pdf->SetX(107);
 		
-		$pdf->Cell(6,6,'',1,0,'C',false);
+
+		if ($rowV['reftipojugadores'] == 2) {
+			$pdf->Cell(6,6,'ARQ',1,0,'C',false);
+		} else {
+			$pdf->Cell(6,6,'',1,0,'C',false);
+		}
 		$pdf->SetFont('Arial','',7);
 		$pdf->Cell(35,6,substr(utf8_decode($rowV['nombrecompleto']),0,20),0,0,'L',false);
 		$pdf->SetFont('Arial','',8);

@@ -1197,7 +1197,7 @@ if ($_SESSION['idroll_predio'] != 1) {
             
             <div class="row">
                 <div class="col-md-3">
-                	<p>Descripci髇: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
+                	<p>Descripci贸n: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
                 </div>
 
                 <div class="col-md-3">
@@ -1298,7 +1298,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 </div>
                 
                 <div class="col-md-4">
-                	<p>Calificaci髇 Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
+                	<p>Calificaci贸n Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
                 </div>
                 
                 <div class="col-md-6">
@@ -2273,10 +2273,10 @@ $(document).ready(function(){
 	//al enviar el formulario
     $('#cargar').click(function(){
 
-			//informaci髇 del formulario
+			//informaci贸n del formulario
 		var formData = new FormData($(".formulario")[0]);
 		var message = "";
-		//hacemos la petici髇 ajax  
+		//hacemos la petici贸n ajax  
 		$.ajax({
 			url: '../../ajax/ajax.php',  
 			type: 'POST',
@@ -2301,8 +2301,8 @@ $(document).ready(function(){
 					$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente las <strong>Estadisticas</strong>. ');
 					$(".alert").delay(3000).queue(function(){
 						/*aca lo que quiero hacer 
-						  despu閟 de los 2 segundos de retraso*/
-						$(this).dequeue(); //contin鷒 con el siguiente 韙em en la cola
+						  despu茅s de los 2 segundos de retraso*/
+						$(this).dequeue(); //contin煤o con el siguiente 铆tem en la cola
 						
 					});
 					$("#load").html('');

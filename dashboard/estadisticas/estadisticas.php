@@ -599,7 +599,7 @@ if ($_SESSION['idroll_predio'] != 1) {
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
         	<div class="row">
                 <div class="col-md-3">
-                	<p>Descripci�n: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
+                	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
                 </div>
 
                 <div class="col-md-3">
@@ -704,7 +704,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 </div>
                 
                 <div class="col-md-4">
-                	<p>Calificaci�n Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
+                	<p>Calificación Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
                 </div>
                 
                 <div class="col-md-6">
@@ -1874,7 +1874,7 @@ $(document).ready(function(){
 		/* localsale - salecambioLocal - minutocambioLocal */
 		var cambio = 0;
 		$('.dorsalEA').each(function(intIndex){
-			cambio = 0;
+		    cambio = 0;
 			idJugador = $(this).attr("id");
 			idJugador = idJugador.replace("dorsal", "");
 			if ($(this).val()==0) {
@@ -1903,7 +1903,7 @@ $(document).ready(function(){
 		/* visitsale - salecambioVisitante - minutocambioVisitante */
 		var cambioV = 0;
 		$('.dorsalEB').each(function(intIndex){
-			cambioV = 0;
+		    cambioV = 0;
 			idJugador = $(this).attr("id");
 			idJugador = idJugador.replace("dorbsal", "");
 			if ($(this).val()==0) {
@@ -1994,10 +1994,10 @@ $(document).ready(function(){
 	//al enviar el formulario
     $('#cargar').click(function(){
 
-			//informaci�n del formulario
+			//informaciï¿½n del formulario
 		var formData = new FormData($(".formulario")[0]);
 		var message = "";
-		//hacemos la petici�n ajax  
+		//hacemos la peticiï¿½n ajax  
 		$.ajax({
 			url: '../../ajax/ajax.php',  
 			type: 'POST',
@@ -2022,8 +2022,8 @@ $(document).ready(function(){
 					$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente las <strong>Estadisticas</strong>. ');
 					$(".alert").delay(3000).queue(function(){
 						/*aca lo que quiero hacer 
-						  despu�s de los 2 segundos de retraso*/
-						$(this).dequeue(); //contin�o con el siguiente �tem en la cola
+						  despuï¿½s de los 2 segundos de retraso*/
+						$(this).dequeue(); //continï¿½o con el siguiente ï¿½tem en la cola
 						
 					});
 					$("#load").html('');

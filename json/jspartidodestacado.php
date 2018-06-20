@@ -22,13 +22,14 @@ if (mysql_num_rows($resTraerTemporadas)>0) {
 }
 
 $ultimaFecha = $serviciosReferencias->traerUltimoDiaJugado();
+$nuevoMarcosFechaDestacada = $serviciosReferencias->traerUltimaFechaDestacada();
 
 $fecha = mysql_result($ultimaFecha,0,0);
 $nuevaDesde = strtotime ( '-2 day' , strtotime ( $fecha ) ) ;
 $nuevaHasta = strtotime ( '+2 day' , strtotime ( $fecha ) ) ;
 
-$nuevaDesde = date ( 'Y-m-d' , $nuevaDesde );
-$nuevaHasta = date ( 'Y-m-d' , $nuevaHasta );
+$nuevaDesde = mysql_result($nuevoMarcosFechaDestacada,0,0);
+$nuevaHasta = mysql_result($nuevoMarcosFechaDestacada,0,1);
 
 $datos = $serviciosReferencias->traerPartidoDestacadoPorFechas($idTemporada,$nuevaDesde, $nuevaHasta);
 

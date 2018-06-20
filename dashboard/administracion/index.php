@@ -216,6 +216,23 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </div>
                 </div>
             </div>
+            <br>
+            <div class="row" style="margin-bottom:10px;">    
+                <div class="col-md-12">
+                	<div class="input-group">
+                    	<input class="form-control" readonly value="Vigencia Desde y Hasta para mostrar partidos en la pantalla principal" aria-label="Text input with multiple buttons">
+                        <div class="input-group-btn">
+                            <input type="text" class="form-control" style="width: 120px;" name="fddesde" id="fddesde">
+                        </div>
+                        <div class="input-group-btn">
+                            <input type="text" class="form-control" style="width: 120px;" name="fdhasta" id="fdhasta">
+                        </div>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-success fechadestacadas">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--
             <div class="row">
             	<div id="map" ></div>
@@ -274,6 +291,10 @@ $(document).ready(function(){
 											
 	$("#vigenciadesde").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 	$("#vigenciahasta").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+
+
+	$("#fddesde").mask("9999-99-99",{placeholder:"yyyy-mm-dd"});
+	$("#fdhasta").mask("9999-99-99",{placeholder:"yyyy-mm-dd"});
 
 	$(".resetear").click( function(){
 		$.ajax({
@@ -372,6 +393,34 @@ $(document).ready(function(){
 				$(".alert").removeClass("alert-info");
 				$(".alert").addClass("alert-success");
 				$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente las vigencias.');
+				$(".alert").delay(3000).queue(function(){
+					/*aca lo que quiero hacer 
+					  después de los 2 segundos de retraso*/
+					$(this).dequeue(); //continúo con el siguiente ítem en la cola
+					
+				});
+			
+			}
+		});
+	});//fin del boton eliminar
+
+
+
+	$(".fechadestacadas").click( function(){
+		$.ajax({
+			data:  {desde: $('#fddesde').val(),
+					hasta: $('#fdhasta').val(),
+					accion: 'cargarFechaDestacadaPrincipal'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+				$(".alert").html('');
+			},
+			success:  function (response) {
+				$(".alert").removeClass("alert-danger");
+				$(".alert").removeClass("alert-info");
+				$(".alert").addClass("alert-success");
+				$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente las fechas desde y hasta.');
 				$(".alert").delay(3000).queue(function(){
 					/*aca lo que quiero hacer 
 					  después de los 2 segundos de retraso*/

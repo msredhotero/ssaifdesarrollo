@@ -22,13 +22,14 @@ if (mysql_num_rows($resTraerTemporadas)>0) {
 }
 
 $ultimaFecha = $serviciosReferencias->traerUltimoDiaJugado();
+$nuevoMarcosFechaDestacada = $serviciosReferencias->traerUltimaFechaDestacada();
 
 $fecha = mysql_result($ultimaFecha,0,0);
 $nuevaDesde = strtotime ( '-2 day' , strtotime ( $fecha ) ) ;
 $nuevaHasta = strtotime ( '+2 day' , strtotime ( $fecha ) ) ;
 
-$nuevaDesde = date ( 'Y-m-d' , $nuevaDesde );
-$nuevaHasta = date ( 'Y-m-d' , $nuevaHasta );
+$nuevaDesde = mysql_result($nuevoMarcosFechaDestacada,0,0);
+$nuevaHasta = mysql_result($nuevoMarcosFechaDestacada,0,1);
 
 $datos = $serviciosReferencias->traerFixtureSumarizadoTodoPorTorneoDesdeHastaWhere($idTemporada,$nuevaDesde, $nuevaHasta);
 
@@ -38,7 +39,7 @@ $ar = array();
 
 	while ($row = mysql_fetch_array($datos)) {
 			  
-		array_push($ar,array('ganadoslocal'=>$row['ganadoslocal'], 'ganadosvisitante'=>$row['ganadosvisitante'],'empatados'=>$row['empatados'],'goles'=>$row['goles'],'amarillas'=>$row['amarillas'],'rojas'=>$row['rojas']));
+		array_push($ar,array('ganadoslocal'=>$row['ganadoslocal'], 'ganadosvisitante'=>$row['ganadosvisitante'],'empatados'=>$row['empatados'],'goles'=>$row['goles'],'amarillas'=>$row['amarillas'],'rojas'=>($row['rojas'] == '' ? 0 :$row['rojas'])));
 		
 		
 	}

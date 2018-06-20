@@ -977,28 +977,28 @@ padding-bottom: 10px;
 
   $(function() {
 
- //Array para dar formato en español
+ //Array para dar formato en espaÃ±ol
 
   $.datepicker.regional['es'] =
   {
   closeText: 'Cerrar',
   prevText: 'Previo',
-  nextText: 'Próximo',
+  nextText: 'PrÃ³ximo',
 
   monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
   monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
   'Jul','Ago','Sep','Oct','Nov','Dic'],
-  monthStatus: 'Ver otro mes', yearStatus: 'Ver otro año',
-  dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
-  dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sáb'],
+  monthStatus: 'Ver otro mes', yearStatus: 'Ver otro aÃ±o',
+  dayNames: ['Domingo','Lunes','Martes','MiÃ©rcoles','Jueves','Viernes','SÃ¡bado'],
+  dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','SÃ¡b'],
   dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
   dateFormat: 'dd/mm/yy', firstDay: 0,
   initStatus: 'Selecciona la fecha', isRTL: false};
 
  $.datepicker.setDefaults($.datepicker.regional['es']);
- //miDate: fecha de comienzo D=días | M=mes | Y=año
- //maxDate: fecha tope D=días | M=mes | Y=año
+ //miDate: fecha de comienzo D=dÃ­as | M=mes | Y=aÃ±o
+ //maxDate: fecha tope D=dÃ­as | M=mes | Y=aÃ±o
     $( "#datepicker1" ).datepicker({ minDate: "", maxDate: "+2M +10D" });
 	$( "#datepicker2" ).datepicker({ minDate: "", maxDate: "+3M +10D" });
 	$( "#datepicker3" ).datepicker({ minDate: "", maxDate: "+4M +10D" });
@@ -1226,11 +1226,9 @@ padding-bottom: 10px;
 						$darVuelta = 2;
 					}
 				}
-
-
 				$fechainicio = strtotime ( '+7 day' , strtotime ( $fechainicio ) ) ;
 				$fechainicio = date ( 'Y-m-d' , $fechainicio );
-
+				
 				$resFechaExcluida = $serviciosReferencias->traerFechasexcluidasPorFecha($fechainicio);
 
 				if (mysql_num_rows($resFechaExcluida)>0) {
@@ -1282,7 +1280,7 @@ padding-bottom: 10px;
 <div id="dialog2" title="Eliminar Fixture">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar el fixture?.<span id="proveedorEli"></span>
+            Â¿Esta seguro que desea eliminar el fixture?.<span id="proveedorEli"></span>
         </p>
         <p><strong>Importante: </strong>Si elimina el fixture se perderan todos los datos de este</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
@@ -1391,7 +1389,7 @@ $(document).ready(function(){
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acciÃ³n.");	
 		  }
 	});//fin del boton eliminar
 
@@ -1402,7 +1400,7 @@ $(document).ready(function(){
 			url = "modificar.php?id=" + usersid;
 			$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acciÃ³n.");	
 		  }
 	});//fin del boton modificar
 
@@ -1450,10 +1448,10 @@ $(document).ready(function(){
 		
 		if (validador() == "")
         {
-			//información del formulario
+			//informaciÃ³n del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
-			//hacemos la petición ajax  
+			//hacemos la peticiÃ³n ajax  
 			$.ajax({
 				url: '../../ajax/ajax.php',  
 				type: 'POST',
@@ -1478,8 +1476,8 @@ $(document).ready(function(){
                                             $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Fixture</strong>. ');
 											$(".alert").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+												  despuÃ©s de los 2 segundos de retraso*/
+												$(this).dequeue(); //continÃºo con el siguiente Ã­tem en la cola
 												
 											});
 											$("#load").html('');

@@ -43,6 +43,8 @@ $cantFechas = 0;
 		
 	}
 
+
+
 if ($i == 1) {
 	$ar[$i - 1]['actual'] = 1;
 } else {
@@ -53,6 +55,8 @@ if ($i == 1) {
 	}
 	
 }
+
+$ar[0]['actual'] = 1;
 //echo "[".substr($cad,0,-1)."]";
 echo $token.'('.json_encode($ar).');';
 ?>

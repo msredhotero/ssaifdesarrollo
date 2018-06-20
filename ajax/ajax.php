@@ -348,9 +348,6 @@ case 'eliminarJugadoresmotivoshabilitacionestransitorias':
 eliminarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias); 
 break; 
 
-case 'buscarJugadoresNuevo':
-	buscarJugadoresNuevo($serviciosReferencias, $serviciosFunciones);
-	break;
 
 /**************  ETAPA 3 Y 4 **************************************/
 case 'insertarTorneos': 
@@ -523,7 +520,7 @@ case 'filtrosGenerales':
 	break;
 case 'traerJugadoresPorEquipo':
 	traerJugadoresPorEquipo($serviciosReferencias);
-	break;
+	break;	
 /*****          FIN            ***********/
 
 
@@ -614,6 +611,19 @@ case 'generarNotificacion':
 case 'modificarCategoriaFallo':
 	modificarCategoriaFallo($serviciosReferencias);
 	break;
+	
+case 'cargarFechaDestacadaPrincipal':
+	cargarFechaDestacadaPrincipal($serviciosReferencias);
+	break;
+}
+
+function cargarFechaDestacadaPrincipal($serviciosReferencias) {
+	$desde = $_POST['desde'];
+	$hasta = $_POST['hasta'];
+
+	$res = $serviciosReferencias->insertarFechaDestacada($desde, $hasta);
+
+	echo '';
 }
 
 function modificarCategoriaFallo($serviciosReferencias) {
@@ -1954,8 +1964,9 @@ function modificarFalloPorFecha($serviciosReferencias) {
 				if (mysql_num_rows($resCambio)>0) {
 					while ($row = mysql_fetch_array($resCambio)) {
 						
-						if ($serviciosReferencias->existeYaLaSancion($refFixture, $idJugador, mysql_result($resFallo,0,0)) == 0) {
-							$serviciosReferencias->insertarSancionCumplidaSolo($refFixture, $idJugador, 1, mysql_result($resFallo,0,0), 0);	
+						// voy recorriendo las fechas que deberia haber sancionado
+						if ($serviciosReferencias->existeYaLaSancion($row['idfixture'], $idJugador, mysql_result($resFallo,0,0)) == 0) {
+							$serviciosReferencias->insertarSancionCumplidaSolo($row['idfixture'], $idJugador, 1, mysql_result($resFallo,0,0), 0);	
 						}
 					}
 				}
