@@ -24,7 +24,7 @@ $ar = array();
 
 	while ($row = mysql_fetch_array($resTraerJugadores)) {
 		
-		array_push($ar,array('temporada'=> $row['temporada'],'goles'=>$row['goles'], 'amonestaciones'=>$row['amarillas'],'expulsiones'=>$row['rojas']));
+		array_push($ar,array('temporada'=> $row['temporada'],'goles'=>$row['goles'], 'amonestaciones'=>$row['amarillas'],'expulsiones'=>$row['rojas'],'pj'=>$row['pj'],'minutos'=>$row['minutos']));
 	}
 
 echo $token.'('.json_encode($ar).');';
