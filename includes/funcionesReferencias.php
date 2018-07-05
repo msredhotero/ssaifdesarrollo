@@ -11355,7 +11355,7 @@ function hayMovimientos($idJugador, $idFixture, $idTipoTorneo) {
                 ju.idjugador = ".$idJugador."
                     AND tip.cumpletodascategorias = 1
                     AND (coalesce(sf.fechascumplidas,0) + coalesce(sfc.cumplidas,0)) < sf.cantidadfechas
-                    AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.reffechas > fixv.reffechas end)";
+                    AND (case when torv.idtorneo <> tor.idtorneo then fix.reffechas >= 1 else fix.fecha > san.fecha end)";
     } else {
         $sql = "SELECT 
                 coalesce(sf.cantidadfechas -  coalesce(sfc.cumplidas,0),0) as faltan
@@ -11481,7 +11481,7 @@ function hayMovimientosDevuelveId($idJugador, $idFixture, $idTipoTorneo) {
                     INNER JOIN
                 dbfixture fix ON fix.idfixture = ".$idFixture."
                     INNER JOIN
-                dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
+                dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo in (1,2)
                     INNER JOIN
                 dbfixture fixv ON fixv.idfixture = san.reffixture
                     inner join
@@ -11518,7 +11518,7 @@ function hayMovimientosAmarillasAcumuladas($idJugador, $idFixture, $idCategoria,
                     INNER JOIN
                 dbfixture fixv ON fixv.idfixture = san.reffixture
                     inner join
-                dbtorneos torv ON torv.idtorneo = fixv.reftorneos and torv.reftipotorneo = ".$idTipoTorneo."
+                dbtorneos torv ON torv.idtorneo = fixv.reftorneos and torv.reftipotorneo in (1,2)
             WHERE
                 ju.idjugador = ".$idJugador."
                     AND tor.refcategorias = ".$idCategoria."
@@ -12319,6 +12319,53 @@ return $res;
                     WHERE
                         d.reffixture = ".$idFixture." and d.numero > 0
                 ) r
+                where r.numero not in
+                (
+
+                SELECT 
+                    
+                    de.numero AS numeroentra
+                    
+                FROM
+                    dbcambios c
+                        INNER JOIN
+                    dbfixture fix ON fix.idfixture = c.reffixture
+                        AND fix.refconectorlocal = c.refequipos
+                        INNER JOIN
+                    dbdorsales ds ON c.refdorsalsale = ds.numero
+                        AND ds.reffixture = fix.idfixture AND fix.refconectorlocal = ds.refequipos
+                        INNER JOIN
+                    dbjugadores js ON js.idjugador = ds.refjugadores
+                        INNER JOIN
+                    dbdorsales de ON c.refdorsalentra = de.numero
+                        AND de.reffixture = fix.idfixture AND fix.refconectorlocal = de.refequipos
+                        INNER JOIN
+                    dbjugadores je ON je.idjugador = de.refjugadores
+                WHERE
+                    c.reffixture = ".$idFixture."
+                    
+                union all
+                
+                SELECT 
+                    de.numero AS numeroentra
+                FROM
+                    dbcambios c
+                        INNER JOIN
+                    dbfixture fix ON fix.idfixture = c.reffixture
+                        AND fix.refconectorvisitante = c.refequipos
+                        INNER JOIN
+                    dbdorsales ds ON c.refdorsalsale = ds.numero
+                        AND ds.reffixture = fix.idfixture AND fix.refconectorvisitante = ds.refequipos
+                        INNER JOIN
+                    dbjugadores js ON js.idjugador = ds.refjugadores
+                        INNER JOIN
+                    dbdorsales de ON c.refdorsalentra = de.numero
+                        AND de.reffixture = fix.idfixture AND fix.refconectorvisitante = de.refequipos
+                        INNER JOIN
+                    dbjugadores je ON je.idjugador = de.refjugadores
+                WHERE
+                    c.reffixture = ".$idFixture."
+                )
                 order by r.orden, r.numero
                 ";
 
