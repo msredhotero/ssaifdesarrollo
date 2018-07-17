@@ -3,12 +3,27 @@
 
 include ('../includes/funciones.php');
 include ('../includes/funcionesReferencias.php');
+include ('../includes/funcionesReferenciasRemoto.php');
+
+$serviciosFunciones = new Servicios();
+$serviciosReferencias 	= new ServiciosReferencias();
+$serviciosReferenciasRemoto 	= new ServiciosReferenciasRemoto();
 
 $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
 
 if ((isset($_GET['idfixture'])) && ($_GET['idfixture'] > 0)) {
-	$resTraerDatos = $serviciosReferencias->traerInicidenciasPorFixtureDetalle($_GET['idfixture']);
+	if ((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) {
+		$resTorneo = $serviciosReferencias->traerTorneosPorId($_GET['idtorneo']);
+		if (mysql_num_rows($resTorneo) > 0) {
+			$resTraerDatos = $serviciosReferencias->traerInicidenciasPorFixtureDetalle($_GET['idfixture']);
+		} else {
+			$resTraerDatos = $serviciosReferenciasRemoto->traerInicidenciasPorFixtureDetalle($_GET['idfixture']);
+		}
+	} else {
+		$resTraerDatos = $serviciosReferencias->traerInicidenciasPorFixtureDetalle($_GET['idfixture']);
+	}
+	
 } else {
 	$resTraerDatos = $serviciosReferencias->traerInicidenciasPorFixtureDetalle(0);
 }

@@ -26,7 +26,8 @@ $cad = '';
 		array_push($ar,array('jugador'=> $row['apyn'], 
 							'dorsal'=> $row['numero'],
 							'equipo'=> $row['equipo'],
-							'idjugador'=>$row['refjugadores']));
+							'idjugador'=>$row['refjugadores'],
+							'orden' =>$row['orden']));
 	}
 
 //echo "[".substr($cad,0,-1)."]";

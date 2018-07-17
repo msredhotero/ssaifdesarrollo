@@ -3,9 +3,11 @@
 
 include ('../includes/funciones.php');
 include ('../includes/funcionesReferencias.php');
+include ('../includes/funcionesReferenciasRemoto.php');
 
 $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
+$serviciosReferenciasRemoto 	= new ServiciosReferenciasRemoto();
 
 $dato = 0;
 if ((isset($_GET['idequipo'])) && ($_GET['idequipo'] > 0) && ((isset($_GET['idtemporada'])) && ($_GET['idtemporada'] > 0)) && ((isset($_GET['idcategoria'])) && ($_GET['idcategoria'] > 0)) && ((isset($_GET['iddivision'])) && ($_GET['iddivision'] > 0))) {
@@ -18,6 +20,11 @@ if ((isset($_GET['idequipo'])) && ($_GET['idequipo'] > 0) && ((isset($_GET['idte
 	} else {
 		$resTraerDatos = $serviciosReferencias->traerTorneosPorEquipo(99999999999);	
 	}
+}
+
+
+if ((isset($_GET['idtemporada'])) && ($_GET['idtemporada'] > 0) && ((isset($_GET['idcategoria'])) && ($_GET['idcategoria'] == 8))) {
+	$resTraerDatosRemoto = $serviciosReferenciasRemoto->traerTorneosPorTemporadaCategoriaDivisionTipoTorneo($_GET['idtemporada'], $_GET['idcategoria'], 1);
 }
 
 
@@ -35,7 +42,12 @@ $cad = '';
 			array_push($ar,array('id'=>$row['idtorneo'], 'torneo'=> $row['descripcion']));
 		}
 	}
+	
+	while ($row = mysql_fetch_array($resTraerDatosRemoto)) {
+		array_push($ar,array('id'=>$row['idtorneo'], 'torneo'=> $row['descripcion']));
 
+	}
+	
 //echo "[".substr($cad,0,-1)."]";
 echo $token.'('.json_encode($ar).');';
 

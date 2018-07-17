@@ -3,12 +3,19 @@
 
 include ('../includes/funciones.php');
 include ('../includes/funcionesReferencias.php');
+include ('../includes/funcionesReferenciasRemoto.php');
 
 $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
+$serviciosReferenciasRemoto 	= new ServiciosReferenciasRemoto();
 
 if ((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) {
 	$resTraerDatos = $serviciosReferencias->traerFechasFixturePorTorneo($_GET['idtorneo']);
+	if (mysql_num_rows($resTraerDatos) > 0) {
+		$resTraerDatos = $serviciosReferencias->traerFechasFixturePorTorneo($_GET['idtorneo']);
+	} else {
+		$resTraerDatos = $serviciosReferenciasRemoto->traerFechasFixturePorTorneoRemoto($_GET['idtorneo']);
+	}
 } else {
 	$resTraerDatos = $serviciosReferencias->traerFechasFixturePorTorneo(0);
 }
