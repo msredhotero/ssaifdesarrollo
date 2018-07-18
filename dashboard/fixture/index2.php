@@ -34,7 +34,7 @@ $lblCambio	 	= array("refconectorlocal","goleslocal","refconectorvisitante","gol
 $lblreemplazo	= array("Equipo Local","Resultado 1","Equipo Visitante","Resultado 2","Fecha Juego","Fecha","Cancha","Arbitros","Estados Partidos","Torneo");
 
 $resConectorL	=	$serviciosReferencias->traerEquipos();
-$cadRef			=	$serviciosFunciones->devolverSelectBox($resConectorL,array(1,2)," - ");
+$cadRef			=	$serviciosFunciones->devolverSelectBox($resConectorL,array(0,1,2)," - ");
 
 $resFechas		=	$serviciosReferencias->traerFechas();
 $cadRef2		=	$serviciosFunciones->devolverSelectBox($resFechas,array(1),'');
@@ -182,9 +182,6 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$refTorneos,90);
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Guardar</button>
                     </li>
-<<<<<<< .mine
-                    
-||||||| .r70
                     <li>
                         <button type="button" class="btn btn-success" id="chequearF" style="margin-left:0px;">Chequear Fixture</button>
                     </li>
@@ -194,15 +191,11 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$refTorneos,90);
                     <li>
                         <button type="button" class="btn btn-primary" id="fixtureM" style="margin-left:0px;">Fixture Manual</button>
                     </li>
-=======
 
->>>>>>> .r72
                 </ul>
                 </div>
             </div>
-            
-<<<<<<< .mine
-||||||| .r70
+
             <div class="row" align="center">
             	<ul class="list-inline">
                 	<li>
@@ -219,9 +212,7 @@ $lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$refTorneos,90);
 					<?php } ?>
                 </ul>
             </div>
-=======
-            
->>>>>>> .r72
+
             </form>
     	</div>
     </div>

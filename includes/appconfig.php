@@ -5,19 +5,20 @@ date_default_timezone_set('America/Buenos_Aires');
 class appconfig {
 
 function conexion() {
-		/*
+		
 		$hostname = "localhost";
-		$database = "ssaif_local_diciembre_host";
+		$database = "ssaif_junio_2018";
 		$username = "root";
 		$password = "";
-		*/
 		
 		
 		
+		/*
 		$hostname = "localhost";
-		$database = "u235498999_aif";
-		$username = "u235498999_aif";
+		$database = "u235498999_copa";
+		$username = "u235498999_copa";
 		$password = "rhcp7575";
+		*/
 		//u235498999_kike usuario
 		
 		

@@ -7,7 +7,7 @@
 
 date_default_timezone_set('America/Buenos_Aires');
 
-class ServiciosReferencias {
+class ServiciosReferenciasRemoto {
 
 
 function calcularPuntoBonusViejo($refTorneo, $idEquipo) {
@@ -6341,6 +6341,20 @@ return $res;
 } 
 
 
+function traerTorneosPorTemporadaCategoriaDivisionTipoTorneo($idTemporada, $idCategoria, $idDivision) { 
+$sql = "SELECT 
+            t.idtorneo,
+            t.descripcion
+        FROM
+            dbtorneos t
+        WHERE
+            t.activo = 1 and t.reftemporadas = ".$idTemporada." and t.refcategorias = ".$idCategoria." and t.reftipotorneo in (3)
+        order by 1"; 
+$res = $this->query($sql,0); 
+return $res;
+} 
+
+
 function traerTorneosPorTemporadaPorFechas($idTemporada, $desde, $hasta) { 
 $sql = "SELECT 
             t.idtorneo,
@@ -8460,7 +8474,7 @@ function traerEstadisticaTemporadasPorJugador($idJugador) {
                 coalesce( sum(r.goles),0) + coalesce( sum(r.penal),0) as goles,
                 coalesce( sum(r.amarillas),0) as amarillas,
                 coalesce( sum(r.rojas),0) as rojas,
-                coalesce( sum(r.pj),0) as pj,
+                coalesce( count(r.pj),0) as pj,
                 coalesce( sum(r.minutos),0) as minutos,
                 r.temporada
                 from dbjugadores jug
@@ -8550,160 +8564,6 @@ function traerEstadisticaTemporadasPorJugador($idJugador) {
                 
     $res = $this->query($sql,0); 
     return $res; 
-}
-
-
-function traerEstadisticaJugadorTemporadaActual($idjugador, $idtemporada) {
-    $sql = "select
-                jug.apellido,
-                jug.nombres,
-                jug.idjugador,
-                coalesce( sum(r.goles),0) + coalesce( sum(r.penal),0) as goles,
-                coalesce( sum(r.amarillas),0) as amarillas,
-                coalesce( sum(r.rojas),0) as rojas,
-                coalesce( sum(r.pj),0) as pj,
-                coalesce( sum(r.minutos),0) as minutos,
-                r.temporada,
-                r.idequipo,
-                r.nombreequipo,
-                r.categoria,
-                r.division
-                from dbjugadores jug
-                left join
-                    (   
-                        select sum(go.goles) as goles, sum(go.encontra) as encontra,0 as penal,0 as amarillas, 0 as rojas,
-                                go.reffixture, jug.idjugador, tem.temporada, 0 AS pj,0 AS minutos,
-                                eq.idequipo, 
-                                (case when fix.refconectorlocal = eq.idequipo then fix.nombreequipolocal else fix.nombreequipovisitante end) as nombreequipo,
-                                ca.categoria,
-                                di.division
-                            from dbgoleadores go 
-                                inner join dbjugadores jug on jug.idjugador = go.refjugadores
-                                inner join dbfixture fix ON fix.idfixture = go.reffixture
-                                inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-                                inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas and tem.idtemporadas = ".$idtemporada."
-                                inner join dbequipos eq on eq.idequipo = go.refequipos
-                                INNER JOIN tbcategorias ca ON ca.idtcategoria = go.refcategorias
-                                INNER JOIN tbdivisiones di ON di.iddivision = go.refdivisiones
-                                where jug.idjugador = ".$idjugador."
-                                group by go.reffixture, jug.idjugador, tem.temporada
-                        union all
-                        select 0 as goles,0 as encontra,sum(go.penalconvertido) as penal,0 as amarillas, 0 as rojas, 
-                                go.reffixture , jug.idjugador, tem.temporada, 0 AS pj,0 AS minutos,
-                                eq.idequipo, 
-                                (case when fix.refconectorlocal = eq.idequipo then fix.nombreequipolocal else fix.nombreequipovisitante end) as nombreequipo,
-                                ca.categoria,
-                                di.division
-                            from dbpenalesjugadores go 
-                                inner join dbjugadores jug on jug.idjugador = go.refjugadores
-                                inner join dbfixture fix ON fix.idfixture = go.reffixture
-                                inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-                                inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas and tem.idtemporadas = ".$idtemporada."
-                                inner join dbequipos eq on eq.idequipo = go.refequipos
-                                INNER JOIN tbcategorias ca ON ca.idtcategoria = go.refcategorias
-                                INNER JOIN tbdivisiones di ON di.iddivision = go.refdivisiones
-                                where jug.idjugador = ".$idjugador."
-                                group by go.reffixture, jug.idjugador, tem.temporada
-                        union all
-                        select 0 as goles,0 as encontra,0 as penal,sum(go.cantidad) as amarillas,0 as rojas,
-                                go.reffixture, jug.idjugador, tem.temporada, 0 AS pj,0 AS minutos,
-                                eq.idequipo, 
-                                (case when fix.refconectorlocal = eq.idequipo then fix.nombreequipolocal else fix.nombreequipovisitante end) as nombreequipo,
-                                ca.categoria,
-                                di.division
-                            from dbsancionesjugadores go 
-                                inner join dbjugadores jug on jug.idjugador = go.refjugadores
-                                inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
-                                inner join dbfixture fix ON fix.idfixture = go.reffixture
-                                inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-                                inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas and tem.idtemporadas = ".$idtemporada."
-                                inner join dbequipos eq on eq.idequipo = go.refequipos
-                                INNER JOIN tbcategorias ca ON ca.idtcategoria = go.refcategorias
-                                INNER JOIN tbdivisiones di ON di.iddivision = go.refdivisiones
-                                where ts.amonestacion = 1 AND jug.idjugador = ".$idjugador."
-                                group by go.reffixture, jug.idjugador, tem.temporada
-                        union all
-                        select 0 as goles,0 as encontra,0 as penal,2 as amarillas,0 as rojas,
-                                go.reffixture, jug.idjugador, tem.temporada, 0 AS pj,0 AS minutos,
-                                eq.idequipo, 
-                                (case when fix.refconectorlocal = eq.idequipo then fix.nombreequipolocal else fix.nombreequipovisitante end) as nombreequipo,
-                                ca.categoria,
-                                di.division
-                            from dbsancionesjugadores go 
-                                inner join dbsancionesfallos sf ON go.refsancionesfallos = sf.idsancionfallo
-                                inner join dbjugadores jug on jug.idjugador = go.refjugadores
-                                inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
-                                inner join dbfixture fix ON fix.idfixture = go.reffixture
-                                inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-                                inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas and tem.idtemporadas = ".$idtemporada."
-                                inner join dbequipos eq on eq.idequipo = go.refequipos
-                                INNER JOIN tbcategorias ca ON ca.idtcategoria = go.refcategorias
-                                INNER JOIN tbdivisiones di ON di.iddivision = go.refdivisiones
-                                where jug.idjugador = ".$idjugador." and sf.amarillas = 2
-                                group by go.reffixture, jug.idjugador, tem.temporada
-                        union all
-                        select 0 as goles,0 as encontra,0 as penal,0 as amarillas, sum(go.cantidad) as rojas,
-                                go.reffixture , jug.idjugador, tem.temporada, 0 AS pj,0 AS minutos,
-                                eq.idequipo, 
-                                (case when fix.refconectorlocal = eq.idequipo then fix.nombreequipolocal else fix.nombreequipovisitante end) as nombreequipo,
-                                ca.categoria,
-                                di.division
-                            from dbsancionesjugadores go
-                                inner join dbjugadores jug on jug.idjugador = go.refjugadores
-                                inner join tbtiposanciones ts ON ts.idtiposancion = go.reftiposanciones
-                                inner join dbfixture fix ON fix.idfixture = go.reffixture
-                                inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-                                inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas and tem.idtemporadas = ".$idtemporada."
-                                inner join dbequipos eq on eq.idequipo = go.refequipos
-                                INNER JOIN tbcategorias ca ON ca.idtcategoria = go.refcategorias
-                                INNER JOIN tbdivisiones di ON di.iddivision = go.refdivisiones
-                                where ts.expulsion = 1 AND jug.idjugador = ".$idjugador."
-                                group by go.reffixture, jug.idjugador, tem.temporada
-                        union all
-                        select 0 as goles,0 as encontra,0 as penal,0 as amarillas, 0 as rojas,
-                                go.reffixture , jug.idjugador, tem.temporada, coalesce(COUNT(go.idminutojugado),0) AS pj,0 AS minutos,
-                                eq.idequipo, 
-                                (case when fix.refconectorlocal = eq.idequipo then fix.nombreequipolocal else fix.nombreequipovisitante end) as nombreequipo,
-                                ca.categoria,
-                                di.division
-                            from dbminutosjugados go
-                                inner join dbjugadores jug on jug.idjugador = go.refjugadores
-                                inner join dbfixture fix ON fix.idfixture = go.reffixture
-                                inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-                                inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas and tem.idtemporadas = ".$idtemporada."
-                                inner join dbequipos eq on eq.idequipo = go.refequipos
-                                INNER JOIN tbcategorias ca ON ca.idtcategoria = go.refcategorias
-                                INNER JOIN tbdivisiones di ON di.iddivision = go.refdivisiones
-                                where go.minutos > 0 AND jug.idjugador = ".$idjugador."
-                                group by go.reffixture, jug.idjugador, tem.temporada
-                        union all
-                        select 0 as goles,0 as encontra,0 as penal,0 as amarillas, 0 as rojas,
-                                go.reffixture , jug.idjugador, tem.temporada, 0 AS pj, coalesce(SUM(go.minutos),0) AS minutos,
-                                eq.idequipo, 
-                                (case when fix.refconectorlocal = eq.idequipo then fix.nombreequipolocal else fix.nombreequipovisitante end) as nombreequipo,
-                                ca.categoria,
-                                di.division
-                            from dbminutosjugados go
-                                inner join dbjugadores jug on jug.idjugador = go.refjugadores
-                                inner join dbfixture fix ON fix.idfixture = go.reffixture
-                                inner join dbtorneos tor ON fix.reftorneos = tor.idtorneo
-                                inner join tbtemporadas tem ON tem.idtemporadas = tor.reftemporadas and tem.idtemporadas = ".$idtemporada."
-                                inner join dbequipos eq on eq.idequipo = go.refequipos
-                                INNER JOIN tbcategorias ca ON ca.idtcategoria = go.refcategorias
-                                INNER JOIN tbdivisiones di ON di.iddivision = go.refdivisiones
-                                where go.minutos > 0 AND jug.idjugador = ".$idjugador."
-                                group by go.reffixture, jug.idjugador, tem.temporada
-                                
-                ) r on r.idjugador = jug.idjugador
-                where jug.idjugador = ".$idjugador."
-                group by jug.apellido,
-                jug.nombres,
-                jug.idjugador, r.temporada,r.idequipo,
-                r.nombreequipo,r.categoria,
-                r.division
-                order by r.temporada, r.idequipo";
-    $res = $this->query($sql,0);
-    return $res;    
 }
 
 
@@ -9037,6 +8897,52 @@ left join dbarbitros arb ON arb.idarbitro = f.refarbitros
 left join tbcanchas can ON can.idcancha = f.refcanchas
 left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
 where tor.idtorneo = ".$idTorneo." and f.reffechas = ".$idFecha."
+order by f.fecha, f.idfixture";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
+function traerFixtureTodoPorTorneosFechasPlayOff($idTorneo, $idEtapa) {
+$sql = "select
+f.idfixture,
+coalesce(el.nombre,'Libre') as equipolocal,
+f.puntoslocal,
+f.puntosvisita,
+coalesce(ev.nombre, 'Libre') as equipovisitante,
+ca.categoria,
+arb.nombrecompleto as arbitro,
+f.goleslocal,
+f.golesvisitantes,
+can.nombre as cancha,
+fec.fecha,
+date_format(f.fecha,'%d-%m-%Y') as fechajuego,
+f.hora,
+est.descripcion as estado,
+f.calificacioncancha,
+f.juez1,
+f.juez2,
+f.refcanchas,
+f.reftorneos,
+f.refconectorlocal,
+f.refconectorvisitante,
+coalesce((case when est.finalizado = 1 then '1' else '0' end),0) as esfinalizado,
+coalesce((case when est.visibleparaarbitros = 1 then '1' else '0' end),0) as espendienterevision
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join tbetapas ep on ep.idetapa = f.refetapas
+left join dbequipos el ON el.idequipo = f.refconectorlocal
+left join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+where tor.idtorneo = ".$idTorneo." and f.refetapas = ".$idEtapa."
 order by f.fecha, f.idfixture";
 $res = $this->query($sql,0);
 return $res;
@@ -9654,6 +9560,59 @@ $res = $this->query($sql,0);
         where tor.idtorneo = ".$idTorneo."
         group by f.reffechas,fec.fecha
         order by f.reffechas";
+        $res = $this->query($sql,0);
+        return $res;
+    }
+
+}
+
+
+function traerFechasFixturePorTorneoRemoto($idTorneo) {
+$sql = "select
+etp.idetapa as reffechas,
+etp.descripcion as fecha,
+coalesce( max(est.idestadopartido),0) as idestadopartido
+from dbfixture f
+inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+inner join tbfechas fec ON fec.idfecha = f.reffechas
+inner join dbequipos el ON el.idequipo = f.refconectorlocal
+inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+inner join tbetapas etp ON etp.idetapa = f.refetapas
+left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+left join tbcanchas can ON can.idcancha = f.refcanchas
+left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos and est.finalizado = 1
+where tor.idtorneo = ".$idTorneo."
+group by etp.idetapa,etp.descripcion
+order by etp.idetapa";
+$res = $this->query($sql,0);
+
+    if (mysql_num_rows($res)>0) {
+        return $res;
+    } else {
+        $sql = "select
+        etp.idetapa as reffechas,
+        etp.descripcion as fecha,
+        coalesce( max(est.idestadopartido),0) as idestadopartido
+        from dbfixture f
+        inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
+        inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
+        inner join tbtemporadas te ON te.idtemporadas = tor.reftemporadas
+        inner join tbcategorias ca ON ca.idtcategoria = tor.refcategorias
+        inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+        inner join tbfechas fec ON fec.idfecha = f.reffechas
+        inner join dbequipos el ON el.idequipo = f.refconectorlocal
+        inner join dbequipos ev ON ev.idequipo = f.refconectorvisitante
+        inner join tbetapas etp ON etp.idetapa = f.refetapas
+        left join dbarbitros arb ON arb.idarbitro = f.refarbitros
+        left join tbcanchas can ON can.idcancha = f.refcanchas
+        left join tbestadospartidos est ON est.idestadopartido = f.refestadospartidos
+        where tor.idtorneo = ".$idTorneo."
+        group by etp.idetapa,etp.descripcion
+        order by etp.idetapa";
         $res = $this->query($sql,0);
         return $res;
     }
@@ -14447,72 +14406,14 @@ function insertarFechaDestacada($desde, $hasta) {
 }
 
 
-function traerImagenesRepetidas() {
-    $sql = "SELECT * FROM dbdocumentacionjugadorimagenes WHERE imagen like '%.pdf%' and iddocumentacionjugadorimagen < 3660";
-    $res = $this->query($sql,0);
-
-    return $res;
-}
-
-
-function eroresDorsales() {
-    $sql = "SELECT 
-    fix.idfixture,
-    c.refdorsalsale,
-    ca.categoria,
-    di.division,
-    fix.fecha,
-    e.nombre,
-    c.idcambio
-FROM
-    dbcambios c
-        INNER JOIN
-    dbfixture fix ON fix.idfixture = c.reffixture
-        AND fix.refconectorlocal = c.refequipos
-        LEFT JOIN
-    dbdorsales ds ON c.refdorsalsale = ds.numero
-        AND ds.reffixture = fix.idfixture
-        AND fix.refconectorlocal = ds.refequipos
-        LEFT JOIN
-    dbjugadores js ON js.idjugador = ds.refjugadores
-        INNER JOIN
-    dbtorneos t ON t.idtorneo = fix.reftorneos
-        INNER JOIN
-    tbcategorias ca ON ca.idtcategoria = c.refcategorias
-        INNER JOIN
-    tbdivisiones di ON di.iddivision = c.refdivisiones
-        inner join
-    dbequipos e on e.idequipo = c.refequipos
-WHERE
-    t.reftemporadas = 7
-        AND ds.iddorsal IS NULL
-order by fix.fecha,fix.idfixture, ca.categoria, di.division";
-    $res = $this->query($sql,0);
-
-    return $res;
-}
-
-function modificarCambioSimple($id, $dorsal, $x) {
-    if ($x == 1) {
-        $sql = "update dbcambios set refdorsalsale = ".$dorsal." where idcambio =".$id;
-    } else {
-        $sql = "update dbcambios set refdorsalentra = ".$dorsal." where idcambio =".$id;
-    }
-
-    $res = $this->query($sql,0);
-
-    return $res;
-}
-
-
 function query($sql,$accion) {
         
         
         
-        require_once 'appconfig.php';
+        require_once 'appconfigremoto.php';
 
-        $appconfig  = new appconfig();
-        $datos      = $appconfig->conexion();   
+        $appconfigremoto  = new appconfigremoto();
+        $datos      = $appconfigremoto->conexion();   
         $hostname   = $datos['hostname'];
         $database   = $datos['database'];
         $username   = $datos['username'];

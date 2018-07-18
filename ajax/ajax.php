@@ -534,6 +534,9 @@ case 'buscarPartido':
 case 'guardarPartidoSimple':
 	guardarPartidoSimple($serviciosReferencias);
 	break;
+case 'modificarCambioSimple':
+	modificarCambioSimple($serviciosReferencias);
+	break;
 /*****			FIN				**********/
 
 /*****		TODO FALLOS        **********/
@@ -2188,6 +2191,19 @@ function guardarPartidoSimple($serviciosReferencias) {
 		echo 'Formato de fecha erroneo'.$_POST['fecha'];
 	}
 }
+
+
+function modificarCambioSimple($serviciosReferencias) {
+	$id		 	= $_POST['idcambio'];
+	$dorsal		= $_POST['dorsalnuevo'];
+	$x			= 1;
+
+
+	$res = $serviciosReferencias->modificarCambioSimple($id, $dorsal, $x);
+	echo '';
+
+}
+
 
 function insertarFixture($serviciosReferencias) {
 	$reftorneos = $_POST['reftorneos'];
