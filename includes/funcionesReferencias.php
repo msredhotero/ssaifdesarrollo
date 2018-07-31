@@ -12533,6 +12533,132 @@ return $res;
 
 
 
+    function traerFormacionPorFixtureDetalleWhere($where) {
+        $sql = "
+
+                select
+                    r.numero,
+                    r.apyn,
+                    r.equipo,
+                    r.orden,
+                    r.refjugadores,
+                    r.idfixture,
+                    r.fechajuego,
+                    r.categoria,
+                    r.division
+                from (
+                    SELECT 
+                        d.numero,
+                        CONCAT(j.apellido, ' ', j.nombres) AS apyn,
+                        fix.nombreequipolocal as equipo,
+                        1 as orden,
+                        d.refjugadores,
+                        fix.idfixture,
+                        fix.fechajuego,
+                        cat.categoria,
+                        di.division
+                    FROM
+                        dbdorsales d
+                            INNER JOIN
+                        dbjugadores j ON j.idjugador = d.refjugadores
+                            INNER JOIN
+                        dbfixture fix ON fix.idfixture = d.reffixture AND fix.refconectorlocal = d.refequipos
+                            INNER JOIN
+                        dbtorneos tt on tt.idtorneo = fix.reftorneos
+                            INNER JOIN
+                        tbcategorias cat on cat.idtcategoria = tt.refcategorias
+                            INNER JOIN
+                        tbdivisiones di on di.iddivision = tt.refdivisiones
+                    WHERE
+                        d.numero > 0 and ".$where."
+                        
+                    union all
+
+                    SELECT 
+                        d.numero,
+                        CONCAT(j.apellido, ' ', j.nombres) AS apyn,
+                        fix.nombreequipovisitante as equipo,
+                        2 as orden,
+                        d.refjugadores,
+                        fix.idfixture,
+                        fix.fechajuego,
+                        cat.categoria,
+                        di.division
+                    FROM
+                        dbdorsales d
+                            INNER JOIN
+                        dbjugadores j ON j.idjugador = d.refjugadores
+                            INNER JOIN
+                        dbfixture fix ON fix.idfixture = d.reffixture
+                            AND fix.refconectorvisitante = d.refequipos
+                            INNER JOIN
+                        dbtorneos tt on tt.idtorneo = fix.reftorneos
+                            INNER JOIN
+                        tbcategorias cat on cat.idtcategoria = tt.refcategorias
+                            INNER JOIN
+                        tbdivisiones di on di.iddivision = tt.refdivisiones
+                    WHERE
+                        d.numero > 0 and ".$where."
+                ) r
+                where r.numero not in
+                (
+
+                SELECT 
+                    
+                    de.numero AS numeroentra
+                    
+                FROM
+                    dbcambios c
+                        INNER JOIN
+                    dbfixture fix ON fix.idfixture = c.reffixture
+                        AND fix.refconectorlocal = c.refequipos
+                        INNER JOIN
+                    dbdorsales ds ON c.refdorsalsale = ds.numero
+                        AND ds.reffixture = fix.idfixture AND fix.refconectorlocal = ds.refequipos
+                        INNER JOIN
+                    dbjugadores js ON js.idjugador = ds.refjugadores
+                        INNER JOIN
+                    dbdorsales de ON c.refdorsalentra = de.numero
+                        AND de.reffixture = fix.idfixture AND fix.refconectorlocal = de.refequipos
+                        INNER JOIN
+                    dbjugadores je ON je.idjugador = de.refjugadores
+                WHERE
+                    ".$where."
+                    
+                union all
+                
+                SELECT 
+                    de.numero AS numeroentra
+                FROM
+                    dbcambios c
+                        INNER JOIN
+                    dbfixture fix ON fix.idfixture = c.reffixture
+                        AND fix.refconectorvisitante = c.refequipos
+                        INNER JOIN
+                    dbdorsales ds ON c.refdorsalsale = ds.numero
+                        AND ds.reffixture = fix.idfixture AND fix.refconectorvisitante = ds.refequipos
+                        INNER JOIN
+                    dbjugadores js ON js.idjugador = ds.refjugadores
+                        INNER JOIN
+                    dbdorsales de ON c.refdorsalentra = de.numero
+                        AND de.reffixture = fix.idfixture AND fix.refconectorvisitante = de.refequipos
+                        INNER JOIN
+                    dbjugadores je ON je.idjugador = de.refjugadores
+                WHERE
+                    ".$where."
+                )
+                order by r.fechajuego,
+                    r.categoria,
+                    r.division,
+                    r.orden, r.numero
+                ";
+
+        $res = $this->query($sql,0); 
+        return $res;
+    }
+
+
+
     function traerFormacionCambiosPorFixtureDetalle($idFixture) {
         $sql = "
             select
