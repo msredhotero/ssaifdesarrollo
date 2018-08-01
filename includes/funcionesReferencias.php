@@ -12543,7 +12543,7 @@ return $res;
                     r.orden,
                     r.refjugadores,
                     r.idfixture,
-                    r.fechajuego,
+                    DATE_FORMAT(r.fechajuego, '%Y-%m-%d') as fechajuego,
                     r.categoria,
                     r.division
                 from (
@@ -12554,7 +12554,7 @@ return $res;
                         1 as orden,
                         d.refjugadores,
                         fix.idfixture,
-                        fix.fechajuego,
+                        fix.fecha as fechajuego,
                         cat.categoria,
                         di.division
                     FROM
@@ -12581,7 +12581,7 @@ return $res;
                         2 as orden,
                         d.refjugadores,
                         fix.idfixture,
-                        fix.fechajuego,
+                        fix.fecha as fechajuego,
                         cat.categoria,
                         di.division
                     FROM
@@ -12622,8 +12622,10 @@ return $res;
                         AND de.reffixture = fix.idfixture AND fix.refconectorlocal = de.refequipos
                         INNER JOIN
                     dbjugadores je ON je.idjugador = de.refjugadores
+                        INNER JOIN
+                    dbtorneos tt on tt.idtorneo = fix.reftorneos
                 WHERE
-                    ".$where."
+                    fix.idfixture = r.idfixture
                     
                 union all
                 
@@ -12644,10 +12646,12 @@ return $res;
                         AND de.reffixture = fix.idfixture AND fix.refconectorvisitante = de.refequipos
                         INNER JOIN
                     dbjugadores je ON je.idjugador = de.refjugadores
+                        INNER JOIN
+                    dbtorneos tt on tt.idtorneo = fix.reftorneos
                 WHERE
-                    ".$where."
+                    fix.idfixture = r.idfixture
                 )
-                order by r.fechajuego,
+                order by r.idfixture,r.fechajuego,
                     r.categoria,
                     r.division,
                     r.orden, r.numero
