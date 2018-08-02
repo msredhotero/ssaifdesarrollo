@@ -12545,7 +12545,8 @@ return $res;
                     r.idfixture,
                     DATE_FORMAT(r.fechajuego, '%Y-%m-%d') as fechajuego,
                     r.categoria,
-                    r.division
+                    r.division,
+                    r.fecha
                 from (
                     SELECT 
                         d.numero,
@@ -12556,7 +12557,8 @@ return $res;
                         fix.idfixture,
                         fix.fecha as fechajuego,
                         cat.categoria,
-                        di.division
+                        di.division,
+                        ff.fecha
                     FROM
                         dbdorsales d
                             INNER JOIN
@@ -12564,13 +12566,43 @@ return $res;
                             INNER JOIN
                         dbfixture fix ON fix.idfixture = d.reffixture AND fix.refconectorlocal = d.refequipos
                             INNER JOIN
+                        tbfechas ff ON ff.idfecha = fix.reffechas
+                            INNER JOIN
                         dbtorneos tt on tt.idtorneo = fix.reftorneos
                             INNER JOIN
                         tbcategorias cat on cat.idtcategoria = tt.refcategorias
                             INNER JOIN
                         tbdivisiones di on di.iddivision = tt.refdivisiones
                     WHERE
-                        d.numero > 0 and ".$where."
+                        d.numero > 0 and ".$where." and 
+                        d.numero not in
+                        (
+
+                        SELECT 
+                            
+                            de.numero AS numeroentra
+                            
+                        FROM
+                            dbcambios c
+                                INNER JOIN
+                            dbfixture fix ON fix.idfixture = c.reffixture
+                                AND fix.refconectorlocal = c.refequipos
+                                INNER JOIN
+                            dbdorsales ds ON c.refdorsalsale = ds.numero
+                                AND ds.reffixture = fix.idfixture AND fix.refconectorlocal = ds.refequipos
+                                INNER JOIN
+                            dbjugadores js ON js.idjugador = ds.refjugadores
+                                INNER JOIN
+                            dbdorsales de ON c.refdorsalentra = de.numero
+                                AND de.reffixture = fix.idfixture AND fix.refconectorlocal = de.refequipos
+                                INNER JOIN
+                            dbjugadores je ON je.idjugador = de.refjugadores
+                                INNER JOIN
+                            dbtorneos tt on tt.idtorneo = fix.reftorneos
+                        WHERE
+                            fix.idfixture = d.reffixture
+                        )
+
                         
                     union all
 
@@ -12583,14 +12615,16 @@ return $res;
                         fix.idfixture,
                         fix.fecha as fechajuego,
                         cat.categoria,
-                        di.division
+                        di.division,
+                        ff.fecha
                     FROM
                         dbdorsales d
                             INNER JOIN
                         dbjugadores j ON j.idjugador = d.refjugadores
                             INNER JOIN
-                        dbfixture fix ON fix.idfixture = d.reffixture
-                            AND fix.refconectorvisitante = d.refequipos
+                        dbfixture fix ON fix.idfixture = d.reffixture AND fix.refconectorvisitante = d.refequipos
+                            INNER JOIN
+                        tbfechas ff ON ff.idfecha = fix.reffechas
                             INNER JOIN
                         dbtorneos tt on tt.idtorneo = fix.reftorneos
                             INNER JOIN
@@ -12598,63 +12632,35 @@ return $res;
                             INNER JOIN
                         tbdivisiones di on di.iddivision = tt.refdivisiones
                     WHERE
-                        d.numero > 0 and ".$where."
-                ) r
-                where r.numero not in
-                (
+                        d.numero > 0 and ".$where." and 
+                        d.numero not in (SELECT 
+                                            de.numero AS numeroentra
+                                        FROM
+                                            dbcambios c
+                                                INNER JOIN
+                                            dbfixture fix ON fix.idfixture = c.reffixture
+                                                AND fix.refconectorvisitante = c.refequipos
+                                                INNER JOIN
+                                            dbdorsales ds ON c.refdorsalsale = ds.numero
+                                                AND ds.reffixture = fix.idfixture AND fix.refconectorvisitante = ds.refequipos
+                                                INNER JOIN
+                                            dbjugadores js ON js.idjugador = ds.refjugadores
+                                                INNER JOIN
+                                            dbdorsales de ON c.refdorsalentra = de.numero
+                                                AND de.reffixture = fix.idfixture AND fix.refconectorvisitante = de.refequipos
+                                                INNER JOIN
+                                            dbjugadores je ON je.idjugador = de.refjugadores
+                                                INNER JOIN
+                                            dbtorneos tt on tt.idtorneo = fix.reftorneos
+                                        WHERE
+                                            fix.idfixture = d.reffixture)
 
-                SELECT 
-                    
-                    de.numero AS numeroentra
-                    
-                FROM
-                    dbcambios c
-                        INNER JOIN
-                    dbfixture fix ON fix.idfixture = c.reffixture
-                        AND fix.refconectorlocal = c.refequipos
-                        INNER JOIN
-                    dbdorsales ds ON c.refdorsalsale = ds.numero
-                        AND ds.reffixture = fix.idfixture AND fix.refconectorlocal = ds.refequipos
-                        INNER JOIN
-                    dbjugadores js ON js.idjugador = ds.refjugadores
-                        INNER JOIN
-                    dbdorsales de ON c.refdorsalentra = de.numero
-                        AND de.reffixture = fix.idfixture AND fix.refconectorlocal = de.refequipos
-                        INNER JOIN
-                    dbjugadores je ON je.idjugador = de.refjugadores
-                        INNER JOIN
-                    dbtorneos tt on tt.idtorneo = fix.reftorneos
-                WHERE
-                    fix.idfixture = r.idfixture
-                    
-                union all
+                ) r
                 
-                SELECT 
-                    de.numero AS numeroentra
-                FROM
-                    dbcambios c
-                        INNER JOIN
-                    dbfixture fix ON fix.idfixture = c.reffixture
-                        AND fix.refconectorvisitante = c.refequipos
-                        INNER JOIN
-                    dbdorsales ds ON c.refdorsalsale = ds.numero
-                        AND ds.reffixture = fix.idfixture AND fix.refconectorvisitante = ds.refequipos
-                        INNER JOIN
-                    dbjugadores js ON js.idjugador = ds.refjugadores
-                        INNER JOIN
-                    dbdorsales de ON c.refdorsalentra = de.numero
-                        AND de.reffixture = fix.idfixture AND fix.refconectorvisitante = de.refequipos
-                        INNER JOIN
-                    dbjugadores je ON je.idjugador = de.refjugadores
-                        INNER JOIN
-                    dbtorneos tt on tt.idtorneo = fix.reftorneos
-                WHERE
-                    fix.idfixture = r.idfixture
-                )
                 order by r.idfixture,r.fechajuego,
                     r.categoria,
                     r.division,
-                    r.orden, r.numero
+                    r.orden, r.apyn
                 ";
 
         $res = $this->query($sql,0); 

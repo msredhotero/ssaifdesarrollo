@@ -98,6 +98,11 @@ $pdf->SetAutoPageBreak(true,1);
 	$idfixture = 0;
 	$primero = 0;
 
+	$cantEquiposLocal = 0;
+	$cantEquiposVisitante = 0;
+
+	$pdf->SetFont('Arial','B',10);
+
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->Cell(25,4,'Fecha',1,0,'C',false);
@@ -116,10 +121,15 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	if ($idfixture != $rowE['idfixture']) {
 		$idfixture = $rowE['idfixture'];
 		if ($primero != 0) {
+			$pdf->SetFont('Arial','B',10);
 			$pdf->Ln();
 			$pdf->SetX(5);
-			$pdf->Cell(205,4,'Cantidad de Jugadores: '.$cantPartidos,1,0,'R',false);
+			$pdf->Cell(70,6,'Cantidad de Jugadores Local: '.$cantEquiposLocal,1,0,'C',false);
+			$pdf->Cell(70,6,'Cantidad de Jugadores Visitante: '.$cantEquiposVisitante,1,0,'C',false);
+			$pdf->Cell(65,6,'Cantidad de Jugadores: '.$cantPartidos,1,0,'C',false);
 			$cantPartidos = 0;
+			$cantEquiposLocal = 0;
+			$cantEquiposVisitante = 0;
 		}
 
 		$primero = 1;
@@ -152,7 +162,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(25,4,$rowE['fechajuego'],1,0,'C',false);
+	$pdf->Cell(25,4,$rowE['fecha'],1,0,'C',false);
 	$pdf->Cell(50,4,$rowE['equipo'],1,0,'L',false);
 	$pdf->Cell(30,4,$rowE['categoria'],1,0,'L',false);
 	$pdf->Cell(20,4,$rowE['division'],1,0,'L',false);
@@ -167,10 +177,22 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$contadorY1 += 4;
 	$cantPartidos += 1;
 
+	if ($rowE['orden'] == 1) {
+		$cantEquiposLocal += 1;
+	} else {
+		$cantEquiposVisitante += 1;
+	}
+
 	//$pdf->SetY($contadorY1);		
 
 
 }
+
+	$pdf->Ln();
+	$pdf->SetX(5);
+	$pdf->Cell(70,6,'Cantidad de Jugadores Local: '.$cantEquiposLocal,1,0,'C',false);
+	$pdf->Cell(70,6,'Cantidad de Jugadores Visitante: '.$cantEquiposVisitante,1,0,'C',false);
+	$pdf->Cell(65,6,'Cantidad de Jugadores: '.$cantPartidos,1,0,'C',false);
 //120 x 109
 
 

@@ -297,7 +297,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="9">Historico Incidencias Jugadores</option>
                             <option value="11">Estadistica Jugador Por Categoria</option>
                             <option value="12">Habilitaciones Transitorias</option>
-                            
+                            <option value="13">Jugadores Por Partido</option>
                     	</select>
                     </div>
                 </div>
@@ -934,6 +934,23 @@ $(document).ready(function(){
                 $('#fmj1').hide();
                 $('#fmn1').hide();
                 break;
+            case 13:
+                $('#cou1').hide();
+                $('#jug1').hide();
+                $('#baj1').hide();
+                $('#cat1').show();
+                $('#div1').show();
+                $('#tor1').hide();
+                $('#tem1').show();
+                $('#fpa1').hide();
+                $('#fam1').hide();
+                $('#fra1').hide();
+                $('#ffa1').hide();
+                $('#ffn1').hide();
+                $('#fed1').hide();
+                $('#fmj1').hide();
+                $('#fmn1').hide();
+                break;
 			default:
 				alert('Debe elegir una opcion');
 		}
@@ -985,13 +1002,16 @@ $(document).ready(function(){
                 break;	
             case 9:
                 window.open("../../reportes/rptHistoricoJugadorIncidencias.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&idjugador="+ $("#idjugador").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');   
-                break;    
+                break;
 			case 11:
                 window.open("../../reportes/rptEstadisticaJugadorPorCategoria.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtropartidosvalor2=' + $('#valorpartido2').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtroamarillasvalor2=' + $('#valoramarillas2').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrorojasvalor2=' + $('#valorrojas2').val() + '&filtrofechaalta=' + $('#filtrofechaalta').val() + '&filtrofechaaltavalor=' + $('#valorfechaalta').val() + '&filtrofechaaltavalor2=' + $('#valorfechaalta2').val() + '&filtrofechanacimiento=' + $('#filtrofechanacimiento').val() + '&filtrofechanacimientovalor=' + $('#valorfechanacimiento').val() + '&filtrofechanacimientovalor2=' + $('#valorfechanacimiento2').val() + '&filtroedad=' + $('#filtroedad').val() + '&filtroedadvalor=' + $('#valoredad').val() + '&filtroedadvalor2=' + $('#valoredad2').val() + '&filtromejorjugador=' + $('#filtromejorjugador').val() + '&filtromejorjugadorvalor=' + $('#valormejorjugador').val()  + '&filtromejorjugadorvalor2=' + $('#valormejorjugador2').val()+ '&filtrominutos=' + $('#filtrominutos').val() + '&filtrominutosvalor=' + $('#valorminutos').val() + '&filtrominutosvalor2=' + $('#valorminutos2').val(),'_blank');   
                 break; 	
             case 12:
                 window.open("../../reportes/rptHabilitacionesTransitoriasExcel.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');   
-                break;  
+                break;
+            case 13:
+                window.open("../../reportes/rptJugadoresPorPartidos.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');   
+                break;
 				
 			default:
 				alert('Debe elegir una opcion');
