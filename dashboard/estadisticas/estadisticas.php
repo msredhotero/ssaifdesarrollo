@@ -1694,7 +1694,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 ?>
                 
                 <?php
-					$iC = 1;
+					
 					for ($k = $iC;$k<= 7;$k++) {
 				?>
                 <div class="row" style="margin-left:25px;">
