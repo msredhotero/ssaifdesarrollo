@@ -224,17 +224,26 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 
-<script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
-<script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
 
 <script src="../../js/bootstrap-datetimepicker.min.js"></script>
 <script src="../../js/bootstrap-datetimepicker.es.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#example').dataTable({
-		"order": [[ 0, "asc" ]],
-		"language": {
+	var table = $('#example').DataTable({
+		order: [[ 0, "asc" ]],
+        buttons: [ 'copy', 'excel', 'pdf', 'colvis' ],
+		language: {
 			"emptyTable":     "No hay datos cargados",
 			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
 			"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
@@ -258,6 +267,9 @@ $(document).ready(function(){
 			}
 		  }
 	} );
+
+	table.buttons().container()
+        .appendTo( '#example_wrapper .col-sm-6:eq(0)' );
 	
 	$('#activo').prop('checked',true);
 	
