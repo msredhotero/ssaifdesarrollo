@@ -5,16 +5,26 @@ include ('../includes/funciones.php');
 include ('../includes/funcionesUsuarios.php');
 include ('../includes/funcionesHTML.php');
 include ('../includes/funcionesReferencias.php');
+include ('../includes/funcionesReferenciasRemoto.php');
+
 
 $serviciosFunciones = new Servicios();
 $serviciosUsuario 	= new ServiciosUsuarios();
 $serviciosHTML 		= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
+$serviciosReferenciasRemoto 	= new ServiciosReferenciasRemoto();
+
 
 $fecha = date('Y-m-d');
 
+
 if ((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) {
 	$resDatos = $serviciosReferencias->Goleadores($_GET['idtorneo']);
+	if (mysql_num_rows($resDatos) > 0) {
+		$resDatos = $serviciosReferencias->Goleadores($_GET['idtorneo']);
+	} else {
+		$resDatos = $serviciosReferenciasRemoto->Goleadores($_GET['idtorneo']);
+	}
 } else {
 	$resDatos = $serviciosReferencias->Goleadores(0);
 }

@@ -140,6 +140,8 @@ $filas = count($cantEquipos)/2;
 
 $fechaNueva = date_create($fechainicio);
 
+$contadorInvertir = 0;
+
 ?>
 
 <!DOCTYPE HTML>
@@ -1140,6 +1142,7 @@ padding-bottom: 10px;
 					  </div>';
 			for ($k=0;$k<$filas;$k++) {
 				//$lstEquipos = explode("***",$fixtureGenerardo[$i][$k]);
+				$contadorInvertir += 1;
 				
 				if ($darVuelta == 1) {
 					echo '
@@ -1304,7 +1307,7 @@ $(document).ready(function(){
 	function invertirLocalVisitante() {
 		var local = 0;
 		var visitante = 0;
-		for (i=1; i <= <?php echo $total; ?>; i++) {
+		for (i=1; i <= <?php echo $contadorInvertir; ?>; i++) {
 			
 			local 		= $('#equipoa'+i+' option:selected').val();
 			visitante 	= $('#equipob'+i+' option:selected').val();
