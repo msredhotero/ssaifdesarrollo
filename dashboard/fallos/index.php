@@ -81,16 +81,9 @@ $cabeceras 		= "	<th bgcolor='#E0ECF8'>Jugador</th>
 
 
 
+//$resFallosAcu = $serviciosReferencias->traerSancionesJugadoresConFallosAcumulados();
+//$lstCargadosAcumulados 	= $serviciosFunciones->camposTablaView($cabeceras,$resFallosAcu,87);
 
-$formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
-
-
-
-$resFallosAcu = $serviciosReferencias->traerSancionesJugadoresConFallosAcumulados();
-$lstCargadosAcumulados 	= $serviciosFunciones->camposTablaView($cabeceras,$resFallosAcu,87);
-
-$resFallos = $serviciosReferencias->traerSancionesJugadoresConFallos();
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras, $resFallos,15);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -132,6 +125,11 @@ if ($_SESSION['refroll_predio'] != 1) {
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
+
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/dataTables.bootstrap.css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/dataTables.jqueryui.min.css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/jquery.dataTables.css">
 	
     
    
@@ -162,7 +160,44 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
-        	<?php echo $lstCargados; ?>
+    		<table id="example" class="display table " style="width:100%">
+        	<thead>
+		            <tr>
+		                <th>Jugador</th>
+		                <th>Nro Documento</th>
+		                <th>Equipo</th>
+		                <th>Fecha</th>
+		                <th>Tipo Sancion</th>
+		                <th>Cant.</th>
+		                <th>Cant. Fechas</th>
+		                <th>Desde</th>
+		                <th>Hasta</th>
+		                <th>Amarillas</th>
+		                <th>Fechas Cumplidas</th>
+		                <th>Pend. Cump.</th>
+		                <th>Pend. Fallo</th>
+		                <th>Acciones</th>
+		            </tr>
+		        </thead>
+		        <tfoot>
+		            <tr>
+		                <th>Jugador</th>
+		                <th>Nro Documento</th>
+		                <th>Equipo</th>
+		                <th>Fecha</th>
+		                <th>Tipo Sancion</th>
+		                <th>Cant.</th>
+		                <th>Cant. Fechas</th>
+		                <th>Desde</th>
+		                <th>Hasta</th>
+		                <th>Amarillas</th>
+		                <th>Fechas Cumplidas</th>
+		                <th>Pend. Cump.</th>
+		                <th>Pend. Fallo</th>
+		                <th>Acciones</th>
+		            </tr>
+		        </tfoot>
+		    </table>
     	</div>
     </div>
     
@@ -173,7 +208,44 @@ if ($_SESSION['refroll_predio'] != 1) {
         	
         </div>
     	<div class="cuerpoBox">
-        	<?php echo $lstCargadosAcumulados; ?>
+        	<table id="example2" class="display" style="width:100%">
+        	<thead>
+		            <tr>
+		                <th>Jugador</th>
+		                <th>Nro Documento</th>
+		                <th>Equipo</th>
+		                <th>Fecha</th>
+		                <th>Tipo Sancion</th>
+		                <th>Cant.</th>
+		                <th>Cant. Fechas</th>
+		                <th>Desde</th>
+		                <th>Hasta</th>
+		                <th>Amarillas</th>
+		                <th>Fechas Cumplidas</th>
+		                <th>Pend. Cump.</th>
+		                <th>Pend. Fallo</th>
+		                <th>Acciones</th>
+		            </tr>
+		        </thead>
+		        <tfoot>
+		            <tr>
+		                <th>Jugador</th>
+		                <th>Nro Documento</th>
+		                <th>Equipo</th>
+		                <th>Fecha</th>
+		                <th>Tipo Sancion</th>
+		                <th>Cant.</th>
+		                <th>Cant. Fechas</th>
+		                <th>Desde</th>
+		                <th>Hasta</th>
+		                <th>Amarillas</th>
+		                <th>Fechas Cumplidas</th>
+		                <th>Pend. Cump.</th>
+		                <th>Pend. Fallo</th>
+		                <th>Acciones</th>
+		            </tr>
+		        </tfoot>
+		    </table>
     	</div>
     </div>
     
@@ -185,27 +257,37 @@ if ($_SESSION['refroll_predio'] != 1) {
 </div>
 
 
-</div>
-<div id="dialog2" title="Eliminar <?php echo $singular; ?>">
-    	<p>
-        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar el <?php echo $singular; ?>?.<span id="proveedorEli"></span>
-        </p>
-        <p><strong>Importante: </strong>Si elimina el <?php echo $singular; ?> se perderan todos los datos de este</p>
-        <input type="hidden" value="" id="idEliminar" name="idEliminar">
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Eliminar Sancion Por 5 amarilla</h4>
+      </div>
+      <div class="modal-body">
+        <p>¿Desea eliminar definitivamente esta sancion?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="eliminarAcumulada" data-dismiss="modal">Confirmar</button>
+        <input type="hidden" name="idacumulada" id="idacumulada" value="">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div id="dialog3" title="Eliminar Suspension Acumuladas">
-    	<p>
-        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar la suspencion por amarillas acumuladas?.<span id="proveedorEli"></span>
-        </p>
-        <p><strong>Importante: </strong>Si elimina el <?php echo $singular; ?> se perderan todos los datos de este</p>
-        <input type="hidden" value="" id="idEliminarAcumuladas" name="idEliminarAcumuladas">
+
+
 </div>
 
-<script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
-<script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
+
+
+
+<script src="../../DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
 
 <script src="../../js/bootstrap-datetimepicker.min.js"></script>
 <script src="../../js/bootstrap-datetimepicker.es.js"></script>
@@ -213,8 +295,10 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	$('#example').dataTable({
-		"order": [[ 0, "asc" ]],
-		"language": {
+	"bProcessing": true,
+	"bServerSide": true,
+	"sAjaxSource": "../../json/jsfallosajax.php",
+	"language": {
 			"emptyTable":     "No hay datos cargados",
 			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
 			"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
@@ -237,11 +321,14 @@ $(document).ready(function(){
 				"sortDescending": ": activate to sort column descending"
 			}
 		  }
-	} );
-	
+	});
+
+
 	$('#example2').dataTable({
-		"order": [[ 0, "asc" ]],
-		"language": {
+	"bProcessing": true,
+	"bServerSide": true,
+	"sAjaxSource": "../../json/jsacumuladasajax.php",
+	"language": {
 			"emptyTable":     "No hay datos cargados",
 			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
 			"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
@@ -264,187 +351,45 @@ $(document).ready(function(){
 				"sortDescending": ": activate to sort column descending"
 			}
 		  }
-	} );
+	});
 	
-	$('#activo').prop('checked',true);
-
-	$("#example").on("click",'.varborrar', function(){
-		  usersid =  $(this).attr("id");
-		  if (!isNaN(usersid)) {
-			$("#idEliminar").val(usersid);
-			$("#dialog2").dialog("open");
-
-			
-			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
-			//$(location).attr('href',url);
-		  } else {
-			alert("Error, vuelva a realizar la acción.");	
-		  }
-	});//fin del boton eliminar
 	
+
+
 	
 	$("#example2").on("click",'.varborraracumulados', function(){
 		  usersid =  $(this).attr("id");
-		  if (!isNaN(usersid)) {
-			$("#idEliminarAcumuladas").val(usersid);
-			$("#dialog3").dialog("open");
-
-			
-			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
-			//$(location).attr('href',url);
-		  } else {
-			alert("Error, vuelva a realizar la acción.");	
-		  }
+		  $('#idacumulada').val(usersid);
+		  $('#myModal').modal();
 	});//fin del boton eliminar
 	
-	$("#example").on("click",'.varmodificar', function(){
-		  usersid =  $(this).attr("id");
-		  if (!isNaN(usersid)) {
-			
-			url = "modificar.php?id=" + usersid;
-			$(location).attr('href',url);
-		  } else {
-			alert("Error, vuelva a realizar la acción.");	
-		  }
-	});//fin del boton modificar
-
-	 $( "#dialog2" ).dialog({
-		 	
-			    autoOpen: false,
-			 	resizable: false,
-				width:600,
-				height:240,
-				modal: true,
-				buttons: {
-				    "Eliminar": function() {
 	
-						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
-									url:   '../../ajax/ajax.php',
-									type:  'post',
-									beforeSend: function () {
-											
-									},
-									success:  function (response) {
-										url = "index.php";
-										//$(location).attr('href',url);
-											
-									}
-							});
-						$( this ).dialog( "close" );
-						$( this ).dialog( "close" );
-							$('html, body').animate({
-	           					scrollTop: '1000px'
-	       					},
-	       					1500);
-				    },
-				    Cancelar: function() {
-						$( this ).dialog( "close" );
-				    }
-				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
-			
 
-	
-	$( "#dialog3" ).dialog({
-		 	
-			autoOpen: false,
-			resizable: false,
-			width:600,
-			height:240,
-			modal: true,
-			buttons: {
-				"Eliminar": function() {
+	$('#eliminarAcumulada').click(function() {
+		eliminar();
+	});
 
-					$.ajax({
-								data:  {id: $('#idEliminarAcumuladas').val(), accion: 'eliminarSancionesfallosacumuladas'},
-								url:   '../../ajax/ajax.php',
-								type:  'post',
-								beforeSend: function () {
-										
-								},
-								success:  function (response) {
-									url = "index.php";
-									$(location).attr('href',url);
-										
-								}
-						});
-					$( this ).dialog( "close" );
-					$( this ).dialog( "close" );
-						$('html, body').animate({
-							scrollTop: '1000px'
-						},
-						1500);
-				},
-				Cancelar: function() {
-					$( this ).dialog( "close" );
-				}
+	function eliminar() {
+		$.ajax({
+			data:  {id: $('#idacumulada').val(), 
+					accion: 'eliminarSancionesfallosacumuladas'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					
+			},
+			success:  function (response) {
+				url = "index.php";
+				$(location).attr('href',url);
+					
 			}
-	 
-	 
-		}); //fin del dialogo para eliminar
-			
-	
-	
-	//al enviar el formulario
-    $('#cargar').click(function(){
-		
-		if (validador() == "")
-        {
-			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax  
-			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
+		});
 
-					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											url = "index.php";
-											$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
-		}
-    });
+	}
+	
+	
+
+
 
 });
 </script>
