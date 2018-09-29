@@ -618,7 +618,58 @@ case 'modificarCategoriaFallo':
 case 'cargarFechaDestacadaPrincipal':
 	cargarFechaDestacadaPrincipal($serviciosReferencias);
 	break;
+
+/*** controles ***///
+case 'traerAmarillasAcumuladas':
+	traerAmarillasAcumuladas($serviciosReferencias);
+	break;
+
+case 'ultimaFechaSancionadoPorAcumulacionAmarillas':
+	ultimaFechaSancionadoPorAcumulacionAmarillas($serviciosReferencias);
+	break;
+
+case 'ultimaFechaSancionadoPorAcumulacionAmarillasFallada':
+	ultimaFechaSancionadoPorAcumulacionAmarillasFallada($serviciosReferencias);
+	break;
+
+/*** fin controles *****///	
 }
+
+/**** controles ****////
+
+function traerAmarillasAcumuladas($serviciosReferencias) {
+	$idtorneo = $_POST['idtorneo'];
+	$idjugador = $_POST['idjugador'];
+	$reffecha = $_POST['reffecha'];
+	$idtipotorneo = $_POST['idtipotorneo'];
+
+	$res = $serviciosReferencias->traerAmarillasAcumuladas($idtorneo, $idjugador, $reffecha, $idtipotorneo);
+
+	echo $res;
+
+}
+
+function ultimaFechaSancionadoPorAcumulacionAmarillas($serviciosReferencias) {
+	$idtorneo = $_POST['idtorneo'];
+	$idjugador = $_POST['idjugador'];
+	$idtipotorneo = $_POST['idtipotorneo'];
+
+	$res = $serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillas($idtorneo, $idjugador, $idtipotorneo);
+
+	echo $res;
+}
+
+function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($serviciosReferencias) {
+	$idtorneo = $_POST['idtorneo'];
+	$idjugador = $_POST['idjugador'];
+	$idtipotorneo = $_POST['idtipotorneo'];
+
+	$res = $serviciosReferencias->ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idtorneo, $idjugador, $idtipotorneo);
+
+	echo $res;
+}
+
+/**** fin controles ****///
 
 function cargarFechaDestacadaPrincipal($serviciosReferencias) {
 	$desde = $_POST['desde'];
