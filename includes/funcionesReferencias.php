@@ -1163,6 +1163,184 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 
 
 
+function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
+    
+    $sql = "select idtorneo from dbtorneos where reftemporadas =".$idTemporada." and refcategorias = ".$idCategoria." and refdivisiones = ".$idDivision." and acumulatablaconformada = 1";
+    
+    $resConformada = $this->query($sql,0);
+    
+    $lstPosiciones = array();
+    
+    $lstPosicionesFinal = array();
+
+    while ($rowT = mysql_fetch_array($resConformada)) {
+    
+        $arPosiciones = $this->Posiciones($rowT['idtorneo']);
+        
+        foreach ($arPosiciones as $valorT) {
+            
+            $lstPosiciones[] = array('equipo'=> $valorT['equipo'],
+                                  'puntos'=> (integer)$valorT['puntos'],
+                                  'goles'=> (integer)$valorT['goles'],
+                                  'golescontra'=> (integer)$valorT['golescontra'],
+                                  'pj'=> (integer)$valorT['pj'],
+                                  'pg'=> (integer)$valorT['pg'],
+                                  'pp'=> (integer)$valorT['pp'],
+                                  'pe'=> (integer)$valorT['pe'],
+                                  'amarillas'=> (integer)$valorT['amarillas'],
+                                  'rojas'=> (integer)$valorT['rojas'],
+                                  'puntobonus'=> (integer)$valorT['puntobonus'],
+                                  'idequipo'=> (integer)$valorT['idequipo']);
+                                                      
+        }
+
+    
+    }
+    
+    $sorted = $this->array_orderby($lstPosiciones, 'idequipo', SORT_ASC);
+    
+    $cambio = 0;
+    $primero = 0;
+    
+    $equipo     = '';
+    $puntos     = 0;
+    $goles      = 0;
+    $golescontra= 0;
+    $pj         = 0;
+    $pg         = 0;
+    $pp         = 0;
+    $pe         = 0;
+    $amarillas  = 0;
+    $rojas      = 0;
+    $puntobonus = 0;
+    $soloUno    = 0;
+
+    $tamañoAr = count($sorted);
+    
+    //die(var_dump($sorted));
+    foreach ($sorted as $tblFinal) {
+        if ($cambio != $tblFinal['idequipo']) {
+            
+            if (($soloUno != 0) && ($primero == 1)) {
+                $lstPosicionesFinal[] = array('equipo'=> $equipo,
+                                  'puntos'=> $puntos,
+                                  'goles'=> $goles,
+                                  'golescontra'=> $golescontra,
+                                  'pj'=> $pj,
+                                  'pg'=> $pg,
+                                  'pp'=> $pp,
+                                  'pe'=> $pe,
+                                  'amarillas'=> $amarillas,
+                                  'rojas'=> $rojas,
+                                  'puntobonus'=> $puntobonus,
+                                  'idequipo'=> (integer)$tblFinal['idequipo']);
+                
+                $primero = 0;
+            }
+
+            $cambio = (integer)$tblFinal['idequipo'];
+            
+            $equipo     = '';
+            $puntos     = 0;
+            $goles      = 0;
+            $pj         = 0;
+            $pg         = 0;
+            $pp         = 0;
+            $pe         = 0;
+            $amarillas  = 0;
+            $rojas      = 0;
+            $puntobonus = 0;
+            $golescontra= 0;
+
+        }
+        
+        $equipo     = $tblFinal['equipo'];
+        $puntos     += (integer)$tblFinal['puntos'];
+        $goles      += (integer)$tblFinal['goles'];
+        $golescontra+= (integer)$tblFinal['golescontra'];
+        $pj         += (integer)$tblFinal['pj'];
+        $pg         += (integer)$tblFinal['pg'];
+        $pp         += (integer)$tblFinal['pp'];
+        $pe         += (integer)$tblFinal['pe'];
+        $amarillas  += (integer)$tblFinal['amarillas'];
+        $rojas      += (integer)$tblFinal['rojas'];
+        $puntobonus += (integer)$tblFinal['puntobonus'];
+        
+        if ($primero != 0) {
+            $lstPosicionesFinal[] = array('equipo'=> $equipo,
+                              'puntos'=> $puntos,
+                              'goles'=> $goles,
+                              'golescontra'=> $golescontra,
+                              'pj'=> $pj,
+                              'pg'=> $pg,
+                              'pp'=> $pp,
+                              'pe'=> $pe,
+                              'amarillas'=> $amarillas,
+                              'rojas'=> $rojas,
+                              'puntobonus'=> $puntobonus,
+                              'idequipo'=> $tblFinal['idequipo']);
+            
+            $primero = 0;
+        } else {
+            $soloUno = 1;
+            $primero += 1;  
+        }
+        
+         
+    }
+
+    $tamañoAr2 = count($lstPosicionesFinal);
+
+    if ($tamañoAr != $tamañoAr2) {
+        $lstPosicionesFinal[] = array('equipo'=> $equipo,
+                              'puntos'=> $puntos,
+                              'goles'=> $goles,
+                              'golescontra'=> $golescontra,
+                              'pj'=> $pj,
+                              'pg'=> $pg,
+                              'pp'=> $pp,
+                              'pe'=> $pe,
+                              'amarillas'=> $amarillas,
+                              'rojas'=> $rojas,
+                              'puntobonus'=> $puntobonus,
+                              'idequipo'=> $cambio);
+    }
+    
+    
+    $sorted = $this->array_orderby($lstPosicionesFinal, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC, 'goles',SORT_DESC, 'golescontra', SORT_ASC);
+
+    return $sorted;
+
+}
+
+
+function array_msort($array, $cols)
+{
+    $colarr = array();
+    foreach ($cols as $col => $order) {
+        $colarr[$col] = array();
+        foreach ($array as $k => $row) { $colarr[$col]['_'.$k] = strtolower($row[$col]); }
+    }
+    $eval = 'array_multisort(';
+    foreach ($cols as $col => $order) {
+        $eval .= '$colarr[\''.$col.'\'],'.$order.',';
+    }
+    $eval = substr($eval,0,-1).');';
+    eval($eval);
+    $ret = array();
+    foreach ($colarr as $col => $arr) {
+        foreach ($arr as $k => $v) {
+            $k = substr($k,1);
+            if (!isset($ret[$k])) $ret[$k] = $array[$k];
+            $ret[$k][$col] = $array[$k][$col];
+        }
+    }
+    return $ret;
+
+}
+
+
+
 function Goleadores($idTorneo) {
     $sql = "select
             t.equipo, t.apyn, t.nrodocumento, sum(t.goles) as goles, t.idjugador, t.refequipos
@@ -2217,7 +2395,7 @@ function traerHistoricoIncidenciasPorJugador($idJugador, $where) {
                 INNER JOIN tbdivisiones divi ON divi.iddivision = p.refdivisiones
                 INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
                 INNER JOIN dbminutosjugados mij ON mij.reffixture = fix.idfixture
-                    AND mij.refjugadores = jug.idjugador and mij.minutos > 0
+                    AND mij.refjugadores = jug.idjugador
                 WHERE
                     jug.idjugador = ".$idJugador.$where." 
                     
@@ -2270,7 +2448,7 @@ function traerHistoricoIncidenciasPorJugador($idJugador, $where) {
                 INNER JOIN tbdivisiones divi ON divi.iddivision = p.refdivisiones
                 INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
                 INNER JOIN dbminutosjugados mij ON mij.reffixture = fix.idfixture
-                    AND mij.refjugadores = jug.idjugador and mij.minutos > 0
+                    AND mij.refjugadores = jug.idjugador
                 WHERE
                     jug.idjugador = ".$idJugador.$where."
                         AND (p.penalconvertido > 0
@@ -2516,10 +2694,10 @@ function traerEstadisticaJugadorPorCategoria($where, $whereAux) {
                     sum(f.partidos) as partidos,
                     f.country
                 FROM
-                (SELECT 
-                    CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
+                (SELECT
+                        CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
                         jug.nrodocumento,
-                        coc.refjugadores,
+                        p.refjugadores,
                         equ.idequipo AS refequipos,
                         tor.refcategorias,
                         tor.refdivisiones,
@@ -2534,7 +2712,7 @@ function traerEstadisticaJugadorPorCategoria($where, $whereAux) {
                         0 AS pc,
                         0 AS pa,
                         0 AS pe,
-                        sum(mij.minutos) as minutos,
+                        sum(p.minutos) as minutos,
                         jug.fechanacimiento,
                         year(now()) - year(jug.fechanacimiento) as edad,
                         jug.fechaalta,
@@ -2542,31 +2720,31 @@ function traerEstadisticaJugadorPorCategoria($where, $whereAux) {
                         count(fix.idfixture) as partidos,
                         cou.nombre as country
                 FROM
-                    dbfixture fix
-                INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos
-                INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
-                LEFT JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
-                INNER JOIN tbcategorias cat ON cat.idtcategoria = tor.refcategorias
-                INNER JOIN tbdivisiones divi ON divi.iddivision = tor.refdivisiones
-                INNER JOIN dbequipos equ ON equ.idequipo = fix.refconectorlocal
-                INNER JOIN dbequipos equV ON equV.idequipo = fix.refconectorvisitante
-                INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
-                INNER JOIN dbconector coc ON coc.refequipos = equ.idequipo
-                    AND coc.refcategorias = cat.idtcategoria
-                INNER JOIN dbjugadores jug ON jug.idjugador = coc.refjugadores
+                    dbminutosjugados p
+                INNER JOIN dbjugadores jug ON jug.idjugador = p.refjugadores
                 INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
                 INNER JOIN dbcountries co ON co.idcountrie = jug.refcountries
+                INNER JOIN dbfixture fix ON fix.idfixture = p.reffixture
+                INNER JOIN dbequipos equV ON equV.idequipo = (CASE
+                    WHEN p.refequipos = fix.refconectorlocal THEN fix.refconectorvisitante
+                    ELSE fix.refconectorlocal
+                END)
+                INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos and p.refcategorias = tor.refcategorias and p.refdivisiones = tor.refdivisiones
+                INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
+                INNER JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+                INNER JOIN dbequipos equ ON equ.idequipo = p.refequipos
+                INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
+                INNER JOIN tbcategorias cat ON cat.idtcategoria = p.refcategorias
+                INNER JOIN tbdivisiones divi ON divi.iddivision = p.refdivisiones
                 INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
-                INNER JOIN dbminutosjugados mij ON mij.reffixture = fix.idfixture
-                    AND mij.refjugadores = jug.idjugador
                 left JOIN dbmejorjugador mj ON mj.reffixture = fix.idfixture
                     AND mj.refjugadores = jug.idjugador
                 WHERE
-                    es.finalizado = 1 ".$where."
+                    es.finalizado = 1 and p.minutos > 0 ".$where."
                     group by jug.apellido, jug.nombres,
                         jug.nrodocumento,
-                        coc.refjugadores,
-                        equ.idequipo,
+                        p.refjugadores,
+                        equ.idequipo ,
                         tor.refcategorias,
                         tor.refdivisiones,
                         tep.temporada,
@@ -2574,68 +2752,10 @@ function traerEstadisticaJugadorPorCategoria($where, $whereAux) {
                         divi.division,
                         equ.nombre,
                         jug.fechanacimiento,
-                        jug.fechaalta,
-                        cou.nombre
-                        UNION ALL SELECT 
-                    CONCAT(jug.apellido, ', ', jug.nombres) AS apyn,
-                        jug.nrodocumento,
-                        coc.refjugadores,
-                        equ.idequipo AS refequipos,
-                        tor.refcategorias,
-                        tor.refdivisiones,
-                        tep.temporada,
-                        cat.categoria,
-                        divi.division,
-                        equ.nombre AS equipo,
-                        0 AS goles,
-                        0 AS encontra,
-                        0 AS amarillas,
-                        0 AS rojas,
-                        0 AS pc,
-                        0 AS pa,
-                        0 AS pe,
-                        sum(mij.minutos) as minutos,
-                        jug.fechanacimiento,
-                        year(now()) - year(jug.fechanacimiento) as edad,
-                        jug.fechaalta,
-                        sum(case when coalesce( mj.idmejorjugador,0)>0 then 1 else 0 end) as mejorjugador,
-                        count(fix.idfixture) as partidos,
-                        cou.nombre as country
-                FROM
-                    dbfixture fix
-                INNER JOIN dbtorneos tor ON tor.idtorneo = fix.reftorneos
-                INNER JOIN tbfechas fe ON fe.idfecha = fix.reffechas
-                LEFT JOIN tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
-                INNER JOIN tbcategorias cat ON cat.idtcategoria = tor.refcategorias
-                INNER JOIN tbdivisiones divi ON divi.iddivision = tor.refdivisiones
-                INNER JOIN dbequipos equ ON equ.idequipo = fix.refconectorvisitante
-                INNER JOIN dbequipos equV ON equV.idequipo = fix.refconectorlocal
-                INNER JOIN dbcountries cou ON cou.idcountrie = equ.refcountries
-                INNER JOIN dbconector coc ON coc.refequipos = equ.idequipo
-                    AND coc.refcategorias = cat.idtcategoria
-                INNER JOIN dbjugadores jug ON jug.idjugador = coc.refjugadores
-                INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
-                INNER JOIN dbcountries co ON co.idcountrie = jug.refcountries
-                INNER JOIN tbtemporadas tep ON tep.idtemporadas = tor.reftemporadas
-                INNER JOIN dbminutosjugados mij ON mij.reffixture = fix.idfixture
-                    AND mij.refjugadores = jug.idjugador
-                left JOIN dbmejorjugador mj ON mj.reffixture = fix.idfixture
-                    AND mj.refjugadores = jug.idjugador
-                WHERE
-                    es.finalizado = 1 ".$where."
-                        group by jug.apellido, jug.nombres,
-                        jug.nrodocumento,
-                        coc.refjugadores,
-                        equ.idequipo,
-                        tor.refcategorias,
-                        tor.refdivisiones,
-                        tep.temporada,
-                        cat.categoria,
-                        divi.division,
-                        equ.nombre,
                         jug.fechanacimiento,
                         jug.fechaalta,
                         cou.nombre
+                        
                         UNION ALL 
                         
                         SELECT 
@@ -3008,7 +3128,7 @@ function ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $id
                 on          fixc.idfixture = sc.reffixture
                 inner
                 join        dbtorneos tor
-                on          tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
+                on          tor.idtorneo = fix.reftorneos and tor.reftipotorneo in (1,2)
                 where       ms.generadaporacumulacion = 1 
                             and sj.refjugadores = ".$idJugador."
                             and tor.reftemporadas = ".(integer)$idTemporada." 
