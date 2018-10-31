@@ -248,7 +248,7 @@ while ($fila = mysql_fetch_array($datosP)) {
 		 ->setCellValue('K'.$i, '')
 		 ->setCellValue('L'.$i, '')
 		 ->setCellValue('M'.$i, '');
-	//$i++; 
+	$i++; 
  }
  
 

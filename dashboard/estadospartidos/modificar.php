@@ -205,6 +205,42 @@ $(document).ready(function(){
 		url = "index.php";
 		$(location).attr('href',url);
 	});//fin del boton modificar
+
+	if ('<?php echo mysql_result($resResultado,0,'defautomatica'); ?>' == 'Si') {
+		$('#defautomatica').prop('checked',true);
+	} else {
+		$('#defautomatica').prop('checked',false);
+	}
+
+	if ('<?php echo mysql_result($resResultado,0,'goleslocalborra'); ?>' == 'Si') {
+		$('#goleslocalborra').prop('checked',true);
+	} else {
+		$('#goleslocalborra').prop('checked',false);
+	}
+
+	if ('<?php echo mysql_result($resResultado,0,'golesvisitanteborra'); ?>' == 'Si') {
+		$('#golesvisitanteborra').prop('checked',true);
+	} else {
+		$('#golesvisitanteborra').prop('checked',false);
+	}
+
+	if ('<?php echo mysql_result($resResultado,0,'finalizado'); ?>' == 'Si') {
+		$('#finalizado').prop('checked',true);
+	} else {
+		$('#finalizado').prop('checked',false);
+	}
+
+	if ('<?php echo mysql_result($resResultado,0,'ocultardetallepublico'); ?>' == 'Si') {
+		$('#ocultardetallepublico').prop('checked',true);
+	} else {
+		$('#ocultardetallepublico').prop('checked',false);
+	}
+
+	if ('<?php echo mysql_result($resResultado,0,'visibleparaarbitros'); ?>' == 'Si') {
+		$('#visibleparaarbitros').prop('checked',true);
+	} else {
+		$('#visibleparaarbitros').prop('checked',false);
+	}
 	
 	
 	

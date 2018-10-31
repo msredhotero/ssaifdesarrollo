@@ -3644,7 +3644,7 @@ function insertarTorneos($serviciosReferencias) {
 	if ($fechainicio != '***') {
 		$res = $serviciosReferencias->insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo); 
 		if ((integer)$res > 0) { 
-			$serviciosReferencias->desactivarTorneos($res,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);
+			//$serviciosReferencias->desactivarTorneos($res,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);
 			$serviciosReferencias->insertarTorneopuntobonus($res,1);
 			echo $res; 
 		} else { 

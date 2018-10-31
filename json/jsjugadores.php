@@ -37,6 +37,6 @@ $cadJugadores = '';
 			  },';
 	}
 
-echo "[".substr($cadJugadores,0,-1)."]";
+echo utf8_encode("[".substr($cadJugadores,0,-1)."]");
 }
 ?>

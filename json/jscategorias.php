@@ -25,6 +25,7 @@ $cad = '';
 		array_push($ar,array('categoria'=>$row['categoria'], 'id'=> $row[0]));
 	}
 
+die(var_dump($ar));
 //echo "[".substr($cad,0,-1)."]";
 echo $token.'('.json_encode($ar).');';
 

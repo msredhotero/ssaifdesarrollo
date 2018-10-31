@@ -24,6 +24,11 @@ if ((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) {
 
 
 $token = $_GET['callback'];
+/*
+foreach ($resDatos as $row) {
+echo $row['idequipo'].'<br>';
+}
+*/
 
 header("content-type: Access-Control-Allow-Origin: *");
 
@@ -47,6 +52,7 @@ $y = 0;
 		
 		//obtengo el indice de la fecha anterior
 		//$indice = array_search($row['idequipo'],$resDatosExtra['idequipo'],true);
+		/*
 		foreach ($resDatosExtra as $rowE) {
 			if ($row['idequipo'] == $rowE['idequipo']) {
 				if ($rowE['posicion'] == $row['posicion']) {
@@ -61,7 +67,9 @@ $y = 0;
 				break;
 			}
 		}
-		
+		*/
+	
+
 		if (($y == 2) || ($y == 3)) {
 			array_push($ar,array('posicion'=>$i, 'equipos'=>$row['equipo'],'pts'=>$row['puntos'],'ptsb'=>$row['puntobonus'],'ptsn'=>$row['puntos'] - $row['puntobonus'],'pj'=>$row['pj'],'pg'=>$row['pg'],'pe'=>$row['pe'],'pp'=>$row['pp'],'gf'=>$row['goles'],'gc'=>$row['golescontra'],'amonestados'=>$row['amarillas'],'expulsados'=>$row['rojas'],'ultimoresultado1'=>$arResultados[0],'ultimoresultado2'=>$arResultados[1],'ultimoresultado3'=>$arResultados[2], 'asterisco'=>1, 'observacion'=> 'Se suspende el partido por lluevia', 'idequipo'=>$row['idequipo']));
 		} else {
