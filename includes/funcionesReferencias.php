@@ -493,6 +493,7 @@ k.amarillas,
 k.rojas,
 k.idequipo,
 k.observacionestorneo,
+k.observacionesgenerales,
 (case when ep.asterisco= 1 then '1' else '0' end) as asterisco,
 ep.descripcion as observacion,
     @rownum:= @rownum + 1 'posicion'
@@ -512,6 +513,7 @@ sum(p.amarillas) as amarillas,
 sum(p.rojas) as rojas,
 p.idequipo,
 p.observacionestorneo,
+p.observacionesgenerales,
 max(p.idfixture ) as idfixture
 
 
@@ -540,6 +542,7 @@ sum(coalesce(fixa.amarillas,0)) as amarillas,
 sum(coalesce(fixr.rojas,0)) as rojas,
 el.idequipo,
 tor.observaciones as observacionestorneo,
+tor.observacionesgenerales,
 f.idfixture
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
@@ -595,6 +598,7 @@ group by el.nombre,
             f.publicar,
             el.idequipo,
             tor.observaciones,
+            tor.observacionesgenerales,
             f.idfixture
 
 union all
@@ -624,6 +628,7 @@ sum(coalesce(fixa.amarillas,0)) as amarillas,
 sum(coalesce(fixr.rojas,0)) as rojas,
 ev.idequipo,
 tor.observaciones as observacionestorneo,
+tor.observacionesgenerales,
 f.idfixture   
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
@@ -679,6 +684,7 @@ group by ev.nombre,
             f.publicar,
             ev.idequipo,
             tor.observaciones,
+            tor.observacionesgenerales,
             f.idfixture
             
 union all
@@ -708,12 +714,15 @@ ca.categoria,
 0 as rojas,
 ev.idequipo,
 ev.observacionestorneo,
+ev.observacionesgenerales,
 0 as idfixture
 from (select 
         e.idequipo,
         e.nombre,
         t.refcategorias,
-        t.observaciones as observacionestorneo
+        t.observaciones as observacionestorneo,
+        t.observacionesgenerales,
+        fl.idfixture
         from dbequipos e 
         inner join dbtorneos t on e.refcategorias = t.refcategorias and e.refdivisiones = t.refdivisiones
         inner join tbcategorias ca on ca.idtcategoria = t.refcategorias
@@ -725,7 +734,7 @@ left join dbfixture f ON (ev.idequipo = f.refconectorlocal or ev.idequipo = f.re
 
 where f.idfixture is null
 ) p
-group by p.equipo, p.idequipo, p.observacionestorneo
+group by p.equipo, p.idequipo, p.observacionestorneo, p.observacionesgenerales
 order by sum(p.puntos) desc, sum(p.rojas) asc, sum(p.amarillas) asc
 
 ) k 
@@ -767,6 +776,7 @@ inner join tbestadospartidos ep on ep.idestadopartido = fix.refestadospartidos
                               'idequipo'=> $row['idequipo'],
                               'posicion'=> $posicion,
                               'observacionestorneo'=>$row['observacionestorneo'],
+                              'observacionesgenerales'=>$row['observacionesgenerales'],
                               'asterisco'=>$row['asterisco'],
                               'observaciones'=>$row['observacion']);
         $posicion += 1;                   
@@ -792,6 +802,7 @@ inner join tbestadospartidos ep on ep.idestadopartido = fix.refestadospartidos
                               'idequipo'=> $row['idequipo'],
                               'posicion'=> $posicion,
                               'observacionestorneo'=>$row['observacionestorneo'],
+                              'observacionesgenerales'=>$row['observacionesgenerales'],
                               'asterisco'=>$row['asterisco'],
                               'observaciones'=>$row['observaciones']);
         $posicion += 1;                   
@@ -1057,6 +1068,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
                                   'pe'=> $valorT['pe'],
                                   'amarillas'=> $valorT['amarillas'],
                                   'rojas'=> $valorT['rojas'],
+                                  'observacionesgenerales'=> $valorT['observacionesgenerales'],
                                   'puntobonus'=> (integer)$valorT['puntobonus'],
                                   'idequipo'=> $valorT['idequipo']);
                                                       
@@ -1082,6 +1094,8 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
     $rojas      = 0;
     $puntobonus = 0;
     $soloUno    = 0;
+    $observacionesgenerales = '';
+
     
     //die(var_dump($sorted));
     foreach ($sorted as $tblFinal) {
@@ -1099,6 +1113,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
                                   'amarillas'=> $amarillas,
                                   'rojas'=> $rojas,
                                   'puntobonus'=> $puntobonus,
+                                  'observacionesgenerales' => $observacionesgenerales,
                                   'idequipo'=> $tblFinal['idequipo']);
                 
                 $primero = 0;
@@ -1130,6 +1145,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
         $amarillas  += (integer)$tblFinal['amarillas'];
         $rojas      += (integer)$tblFinal['rojas'];
         $puntobonus += (integer)$tblFinal['puntobonus'];
+        $observacionesgenerales .= $tblFinal['observacionesgenerales'];
         
         if ($primero != 0) {
             $lstPosicionesFinal[] = array('equipo'=> $equipo,
@@ -1143,6 +1159,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
                               'amarillas'=> $amarillas,
                               'rojas'=> $rojas,
                               'puntobonus'=> $puntobonus,
+                              'observacionesgenerales' => $observacionesgenerales,
                               'idequipo'=> $tblFinal['idequipo']);
             
             $primero = 0;
@@ -1163,7 +1180,7 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 
 
 
-function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
+function PosicionesConformada2($idTemporada, $idCategoria, $idDivision) {
     
     $sql = "select idtorneo from dbtorneos where reftemporadas =".$idTemporada." and refcategorias = ".$idCategoria." and refdivisiones = ".$idDivision." and acumulatablaconformada = 1";
     
@@ -13276,6 +13293,38 @@ function traerPromedioCanchas($idTemporada) {
 }
 
 
+function traerPromedioCanchasExcel($idTemporada) {
+    $sql = "
+                select 
+                    cou.idcountrie, cou.nombre as countrie,
+                    cc.nombre as cancha,
+                    (fix.calificacioncancha) as calificacion, (fix.idfixture) as partido,
+                    cat.categoria,
+                    dd.division,
+                    fix.nombreequipolocal,
+                    fix.nombreequipovisitante,
+                    cc.idcancha
+            
+                from  dbfixture fix
+                inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
+                    INNER JOIN
+                tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+                    INNER JOIN
+                tbdivisiones dd ON dd.iddivision = tor.refdivisiones 
+                inner join tbfechas fe ON fe.idfecha = fix.reffechas 
+                inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos 
+                inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+                inner join dbcountries cou ON cou.idcountrie = equ.refcountries 
+                inner join tbcanchas cc ON cc.idcancha = fix.refcanchas
+                where fix.calificacioncancha <> 0 and
+                tor.reftemporadas = ".$idTemporada."
+
+            order by ltrim(cc.nombre), fix.idfixture";
+    $res = $this->query($sql,0); 
+    return $res;    
+}
+
+
 function traerEstadisticaArbitrosPorTemporadaWhere($idTemporada, $where) {
     $sql = "select
                 r.idarbitro,r.nombrecompleto, max(r.cantidad) as cantidad, sum(coalesce( r.amarillas,0)) as amarillas, sum(coalesce( r.rojas,0)) as rojas
@@ -13321,7 +13370,7 @@ function traerEstadisticaArbitrosPorTemporadaWhere($idTemporada, $where) {
                         GROUP BY fix.idfixture, sj.refequipos) fixr
                 on      fixr.idfixture = fix.idfixture
                 where fix.calificacioncancha <> 0 and
-                tor.reftemporadas = 5
+                tor.reftemporadas = ".$idTemporada."
                 group by a.idarbitro,a.nombrecompleto
                 
                 union all
@@ -13371,6 +13420,152 @@ function traerEstadisticaArbitrosPorTemporadaWhere($idTemporada, $where) {
             where r.cantidad > 0 ".$where."
             group by r.idarbitro,r.nombrecompleto
             order by 2";
+    $res = $this->query($sql,0); 
+    return $res;    
+}
+
+
+
+function traerEstadisticaArbitrosPorTemporadaExcelWhere($idTemporada, $where) {
+    $sql = "SELECT 
+                r.idarbitro,
+                r.nombrecompleto,
+                r.partido as cantidad,
+                sum(r.amarillas) as amarillas,
+                sum(r.rojas) as rojas,
+                r.categoria,
+                r.division,
+                r.nombreequipolocal,
+                r.nombreequipovisitante
+            from (
+                SELECT 
+                    a.idarbitro,
+                    a.nombrecompleto,
+                    fix.idfixture AS partido,
+                    COALESCE(fixa.amarillas, 0) AS amarillas,
+                    COALESCE(fixr.rojas, 0) AS rojas,
+                    cat.categoria,
+                    dd.division,
+                    fix.nombreequipolocal,
+                    fix.nombreequipovisitante
+                FROM
+                    dbfixture fix
+                        INNER JOIN
+                    dbtorneos tor ON tor.idtorneo = fix.reftorneos
+                        INNER JOIN
+                    tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+                        INNER JOIN
+                    tbdivisiones dd ON dd.iddivision = tor.refdivisiones
+                        INNER JOIN
+                    tbfechas fe ON fe.idfecha = fix.reffechas
+                        INNER JOIN
+                    tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+                        INNER JOIN
+                    dbequipos equ ON equ.idequipo = fix.refconectorlocal
+                        INNER JOIN
+                    dbcountries cou ON cou.idcountrie = equ.refcountries
+                        INNER JOIN
+                    dbarbitros a ON a.idarbitro = fix.refarbitros
+                        LEFT JOIN
+                    (SELECT 
+                        SUM(sj.cantidad) AS amarillas, fix.idfixture
+                    FROM
+                        dbsancionesjugadores sj
+                    INNER JOIN dbfixture fix ON sj.reffixture = fix.idfixture
+                        AND fix.refconectorlocal = sj.refequipos
+                    INNER JOIN tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+                    WHERE
+                        ts.amonestacion = 1
+                            AND (sj.refsancionesfallos IS NULL
+                            OR sj.refsancionesfallos = 0)
+                    GROUP BY fix.idfixture , sj.refequipos) fixa ON fixa.idfixture = fix.idfixture
+                        AND fixa.amarillas IS NOT NULL
+                        LEFT JOIN
+                    (SELECT 
+                        SUM(sj.cantidad) AS rojas, fix.idfixture
+                    FROM
+                        dbsancionesjugadores sj
+                    INNER JOIN dbfixture fix ON sj.reffixture = fix.idfixture
+                        AND fix.refconectorlocal = sj.refequipos
+                    INNER JOIN tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+                    WHERE
+                        ts.expulsion = 1
+                    GROUP BY fix.idfixture , sj.refequipos) fixr ON fixr.idfixture = fix.idfixture
+                        AND fixr.rojas IS NOT NULL
+                WHERE
+                    fix.calificacioncancha <> 0
+                        AND tor.reftemporadas = ".$idTemporada."
+                        AND (fixa.amarillas IS NOT NULL
+                        OR fixr.rojas IS NOT NULL) 
+                UNION ALL SELECT 
+                    a.idarbitro,
+                    a.nombrecompleto,
+                    fix.idfixture AS partido,
+                    COALESCE(fixa.amarillas, 0) AS amarillas,
+                    COALESCE(fixr.rojas, 0) AS rojas,
+                    cat.categoria,
+                    dd.division,
+                    fix.nombreequipolocal,
+                    fix.nombreequipovisitante
+                FROM
+                    dbfixture fix
+                        INNER JOIN
+                    dbtorneos tor ON tor.idtorneo = fix.reftorneos
+                        INNER JOIN
+                    tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+                        INNER JOIN
+                    tbdivisiones dd ON dd.iddivision = tor.refdivisiones
+                        INNER JOIN
+                    tbfechas fe ON fe.idfecha = fix.reffechas
+                        INNER JOIN
+                    tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+                        INNER JOIN
+                    dbequipos equ ON equ.idequipo = fix.refconectorlocal
+                        INNER JOIN
+                    dbcountries cou ON cou.idcountrie = equ.refcountries
+                        INNER JOIN
+                    dbarbitros a ON a.idarbitro = fix.refarbitros
+                        LEFT JOIN
+                    (SELECT 
+                        SUM(sj.cantidad) AS amarillas, fix.idfixture
+                    FROM
+                        dbsancionesjugadores sj
+                    INNER JOIN dbfixture fix ON sj.reffixture = fix.idfixture
+                        AND fix.refconectorvisitante = sj.refequipos
+                    INNER JOIN tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+                    WHERE
+                        ts.amonestacion = 1
+                            AND (sj.refsancionesfallos IS NULL
+                            OR sj.refsancionesfallos = 0)
+                    GROUP BY fix.idfixture , sj.refequipos) fixa ON fixa.idfixture = fix.idfixture
+                        AND fixa.amarillas IS NOT NULL
+                        LEFT JOIN
+                    (SELECT 
+                        SUM(sj.cantidad) AS rojas, fix.idfixture
+                    FROM
+                        dbsancionesjugadores sj
+                    INNER JOIN dbfixture fix ON sj.reffixture = fix.idfixture
+                        AND fix.refconectorvisitante = sj.refequipos
+                    INNER JOIN tbtiposanciones ts ON ts.idtiposancion = sj.reftiposanciones
+                    WHERE
+                        ts.expulsion = 1
+                    GROUP BY fix.idfixture , sj.refequipos) fixr ON fixr.idfixture = fix.idfixture
+                        AND fixr.rojas IS NOT NULL
+                WHERE
+                    fix.calificacioncancha <> 0
+                        AND tor.reftemporadas = ".$idTemporada."
+                        AND (fixa.amarillas IS NOT NULL
+                        OR fixr.rojas IS NOT NULL)
+                ) r
+                where 1=1 ".$where."
+                group by r.idarbitro,
+                        r.nombrecompleto,
+                        r.partido,
+                        r.categoria,
+                        r.division,
+                        r.nombreequipolocal,
+                        r.nombreequipovisitante
+                order by 2";
     $res = $this->query($sql,0); 
     return $res;    
 }

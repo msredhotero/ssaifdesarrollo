@@ -7,6 +7,7 @@ include ('../includes/funciones.php');
 include ('../includes/funcionesHTML.php');
 include ('../includes/funcionesReferencias.php');
 
+require_once '../excelClass/PHPExcel.php';
 
 $serviciosUsuarios  		= new ServiciosUsuarios();
 $serviciosFunciones 		= new Servicios();
@@ -24,7 +25,7 @@ $idTemporada		=	$_GET['reftemporada1'];
 /////////////////////////////  fin parametross  ///////////////////////////
 
 
-$resDatos = $serviciosReferencias->traerPromedioCanchas($idTemporada);
+$resDatos = $serviciosReferencias->traerPromedioCanchasExcel($idTemporada);
 
 $resTemporadas = $serviciosReferencias->traerTemporadasPorId($idTemporada);
 
@@ -32,112 +33,218 @@ $resTemporadas = $serviciosReferencias->traerTemporadasPorId($idTemporada);
 
 $nombre 	= mysql_result($resTemporadas,0,'temporada');
 
+// Crea un nuevo objeto PHPExcel
+$objPHPExcel = new PHPExcel();
 
 
-$pdf = new FPDF();
-$cantidadJugadores = 0;
-#Establecemos los márgenes izquierda, arriba y derecha: 
-$pdf->SetMargins(2, 2 , 2); 
 
-#Establecemos el margen inferior: 
-$pdf->SetAutoPageBreak(true,1); 
+$nombre 	= mysql_result($resTemporadas,0,'temporada');
 
+
+
+$objPHPExcel->getProperties()
+->setCreator("Exebin")
+->setLastModifiedBy("Exebin")
+->setTitle("Documento Excel")
+->setSubject("Documento Excel")
+->setDescription("Documento Excel Promedio Canchas.")
+->setKeywords("Excel Office 2007 openxml php")
+->setCategory("Excel");
+ 
+$tituloReporte = "Promedio Canchas";
+$tituloReporte2 = "Temporada: ".$nombre;
+$titulosColumnas = array("Club", "Cancha", "Nro Partido","Categoria","Division","Partido","Calificacion");
+
+$objPHPExcel->setActiveSheetIndex(0)
+    ->mergeCells('A1:G1');
+$objPHPExcel->setActiveSheetIndex(0)
+    ->mergeCells('A2:G2');
 
 	
-	$pdf->AddPage();
-	/***********************************    PRIMER CUADRANTE ******************************************/
+	 
+// Se agregan los titulos del reporte
+$objPHPExcel->setActiveSheetIndex(0)
+    ->setCellValue('A1', htmlspecialchars(utf8_encode($tituloReporte))) // Titulo del reporte
+	->setCellValue('A2', utf8_encode($tituloReporte2))
 	
-	$pdf->Image('../imagenes/logoparainformes.png',2,2,40);
-
-	/***********************************    FIN ******************************************/
-	
-	
-	
-	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
-
-	
-	$pdf->SetFillColor(183,183,183);
-	$pdf->SetFont('Arial','B',10);
-	$pdf->Ln();
-	$pdf->Ln();
-	$pdf->SetY(25);
-	$pdf->SetX(5);
-	$pdf->Cell(200,5,'Temporada '.utf8_decode($nombre),1,0,'C',true);
-	$pdf->SetFont('Arial','',8);
-	$pdf->Ln();
-	$pdf->Ln();
-	$pdf->SetX(5);
-	
-
-	$cantPartidos = 0;
-	$i=0;
-	
-	$contadorY1 = 44;
-	$contadorY2 = 44;
-
-	$acumulador1 = 0;
-	$acumulador2 = 0;
-
-while ($rowE = mysql_fetch_array($resDatos)) {
-	$i+=1;	
-	$cantPartidos += 1;
-	
-	if ($i > 61) {
-		$pdf->AddPage();
-		$pdf->Image('../imagenes/logoparainformes.png',2,2,40);	
-		$pdf->SetFont('Arial','B',10);
-		$pdf->Ln();
-		$pdf->Ln();
-		$pdf->SetY(25);
-		$pdf->SetX(5);
-		$pdf->Cell(200,5,'Countrie '.utf8_decode($nombre),1,0,'C',false);
-		$pdf->SetFont('Arial','',8);
-		$pdf->Ln();
-		$pdf->SetX(5);
-
-		$i=0;
-		
-	}
-	
-	
-	
-	$canchas = $serviciosReferencias->traerPromedioCanchasPorCountrie($rowE['idcountrie'], $idTemporada);
-	while ($rowC = mysql_fetch_array($canchas)) {
-		$pdf->Ln();
-		$pdf->SetX(5);
-		$pdf->Cell(5,4,'',1,0,'C',True);
-		$pdf->Cell(95,4,utf8_decode($rowC['cancha']),1,0,'L',false);
-		$pdf->Cell(16,4,$rowC['promedio'],1,0,'C',false);
-
-		$acumulador1 += $rowC['promedio'];
-		$acumulador2 += 1;
-	}
-	
-	$pdf->Ln();
-	$pdf->SetX(5);
-	$pdf->SetFont('Arial','',8);
-	$pdf->Cell(5,4,$cantPartidos,1,0,'C',True);
-	$pdf->Cell(95,4,utf8_decode($rowE['countrie']),1,0,'L',True);
-	$pdf->Cell(16,4,round(($acumulador2 == 0 ? 0 : $acumulador1 / $acumulador2),2,PHP_ROUND_HALF_UP),1,0,'C',True);
-	$pdf->Ln();
-	$pdf->Ln();
-		
-	$acumulador1 = 0;
-	$acumulador2 = 0;
-
-	$contadorY1 += 4;
-
-	//$pdf->SetY($contadorY1);		
+    ->setCellValue('A3',  utf8_encode($titulosColumnas[0]))  //Titulo de las columnas
+    ->setCellValue('B3',  utf8_encode($titulosColumnas[1]))
+    ->setCellValue('C3',  utf8_encode($titulosColumnas[2]))
+    ->setCellValue('D3',  utf8_encode($titulosColumnas[3]))
+    ->setCellValue('E3',  utf8_encode($titulosColumnas[4]))
+    ->setCellValue('F3',  utf8_encode($titulosColumnas[5]))
+    ->setCellValue('G3',  utf8_encode($titulosColumnas[6]));
 
 
-}
-//120 x 109
+// Agregar Informacion
+/*$objPHPExcel->setActiveSheetIndex(0)
+->setCellValue('A1', 'Valor 1')
+->setCellValue('B1', 'Valor 2')
+->setCellValue('C1', 'Total')
+->setCellValue('A2', '10')
+->setCellValue('C2', '=sum(A2:B2)');*/
+
+$i = 4; //Numero de fila donde se va a comenzar a rellenar
+$primero = 0;
+$partidos = 0;
+$calificacion = 0;
+$idcancha = -1;
+
+ while ($fila = mysql_fetch_array($resDatos)) {
+    if ($idcancha != $fila[9]) {
+        $idcancha = $fila[9];
+        if ($primero != 0) {
+            $objPHPExcel->setActiveSheetIndex(0)
+                         ->setCellValue('A'.$i, '')
+                         ->setCellValue('B'.$i, '')
+                         ->setCellValue('C'.$i, '')
+                         ->setCellValue('D'.$i, '')
+                         ->setCellValue('E'.$i, '')
+                         ->setCellValue('F'.$i, $partidos)
+                         ->setCellValue('G'.$i, $calificacion / $partidos);
+
+            $i++;
+        }
+        $primero = 1;
+        $calificacion = 0;
+        $partidos = 0;
+    }
+
+     $objPHPExcel->setActiveSheetIndex(0)
+         ->setCellValue('A'.$i, ($fila[1]))
+         ->setCellValue('B'.$i, ($fila[2]))
+         ->setCellValue('C'.$i, ($fila[5]))
+         ->setCellValue('D'.$i, ($fila[6]))
+         ->setCellValue('E'.$i, ($fila[7].' vs '.$fila[8]))
+         ->setCellValue('F'.$i, ($fila[4]))
+         ->setCellValue('G'.$i, ($fila[3]));
+     $i++;
+
+    $partidos++;
+    $calificacion += $fila[3];
 
 
+ }
 
-$nombreTurno = "PROMEDIO-CANCHAS-".$fecha.".pdf";
+ $objPHPExcel->setActiveSheetIndex(0)
+                         ->setCellValue('A'.$i, '')
+                         ->setCellValue('B'.$i, '')
+                         ->setCellValue('C'.$i, '')
+                         ->setCellValue('D'.$i, '')
+                         ->setCellValue('E'.$i, '')
+                         ->setCellValue('F'.$i, $partidos)
+                         ->setCellValue('G'.$i, $calificacion / $partidos);
 
-$pdf->Output($nombreTurno,'I');
+
+$estiloTituloReporte = array(
+    'font' => array(
+        'name'      => 'Verdana',
+        'bold'      => true,
+        'italic'    => false,
+        'strike'    => false,
+        'size' =>16,
+        'color'     => array(
+            'rgb' => 'FFFFFF'
+        )
+    ),
+    'fill' => array(
+        'type'  => PHPExcel_Style_Fill::FILL_SOLID,
+        'color' => array(
+            'argb' => '0B87A9')
+    ),
+    'borders' => array(
+        'allborders' => array(
+            'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+        )
+    ),
+    'alignment' => array(
+        'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+        'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+        'rotation' => 0,
+        'wrap' => TRUE
+    )
+);
+ 
+$estiloTituloColumnas = array(
+    'font' => array(
+        'name'  => 'Arial',
+        'bold'  => true,
+        'color' => array(
+            'rgb' => 'FFFFFF'
+        )
+    ),
+    'fill' => array(
+        'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+    'rotation'   => 90,
+        'startcolor' => array(
+            'rgb' => '1ACEFF'
+        ),
+        'endcolor' => array(
+            'argb' => '0AA3CE'
+        )
+    ),
+    'borders' => array(
+        'allborders' => array(
+            'style' => PHPExcel_Style_Border::BORDER_MEDIUM ,
+            'color' => array(
+                'rgb' => '143860'
+            )
+        ),
+        'bottom' => array(
+            'style' => PHPExcel_Style_Border::BORDER_MEDIUM ,
+            'color' => array(
+                'rgb' => '143860'
+            )
+        )
+    ),
+    'alignment' =>  array(
+        'horizontal'=> PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+        'vertical'  => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+        'wrap'      => TRUE
+    )
+);
+ 
+$estiloInformacion = new PHPExcel_Style();
+$estiloInformacion->applyFromArray( array(
+    'font' => array(
+        'name'  => 'Arial',
+        'color' => array(
+            'rgb' => '000000'
+        )
+    ),
+    'fill' => array(
+    'type'  => PHPExcel_Style_Fill::FILL_SOLID,
+    'color' => array(
+            'argb' => 'B8FEFF')
+    ),
+    'borders' => array(
+        'left' => array(
+            'style' => PHPExcel_Style_Border::BORDER_THIN ,
+        'color' => array(
+                'rgb' => '2A4348'
+            )
+        )
+    )
+));
+
+$objPHPExcel->getActiveSheet()->getStyle('A1:G1')->applyFromArray($estiloTituloReporte);
+$objPHPExcel->getActiveSheet()->getStyle('A2:G2')->applyFromArray($estiloTituloReporte);
+$objPHPExcel->getActiveSheet()->getStyle('A3:G3')->applyFromArray($estiloTituloColumnas);
+
+// Renombrar Hoja
+$objPHPExcel->getActiveSheet()->setTitle('Hoja1');
+ 
+// Establecer la hoja activa, para que cuando se abra el documento se muestre primero.
+$objPHPExcel->setActiveSheetIndex(0);
+ 
+// Se modifican los encabezados del HTTP para indicar que se envia un archivo de Excel.
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8');
+header('Content-Disposition: attachment;filename="rptPromedioCanchas.xlsx"');
+header('Cache-Control: max-age=0');
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+$objWriter->save('php://output');
+exit;
+
 
 
 ?>
