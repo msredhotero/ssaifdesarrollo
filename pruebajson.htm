@@ -157,16 +157,16 @@ $(document).ready(function(){
 
 	 $.ajax({
 		dataType: 'jsonp',
-		url: 'http://saupureinconsulting.com.ar/aifdesarrollo/json/jstemporadas.php', // devuelve "id" y "temporada", sin parametros
+		url: 'https://www.byma.com.ar/wp-admin/admin-ajax.php?action=get_balance_simbolo&simbolo=MIRG', // devuelve "id" y "temporada", sin parametros
 		beforeSend: function (XMLHttpRequest) {
 				$('#lstTemporadas').html('<option value="0">--	Seleccionar 	--</option>'); //Nothing happnes
 		},
 		success: function(datos) {
 					
 					for (var clave in datos) {
-						//alert(datos[clave].equipo);
+						alert(datos[clave]);
 						//alert(datos[clave].id);
-						$('#lstTemporadas').append('<option value="' + datos[clave].id + '">' + datos[clave].temporada + '</option>');
+						//$('#lstTemporadas').append('<option value="' + datos[clave].id + '">' + datos[clave].temporada + '</option>');
 						
 						
 					}

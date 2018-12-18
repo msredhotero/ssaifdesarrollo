@@ -20,7 +20,7 @@ $fecha = date('Y-m-d');
 if ((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) {
 	$resTorneo= $serviciosReferencias->traerTorneosPorId($_GET['idtorneo']);
 	$resDatos = $serviciosReferencias->GoleadoresConformada(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'),mysql_result($resTorneo,0,'refdivisiones'));
-	if (mysql_num_rows($resDatos) > 0) {
+	if (mysql_num_rows($resTorneo) > 0) {
 		$resDatos = $serviciosReferencias->GoleadoresConformada(mysql_result($resTorneo,0,'reftemporadas'),mysql_result($resTorneo,0,'refcategorias'),mysql_result($resTorneo,0,'refdivisiones'));
 	} else {
 		$resDatos = $serviciosReferenciasRemoto->Goleadores($_GET['idtorneo']);
