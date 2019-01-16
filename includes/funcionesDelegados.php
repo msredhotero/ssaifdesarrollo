@@ -290,7 +290,7 @@ SET validation_check = if(start_dts > end_dts, 'VALID', '')
 				}
 
 			} else {
-				$cad .= 'No Cumple con todo<br>';
+				$cad .= 'No Cumple con todo<br>'.$total.'<br>'.mysql_num_rows($resEquipos);
 			}
 		}
 
