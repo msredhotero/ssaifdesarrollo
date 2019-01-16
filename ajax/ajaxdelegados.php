@@ -40,6 +40,7 @@ $accion = $_POST['accion'];
 
 		$res = $serviciosDelegados->aprobarMasivoEquiposDelagados($id,$idestado);
 
+		$verificar = $serviciosDelegados->verificarAprobadoCompletoFase1($id);
 		echo '';
 	}
 
@@ -50,6 +51,8 @@ $accion = $_POST['accion'];
 
 		$res = $serviciosDelegados->modificarEstadoEquiposDelegados($id, $idestado);
 
+		$verificar = $serviciosDelegados->verificarAprobadoCompletoFase1($id);
+
 		echo '';
 	}
 
@@ -59,6 +62,8 @@ $accion = $_POST['accion'];
 		$idestado = $_POST['idestado'];
 
 		$res = $serviciosDelegados->modificarCabeceraconfirmacionEstado($id, $idestado);
+
+		$verificar = $serviciosDelegados->verificarAprobadoCompletoFase1($id);
 
 		echo '';
 	}
