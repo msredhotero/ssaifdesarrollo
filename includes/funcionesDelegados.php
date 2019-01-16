@@ -246,6 +246,8 @@ SET validation_check = if(start_dts > end_dts, 'VALID', '')
 		$idestado1 = mysql_result($resCabecera,0,'refestados');
 		$idcountrie= mysql_result($resCabecera,0,'refcountries');
 
+		$cad = '';
+
 		$sql = "select
 					ed.refestados, count(*)
 					from		dbequiposdelegados ed
@@ -258,14 +260,17 @@ SET validation_check = if(start_dts > end_dts, 'VALID', '')
 
 
 		if (mysql_num_rows($resEquipos) > 0) {
+			$cad .= 'Acepto Equipos<br>';
 			$idestado2 = mysql_result($resCabecera,0,'refestados');
 			$total = mysql_result($resCabecera,0,1);
 		} else {
 			$idestado2 = 0;
+			$cad .= 'No Acepto Equipos<br>';
 		}
 
 		if ($idestado2 > 0) {
 			if (($total == mysql_num_rows($resEquipos)) && ($idestado1 == 3) && ($idestado2 == 3)) {
+				$cad .= 'Cumple con todo<br>';
 				// envio un email
 				$encargado	=	$this->traerEncargadoPorCountries($idcountrie);
 				$asunto		=	'Todos los Equipos Fueron Aceptados';
@@ -284,8 +289,12 @@ SET validation_check = if(start_dts > end_dts, 'VALID', '')
 					$this->enviarEmail($encargado['email4'],$asunto,$cuerpo, $referencia='');
 				}
 
+			} else {
+				$cad .= 'No Cumple con todo<br>';
 			}
 		}
+
+		return $cad;
 
 	}
 
