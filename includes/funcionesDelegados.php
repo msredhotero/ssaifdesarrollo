@@ -269,7 +269,7 @@ SET validation_check = if(start_dts > end_dts, 'VALID', '')
 		}
 
 		if ($idestado2 > 0) {
-			if (($total == mysql_num_rows($resEquipos)) && ($idestado1 == 3) && ($idestado2 == 3)) {
+			if ((1 == mysql_num_rows($resEquipos)) && ($idestado1 == 3) && ($idestado2 == 3)) {
 				$cad .= 'Cumple con todo<br>';
 				// envio un email
 				$encargado	=	$this->traerEncargadoPorCountries($idcountrie);
