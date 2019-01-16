@@ -77,7 +77,9 @@ $cabeceras 		= "	<th>Temporada</th>
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
+$resaa = $serviciosDelegados->verificarAprobadoCompletoFase1(2);
 
+die(var_dump($resaa));
 
 
 //$formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);

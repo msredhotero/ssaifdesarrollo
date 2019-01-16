@@ -47,11 +47,11 @@ $servicios = new Servicios();
 <script type="text/javascript">
 
     $(document).ready(function(){
-        
-        
-            
-            
-        
+
+
+
+
+
         function validador(){
 
                 $error = "";
@@ -62,19 +62,19 @@ $servicios = new Servicios();
                     $("#error").addClass("alert alert-danger");
                     $("#error").attr('placeholder',$error);
                 }
-                
+
                 if ($("#pass").val() == "") {
                     $error = "Es obligatorio el campo Password.";
 
                     $("#pass").addClass("alert alert-danger");
                     $("#pass").attr('placeholder',$error);
                 }
-                
 
-                
-                
+
+
+
                 var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-                
+
                 if( !emailReg.test( $("#email").val() ) ) {
                     $error = "El E-Mail ingresado es inválido.";
 
@@ -84,16 +84,16 @@ $servicios = new Servicios();
 
                 return $error;
         }
-        
+
         $('body').keyup(function(e) {
             if(e.keyCode == 13) {
                 $("#login").click();
             }
         });
-        
-        
+
+
         $("#login").click(function(event) {
-            
+
                 if (validador() == "")
                 {
                         $.ajax({
@@ -107,25 +107,29 @@ $servicios = new Servicios();
                                 $("#load").html('<img src="imagenes/load13.gif" width="50" height="50" />');
                         },
                         success:  function (response) {
-                                
-                                if (response != '') {
-                                    
-                                    $("#error").removeClass("alert alert-danger");
 
-                                    $("#error").addClass("alert alert-danger");
-                                    $("#error").html('<strong>Error!</strong> '+response);
-                                    $("#load").html('');
+                           if (response == 'delegado') {
+                              url = "https://www.saupureinconsulting.com.ar/aifzncountries/dashboard/";
+                              $(location).attr('href',url);
+                           } else {
+                              if (response != '') {
+                                 $("#error").removeClass("alert alert-danger");
 
-                                } else {
-                                    url = "dashboard/";
-                                    $(location).attr('href',url);
-                                }
-                                
+                                 $("#error").addClass("alert alert-danger");
+                                 $("#error").html('<strong>Error!</strong> '+response);
+                                 $("#load").html('');
+                              } else {
+                                 url = "dashboard/";
+                                 $(location).attr('href',url);
+                              }
+                           }
+
+
                         }
                 });
                 }
         });
-        
+
 		$('#registrarse').click(function() {
 			$(location).attr('href','registrarse.php');
 		});
@@ -134,8 +138,8 @@ $servicios = new Servicios();
 </script>
 
 
-        
-        
+
+
 </head>
 
 
@@ -147,7 +151,7 @@ $servicios = new Servicios();
 
 <!--<div class="row" style="margin-top:10px; font-family:Verdana, Geneva, sans-serif;" align="center">
 		<img src="imagenes/logo.png" width="300" height="273">
-   
+
 </div>-->
 
 
@@ -160,7 +164,7 @@ $servicios = new Servicios();
 	<section style="padding-top:10px; padding-top:60px;padding:25px;
 background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #333;-webkit-box-shadow: 2px 2px 3px #333;-moz-box-shadow: 2px 2px 3px #333;">
 			<div id="error" style="text-align:left; color:#666;">
-            
+
             </div>
 
             <div align="center">
@@ -169,37 +173,37 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
                 <br>
             </div>
 			<form role="form" class="form-horizontal">
-              
+
               <div class="row">
                 <div class="input-field col s12">
                   <input id="email" name="email" type="email" class="validate">
                   <label for="password">Email</label>
                 </div>
               </div>
-      
-              
+
+
               <div class="row">
                 <div class="input-field col s12">
                   <input id="pass" name="pass" type="password" class="validate">
                   <label for="password">Password</label>
                 </div>
               </div>
-              
+
               <div class="row">
               <div class="form-group">
               	<label for="olvido" class="control-label" style="color:#363636">¿Has olvidado tu contraseña?. <a href="recuperarpassword.php">Recuperar.</a></label>
               </div>
-             
+
               <div class="form-group">
                 <div class="col-md-12">
                   <a class="waves-effect waves-light btn" id="login"><i class="material-icons left">cloud</i>Ingresar</a>
                   <a class="waves-effect red btn" id="registrarse"><i class="material-icons left">group_add</i>Registrate</a>
-                  
+
                 </div>
               </div>
 				      </div>
                 <div id="load">
-                
+
                 </div>
 
             </form>
