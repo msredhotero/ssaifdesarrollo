@@ -285,7 +285,7 @@ $(document).ready(function(){
 	});
 
 	$('.iniciarMasivo').click(function() {
-		aprobarMasivoEquiposDelagados(1);
+		aprobarMasivoEquiposDelagados(8);
 	});
 
 	traerEquiposDelagados();
