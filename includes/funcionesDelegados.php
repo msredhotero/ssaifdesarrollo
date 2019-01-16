@@ -239,6 +239,122 @@ SET validation_check = if(start_dts > end_dts, 'VALID', '')
 		return $res;
 	}
 
+
+	function verificarAprobadoCompletoFase1($idcabecera) {
+		$resCabecera = $this->traerCabeceraconfirmacionPorId($idcabecera);
+
+		$idestado1 = mysql_result($resCabecera,0,'refestados');
+		$idcountrie= mysql_result($resCabecera,0,'refcountries');
+
+		$sql = "select
+					ed.refestados, count(*)
+					from		dbequiposdelegados ed
+					inner join dbcabeceraconfirmacion cab on cab.reftemporadas = ed.reftemporadas and cab.refcountries = ed.refcountries
+					where		cab.idcabeceraconfirmacion = ".$idcabecera."
+					group by refestados";
+
+		$resEquipos = $this->query($sql,0);
+
+
+
+		if (mysql_num_rows($resEquipos) > 0) {
+			$idestado2 = mysql_result($resCabecera,0,'refestados');
+			$total = mysql_result($resCabecera,0,1);
+		} else {
+			$idestado2 = 0;
+		}
+
+		if ($idestado2 > 0) {
+			if (($total == mysql_num_rows($resEquipos)) && ($idestado1 == 3) && ($idestado2 == 3)) {
+				// envio un email
+				$encargado	=	$this->traerEncargadoPorCountries($idcountrie);
+				$asunto		=	'Todos los Equipos Fueron Aceptados';
+				$cuerpo		=	'Puede continuar con la carga de la Lista de Buena Fe';
+
+				if ($encargado['email1'] != '') {
+					$this->enviarEmail($encargado['email1'],$asunto,$cuerpo, $referencia='');
+				}
+				if ($encargado['email2'] != '') {
+					$this->enviarEmail($encargado['email2'],$asunto,$cuerpo, $referencia='');
+				}
+				if ($encargado['email3'] != '') {
+					$this->enviarEmail($encargado['email3'],$asunto,$cuerpo, $referencia='');
+				}
+				if ($encargado['email4'] != '') {
+					$this->enviarEmail($encargado['email4'],$asunto,$cuerpo, $referencia='');
+				}
+
+			}
+		}
+
+	}
+
+	function traerEncargadoPorCountries($idcountrie) {
+		$sql = "select email, idusuario from dbusuarios where refcountries = ".$idcountrie;
+		$resUsuario = $this->query($sql,0);
+
+		$email = mysql_result($resUsuario,0,0);
+		$idusuario = mysql_result($resUsuario,0,1);
+
+		$sqlDelegados = "select email1,email2,email3,email4 from dbdelegados where refusuarios = ".$idusuario;
+		$resDelegado = $this->query($sqlDelegados,0);
+
+		$email1 = '';
+		$email2 = '';
+		$email3 = '';
+		$email4 = '';
+
+		if (mysql_num_rows($resDelegado) > 0) {
+			// empiezo a enviar emails a los que esten agregados
+			if (mysql_result($resDelegado,0,'email1') != '') {
+				$email1 = mysql_result($resDelegado,0,'email1');
+			}
+			if (mysql_result($resDelegado,0,'email2') != '') {
+				$email2 = mysql_result($resDelegado,0,'email2');
+			}
+			if (mysql_result($resDelegado,0,'email3') != '') {
+				$email3 = mysql_result($resDelegado,0,'email3');
+			}
+			if (mysql_result($resDelegado,0,'email4') != '') {
+				$email4 = mysql_result($resDelegado,0,'email4');
+			}
+		}
+
+		$arEncargado = array('idusuario'=> $idusuario, 'email' => $email,'email1' => $email1,'email2' => $email2,'email3' => $email3,'email4' => $email4);
+
+		return $arEncargado;
+
+	}
+
+
+	function enviarEmail($destinatario,$asunto,$cuerpo, $referencia='') {
+
+	    if ($referencia == '') {
+	        $referencia = 'aif@intercountryfutbol.com.ar';
+	    }
+	    # Defina el número de e-mails que desea enviar por periodo. Si es 0, el proceso por lotes
+	    # se deshabilita y los mensajes son enviados tan rápido como sea posible.
+	    define("MAILQUEUE_BATCH_SIZE",0);
+
+	    //para el envío en formato HTML
+	    //$headers = "MIME-Version: 1.0\r\n";
+
+	    // Cabecera que especifica que es un HMTL
+	    $headers  = 'MIME-Version: 1.0' . "\r\n";
+	    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+	    //dirección del remitente
+	    $headers .= utf8_decode("From: ASOCIACIÓN INTERCOUNTRY DE FÚTBOL ZONA NORTE <aif@intercountryfutbol.com.ar>\r\n");
+
+	    //ruta del mensaje desde origen a destino
+	    $headers .= "Return-path: ".$destinatario."\r\n";
+
+	    //direcciones que recibirán copia oculta
+	    $headers .= "Bcc: ".$referencia."\r\n";
+
+	    mail($destinatario,$asunto,$cuerpo,$headers);
+	}
+
 	/* Fin */
 	/* /* Fin de la Tabla: dbcabeceraconfirmacion*/
 

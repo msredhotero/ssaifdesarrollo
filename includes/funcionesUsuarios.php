@@ -21,7 +21,7 @@ function GUID()
 
 
 function login($usuario,$pass) {
-	
+
 	$sqlusu = "select * from dbusuarios where email = '".$usuario."'";
 
 $error = '';
@@ -31,52 +31,69 @@ if (trim($usuario) != '' and trim($pass) != '') {
 $respusu = $this->query($sqlusu,0);
 
 if (mysql_num_rows($respusu) > 0) {
-	
-	
+
+
 	$idUsua = mysql_result($respusu,0,0);
 	$sqlpass = "select nombrecompleto,email,usuario,r.descripcion, r.idrol, u.refcountries from dbusuarios u inner join tbroles r on r.idrol = u.refroles where password = '".$pass."' and u.activo = 1 and idusuario = ".$idUsua;
 
 
 	$resppass = $this->query($sqlpass,0);
-	
+
 	if (mysql_num_rows($resppass) > 0) {
 		$error = '';
 		} else {
 			$error = 'Usuario o Password incorrecto';
 		}
-	
+
 	}
 	else
-	
+
 	{
-		$error = 'Usuario o Password incorrecto';	
+		$error = 'Usuario o Password incorrecto';
 	}
-	
+
 	if ($error == '') {
 		//die(var_dump($error));
 		session_start();
-		$_SESSION['usua_predio'] = $usuario;
-		$_SESSION['nombre_predio'] = mysql_result($resppass,0,0);
-		$_SESSION['email_predio'] = mysql_result($resppass,0,1);
-		$_SESSION['idroll_predio'] = mysql_result($resppass,0,4);
-		$_SESSION['refroll_predio'] = mysql_result($resppass,0,3);
-		$_SESSION['id_usuariopredio'] = $idUsua;
-		$_SESSION['club_predio'] = mysql_result($resppass,0,'refcountries');
-		
-		return '';
+
+      if (mysql_result($resppass,0,4) == 4) {
+         $_SESSION['usua_aif'] = $usuario;
+			$_SESSION['nombre_aif'] = mysql_result($resppass,0,0);
+			$_SESSION['usuaid_aif'] = $idUsua;
+			$_SESSION['email_aif'] = mysql_result($resppass,0,1);
+			$_SESSION['idroll_aif'] = mysql_result($resppass,0,4);
+			$_SESSION['refroll_aif'] = mysql_result($resppass,0,3);
+			$_SESSION['idclub_aif'] = mysql_result($resppass,0,'refcountries');
+			$_SESSION['club_aif'] = mysql_result($resppass,0,'refcountries');
+
+         return 'delegado';
+      } else {
+         $_SESSION['usua_predio'] = $usuario;
+   		$_SESSION['nombre_predio'] = mysql_result($resppass,0,0);
+   		$_SESSION['email_predio'] = mysql_result($resppass,0,1);
+   		$_SESSION['idroll_predio'] = mysql_result($resppass,0,4);
+   		$_SESSION['refroll_predio'] = mysql_result($resppass,0,3);
+   		$_SESSION['id_usuariopredio'] = $idUsua;
+   		$_SESSION['club_predio'] = mysql_result($resppass,0,'refcountries');
+
+         return '';
+      }
+
+
+
 	}
-	
+
 }	else {
-	$error = 'Usuario y Password son campos obligatorios';	
+	$error = 'Usuario y Password son campos obligatorios';
 }
-	
-	
+
+
 	return $error;
-	
+
 }
 
 function loginFacebook($usuario) {
-	
+
 	$sqlusu = "select concat(apellido,' ',nombre),email,direccion,refroll from se_usuarios where email = '".$usuario."'";
 	$error = '';
 
@@ -86,8 +103,8 @@ if (trim($usuario) != '') {
 $respusu = $this->query($sqlusu,0);
 
 	if (mysql_num_rows($respusu) > 0) {
-		
-		
+
+
 		if ($error == '') {
 			session_start();
 			$_SESSION['usua_predio'] = $usuario;
@@ -96,22 +113,22 @@ $respusu = $this->query($sqlusu,0);
 			$_SESSION['refroll_predio'] = mysql_result($resppass,0,3);
 			//$error = 'andube por aca'-$sqlusu;
 		}
-		
+
 	}	else {
-		$error = 'Usuario y Password son campos obligatorios';	
+		$error = 'Usuario y Password son campos obligatorios';
 	}
 
 }
 
 	return $error;
-	
+
 }
 
 
 
 
 function loginUsuario($usuario,$pass) {
-	
+
 	$sqlusu = "select * from dbusuarios where email = '".$usuario."'";
 
 
@@ -119,15 +136,15 @@ function loginUsuario($usuario,$pass) {
 if (trim($usuario) != '' and trim($pass) != '') {
 
 	$respusu = $this->query($sqlusu,0);
-	
+
 	if (mysql_num_rows($respusu) > 0) {
 		$error = '';
-		
+
 		$idUsua = mysql_result($respusu,0,0);
 		$sqlpass = "select concat(apellido,' ',nombre),email,refroles from dbusuarios where password = '".$pass."' and IdUsuario = ".$idUsua;
-	
+
 		$resppass = $this->query($sqlpass,0);
-		
+
 			if (mysql_num_rows($resppass) > 0) {
 				$error = '';
 
@@ -139,14 +156,14 @@ if (trim($usuario) != '' and trim($pass) != '') {
 				}
 
 			}
-		
+
 		}
 		else
-		
+
 		{
-			$error = 'Usuario o Password incorrecto';	
+			$error = 'Usuario o Password incorrecto';
 		}
-		
+
 		if ($error == '') {
 			session_start();
 			$_SESSION['usua_predio'] = $usuario;
@@ -154,15 +171,15 @@ if (trim($usuario) != '' and trim($pass) != '') {
 			$_SESSION['email_predio'] = mysql_result($resppass,0,1);
 			$_SESSION['refroll_predio'] = mysql_result($resppass,0,2);
 		}
-	
-	
+
+
 	}	else {
-		$error = 'Usuario y Password son campos obligatorios';	
+		$error = 'Usuario y Password son campos obligatorios';
 	}
-	
-	
+
+
 	return $error;
-	
+
 }
 
 
@@ -200,7 +217,7 @@ function traerUsuario($email) {
 function traerUsuarios() {
 	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles
 			from dbusuarios u
-			inner join tbroles r on u.refroles = r.idrol 
+			inner join tbroles r on u.refroles = r.idrol
 			left join dbcountries cou on cou.idcountrie = u.refcountries
 			order by nombrecompleto";
 	$res = $this->query($sql,0);
@@ -214,7 +231,7 @@ function traerUsuarios() {
 function traerUsuariosPorRol($idRol) {
 	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles
 			from dbusuarios u
-			inner join tbroles r on u.refroles = r.idrol 
+			inner join tbroles r on u.refroles = r.idrol
 			left join dbcountries cou on cou.idcountrie = u.refcountries
 			where r.idrol in (".$idRol.")
 			order by nombrecompleto";
@@ -230,7 +247,7 @@ function traerUsuariosPorRol($idRol) {
 function traerUsuariosSimple() {
 	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles
 			from dbusuarios u
-			inner join tbroles r on u.refroles = r.idrol 
+			inner join tbroles r on u.refroles = r.idrol
 			left join dbcountries cou on cou.idcountrie = u.refcountries
 			where r.idrol <> 1
 			order by nombrecompleto";
@@ -268,20 +285,20 @@ function existeUsuario($usuario) {
 	$sql = "select * from dbusuarios where email = '".$usuario."'";
 	$res = $this->query($sql,0);
 	if (mysql_num_rows($res)>0) {
-		return true;	
+		return true;
 	} else {
-		return false;	
+		return false;
 	}
 }
-    
-    
+
+
 function existeUsuarioPreRegistrado($email) {
 	$sql = "select (case when activo=1 then 'Si' else 'No' end) as activo from dbusuarios where email = '".$email."'";
 	$res = $this->query($sql,0);
 	if (mysql_num_rows($res)>0) {
-		return mysql_result($res,0,0);	
+		return mysql_result($res,0,0);
 	} else {
-		return '';	
+		return '';
 	}
 }
 
@@ -296,21 +313,21 @@ function enviarEmail($destinatario,$asunto,$cuerpo, $referencia='') {
 
 	//para el envío en formato HTML
 	//$headers = "MIME-Version: 1.0\r\n";
-	
+
 	// Cabecera que especifica que es un HMTL
 	$headers  = 'MIME-Version: 1.0' . "\r\n";
 	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-	
+
 	//dirección del remitente
 	$headers .= utf8_decode("From: ASOCIACIÓN INTERCOUNTRY DE FÚTBOL ZONA NORTE <aif@intercountryfutbol.com.ar>\r\n");
-	
+
 	//ruta del mensaje desde origen a destino
 	$headers .= "Return-path: ".$destinatario."\r\n";
-	
+
 	//direcciones que recibirán copia oculta
 	$headers .= "Bcc: ".$referencia."\r\n";
-	
-	mail($destinatario,$asunto,$cuerpo,$headers); 	
+
+	mail($destinatario,$asunto,$cuerpo,$headers);
 }
 
 
@@ -325,21 +342,21 @@ function enviarEmailConReferente($destinatario,$asunto,$cuerpo, $referencia) {
 
 	//para el envío en formato HTML
 	//$headers = "MIME-Version: 1.0\r\n";
-	
+
 	// Cabecera que especifica que es un HMTL
 	$headers  = 'MIME-Version: 1.0' . "\r\n";
 	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-	
+
 	//dirección del remitente
 	$headers .= utf8_decode("From: ASOCIACIÓN INTERCOUNTRY DE FÚTBOL ZONA NORTE <aif@intercountryfutbol.com.ar>\r\n");
-	
+
 	//ruta del mensaje desde origen a destino
 	$headers .= "Return-path: ".$destinatario."\r\n";
-	
+
 	//direcciones que recibirán copia oculta
 	$headers .= "Bcc: ".$referencia."\r\n";
-	
-	mail($destinatario,$asunto,$cuerpo,$headers); 	
+
+	mail($destinatario,$asunto,$cuerpo,$headers);
 }
 
 function enviarEmailPrueba() {
@@ -399,7 +416,7 @@ function registrarSocio($email, $password,$apellido, $nombre,$nrodocumento,$fech
 				NULL,
 				0)";
 	if ($this->existeUsuario($email) == true) {
-		return "Ya existe el usuario";	
+		return "Ya existe el usuario";
 	}
 	$res = $this->query($sql,1);
 	if ($res == false) {
@@ -463,13 +480,13 @@ function insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto, $re
 				".($refcountries == '' ? 'NULL' : $refcountries).",
 				1)";
 	if ($this->existeUsuario($email) == true) {
-		return "Ya existe el usuario";	
+		return "Ya existe el usuario";
 	}
 	$res = $this->query($sql,1);
 	if ($res == false) {
 		return 'Error al insertar datos '.$sql;
 	} else {
-		
+
 		return $res;
 	}
 }
@@ -492,109 +509,109 @@ function modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto
 	} else {
 		return '';
 	}
-	
+
 }
 
 
 /* PARA Activacionusuarios */
 
-function insertarActivacionusuarios($refusuarios,$token,$vigenciadesde,$vigenciahasta) { 
-$sql = "insert into dbactivacionusuarios(idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta) 
-values ('',".$refusuarios.",'".utf8_decode($token)."',now(),ADDDATE(now(), INTERVAL 2 DAY))"; 
-$res = $this->query($sql,1); 
-return $res; 
-} 
+function insertarActivacionusuarios($refusuarios,$token,$vigenciadesde,$vigenciahasta) {
+$sql = "insert into dbactivacionusuarios(idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta)
+values ('',".$refusuarios.",'".utf8_decode($token)."',now(),ADDDATE(now(), INTERVAL 2 DAY))";
+$res = $this->query($sql,1);
+return $res;
+}
 
 
-function modificarActivacionusuarios($id,$refusuarios,$token,$vigenciadesde,$vigenciahasta) { 
-$sql = "update dbactivacionusuarios 
-set 
-refusuarios = ".$refusuarios.",token = '".($token)."',vigenciadesde = '".utf8_decode($vigenciadesde)."',vigenciahasta = '".utf8_decode($vigenciahasta)."' 
-where idactivacionusuario =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function modificarActivacionusuarios($id,$refusuarios,$token,$vigenciadesde,$vigenciahasta) {
+$sql = "update dbactivacionusuarios
+set
+refusuarios = ".$refusuarios.",token = '".($token)."',vigenciadesde = '".utf8_decode($vigenciadesde)."',vigenciahasta = '".utf8_decode($vigenciahasta)."'
+where idactivacionusuario =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function modificarActivacionusuariosConcretada($token) { 
-$sql = "update dbactivacionusuarios 
-set 
-vigenciadesde = 'NULL',vigenciahasta = 'NULL' 
-where token ='".$token."'"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function modificarActivacionusuariosConcretada($token) {
+$sql = "update dbactivacionusuarios
+set
+vigenciadesde = 'NULL',vigenciahasta = 'NULL'
+where token ='".$token."'";
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function modificarActivacionusuariosRenovada($refusuarios,$token,$vigenciadesde,$vigenciahasta) { 
-$sql = "update dbactivacionusuarios 
-set 
+function modificarActivacionusuariosRenovada($refusuarios,$token,$vigenciadesde,$vigenciahasta) {
+$sql = "update dbactivacionusuarios
+set
 vigenciadesde = now(),vigenciahasta = ADDDATE(now(), INTERVAL 2 DAY),token = '".($token)."'
-where refusuarios =".$refusuarios; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+where refusuarios =".$refusuarios;
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function eliminarActivacionusuarios($id) { 
-$sql = "delete from dbactivacionusuarios where idactivacionusuario =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function eliminarActivacionusuarios($id) {
+$sql = "delete from dbactivacionusuarios where idactivacionusuario =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
 
-function eliminarActivacionusuariosPorUsuario($refusuarios) { 
-$sql = "delete from dbactivacionusuarios where refusuarios =".$refusuarios; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function eliminarActivacionusuariosPorUsuario($refusuarios) {
+$sql = "delete from dbactivacionusuarios where refusuarios =".$refusuarios;
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function traerActivacionusuarios() { 
-$sql = "select 
+function traerActivacionusuarios() {
+$sql = "select
 a.idactivacionusuario,
 a.refusuarios,
 a.token,
 a.vigenciadesde,
 a.vigenciahasta
-from dbactivacionusuarios a 
-order by 1"; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+from dbactivacionusuarios a
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function traerActivacionusuariosPorId($id) { 
-$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where idactivacionusuario =".$id; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function traerActivacionusuariosPorId($id) {
+$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where idactivacionusuario =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function traerActivacionusuariosPorToken($token) { 
-$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where token =".$token; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function traerActivacionusuariosPorToken($token) {
+$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where token =".$token;
+$res = $this->query($sql,0);
+return $res;
+}
 
 
-function traerActivacionusuariosPorTokenFechas($token) { 
-$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where token ='".$token."' and now() between vigenciadesde and vigenciahasta "; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
+function traerActivacionusuariosPorTokenFechas($token) {
+$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where token ='".$token."' and now() between vigenciadesde and vigenciahasta ";
+$res = $this->query($sql,0);
+return $res;
+}
 
-function traerActivacionusuariosPorUsuarioFechas($usuario) { 
-$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where refusuarios =".$usuario." and now() between vigenciadesde and vigenciahasta "; 
-$res = $this->query($sql,0); 
-return $res; 
-} 
-    
-    
+function traerActivacionusuariosPorUsuarioFechas($usuario) {
+$sql = "select idactivacionusuario,refusuarios,token,vigenciadesde,vigenciahasta from dbactivacionusuarios where refusuarios =".$usuario." and now() between vigenciadesde and vigenciahasta ";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
 function activarUsuario($refusuario) {
-	$sql = "update dbusuarios 
-	set 
+	$sql = "update dbusuarios
+	set
 		activo = 1
-	where idusuario =".$refusuario; 
+	where idusuario =".$refusuario;
 	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al modificar datos';
@@ -609,22 +626,22 @@ function activarUsuario($refusuario) {
 
 
 	function query($sql,$accion) {
-		
-		
-		
+
+
+
 		require_once 'appconfig.php';
 
 		$appconfig	= new appconfig();
-		$datos		= $appconfig->conexion();	
+		$datos		= $appconfig->conexion();
 		$hostname	= $datos['hostname'];
 		$database	= $datos['database'];
 		$username	= $datos['username'];
 		$password	= $datos['password'];
-		
+
 		$conex = mysql_connect($hostname,$username,$password) or die ("no se puede conectar".mysql_error());
-		
+
 		mysql_select_db($database);
-		
+
 		        $error = 0;
 		mysql_query("BEGIN");
 		$result=mysql_query($sql,$conex);
@@ -642,7 +659,7 @@ function activarUsuario($refusuario) {
 			mysql_query("COMMIT");
 			return $result;
 		}
-		
+
 	}
 
 }
