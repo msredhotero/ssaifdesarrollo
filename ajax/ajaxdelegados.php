@@ -29,9 +29,21 @@ $accion = $_POST['accion'];
 		case 'armarTable':
 			armarTable($serviciosDelegados, $serviciosReferencias, $serviciosFunciones);
 		break;
+		case 'aprobarMasivoEquiposDelagados':
+			aprobarMasivoEquiposDelagados($serviciosDelegados);
+		break;
 	}
 
-	
+	function aprobarMasivoEquiposDelagados($serviciosDelegados) {
+		$id = $_POST['idcabecera'];
+		$idestado = $_POST['idestado'];
+
+		$res = $serviciosDelegados->aprobarMasivoEquiposDelagados($id,$idestado);
+
+		echo '';
+	}
+
+
 	function modificarEstadoEquiposDelegados($serviciosDelegados) {
 		$id = $_POST['id'];
 		$idestado = $_POST['idestado'];
@@ -58,22 +70,22 @@ glyphicon-pencil
 		$cad = '<td>
 					<div class="btn-group">
 						<button class="btn btn-success" type="button">Acciones</button>
-						
+
 						<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
 						<span class="caret"></span>
 						<span class="sr-only">Toggle Dropdown</span>
 						</button>
-						
+
 						<ul class="dropdown-menu" role="menu">';
-						   
+
 		for ($j=0; $j<count($label); $j++) {
 			$cad .= '<li>
 							<a href="javascript:void(0)" class="'.$class[$j].'" id="'.$id.'"><span class="glyphicon '.$icon[$j].'"></span> '.$label[$j].'</a>
 							</li>';
 		}
-		
 
-							
+
+
 		$cad .= '				</ul>
 					</div>
 				</td>';
@@ -129,10 +141,10 @@ glyphicon-pencil
 				$cad .= '<td>'.$row[$cabecerasdatos[$i]].'</td>';
 			}
 			$cad .= armarDropDown($row[$id], '', $label, $class, $icon);
-			
-			
+
+
 		}
-			
+
 		echo $cad;
 	}
 
