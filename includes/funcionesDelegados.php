@@ -261,8 +261,8 @@ SET validation_check = if(start_dts > end_dts, 'VALID', '')
 
 		if (mysql_num_rows($resEquipos) > 0) {
 			$cad .= 'Acepto Equipos<br>';
-			$idestado2 = mysql_result($resCabecera,0,'refestados');
-			$total = mysql_result($resCabecera,0,1);
+			$idestado2 = mysql_result($resEquipos,0,'refestados');
+			$total = mysql_result($resEquipos,0,1);
 		} else {
 			$idestado2 = 0;
 			$cad .= 'No Acepto Equipos<br>';
