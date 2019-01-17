@@ -206,15 +206,18 @@ function traerCabeceraconfirmacionPorId($id) {
 
 		$sql = "select
 					fe.idfusionequipo,
-					cp.nombre as countries,
+					cpf.nombre as countriesfusion,
 					cat.categoria,
 					di.division,
 					ed.nombre,
 					est.estado,
-					est.idestado
+					est.idestado,
+					cp.nombre as countries
+
 				from dbfusionequipos fe
 				inner join dbequiposdelegados ed on ed.idequipodelegado = fe.refequiposdelegados
 				inner join dbcountries cp on cp.idcountrie = ed.refcountries
+				inner join dbcountries cpf on cpf.idcountrie = fe.refcountries
 				inner join tbcategorias cat on cat.idtcategoria = ed.refcategorias
 				inner join tbdivisiones di on di.iddivision = ed.refdivisiones
 				inner join tbestados est on est.idestado = fe.refestados

@@ -88,7 +88,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
-	
+
 }
 
 
@@ -110,23 +110,23 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	
-    
-   
+
+
+
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -137,7 +137,7 @@ if ($_SESSION['refroll_predio'] != 1) {
         $('#navigation').perfectScrollbar();
       });
     </script>
-    
+
 </head>
 
 <body>
@@ -145,11 +145,11 @@ if ($_SESSION['refroll_predio'] != 1) {
  <?php echo $resMenu; ?>
 
 <div id="content">
-    
+
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Solicitud de Fusión</p>
-        	
+
         </div>
     	<div class="cuerpoBox">
     		<button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
@@ -167,18 +167,18 @@ if ($_SESSION['refroll_predio'] != 1) {
 					</tr>
 				</thead>
 				<tbody id="resultados">
-					
+
 				</tbody>
 			</table>
 
     	</div>
     </div>
-    
-    
 
-    
-    
-   
+
+
+
+
+
 </div>
 
 
@@ -223,42 +223,42 @@ if ($_SESSION['refroll_predio'] != 1) {
 $(document).ready(function(){
 
 	$('.volver').click(function(event){
-		 
+
 		url = "index.php";
 		$(location).attr('href',url);
 	});//fin del boton modificar
 
 	function traerEquiposDelagados() {
 		$.ajax({
-			data:  {dato: 'fusiones', 
+			data:  {dato: 'fusiones',
 					param1: <?php echo $id; ?>,
-					cabecerasdatos: 'countries,nombre,categoria,division,estado',
+					cabecerasdatos: 'countriesfusion,nombre,categoria,division,estado',
 					id: 'idfusionequipo',
 					accion: 'armarTable'},
 			url:   '../../ajax/ajaxdelegados.php',
 			type:  'post',
 			beforeSend: function () {
-			
+
 			},
 			success:  function (response) {
-				
+
 				$('#resultados').html(response);
-				
+
 			}
-		});	
+		});
 	}
 
 	traerEquiposDelagados();
 
 	function modificarEstadoCabecera(id,estado) {
 		$.ajax({
-			data:  {id: id, 
+			data:  {id: id,
 					idestado: estado,
 					accion: 'modificarEstadoEquiposDelegados'},
 			url:   '../../ajax/ajaxdelegados.php',
 			type:  'post',
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 				traerEquiposDelagados();
@@ -269,7 +269,7 @@ $(document).ready(function(){
 	$('#btnModificarEstado').click(function() {
 		modificarEstadoCabecera($('#idequiposdelegados').val(), $('#refestados').val() );
 	});
-	
+
 	$('#activo').prop('checked',true);
 
 	$("#example").on("click",'.varborrar', function(){
@@ -278,14 +278,14 @@ $(document).ready(function(){
 			$("#idEliminar").val(usersid);
 			$("#dialog2").dialog("open");
 
-			
+
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton eliminar
-	
+
 	$("#example").on("click",'.varmodificarestado', function(){
 		usersid =  $(this).attr("id");
 		$('#idequiposdelegados').val(usersid);
@@ -294,7 +294,7 @@ $(document).ready(function(){
 	});//fin del boton modificar
 
 	 $( "#dialog2" ).dialog({
-		 	
+
 			    autoOpen: false,
 			 	resizable: false,
 				width:600,
@@ -302,18 +302,18 @@ $(document).ready(function(){
 				modal: true,
 				buttons: {
 				    "Eliminar": function() {
-	
+
 						$.ajax({
 									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
-											
+
 									},
 									success:  function (response) {
 											url = "index.php";
 											$(location).attr('href',url);
-											
+
 									}
 							});
 						$( this ).dialog( "close" );
@@ -327,29 +327,29 @@ $(document).ready(function(){
 						$( this ).dialog( "close" );
 				    }
 				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
-			
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
-	
-	?>
-	
 
-	
-	
+
+	 		}); //fin del dialogo para eliminar
+
+	<?php
+		echo $serviciosHTML->validacion($tabla);
+
+	?>
+
+
+
+
 	//al enviar el formulario
     $('#cargar').click(function(){
-		
+
 		if (validador() == "")
         {
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
-			//hacemos la petición ajax  
+			//hacemos la petición ajax
 			$.ajax({
-				url: '../../ajax/ajax.php',  
+				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -360,7 +360,7 @@ $(document).ready(function(){
 				processData: false,
 				//mientras enviamos el archivo
 				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
 				},
 				//una vez finalizado correctamente
 				success: function(data){
@@ -371,16 +371,16 @@ $(document).ready(function(){
                                             $(".alert").addClass("alert-success");
                                             $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
 											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
+												/*aca lo que quiero hacer
 												  después de los 2 segundos de retraso*/
 												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
+
 											});
 											$("#load").html('');
 											url = "index.php";
 											$(location).attr('href',url);
-                                            
-											
+
+
                                         } else {
                                         	$(".alert").removeClass("alert-danger");
                                             $(".alert").addClass("alert-danger");
