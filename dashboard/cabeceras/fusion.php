@@ -35,6 +35,12 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Cabecer
 
 $id = $_GET['id'];
 
+$equiposdelegados = $serviciosDelegados->traerEquiposdelegadosPorId($id);
+
+$resultado = $serviciosDelegados->traerCabeceraconfirmacionPorClubTemporada(mysql_result($equiposdelegados,0,'refcountries'),mysql_result($equiposdelegados,0,'reftemporadas'));
+
+$idequiposdelegados = mysql_result($resultado,0,'idcabeceraconfirmacion');
+
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Division";
@@ -163,6 +169,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 						<th>Categoria</th>
 						<th>Division</th>
 						<th>Estado</th>
+						<th>Fusion</th>
 						<th>Acciones</th>
 					</tr>
 				</thead>
@@ -199,7 +206,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 			    <select class="form-control" id="refestados" name="refestados">
 			    	<?php echo $cadRef; ?>
 			    </select>
-			    <input type="hidden" name="idequiposdelegados" id="idequiposdelegados" value="0">
+			    <input type="hidden" name="idfusionequipo" id="idfusionequipo" value="0">
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-warning" data-dismiss="modal" id="btnModificarEstado">Modificar</button>
@@ -224,7 +231,7 @@ $(document).ready(function(){
 
 	$('.volver').click(function(event){
 
-		url = "index.php";
+		url = "detalle.php?id=<?php echo $idequiposdelegados; ?>";
 		$(location).attr('href',url);
 	});//fin del boton modificar
 
@@ -232,7 +239,7 @@ $(document).ready(function(){
 		$.ajax({
 			data:  {dato: 'fusiones',
 					param1: <?php echo $id; ?>,
-					cabecerasdatos: 'countriesfusion,nombre,categoria,division,estado',
+					cabecerasdatos: 'countriesfusion,nombre,categoria,division,estado,viejo',
 					id: 'idfusionequipo',
 					accion: 'armarTable'},
 			url:   '../../ajax/ajaxdelegados.php',
@@ -254,7 +261,7 @@ $(document).ready(function(){
 		$.ajax({
 			data:  {id: id,
 					idestado: estado,
-					accion: 'modificarEstadoEquiposDelegados'},
+					accion: 'modificarEstadoFusion'},
 			url:   '../../ajax/ajaxdelegados.php',
 			type:  'post',
 			beforeSend: function () {
@@ -267,7 +274,7 @@ $(document).ready(function(){
 	}
 
 	$('#btnModificarEstado').click(function() {
-		modificarEstadoCabecera($('#idequiposdelegados').val(), $('#refestados').val() );
+		modificarEstadoCabecera($('#idfusionequipo').val(), $('#refestados').val() );
 	});
 
 	$('#activo').prop('checked',true);
@@ -288,7 +295,7 @@ $(document).ready(function(){
 
 	$("#example").on("click",'.varmodificarestado', function(){
 		usersid =  $(this).attr("id");
-		$('#idequiposdelegados').val(usersid);
+		$('#idfusionequipo').val(usersid);
 		$('#myModal3').modal();
 
 	});//fin del boton modificar

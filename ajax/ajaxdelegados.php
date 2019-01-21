@@ -32,6 +32,18 @@ $accion = $_POST['accion'];
 		case 'aprobarMasivoEquiposDelagados':
 			aprobarMasivoEquiposDelagados($serviciosDelegados);
 		break;
+		case 'modificarEstadoFusion':
+			modificarEstadoFusion($serviciosDelegados);
+		break;
+	}
+
+	function modificarEstadoFusion($serviciosDelegados) {
+		$id = $_POST['id'];
+		$idestado = $_POST['idestado'];
+
+		$res = $serviciosDelegados->modificarEstadoFusion($id, $idestado);
+
+		echo '';
 	}
 
 	function aprobarMasivoEquiposDelagados($serviciosDelegados) {

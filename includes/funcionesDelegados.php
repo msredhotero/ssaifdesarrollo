@@ -78,6 +78,29 @@ function traerCabeceraconfirmacion() {
 	return $res;
 }
 
+function traerCabeceraconfirmacionPorClubTemporada($refcountries, $reftemporadas) {
+	$sql = "select
+	c.idcabeceraconfirmacion,
+	c.reftemporadas,
+	c.refcountries,
+	c.refestados,
+	c.fechacrea,
+	c.fechamodi,
+	c.usuacrea,
+	c.usuamodi
+	from dbcabeceraconfirmacion c
+	where c.reftemporadas = ".$reftemporadas." and c.refcountries = ".$refcountries."
+	order by 1";
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+	function traerEquiposdelegadosPorId($id) {
+		$sql = "select idequipodelegado,idequipo,reftemporadas,refusuarios,refcountries,nombre,refcategorias,refdivisiones,fechabaja,activo,refestados from dbequiposdelegados where idequipodelegado =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
 
 function traerCabeceraconfirmacionGrid() {
 	$sql = "select
@@ -202,6 +225,16 @@ function traerCabeceraconfirmacionPorId($id) {
 	}
 
 
+	function modificarEstadoFusion($id,$refestados) {
+		$sql = "update dbfusionequipos
+		set
+		refestados = ".$refestados."
+		where idfusionequipo =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
 	function traerFusionesPorEquipo($idequiposdelegados) {
 
 		$sql = "select
@@ -211,6 +244,7 @@ function traerCabeceraconfirmacionPorId($id) {
 					di.division,
 					ed.nombre,
 					est.estado,
+					(case when fe.viejo = 1 then 'Mantiene' else 'Nuevo' end) as viejo,
 					est.idestado,
 					cp.nombre as countries
 
@@ -226,6 +260,13 @@ function traerCabeceraconfirmacionPorId($id) {
 		$res = $this->query($sql,0);
 		return $res;
 
+	}
+
+	function traerFusionesequiposPorId($id) {
+		$sql = "select idfusionequipo,refequiposdelegados,refcountries,refestados,observacion,viejo
+					from dbfusionequipos where idfusionequipo = ".$id;
+		$res = $this->query($sql,0);
+		return $res;
 	}
 /*
 UPDATE tableA a
