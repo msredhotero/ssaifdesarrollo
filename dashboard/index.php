@@ -59,7 +59,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_SESSION['club_predio']);
 			$refClub = $_SESSION['club_predio'];
 		} else {
-			$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_GET['id']);	
+			$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_GET['id']);
 			$refClub = $_GET['id'];
 		}
 
@@ -73,12 +73,12 @@ if ($_SESSION['idroll_predio'] == 4) {
 		}
 
 
-		$resTemporadas = $serviciosReferencias->traerUltimaTemporada(); 
+		$resTemporadas = $serviciosReferencias->traerUltimaTemporada();
 
 		if (mysql_num_rows($resTemporadas)>0) {
-		    $ultimaTemporada = mysql_result($resTemporadas,0,0);    
+		    $ultimaTemporada = mysql_result($resTemporadas,0,0);
 		} else {
-		    $ultimaTemporada = 0;   
+		    $ultimaTemporada = 0;
 		}
 
 		/////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
@@ -136,7 +136,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		} else {
 
-			
+
 		}
 
 
@@ -158,14 +158,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 
 		<link href="../css/estiloDash.css" rel="stylesheet" type="text/css">
-		    
 
-		    
+
+
 		    <script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
 		    <link rel="stylesheet" href="../css/jquery-ui.css">
 
 		    <script src="../js/jquery-ui.js"></script>
-		    
+
 			<!-- Latest compiled and minified CSS -->
 		    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css"/>
 			<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
@@ -173,8 +173,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 		    <script src="../bootstrap/js/bootstrap.min.js"></script>
 			<link rel="stylesheet" href="../css/bootstrap-datetimepicker.min.css">
 			<script src="../js/jquery.maskedinput.min.js" type="text/javascript"></script>
-		    
-		   
+
+
 		   <link href="../css/perfect-scrollbar.css" rel="stylesheet">
 		      <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
 		      <script src="../js/jquery.mousewheel.js"></script>
@@ -185,9 +185,9 @@ if ($_SESSION['idroll_predio'] == 4) {
 		        $('#navigation').perfectScrollbar();
 		      });
 		    </script>
-		    
-		   
-		 
+
+
+
 		</head>
 
 		<body>
@@ -201,21 +201,21 @@ if ($_SESSION['idroll_predio'] == 4) {
 		    <div class="boxInfoLargo">
 		        <div id="headBoxInfo">
 		        	<p style="color: #fff; font-size:18px; height:16px;">Jugadores del club</p>
-		        	
+
 		        </div>
 		    	<div class="cuerpoBox">
 		        	<form class="form-inline formulario" role="form">
 		        	<div class="row">
 
-					<?php 
+					<?php
 						$country = '';
 						$fecha = '';
 						$cadCabecera = '';
 						$primero = 0;
 						while ($row = mysql_fetch_array($resJugadoresPorCountries)) {
 							if ($country != $refClub)  {
-								
-								
+
+
 								$cadCabecera .= '<div class="col-md-12">
 												<table class="table table-striped" style="padding:2px;" id="example">
 												<thead>
@@ -227,15 +227,15 @@ if ($_SESSION['idroll_predio'] == 4) {
 														<th>Baja</th>
 														<th>Art 2 Inciso D</th>
 														<th>Accion</th>
-					
+
 													</tr>
 												</thead>
 												<tbody>';
-												
+
 								$primero = 1;
-								$country = $refClub;	
+								$country = $refClub;
 							}
-							
+
 							$cadCabecera .= "<tr>
 												<td>".$row['apellido']."</td>
 												<td>".$row['nombres']."</td>
@@ -243,7 +243,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 												<td><input class='form-control' type='text' name='numeroserielote".$row['idjugador']."' id='numeroserielote".$row['idjugador']."' value='".$row['numeroserielote']."'/></td>
 												<td><input class='form-control' type='checkbox' name='fechabaja".$row['idjugador']."' id='fechabaja".$row['idjugador']."' ".($row['fechabaja'] == 'Si' ? 'checked' : '')."/></td>
 												<td><input class='form-control' type='checkbox' name='articulo".$row['idjugador']."' id='articulo".$row['idjugador']."'  ".($row['articulo'] == 'Si' ? 'checked' : '')."/></td>
-												
+
 												<td>";
 							if ($permiteRegistrar == 1) {
 								if ($habilitado == 1) {
@@ -252,11 +252,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 							}
 							$cadCabecera .= "</td>
 											</tr>";
-					
+
 						}
-						
+
 						$cadCabecera .= '</tbody></table></div>';
-						
+
 						echo $cadCabecera;
 					?>
 		            </div>
@@ -281,31 +281,31 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            		?>
 		            			<option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
 		            			<option value="<?php echo date('Y') + 1; ?>"><?php echo date('Y') + 1; ?></option>
-		            			
+
 
 		            		<?php
 		            			}
 		            		?>
-		            		
+
 		            		</select>
 		            	</div>
-		            	
+
 
 		            </div>
 
 		            <div class='row' style="margin-left:25px; margin-right:25px;">
 		                <div class='alert'>
-		                
+
 		                </div>
 		                <div id='load'>
-		                
+
 		                </div>
 		            </div>
-		            
+
 		            <div class="row">
 		                <div class="col-md-12">
 		                <ul class="list-inline" style="margin-top:15px;">
-		                	
+
 		                    <li>
 		                        <button type="button" class="btn btn-danger" id="btnImprimir" style="margin-left:0px;">Imprimir</button>
 		                    </li>
@@ -330,19 +330,19 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            </form>
 		    	</div>
 		    </div>
-		    
-		    
+
+
 		<?php if ($habilitado == 1) { ?>
 		<div id="dialog2" title="Eliminar Jugadores">
 		    	<p>
 		        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
 		            ¿Esta seguro que desea eliminar el Jugador?.<span id="proveedorEli"></span>
 		        </p>
-		        
+
 		        <input type="hidden" value="" id="idEliminar" name="idEliminar">
 		</div>
 
-		    
+
 		<!-- Modal del guardar-->
 		<div class="modal fade" id="myModal3" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog modal-lg" role="document">
@@ -358,7 +358,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-primary" data-dismiss="modal" id="cargarJugador">Agregar</button>
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		        
+
 		      </div>
 		      </form>
 		    </div>
@@ -418,32 +418,32 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$('#btnCondicionJugador').click(function() {
 				window.open("../reportes/rptCondicionJugadorManual.php?id=0&reftemporada=" + <?php echo $ultimaTemporada; ?> + "&bajaequipos=1" + "&refcountries=" + <?php echo $refClub; ?> + "&anio=" + $('#anio').val() ,'_blank');
 			});
-			
+
 			$("#example").on("click",'.guardarJugadorClubSimple', function(){
-				
+
 				idBtn = $(this).attr("id");
 				var fechabaja = 0;
 				if ($('#fechabaja'+$(this).attr("id")).prop('checked')) {
-					fechabaja = 1;	
+					fechabaja = 1;
 				}
-				
+
 				var articulo = 0;
 				if ($('#articulo'+$(this).attr("id")).prop('checked')) {
-					articulo = 1;	
+					articulo = 1;
 				}
-				
+
 				$('#myModal').modal("show");
 		        $.ajax({
-					data:  {idjugador: $(this).attr("id"), 
-							idclub: <?php echo $refClub; ?>, 
-							numeroserielote: $('#numeroserielote'+$(this).attr("id")).val(), 
-							fechabaja: fechabaja, 
-							articulo: articulo, 
+					data:  {idjugador: $(this).attr("id"),
+							idclub: <?php echo $refClub; ?>,
+							numeroserielote: $('#numeroserielote'+$(this).attr("id")).val(),
+							fechabaja: fechabaja,
+							articulo: articulo,
 							accion: 'guardarJugadorClubSimple'},
 					url:   '../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 						if (response == '') {
@@ -452,7 +452,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 							$('#'+idBtn).removeClass("btn-danger");
 							$('#'+idBtn).addClass("btn-success");
 							$('#'+idBtn).html('<span class="glyphicon glyphicon-ok"></span> Guardado');
-							
+
 						} else {
 							$('#error').html('Huvo un error al guardar los datos, verifique los datos ingresados '.response);
 							$('#'+idBtn).removeClass("btn-primary");
@@ -470,14 +470,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 					$("#idEliminar").val(usersid);
 					$("#dialog2").dialog("open");
 
-					
+
 					//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 					//$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton eliminar
-			
+
 			$("#example1").on("click",'.varmodificar', function(){
 				usersid =  $(this).attr("id");
 				url = "modificarjugador.php?id=" + usersid;
@@ -486,7 +486,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			});//fin del boton modificar
 
 			 $( "#dialog2" ).dialog({
-				 	
+
 					    autoOpen: false,
 					 	resizable: false,
 						width:600,
@@ -494,18 +494,18 @@ if ($_SESSION['idroll_predio'] == 4) {
 						modal: true,
 						buttons: {
 						    "Eliminar": function() {
-			
+
 								$.ajax({
 											data:  {id: $('#idEliminar').val(), accion: 'eliminarJugadorespre'},
 											url:   '../ajax/ajax.php',
 											type:  'post',
 											beforeSend: function () {
-													
+
 											},
 											success:  function (response) {
 													url = "index.php";
 													$(location).attr('href',url);
-													
+
 											}
 									});
 								$( this ).dialog( "close" );
@@ -519,23 +519,23 @@ if ($_SESSION['idroll_predio'] == 4) {
 								$( this ).dialog( "close" );
 						    }
 						}
-				 
-				 
+
+
 			 		}); //fin del dialogo para eliminar
-					
+
 			<?php } ?>
-			
+
 			//al enviar el formulario
 		    $('#cargar').click(function(){
-				
+
 				if (validador() == "")
 		        {
 					//información del formulario
 					var formData = new FormData($(".formulario")[0]);
 					var message = "";
-					//hacemos la petición ajax  
+					//hacemos la petición ajax
 					$.ajax({
-						url: '../ajax/ajax.php',  
+						url: '../ajax/ajax.php',
 						type: 'POST',
 						// Form data
 						//datos del formulario
@@ -546,7 +546,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 						processData: false,
 						//mientras enviamos el archivo
 						beforeSend: function(){
-							$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');       
+							$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');
 						},
 						//una vez finalizado correctamente
 						success: function(data){
@@ -557,16 +557,16 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                        $(".alert").addClass("alert-success");
 		                        $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
 								$(".alert").delay(3000).queue(function(){
-									/*aca lo que quiero hacer 
+									/*aca lo que quiero hacer
 									  después de los 2 segundos de retraso*/
 									$(this).dequeue(); //continúo con el siguiente ítem en la cola
-									
+
 								});
 								$("#load").html('');
 								url = "index.php";
 								$(location).attr('href',url);
-		                        
-								
+
+
 		                    } else {
 		                    	$(".alert").removeClass("alert-danger");
 		                        $(".alert").addClass("alert-danger");
@@ -588,13 +588,13 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 		    //al enviar el formulario
 		    $('#cargarJugador').click(function(){
-				
+
 					//información del formulario
 					var formData = new FormData($(".formulario")[1]);
 					var message = "";
-					//hacemos la petición ajax  
+					//hacemos la petición ajax
 					$.ajax({
-						url: '../ajax/ajax.php',  
+						url: '../ajax/ajax.php',
 						type: 'POST',
 						// Form data
 						//datos del formulario
@@ -605,29 +605,29 @@ if ($_SESSION['idroll_predio'] == 4) {
 						processData: false,
 						//mientras enviamos el archivo
 						beforeSend: function(){
-							$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');       
+							$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');
 						},
 						//una vez finalizado correctamente
 						success: function(data){
-							
+
 							if (!isNaN(data)) {
 								$(".alert").removeClass("alert-danger");
 								$(".alert").removeClass("alert-info");
 								$(".alert").addClass("alert-success");
 								$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Jugador</strong>. ');
 								$(".alert").delay(3000).queue(function(){
-									/*aca lo que quiero hacer 
+									/*aca lo que quiero hacer
 									  después de los 2 segundos de retraso*/
 									$(this).dequeue(); //continúo con el siguiente ítem en la cola
-									
+
 								});
 
 								url = "index.php";
 								$(location).attr('href',url);
 								$("#load").html('');
 
-								
-								
+
+
 							} else {
 								$(".alert").removeClass("alert-danger");
 								$(".alert").addClass("alert-danger");
@@ -641,7 +641,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                    $("#load").html('');
 						}
 					});
-				
+
 		    });
 
 		});
@@ -763,7 +763,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				$spanFoto = 'text-danger glyphicon glyphicon-remove-sign';
 				break;
 		}
-		
+
 
 
 		// traer imagen
@@ -956,14 +956,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 
 		<link href="../css/estiloDash.css" rel="stylesheet" type="text/css">
-		    
 
-		    
+
+
 		    <script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
 		    <link rel="stylesheet" href="../css/jquery-ui.css">
 
 		    <script src="../js/jquery-ui.js"></script>
-		    
+
 			<!-- Latest compiled and minified CSS -->
 		    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css"/>
 			<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
@@ -975,7 +975,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			<script src="../js/fileinput/plugins/sortable.min.js"></script>
 			<!-- purify plugin for safe rendering HTML content in preview -->
 			<script src="../js/fileinput/plugins/purify.min.js"></script>
-			
+
 		    <script src="../js/liquidmetal.js" type="text/javascript"></script>
 		    <script src="../js/jquery.flexselect.js" type="text/javascript"></script>
 		   <link rel="stylesheet" href="../css/flexselect.css" type="text/css" media="screen" />
@@ -1011,32 +1011,32 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    font-weight: normal;
 			}
 			</style>
-		    
-		    
+
+
 		</head>
 
 		<body>
 
-		 
+
 		<?php echo str_replace('****','..', str_replace('..','../dashboard',$resMenu)); ?>
 
 		<div id="content">
 
 		<h3>Bienvenido</h3>
-			
+
 		    <div class="boxInfoLargo">
 		        <div id="headBoxInfo">
 		        	<p style="color: #fff; font-size:18px; height:16px;">Bienvenido al panel de alta de socios/jugadores nuevos.</p>
-		        	
+
 		        </div>
 		    	<div class="cuerpoBox">
-		    		
+
 
 					<div class="alert alert-predio">
 					<p><b><span class="glyphicon glyphicon-info-sign"></span> PASO 1</b> POR FAVOR CONTROLE TODOS SUS DATOS PERSONALES. SOLO SE PUEDEN MODIFICAR LOS CAMPOS HABILITADOS EN BLANCO</p>
 					</div>
 		        	<form class="form-inline formulario" role="form" enctype="multipart/form-data">
-		        	
+
 					<div class="row">
 					<?php echo $formulario; ?>
 					<input type="hidden" id="nrodocumento" name="nrodocumento" value="<?php echo mysql_result($resResultado, 0,'nrodocumento'); ?>">
@@ -1100,7 +1100,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 					        </div>
 				        </div>
 		            </div>
-		            
+
 		            <hr>
 		            <div class="row">
 		            	<div class="col-sm-12">
@@ -1223,14 +1223,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 						</div>
 					</div>
-		            
-		            
+
+
 		            <div class='row' style="margin-left:25px; margin-right:25px;">
 		                <div class='alert'>
-		                
+
 		                </div>
 		                <div id='load'>
-		                
+
 		                </div>
 		            </div>
 
@@ -1264,7 +1264,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		    </div>
 
 
-		   
+
 		</div>
 
 
@@ -1280,7 +1280,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		        <h4 class="modal-title" id="myModalLabel">Estado Documentación</h4>
 		      </div>
 		      <div class="modal-body" id="resultadoPresentacion">
-		        
+
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -1296,14 +1296,14 @@ if ($_SESSION['idroll_predio'] == 4) {
 		<script src="../bootstrap/js/dataTables.bootstrap.js"></script>
 		<script type="text/javascript" src="../js/fileinput/fileinput.js"></script>
 		<script>
-		
+
 		</script>
 
 		<script type="text/javascript">
 		$(document).ready(function(){
 
 			$('#generarFicha').click(function() {
-				window.open("../reportes/rptAltaSocio.php?id=<?php echo mysql_result($resResultado,0,0); ?>" ,'_blank');	
+				window.open("../reportes/rptAltaSocio.php?id=<?php echo mysql_result($resResultado,0,0); ?>" ,'_blank');
 			});
 
 			$('.abrir').click();
@@ -1314,42 +1314,42 @@ if ($_SESSION['idroll_predio'] == 4) {
 				$direc = "./../data/".mysql_result($resFoto,0,0);
 			?>
 			function rotarImagenIzquierda() {
-				
+
 				$.ajax({
-					data:  {imagen: '<?php echo $urlImg; ?>', 
+					data:  {imagen: '<?php echo $urlImg; ?>',
 							rotar: 90,
 							directorio: '<?php echo $direc; ?>',
 							accion: 'rotarImagen'},
 					url:   '../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							url = "index.php";
 							$(location).attr('href',url);
-							
+
 					}
 				});
 			}
 
 
 			function rotarImagenDerecha() {
-				
+
 				$.ajax({
-					data:  {imagen: '<?php echo $urlImg; ?>', 
+					data:  {imagen: '<?php echo $urlImg; ?>',
 							rotar: 270,
 							directorio: '<?php echo $direc; ?>',
 							accion: 'rotarImagen'},
 					url:   '../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							url = "index.php";
 							$(location).attr('href',url);
-							
+
 					}
 				});
 			}
@@ -1363,55 +1363,55 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 			function eliminarFoto(documentacion, jugador) {
 				$.ajax({
-					data:  {documentacion: documentacion, 
+					data:  {documentacion: documentacion,
 							jugador: jugador,
 							accion: 'eliminarFotoJugadores'},
 					url:   '../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							alert(response);
 							url = "index.php";
 							$(location).attr('href',url);
-							
+
 					}
 				});
 			}
 
 			function presentardocumentacion(id) {
 				$.ajax({
-					data:  {id: id, 
+					data:  {id: id,
 							accion: 'presentardocumentacion'},
 					url:   '../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							$('#resultadoPresentacion').html(response);
 							//url = "index.php";
 							//$(location).attr('href',url);
-							
+
 					}
 				});
 			}
-			
+
 			function presentardocumentacionAparte(id) {
 				$.ajax({
-					data:  {id: id, 
+					data:  {id: id,
 							accion: 'presentardocumentacionAparte'},
 					url:   '../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							$('#resultadoPresentacion').html(response);
 							//url = "index.php";
 							//$(location).attr('href',url);
-							
+
 					}
 				});
 			}
@@ -1419,15 +1419,15 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$('#presentar').click(function() {
 				presentardocumentacion(<?php echo mysql_result($resResultado,0,0); ?>);
 			});
-			
+
 			$('#presentar2').click(function() {
 				presentardocumentacionAparte(<?php echo mysql_result($resResultado,0,0); ?>);
 			});
 
-			var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' + 
+			var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' +
 			    'onclick="alert(\'Call your custom code here.\')">' +
 			    '<i class="glyphicon glyphicon-tag"></i>' +
-			    '</button>'; 
+			    '</button>';
 
 			<?php
 				if (mysql_num_rows($resFoto)>0) {
@@ -1455,7 +1455,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
@@ -1501,11 +1501,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1535,7 +1535,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
@@ -1580,12 +1580,12 @@ if ($_SESSION['idroll_predio'] == 4) {
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1619,7 +1619,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
@@ -1664,12 +1664,12 @@ if ($_SESSION['idroll_predio'] == 4) {
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1720,11 +1720,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic 
+			        // note for these file types below no extension determination logic
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../imagenes/sin_img.jpg">', 
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<img src="../imagenes/sin_img.jpg">'    
+			        'jpg': '<img src="../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../imagenes/sin_img.jpg">'
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
@@ -1776,7 +1776,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    allowedFileExtensions: ["pdf"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1801,7 +1801,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
-			    <?php 
+			    <?php
 			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreview: [
@@ -1819,7 +1819,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				?>
 				initialPreviewFileType: 'image',
 			    initialPreviewAsData: true, // allows you to set a raw markup
-    			<?php 
+    			<?php
 			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreviewConfig: [
@@ -1850,11 +1850,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic 
+			        // note for these file types below no extension determination logic
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../imagenes/sin_img.jpg">', 
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<img src="../imagenes/sin_img.jpg">'    
+			        'jpg': '<img src="../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../imagenes/sin_img.jpg">'
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
@@ -1906,7 +1906,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1932,7 +1932,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    defaultPreviewContent: '<img src="../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
-			    <?php 
+			    <?php
 			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreview: [
@@ -1950,7 +1950,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				?>
 				initialPreviewFileType: 'image',
 			    initialPreviewAsData: true, // allows you to set a raw markup
-    			<?php 
+    			<?php
 			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreviewConfig: [
@@ -1981,11 +1981,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic 
+			        // note for these file types below no extension determination logic
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../imagenes/sin_img.jpg">', 
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<img src="../imagenes/sin_img.jpg">'    
+			        'jpg': '<img src="../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../imagenes/sin_img.jpg">'
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
@@ -2037,12 +2037,12 @@ if ($_SESSION['idroll_predio'] == 4) {
 			    allowedFileExtensions: ["pdf","jpg", "png"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
 
-			
+
 			$('#colapsarMenu').click();
 
 
@@ -2050,7 +2050,9 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$('#nrodocumento').prop('disabled',true);
 			$('#email').prop('disabled',true);
 			$('#fechaalta').prop('disabled',true);
-			
+			$('#fechanacimiento').prop('disabled',true);
+
+
 			$(document).on('click', '.panel-heading span.clickable', function(e){
 				var $this = $(this);
 				if(!$this.hasClass('panel-collapsed')) {
@@ -2063,8 +2065,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 					$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
 				}
 			});
-			
-			
+
+
 			$('#buscar').click(function(e) {
 		        $.ajax({
 						data:  {busqueda: $('#busqueda').val(),
@@ -2073,27 +2075,27 @@ if ($_SESSION['idroll_predio'] == 4) {
 						url:   '../ajax/ajax.php',
 						type:  'post',
 						beforeSend: function () {
-								
+
 						},
 						success:  function (response) {
 								$('#resultadosJuagadores').html(response);
-								
+
 						}
 				});
-				
+
 			});
-			
-			
+
+
 			//al enviar el formulario
 		    $('#cargar').click(function(){
-				
+
 
 				//información del formulario
 				var formData = new FormData($(".formulario")[0]);
 				var message = "";
-				//hacemos la petición ajax  
+				//hacemos la petición ajax
 				$.ajax({
-					url: '../ajax/ajax.php',  
+					url: '../ajax/ajax.php',
 					type: 'POST',
 					// Form data
 					//datos del formulario
@@ -2104,8 +2106,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 					processData: false,
 					//mientras enviamos el archivo
 					beforeSend: function(){
-						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');  
-						$('#cargar').hide();     
+						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');
+						$('#cargar').hide();
 					},
 					//una vez finalizado correctamente
 					success: function(data){
@@ -2116,16 +2118,16 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                                        $(".alert").addClass("alert-success");
 		                                        $(".alert").html('<strong>Ok!</strong> Sus datos fueron guardados correctamente. ');
 												$(".alert").delay(3000).queue(function(){
-													/*aca lo que quiero hacer 
+													/*aca lo que quiero hacer
 													  después de los 2 segundos de retraso*/
 													$(this).dequeue(); //continúo con el siguiente ítem en la cola
-													
+
 												});
 												$("#load").html('');
 												url = "index.php";
 												$(location).attr('href',url);
-		                                        
-												
+
+
 		                                    } else {
 		                                    	$(".alert").removeClass("alert-danger");
 		                                        $(".alert").addClass("alert-danger");
@@ -2139,21 +2141,21 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                $("#load").html('');
 					}
 				});
-				
+
 		    });
 
 
 
 			//al enviar el formulario
 		    $('#cargar2').click(function(){
-				
+
 
 				//información del formulario
 				var formData = new FormData($(".formulario")[0]);
 				var message = "";
-				//hacemos la petición ajax  
+				//hacemos la petición ajax
 				$.ajax({
-					url: '../ajax/ajax.php',  
+					url: '../ajax/ajax.php',
 					type: 'POST',
 					// Form data
 					//datos del formulario
@@ -2164,8 +2166,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 					processData: false,
 					//mientras enviamos el archivo
 					beforeSend: function(){
-						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');  
-						$('#cargar2').hide();     
+						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');
+						$('#cargar2').hide();
 					},
 					//una vez finalizado correctamente
 					success: function(data){
@@ -2176,16 +2178,16 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                                        $(".alert").addClass("alert-success");
 		                                        $(".alert").html('<strong>Ok!</strong> Sus datos fueron guardados correctamente. ');
 												$(".alert").delay(3000).queue(function(){
-													/*aca lo que quiero hacer 
+													/*aca lo que quiero hacer
 													  después de los 2 segundos de retraso*/
 													$(this).dequeue(); //continúo con el siguiente ítem en la cola
-													
+
 												});
 												$("#load").html('');
 												url = "index.php";
 												$(location).attr('href',url);
-		                                        
-												
+
+
 		                                    } else {
 		                                    	$(".alert").removeClass("alert-danger");
 		                                        $(".alert").addClass("alert-danger");
@@ -2199,36 +2201,36 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                $("#load").html('');
 					}
 				});
-				
+
 		    });
-			
-			
+
+
 
 			$('#selction-ajax').on("click",'.varJugadorModificar', function(){
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
-					
+
 					url = "jugadores/modificar.php?id=" + usersid;
 					$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton eliminar
-			
+
 			$('table.table').on("click",'.varborrar', function(){
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
 					$("#idEliminar").val(usersid);
 					$("#dialog2").dialog("open");
 
-					
+
 					//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 					//$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton eliminar
-			
+
 			$("#refcountries").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 
 		});
@@ -2254,31 +2256,31 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 
 		<link href="../css/estiloDash.css" rel="stylesheet" type="text/css">
-		    
 
-		    
+
+
 		    <script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
 		    <link rel="stylesheet" href="../css/jquery-ui.css">
 
 		    <script src="../js/jquery-ui.js"></script>
-		    
-		    <script src="../js/jquery.easy-autocomplete.min.js"></script> 
+
+		    <script src="../js/jquery.easy-autocomplete.min.js"></script>
 
 			<!-- CSS file -->
-			<link rel="stylesheet" href="../css/easy-autocomplete.min.css"> 
+			<link rel="stylesheet" href="../css/easy-autocomplete.min.css">
 
 			<!-- Additional CSS Themes file - not required-->
-			<link rel="stylesheet" href="../css/easy-autocomplete.themes.min.css"> 
-		    
+			<link rel="stylesheet" href="../css/easy-autocomplete.themes.min.css">
+
 			<!-- Latest compiled and minified CSS -->
 		    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css"/>
 			<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
 		    <!-- Latest compiled and minified JavaScript -->
 		    <script src="../bootstrap/js/bootstrap.min.js"></script>
-			
 
 
-			
+
+
 		    <script src="../js/liquidmetal.js" type="text/javascript"></script>
 		    <script src="../js/jquery.flexselect.js" type="text/javascript"></script>
 		   <link rel="stylesheet" href="../css/flexselect.css" type="text/css" media="screen" />
@@ -2292,19 +2294,19 @@ if ($_SESSION['idroll_predio'] == 4) {
 		        $('#navigation').perfectScrollbar();
 		      });
 		    </script>
-		    
-		    
+
+
 		</head>
 
 		<body>
 
-		 
+
 		<?php echo str_replace('****','..', str_replace('..','../dashboard',$resMenu)); ?>
 
 		<div id="content">
 
 		<h3>Bienvenido</h3>
-			
+
 		    <?php
 			if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 				$resCantidadJugadores = $serviciosReferencias->traerCantidadJugadores();
@@ -2326,39 +2328,39 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                    <div class="panel-body">
 		                    	<div class="row">
 
-		                            
+
 		                            <div class="form-group col-md-12">
 		                                 <h4>Busqueda por Nombre Completo o Nro Documento</h4>
-		                                
-		        							
+
+
 		        						<input id="lstjugadores" style="width:75%;">
-		        							
-		        						
+
+
 		        						<div id="selction-ajax" style="margin-top: 10px;"></div>
 		                            </div>
-		                            
+
 		                            <div class="form-group col-md-12">
 		                                <div class="cuerpoBox" id="resultadosJuagadores">
-		                
+
 		                                </div>
 		                            </div>
-		                            
-		                            
+
+
 							</div><!-- fin del contenedor detalle -->
-		                    </div>		
+		                    </div>
 						</div>
 		            </div>
-		    
+
 		    </div>
 		    </div>
-		    
-		    
-		    
-		    
+
+
+
+
 		    <?php
 			}
 			?>
-		   
+
 		</div>
 
 		<!-- Modal -->
@@ -2371,7 +2373,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		        <h4 class="modal-title" id="myModalLabel">Desea cargarle los estudios medicos?</h4>
 		      </div>
 		      <div class="modal-body" id="datosEstudioMedico">
-		        
+
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-primary" data-dismiss="modal" id="cargarEstudioMedico">Si</button>
@@ -2397,7 +2399,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$("select.flexselect").flexselect();
 
 			$("select.flexselect").change(function() {
-				
+
 				$('#selction-ajax').html('<button type="button" class="btn btn-warning varJugadorModificar" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Modificar</button> \
 					<button type="button" class="btn btn-success varJugadorDocumentaciones" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Documentaciones</button> \
 					<button type="button" class="btn btn-success varJugadorEquipos" id="' + $("select.flexselect").val() + '" style="margin-left:0px;">Equipos</button> \
@@ -2406,7 +2408,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 */
 
 			$('#colapsarMenu').click();
-			
+
 			$(document).on('click', '.panel-heading span.clickable', function(e){
 				var $this = $(this);
 				if(!$this.hasClass('panel-collapsed')) {
@@ -2461,12 +2463,12 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            busqueda: $("#lstjugadores").val()
 		        }
 		    },
-		    
+
 		    preparePostData: function (data) {
 		        data.busqueda = $("#lstjugadores").val();
 		        return data;
 		    },
-			
+
 			list: {
 			    maxNumberOfElements: 15,
 				match: {
@@ -2474,7 +2476,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				},
 				onClickEvent: function() {
 					var value = $("#lstjugadores").getSelectedItemData().id;
-					
+
 					$("#selction-ajax").html('<button type="button" class="btn btn-warning varJugadorModificar" id="' + value + '" style="margin-left:0px;">Modificar</button> \
 					<button type="button" class="btn btn-success varJugadorDocumentaciones" id="' + value + '" style="margin-left:0px;">Documentaciones</button> \
 					<button type="button" class="btn btn-success varJugadorEquipos" id="' + value + '" style="margin-left:0px;">Equipos</button> \
@@ -2488,7 +2490,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 		$("#lstjugadores").easyAutocomplete(options);
 
 			$('#colapsarMenu').click();
-			
+
 			$(document).on('click', '.panel-heading span.clickable', function(e){
 				var $this = $(this);
 				if(!$this.hasClass('panel-collapsed')) {
@@ -2501,8 +2503,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 					$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
 				}
 			});
-			
-			
+
+
 			$('#buscar').click(function(e) {
 		        $.ajax({
 						data:  {busqueda: $('#busqueda').val(),
@@ -2511,18 +2513,18 @@ if ($_SESSION['idroll_predio'] == 4) {
 						url:   '../ajax/ajax.php',
 						type:  'post',
 						beforeSend: function () {
-								
+
 						},
 						success:  function (response) {
 								$('#resultadosJuagadores').html(response);
-								
+
 						}
 				});
-				
+
 			});
-			
-			
-			
+
+
+
 			$('table.table').dataTable({
 				"order": [[ 0, "asc" ]],
 				"language": {
@@ -2549,20 +2551,20 @@ if ($_SESSION['idroll_predio'] == 4) {
 					}
 				  }
 			} );
-			
 
-			
+
+
 			$('#cargarEstudioMedico').click(function() {
 				$.ajax({
 					data:  {id: $('#refjugadorestudiomedico').val(), accion: 'modificarEstudioMedico'},
 					url:   '../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 						alert('El Estudio Medico fue modificado Correctamente');
-							
+
 					}
 				});
 			});
@@ -2576,11 +2578,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 					url:   '../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							$('#datosEstudioMedico').html(response);
-							
+
 					}
 				});
 			});//fin del boton eliminar
@@ -2588,11 +2590,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$('#selction-ajax').on("click",'.varJugadorModificar', function(){
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
-					
+
 					url = "jugadores/modificar.php?id=" + usersid;
 					$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton eliminar
 
@@ -2600,11 +2602,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$('#selction-ajax').on("click",'.varJugadorDocumentaciones', function(){
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
-					
+
 					url = "jugadores/documentaciones.php?id=" + usersid;
 					$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton eliminar
 
@@ -2612,11 +2614,11 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$('#selction-ajax').on("click",'.varJugadorEquipos', function(){
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
-					
+
 					url = "jugadores/equipos.php?id=" + usersid;
 					$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton eliminar
 
@@ -2624,55 +2626,55 @@ if ($_SESSION['idroll_predio'] == 4) {
 			$('#selction-ajax').on("click",'.varJugadorHabilitaciones', function(){
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
-					
+
 					url = "jugadores/habilitaciones.php?id=" + usersid;
 					$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton eliminar
-			
+
 			$('table.table').on("click",'.varborrar', function(){
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
 					$("#idEliminar").val(usersid);
 					$("#dialog2").dialog("open");
 
-					
+
 					//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 					//$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton eliminar
-			
+
 			$('table.table').on("click",'.varmodificar', function(){
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
-					
+
 					url = "ordenes/modificar.php?id=" + usersid;
 					$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton modificar
-			
-			
+
+
 			$('table.table').on("click",'.varpagar', function(){
-				
+
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
-					
+
 					url = "pagos/pagar.php?id="+usersid;
 					$(location).attr('href',url);
 				  } else {
-					alert("Error, vuelva a realizar la acción.");	
+					alert("Error, vuelva a realizar la acción.");
 				  }
 			});//fin del boton pagos
-			
-			
+
+
 			$('table.table').on("click",'.varpagos', function(){
-					
+
 				  usersid =  $(this).attr("id");
 				  if (!isNaN(usersid)) {
 
@@ -2681,22 +2683,22 @@ if ($_SESSION['idroll_predio'] == 4) {
 							url:   '../ajax/ajax.php',
 							type:  'post',
 							beforeSend: function () {
-									
+
 							},
 							success:  function (response) {
 									$('.userasignates').html(response);
-									
+
 							}
 					});
-					
+
 					//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 					//$(location).attr('href',url);
 				  } else {
-					alert("Error redo action.");	
+					alert("Error redo action.");
 				  }
 			});//fin del boton eliminar
-			
-			
+
+
 			$('table.table').on("click",'.varfinalizar', function(){
 
 				  usersid =  $(this).attr("id");
@@ -2707,7 +2709,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 							url:   '../ajax/ajax.php',
 							type:  'post',
 							beforeSend: function () {
-									
+
 							},
 							success:  function (response) {
 									if (response == '') {
@@ -2716,35 +2718,35 @@ if ($_SESSION['idroll_predio'] == 4) {
 										$(".alert").addClass("alert-success");
 										$(".alert").html('<strong>Ok!</strong> Se finalizo exitosamente la <strong>Orden</strong>. ');
 										$(".alert").delay(3000).queue(function(){
-											/*aca lo que quiero hacer 
+											/*aca lo que quiero hacer
 											  después de los 2 segundos de retraso*/
 											$(this).dequeue(); //continúo con el siguiente ítem en la cola
-											
+
 										});
 										$("#load").html('');
 										url = "index.php";
 										$(location).attr('href',url);
-										
-										
+
+
 									} else {
 										$(".alert").removeClass("alert-danger");
 										$(".alert").addClass("alert-danger");
 										$(".alert").html('<strong>Error!</strong> '+response);
 										$("#load").html('');
 									}
-									
+
 							}
 					});
-					
+
 					//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 					//$(location).attr('href',url);
 				  } else {
-					alert("Error redo action.");	
+					alert("Error redo action.");
 				  }
 			});//fin del boton eliminar
-			
+
 			 $( "#dialog2" ).dialog({
-				 	
+
 					    autoOpen: false,
 					 	resizable: false,
 						width:600,
@@ -2752,18 +2754,18 @@ if ($_SESSION['idroll_predio'] == 4) {
 						modal: true,
 						buttons: {
 						    "Eliminar": function() {
-			
+
 								$.ajax({
 											data:  {id: $('#idEliminar').val(), accion: 'eliminarJugadoresPre'},
 											url:   '../ajax/ajax.php',
 											type:  'post',
 											beforeSend: function () {
-													
+
 											},
 											success:  function (response) {
 													url = "index.php";
 													$(location).attr('href',url);
-													
+
 											}
 									});
 								$( this ).dialog( "close" );
@@ -2777,8 +2779,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 								$( this ).dialog( "close" );
 						    }
 						}
-				 
-				 
+
+
 			 		}); //fin del dialogo para eliminar
 
 		});
@@ -2790,6 +2792,3 @@ if ($_SESSION['idroll_predio'] == 4) {
 <?php } /* de la session */ ?>
 </body>
 </html>
-
-
-
