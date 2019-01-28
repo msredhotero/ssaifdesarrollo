@@ -70,7 +70,7 @@ switch ($accion) {
 		break;
 	case 'eliminarCierrepadrones':
 		eliminarCierrepadrones($serviciosReferencias);
-		break; 
+		break;
 /* fin */
 
 /* PARA Tipocontactos */
@@ -85,7 +85,7 @@ modificarFixture($serviciosReferencias);
 break;
 case 'eliminarFixture':
 eliminarFixture($serviciosReferencias);
-break; 
+break;
 
 case 'traerFechasPorTorneos':
 	traerFechasPorTorneos($serviciosReferencias, $serviciosFunciones);
@@ -133,7 +133,7 @@ case 'eliminarFotoJugadoresID':
 case 'traerContactosPorCountries':
 	traerContactosPorCountries($serviciosFunciones,$serviciosReferencias);
 	break;
-	
+
 case 'insertarUsuarios':
 insertarUsuarios($serviciosReferencias);
 break;
@@ -200,7 +200,7 @@ modificarArbitros($serviciosReferencias);
 break;
 case 'eliminarArbitros':
 eliminarArbitros($serviciosReferencias);
-break; 
+break;
 
 case 'insertarCategorias':
 insertarCategorias($serviciosReferencias);
@@ -219,7 +219,7 @@ modificarDivisiones($serviciosReferencias);
 break;
 case 'eliminarDivisiones':
 eliminarDivisiones($serviciosReferencias);
-break; 
+break;
 
 case 'insertarTemporadas':
 insertarTemporadas($serviciosReferencias);
@@ -229,7 +229,7 @@ modificarTemporadas($serviciosReferencias);
 break;
 case 'eliminarTemporadas':
 eliminarTemporadas($serviciosReferencias);
-break; 
+break;
 
 
 case 'insertarCanchasuspenciones':
@@ -240,33 +240,33 @@ modificarCanchasuspenciones($serviciosReferencias);
 break;
 case 'eliminarCanchasuspenciones':
 eliminarCanchasuspenciones($serviciosReferencias);
-break; 
+break;
 
 case 'existeJugador':
 	existeJugador($serviciosReferencias);
 	break;
 
-case 'insertarJugadores': 
-insertarJugadores($serviciosReferencias); 
-break; 
-case 'modificarJugadores': 
-modificarJugadores($serviciosReferencias); 
-break; 
+case 'insertarJugadores':
+insertarJugadores($serviciosReferencias);
+break;
+case 'modificarJugadores':
+modificarJugadores($serviciosReferencias);
+break;
 case 'modificarJugadorApellidoNombrePorId':
 	modificarJugadorApellidoNombrePorId($serviciosReferencias);
 	break;
-case 'eliminarJugadores': 
-eliminarJugadores($serviciosReferencias); 
-break; 
-case 'insertarJugadoresdocumentacion': 
-insertarJugadoresdocumentacion($serviciosReferencias); 
-break; 
-case 'modificarJugadoresdocumentacion': 
-modificarJugadoresdocumentacion($serviciosReferencias); 
-break; 
-case 'eliminarJugadoresdocumentacion': 
-eliminarJugadoresdocumentacion($serviciosReferencias); 
-break; 
+case 'eliminarJugadores':
+eliminarJugadores($serviciosReferencias);
+break;
+case 'insertarJugadoresdocumentacion':
+insertarJugadoresdocumentacion($serviciosReferencias);
+break;
+case 'modificarJugadoresdocumentacion':
+modificarJugadoresdocumentacion($serviciosReferencias);
+break;
+case 'eliminarJugadoresdocumentacion':
+eliminarJugadoresdocumentacion($serviciosReferencias);
+break;
 
 case 'modificarEstudioMedico':
 	modificarEstudioMedico($serviciosReferencias);
@@ -282,83 +282,83 @@ case 'traerJugadoresPorCountrie':
 	traerJugadoresPorCountrie($serviciosReferencias);
 	break;
 
-case 'insertarDocumentaciones': 
-insertarDocumentaciones($serviciosReferencias); 
-break; 
-case 'modificarDocumentaciones': 
-modificarDocumentaciones($serviciosReferencias); 
-break; 
-case 'eliminarDocumentaciones': 
-eliminarDocumentaciones($serviciosReferencias); 
-break; 
-case 'insertarMotivoshabilitacionestransitorias': 
-insertarMotivoshabilitacionestransitorias($serviciosReferencias); 
-break; 
-case 'modificarMotivoshabilitacionestransitorias': 
-modificarMotivoshabilitacionestransitorias($serviciosReferencias); 
-break; 
-case 'eliminarMotivoshabilitacionestransitorias': 
-eliminarMotivoshabilitacionestransitorias($serviciosReferencias); 
-break; 
+case 'insertarDocumentaciones':
+insertarDocumentaciones($serviciosReferencias);
+break;
+case 'modificarDocumentaciones':
+modificarDocumentaciones($serviciosReferencias);
+break;
+case 'eliminarDocumentaciones':
+eliminarDocumentaciones($serviciosReferencias);
+break;
+case 'insertarMotivoshabilitacionestransitorias':
+insertarMotivoshabilitacionestransitorias($serviciosReferencias);
+break;
+case 'modificarMotivoshabilitacionestransitorias':
+modificarMotivoshabilitacionestransitorias($serviciosReferencias);
+break;
+case 'eliminarMotivoshabilitacionestransitorias':
+eliminarMotivoshabilitacionestransitorias($serviciosReferencias);
+break;
 
 case 'traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion':
 	traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($serviciosReferencias,$serviciosFunciones);
 	break;
-	
-case 'insertarTipodocumentos': 
-insertarTipodocumentos($serviciosReferencias); 
-break; 
-case 'modificarTipodocumentos': 
-modificarTipodocumentos($serviciosReferencias); 
-break; 
-case 'eliminarTipodocumentos': 
-eliminarTipodocumentos($serviciosReferencias); 
-break; 
-case 'insertarTipojugadores': 
-insertarTipojugadores($serviciosReferencias); 
-break; 
-case 'modificarTipojugadores': 
-modificarTipojugadores($serviciosReferencias); 
-break; 
-case 'eliminarTipojugadores': 
-eliminarTipojugadores($serviciosReferencias); 
-break; 
 
-case 'insertarValoreshabilitacionestransitorias': 
-insertarValoreshabilitacionestransitorias($serviciosReferencias); 
-break; 
-case 'modificarValoreshabilitacionestransitorias': 
-modificarValoreshabilitacionestransitorias($serviciosReferencias); 
-break; 
-case 'eliminarValoreshabilitacionestransitorias': 
-eliminarValoreshabilitacionestransitorias($serviciosReferencias); 
-break; 
+case 'insertarTipodocumentos':
+insertarTipodocumentos($serviciosReferencias);
+break;
+case 'modificarTipodocumentos':
+modificarTipodocumentos($serviciosReferencias);
+break;
+case 'eliminarTipodocumentos':
+eliminarTipodocumentos($serviciosReferencias);
+break;
+case 'insertarTipojugadores':
+insertarTipojugadores($serviciosReferencias);
+break;
+case 'modificarTipojugadores':
+modificarTipojugadores($serviciosReferencias);
+break;
+case 'eliminarTipojugadores':
+eliminarTipojugadores($serviciosReferencias);
+break;
 
-case 'insertarJugadoresmotivoshabilitacionestransitoriasA': 
-insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferencias); 
-break; 
-case 'insertarJugadoresmotivoshabilitacionestransitoriasB': 
-insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferencias); 
-break; 
+case 'insertarValoreshabilitacionestransitorias':
+insertarValoreshabilitacionestransitorias($serviciosReferencias);
+break;
+case 'modificarValoreshabilitacionestransitorias':
+modificarValoreshabilitacionestransitorias($serviciosReferencias);
+break;
+case 'eliminarValoreshabilitacionestransitorias':
+eliminarValoreshabilitacionestransitorias($serviciosReferencias);
+break;
 
-case 'modificarJugadoresmotivoshabilitacionestransitorias': 
-modificarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias); 
-break; 
-case 'eliminarJugadoresmotivoshabilitacionestransitorias': 
-eliminarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias); 
-break; 
+case 'insertarJugadoresmotivoshabilitacionestransitoriasA':
+insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferencias);
+break;
+case 'insertarJugadoresmotivoshabilitacionestransitoriasB':
+insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferencias);
+break;
+
+case 'modificarJugadoresmotivoshabilitacionestransitorias':
+modificarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias);
+break;
+case 'eliminarJugadoresmotivoshabilitacionestransitorias':
+eliminarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias);
+break;
 
 
 /**************  ETAPA 3 Y 4 **************************************/
-case 'insertarTorneos': 
-insertarTorneos($serviciosReferencias); 
-break; 
-case 'modificarTorneos': 
-modificarTorneos($serviciosReferencias); 
-break; 
-case 'eliminarTorneos': 
-eliminarTorneos($serviciosReferencias); 
-break; 
+case 'insertarTorneos':
+insertarTorneos($serviciosReferencias);
+break;
+case 'modificarTorneos':
+modificarTorneos($serviciosReferencias);
+break;
+case 'eliminarTorneos':
+eliminarTorneos($serviciosReferencias);
+break;
 
 case 'correrfechafixture':
 	correrfechafixture($serviciosReferencias);
@@ -367,15 +367,15 @@ case 'modificarnuevafecha':
 	modificarnuevafecha($serviciosReferencias);
 	break;
 
-case 'insertarEquipos': 
-insertarEquipos($serviciosReferencias); 
-break; 
-case 'modificarEquipos': 
-modificarEquipos($serviciosReferencias); 
-break; 
-case 'eliminarEquipos': 
-eliminarEquipos($serviciosReferencias); 
-break; 
+case 'insertarEquipos':
+insertarEquipos($serviciosReferencias);
+break;
+case 'modificarEquipos':
+modificarEquipos($serviciosReferencias);
+break;
+case 'eliminarEquipos':
+eliminarEquipos($serviciosReferencias);
+break;
 
 case 'traerEquiposPorCountries':
 	traerEquiposPorCountries($serviciosFunciones,$serviciosReferencias);
@@ -384,102 +384,102 @@ case 'traerEquipoPorCategoria':
 	traerEquipoPorCategoria($serviciosFunciones,$serviciosReferencias);
 	break;
 
-case 'insertarPuntobonus': 
-insertarPuntobonus($serviciosReferencias); 
-break; 
-case 'modificarPuntobonus': 
-modificarPuntobonus($serviciosReferencias); 
-break; 
-case 'eliminarPuntobonus': 
-eliminarPuntobonus($serviciosReferencias); 
-break; 
-
-case 'insertarTiposanciones': 
-insertarTiposanciones($serviciosReferencias); 
-break; 
-case 'modificarTiposanciones': 
-modificarTiposanciones($serviciosReferencias); 
-break; 
-case 'eliminarTiposanciones': 
-eliminarTiposanciones($serviciosReferencias); 
-break; 
-
-case 'insertarFechasexcluidas': 
-insertarFechasexcluidas($serviciosReferencias); 
-break; 
-case 'modificarFechasexcluidas': 
-modificarFechasexcluidas($serviciosReferencias); 
-break; 
-case 'eliminarFechasexcluidas': 
-eliminarFechasexcluidas($serviciosReferencias); 
-break; 
-
-case 'insertarEstadospartidos': 
-insertarEstadospartidos($serviciosReferencias); 
-break; 
-case 'modificarEstadospartidos': 
-modificarEstadospartidos($serviciosReferencias); 
-break; 
-case 'eliminarEstadospartidos': 
-eliminarEstadospartidos($serviciosReferencias); 
-break; 
-
-case 'insertarDefinicionescategoriastemporadas': 
-insertarDefinicionescategoriastemporadas($serviciosReferencias); 
-break; 
-case 'modificarDefinicionescategoriastemporadas': 
-modificarDefinicionescategoriastemporadas($serviciosReferencias); 
-break; 
-case 'eliminarDefinicionescategoriastemporadas': 
-eliminarDefinicionescategoriastemporadas($serviciosReferencias); 
+case 'insertarPuntobonus':
+insertarPuntobonus($serviciosReferencias);
+break;
+case 'modificarPuntobonus':
+modificarPuntobonus($serviciosReferencias);
+break;
+case 'eliminarPuntobonus':
+eliminarPuntobonus($serviciosReferencias);
 break;
 
-case 'insertarDefinicionescategoriastemporadastipojugador': 
-insertarDefinicionescategoriastemporadastipojugador($serviciosReferencias); 
-break; 
-case 'modificarDefinicionescategoriastemporadastipojugador': 
-modificarDefinicionescategoriastemporadastipojugador($serviciosReferencias); 
-break; 
-case 'eliminarDefinicionescategoriastemporadastipojugador': 
-eliminarDefinicionescategoriastemporadastipojugador($serviciosReferencias); 
-break; 
+case 'insertarTiposanciones':
+insertarTiposanciones($serviciosReferencias);
+break;
+case 'modificarTiposanciones':
+modificarTiposanciones($serviciosReferencias);
+break;
+case 'eliminarTiposanciones':
+eliminarTiposanciones($serviciosReferencias);
+break;
+
+case 'insertarFechasexcluidas':
+insertarFechasexcluidas($serviciosReferencias);
+break;
+case 'modificarFechasexcluidas':
+modificarFechasexcluidas($serviciosReferencias);
+break;
+case 'eliminarFechasexcluidas':
+eliminarFechasexcluidas($serviciosReferencias);
+break;
+
+case 'insertarEstadospartidos':
+insertarEstadospartidos($serviciosReferencias);
+break;
+case 'modificarEstadospartidos':
+modificarEstadospartidos($serviciosReferencias);
+break;
+case 'eliminarEstadospartidos':
+eliminarEstadospartidos($serviciosReferencias);
+break;
+
+case 'insertarDefinicionescategoriastemporadas':
+insertarDefinicionescategoriastemporadas($serviciosReferencias);
+break;
+case 'modificarDefinicionescategoriastemporadas':
+modificarDefinicionescategoriastemporadas($serviciosReferencias);
+break;
+case 'eliminarDefinicionescategoriastemporadas':
+eliminarDefinicionescategoriastemporadas($serviciosReferencias);
+break;
+
+case 'insertarDefinicionescategoriastemporadastipojugador':
+insertarDefinicionescategoriastemporadastipojugador($serviciosReferencias);
+break;
+case 'modificarDefinicionescategoriastemporadastipojugador':
+modificarDefinicionescategoriastemporadastipojugador($serviciosReferencias);
+break;
+case 'eliminarDefinicionescategoriastemporadastipojugador':
+eliminarDefinicionescategoriastemporadastipojugador($serviciosReferencias);
+break;
 
 case 'traerDefinicionesPorTemporadaCategoriaTipoJugador':
 	traerDefinicionesPorTemporadaCategoriaTipoJugador($serviciosReferencias);
 	break;
 
 
-case 'insertarDefinicionessancionesacumuladastemporadas': 
-insertarDefinicionessancionesacumuladastemporadas($serviciosReferencias); 
-break; 
-case 'modificarDefinicionessancionesacumuladastemporadas': 
-modificarDefinicionessancionesacumuladastemporadas($serviciosReferencias); 
-break; 
-case 'eliminarDefinicionessancionesacumuladastemporadas': 
-eliminarDefinicionessancionesacumuladastemporadas($serviciosReferencias); 
-break; 
+case 'insertarDefinicionessancionesacumuladastemporadas':
+insertarDefinicionessancionesacumuladastemporadas($serviciosReferencias);
+break;
+case 'modificarDefinicionessancionesacumuladastemporadas':
+modificarDefinicionessancionesacumuladastemporadas($serviciosReferencias);
+break;
+case 'eliminarDefinicionessancionesacumuladastemporadas':
+eliminarDefinicionessancionesacumuladastemporadas($serviciosReferencias);
+break;
 
 
-case 'insertarConector': 
-insertarConector($serviciosReferencias); 
-break; 
-case 'insertarConectorAjax': 
-insertarConectorAjax($serviciosReferencias); 
-break; 
-case 'modificarConector': 
-modificarConector($serviciosReferencias); 
-break; 
-case 'eliminarConector': 
-eliminarConector($serviciosReferencias); 
-break; 
+case 'insertarConector':
+insertarConector($serviciosReferencias);
+break;
+case 'insertarConectorAjax':
+insertarConectorAjax($serviciosReferencias);
+break;
+case 'modificarConector':
+modificarConector($serviciosReferencias);
+break;
+case 'eliminarConector':
+eliminarConector($serviciosReferencias);
+break;
 
-case 'eliminarConectorDefinitivamente': 
-eliminarConectorDefinitivamente($serviciosReferencias); 
-break; 
+case 'eliminarConectorDefinitivamente':
+eliminarConectorDefinitivamente($serviciosReferencias);
+break;
 
 case 'eliminarTodosLosJugadores':
 	eliminarTodosLosJugadores($serviciosReferencias);
-	break; 
+	break;
 /***************  FIN  ********************************************/
 
 /*****         FUNCIONES       **********/
@@ -520,7 +520,7 @@ case 'filtrosGenerales':
 	break;
 case 'traerJugadoresPorEquipo':
 	traerJugadoresPorEquipo($serviciosReferencias);
-	break;	
+	break;
 /*****          FIN            ***********/
 
 
@@ -549,7 +549,7 @@ case 'modificarFalloPorFecha':
 case 'modificarMovimientosSancionesFechaCumplida':
 	modificarMovimientosSancionesFechaCumplida($serviciosReferencias);
 	break;
-	
+
 case 'insertarSancionesfechascumplidas':
 	insertarSancionesfechascumplidas($serviciosReferencias);
 	break;
@@ -558,12 +558,12 @@ case 'modificarSancionesfechascumplidas':
 	break;
 case 'eliminarSancionesfechascumplidas':
 	eliminarSancionesfechascumplidas($serviciosReferencias);
-	break; 
-	
+	break;
+
 case 'eliminarSancionesfallos':
 	eliminarSancionesfallos($serviciosReferencias);
 	break;
-	
+
 case 'eliminarSancionesfallosacumuladas':
 	eliminarSancionesfallosacumuladas($serviciosReferencias);
 	break;
@@ -581,16 +581,16 @@ case 'modificarJugadorespre':
 	break;
 case 'eliminarJugadorespre':
 	eliminarJugadorespre($serviciosReferencias);
-	break; 
+	break;
 case 'modificarJugadorespreRegistro':
 	modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios);
 	break;
 case 'presentardocumentacion':
 	presentardocumentacion($serviciosReferencias);
-	break; 
+	break;
 case 'presentardocumentacionAparte':
 	presentardocumentacionAparte($serviciosReferencias);
-	break; 
+	break;
 case 'guardarEstado':
 	guardarEstado($serviciosReferencias);
 	break;
@@ -614,7 +614,7 @@ case 'generarNotificacion':
 case 'modificarCategoriaFallo':
 	modificarCategoriaFallo($serviciosReferencias);
 	break;
-	
+
 case 'cargarFechaDestacadaPrincipal':
 	cargarFechaDestacadaPrincipal($serviciosReferencias);
 	break;
@@ -632,7 +632,7 @@ case 'ultimaFechaSancionadoPorAcumulacionAmarillasFallada':
 	ultimaFechaSancionadoPorAcumulacionAmarillasFallada($serviciosReferencias);
 	break;
 
-/*** fin controles *****///	
+/*** fin controles *****///
 }
 
 /**** controles ****////
@@ -714,38 +714,38 @@ function marcarNotificacion($serviciosReferencias) {
 }
 
 function generarNotificacion($serviciosReferencias) {
-	$mensaje = $_POST['mensaje']; 
-	$idpagina = $_POST['idpagina']; 
-	$autor = $_POST['autor']; 
-	$destinatario = $_POST['destinatario']; 
-	$id1 = $_POST['id1']; 
-	$id2 = $_POST['id2']; 
-	$id3 = $_POST['id3']; 
-	$icono = $_POST['icono']; 
-	$estilo = $_POST['estilo']; 
-	$fecha = date('Y-m-d H:i:s'); 
-	$url = $_POST['url']; 
-	$email = $_POST['email']; 
+	$mensaje = $_POST['mensaje'];
+	$idpagina = $_POST['idpagina'];
+	$autor = $_POST['autor'];
+	$destinatario = $_POST['destinatario'];
+	$id1 = $_POST['id1'];
+	$id2 = $_POST['id2'];
+	$id3 = $_POST['id3'];
+	$icono = $_POST['icono'];
+	$estilo = $_POST['estilo'];
+	$fecha = date('Y-m-d H:i:s');
+	$url = $_POST['url'];
+	$email = $_POST['email'];
 
-	$res = $serviciosReferencias->insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url); 
-	
-	if ((integer)$res > 0) { 
+	$res = $serviciosReferencias->insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url);
+
+	if ((integer)$res > 0) {
 		$destinatario = $email;
 		if ($icono == 'glyphicon glyphicon-ok') {
 			$asunto = "Su Ficha se encuantra en estado: Aceptado";
 		} else {
 			$asunto = "Su Ficha se encuantra en estado: Rechazado";
 		}
-		
+
 		$cuerpo = '<p>'.$mensaje.'</p>';
 		if ($icono == 'glyphicon glyphicon-ok') {
 			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/aifzn/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>';
 		}
 		$serviciosReferencias->enviarEmail($destinatario,$asunto,$cuerpo, $referencia='');
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
 }
 /* Fin */
 
@@ -781,7 +781,7 @@ $id = $_POST['id'];
 
 $res = $serviciosReferencias->eliminarCierrepadronesPorCountry($id);
 echo $res;
-} 
+}
 
 /*****			SATELITES		**********/
 
@@ -816,7 +816,7 @@ function jugadorNuevo($serviciosReferencias) {
 				observaciones
 				from		dbjugadorespre
 				where		idjugadorpre = ".$id;
-			
+
 
 	$res = $serviciosReferencias->query($sql,1);
 
@@ -833,7 +833,7 @@ function jugadorNuevo($serviciosReferencias) {
 
 	//escritura
 	$serviciosReferencias->insertarJugadoresdocumentacion($res,4,0,'');
-	
+
 	//examen medico
 	$serviciosReferencias->insertarJugadoresdocumentacion($res,5,0,'');
 
@@ -874,7 +874,7 @@ function jugadorNuevo($serviciosReferencias) {
 	} else {
 		$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,364);
 	}
-	
+
 
 	//inhabilita country
 	$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($res,366);
@@ -890,7 +890,7 @@ function guardarEstado($serviciosReferencias) {
 	$id = $_POST['id'];
 	$refestados = $_POST['refestados'];
 	$existeJugador = $_POST['existeJugador'];
-	
+
 	$res = $serviciosReferencias->modificarEstadoDocumentacionjugadorimagenesPorId($id, $refestados);
 
 	if (($existeJugador == 1) && ($refestados == 3)) {
@@ -917,7 +917,7 @@ function guardarEstado($serviciosReferencias) {
 		} else {
 			$serviciosReferencias->insertarJugadoresdocumentacion($id,$refdocumentaciones,1,'');
 		}
-		
+
 
 		//inserto valoracion
 		switch ($refdocumentaciones) {
@@ -931,7 +931,7 @@ function guardarEstado($serviciosReferencias) {
 				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,368);
 				break;
 		}
-		
+
 
 
 	}
@@ -971,20 +971,20 @@ function insertarJugadorespre($serviciosReferencias) {
 	$refcountries = $_POST['refcountries'];
 	$observaciones = $_POST['observaciones'];
 	$refusuarios = $_POST['refusuarios'];
-	
+
 	if (($fechaalta == '***') || ($fechanacimiento == '***')) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if (($serviciosReferencias->existeJugador($nrodocumento) == 0) && ($serviciosReferencias->existeJugadorPre($nrodocumento) == 0)) {
-			$res = $serviciosReferencias->insertarJugadorespre($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$numeroserielote,$refcountries,$observaciones,$refusuarios); 
-			
-			if ((integer)$res > 0) { 
-				echo $res; 
-			} else { 
-				echo 'Huvo un error al insertar datos ';	 
-			} 
+			$res = $serviciosReferencias->insertarJugadorespre($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$numeroserielote,$refcountries,$observaciones,$refusuarios);
+
+			if ((integer)$res > 0) {
+				echo $res;
+			} else {
+				echo 'Huvo un error al insertar datos ';
+			}
 		} else {
-			echo 'Ya existe ese numero de documento';	
+			echo 'Ya existe ese numero de documento';
 		}
 	}
 }
@@ -1003,12 +1003,12 @@ function modificarJugadorespre($serviciosReferencias) {
 	$refcountries = $_POST['refcountries'];
 	$observaciones = $_POST['observaciones'];
 	$refusuarios = $_POST['refusuarios'];
-	
+
 	if (($fechaalta == '***') || ($fechanacimiento == '***')) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		$res = $serviciosReferencias->modificarJugadorespre($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$numeroserielote,$refcountries,$observaciones,$refusuarios);
-		
+
 		if ($res == true) {
 			echo '';
 		} else {
@@ -1021,7 +1021,7 @@ function modificarJugadorespre($serviciosReferencias) {
 function eliminarJugadorespre($serviciosReferencias) {
 	$id = $_POST['id'];
 
-	$res = $serviciosReferencias->traerJugadoresprePorId($id);	
+	$res = $serviciosReferencias->traerJugadoresprePorId($id);
 
 	if ( (integer)mysql_result($res, 0,'idusuario') > 0) {
 		echo 'No se puede borrar el jugador ya que se registro como usuario en el sistema, comunicarse con la Asociacion para resolverlo.';
@@ -1030,7 +1030,7 @@ function eliminarJugadorespre($serviciosReferencias) {
 		$res = $serviciosReferencias->eliminarJugadorespre($id);
 		echo $res;
 	}
-} 
+}
 
 function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios) {
 	$id = $_POST['id'];
@@ -1049,12 +1049,12 @@ function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios
 	} else {
 		$res = $serviciosReferencias->modificarJugadorespreRegistro($id, $apellido, $nombres, $fechanacimiento, $observaciones);
 		if ($res == true) {
-			
+
 
 			$resFoto 				= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
 			$resFotoDocumento 		= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
 			$resFotoDocumentoDorso 	= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,99);
-			
+
 			$resTitulo 			   	= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,4);
 			$resExpensa				= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,6);
 			$resPartidaNacimiento	= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,9);
@@ -1118,9 +1118,9 @@ function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios
 				$nuevoId6 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 				$error .= $serviciosReferencias->subirArchivoJugadores('avatar-6',$id,$nuevoId6,9,$id);
 			}
-			
-			
-			
+
+
+
 			echo ''.$error;
 		} else {
 			echo 'Huvo un error al modificar datos';
@@ -1145,7 +1145,7 @@ function cargarVigenciasCargaDelegados($serviciosReferencias) {
 
 	if (($vigenciaDesde == '***') || ($vigenciaHasta == '***')) {
 		echo 'Error en el formato de las fechas';
-		
+
 	} else {
 		$res = $serviciosReferencias->insertarVigenciasoperaciones(2,$vigenciaDesde,$vigenciaHasta,'Carga de vigencias para los delegados');
 		echo $res;
@@ -1222,25 +1222,25 @@ function guardarJugadorClubSimple($serviciosReferencias) {
 /*****		Llenar Combos con otros ******/
 function traerCategoriasPorCountries($serviciosReferencias, $serviciosFunciones) {
 	$idCountries = $_POST['id'];
-	
+
 	$res = traerCategoriasPorCountries($idCountries);
 	$cad = $serviciosFunciones->devolverSelectBox($res, array(1), '');
-	
+
 	echo $cad;
-		
+
 }
 
 /* Fin */
 function formatearFechas($fecha) {
 	if ($fecha != '') {
 		$arFecha = explode("/", $fecha);
-		
+
 		$nuevaFecha = 	$arFecha[2]."/".$arFecha[1]."/".$arFecha[0];
-		
+
 		if (checkdate($arFecha[1],$arFecha[0],$arFecha[2])) {
 			return $nuevaFecha;
 		} else {
-			return '***';	
+			return '***';
 		}
 	}
 	return $fecha;
@@ -1248,7 +1248,7 @@ function formatearFechas($fecha) {
 
 function formatearEntero($entero) {
 	if ($entero == '') {
-		return 'NULL';	
+		return 'NULL';
 	}
 	return $entero;
 }
@@ -1258,13 +1258,13 @@ function formatearEntero($entero) {
 
 function buscarPartido($serviciosReferencias) {
 	$id = $_POST['id'];
-	
+
 	$res = $serviciosReferencias->traerFixturePorId($id);
-	
+
 	if (mysql_num_rows($res)>0) {
-		echo $id;	
+		echo $id;
 	} else {
-		echo 0;	
+		echo 0;
 	}
 }
 
@@ -1275,7 +1275,7 @@ function buscarPartido($serviciosReferencias) {
 /*****         FUNCIONES       **********/
 function verificarEdad($serviciosReferencias) {
 	$id	= $_POST['refjugador'];
-	
+
 	echo $serviciosReferencias->verificarEdad($id);
 }
 
@@ -1285,17 +1285,17 @@ function verificaEdadCategoriaJugador($serviciosReferencias) {
 	$refequipo		= $_POST['refequipo'];
 	$reftemporada	= $_POST['reftemporada'];
 	$tipoJugador	= $_POST['tipoJugador'];
-	
+
 	//obtengo el valor que verifica si el jugador puede jugar para ese categoria en esa posicion
 	$valorA = $serviciosReferencias->verificaEdadCategoriaJugador($refjugador, $refcategoria, $tipoJugador);
-	
+
 	//obtengo el valor que verifica si el jugador tiene alguna habilitacion temporaria deportiva
 	$valorB = $serviciosReferencias->verificaHabilitacionDeportiva($refjugador, $refcategoria, $reftemporada, $refequipo);
-	
+
 	if (($valorA == 0) && ($valorB == 0)) {
-		echo 0;	
+		echo 0;
 	} else {
-		echo 1;	
+		echo 1;
 	}
 }
 /*****          fin          ************/
@@ -1303,7 +1303,7 @@ function verificaEdadCategoriaJugador($serviciosReferencias) {
 
 /**********************     BUSQUEDAS             ********************************************************/
 function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
-	$resTemporadas = $serviciosReferencias->traerUltimaTemporada();	
+	$resTemporadas = $serviciosReferencias->traerUltimaTemporada();
 
 	$where = '';
 
@@ -1312,13 +1312,13 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 		$where .= 'tor.reftemporadas = '.$reftemporada." and ";
 	} else {
 		if (mysql_num_rows($resTemporadas)>0) {
-			$reftemporada = mysql_result($resTemporadas,0,0);	
+			$reftemporada = mysql_result($resTemporadas,0,0);
 			$where .= 'tor.reftemporadas = '.$reftemporada." and ";
 		} else {
-			$reftemporada = 0;	
+			$reftemporada = 0;
 		}
 	}
-	
+
 	if ((isset($_POST['refcountries1'])) && ($_POST['refcountries1']!=0)) {
 		$refcountres = $_POST['refcountries1'];
 		$where .= 'equ.refcountries = '.$refcountres." and ";
@@ -1349,7 +1349,7 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 	} else {
 		$reffechas = '';
 	}
-	
+
 	if ((isset($_POST['reffechadesde1'])) && ($_POST['reffechadesde1']!='')) {
 		$desde = $_POST['reffechadesde1'];
 		$hasta = $_POST['reffechahasta1'];
@@ -1361,21 +1361,21 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 	} else {
 		$desde = '';
 	}
-	
+
 	$refCanchas		=	$serviciosReferencias->traerCanchas();
 
 	$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(2),'');
 
 	$resProximasFechas	= $serviciosReferencias->traerProximaFechaFiltros(substr($where,0,strlen($where)-4));
 	//echo $resProximasFechas;
-	
+
 	$categorias = '';
 	$fecha = '';
 	$cadCabecera = '';
 	$primero = 0;
 	while ($row = mysql_fetch_array($resProximasFechas)) {
 		if (($categorias != $row['categoria']) || ($fecha != $row['fecha'])) {
-			
+
 			if ($primero != 0) {
 				$cadCabecera .= '</tbody></table></div></div></div>';
 			}
@@ -1399,14 +1399,14 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 								</tr>
 							</thead>
 							<tbody>';
-							
+
 			$primero = 1;
-			$categorias = $row['categoria'];	
-			$fecha = $row['fecha'];		
+			$categorias = $row['categoria'];
+			$fecha = $row['fecha'];
 		}
-		
+
 		$dateH = new DateTime($row['fechajuego']);
-		
+
 		$cadCabecera .= "<tr>
 							<td>".$row['equipoLocal']."</td>
 							<td>".$row['equipoVisitante']."</td>
@@ -1424,26 +1424,26 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 						</tr>";
 
 	}
-	
+
 	$cadCabecera .= '</tbody></table></div></div></div>';
-	
+
 	echo $cadCabecera;
-	
+
 }
 
 
 function buscarJugadoresFiltro($serviciosReferencias) {
 	$busqueda		=	$_POST['busqueda'];
-	
+
 	if (is_int($busqueda)) {
 		$tipobusqueda = 3;
 	} else {
 		$tipobusqueda = 2;
 	}
-	
-	
+
+
 	$res	=	$serviciosReferencias->buscarJugadores($tipobusqueda,$busqueda);
-	
+
 	$cad3 = '';
 	//////////////////////////////////////////////////////busquedajugadores/////////////////////
 	$cad3 = $cad3.'
@@ -1451,7 +1451,7 @@ function buscarJugadoresFiltro($serviciosReferencias) {
 				<div class="panel panel-info">
                                 <div class="panel-heading">
                                 	<h3 class="panel-title">Resultado de la Busqueda</h3>
-                                	
+
                                 </div>
                                 <div class="panel-body-predio" style="padding:5px 20px;">
                                 	';
@@ -1487,33 +1487,33 @@ function buscarJugadoresFiltro($serviciosReferencias) {
 					<td>'.($rowJ[9]).'</td>
 					<td>'.($rowJ[10]).'</td>
 					<td>
-								
+
 							<div class="btn-group">
 								<button class="btn btn-success" type="button">Acciones</button>
-								
+
 								<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
 								<span class="caret"></span>
 								<span class="sr-only">Toggle Dropdown</span>
 								</button>
-								
+
 								<ul class="dropdown-menu" role="menu">
 									<li>
 									<a href="modificar.php?id='.$rowJ[0].'" class="varmodificarJugador" id="'.$rowJ[0].'"><span class="glyphicon glyphicon-pencil"></span>  Modificar</a>
 									</li>
-									
+
 								</ul>
 							</div>
-							
-							
+
+
 						</td>
 				 </tr>';
 	}
-	
+
 	$cad3 = $cad3.'</tbody>
                                 </table></div>
                             </div>
 						</div>';
-						
+
 	echo $cad3;
 }
 
@@ -1521,16 +1521,16 @@ function buscarJugadoresFiltro($serviciosReferencias) {
 
 function buscarJugadoresNombresFiltro($serviciosReferencias) {
 	$busqueda		=	$_POST['busqueda'];
-	
+
 	if (is_int($busqueda)) {
 		$tipobusqueda = 3;
 	} else {
 		$tipobusqueda = 2;
 	}
-	
-	
+
+
 	$res	=	$serviciosReferencias->buscarJugadores($tipobusqueda,$busqueda);
-	
+
 	$cad3 = '';
 	//////////////////////////////////////////////////////busquedajugadores/////////////////////
 	$cad3 = $cad3.'
@@ -1538,7 +1538,7 @@ function buscarJugadoresNombresFiltro($serviciosReferencias) {
 				<div class="panel panel-info">
                                 <div class="panel-heading">
                                 	<h3 class="panel-title">Resultado de la Busqueda</h3>
-                                	
+
                                 </div>
                                 <div class="panel-body-predio" style="padding:5px 20px;">
                                 	';
@@ -1574,12 +1574,12 @@ function buscarJugadoresNombresFiltro($serviciosReferencias) {
 					<td><button type="button" class="btn btn-primary modificarJugadorNombreApellido" id="'.$rowJ[0].'">Guardar</button></td>
 				 </tr>';
 	}
-	
+
 	$cad3 = $cad3.'</tbody>
                                 </table></div>
                             </div>
 						</div>';
-						
+
 	echo $cad3;
 }
 
@@ -1587,9 +1587,9 @@ function buscarJugadoresNombresFiltro($serviciosReferencias) {
 function buscarJugadores($serviciosReferencias) {
 	$tipobusqueda	=	$_POST['tipobusqueda'];
 	$busqueda		=	$_POST['busqueda'];
-	
+
 	$res	=	$serviciosReferencias->buscarJugadores($tipobusqueda,$busqueda);
-	
+
 	$cad3 = '';
 	//////////////////////////////////////////////////////busquedajugadores/////////////////////
 	$cad3 = $cad3.'
@@ -1597,7 +1597,7 @@ function buscarJugadores($serviciosReferencias) {
 				<div class="panel panel-info">
                                 <div class="panel-heading">
                                 	<h3 class="panel-title">Resultado de la Busqueda</h3>
-                                	
+
                                 </div>
                                 <div class="panel-body-predio" style="padding:5px 20px;">
                                 	';
@@ -1633,33 +1633,33 @@ function buscarJugadores($serviciosReferencias) {
 					<td>'.($rowJ[9]).'</td>
 					<td>'.($rowJ[10]).'</td>
 					<td>
-								
+
 							<div class="btn-group">
 								<button class="btn btn-success" type="button">Acciones</button>
-								
+
 								<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
 								<span class="caret"></span>
 								<span class="sr-only">Toggle Dropdown</span>
 								</button>
-								
+
 								<ul class="dropdown-menu" role="menu">
 									<li>
 									<a href="jugadores/modificar.php?id='.$rowJ[0].'" class="varmodificarJugador" id="'.$rowJ[0].'"><span class="glyphicon glyphicon-pencil"></span>  Modificar</a>
 									</li>
-									
+
 								</ul>
 							</div>
-							
-							
+
+
 						</td>
 				 </tr>';
 	}
-	
+
 	$cad3 = $cad3.'</tbody>
                                 </table></div>
                             </div>
 						</div>';
-						
+
 	echo $cad3;
 }
 
@@ -1673,14 +1673,14 @@ function buscarJugadores($serviciosReferencias) {
 function modificarMovimientosSancionesFechaCumplida($serviciosReferencias) {
 	$id		=	$_POST['id'];
 	$cumple =	$_POST['cumple'];
-	
+
 	$res = $serviciosReferencias->modificarMovimientosancionesCumplidasPorId($id,$cumple);
-	
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 	
+
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
 }
 
 
@@ -1688,17 +1688,17 @@ function modificarMovimientosSancionesFechaCumplida($serviciosReferencias) {
 function insertarSancionesfechascumplidas($serviciosReferencias) {
 	$reffixture = $_POST['reffixture'];
 	$refjugadores = $_POST['refjugadores'];
-	
+
 	if (isset($_POST['cumplida'])) {
 		$cumplida = 1;
 	} else {
 		$cumplida = 0;
 	}
-	
+
 	$refsancionesfallos = $_POST['refsancionesfallos'];
-	
+
 	$res = $serviciosReferencias->insertarSancionesfechascumplidas($reffixture,$refjugadores,$cumplida,$refsancionesfallos);
-	
+
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
@@ -1717,11 +1717,11 @@ function modificarSancionesfechascumplidas($serviciosReferencias) {
 	} else {
 		$cumplida = 0;
 	}
-	
+
 	$refsancionesfallos = $_POST['refsancionesfallos'];
-	
+
 	$res = $serviciosReferencias->modificarSancionesfechascumplidas($id,$reffixture,$refjugadores,$cumplida,$refsancionesfallos);
-	
+
 	if ($res == true) {
 		echo '';
 	} else {
@@ -1734,7 +1734,7 @@ function eliminarSancionesfechascumplidas($serviciosReferencias) {
 
 	$res = $serviciosReferencias->eliminarSancionesfechascumplidas($id);
 	echo $res;
-} 
+}
 
 function eliminarSancionesfallos($serviciosReferencias) {
 	$id = $_POST['id'];
@@ -1759,23 +1759,23 @@ function eliminarPreFallo($serviciosReferencias) {
 }
 /**********************                        FIN                     ***********************************/
 function insertarFalloPorFecha($serviciosReferencias) {
-	$refsancionesjugadores = $_POST['refsancionesjugadores']; 
-	
-	if (isset($_POST['elegir'])) { 
-		$valor	= $_POST['elegir']; 
-	} else { 
-		$valor = 0; 
-	} 
-	
+	$refsancionesjugadores = $_POST['refsancionesjugadores'];
+
+	if (isset($_POST['elegir'])) {
+		$valor	= $_POST['elegir'];
+	} else {
+		$valor = 0;
+	}
+
 	//traigo la sancion del jugador para poder acceder a la fecha//
 	$resSancionesJugadores	=	$serviciosReferencias->traerSancionesjugadoresPorId($refsancionesjugadores);
 	$refFixture				=	mysql_result($resSancionesJugadores,0,'reffixture');
-	
+
 	$resFixture				=	$serviciosReferencias->traerFixturePorId($refFixture);
 	$refFecha				=	mysql_result($resFixture,0,'reffechas');
-	
+
 	$idTorneo				=	mysql_result($resFixture,0,'reftorneos');
-	
+
 	$resTorneo				=	$serviciosReferencias->traerTorneosPorId($idTorneo);
 	$idTipoTorneo			=	mysql_result($resTorneo,0,'reftipotorneo');
 
@@ -1785,104 +1785,104 @@ function insertarFalloPorFecha($serviciosReferencias) {
 	$idDivisiones			=	mysql_result($resSancionesJugadores,0,'refdivisiones');
 	$idsancion				=	$refsancionesjugadores;
 	$idJugador				=	mysql_result($resSancionesJugadores,0,'refjugadores');
-	
+
 	$refParaActualizar		=	0; //utilizo esta variable para acumular la ultima fecha sancionada y modificar la de la acumulacion de las amarillas
 	$fechaEncontrada		=	0;
 	$bandModificoFecha		=	0;
-	
-	
+
+
 	$pendientescumplimientos = 0; //verificar
-	
+
 	$errores	=	"";
-	
+
 	$amarillas = 0;
-	
-	$fechadesde = ''; 
-	$fechahasta = ''; 
-	
-	$cantidadfechas = 0; 
-	
+
+	$fechadesde = '';
+	$fechahasta = '';
+
+	$cantidadfechas = 0;
+
 	$count = count($valor);
-	
+
 	for ($i = 0; $i < $count; $i++) {
 
 		switch ($valor[$i]) {
-			case 'fallocantidad':	
-				$cantidadfechas = $_POST['cantidadfechas']; 
-				$fechadesde = ''; 
-				$fechahasta = ''; 
-				$pendientesfallo = 0; 
+			case 'fallocantidad':
+				$cantidadfechas = $_POST['cantidadfechas'];
+				$fechadesde = '';
+				$fechahasta = '';
+				$pendientesfallo = 0;
 				break;
 			case 'fallofechas':
-				$cantidadfechas = 0; 
-				$fechadesde = formatearFechas($_POST['fechadesde']); 
-				$fechahasta = formatearFechas($_POST['fechahasta']); 
+				$cantidadfechas = 0;
+				$fechadesde = formatearFechas($_POST['fechadesde']);
+				$fechahasta = formatearFechas($_POST['fechahasta']);
 				$pendientescumplimientos = 1; //verificar
-				$pendientesfallo = 0; 
+				$pendientesfallo = 0;
 				if (($fechadesde == '***') || ($fechahasta == '***')) {
 					$errores = 'Formato de fecha incorrecto';
 				}
 				break;
 			case 'falloamarillas':
-				$amarillas = $_POST['amarillas']; 
-				$pendientesfallo = 0; 
+				$amarillas = $_POST['amarillas'];
+				$pendientesfallo = 0;
 				break;
 			case 'pendientesfallo':
-				$cantidadfechas = 0; 
-				$fechadesde = ''; 
-				$fechahasta = ''; 
-				$amarillas = 0; 
-				$pendientesfallo = 1; 
+				$cantidadfechas = 0;
+				$fechadesde = '';
+				$fechahasta = '';
+				$amarillas = 0;
+				$pendientesfallo = 1;
 				break;
 			default:
 				$amarillas = -1;
 		}
 	}
-	
+
 	if ($errores != '') {
 		echo $errores;
 	} else {
 		if ($amarillas == -1) {
 			echo 'Debe seleccionar una opción.';
 		} else {
-			$fechascumplidas = 0; 
-			
+			$fechascumplidas = 0;
+
 			$generadaporacumulacion = 0; //solo cuando cumple con 5 amarillas
-			
-			
-			$observaciones = $_POST['observaciones']; 	
-			
+
+
+			$observaciones = $_POST['observaciones'];
+
 			//necesito saber si cuando resuelven por 2 amarillas en el pre-fallo o en el fallo o la convinandiocn de las dos
-			
+
 			$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones);
 
-			if ((integer)$res > 0) { 
+			if ((integer)$res > 0) {
 
 				//actualizo la referencia
 				$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
-				
+
 				//// aplico el calculo de acumulacionde amarillas si el or es true /////
-			
+
 				if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
 					//*****			calculo amarillas acumuladas ********/
 					$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo);
 					//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
 					if ((integer)$cantidadAmarillas >= 5) {
-	
-					
+
+
 						$fallo = $serviciosReferencias->insertarSancionesfallosacumuladas($refsancionesjugadores,1,'0000-00-00','0000-00-00',$amarillas,0,0,0,1,'Acumulación de la 5 amarilla:'.$cantidadAmarillas);
-							
-						
+
+
 					}
-					
+
 					//*****				fin							*****/
-				} 
-				
-				echo ''; 
-			} else { 
-				echo 'Huvo un error al insertar datos';	 
-			} 
-			
+				}
+
+				echo '';
+			} else {
+				echo 'Huvo un error al insertar datos';
+			}
+
 		}
 	}
 }
@@ -1890,26 +1890,26 @@ function insertarFalloPorFecha($serviciosReferencias) {
 
 
 function modificarFalloPorFecha($serviciosReferencias) {
-	$refsancionesjugadores = $_POST['refsancionesjugadores']; 
-	
-	if (isset($_POST['elegir'])) { 
-		$valor	= $_POST['elegir']; 
-	} else { 
-		$valor = 0; 
-	} 
-	
+	$refsancionesjugadores = $_POST['refsancionesjugadores'];
+
+	if (isset($_POST['elegir'])) {
+		$valor	= $_POST['elegir'];
+	} else {
+		$valor = 0;
+	}
+
 	//traigo la sancion del jugador para poder acceder a la fecha//
 	$resSancionesJugadores	=	$serviciosReferencias->traerSancionesjugadoresPorId($refsancionesjugadores);
 	$refFixture				=	mysql_result($resSancionesJugadores,0,'reffixture');
-	
+
 	$resFixture				=	$serviciosReferencias->traerFixturePorId($refFixture);
 	$refFecha				=	mysql_result($resFixture,0,'reffechas');
-	
+
 	$idTorneo				=	mysql_result($resFixture,0,'reftorneos');
-	
+
 	$resTorneo				=	$serviciosReferencias->traerTorneosPorId($idTorneo);
 	$idTipoTorneo			=	mysql_result($resTorneo,0,'reftipotorneo');
-	
+
 	$equipo					=	mysql_result($resSancionesJugadores,0,'refequipos');
 	$fecha					=	date('Y-m-d');
 	$idCategoria			=	mysql_result($resSancionesJugadores,0,'refcategorias');
@@ -1920,76 +1920,76 @@ function modificarFalloPorFecha($serviciosReferencias) {
 	$resFallo				=	$serviciosReferencias->traerSancionesfallosPorId(mysql_result($resSancionesJugadores,0,'refsancionesfallos'));
 
 	$pendientescumplimientos = mysql_result($resFallo,0,'pendientescumplimientos'); //verificar
-	
+
 	if ($pendientescumplimientos == 'Si') {
 		$pendientescumplimientos = 1;
 	} else {
 		$pendientescumplimientos = 0;
 	}
-	
+
 	$errores	=	"";
-	
+
 	$amarillas = 0;
-	
-	$fechadesde = ''; 
-	$fechahasta = ''; 
-	
-	$cantidadfechas = 0; 
-	
+
+	$fechadesde = '';
+	$fechahasta = '';
+
+	$cantidadfechas = 0;
+
 	$count = count($valor);
 
 	for ($i = 0; $i < $count; $i++) {
 
 		switch ($valor[$i]) {
-			case 'fallocantidad':	
-				$cantidadfechas = $_POST['cantidadfechas']; 
-				$fechadesde = ''; 
-				$fechahasta = ''; 
-				$pendientesfallo = 0; 
+			case 'fallocantidad':
+				$cantidadfechas = $_POST['cantidadfechas'];
+				$fechadesde = '';
+				$fechahasta = '';
+				$pendientesfallo = 0;
 				break;
 			case 'fallofechas':
-				$cantidadfechas = 0; 
-				$fechadesde = formatearFechas($_POST['fechadesde']); 
-				$fechahasta = formatearFechas($_POST['fechahasta']); 
+				$cantidadfechas = 0;
+				$fechadesde = formatearFechas($_POST['fechadesde']);
+				$fechahasta = formatearFechas($_POST['fechahasta']);
 				$pendientescumplimientos = 1; //verificar
-				$pendientesfallo = 0; 
+				$pendientesfallo = 0;
 				if (($fechadesde == '***') || ($fechahasta == '***')) {
 					$errores = 'Formato de fecha incorrecto';
 				}
 				break;
 			case 'falloamarillas':
-				$amarillas = $_POST['amarillas']; 
-				$pendientesfallo = 0; 
+				$amarillas = $_POST['amarillas'];
+				$pendientesfallo = 0;
 				break;
 			case 'pendientesfallo':
-				$cantidadfechas = 0; 
-				$fechadesde = ''; 
-				$fechahasta = ''; 
-				$amarillas = 0; 
-				$pendientesfallo = 1; 
+				$cantidadfechas = 0;
+				$fechadesde = '';
+				$fechahasta = '';
+				$amarillas = 0;
+				$pendientesfallo = 1;
 				break;
 			default:
 				$amarillas = -1;
 		}
 	}
-	
+
 	if ($errores != '') {
 		echo $errores;
 	} else {
 		if ($amarillas == -1) {
 			echo 'Debe seleccionar una opción.';
 		} else {
-			$fechascumplidas = 0; 
-			
+			$fechascumplidas = 0;
+
 			$generadaporacumulacion = 0; //solo cuando cumple con 5 amarillas
-			
-			
-			$observaciones = $_POST['observaciones']; 	
-			
+
+
+			$observaciones = $_POST['observaciones'];
+
 			//necesito saber si cuando resuelven por 2 amarillas en el pre-fallo o en el fallo o la convinandiocn de las dos
-				
+
 			//// aplico el calculo de acumulacionde amarillas si el or es true /////
-			
+
 			if ((mysql_result($resSancionesJugadores,0,'reffixture') == 4) || ($amarillas == 2)) {
 				//*****			calculo amarillas acumuladas ********/
 				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo);
@@ -2001,88 +2001,88 @@ function modificarFalloPorFecha($serviciosReferencias) {
 
 				} else {
 					$existe = $serviciosReferencias->traerSancionesfallosacumuladasPorIdSancionJugador($refsancionesjugadores);
-					
+
 					if (mysql_num_rows($existe)>0) {
 						//borro la sancion
-						$serviciosReferencias->eliminarSancionesfallosacumuladas(mysql_result($existe,0,0));	
+						$serviciosReferencias->eliminarSancionesfallosacumuladas(mysql_result($existe,0,0));
 					}
 				}
-				
+
 				//*****				fin							*****/
-			} 
-			
+			}
+
 			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones);
-			
+
 			if ($cantidadfechas > 0) {
 				$resCambio = $serviciosReferencias->traerSancionesfallosacumuladasCambioPorEquipoFechaDesdeHasta(mysql_result($resSancionesJugadores,0,'refequipos'),mysql_result($resSancionesJugadores,0,'fecha'),date('Y-m-d'),mysql_result($resSancionesJugadores,0,'refcategorias'));
 				if (mysql_num_rows($resCambio)>0) {
 					while ($row = mysql_fetch_array($resCambio)) {
-						
+
 						// voy recorriendo las fechas que deberia haber sancionado
 						if ($serviciosReferencias->existeYaLaSancion($row['idfixture'], $idJugador, mysql_result($resFallo,0,0)) == 0) {
-							$serviciosReferencias->insertarSancionCumplidaSolo($row['idfixture'], $idJugador, 1, mysql_result($resFallo,0,0), 0);	
+							$serviciosReferencias->insertarSancionCumplidaSolo($row['idfixture'], $idJugador, 1, mysql_result($resFallo,0,0), 0);
 						}
 					}
 				}
 			}
-			
-			if ($res == true) { 
 
-				echo ''; 
-			} else { 
-				echo 'Huvo un error al insertar datos';	 
-			} 
-			
-			
+			if ($res == true) {
+
+				echo '';
+			} else {
+				echo 'Huvo un error al insertar datos';
+			}
+
+
 			/********** elimino lo cargado ***************************************************/
 			//$serviciosReferencias->eliminarMovimientosancionesPorSancionJugador($refsancionesjugadores);
 			/********** fin   (despues lo controlo con los movimientos)  *********************/
-			
-			
+
+
 		}
 	}
 }
 /**********************          CONECTA JUGADORES CON EQUIPOS *******************************************/
 
-function insertarConectorAjax($serviciosReferencias) { 
-	$refjugadores = $_POST['refjugadores']; 
-	$reftipojugadores = $_POST['reftipojugadores']; 
-	$refequipos = $_POST['refequipos']; 
-	$refcountries = $_POST['refcountries']; 
-	$refcategorias = $_POST['refcategorias']; 
-	$reftemporada = $_POST['reftemporada']; 
-	
-	if (isset($_POST['esfusion'])) { 
+function insertarConectorAjax($serviciosReferencias) {
+	$refjugadores = $_POST['refjugadores'];
+	$reftipojugadores = $_POST['reftipojugadores'];
+	$refequipos = $_POST['refequipos'];
+	$refcountries = $_POST['refcountries'];
+	$refcategorias = $_POST['refcategorias'];
+	$reftemporada = $_POST['reftemporada'];
+
+	if (isset($_POST['esfusion'])) {
 		$refcountries = $_POST['refcountriesaux'];
-		$esfusion	= 1; 
-	} else { 
-		$esfusion = 0; 
-	} 
-	
-	$activo	= 1; 
+		$esfusion	= 1;
+	} else {
+		$esfusion = 0;
+	}
+
+	$activo	= 1;
 
 	$cad = '';
-	
+
 	//// verifico si el jugador ya fue cargado 1=existe, 0=no existe /////
-	$existeJugador = $serviciosReferencias->existeConectorJugadorEquipo($refjugadores, $refequipos);	
-	
+	$existeJugador = $serviciosReferencias->existeConectorJugadorEquipo($refjugadores, $refequipos);
+
 	///  verifico si cumple con la edad 	1=ok, 0=mal	/////
 	$vEdad = $serviciosReferencias->verificaEdadCategoriaJugador($refjugadores, $refcategorias, $reftipojugadores);
-	
+
 	// Verifico si tiene una hab. transitoria
 	$vHabTrns = $serviciosReferencias->verificaHabilitacionDeportiva($refjugadores, $refcategorias, $reftemporada, $refequipos);
-	
+
 	if ($existeJugador == 0) {
 		if (($vEdad == 1) || ($vHabTrns == 1)) {
-			$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
-			if ((integer)$res > 0) { 
-				
-				
+			$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo);
+			if ((integer)$res > 0) {
+
+
 				//$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
-				
+
 				$resConector = $serviciosReferencias->traerConectorActivosPorConector($res);
-				
-				
+
+
 				$cad = '
 						<tr>
 						<td>'.mysql_result($resConector,0,'nombrecompleto').'</td>
@@ -2094,91 +2094,91 @@ function insertarConectorAjax($serviciosReferencias) {
 						<td align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="'.mysql_result($resConector,0,'idconector').'" class="varEliminarJugador"></td>
 						</tr>
 						';
-				
-				echo $cad; 
-			} else { 
-				echo 'Huvo un error al insertar datos';	 
-			} 
+
+				echo $cad;
+			} else {
+				echo 'Huvo un error al insertar datos';
+			}
 		} else {
-			echo 'El jugador no cumple con la edad';	
+			echo 'El jugador no cumple con la edad';
 		}
 	} else {
-		echo 'El jugador ya fue cargado en este equipo';	
+		echo 'El jugador ya fue cargado en este equipo';
 	}
-	
-} 
+
+}
 
 
-function insertarConector($serviciosReferencias) { 
-	$refjugadores = $_POST['refjugadores']; 
-	$reftipojugadores = $_POST['reftipojugadores']; 
-	$refequipos = $_POST['refequipos']; 
-	$refcountries = $_POST['refcountries']; 
-	$refcategorias = $_POST['refcategorias']; 
-	
+function insertarConector($serviciosReferencias) {
+	$refjugadores = $_POST['refjugadores'];
+	$reftipojugadores = $_POST['reftipojugadores'];
+	$refequipos = $_POST['refequipos'];
+	$refcountries = $_POST['refcountries'];
+	$refcategorias = $_POST['refcategorias'];
+
 	$reftemporada = $_POST['reftemporada'];
-	
-	if (isset($_POST['esfusion'])) { 
+
+	if (isset($_POST['esfusion'])) {
 		$refcountries = $_POST['refcountriesaux'];
-		$esfusion	= 1; 
-	} else { 
-		$esfusion = 0; 
-	} 
-	
-	$activo	= 1; 
-	
+		$esfusion	= 1;
+	} else {
+		$esfusion = 0;
+	}
+
+	$activo	= 1;
+
 	// Verifico si tiene una hab. transitoria
 	$vHabTrns = $serviciosReferencias->verificaHabilitacionDeportiva($refjugadores, $refcategorias, $reftemporada, $refequipos);
-	
+
 	$existe = $serviciosReferencias->existeConectorJugadorEquipo($refjugadores, $refequipos);
-	
+
 	if ($existe == 1) {
-		echo 'Ya cargo a este jugador en el equipo';	 
+		echo 'Ya cargo a este jugador en el equipo';
 	} else {
-		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
-		
-		if ((integer)$res > 0) { 
+		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo);
+
+		if ((integer)$res > 0) {
 			//si voy a cargar al agente y ademas posee otro conector y esta activo, pero esta carga viene de un habilitacion deportiva
 			if ($vHabTrns != 1) {
 				$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
 			}
-			echo ''; 
-		} else { 
-			echo 'Huvo un error al insertar datos';	 
-		} 
+			echo '';
+		} else {
+			echo 'Huvo un error al insertar datos';
+		}
 	}
-} 
+}
 
 
-function modificarConector($serviciosReferencias) { 
-$id = $_POST['id']; 
-$refjugadores = $_POST['refjugadores']; 
-$reftipojugadores = $_POST['reftipojugadores']; 
-$refequipos = $_POST['refequipos']; 
-$refcountries = $_POST['refcountries']; 
-$refcategorias = $_POST['refcategorias']; 
-if (isset($_POST['esfusion'])) { 
-$esfusion	= 1; 
-} else { 
-$esfusion = 0; 
-} 
-if (isset($_POST['activo'])) { 
-$activo	= 1; 
-} else { 
-$activo = 0; 
-} 
-$res = $serviciosReferencias->modificarConector($id,$refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo); 
-if ($res == true) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al modificar datos'; 
-} 
-} 
-function eliminarConector($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarConector($id); 
-echo $res; 
-} 
+function modificarConector($serviciosReferencias) {
+$id = $_POST['id'];
+$refjugadores = $_POST['refjugadores'];
+$reftipojugadores = $_POST['reftipojugadores'];
+$refequipos = $_POST['refequipos'];
+$refcountries = $_POST['refcountries'];
+$refcategorias = $_POST['refcategorias'];
+if (isset($_POST['esfusion'])) {
+$esfusion	= 1;
+} else {
+$esfusion = 0;
+}
+if (isset($_POST['activo'])) {
+$activo	= 1;
+} else {
+$activo = 0;
+}
+$res = $serviciosReferencias->modificarConector($id,$refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarConector($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarConector($id);
+echo $res;
+}
 
 
 function eliminarTodosLosJugadores($serviciosReferencias) {
@@ -2191,23 +2191,23 @@ function eliminarTodosLosJugadores($serviciosReferencias) {
 
 
 
-function eliminarConectorDefinitivamente($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	
+function eliminarConectorDefinitivamente($serviciosReferencias) {
+	$id = $_POST['id'];
+
 	//verifico que no esta cargado en ningun fixture sino le doy una baja logica  //eliminarConector
-	
-	$res = $serviciosReferencias->eliminarConectorDefinitivamente($id); 
-	echo $res; 
-} 
+
+	$res = $serviciosReferencias->eliminarConectorDefinitivamente($id);
+	echo $res;
+}
 
 
 function traerFechasPorTorneos($serviciosReferencias, $serviciosFunciones) {
 	$idTorneo = $_POST['idTorneo'];
-	
+
 	$res = $serviciosReferencias->traerFechasFixturePorTorneo($idTorneo);
-	
+
 	$cad = $serviciosFunciones->devolverSelectBox($res,array(1),'');
-	
+
 	echo $cad;
 }
 
@@ -2217,24 +2217,24 @@ function guardarPartidoSimple($serviciosReferencias) {
 	$fecha			 = $_POST['fecha'];
 	$hora			 = $_POST['hora'];
 	$refcanchas		 = $_POST['cancha'];
-	$esresaltado	= $_POST['esresaltado']; 	
-	$esdestacado	= $_POST['esdestacado']; 
-	
+	$esresaltado	= $_POST['esresaltado'];
+	$esdestacado	= $_POST['esdestacado'];
+
 	/*
-	if (isset($_POST['esresaltado'])) { 
-		$esresaltado	= 1; 
-	} else { 
-		$esresaltado = 0; 
-	} 
-	
-	if (isset($_POST['esdestacado'])) { 
-		$esdestacado	= 1; 
-	} else { 
-		$esdestacado = 0; 
-	} 
+	if (isset($_POST['esresaltado'])) {
+		$esresaltado	= 1;
+	} else {
+		$esresaltado = 0;
+	}
+
+	if (isset($_POST['esdestacado'])) {
+		$esdestacado	= 1;
+	} else {
+		$esdestacado = 0;
+	}
 	*/
 	$fecha = formatearFechas($fecha);
-	
+
 	if ($fecha != '***') {
 		$res = $serviciosReferencias->guardarPartidoSimple($idfixture, $fecha, $hora, $refcanchas,$esresaltado,$esdestacado);
 		echo '';
@@ -2274,23 +2274,23 @@ function insertarFixture($serviciosReferencias) {
 	$goleslocal = ($_POST['goleslocal'] == '' ? 'NULL' : $_POST['goleslocal']);
 	$golesvisitantes = ($_POST['golesvisitantes'] == '' ? 'NULL' : $_POST['golesvisitantes']);
 	$observaciones = $_POST['observaciones'];
-	
+
 	if (isset($_POST['publicar'])) {
 		$publicar = 1;
 	} else {
 		$publicar = 0;
 	}
-	
+
 	if ($fecha != '***') {
 		$res = $serviciosReferencias->insertarFixture($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
-		
+
 		if ((integer)$res > 0) {
 			echo '';
 		} else {
 			echo 'Huvo un error al insertar datos';
 		}
 	} else {
-		echo 'Formato de fecha erroneo'.$_POST['fecha'];	
+		echo 'Formato de fecha erroneo'.$_POST['fecha'];
 	}
 }
 
@@ -2316,23 +2316,23 @@ function insertarFixtureNuevo($serviciosReferencias) {
 	$observaciones = $_POST['observaciones'];
 	$refetapas = $_POST['refetapas'];
 	$posicion = $_POST['posicion'];
-	
+
 	if (isset($_POST['publicar'])) {
 		$publicar = 1;
 	} else {
 		$publicar = 0;
 	}
-	
+
 	if ($fecha != '***') {
 		$res = $serviciosReferencias->insertarFixtureNuevo($reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar,$refetapas, $posicion);
-		
+
 		if ((integer)$res > 0) {
 			echo '';
 		} else {
 			echo 'Huvo un error al insertar datos ';
 		}
 	} else {
-		echo 'Formato de fecha erroneo'.$_POST['fecha'];	
+		echo 'Formato de fecha erroneo'.$_POST['fecha'];
 	}
 }
 
@@ -2356,23 +2356,23 @@ function modificarFixture($serviciosReferencias) {
 	$goleslocal = $_POST['goleslocal'];
 	$golesvisitantes = $_POST['golesvisitantes'];
 	$observaciones = $_POST['observaciones'];
-	
+
 	if (isset($_POST['publicar'])) {
 		$publicar = 1;
 	} else {
 		$publicar = 0;
 	}
-	
+
 	if ($fecha == '***') {
 		$res = $serviciosReferencias->modificarFixture($id,$reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
-		
+
 		if ($res == true) {
 			echo '';
 		} else {
 			echo 'Huvo un error al modificar datos';
 		}
 	} else {
-		echo 'Formato de fecha erroneo';	
+		echo 'Formato de fecha erroneo';
 	}
 }
 
@@ -2380,7 +2380,7 @@ function eliminarFixture($serviciosReferencias) {
 	$id = $_POST['id'];
 	$res = $serviciosReferencias->eliminarFixture($id);
 	echo $res;
-} 
+}
 
 /**********************                        FIN                     ***********************************/
 
@@ -2398,19 +2398,19 @@ function insertarContactos($serviciosReferencias) {
 	$fax = $_POST['fax'];
 	$email = $_POST['email'];
 	$observaciones = $_POST['observaciones'];
-	
+
 	if (isset($_POST['publico'])) {
 		$publico = 1;
 	} else {
 		$publico = 0;
 	}
-	
+
 	$refCountries	= $_POST['refcountries'];
 
 	$res = $serviciosReferencias->insertarContactos($reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico);
-	
+
 	if ((integer)$res > 0) {
-		
+
 		if ($refCountries != 0) {
 			$serviciosReferencias->insertarCountriecontactos($refCountries,$res);
 		}
@@ -2432,19 +2432,19 @@ function insertarContactosId($serviciosReferencias) {
 	$fax = $_POST['fax'];
 	$email = $_POST['email'];
 	$observaciones = $_POST['observaciones'];
-	
+
 	if (isset($_POST['publico'])) {
 		$publico = 1;
 	} else {
 		$publico = 0;
 	}
-	
+
 	$refCountries	= $_POST['refcountries'];
 
 	$res = $serviciosReferencias->insertarContactos($reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico);
-	
+
 	if ((integer)$res > 0) {
-		
+
 		if ($refCountries != 0) {
 			$serviciosReferencias->insertarCountriecontactos($refCountries,$res);
 		}
@@ -2466,17 +2466,17 @@ function modificarContactos($serviciosReferencias) {
 	$fax = $_POST['fax'];
 	$email = $_POST['email'];
 	$observaciones = $_POST['observaciones'];
-	
+
 	if (isset($_POST['publico'])) {
 		$publico = 1;
 	} else {
 		$publico = 0;
 	}
-	
+
 	$refCountries	= $_POST['refcountries'];
 
 	$res = $serviciosReferencias->modificarContactos($id,$reftipocontactos,$nombre,$direccion,$localidad,$cp,$telefono,$celular,$fax,$email,$observaciones,$publico);
-	
+
 	if ($res == true) {
 		if ($refCountries != 0) {
 			$serviciosReferencias->insertarCountriecontactos($refCountries,$id);
@@ -2494,30 +2494,30 @@ echo $res;
 
 function traerCountriesPorContactos($serviciosReferencias) {
 	$id		=	$_POST['id'];
-	
+
 	$res	= $serviciosReferencias->traerCountriesPorContactos($id);
 	$cadRows='';
 	$total = 0;
-	
+
 	while ($row = mysql_fetch_array($res)) {
 			$cadsubRows = '';
 			$cadRows = $cadRows.'
-			
+
 					<tr class="'.$row[0].'">
                         	';
-			
-			
+
+
 			for ($i=1;$i<=1;$i++) {
-				
-				$cadsubRows = $cadsubRows.'<td><div style="height:20px;overflow:auto;">'.$row[$i].'</div></td>';	
+
+				$cadsubRows = $cadsubRows.'<td><div style="height:20px;overflow:auto;">'.$row[$i].'</div></td>';
 			}
-			
+
 			$cadRows = $cadRows.'
 								'.$cadsubRows.'</tr>';
-			
+
 	}
-			
-	
+
+
 	$cad	= '';
 	$cad = $cad.'
 			<table class="table table-striped table-responsive">
@@ -2532,22 +2532,22 @@ function traerCountriesPorContactos($serviciosReferencias) {
                 </tbody>
             </table>
 			<div style="margin-bottom:85px; margin-right:60px;"></div>
-		
-		';	
+
+		';
 	echo $cad;
-	
-	
+
+
 }
 
 function existeCuit($serviciosReferencias) {
-	$cuit = $_POST['cuit'];	
-	
+	$cuit = $_POST['cuit'];
+
 	$res = $serviciosReferencias->existeCountrie($cuit);
-	
+
 	if ($res == 0) {
-		echo '';	
+		echo '';
 	} else {
-		echo 'Ya existe este Cuit';	
+		echo 'Ya existe este Cuit';
 	}
 }
 
@@ -2557,36 +2557,36 @@ function insertarCountries($serviciosReferencias) {
 	$fechaalta = formatearFechas($_POST['fechaalta']);
 	$fechabaja = formatearFechas($_POST['fechabaja']);
 	$refposiciontributaria = $_POST['refposiciontributaria'];
-	
+
 	$latitud = $_POST['latitud'];
 	$longitud = $_POST['longitud'];
-	
-	$direccion = $_POST['direccion']; 
-	$telefonoadministrativo = $_POST['telefonoadministrativo']; 
-	$telefonocampo = $_POST['telefonocampo']; 
-	$refusuarios = $_POST['refusuarios']; 
-	
+
+	$direccion = $_POST['direccion'];
+	$telefonoadministrativo = $_POST['telefonoadministrativo'];
+	$telefonocampo = $_POST['telefonocampo'];
+	$refusuarios = $_POST['refusuarios'];
+
 	if (isset($_POST['activo'])) {
 		$activo = 1;
 	} else {
 		$activo = 0;
 	}
-	
+
 	$referencia = $_POST['referencia'];
-	$imagen = ''; 
-	
+	$imagen = '';
+
 	$email = $_POST['email'];
 	$localidad = $_POST['localidad'];
-	$codigopostal = $_POST['codigopostal']; 
-	
+	$codigopostal = $_POST['codigopostal'];
+
 	$errorArchivo = '';
-	
+
 	if (($fechaalta == '***') || ($fechabaja == '***')) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeCountrie($cuit)==0) {
 			$res = $serviciosReferencias->insertarCountries($nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal, $refusuarios);
-			
+
 			if ((integer)$res > 0) {
 				$resUser = $serviciosReferencias->traerContactos();
 				$cad = 'user';
@@ -2595,9 +2595,9 @@ function insertarCountries($serviciosReferencias) {
 						$serviciosReferencias->insertarCountriecontactos($res,$rowFS[0]);
 					}
 				}
-				
+
 				$imagenes = array("imagen" => 'imagen');
-			
+
 				foreach ($imagenes as $valor) {
 					$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$res,1);
 				}
@@ -2617,36 +2617,36 @@ function modificarCountries($serviciosReferencias) {
 	$fechaalta = formatearFechas($_POST['fechaalta']);
 	$fechabaja = formatearFechas($_POST['fechabaja']);
 	$refposiciontributaria = $_POST['refposiciontributaria'];
-	
+
 	$latitud = $_POST['latitud'];
 	$longitud = $_POST['longitud'];
-	
-	$direccion = $_POST['direccion']; 
-	$telefonoadministrativo = $_POST['telefonoadministrativo']; 
-	$telefonocampo = $_POST['telefonocampo']; 
 
-	$refusuarios = $_POST['refusuarios']; 
-	
+	$direccion = $_POST['direccion'];
+	$telefonoadministrativo = $_POST['telefonoadministrativo'];
+	$telefonocampo = $_POST['telefonocampo'];
+
+	$refusuarios = $_POST['refusuarios'];
+
 	if (isset($_POST['activo'])) {
 		$activo = 1;
 	} else {
 		$activo = 0;
 	}
-	
+
 	$referencia = $_POST['referencia'];
-	$imagen = ''; 
+	$imagen = '';
 	$email = $_POST['email'];
 	$localidad = $_POST['localidad'];
-	$codigopostal = $_POST['codigopostal']; 
-	
+	$codigopostal = $_POST['codigopostal'];
+
 	$errorArchivo = '';
-	
+
 	if (($fechaalta == '***') || ($fechabaja == '***')) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeCountriePorId($cuit,$id)==0) {
 			$res = $serviciosReferencias->modificarCountries($id,$nombre,$cuit,$fechaalta,$fechabaja,$refposiciontributaria,$latitud,$longitud,$activo,$referencia,$imagen,$direccion,$telefonoadministrativo,$telefonocampo,$email,$localidad,$codigopostal, $refusuarios);
-			
+
 			if ($res == true) {
 				$serviciosReferencias->eliminarCountriecontactosPorCountrie($id);
 					$resUser = $serviciosReferencias->traerContactos();
@@ -2656,9 +2656,9 @@ function modificarCountries($serviciosReferencias) {
 							$serviciosReferencias->insertarCountriecontactos($id,$rowFS[0]);
 						}
 					}
-					
+
 				$imagenes = array("imagen" => 'imagen');
-			
+
 				foreach ($imagenes as $valor) {
 					$errorArchivo .= $serviciosReferencias->subirArchivo($valor,'countries',$id,1);
 				}
@@ -2964,7 +2964,7 @@ function eliminarArbitros($serviciosReferencias) {
 $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarArbitros($id);
 echo $res;
-} 
+}
 
 function insertarCategorias($serviciosReferencias) {
 $categoria = $_POST['categoria'];
@@ -3013,27 +3013,27 @@ function eliminarDivisiones($serviciosReferencias) {
 $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarDivisiones($id);
 echo $res;
-} 
+}
 
 function insertarTemporadas($serviciosReferencias) {
 	$temporada = $_POST['temporada'];
-	
+
 	if (isset($_POST['copiar'])) {
-		$copiar = 1;	
+		$copiar = 1;
 	} else {
-		$copiar = 0;	
+		$copiar = 0;
 	}
-	
-	$resTemporadas = $serviciosReferencias->traerUltimaTemporada();	
+
+	$resTemporadas = $serviciosReferencias->traerUltimaTemporada();
 
 	if (mysql_num_rows($resTemporadas)>0) {
-		$ultimaTemporada = mysql_result($resTemporadas,0,0);	
+		$ultimaTemporada = mysql_result($resTemporadas,0,0);
 	} else {
-		$ultimaTemporada = 0;	
+		$ultimaTemporada = 0;
 	}
-	
+
 	$res = $serviciosReferencias->insertarTemporadas($temporada);
-	
+
 	if ((integer)$res > 0) {
 		if (($copiar == 1) && ($ultimaTemporada != 0)) {
 			$copiaDT = $serviciosReferencias->copiarDefinicionAnterior($ultimaTemporada, $res);
@@ -3061,7 +3061,7 @@ function eliminarTemporadas($serviciosReferencias) {
 $id = $_POST['id'];
 $res = $serviciosReferencias->eliminarTemporadas($id);
 echo $res;
-} 
+}
 
 
 function insertarCanchasuspenciones($serviciosReferencias) {
@@ -3072,9 +3072,9 @@ function insertarCanchasuspenciones($serviciosReferencias) {
 	$fechacrea = date('Y-m-d H:i:s');
 	$usuamodi = '';
 	$fechamodi = '';
-	
+
 	$res = $serviciosReferencias->insertarCanchasuspenciones($refcanchas,$vigenciadesde,$vigenciahasta,$usuacrea,$fechacrea,$usuamodi,$fechamodi);
-	
+
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
@@ -3083,7 +3083,7 @@ function insertarCanchasuspenciones($serviciosReferencias) {
 }
 function modificarCanchasuspenciones($serviciosReferencias) {
 	$id = $_POST['id'];
-	
+
 	$refcanchas = $_POST['refcanchas'];
 	$vigenciadesde = $_POST['vigenciadesde'];
 	$vigenciahasta = ($_POST['vigenciahasta'] == '' ? 'null' : $_POST['vigenciahasta']);
@@ -3091,9 +3091,9 @@ function modificarCanchasuspenciones($serviciosReferencias) {
 	$fechacrea = $_POST['fechacrea'];
 	$usuamodi = $_POST['usuamodi'];
 	$fechamodi = date('Y-m-d H:i:s');
-	
+
 	$res = $serviciosReferencias->modificarCanchasuspenciones($id,$refcanchas,$vigenciadesde,$vigenciahasta,$usuacrea,$fechacrea,$usuamodi,$fechamodi);
-	
+
 	if ($res == true) {
 		echo '';
 	} else {
@@ -3104,119 +3104,119 @@ function eliminarCanchasuspenciones($serviciosReferencias) {
 	$id = $_POST['id'];
 	$res = $serviciosReferencias->eliminarCanchasuspenciones($id);
 	echo $res;
-} 
+}
 
 
 
 function existeJugador($serviciosReferencias) {
-	$nrodocumento = $_POST['nrodocumento']; 
-	
+	$nrodocumento = $_POST['nrodocumento'];
+
 	$res = $serviciosReferencias->existeJugador($nrodocumento);
-	
+
 	if ($res == 0) {
-		echo '';	
+		echo '';
 	} else {
-		echo 'Ya existe este Nro de Documento';	
+		echo 'Ya existe este Nro de Documento';
 	}
 }
 
 
 function existeJugadorPre($serviciosReferencias) {
-	$nrodocumento = $_POST['nrodocumento']; 
-	
+	$nrodocumento = $_POST['nrodocumento'];
+
 	$res = $serviciosReferencias->existeJugadorPre($nrodocumento);
-	
+
 	if ($res == 0) {
-		echo '';	
+		echo '';
 	} else {
-		echo 'Ya existe este Nro de Documento';	
+		echo 'Ya existe este Nro de Documento';
 	}
 }
 
-function insertarJugadores($serviciosReferencias) { 
-	$reftipodocumentos = $_POST['reftipodocumentos']; 
-	$nrodocumento = $_POST['nrodocumento']; 
-	$apellido = $_POST['apellido']; 
-	$nombres = $_POST['nombres']; 
-	$email = $_POST['email']; 
-	$fechanacimiento = formatearFechas($_POST['fechanacimiento']); 
-	$fechaalta = formatearFechas($_POST['fechaalta']); 
-	$fechabaja = formatearFechas($_POST['fechabaja']); 
-	$refcountries = $_POST['refcountries']; 
-	$observaciones = $_POST['observaciones']; 
-	
+function insertarJugadores($serviciosReferencias) {
+	$reftipodocumentos = $_POST['reftipodocumentos'];
+	$nrodocumento = $_POST['nrodocumento'];
+	$apellido = $_POST['apellido'];
+	$nombres = $_POST['nombres'];
+	$email = $_POST['email'];
+	$fechanacimiento = formatearFechas($_POST['fechanacimiento']);
+	$fechaalta = formatearFechas($_POST['fechaalta']);
+	$fechabaja = formatearFechas($_POST['fechabaja']);
+	$refcountries = $_POST['refcountries'];
+	$observaciones = $_POST['observaciones'];
+
 	if (($fechaalta == '***') || ($fechabaja == '***') || ($fechanacimiento == '***')) {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugador($nrodocumento) == 0) {
-			$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
-			
-			if ((integer)$res > 0) { 
-				echo $res; 
-			} else { 
-				echo 'Huvo un error al insertar datos';	 
-			} 
-		} else {
-			echo 'Ya existe ese numero de documento';	
-		}
-	}
-} 
+			$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones);
 
-function modificarJugadores($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$reftipodocumentos = $_POST['reftipodocumentos']; 
-	$nrodocumento = $_POST['nrodocumento']; 
-	$apellido = $_POST['apellido']; 
-	$nombres = $_POST['nombres']; 
-	$email = $_POST['email']; 
-	$fechanacimiento = formatearFechas($_POST['fechanacimiento']); 
-	$fechaalta = formatearFechas($_POST['fechaalta']); 
-	$fechabaja = formatearFechas($_POST['fechabaja']); 
-	$refcountries = $_POST['refcountries']; 
-	$observaciones = $_POST['observaciones']; 
-	
-	if (($fechaalta == '***') || ($fechabaja == '***') || ($fechanacimiento == '***')) {
-		echo 'Formato de fecha incorrecto';
-	} else {
-		if ($serviciosReferencias->existeJugadorConIdJugador($nrodocumento, $id) == 0) {
-			$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones); 
-			
-			if ($res == true) { 
-				echo ''; 
-			} else { 
-				echo 'Huvo un error al modificar datos'; 
-			} 
+			if ((integer)$res > 0) {
+				echo $res;
+			} else {
+				echo 'Huvo un error al insertar datos';
+			}
 		} else {
 			echo 'Ya existe ese numero de documento';
 		}
 	}
-} 
+}
+
+function modificarJugadores($serviciosReferencias) {
+	$id = $_POST['id'];
+	$reftipodocumentos = $_POST['reftipodocumentos'];
+	$nrodocumento = $_POST['nrodocumento'];
+	$apellido = $_POST['apellido'];
+	$nombres = $_POST['nombres'];
+	$email = $_POST['email'];
+	$fechanacimiento = formatearFechas($_POST['fechanacimiento']);
+	$fechaalta = formatearFechas($_POST['fechaalta']);
+	$fechabaja = formatearFechas($_POST['fechabaja']);
+	$refcountries = $_POST['refcountries'];
+	$observaciones = $_POST['observaciones'];
+
+	if (($fechaalta == '***') || ($fechabaja == '***') || ($fechanacimiento == '***')) {
+		echo 'Formato de fecha incorrecto';
+	} else {
+		if ($serviciosReferencias->existeJugadorConIdJugador($nrodocumento, $id) == 0) {
+			$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones);
+
+			if ($res == true) {
+				echo '';
+			} else {
+				echo 'Huvo un error al modificar datos';
+			}
+		} else {
+			echo 'Ya existe ese numero de documento';
+		}
+	}
+}
 
 function modificarJugadorApellidoNombrePorId($serviciosReferencias) {
-	$idJugador = $_POST['idJugador']; 
-	$apellido = $_POST['apellido']; 
-	$nombres = $_POST['nombre']; 
-	
+	$idJugador = $_POST['idJugador'];
+	$apellido = $_POST['apellido'];
+	$nombres = $_POST['nombre'];
+
 	$res = $serviciosReferencias->modificarJugadorApellidoNombrePorId($idJugador, $apellido, $nombres);
-	
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
-	
+
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+
 }
 
 
-function eliminarJugadores($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarJugadores($id); 
-echo $res; 
-} 
+function eliminarJugadores($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarJugadores($id);
+echo $res;
+}
 
 function traerJugadoresPorCountrie($serviciosReferencias) {
 	$id		=	$_POST['refcountries'];
-	
+
 	$res 	=	$serviciosReferencias->traerJugadoresPorCountrie($id);
 	/*
 	$cadJugadores = '';
@@ -3228,26 +3228,26 @@ function traerJugadoresPorCountrie($serviciosReferencias) {
 				label: "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'"
 			  },';
 	}
-	
+
 	echo substr($cadJugadores,0,-1);
 	*/
-	echo json_encode(toArray($res));	
+	echo json_encode(toArray($res));
 }
 
 
 function traerJugadoresPorEquipo($serviciosReferencias) {
 	$id		=	$_POST['refequipo'];
-	
+
 	$res 	=	$serviciosReferencias->traerConectorActivosPorEquipos($id);
-	
+
 	$cadJugadores = '';
 	while ($row = mysql_fetch_array($res)) {
 		//$cadJugadores .= '"'.$row[0].'": "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'",';
 		$cadJugadores .= '<tr class="equipox'.$row['refjugadores'].'">
                     	<td align="center">
-                        
+
                             <input class="form-control tildar" type="checkbox" name="equipox'.$row['refjugadores'].'" id="equipox'.$row['refjugadores'].'"/>
-                        
+
                         </td>
                         <td>'.$row["categoria"].'</td>
                         <td>'.$row["equipo"].'</td>
@@ -3258,14 +3258,14 @@ function traerJugadoresPorEquipo($serviciosReferencias) {
                         <td>'.$row["fechaalta"].'</td>
                     </tr>';
 	}
-	
+
 	echo substr($cadJugadores,0,-1);
 
 }
 
 function traerDatosJugador($serviciosReferencias) {
-	$id = $_POST['id']; 
-	$res = $serviciosReferencias->traerJugadoresPorIdCompleto($id); 
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->traerJugadoresPorIdCompleto($id);
 	$cad = '';
 
 	if (mysql_num_rows($res)>0) {
@@ -3275,22 +3275,22 @@ function traerDatosJugador($serviciosReferencias) {
 	echo $cad;
 }
 
-function insertarJugadoresdocumentacion($serviciosReferencias) { 
-	$refjugadores = $_POST['refjugadores']; 
+function insertarJugadoresdocumentacion($serviciosReferencias) {
+	$refjugadores = $_POST['refjugadores'];
 	$observaciones = '';
-	
+
 	$resDocu = $serviciosReferencias->traerDocumentaciones();
 	$cad = 'docu';
 	while ($rowFS = mysql_fetch_array($resDocu)) {
 		if (isset($_POST[$cad.$rowFS[0]])) {
-		
+
 			$res = $serviciosReferencias->insertarJugadoresdocumentacion($refjugadores,$rowFS[0],1,$observaciones);
 		} else {
 			$res = $serviciosReferencias->insertarJugadoresdocumentacion($refjugadores,$rowFS[0],0,$observaciones);
-		
+
 		}
 	}
-	
+
 	$resV = '';
 	$resValores = $serviciosReferencias->traerValoreshabilitacionestransitorias();
 	$cadV = 'multiselect';
@@ -3302,7 +3302,7 @@ function insertarJugadoresdocumentacion($serviciosReferencias) {
 			$resV .= $serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($refjugadores,$rowV[0]);
 		}
 	}
-	
+
 	/*
 	for($i=0;$i<$numero;$i++){
 		$cad .= $tags[$i]." - ";
@@ -3318,250 +3318,250 @@ function insertarJugadoresdocumentacion($serviciosReferencias) {
 		}
 	}
 	*/
-	 
-	if ((integer)$resV > 0) { 
 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos'.$resV.' ---- ';	 
-	} 
+	if ((integer)$resV > 0) {
+
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos'.$resV.' ---- ';
+	}
 	//echo $cad;
-} 
-
-
-function modificarJugadoresdocumentacion($serviciosReferencias) { 
-$id = $_POST['id']; 
-$refjugadores = $_POST['refjugadores']; 
-$refdocumentaciones = $_POST['refdocumentaciones']; 
-if (isset($_POST['valor'])) { 
-$valor	= 1; 
-} else { 
-$valor = 0; 
-} 
-if (isset($_POST['habilita'])) { 
-$habilita	= 1; 
-} else { 
-$habilita = 0; 
-} 
-$observaciones = $_POST['observaciones']; 
-$res = $serviciosReferencias->modificarJugadoresdocumentacion($id,$refjugadores,$refdocumentaciones,$valor,$habilita,$observaciones); 
-if ($res == true) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al modificar datos'; 
-} 
-} 
-
-
-function modificarEstudioMedico($serviciosReferencias) { 
-	$refjugadores = $_POST['id']; 
-	
-	$res = $serviciosReferencias->modificarEstudioMedico($refjugadores); 
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
-} 
-
-
-function eliminarJugadoresdocumentacion($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarJugadoresdocumentacion($id); 
-echo $res; 
-} 
-
-function insertarDocumentaciones($serviciosReferencias) { 
-$descripcion = $_POST['descripcion']; 
-if (isset($_POST['obligatoria'])) { 
-$obligatoria	= 1; 
-} else { 
-$obligatoria = 0; 
-} 
-$observaciones = $_POST['observaciones']; 
-$res = $serviciosReferencias->insertarDocumentaciones($descripcion,$obligatoria,$observaciones); 
-if ((integer)$res > 0) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al insertar datos';	 
-} 
-} 
-function modificarDocumentaciones($serviciosReferencias) { 
-$id = $_POST['id']; 
-$descripcion = $_POST['descripcion']; 
-if (isset($_POST['obligatoria'])) { 
-$obligatoria	= 1; 
-} else { 
-$obligatoria = 0; 
-} 
-$observaciones = $_POST['observaciones']; 
-$res = $serviciosReferencias->modificarDocumentaciones($id,$descripcion,$obligatoria,$observaciones); 
-if ($res == true) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al modificar datos'; 
-} 
-} 
-function eliminarDocumentaciones($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarDocumentaciones($id); 
-echo $res; 
-} 
-function insertarMotivoshabilitacionestransitorias($serviciosReferencias) { 
-if (isset($_POST['inhabilita'])) { 
-$inhabilita	= 1; 
-} else { 
-$inhabilita = 0; 
-} 
-$descripcion = $_POST['descripcion']; 
-$refdocumentaciones = $_POST['refdocumentaciones'];
-$res = $serviciosReferencias->insertarMotivoshabilitacionestransitorias($inhabilita,$descripcion,$refdocumentaciones); 
-
-if ((integer)$res > 0) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al insertar datos';	 
-} 
-} 
-function modificarMotivoshabilitacionestransitorias($serviciosReferencias) { 
-$id = $_POST['id']; 
-if (isset($_POST['inhabilita'])) { 
-$inhabilita	= 1; 
-} else { 
-$inhabilita = 0; 
-} 
-$descripcion = $_POST['descripcion']; 
-$refdocumentaciones = $_POST['refdocumentaciones'];
-$res = $serviciosReferencias->modificarMotivoshabilitacionestransitorias($id,$inhabilita,$descripcion,$refdocumentaciones); 
-if ($res == true) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al modificar datos'; 
-} 
-} 
-function eliminarMotivoshabilitacionestransitorias($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarMotivoshabilitacionestransitorias($id); 
-echo $res; 
-} 
-
-function traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($serviciosReferencias,$serviciosFunciones) {
-	$id = 	$_POST['id']; 
-	$res =  $serviciosReferencias->traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($id);
-	$cadRef = $serviciosFunciones->devolverSelectBox($res,array(2,1),' - inhabilita:');
-	
-	echo $cadRef;
-	
 }
 
-function insertarTipodocumentos($serviciosReferencias) { 
-$tipodocumento = $_POST['tipodocumento']; 
-$res = $serviciosReferencias->insertarTipodocumentos($tipodocumento); 
-if ((integer)$res > 0) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al insertar datos';	 
-} 
-} 
-function modificarTipodocumentos($serviciosReferencias) { 
-$id = $_POST['id']; 
-$tipodocumento = $_POST['tipodocumento']; 
-$res = $serviciosReferencias->modificarTipodocumentos($id,$tipodocumento); 
-if ($res == true) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al modificar datos'; 
-} 
-} 
-function eliminarTipodocumentos($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarTipodocumentos($id); 
-echo $res; 
-} 
-function insertarTipojugadores($serviciosReferencias) { 
-$tipojugador = $_POST['tipojugador']; 
-$abreviatura = $_POST['abreviatura']; 
-$res = $serviciosReferencias->insertarTipojugadores($tipojugador,$abreviatura); 
-if ((integer)$res > 0) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al insertar datos';	 
-} 
-} 
-function modificarTipojugadores($serviciosReferencias) { 
-$id = $_POST['id']; 
-$tipojugador = $_POST['tipojugador']; 
-$abreviatura = $_POST['abreviatura']; 
-$res = $serviciosReferencias->modificarTipojugadores($id,$tipojugador,$abreviatura); 
-if ($res == true) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al modificar datos'; 
-} 
-} 
-function eliminarTipojugadores($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarTipojugadores($id); 
-echo $res; 
-} 
+
+function modificarJugadoresdocumentacion($serviciosReferencias) {
+$id = $_POST['id'];
+$refjugadores = $_POST['refjugadores'];
+$refdocumentaciones = $_POST['refdocumentaciones'];
+if (isset($_POST['valor'])) {
+$valor	= 1;
+} else {
+$valor = 0;
+}
+if (isset($_POST['habilita'])) {
+$habilita	= 1;
+} else {
+$habilita = 0;
+}
+$observaciones = $_POST['observaciones'];
+$res = $serviciosReferencias->modificarJugadoresdocumentacion($id,$refjugadores,$refdocumentaciones,$valor,$habilita,$observaciones);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+
+
+function modificarEstudioMedico($serviciosReferencias) {
+	$refjugadores = $_POST['id'];
+
+	$res = $serviciosReferencias->modificarEstudioMedico($refjugadores);
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+
+
+function eliminarJugadoresdocumentacion($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarJugadoresdocumentacion($id);
+echo $res;
+}
+
+function insertarDocumentaciones($serviciosReferencias) {
+$descripcion = $_POST['descripcion'];
+if (isset($_POST['obligatoria'])) {
+$obligatoria	= 1;
+} else {
+$obligatoria = 0;
+}
+$observaciones = $_POST['observaciones'];
+$res = $serviciosReferencias->insertarDocumentaciones($descripcion,$obligatoria,$observaciones);
+if ((integer)$res > 0) {
+echo '';
+} else {
+echo 'Huvo un error al insertar datos';
+}
+}
+function modificarDocumentaciones($serviciosReferencias) {
+$id = $_POST['id'];
+$descripcion = $_POST['descripcion'];
+if (isset($_POST['obligatoria'])) {
+$obligatoria	= 1;
+} else {
+$obligatoria = 0;
+}
+$observaciones = $_POST['observaciones'];
+$res = $serviciosReferencias->modificarDocumentaciones($id,$descripcion,$obligatoria,$observaciones);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarDocumentaciones($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarDocumentaciones($id);
+echo $res;
+}
+function insertarMotivoshabilitacionestransitorias($serviciosReferencias) {
+if (isset($_POST['inhabilita'])) {
+$inhabilita	= 1;
+} else {
+$inhabilita = 0;
+}
+$descripcion = $_POST['descripcion'];
+$refdocumentaciones = $_POST['refdocumentaciones'];
+$res = $serviciosReferencias->insertarMotivoshabilitacionestransitorias($inhabilita,$descripcion,$refdocumentaciones);
+
+if ((integer)$res > 0) {
+echo '';
+} else {
+echo 'Huvo un error al insertar datos';
+}
+}
+function modificarMotivoshabilitacionestransitorias($serviciosReferencias) {
+$id = $_POST['id'];
+if (isset($_POST['inhabilita'])) {
+$inhabilita	= 1;
+} else {
+$inhabilita = 0;
+}
+$descripcion = $_POST['descripcion'];
+$refdocumentaciones = $_POST['refdocumentaciones'];
+$res = $serviciosReferencias->modificarMotivoshabilitacionestransitorias($id,$inhabilita,$descripcion,$refdocumentaciones);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarMotivoshabilitacionestransitorias($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarMotivoshabilitacionestransitorias($id);
+echo $res;
+}
+
+function traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($serviciosReferencias,$serviciosFunciones) {
+	$id = 	$_POST['id'];
+	$res =  $serviciosReferencias->traerMotivoshabilitacionestransitoriasDocumentacionesPorDocumentacion($id);
+	$cadRef = $serviciosFunciones->devolverSelectBox($res,array(2,1),' - inhabilita:');
+
+	echo $cadRef;
+
+}
+
+function insertarTipodocumentos($serviciosReferencias) {
+$tipodocumento = $_POST['tipodocumento'];
+$res = $serviciosReferencias->insertarTipodocumentos($tipodocumento);
+if ((integer)$res > 0) {
+echo '';
+} else {
+echo 'Huvo un error al insertar datos';
+}
+}
+function modificarTipodocumentos($serviciosReferencias) {
+$id = $_POST['id'];
+$tipodocumento = $_POST['tipodocumento'];
+$res = $serviciosReferencias->modificarTipodocumentos($id,$tipodocumento);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarTipodocumentos($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarTipodocumentos($id);
+echo $res;
+}
+function insertarTipojugadores($serviciosReferencias) {
+$tipojugador = $_POST['tipojugador'];
+$abreviatura = $_POST['abreviatura'];
+$res = $serviciosReferencias->insertarTipojugadores($tipojugador,$abreviatura);
+if ((integer)$res > 0) {
+echo '';
+} else {
+echo 'Huvo un error al insertar datos';
+}
+}
+function modificarTipojugadores($serviciosReferencias) {
+$id = $_POST['id'];
+$tipojugador = $_POST['tipojugador'];
+$abreviatura = $_POST['abreviatura'];
+$res = $serviciosReferencias->modificarTipojugadores($id,$tipojugador,$abreviatura);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarTipojugadores($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarTipojugadores($id);
+echo $res;
+}
 
 
 
 
-function insertarValoreshabilitacionestransitorias($serviciosReferencias) { 
-	$refdocumentaciones = $_POST['refdocumentaciones']; 
-	$descripcion = $_POST['descripcion']; 
-	
-	if (isset($_POST['habilita'])) { 
-		$habilita	= 1; 
-	} else { 
-		$habilita = 0; 
-	} 
-	
-	if (isset($_POST['predeterminado'])) { 
-		$default	= 1; 
+function insertarValoreshabilitacionestransitorias($serviciosReferencias) {
+	$refdocumentaciones = $_POST['refdocumentaciones'];
+	$descripcion = $_POST['descripcion'];
+
+	if (isset($_POST['habilita'])) {
+		$habilita	= 1;
+	} else {
+		$habilita = 0;
+	}
+
+	if (isset($_POST['predeterminado'])) {
+		$default	= 1;
 		$serviciosReferencias->noPredeterminarTodo($refdocumentaciones);
-	} else { 
-		$default = 0; 
-	} 
-	
-	
-	$res = $serviciosReferencias->insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$default); 
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
-} 
+	} else {
+		$default = 0;
+	}
 
 
-function modificarValoreshabilitacionestransitorias($serviciosReferencias) { 
-$id = $_POST['id']; 
-$refdocumentaciones = $_POST['refdocumentaciones']; 
-$descripcion = $_POST['descripcion']; 
-if (isset($_POST['habilita'])) { 
-$habilita	= 1; 
-} else { 
-$habilita = 0; 
-} 
-if (isset($_POST['predeterminado'])) { 
-$default	= 1; 
+	$res = $serviciosReferencias->insertarValoreshabilitacionestransitorias($refdocumentaciones,$descripcion,$habilita,$default);
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
+
+
+function modificarValoreshabilitacionestransitorias($serviciosReferencias) {
+$id = $_POST['id'];
+$refdocumentaciones = $_POST['refdocumentaciones'];
+$descripcion = $_POST['descripcion'];
+if (isset($_POST['habilita'])) {
+$habilita	= 1;
+} else {
+$habilita = 0;
+}
+if (isset($_POST['predeterminado'])) {
+$default	= 1;
 $serviciosReferencias->noPredeterminarTodo($refdocumentaciones);
-} else { 
-$default = 0; 
-} 
-$res = $serviciosReferencias->modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita,$default); 
-if ($res == true) { 
-echo ''; 
-} else { 
-echo 'Huvo un error al modificar datos'; 
-} 
-} 
-function eliminarValoreshabilitacionestransitorias($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarValoreshabilitacionestransitorias($id); 
-echo $res; 
-} 
+} else {
+$default = 0;
+}
+$res = $serviciosReferencias->modificarValoreshabilitacionestransitorias($id,$refdocumentaciones,$descripcion,$habilita,$default);
+if ($res == true) {
+echo '';
+} else {
+echo 'Huvo un error al modificar datos';
+}
+}
+function eliminarValoreshabilitacionestransitorias($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarValoreshabilitacionestransitorias($id);
+echo $res;
+}
 
 
 
@@ -3569,564 +3569,564 @@ echo $res;
 /* PARA Torneos */
 
 function correrfechafixture($serviciosReferencias) {
-	$idtorneo 	= $_POST['idtorneo']; 
-	$nuevafecha = $_POST['nuevafecha']; 
-	$fechadesde = $_POST['fechadesde']; 
-	
+	$idtorneo 	= $_POST['idtorneo'];
+	$nuevafecha = $_POST['nuevafecha'];
+	$fechadesde = $_POST['fechadesde'];
+
 	$res = $serviciosReferencias->correrfechafixture($idtorneo, $nuevafecha, $fechadesde);
-	
+
 	echo $res;
 }
 
 function modificarnuevafecha($serviciosReferencias) {
-	$idtorneo 	= $_POST['idtorneo']; 
-	$nuevafecha = $_POST['nuevafecha']; 
-	$fechadesde = $_POST['fechadesde']; 
-	
+	$idtorneo 	= $_POST['idtorneo'];
+	$nuevafecha = $_POST['nuevafecha'];
+	$fechadesde = $_POST['fechadesde'];
+
 	$res = $serviciosReferencias->modificarFixtureFechaPorRefFecha($idtorneo,$fechadesde, $nuevafecha);
-	
+
 	if ($res) {
-		echo 'Se modifico correctamente ';	
+		echo 'Se modifico correctamente ';
 	} else {
-		echo 'Ocurrio un error ';	
+		echo 'Ocurrio un error ';
 	}
 }
- 
-function insertarTorneos($serviciosReferencias) { 
-	$descripcion = $_POST['descripcion']; 
-	$reftipotorneo = $_POST['reftipotorneo']; 
-	$reftemporadas = $_POST['reftemporadas']; 
-	$refcategorias = $_POST['refcategorias']; 
-	$refdivisiones = $_POST['refdivisiones']; 
-	$cantidadascensos = $_POST['cantidadascensos']; 
-	$cantidaddescensos = $_POST['cantidaddescensos']; 
-	if (isset($_POST['respetadefiniciontipojugadores'])) { 
-		$respetadefiniciontipojugadores	= 1; 
-	} else { 
-		$respetadefiniciontipojugadores = 0; 
-	} 
-	if (isset($_POST['respetadefinicionhabilitacionestransitorias'])) { 
-		$respetadefinicionhabilitacionestransitorias	= 1; 
-	} else { 
-		$respetadefinicionhabilitacionestransitorias = 0; 
-	} 
-	if (isset($_POST['respetadefinicionsancionesacumuladas'])) { 
-		$respetadefinicionsancionesacumuladas	= 1; 
-	} else { 
-		$respetadefinicionsancionesacumuladas = 0; 
-	} 
-	if (isset($_POST['acumulagoleadores'])) { 
-		$acumulagoleadores	= 1; 
-	} else { 
-		$acumulagoleadores = 0; 
-	} 
-	if (isset($_POST['acumulatablaconformada'])) { 
-		$acumulatablaconformada	= 1; 
-	} else { 
-		$acumulatablaconformada = 0; 
-	} 
-	$observaciones = $_POST['observaciones']; 
-	if (isset($_POST['activo'])) { 
-		$activo	= 1; 
-	} else { 
-		$activo = 0; 
-	} 
-	
-	if (isset($_POST['puntobnus'])) { 
-		$puntobonus	= 1; 
-	} else { 
-		$puntobonus = 0; 
-	} 
-	
+
+function insertarTorneos($serviciosReferencias) {
+	$descripcion = $_POST['descripcion'];
+	$reftipotorneo = $_POST['reftipotorneo'];
+	$reftemporadas = $_POST['reftemporadas'];
+	$refcategorias = $_POST['refcategorias'];
+	$refdivisiones = $_POST['refdivisiones'];
+	$cantidadascensos = $_POST['cantidadascensos'];
+	$cantidaddescensos = $_POST['cantidaddescensos'];
+	if (isset($_POST['respetadefiniciontipojugadores'])) {
+		$respetadefiniciontipojugadores	= 1;
+	} else {
+		$respetadefiniciontipojugadores = 0;
+	}
+	if (isset($_POST['respetadefinicionhabilitacionestransitorias'])) {
+		$respetadefinicionhabilitacionestransitorias	= 1;
+	} else {
+		$respetadefinicionhabilitacionestransitorias = 0;
+	}
+	if (isset($_POST['respetadefinicionsancionesacumuladas'])) {
+		$respetadefinicionsancionesacumuladas	= 1;
+	} else {
+		$respetadefinicionsancionesacumuladas = 0;
+	}
+	if (isset($_POST['acumulagoleadores'])) {
+		$acumulagoleadores	= 1;
+	} else {
+		$acumulagoleadores = 0;
+	}
+	if (isset($_POST['acumulatablaconformada'])) {
+		$acumulatablaconformada	= 1;
+	} else {
+		$acumulatablaconformada = 0;
+	}
+	$observaciones = $_POST['observaciones'];
+	if (isset($_POST['activo'])) {
+		$activo	= 1;
+	} else {
+		$activo = 0;
+	}
+
+	if (isset($_POST['puntobnus'])) {
+		$puntobonus	= 1;
+	} else {
+		$puntobonus = 0;
+	}
+
 	$fechainicio = $_POST['fechainicio'];
 	$fechainicio = formatearFechas($fechainicio);
-	
+
 	if ($fechainicio != '***') {
-		$res = $serviciosReferencias->insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo); 
-		if ((integer)$res > 0) { 
+		$res = $serviciosReferencias->insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo);
+		if ((integer)$res > 0) {
 			//$serviciosReferencias->desactivarTorneos($res,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);
 			$serviciosReferencias->insertarTorneopuntobonus($res,1);
-			echo $res; 
-		} else { 
-			echo 'Huvo un error al insertar datos';	 
-		} 
+			echo $res;
+		} else {
+			echo 'Huvo un error al insertar datos';
+		}
 	} else {
-		echo 'Formato de fecha incorrecto';	
+		echo 'Formato de fecha incorrecto';
 	}
-} 
+}
 
-function modificarTorneos($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$descripcion = $_POST['descripcion']; 
-	$reftipotorneo = $_POST['reftipotorneo']; 
-	$reftemporadas = $_POST['reftemporadas']; 
-	$refcategorias = $_POST['refcategorias']; 
-	$refdivisiones = $_POST['refdivisiones']; 
-	$cantidadascensos = $_POST['cantidadascensos']; 
-	$cantidaddescensos = $_POST['cantidaddescensos']; 
-	if (isset($_POST['respetadefiniciontipojugadores'])) { 
-		$respetadefiniciontipojugadores	= 1; 
-	} else { 
-		$respetadefiniciontipojugadores = 0; 
-	} 
-	if (isset($_POST['respetadefinicionhabilitacionestransitorias'])) { 
-		$respetadefinicionhabilitacionestransitorias	= 1; 
-	} else { 
-		$respetadefinicionhabilitacionestransitorias = 0; 
-	} 
-	if (isset($_POST['respetadefinicionsancionesacumuladas'])) { 
-		$respetadefinicionsancionesacumuladas	= 1; 
-	} else { 
-		$respetadefinicionsancionesacumuladas = 0; 
-	} 
-	if (isset($_POST['acumulagoleadores'])) { 
-		$acumulagoleadores	= 1; 
-	} else { 
-		$acumulagoleadores = 0; 
-	} 
-	if (isset($_POST['acumulatablaconformada'])) { 
-		$acumulatablaconformada	= 1; 
-	} else { 
-		$acumulatablaconformada = 0; 
-	} 
-	$observaciones = $_POST['observaciones']; 
-	if (isset($_POST['activo'])) { 
-		$activo	= 1; 
-	} else { 
-		$activo = 0; 
-	} 
-	
-	if (isset($_POST['puntobonus'])) { 
-		$puntobonus	= 1; 
-	} else { 
-		$puntobonus = 0; 
-	} 
-	
-	$res = $serviciosReferencias->modificarTorneos($id,$descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo); 
-	if ($res == true) { 
+function modificarTorneos($serviciosReferencias) {
+	$id = $_POST['id'];
+	$descripcion = $_POST['descripcion'];
+	$reftipotorneo = $_POST['reftipotorneo'];
+	$reftemporadas = $_POST['reftemporadas'];
+	$refcategorias = $_POST['refcategorias'];
+	$refdivisiones = $_POST['refdivisiones'];
+	$cantidadascensos = $_POST['cantidadascensos'];
+	$cantidaddescensos = $_POST['cantidaddescensos'];
+	if (isset($_POST['respetadefiniciontipojugadores'])) {
+		$respetadefiniciontipojugadores	= 1;
+	} else {
+		$respetadefiniciontipojugadores = 0;
+	}
+	if (isset($_POST['respetadefinicionhabilitacionestransitorias'])) {
+		$respetadefinicionhabilitacionestransitorias	= 1;
+	} else {
+		$respetadefinicionhabilitacionestransitorias = 0;
+	}
+	if (isset($_POST['respetadefinicionsancionesacumuladas'])) {
+		$respetadefinicionsancionesacumuladas	= 1;
+	} else {
+		$respetadefinicionsancionesacumuladas = 0;
+	}
+	if (isset($_POST['acumulagoleadores'])) {
+		$acumulagoleadores	= 1;
+	} else {
+		$acumulagoleadores = 0;
+	}
+	if (isset($_POST['acumulatablaconformada'])) {
+		$acumulatablaconformada	= 1;
+	} else {
+		$acumulatablaconformada = 0;
+	}
+	$observaciones = $_POST['observaciones'];
+	if (isset($_POST['activo'])) {
+		$activo	= 1;
+	} else {
+		$activo = 0;
+	}
+
+	if (isset($_POST['puntobonus'])) {
+		$puntobonus	= 1;
+	} else {
+		$puntobonus = 0;
+	}
+
+	$res = $serviciosReferencias->modificarTorneos($id,$descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo);
+	if ($res == true) {
 		/*
 		if ($activo == 1) {
-			$serviciosReferencias->desactivarTorneos($id,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);	
+			$serviciosReferencias->desactivarTorneos($id,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);
 		}
 		*/
 		if ($puntobonus == 0) {
-			$serviciosReferencias->eliminarTorneopuntobonusPorTorneo($id);	
+			$serviciosReferencias->eliminarTorneopuntobonusPorTorneo($id);
 		} else {
-			$serviciosReferencias->insertarTorneopuntobonus($id,1);	
+			$serviciosReferencias->insertarTorneopuntobonus($id,1);
 		}
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
-} 
-	
-function eliminarTorneos($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$res = $serviciosReferencias->eliminarTorneos($id); 
-	echo $res; 
-} 
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+
+function eliminarTorneos($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarTorneos($id);
+	echo $res;
+}
 
 
 
-function insertarEquipos($serviciosReferencias) { 
-	$refcountries = $_POST['refcountries']; 
-	$nombre = $_POST['nombre']; 
-	$refcategorias = $_POST['refcategorias']; 
-	$refdivisiones = $_POST['refdivisiones']; 
-	
-	$fechaalta = formatearFechas($_POST['fechaalta']); 
-	$fachebaja = formatearFechas($_POST['fachebaja']); 
-	if (isset($_POST['activo'])) { 
-		$activo	= 1; 
-	} else { 
-		$activo = 0; 
-	} 
-	
+function insertarEquipos($serviciosReferencias) {
+	$refcountries = $_POST['refcountries'];
+	$nombre = $_POST['nombre'];
+	$refcategorias = $_POST['refcategorias'];
+	$refdivisiones = $_POST['refdivisiones'];
+
+	$fechaalta = formatearFechas($_POST['fechaalta']);
+	$fachebaja = formatearFechas($_POST['fachebaja']);
+	if (isset($_POST['activo'])) {
+		$activo	= 1;
+	} else {
+		$activo = 0;
+	}
+
 	if (($fechaalta == '***') || ($fachebaja == '***')) {
-		echo 'Formato de fecha incorrecto';	
+		echo 'Formato de fecha incorrecto';
 	} else {
 		if (!isset($_POST['refcontactos'])) {
 			echo 'Debe seleccionar un contacto o cargarle uno al countrie';
 		} else {
 			$refcontactos = $_POST['refcontactos'];
-			$res = $serviciosReferencias->insertarEquipos($refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo); 
-			if ((integer)$res > 0) { 
-				echo ''; 
-			} else { 
-				echo 'Huvo un error al insertar datos';	 
-			} 
+			$res = $serviciosReferencias->insertarEquipos($refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo);
+			if ((integer)$res > 0) {
+				echo '';
+			} else {
+				echo 'Huvo un error al insertar datos';
+			}
 		}
 	}
-} 
+}
 
-function modificarEquipos($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$refcountries = $_POST['refcountries']; 
-	$nombre = $_POST['nombre']; 
-	$refcategorias = $_POST['refcategorias']; 
-	$refdivisiones = $_POST['refdivisiones']; 
-	$refcontactos = $_POST['refcontactos']; 
-	$fechaalta = formatearFechas($_POST['fechaalta']); 
+function modificarEquipos($serviciosReferencias) {
+	$id = $_POST['id'];
+	$refcountries = $_POST['refcountries'];
+	$nombre = $_POST['nombre'];
+	$refcategorias = $_POST['refcategorias'];
+	$refdivisiones = $_POST['refdivisiones'];
+	$refcontactos = $_POST['refcontactos'];
+	$fechaalta = formatearFechas($_POST['fechaalta']);
 	$fachebaja = formatearFechas($_POST['fachebaja']);
-	if (isset($_POST['activo'])) { 
+	if (isset($_POST['activo'])) {
 		$activo	= 1;
 		$fachebaja = '';
-	} else { 
-		$activo = 0; 
+	} else {
+		$activo = 0;
 		if ($fachebaja == '') {
 			$fachebaja = date('Y-m-d');
 		}
-	} 
-	
-	if (($fechaalta == '***') || ($fachebaja == '***')) {
-		echo 'Formato de fecha incorrecto';	
-	} else {
-		$res = $serviciosReferencias->modificarEquipos($id,$refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo); 
-		if ($res == true) { 
-			echo ''; 
-		} else { 
-			echo 'Huvo un error al modificar datos'; 
-		} 
 	}
-	
-} 
 
-function eliminarEquipos($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$res = $serviciosReferencias->eliminarEquipos($id); 
-	echo $res; 
-} 
+	if (($fechaalta == '***') || ($fachebaja == '***')) {
+		echo 'Formato de fecha incorrecto';
+	} else {
+		$res = $serviciosReferencias->modificarEquipos($id,$refcountries,$nombre,$refcategorias,$refdivisiones,$refcontactos,$fechaalta,$fachebaja,$activo);
+		if ($res == true) {
+			echo '';
+		} else {
+			echo 'Huvo un error al modificar datos';
+		}
+	}
+
+}
+
+function eliminarEquipos($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarEquipos($id);
+	echo $res;
+}
 
 
 function traerEquiposPorCountries($serviciosFunciones,$serviciosReferencias) {
-	$id = $_POST['id']; 
-	
+	$id = $_POST['id'];
+
 	$resEquipo			=	$serviciosReferencias->traerEquiposPorCountries($id);
 	$cadRefEquipo		=	$serviciosFunciones->devolverSelectBox($resEquipo,array(0,2,3,4),' - ');
-	
-	echo $cadRefEquipo;	
+
+	echo $cadRefEquipo;
 }
 
 function traerEquipoPorCategoria($serviciosFunciones,$serviciosReferencias) {
-	$id = $_POST['id']; 
-	$idCountrie = $_POST['idCountrie']; 
-	
+	$id = $_POST['id'];
+	$idCountrie = $_POST['idCountrie'];
+
 	$resCategoria		=	$serviciosReferencias->traerEquipoPorCategoriaCountrieActivo($id, $idCountrie);
 	$cadRefCategoria	=	$serviciosFunciones->devolverSelectBox($resCategoria,array(0,1,2),' - ');
-	
-	echo $cadRefCategoria;	
+
+	echo $cadRefCategoria;
 }
 
 
 
-function insertarPuntobonus($serviciosReferencias) { 
-	$descripcion = $_POST['descripcion']; 
-	$cantidadfechas = $_POST['cantidadfechas']; 
-	
-	if (isset($_POST['consecutivas'])) { 
-		$consecutivas	= 1; 
-	} else { 
-		$consecutivas = 0; 
-	} 
- 
-	$comparacion = $_POST['comparacion']; 
-	$valoracomparar = $_POST['valoracomparar']; 
-	$puntosextra = $_POST['puntosextra']; 
-	
-	$res = $serviciosReferencias->insertarPuntobonus($descripcion,$cantidadfechas,$consecutivas,$comparacion,$valoracomparar,$puntosextra); 
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
-} 
+function insertarPuntobonus($serviciosReferencias) {
+	$descripcion = $_POST['descripcion'];
+	$cantidadfechas = $_POST['cantidadfechas'];
 
-function modificarPuntobonus($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$descripcion = $_POST['descripcion']; 
-	$cantidadfechas = $_POST['cantidadfechas']; 
-	
-	if (isset($_POST['consecutivas'])) { 
-		$consecutivas	= 1; 
-	} else { 
-		$consecutivas = 0; 
-	} 
- 
-	$comparacion = $_POST['comparacion']; 
-	$valoracomparar = $_POST['valoracomparar']; 
-	$puntosextra = $_POST['puntosextra']; 
-	
-	$res = $serviciosReferencias->modificarPuntobonus($id,$descripcion,$cantidadfechas,$consecutivas,$comparacion,$valoracomparar,$puntosextra); 
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
-} 
+	if (isset($_POST['consecutivas'])) {
+		$consecutivas	= 1;
+	} else {
+		$consecutivas = 0;
+	}
 
-function eliminarPuntobonus($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$res = $serviciosReferencias->eliminarPuntobonus($id); 
-	echo $res; 
-} 
+	$comparacion = $_POST['comparacion'];
+	$valoracomparar = $_POST['valoracomparar'];
+	$puntosextra = $_POST['puntosextra'];
 
+	$res = $serviciosReferencias->insertarPuntobonus($descripcion,$cantidadfechas,$consecutivas,$comparacion,$valoracomparar,$puntosextra);
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
 
+function modificarPuntobonus($serviciosReferencias) {
+	$id = $_POST['id'];
+	$descripcion = $_POST['descripcion'];
+	$cantidadfechas = $_POST['cantidadfechas'];
 
+	if (isset($_POST['consecutivas'])) {
+		$consecutivas	= 1;
+	} else {
+		$consecutivas = 0;
+	}
 
-function insertarTiposanciones($serviciosReferencias) { 
-	if (isset($_POST['expulsion'])) { 
-		$expulsion	= 1; 
-	} else { 
-		$expulsion = 0; 
-	} 
-	
-	if (isset($_POST['amonestacion'])) { 
-		$amonestacion	= 1; 
-	} else { 
-		$amonestacion = 0; 
-	} 
-	
-	$descripcion = $_POST['descripcion']; 
-	$cantminfechas = $_POST['cantminfechas']; 
-	$abreviatura = $_POST['abreviatura']; 
-	$cantmaxfechas = $_POST['cantmaxfechas']; 
-	
-	if (isset($_POST['cumpletodascategorias'])) { 
-		$cumpletodascategorias	= 1; 
-	} else { 
-		$cumpletodascategorias = 0; 
-	} 
-	
-	if (isset($_POST['llevapendiente'])) { 
-		$llevapendiente	= 1; 
-	} else { 
-		$llevapendiente = 0; 
-	} 
-	
-	if (isset($_POST['ocultardetallepublico'])) { 
-		$ocultardetallepublico	= 1; 
-	} else { 
-		$ocultardetallepublico = 0; 
-	} 
-	
-	$res = $serviciosReferencias->insertarTiposanciones($expulsion,$amonestacion,$descripcion,$cantminfechas,$abreviatura,$cantmaxfechas,$cumpletodascategorias,$llevapendiente,$ocultardetallepublico); 
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
-} 
+	$comparacion = $_POST['comparacion'];
+	$valoracomparar = $_POST['valoracomparar'];
+	$puntosextra = $_POST['puntosextra'];
 
-function modificarTiposanciones($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	
-	if (isset($_POST['expulsion'])) { 
-		$expulsion	= 1; 
-	} else { 
-		$expulsion = 0; 
-	} 
-	
-	if (isset($_POST['amonestacion'])) { 
-		$amonestacion	= 1; 
-	} else { 
-		$amonestacion = 0; 
-	} 
-	
-	$descripcion = $_POST['descripcion']; 
-	$cantminfechas = $_POST['cantminfechas']; 
-	$abreviatura = $_POST['abreviatura']; 
-	$cantmaxfechas = $_POST['cantmaxfechas']; 
-	
-	if (isset($_POST['cumpletodascategorias'])) { 
-		$cumpletodascategorias	= 1; 
-	} else { 
-		$cumpletodascategorias = 0; 
-	} 
-	
-	if (isset($_POST['llevapendiente'])) { 
-		$llevapendiente	= 1; 
-	} else { 
-		$llevapendiente = 0; 
-	} 
-	
-	if (isset($_POST['ocultardetallepublico'])) { 
-		$ocultardetallepublico	= 1; 
-	} else { 
-		$ocultardetallepublico = 0; 
-	} 
-	
-	$res = $serviciosReferencias->modificarTiposanciones($id,$expulsion,$amonestacion,$descripcion,$cantminfechas,$abreviatura,$cantmaxfechas,$cumpletodascategorias,$llevapendiente,$ocultardetallepublico); 
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
-}  
+	$res = $serviciosReferencias->modificarPuntobonus($id,$descripcion,$cantidadfechas,$consecutivas,$comparacion,$valoracomparar,$puntosextra);
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
 
-function eliminarTiposanciones($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$res = $serviciosReferencias->eliminarTiposanciones($id); 
-	echo $res; 
-} 
+function eliminarPuntobonus($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarPuntobonus($id);
+	echo $res;
+}
 
 
 
-function insertarFechasexcluidas($serviciosReferencias) { 
-	$fecha = formatearFechas($_POST['fecha']); 
-	$descripcion = $_POST['descripcion']; 
-	
+
+function insertarTiposanciones($serviciosReferencias) {
+	if (isset($_POST['expulsion'])) {
+		$expulsion	= 1;
+	} else {
+		$expulsion = 0;
+	}
+
+	if (isset($_POST['amonestacion'])) {
+		$amonestacion	= 1;
+	} else {
+		$amonestacion = 0;
+	}
+
+	$descripcion = $_POST['descripcion'];
+	$cantminfechas = $_POST['cantminfechas'];
+	$abreviatura = $_POST['abreviatura'];
+	$cantmaxfechas = $_POST['cantmaxfechas'];
+
+	if (isset($_POST['cumpletodascategorias'])) {
+		$cumpletodascategorias	= 1;
+	} else {
+		$cumpletodascategorias = 0;
+	}
+
+	if (isset($_POST['llevapendiente'])) {
+		$llevapendiente	= 1;
+	} else {
+		$llevapendiente = 0;
+	}
+
+	if (isset($_POST['ocultardetallepublico'])) {
+		$ocultardetallepublico	= 1;
+	} else {
+		$ocultardetallepublico = 0;
+	}
+
+	$res = $serviciosReferencias->insertarTiposanciones($expulsion,$amonestacion,$descripcion,$cantminfechas,$abreviatura,$cantmaxfechas,$cumpletodascategorias,$llevapendiente,$ocultardetallepublico);
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
+
+function modificarTiposanciones($serviciosReferencias) {
+	$id = $_POST['id'];
+
+	if (isset($_POST['expulsion'])) {
+		$expulsion	= 1;
+	} else {
+		$expulsion = 0;
+	}
+
+	if (isset($_POST['amonestacion'])) {
+		$amonestacion	= 1;
+	} else {
+		$amonestacion = 0;
+	}
+
+	$descripcion = $_POST['descripcion'];
+	$cantminfechas = $_POST['cantminfechas'];
+	$abreviatura = $_POST['abreviatura'];
+	$cantmaxfechas = $_POST['cantmaxfechas'];
+
+	if (isset($_POST['cumpletodascategorias'])) {
+		$cumpletodascategorias	= 1;
+	} else {
+		$cumpletodascategorias = 0;
+	}
+
+	if (isset($_POST['llevapendiente'])) {
+		$llevapendiente	= 1;
+	} else {
+		$llevapendiente = 0;
+	}
+
+	if (isset($_POST['ocultardetallepublico'])) {
+		$ocultardetallepublico	= 1;
+	} else {
+		$ocultardetallepublico = 0;
+	}
+
+	$res = $serviciosReferencias->modificarTiposanciones($id,$expulsion,$amonestacion,$descripcion,$cantminfechas,$abreviatura,$cantmaxfechas,$cumpletodascategorias,$llevapendiente,$ocultardetallepublico);
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+
+function eliminarTiposanciones($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarTiposanciones($id);
+	echo $res;
+}
+
+
+
+function insertarFechasexcluidas($serviciosReferencias) {
+	$fecha = formatearFechas($_POST['fecha']);
+	$descripcion = $_POST['descripcion'];
+
 	if ($fecha == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
-		$res = $serviciosReferencias->insertarFechasexcluidas($fecha,$descripcion); 
-		if ((integer)$res > 0) { 
-			echo ''; 
-		} else { 
-			echo 'Huvo un error al insertar datos';	 
-		} 
+		$res = $serviciosReferencias->insertarFechasexcluidas($fecha,$descripcion);
+		if ((integer)$res > 0) {
+			echo '';
+		} else {
+			echo 'Huvo un error al insertar datos';
+		}
 	}
-} 
+}
 
-function modificarFechasexcluidas($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$fecha = formatearFechas($_POST['fecha']); 
-	$descripcion = $_POST['descripcion']; 
-	
+function modificarFechasexcluidas($serviciosReferencias) {
+	$id = $_POST['id'];
+	$fecha = formatearFechas($_POST['fecha']);
+	$descripcion = $_POST['descripcion'];
+
 	if ($fecha == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
-		$res = $serviciosReferencias->modificarFechasexcluidas($id,$fecha,$descripcion); 
-		if ($res == true) { 
-			echo ''; 
-		} else { 
-			echo 'Huvo un error al modificar datos'; 
-		} 
+		$res = $serviciosReferencias->modificarFechasexcluidas($id,$fecha,$descripcion);
+		if ($res == true) {
+			echo '';
+		} else {
+			echo 'Huvo un error al modificar datos';
+		}
 	}
-} 
-function eliminarFechasexcluidas($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$res = $serviciosReferencias->eliminarFechasexcluidas($id); 
-	echo $res; 
-} 
+}
+function eliminarFechasexcluidas($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarFechasexcluidas($id);
+	echo $res;
+}
 
 
 
 
-function insertarEstadospartidos($serviciosReferencias) { 
-	$descripcion = $_POST['descripcion']; 
-	
-	if (isset($_POST['defautomatica'])) { 
-		$defautomatica	= 1; 
-	} else { 
-		$defautomatica = 0; 
-	} 
-	
-	$goleslocalauto = $_POST['goleslocalauto']; 
-	
-	if (isset($_POST['goleslocalborra'])) { 
-		$goleslocalborra	= 1; 
-	} else { 
-		$goleslocalborra = 0; 
-	} 
-	
-	$golesvisitanteauto = $_POST['golesvisitanteauto']; 
-	
-	if (isset($_POST['golesvisitanteborra'])) { 
-		$golesvisitanteborra	= 1; 
-	} else { 
-		$golesvisitanteborra = 0; 
-	} 
-	
-	$puntoslocal = $_POST['puntoslocal']; 
-	$puntosvisitante = $_POST['puntosvisitante']; 
-	
-	if (isset($_POST['finalizado'])) { 
-		$finalizado	= 1; 
-	} else { 
-		$finalizado = 0; 
-	} 
-	
-	if (isset($_POST['ocultardetallepublico'])) { 
-		$ocultardetallepublico	= 1; 
-	} else { 
-		$ocultardetallepublico = 0; 
-	} 
-	
-	if (isset($_POST['visibleparaarbitros'])) { 
-		$visibleparaarbitros	= 1; 
-	} else { 
-		$visibleparaarbitros = 0; 
-	} 
+function insertarEstadospartidos($serviciosReferencias) {
+	$descripcion = $_POST['descripcion'];
 
-	
-	$res = $serviciosReferencias->insertarEstadospartidos($descripcion,$defautomatica,$goleslocalauto,$goleslocalborra,$golesvisitanteauto,$golesvisitanteborra,$puntoslocal,$puntosvisitante,$finalizado,$ocultardetallepublico,$visibleparaarbitros); 
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
-} 
+	if (isset($_POST['defautomatica'])) {
+		$defautomatica	= 1;
+	} else {
+		$defautomatica = 0;
+	}
 
-function modificarEstadospartidos($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$descripcion = $_POST['descripcion']; 
-	
-	if (isset($_POST['defautomatica'])) { 
-		$defautomatica	= 1; 
-	} else { 
-		$defautomatica = 0; 
-	} 
-	
-	$goleslocalauto = $_POST['goleslocalauto']; 
-	
-	if (isset($_POST['goleslocalborra'])) { 
-		$goleslocalborra	= 1; 
-	} else { 
-		$goleslocalborra = 0; 
-	} 
-	
-	$golesvisitanteauto = $_POST['golesvisitanteauto']; 
-	
-	if (isset($_POST['golesvisitanteborra'])) { 
-		$golesvisitanteborra	= 1; 
-	} else { 
-		$golesvisitanteborra = 0; 
-	} 
-	
-	$puntoslocal = $_POST['puntoslocal']; 
-	$puntosvisitante = $_POST['puntosvisitante']; 
-	
-	if (isset($_POST['finalizado'])) { 
-		$finalizado	= 1; 
-	} else { 
-		$finalizado = 0; 
-	} 
-	
-	if (isset($_POST['ocultardetallepublico'])) { 
-		$ocultardetallepublico	= 1; 
-	} else { 
-		$ocultardetallepublico = 0; 
-	} 
-	
-	if (isset($_POST['visibleparaarbitros'])) { 
-		$visibleparaarbitros	= 1; 
-	} else { 
-		$visibleparaarbitros = 0; 
-	}  
-	
-	$res = $serviciosReferencias->modificarEstadospartidos($id,$descripcion,$defautomatica,$goleslocalauto,$goleslocalborra,$golesvisitanteauto,$golesvisitanteborra,$puntoslocal,$puntosvisitante,$finalizado,$ocultardetallepublico,$visibleparaarbitros); 
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
-} 
+	$goleslocalauto = $_POST['goleslocalauto'];
 
-function eliminarEstadospartidos($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$res = $serviciosReferencias->eliminarEstadospartidos($id); 
-	echo $res; 
-} 
+	if (isset($_POST['goleslocalborra'])) {
+		$goleslocalborra	= 1;
+	} else {
+		$goleslocalborra = 0;
+	}
+
+	$golesvisitanteauto = $_POST['golesvisitanteauto'];
+
+	if (isset($_POST['golesvisitanteborra'])) {
+		$golesvisitanteborra	= 1;
+	} else {
+		$golesvisitanteborra = 0;
+	}
+
+	$puntoslocal = $_POST['puntoslocal'];
+	$puntosvisitante = $_POST['puntosvisitante'];
+
+	if (isset($_POST['finalizado'])) {
+		$finalizado	= 1;
+	} else {
+		$finalizado = 0;
+	}
+
+	if (isset($_POST['ocultardetallepublico'])) {
+		$ocultardetallepublico	= 1;
+	} else {
+		$ocultardetallepublico = 0;
+	}
+
+	if (isset($_POST['visibleparaarbitros'])) {
+		$visibleparaarbitros	= 1;
+	} else {
+		$visibleparaarbitros = 0;
+	}
+
+
+	$res = $serviciosReferencias->insertarEstadospartidos($descripcion,$defautomatica,$goleslocalauto,$goleslocalborra,$golesvisitanteauto,$golesvisitanteborra,$puntoslocal,$puntosvisitante,$finalizado,$ocultardetallepublico,$visibleparaarbitros);
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
+
+function modificarEstadospartidos($serviciosReferencias) {
+	$id = $_POST['id'];
+	$descripcion = $_POST['descripcion'];
+
+	if (isset($_POST['defautomatica'])) {
+		$defautomatica	= 1;
+	} else {
+		$defautomatica = 0;
+	}
+
+	$goleslocalauto = $_POST['goleslocalauto'];
+
+	if (isset($_POST['goleslocalborra'])) {
+		$goleslocalborra	= 1;
+	} else {
+		$goleslocalborra = 0;
+	}
+
+	$golesvisitanteauto = $_POST['golesvisitanteauto'];
+
+	if (isset($_POST['golesvisitanteborra'])) {
+		$golesvisitanteborra	= 1;
+	} else {
+		$golesvisitanteborra = 0;
+	}
+
+	$puntoslocal = $_POST['puntoslocal'];
+	$puntosvisitante = $_POST['puntosvisitante'];
+
+	if (isset($_POST['finalizado'])) {
+		$finalizado	= 1;
+	} else {
+		$finalizado = 0;
+	}
+
+	if (isset($_POST['ocultardetallepublico'])) {
+		$ocultardetallepublico	= 1;
+	} else {
+		$ocultardetallepublico = 0;
+	}
+
+	if (isset($_POST['visibleparaarbitros'])) {
+		$visibleparaarbitros	= 1;
+	} else {
+		$visibleparaarbitros = 0;
+	}
+
+	$res = $serviciosReferencias->modificarEstadospartidos($id,$descripcion,$defautomatica,$goleslocalauto,$goleslocalborra,$golesvisitanteauto,$golesvisitanteborra,$puntoslocal,$puntosvisitante,$finalizado,$ocultardetallepublico,$visibleparaarbitros);
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+
+function eliminarEstadospartidos($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarEstadospartidos($id);
+	echo $res;
+}
 
 
 
@@ -4141,17 +4141,17 @@ function insertarDefinicionescategoriastemporadas($serviciosReferencias) {
 	$hora = $_POST['hora'];
 	$minutospartido = $_POST['minutospartido'];
 	$cantidadcambiosporpartido = $_POST['cantidadcambiosporpartido'];
-	
+
 	if (isset($_POST['conreingreso'])) {
 		$conreingreso = 1;
 	} else {
 		$conreingreso = 0;
 	}
-	
+
 	$observaciones = $_POST['observaciones'];
-	
+
 	$res = $serviciosReferencias->insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones);
-	
+
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
@@ -4169,212 +4169,212 @@ function modificarDefinicionescategoriastemporadas($serviciosReferencias) {
 	$hora = $_POST['hora'];
 	$minutospartido = $_POST['minutospartido'];
 	$cantidadcambiosporpartido = $_POST['cantidadcambiosporpartido'];
-	
+
 	if (isset($_POST['conreingreso'])) {
 		$conreingreso = 1;
 	} else {
 		$conreingreso = 0;
 	}
-	
+
 	$observaciones = $_POST['observaciones'];
-	
+
 	$res = $serviciosReferencias->modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones);
-	
+
 	if ($res == true) {
 		echo '';
 	} else {
 		echo 'Huvo un error al modificar datos';
 	}
-} 
+}
 
-function eliminarDefinicionescategoriastemporadas($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$res = $serviciosReferencias->eliminarDefinicionescategoriastemporadas($id); 
-	echo $res; 
-} 
+function eliminarDefinicionescategoriastemporadas($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarDefinicionescategoriastemporadas($id);
+	echo $res;
+}
 
-function insertarDefinicionescategoriastemporadastipojugador($serviciosReferencias) { 
-	$refdefinicionescategoriastemporadas = $_POST['refdefinicionescategoriastemporadas']; 
-	$reftipojugadores = $_POST['reftipojugadores']; 
-	$edadmaxima = $_POST['edadmaxima']; 
-	$edadminima = $_POST['edadminima']; 
-	$cantjugadoresporequipo = $_POST['cantjugadoresporequipo']; 
-	$jugadorescancha = $_POST['jugadorescancha']; 
-	$observaciones = $_POST['observaciones']; 
-	
-	$res = $serviciosReferencias->insertarDefinicionescategoriastemporadastipojugador($refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones); 
-	
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
-} 
+function insertarDefinicionescategoriastemporadastipojugador($serviciosReferencias) {
+	$refdefinicionescategoriastemporadas = $_POST['refdefinicionescategoriastemporadas'];
+	$reftipojugadores = $_POST['reftipojugadores'];
+	$edadmaxima = $_POST['edadmaxima'];
+	$edadminima = $_POST['edadminima'];
+	$cantjugadoresporequipo = $_POST['cantjugadoresporequipo'];
+	$jugadorescancha = $_POST['jugadorescancha'];
+	$observaciones = $_POST['observaciones'];
 
-function modificarDefinicionescategoriastemporadastipojugador($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$refdefinicionescategoriastemporadas = $_POST['refdefinicionescategoriastemporadas']; 
-	$reftipojugadores = $_POST['reftipojugadores']; 
-	$edadmaxima = $_POST['edadmaxima']; 
-	$edadminima = $_POST['edadminima']; 
-	$cantjugadoresporequipo = $_POST['cantjugadoresporequipo']; 
-	$jugadorescancha = $_POST['jugadorescancha']; 
-	$observaciones = $_POST['observaciones']; 
-	
-	$res = $serviciosReferencias->modificarDefinicionescategoriastemporadastipojugador($id,$refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones); 
-	
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
-} 
+	$res = $serviciosReferencias->insertarDefinicionescategoriastemporadastipojugador($refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones);
 
-function eliminarDefinicionescategoriastemporadastipojugador($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$res = $serviciosReferencias->eliminarDefinicionescategoriastemporadastipojugador($id); 
-	echo $res; 
-} 
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
+
+function modificarDefinicionescategoriastemporadastipojugador($serviciosReferencias) {
+	$id = $_POST['id'];
+	$refdefinicionescategoriastemporadas = $_POST['refdefinicionescategoriastemporadas'];
+	$reftipojugadores = $_POST['reftipojugadores'];
+	$edadmaxima = $_POST['edadmaxima'];
+	$edadminima = $_POST['edadminima'];
+	$cantjugadoresporequipo = $_POST['cantjugadoresporequipo'];
+	$jugadorescancha = $_POST['jugadorescancha'];
+	$observaciones = $_POST['observaciones'];
+
+	$res = $serviciosReferencias->modificarDefinicionescategoriastemporadastipojugador($id,$refdefinicionescategoriastemporadas,$reftipojugadores,$edadmaxima,$edadminima,$cantjugadoresporequipo,$jugadorescancha,$observaciones);
+
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+
+function eliminarDefinicionescategoriastemporadastipojugador($serviciosReferencias) {
+	$id = $_POST['id'];
+	$res = $serviciosReferencias->eliminarDefinicionescategoriastemporadastipojugador($id);
+	echo $res;
+}
 
 function traerDefinicionesPorTemporadaCategoriaTipoJugador($serviciosReferencias) {
 	$idTemporada 	= $_POST['resTemporada'];
 	$idCategoria 	= $_POST['resCategoria'];
 	$idTipoJugador 	= $_POST['resTipoJugador'];
-	
-	$res = $serviciosReferencias->traerDefinicionesPorTemporadaCategoriaTipoJugador($idTemporada, $idCategoria, $idTipoJugador);	
+
+	$res = $serviciosReferencias->traerDefinicionesPorTemporadaCategoriaTipoJugador($idTemporada, $idCategoria, $idTipoJugador);
 	$cad = '';
-	
+
 	if (mysql_num_rows($res)>0) {
 		$cad = 'Edad Minima: '.mysql_result($res,0,'edadminima').' - Edad Maxima: '.mysql_result($res,0,'edadmaxima');
 		echo $cad;
 	} else {
-		echo $cad;	
+		echo $cad;
 	}
-	
+
 }
 
 
-function insertarDefinicionessancionesacumuladastemporadas($serviciosReferencias) { 
-	$reftiposanciones = $_POST['reftiposanciones']; 
-	$reftemporadas = $_POST['reftemporadas']; 
-	$cantidadacumulada = $_POST['cantidadacumulada']; 
-	$cantidadfechasacumplir = $_POST['cantidadfechasacumplir']; 
-	
-	$res = $serviciosReferencias->insertarDefinicionessancionesacumuladastemporadas($reftiposanciones,$reftemporadas,$cantidadacumulada,$cantidadfechasacumplir); 
-	if ((integer)$res > 0) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al insertar datos';	 
-	} 
-} 
+function insertarDefinicionessancionesacumuladastemporadas($serviciosReferencias) {
+	$reftiposanciones = $_POST['reftiposanciones'];
+	$reftemporadas = $_POST['reftemporadas'];
+	$cantidadacumulada = $_POST['cantidadacumulada'];
+	$cantidadfechasacumplir = $_POST['cantidadfechasacumplir'];
 
-function modificarDefinicionessancionesacumuladastemporadas($serviciosReferencias) { 
-	$id = $_POST['id']; 
-	$reftiposanciones = $_POST['reftiposanciones']; 
-	$reftemporadas = $_POST['reftemporadas']; 
-	$cantidadacumulada = $_POST['cantidadacumulada']; 
-	$cantidadfechasacumplir = $_POST['cantidadfechasacumplir']; 
-	
-	$res = $serviciosReferencias->modificarDefinicionessancionesacumuladastemporadas($id,$reftiposanciones,$reftemporadas,$cantidadacumulada,$cantidadfechasacumplir); 
-	if ($res == true) { 
-		echo ''; 
-	} else { 
-		echo 'Huvo un error al modificar datos'; 
-	} 
-} 
+	$res = $serviciosReferencias->insertarDefinicionessancionesacumuladastemporadas($reftiposanciones,$reftemporadas,$cantidadacumulada,$cantidadfechasacumplir);
+	if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
 
-function eliminarDefinicionessancionesacumuladastemporadas($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarDefinicionessancionesacumuladastemporadas($id); 
-echo $res; 
-} 
+function modificarDefinicionessancionesacumuladastemporadas($serviciosReferencias) {
+	$id = $_POST['id'];
+	$reftiposanciones = $_POST['reftiposanciones'];
+	$reftemporadas = $_POST['reftemporadas'];
+	$cantidadacumulada = $_POST['cantidadacumulada'];
+	$cantidadfechasacumplir = $_POST['cantidadfechasacumplir'];
+
+	$res = $serviciosReferencias->modificarDefinicionessancionesacumuladastemporadas($id,$reftiposanciones,$reftemporadas,$cantidadacumulada,$cantidadfechasacumplir);
+	if ($res == true) {
+		echo '';
+	} else {
+		echo 'Huvo un error al modificar datos';
+	}
+}
+
+function eliminarDefinicionessancionesacumuladastemporadas($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarDefinicionessancionesacumuladastemporadas($id);
+echo $res;
+}
 /* Fin */
 /* /* Fin de la Tabla: dbtorneos*/
 
-function insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferencias) { 
-	
-	$reftemporadas = $_POST['reftemporadasA']; 
-	$refjugadores = $_POST['refjugadores']; 
-	$refdocumentaciones = $_POST['refdocumentacionesA']; 
-	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasA']; 
-	$refequipos = $_POST['refequiposA']; 
-	$refcategorias = $_POST['refcategoriasA']; 
-	$fechalimite = formatearFechas($_POST['fechalimiteA']); 
-	$observaciones = $_POST['observacionesA']; 
-	
-	if ($fechalimite == '***') {
-		echo 'Formato de fecha incorrecto';
-	} else {
-		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
-			$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
-			
-			if ((integer)$res > 0) { 
-				echo ''; 
-			} else { 
-				echo 'Huvo un error al insertar datos';	 
-			} 
-		} else {
-			echo 'Ya existe esta habilitación';	
-		}
-	}
-} 
+function insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferencias) {
 
-function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferencias) { 
-	
-	$reftemporadas = $_POST['reftemporadasB']; 
-	$refjugadores = $_POST['refjugadores']; 
-	$refdocumentaciones = $_POST['refdocumentacionesB']; 
-	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasB']; 
-	$refequipos = formatearEntero('');  
-	$refcategorias = $_POST['refcategoriasB']; 
-	$fechalimite = formatearFechas($_POST['fechalimiteB']); 
-	$observaciones = $_POST['observacionesB']; 
-	
+	$reftemporadas = $_POST['reftemporadasA'];
+	$refjugadores = $_POST['refjugadores'];
+	$refdocumentaciones = $_POST['refdocumentacionesA'];
+	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasA'];
+	$refequipos = $_POST['refequiposA'];
+	$refcategorias = $_POST['refcategoriasA'];
+	$fechalimite = formatearFechas($_POST['fechalimiteA']);
+	$observaciones = $_POST['observacionesA'];
+
 	if ($fechalimite == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
 		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
-			$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
-			
-			if ((integer)$res > 0) { 
-				echo ''; 
-			} else { 
-				echo 'Huvo un error al insertar datos '.$res;	 
-			} 
+			$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones);
+
+			if ((integer)$res > 0) {
+				echo '';
+			} else {
+				echo 'Huvo un error al insertar datos';
+			}
 		} else {
-			echo 'Ya existe esta habilitación';	
+			echo 'Ya existe esta habilitación';
 		}
 	}
 }
 
-function modificarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias) { 
-$id = $_POST['id']; 
-$reftemporadas = $_POST['reftemporadas']; 
-$refjugadores = $_POST['refjugadores']; 
-$refdocumentaciones = $_POST['refdocumentaciones']; 
-$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitorias']; 
-$refequipos = $_POST['refequipos']; 
-$refcategorias = $_POST['refcategorias']; 
-$fechalimite = formatearFechas($_POST['fechalimite']); 
-$observaciones = $_POST['observaciones']; 
-	
+function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferencias) {
+
+	$reftemporadas = $_POST['reftemporadasB'];
+	$refjugadores = $_POST['refjugadores'];
+	$refdocumentaciones = $_POST['refdocumentacionesB'];
+	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasB'];
+	$refequipos = formatearEntero('');
+	$refcategorias = $_POST['refcategoriasB'];
+	$fechalimite = formatearFechas($_POST['fechalimiteB']);
+	$observaciones = $_POST['observacionesB'];
+
 	if ($fechalimite == '***') {
 		echo 'Formato de fecha incorrecto';
 	} else {
-		$res = $serviciosReferencias->modificarJugadoresmotivoshabilitacionestransitorias($id,$reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones); 
-		if ($res == true) { 
-			echo ''; 
-		} else { 
-			echo 'Huvo un error al modificar datos'; 
-		} 
-	}
-} 
+		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
+			$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones);
 
-function eliminarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias) { 
-$id = $_POST['id']; 
-$res = $serviciosReferencias->eliminarJugadoresmotivoshabilitacionestransitorias($id); 
-echo $res; 
-} 
+			if ((integer)$res > 0) {
+				echo '';
+			} else {
+				echo 'Huvo un error al insertar datos '.$res;
+			}
+		} else {
+			echo 'Ya existe esta habilitación';
+		}
+	}
+}
+
+function modificarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias) {
+$id = $_POST['id'];
+$reftemporadas = $_POST['reftemporadas'];
+$refjugadores = $_POST['refjugadores'];
+$refdocumentaciones = $_POST['refdocumentaciones'];
+$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitorias'];
+$refequipos = $_POST['refequipos'];
+$refcategorias = $_POST['refcategorias'];
+$fechalimite = formatearFechas($_POST['fechalimite']);
+$observaciones = $_POST['observaciones'];
+
+	if ($fechalimite == '***') {
+		echo 'Formato de fecha incorrecto';
+	} else {
+		$res = $serviciosReferencias->modificarJugadoresmotivoshabilitacionestransitorias($id,$reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones);
+		if ($res == true) {
+			echo '';
+		} else {
+			echo 'Huvo un error al modificar datos';
+		}
+	}
+}
+
+function eliminarJugadoresmotivoshabilitacionestransitorias($serviciosReferencias) {
+$id = $_POST['id'];
+$res = $serviciosReferencias->eliminarJugadoresmotivoshabilitacionestransitorias($id);
+echo $res;
+}
 
 
 
@@ -4407,12 +4407,12 @@ function registrar($serviciosUsuarios) {
 	$refroll			=	$_POST['refroll'];
 	$email				=	$_POST['email'];
 	$nombre				=	$_POST['nombrecompleto'];
-	
+
 	$res = $serviciosUsuarios->insertarUsuario($usuario,$password,$refroll,$email,$nombre);
 	if ((integer)$res > 0) {
-		echo '';	
+		echo '';
 	} else {
-		echo $res;	
+		echo $res;
 	}
 }
 
@@ -4430,7 +4430,7 @@ function buscarSocio($serviciosUsuarios, $serviciosReferencias) {
 		} else {
             $email = $serviciosReferencias->traerJugadorPrePorDocumento($nrodocumento);
             $existePreRegistro = $serviciosUsuarios->existeUsuarioPreRegistrado($email);
-            
+
             if ($existePreRegistro == '') {
                 echo '';
             } else {
@@ -4440,7 +4440,7 @@ function buscarSocio($serviciosUsuarios, $serviciosReferencias) {
                     echo 'El usuario debe activar su cuenta!!!';
                 }
             }
-			
+
 		}
 	}
 }
@@ -4470,11 +4470,11 @@ function registrarSocio($ServiciosUsuarios, $ServiciosReferencias) {
 	$nombre				=	$_POST['nombre'];
 	$fechanacimiento	=	$_POST['fechanacimiento'];
 	$id					=	$_POST['id'];
-    
+
     $existeEmail = $ServiciosUsuarios->existeUsuario($email);
-    
+
     if ($existeEmail == true) {
-		echo "Ya existe un usuario con ese email";	
+		echo "Ya existe un usuario con ese email";
 	} else {
         //doy de alta en usuarios alagente
         $res = $ServiciosUsuarios->registrarSocio($email, $password,$apellido, $nombre, $nrodocumento, $fechanacimiento);
@@ -4482,9 +4482,9 @@ function registrarSocio($ServiciosUsuarios, $ServiciosReferencias) {
             //modifico los datos que le solicite en el login
             $ServiciosReferencias->modificarJugadorespreRegistroNuevo($id,$apellido,$nombre,$fechanacimiento,'',$email);
 
-            echo '';	
+            echo '';
         } else {
-            echo $res;	
+            echo $res;
         }
     }
 
@@ -4498,12 +4498,12 @@ function insertarUsuario($serviciosUsuarios) {
 	$email				=	$_POST['email'];
 	$nombre				=	$_POST['nombrecompleto'];
 	$refcountries		=	$_POST['refcountries'];
-	
+
 	$res = $serviciosUsuarios->insertarUsuario($usuario,$password,$refroll,$email,$nombre,$refcountries);
 	if ((integer)$res > 0) {
-		echo '';	
+		echo '';
 	} else {
-		echo $res;	
+		echo $res;
 	}
 }
 
@@ -4516,13 +4516,13 @@ function modificarUsuario($serviciosUsuarios) {
 	$email				=	$_POST['email'];
 	$nombre				=	$_POST['nombrecompleto'];
 	$refcountries		=	$_POST['refcountries'];
-	
+
 	if (isset($_POST['activo'])) {
 		$activo = 1;
 	} else {
 		$activo = 0;
 	}
-	
+
 	echo $serviciosUsuarios->modificarUsuario($id,$usuario,$password,$refroll,$email,$nombre,$refcountries,$activo);
 
 }
@@ -4532,13 +4532,13 @@ function enviarMail($serviciosUsuarios) {
 	$email		=	$_POST['email'];
 	$pass		=	$_POST['pass'];
 	//$idempresa  =	$_POST['idempresa'];
-	
+
 	echo $serviciosUsuarios->login($email,$pass);
 }
 
 
 function devolverImagen($nroInput) {
-	
+
 	if( $_FILES['archivo'.$nroInput]['name'] != null && $_FILES['archivo'.$nroInput]['size'] > 0 ){
 	// Nivel de errores
 	  error_reporting(E_ALL);
@@ -4581,9 +4581,9 @@ function devolverImagen($nroInput) {
 		  $img = imagecreatefrompng($tmp_name);
 		  break;
 	  }
-	  
+
 	  $datos = getimagesize($tmp_name);
-	  
+
 	  $ratio = ($datos[1]/$altura);
 	  $ancho = round($datos[0]/$ratio);
 	  $thumb = imagecreatetruecolor($ancho, $altura);
@@ -4619,7 +4619,7 @@ function devolverImagen($nroInput) {
 		$type = '';
 	}
 	$tfoto = utf8_decode($tfoto);
-	return array('tfoto' => $tfoto, 'type' => $type);	
+	return array('tfoto' => $tfoto, 'type' => $type);
 }
 
 

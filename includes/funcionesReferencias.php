@@ -14640,7 +14640,7 @@ return $res;
 
 function insertarCierrepadrones($refcountries,$refusuarios,$fechacierre) {
 $sql = "insert into tbcierrepadrones(idcierrepadron,refcountries,refusuarios,fechacierre)
-values ('',".$refcountries.",".$refusuarios.",'".utf8_decode($fechacierre)."')";
+values ('',".$refcountries.",".$refusuarios.",'".$fechacierre."')";
 $res = $this->query($sql,1);
 return $res;
 }
