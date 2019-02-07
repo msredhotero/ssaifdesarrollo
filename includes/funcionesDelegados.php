@@ -10,6 +10,51 @@ class serviciosDelegados {
 
 /* PARA Cabeceraconfirmacion */
 
+	function traerTareasGeneralPorCountrieId($idcountrie, $id1) {
+		$sql = "SELECT idtarea,
+						cc.nombre as countrie,
+						tarea,
+						est.estado,
+						usuariocrea,
+						fechacrea,
+						usuariomodi,
+						fechamodi,
+						url,
+						id1,
+						id2,
+						id3,
+						refestados,
+						refcountries,
+						est.color,
+						est.idestadotarea
+					FROM dbtareas t
+					inner join dbcountries cc ON cc.idcountrie = t.refcountries
+					inner join tbestadostareas est ON est.idestadotarea = t.refestados
+					where cc.idcountrie = ".$idcountrie." and t.id1 = ".$id1;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function cambiarEstadoTareas($idtarea=0, $refestado, $idpadre=0, $tablaMadre='') {
+		if ($idpadre != 0) {
+			switch ($tablaMadre) {
+				case 'dbfusionequipos':
+					$sql = "update dbtareas set refestados = ".$refestado." where id1 = ".$idpadre;
+				break;
+
+				default:
+				# code...
+				break;
+			}
+		} else {
+		$sql = "update dbtareas set refestados = ".$refestado." where idtarea = ".$idtarea;
+		}
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
 function devolverIdEstado($tabla,$id, $idlbl) {
 	$sql = "select refestados
 			from ".$tabla."
