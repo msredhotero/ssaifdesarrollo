@@ -45,7 +45,7 @@ $accion = $_POST['accion'];
 
 		//$resFusion = $serviciosDelegados->traerFusionesequiposPorId($id);
 
-		$resTarea = $serviciosDelegados->cambiarEstadoTareas(0, 3, $id, 'dbfusionequipos');
+		$resTarea = $serviciosDelegados->cambiarEstadoTareas(0, 3, $idestado, 'dbfusionequipos');
 
 		echo '';
 	}
