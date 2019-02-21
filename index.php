@@ -190,14 +190,12 @@ background-color: #ffffff; border:1px solid #101010; box-shadow: 2px 2px 3px #33
               </div>
 
               <div class="row">
-              <div class="form-group">
-              	<label for="olvido" class="control-label" style="color:#363636">¿Has olvidado tu contraseña?. <a href="recuperarpassword.php">Recuperar.</a></label>
-              </div>
+
 
               <div class="form-group">
                 <div class="col-md-12">
                   <a class="waves-effect waves-light btn" id="login"><i class="material-icons left">cloud</i>Ingresar</a>
-                  <a class="waves-effect red btn" id="registrarse"><i class="material-icons left">group_add</i>Registrate</a>
+
 
                 </div>
               </div>
