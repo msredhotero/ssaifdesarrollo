@@ -739,7 +739,7 @@ function generarNotificacion($serviciosReferencias) {
 
 		$cuerpo = '<p>'.$mensaje.'</p>';
 		if ($icono == 'glyphicon glyphicon-ok') {
-			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/aifzn/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>';
+			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/aifzncountriesdesarrollo/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>';
 		}
 		$serviciosReferencias->enviarEmail($destinatario,$asunto,$cuerpo, $referencia='');
 		echo '';
