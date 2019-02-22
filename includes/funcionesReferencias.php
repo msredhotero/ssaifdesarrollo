@@ -15201,7 +15201,8 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 		$ruta = "https://saupureinconsulting.com.ar/aifzndesarrollo/ajax/";
 		$mi_archivo = $nombreTurno;
 		$mi_nombre = "AIF";
-		$mi_email = $email;
+		//$mi_email = $email;
+      $mi_email = 'msredhotero@gmail.com';
 		$email_to = 'aif@intercountryfutbol.com.ar';
 		$mi_titulo = "Este es un correo con archivo adjunto";
 		$mi_mensaje = "Esta es el cuerpo de mensaje.";
