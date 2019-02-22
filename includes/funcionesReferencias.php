@@ -15225,7 +15225,7 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 			// ok
 			return 'ok - ';
 		}
-      */
+      
 
       //return $urlImg1;
 
