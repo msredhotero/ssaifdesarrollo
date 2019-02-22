@@ -1129,7 +1129,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 		            				}
 		            			?>
 		            			<?php
-		            				if (($idEstadoFoto != 3) && ($idEstadoNroDoc != 3) && ($idEstadoNroDocDorso != 3)) {
+		            				if ((($idEstadoFoto != 3) && ($idEstadoNroDoc != 3) && ($idEstadoNroDocDorso != 3))
+											&& (($idEstadoFoto != 0) && ($idEstadoNroDoc != 0) && ($idEstadoNroDocDorso != 0))) {
 		            			?>
 		            			<li>
 		            				<button type="button" class="btn btn-warning" id="presentar" data-toggle="modal" data-target="#myModal3" style="margin-left:0px;"><span class="glyphicon glyphicon-file"></span> Presentar</button>

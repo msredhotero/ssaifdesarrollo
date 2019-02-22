@@ -741,8 +741,8 @@ function generarNotificacion($serviciosReferencias) {
 		if ($icono == 'glyphicon glyphicon-ok') {
 			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/aifzncountriesdesarrollo/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>';
 		}
-		$serviciosReferencias->enviarMailAdjuntoAltaSocio($id1,$destinatario,$asunto,$cuerpo);
-		echo '';
+		$resEmail = $serviciosReferencias->enviarMailAdjuntoAltaSocio($id1,$destinatario,$asunto,$cuerpo);
+		echo $resEmail;
 	} else {
 		echo 'Huvo un error al insertar datos';
 	}

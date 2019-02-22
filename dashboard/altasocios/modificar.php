@@ -99,7 +99,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				$spanFoto = 'text-danger glyphicon glyphicon-remove-sign';
 				break;
 		}
-		
+
 
 
 		// traer imagen
@@ -308,14 +308,14 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 
 
 		<link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-		    
 
-		    
+
+
 		    <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
 		    <link rel="stylesheet" href="../../css/jquery-ui.css">
 
 		    <script src="../../js/jquery-ui.js"></script>
-		    
+
 			<!-- Latest compiled and minified CSS -->
 		    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 			<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
@@ -328,7 +328,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			<script src="../../js/fileinput/plugins/sortable.min.js"></script>
 			<!-- purify plugin for safe rendering HTML content in preview -->
 			<script src="../../js/fileinput/plugins/purify.min.js"></script>
-			
+
 		    <script src="../../js/liquidmetal.js" type="text/javascript"></script>
 		    <script src="../../js/jquery.flexselect.js" type="text/javascript"></script>
 		   <link rel="stylesheet" href="../../css/flexselect.css" type="text/css" media="screen" />
@@ -364,26 +364,26 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			    font-weight: normal;
 			}
 			</style>
-		    
-		    
+
+
 		</head>
 
 		<body>
 
-		 
+
 		<?php echo $resMenu; ?>
 
 		<div id="content">
 
 		<h3>Bienvenido</h3>
-			
+
 		    <div class="boxInfoLargo">
 		        <div id="headBoxInfo">
 		        	<p style="color: #fff; font-size:18px; height:16px;">Bienvenido al panel de alta de socios/jugadores nuevos.</p>
-		        	
+
 		        </div>
 		    	<div class="cuerpoBox">
-		    		
+
 		        	<form class="form-inline formulario" role="form" enctype="multipart/form-data">
 		        	<div class="row">
 		        		<div class="col-sm-3 text-center">
@@ -419,7 +419,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 					<input type="hidden" id="numeroserielote" name="numeroserielote" value="<?php echo mysql_result($resResultado, 0,'numeroserielote'); ?>">
 					<input type="hidden" id="id" name="id" value="<?php echo mysql_result($resResultado, 0,0); ?>">
 		            </div>
-		            
+
 		            <div class="row">
 						<div class="col-sm-6 text-center">
 							<h4>Foto del Documento del frente</h4>
@@ -592,18 +592,18 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				        </div>
 
 		            </div>
-		            
-		            
+
+
 		            <div class='row' style="margin-left:25px; margin-right:25px;">
 		                <div class='alert'>
-		                
+
 		                </div>
 		                <div id='load'>
-		                
+
 		                </div>
 		            </div>
-		            
-		            
+
+
 		            <div class="row">
 		                <div class="col-md-12">
 		                <ul class="list-inline" style="margin-top:15px;">
@@ -618,7 +618,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 		    </div>
 
 
-		   
+
 		</div>
 
 
@@ -634,7 +634,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 		        <h4 class="modal-title" id="myModalLabel">Estado Documentación</h4>
 		      </div>
 		      <div class="modal-body" id="resultadoPresentacion">
-		        
+
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -650,7 +650,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 		<script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 		<script type="text/javascript" src="../../js/fileinput/fileinput.js"></script>
 		<script>
-		
+
 		</script>
 
 		<script type="text/javascript">
@@ -659,24 +659,24 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			$('.abrir').click();
 
 			$('#generarFicha').click(function() {
-				window.open("../../reportes/rptAltaSocio.php?id=<?php echo $id; ?>" ,'_blank');	
+				window.open("../../reportes/rptAltaSocio.php?id=<?php echo $id; ?>" ,'_blank');
 			});
 
 			function eliminarFoto(documentacion, jugador) {
 				$.ajax({
-					data:  {documentacion: documentacion, 
+					data:  {documentacion: documentacion,
 							jugador: jugador,
 							accion: 'eliminarFotoJugadores'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							alert(response);
 							url = "modificar.php?id=<?php echo $id; ?>";
 							$(location).attr('href',url);
-							
+
 					}
 				});
 			}
@@ -688,42 +688,42 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				$direc = "./../data/".mysql_result($resFoto,0,0);
 			?>
 			function rotarImagenIzquierda() {
-				
+
 				$.ajax({
-					data:  {imagen: '<?php echo $urlImg; ?>', 
+					data:  {imagen: '<?php echo $urlImg; ?>',
 							rotar: 90,
 							directorio: '<?php echo $direc; ?>',
 							accion: 'rotarImagen'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							url = "modificar.php?id=<?php echo $id; ?>";
 							$(location).attr('href',url);
-							
+
 					}
 				});
 			}
 
 
 			function rotarImagenDerecha() {
-				
+
 				$.ajax({
-					data:  {imagen: '<?php echo $urlImg; ?>', 
+					data:  {imagen: '<?php echo $urlImg; ?>',
 							rotar: 270,
 							directorio: '<?php echo $direc; ?>',
 							accion: 'rotarImagen'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							url = "modificar.php?id=<?php echo $id; ?>";
 							$(location).attr('href',url);
-							
+
 					}
 				});
 			}
@@ -737,25 +737,25 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 
 			function presentardocumentacion(id) {
 				$.ajax({
-					data:  {id: id, 
+					data:  {id: id,
 							accion: 'presentardocumentacion'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							$('#resultadoPresentacion').html(response);
 							//url = "index.php";
 							//$(location).attr('href',url);
-							
+
 					}
 				});
 			}
 
 			function generarNotificacion(mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha,url) {
 				$.ajax({
-					data:  {mensaje: mensaje, 
+					data:  {mensaje: mensaje,
 							idpagina: idpagina,
 							autor: autor,
 							destinatario: destinatario,
@@ -771,12 +771,12 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 					url:   '../../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
-							
+							console.log(response);
 							alert('Se genero la Notificacion y se envio un email al destinatario')
-							
+
 					}
 				});
 			}
@@ -789,20 +789,20 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 
 			function guardarEstado(id, refestados) {
 				$.ajax({
-					data:  {id: id, 
+					data:  {id: id,
 							refestados: refestados,
 							existeJugador: <?php echo $existeJugador; ?>,
 							accion: 'guardarEstado'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
-							
+
 							url = "modificar.php?id=<?php echo $id; ?>";
 							$(location).attr('href',url);
-							
+
 					}
 				});
 			}
@@ -815,7 +815,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 
 			function jugadorNuevo(id, idEstadoExpensas, idEstadoPartidaDeNacimiento, idTitulo) {
 				$.ajax({
-					data:  {id: id, 
+					data:  {id: id,
 							idEstadoExpensas: idEstadoExpensas,
 							idEstadoPartidaDeNacimiento: idEstadoPartidaDeNacimiento,
 							idTitulo: idTitulo,
@@ -823,13 +823,13 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 					url:   '../../ajax/ajax.php',
 					type:  'post',
 					beforeSend: function () {
-							
+
 					},
 					success:  function (response) {
 							alert('El Jugador Ya fue creado y su documentacion también.')
 							url = "../jugadores/modificar.php?id="+response;
 							$(location).attr('href',url);
-							
+
 					}
 				});
 			}
@@ -851,16 +851,16 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				}
 				jugadorNuevo(<?php echo $id; ?>, expensa, partidaNaci, titulo);
 			});
-			
+
 
 			$('#presentar').click(function() {
 				presentardocumentacion(<?php echo mysql_result($resResultado,0,0); ?>);
 			});
 
-			var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' + 
+			var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' +
 			    'onclick="alert(\'Call your custom code here.\')">' +
 			    '<i class="glyphicon glyphicon-tag"></i>' +
-			    '</button>'; 
+			    '</button>';
 
 			<?php
 				if (mysql_num_rows($resFoto)>0) {
@@ -888,7 +888,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
@@ -934,11 +934,11 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -968,7 +968,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
@@ -1013,12 +1013,12 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1052,7 +1052,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"],
 			    initialPreview: [
@@ -1097,12 +1097,12 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				?>
 				layoutTemplates: {actionDelete: "", main2: '{preview}'},
 				<?php
-				} 
+				}
 				?>
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1153,11 +1153,11 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic 
+			        // note for these file types below no extension determination logic
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<img src="../../imagenes/sin_img.jpg">'    
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../../imagenes/sin_img.jpg">'
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
@@ -1209,7 +1209,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			    allowedFileExtensions: ["pdf"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1234,7 +1234,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
-			    <?php 
+			    <?php
 			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreview: [
@@ -1252,7 +1252,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				?>
 				initialPreviewFileType: 'image',
 			    initialPreviewAsData: true, // allows you to set a raw markup
-    			<?php 
+    			<?php
 			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreviewConfig: [
@@ -1283,11 +1283,11 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic 
+			        // note for these file types below no extension determination logic
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<img src="../../imagenes/sin_img.jpg">'    
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../../imagenes/sin_img.jpg">'
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
@@ -1339,7 +1339,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1365,7 +1365,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
-			    <?php 
+			    <?php
 			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreview: [
@@ -1383,7 +1383,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 				?>
 				initialPreviewFileType: 'image',
 			    initialPreviewAsData: true, // allows you to set a raw markup
-    			<?php 
+    			<?php
 			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreviewConfig: [
@@ -1414,11 +1414,11 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic 
+			        // note for these file types below no extension determination logic
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<img src="../../imagenes/sin_img.jpg">'    
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../../imagenes/sin_img.jpg">'
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
@@ -1470,12 +1470,12 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			    allowedFileExtensions: ["pdf","jpg", "png"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
 
-			
+
 			$('#colapsarMenu').click();
 
 
@@ -1483,7 +1483,7 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			$('#nrodocumento').prop('disabled',true);
 			$('#email').prop('disabled',true);
 			$('#fechaalta').prop('disabled',true);
-			
+
 			$(document).on('click', '.panel-heading span.clickable', function(e){
 				var $this = $(this);
 				if(!$this.hasClass('panel-collapsed')) {
@@ -1496,8 +1496,8 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 					$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
 				}
 			});
-			
-			
+
+
 			$('#buscar').click(function(e) {
 		        $.ajax({
 						data:  {busqueda: $('#busqueda').val(),
@@ -1506,27 +1506,27 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 						url:   '../../ajax/ajax.php',
 						type:  'post',
 						beforeSend: function () {
-								
+
 						},
 						success:  function (response) {
 								$('#resultadosJuagadores').html(response);
-								
+
 						}
 				});
-				
+
 			});
-			
-			
+
+
 			//al enviar el formulario
 		    $('#cargar').click(function(){
-				
+
 
 				//información del formulario
 				var formData = new FormData($(".formulario")[0]);
 				var message = "";
-				//hacemos la petición ajax  
+				//hacemos la petición ajax
 				$.ajax({
-					url: '../../ajax/ajax.php',  
+					url: '../../ajax/ajax.php',
 					type: 'POST',
 					// Form data
 					//datos del formulario
@@ -1537,8 +1537,8 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 					processData: false,
 					//mientras enviamos el archivo
 					beforeSend: function(){
-						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');  
-						$('#cargar').hide();     
+						$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');
+						$('#cargar').hide();
 					},
 					//una vez finalizado correctamente
 					success: function(data){
@@ -1549,16 +1549,16 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 		                                        $(".alert").addClass("alert-success");
 		                                        $(".alert").html('<strong>Ok!</strong> Sus datos fueron guardados correctamente. ');
 												$(".alert").delay(3000).queue(function(){
-													/*aca lo que quiero hacer 
+													/*aca lo que quiero hacer
 													  después de los 2 segundos de retraso*/
 													$(this).dequeue(); //continúo con el siguiente ítem en la cola
-													
+
 												});
 												$("#load").html('');
 												url = "index.php";
 												$(location).attr('href',url);
-		                                        
-												
+
+
 		                                    } else {
 		                                    	$(".alert").removeClass("alert-danger");
 		                                        $(".alert").addClass("alert-danger");
@@ -1572,12 +1572,12 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 		                $("#load").html('');
 					}
 				});
-				
-		    });
-			
-			
 
-			
+		    });
+
+
+
+
 
 		});
 		</script>

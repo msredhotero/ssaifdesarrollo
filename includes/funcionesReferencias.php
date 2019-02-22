@@ -15093,7 +15093,7 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
       $resFoto = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
       $urlImg1 = "../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
       $urlImgType1 = mysql_result($resFoto,0,'type');
-
+      /*
       $resFotoDocumento = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
       $urlImg2 = "../data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
       $urlImgType2 = mysql_result($resFotoDocumento,0,'type');
@@ -15113,13 +15113,6 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 
 
    	$pdf->AddPage('L','A4','mm');
-   	/***********************************    PRIMER CUADRANTE ******************************************/
-
-
-
-   	/***********************************    FIN ******************************************/
-
-   	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
 
 
    	$pdf->SetFillColor(183,183,183);
@@ -15232,6 +15225,9 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 			// ok
 			return 'ok - ';
 		}
+      */
+
+      return $urlImg1;
 
 		//$devuelve = $this->mail_attachment($mi_archivo, $ruta, $email_to, $mi_email, $mi_nombre, $mi_titulo, $mi_mensaje);
 
