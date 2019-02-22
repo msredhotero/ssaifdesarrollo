@@ -15091,7 +15091,7 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
       $resSocio = $this->traerJugadoresprePorIdCompleto($id);
 
       $resFoto = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
-      $urlImg1 = "../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+      $urlImg1 = $_SERVER['DOCUMENT_ROOT']."/data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
       $urlImgType1 = mysql_result($resFoto,0,'type');
       /*
       $resFotoDocumento = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
