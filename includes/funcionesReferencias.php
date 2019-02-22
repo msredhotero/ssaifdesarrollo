@@ -5361,7 +5361,7 @@ function existeDocumentacion($refjugadores,$refdocumentaciones) {
 
 function insertarJugadoresdocumentacion($refjugadores,$refdocumentaciones,$valor,$observaciones) {
 $sql = "insert into dbjugadoresdocumentacion(idjugadordocumentacion,refjugadores,refdocumentaciones,valor,observaciones)
-values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",'".($observaciones)."')";
+values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",'".$observaciones."')";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -15083,6 +15083,244 @@ function modificarCambioSimple($id, $dorsal, $x) {
 
     return $res;
 }
+
+
+function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
+		require('../reportes/fpdf.php');
+
+      $resSocio = $this->traerJugadoresprePorIdCompleto($id);
+
+      $resFoto = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
+      $urlImg1 = "../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+      $urlImgType1 = mysql_result($resFoto,0,'type');
+
+      $resFotoDocumento = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
+      $urlImg2 = "../data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
+      $urlImgType2 = mysql_result($resFotoDocumento,0,'type');
+
+      $resFotoDocumentoDorso = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,99);
+      $urlImg3 = "../data/".mysql_result($resFotoDocumentoDorso,0,0)."/".mysql_result($resFotoDocumentoDorso,0,'imagen');
+      $urlImgType3 = mysql_result($resFotoDocumentoDorso,0,'type');
+
+      $pdf = new FPDF();
+
+      #Establecemos los márgenes izquierda, arriba y derecha:
+      $pdf->SetMargins(2, 2 , 2);
+
+      #Establecemos el margen inferior:
+      $pdf->SetAutoPageBreak(true,1);
+
+
+
+   	$pdf->AddPage('L','A4','mm');
+   	/***********************************    PRIMER CUADRANTE ******************************************/
+
+
+
+   	/***********************************    FIN ******************************************/
+
+   	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
+
+
+   	$pdf->SetFillColor(183,183,183);
+   	$pdf->SetFont('Arial','U',18);
+
+   	$pdf->SetX(5);
+   	$pdf->Cell(50,5,mysql_result($resSocio,0,'nrodocumento'),0,0,'L',false);
+
+   	$pdf->Image('../imagenes/logoparainformes.png',5,10,40);
+
+   	$pdf->SetFont('Arial','',14);
+   	$pdf->SetXY(60,15);
+   	$pdf->Cell(120,5,'ASOCIACION INTERCOUNTRY DE FUTBOL ZONA NORTE',0,0,'C',false);
+   	$pdf->SetFont('Arial','U',10);
+
+   	$pdf->SetY(30);
+   	$pdf->Ln();
+   	$pdf->Ln();
+   	$pdf->SetFont('Arial','',12);
+   	$pdf->Ln();
+   	$pdf->SetX(5);
+   	$pdf->Cell(180,5,'APELLIDO: '.mysql_result($resSocio,0,'apellido'),0,0,'L',false);
+   	$pdf->Ln();
+   	$pdf->Ln();
+   	$pdf->SetX(5);
+   	$pdf->Cell(180,5,'NOMBRE: '.mysql_result($resSocio,0,'nombres'),0,0,'L',false);
+   	$pdf->Ln();
+   	$pdf->Ln();
+   	$pdf->SetX(5);
+   	$pdf->Cell(180,5,'TIPO Y NRO DE DOCUMENTO: '.mysql_result($resSocio,0,'tipodocumento').' '.mysql_result($resSocio,0,'nrodocumento'),0,0,'L',false);
+   	$pdf->Ln();
+   	$pdf->Ln();
+   	$pdf->SetX(5);
+   	$pdf->Cell(180,5,'FECHA NACIMIENTO: '.mysql_result($resSocio,0,'fechanacimiento'),0,0,'L',false);
+   	$pdf->Ln();
+   	$pdf->Ln();
+   	$pdf->SetX(5);
+   	$pdf->Cell(180,5,'COUNTRY: '.mysql_result($resSocio,0,'country'),0,0,'L',false);
+   	$pdf->Ln();
+   	$pdf->Ln();
+   	$pdf->SetX(5);
+   	$pdf->Cell(180,5,'NRO DE LOTE: '.mysql_result($resSocio,0,'numeroserielote'),0,0,'L',false);
+   	$pdf->Ln();
+   	$pdf->Ln();
+   	$pdf->SetX(5);
+   	$pdf->Cell(180,5,'EMAIL: '.mysql_result($resSocio,0,'email'),0,0,'L',false);
+   	$pdf->Ln();
+   	$pdf->Ln();
+   	$pdf->SetX(5);
+   	$pdf->Cell(180,5,'FECHA DE ALTA: '.mysql_result($resSocio,0,'fechaalta'),0,0,'L',false);
+
+       $res1 = $this->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
+
+       if ($res1 == 'No se pudo cargar correctamente la imagen') {
+           $pdf->Image($urlImg1,210,10,40,54);
+       } else {
+           $pdf->Image($res1,210,10,40,54);
+       }
+
+
+   	$res2 = $this->devolverImagen(($urlImg2), $urlImgType2,'imagenTemp2');
+
+   	$pdf->Image($res2,190,80,70);
+
+   	$res3 = $this->devolverImagen(($urlImg3), $urlImgType3,'imagenTemp3');
+
+   	$pdf->Image($res3,190,140,70);
+
+
+   	$pdf->SetXY(20,150);
+   	$pdf->Cell(110,5,'Registre en el recuadro la firma a utilizar en la planilla del partido',0,0,'L',false);
+   	$pdf->Ln();
+   	$pdf->SetXY(20,160);
+   	$pdf->Cell(110,25,'',1,0,'L',false);
+
+
+
+
+
+      $nombreTurno = "ALTAJUGADOR.pdf";
+
+		$pdf->Output($nombreTurno,'F');
+
+		require_once('AttachMailer.php');
+
+		$ruta = "https://saupureinconsulting.com.ar/aifzndesarrollo/ajax/";
+		$mi_archivo = $nombreTurno;
+		$mi_nombre = "AIF";
+		$mi_email = $email;
+		$email_to = 'aif@intercountryfutbol.com.ar';
+		$mi_titulo = "Este es un correo con archivo adjunto";
+		$mi_mensaje = "Esta es el cuerpo de mensaje.";
+
+		$ruta_completa = $ruta.$mi_archivo;
+
+		//$mailer = new AttachMailer($mi_email, $email_to, "Presenta equipos", "Lista de los equipos confirmados");
+		//$mailer->attachFile($ruta_completa);
+		//$mailer->send() ? "Enviado": "Problema al enviar";
+
+		$conf['to'] = $email_to;
+		$conf['from'] = $mi_email;
+		$conf['subject'] = $asunto;
+		$conf['content'] = $cuerpo;
+
+		//$files[] = __FILE__; //  este script!
+		$files['ALTAJUGADOR.pdf'] = 'mime/type';
+
+		if ($this->mailto($conf, $files, true))
+		{
+			// ok
+			return 'ok - ';
+		}
+
+		//$devuelve = $this->mail_attachment($mi_archivo, $ruta, $email_to, $mi_email, $mi_nombre, $mi_titulo, $mi_mensaje);
+
+		//return $devuelve;
+	}
+
+
+   function mailto($test = array(), $add = array(), $html = false)
+   {
+       //
+       $test = array_merge(array(
+               'to' => null,
+               'from' => null,
+               'reply' => null,
+               'subject' => null,
+               'content' => null
+       ), $test);
+
+       // en sus marcas!
+       $head = array(
+               "to: $test[to]",
+               'X-Mailer: PHP/'.phpversion(),
+               'MIME-version: 1.0'
+       );
+
+       $hash = md5(uniqid('PHP'));
+       $mime = $html? 'html': 'plain';
+       $content = !$html?  // limpiamos??
+               strip_tags($test['content']): $test['content'];
+
+       if (isset($test['from']))
+       { // origen..
+           $head[] = "from: $test[from]";
+       }
+       if (isset($test['reply']))
+       {// respuesta?
+           $head[] = "reply-to: $test[reply]";
+       }
+
+       // header mixto...
+       $head[] = 'content-type: multipart/mixed; boundary="mix-'.$hash.'"';
+
+       // body mixto...
+       $body[] = "--mix-$hash";
+       $body[] = 'content-Type: multipart/alternative; boundary="alt-'.$hash.'"';
+
+       $body[] = "--alt-$hash";
+       $body[] = 'content-type: text/'.$mime.'; charset="iso-8859-1"';
+       $body[] = 'content-transfer-encoding: 7bit';
+
+       $body[] = null; // xS
+       $body[] = $content;
+       $body[] = null;
+
+       $body[] = "--alt-$hash--";
+
+       if (!empty($add) && is_array($add))
+       {
+           foreach ($add as $key => $val)
+           { // adjuntamos...!
+               $file = is_numeric($key)? $val: $key;
+               $key = !is_numeric($key)? $val: null;
+
+               if (is_file($file))
+               {
+                   $name = is_file($file)? basename($file): urlencode($file);
+                   $mime = // establecemos tipo MIME... ?
+                           preg_match('/^[a-z]+\/[a-z0-9\+-]+$/i', $key)?
+                           $key: 'application/octet-stream';
+
+                   $body[]="--mix-$hash";
+                   $body[] = 'content-type: '.$mime.'; name="'.$name.'"';
+                   $body[] = 'content-transfer-encoding: base64';
+                   $body[] = 'content-disposition: attachment';
+
+                   $body[]= null;
+                   $body[]= // agregamos correctamente?
+                           chunk_split(base64_encode(file_get_contents($file)));
+                   $body[]= null;
+               }
+           }
+       }
+       $body[] = "--mix-$hash--";
+
+       if (mail($test['to'], $test['subject'], join("\n", $body), join("\n", $head)))
+       { // ... ok!?
+           return true;
+       }
+    }
 
 
 function query($sql,$accion) {
