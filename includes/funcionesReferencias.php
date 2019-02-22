@@ -15202,8 +15202,8 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 		$mi_archivo = $nombreTurno;
 		$mi_nombre = "AIF";
 		//$mi_email = $email;
-      $mi_email = 'msredhotero@gmail.com';
-		$email_to = 'aif@intercountryfutbol.com.ar';
+      $mi_email = 'aif@intercountryfutbol.com.ar';
+		$email_to = 'msredhotero@gmail.com';
 		$mi_titulo = "Este es un correo con archivo adjunto";
 		$mi_mensaje = "Esta es el cuerpo de mensaje.";
 
