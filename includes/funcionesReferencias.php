@@ -15091,15 +15091,15 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
       $resSocio = $this->traerJugadoresprePorIdCompleto($id);
 
       $resFoto = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
-      $urlImg1 = "https://saupureinconsulting.com.ar/data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+      $urlImg1 = "https://saupureinconsulting.com.ar/aifzndesarrollo/data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
       $urlImgType1 = mysql_result($resFoto,0,'type');
 
       $resFotoDocumento = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
-      $urlImg2 = "https://saupureinconsulting.com.ar/data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
+      $urlImg2 = "https://saupureinconsulting.com.ar/aifzndesarrollo/data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
       $urlImgType2 = mysql_result($resFotoDocumento,0,'type');
 
       $resFotoDocumentoDorso = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,99);
-      $urlImg3 = "https://saupureinconsulting.com.ar/data/".mysql_result($resFotoDocumentoDorso,0,0)."/".mysql_result($resFotoDocumentoDorso,0,'imagen');
+      $urlImg3 = "https://saupureinconsulting.com.ar/aifzndesarrollo/data/".mysql_result($resFotoDocumentoDorso,0,0)."/".mysql_result($resFotoDocumentoDorso,0,'imagen');
       $urlImgType3 = mysql_result($resFotoDocumentoDorso,0,'type');
 
       $pdf = new FPDF();
@@ -15225,7 +15225,7 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 			// ok
 			return 'ok - ';
 		}
-      
+
 
       //return $urlImg1;
 
