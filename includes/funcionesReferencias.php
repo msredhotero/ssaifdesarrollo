@@ -15091,15 +15091,15 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
       $resSocio = $this->traerJugadoresprePorIdCompleto($id);
 
       $resFoto = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,1);
-      $urlImg1 = $_SERVER['DOCUMENT_ROOT']."/data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+      $urlImg1 = "https://saupureinconsulting.com.ar/data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
       $urlImgType1 = mysql_result($resFoto,0,'type');
-      /*
+
       $resFotoDocumento = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,2);
-      $urlImg2 = "../data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
+      $urlImg2 = "https://saupureinconsulting.com.ar/data/".mysql_result($resFotoDocumento,0,0)."/".mysql_result($resFotoDocumento,0,'imagen');
       $urlImgType2 = mysql_result($resFotoDocumento,0,'type');
 
       $resFotoDocumentoDorso = $this->traerDocumentacionjugadorimagenesPorJugadorDocumentacion($id,99);
-      $urlImg3 = "../data/".mysql_result($resFotoDocumentoDorso,0,0)."/".mysql_result($resFotoDocumentoDorso,0,'imagen');
+      $urlImg3 = "https://saupureinconsulting.com.ar/data/".mysql_result($resFotoDocumentoDorso,0,0)."/".mysql_result($resFotoDocumentoDorso,0,'imagen');
       $urlImgType3 = mysql_result($resFotoDocumentoDorso,0,'type');
 
       $pdf = new FPDF();
@@ -15196,7 +15196,7 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 
 		$pdf->Output($nombreTurno,'F');
 
-		require_once('AttachMailer.php');
+		//require_once('AttachMailer.php');
 
 		$ruta = "https://saupureinconsulting.com.ar/aifzndesarrollo/ajax/";
 		$mi_archivo = $nombreTurno;
@@ -15227,7 +15227,7 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 		}
       */
 
-      return $urlImg1;
+      //return $urlImg1;
 
 		//$devuelve = $this->mail_attachment($mi_archivo, $ruta, $email_to, $mi_email, $mi_nombre, $mi_titulo, $mi_mensaje);
 
