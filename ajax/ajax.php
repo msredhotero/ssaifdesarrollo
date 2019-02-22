@@ -739,7 +739,7 @@ function generarNotificacion($serviciosReferencias) {
 
 		$cuerpo = '<p>'.$mensaje.'</p>';
 		if ($icono == 'glyphicon glyphicon-ok') {
-			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/aifzncountriesdesarrollo/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>';
+			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/aifzncountriesdesarrollo/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>. Pero primero debe loguearse al sistema para acceder al link. También le adjuntamos la ficha en este email.';
 		}
 		$resEmail = $serviciosReferencias->enviarMailAdjuntoAltaSocio($id1,$destinatario,$asunto,$cuerpo);
 		echo $resEmail;
