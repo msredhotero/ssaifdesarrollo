@@ -13,7 +13,7 @@ class serviciosDelegados {
 		$resEquipo = $this->traerEquiposdelegadosPorId($id);
 
 		// primero determino si es un equipo nuevo
-		if ((mysql_result($resEquipo,0,'activo') == 1) && (mysql_result($resEquipo,0,'nuevo') == 1)) {
+		if ((mysql_result($resEquipo,0,'activo') == 'Si') && (mysql_result($resEquipo,0,'nuevo') == 'Si')) {
 			// inserto todos los conectores sin los jugadores nuevos
 			$resInsertarConectores = $this->insertarConectorMasivo(mysql_result($resEquipo,0,'idequipo'), mysql_result($resEquipo,0,'reftemporadas'));
 
@@ -31,7 +31,7 @@ class serviciosDelegados {
 		}
 
 		// si el equipo se mantiene
-		if ((mysql_result($resEquipo,0,'activo') == 1) && (mysql_result($resEquipo,0,'nuevo') == 0)) {
+		if ((mysql_result($resEquipo,0,'activo') == 'Si') && (mysql_result($resEquipo,0,'nuevo') == 'No')) {
 			// doy de baja a los jugadores para este equipo
 			$resBaja = $this->eliminarTodosLosJugadores(mysql_result($resEquipo,0,'idequipo'));
 
@@ -263,7 +263,7 @@ class serviciosDelegados {
 		if (mysql_result($resEquipo,0,'refestados') == 7) {
 
 			//determino si es nuevo
-			if ((mysql_result($resEquipo,0,'activo') == 1) && (mysql_result($resEquipo,0,'nuevo') == 1)) {
+			if ((mysql_result($resEquipo,0,'activo') == 'Si') && (mysql_result($resEquipo,0,'nuevo') == 'Si')) {
 				//verifico que no exista
 				if (mysql_num_rows($existeEquipo) > 0) {
 					return 'El equipo ya fue dado de alta';
@@ -276,7 +276,7 @@ class serviciosDelegados {
 			}
 
 			//determino si lo doy de baja
-			if ((mysql_result($resEquipo,0,'activo') == 0) && (mysql_result($resEquipo,0,'nuevo') == 0)) {
+			if ((mysql_result($resEquipo,0,'activo') == 'No') && (mysql_result($resEquipo,0,'nuevo') == 'No')) {
 
 				$resBaja = $this->darBajaEquipo(mysql_result($resEquipo,0,'idequipo'));
 				return '';
@@ -465,7 +465,11 @@ function traerCabeceraconfirmacionPorClubTemporada($refcountries, $reftemporadas
 }
 
 	function traerEquiposdelegadosPorId($id) {
-		$sql = "select idequipodelegado,idequipo,reftemporadas,refusuarios,refcountries,nombre,refcategorias,refdivisiones,fechabaja,activo,refestados, nuevo from dbequiposdelegados where idequipodelegado =".$id;
+		$sql = "select idequipodelegado,idequipo,reftemporadas,refusuarios,refcountries,nombre,refcategorias,refdivisiones,fechabaja,
+		(case when activo = 1 then 'Si' else 'No' end) as activo,
+		refestados,
+		(case when nuevo = 1 then 'Si' else 'No' end) as nuevo
+		from dbequiposdelegados where idequipodelegado =".$id;
 		$res = $this->query($sql,0);
 		return $res;
 	}
