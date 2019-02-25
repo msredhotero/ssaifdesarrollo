@@ -6580,8 +6580,8 @@ inner join dbcountries cou ON cou.idcountrie = e.refcountries
 inner join tbposiciontributaria po ON po.idposiciontributaria = cou.refposiciontributaria
 inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias
 inner join tbdivisiones di ON di.iddivision = e.refdivisiones
-inner join dbcontactos con ON con.idcontacto = e.refcontactos
-inner join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos
+left join dbcontactos con ON con.idcontacto = e.refcontactos
+left join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos
 left join images i ON i.refproyecto = cou.idcountrie and i.reftabla = 1
 order by e.nombre";
 $res = $this->query($sql,0);

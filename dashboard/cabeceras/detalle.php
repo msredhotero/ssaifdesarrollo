@@ -221,6 +221,27 @@ if ($_SESSION['refroll_predio'] != 1) {
 </div>
 
 
+<div class="modal fade" id="myModal4" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<form class="form-inline formulario" role="form">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Migrar Equipos Jugadores</h4>
+			</div>
+			<div class="modal-body">
+				<h4 class="resultadoMigracion"></h4>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
 
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
@@ -319,6 +340,36 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 
 	});//fin del boton plantel
+
+
+
+	$("#resultados").on("click",'.varMigrar', function(){
+
+		usersid =  $(this).attr("id");
+
+		$.ajax({
+			data:  {id: $(this).attr("id"),
+					accion: 'migrarEquiposJugadores'},
+			url:   '../../ajax/ajaxdelegados.php',
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+				if (response == '') {
+					$('#myModal4').modal();
+					$('.resultadoMigracion').html('Se migraron los datos correctamente');
+					traerEquiposDelagados();
+				} else {
+					$('#myModal4').modal();
+					$('.resultadoMigracion').html('Error: ' + response);
+					traerEquiposDelagados();
+				}
+			}
+		});
+
+	});//fin del boton plantel
+
 
 	$("#resultados").on("click",'.varfusion', function(){
 

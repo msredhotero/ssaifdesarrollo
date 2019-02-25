@@ -35,6 +35,34 @@ $accion = $_POST['accion'];
 		case 'modificarEstadoFusion':
 			modificarEstadoFusion($serviciosDelegados);
 		break;
+
+		case 'migrarEquiposJugadores':
+			migrarEquiposJugadores($serviciosDelegados);
+		break;
+	}
+
+	function migrarEquiposJugadores($serviciosDelegados) {
+		$id = $_POST['id'];
+
+		$res = $serviciosDelegados->migrarEquipo($id);
+
+		if ($res == '') {
+			//salio todo ok
+			//doy de baja todos los jugadores del plantel de la temporada pasada
+			//inserto todos los jugadores nuevos
+			$resJugadores = $serviciosDelegados->migrarJugadores($id);
+			if ($resJugadores == '') {
+				//salio todo ok
+				$res = $serviciosDelegados->modificarEstadoEquiposDelegados($id, 9);
+				echo '';
+			} else {
+				//error con insertar los jugadores
+				echo $res;
+			}
+		} else {
+			// error al migrar el equipos
+			echo $res;
+		}
 	}
 
 	function modificarEstadoFusion($serviciosDelegados) {
@@ -138,9 +166,9 @@ glyphicon-pencil
 				break;
 			case 'equiposdelegados':
 				$res = $serviciosDelegados->traerEquiposdelegadosPorCountrieFinalizado($param1, $param2);
-				$label = array('Modificar Estado','Ver','Fusion');
-				$class = array('varmodificarestado','varver','varfusion');
-				$icon = array('glyphicon-pencil','glyphicon-search','glyphicon-paperclip');
+				$label = array('Modificar Estado','Ver','Fusion','Migrar');
+				$class = array('varmodificarestado','varver','varfusion','varMigrar');
+				$icon = array('glyphicon-pencil','glyphicon-search','glyphicon-paperclip','glyphicon-transfer');
 				break;
 			case 'fusiones':
 				$res = $serviciosDelegados->traerFusionesPorEquipo($param1);

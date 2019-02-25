@@ -7,6 +7,330 @@
 date_default_timezone_set('America/Buenos_Aires');
 
 class serviciosDelegados {
+	/* migraciones */
+
+	function migrarJugadores($id) {
+		$resEquipo = $this->traerEquiposdelegadosPorId($id);
+
+		// primero determino si es un equipo nuevo
+		if ((mysql_result($resEquipo,0,'activo') == 1) && (mysql_result($resEquipo,0,'nuevo') == 1)) {
+			// inserto todos los conectores sin los jugadores nuevos
+			$resInsertarConectores = $this->insertarConectorMasivo(mysql_result($resEquipo,0,'idequipo'), mysql_result($resEquipo,0,'reftemporadas'));
+
+			// traigo todos los jugadores nuevos del plantel y los inserto en jugadores
+			$resJugadoresNuevos = $this->traerJugadoresPreConectores(mysql_result($resEquipo,0,'idequipo'), mysql_result($resEquipo,0,'reftemporadas'));
+			while ($row = mysql_fetch_array($resJugadoresNuevos)) {
+				if ($this->existeJugador($row['nrodocumento']) == 0) {
+					$resIJ = $this->insertarJugadorDocumentacionValores($row['refjugadorespre']);
+					$this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
+				}
+
+			}
+
+			return '';
+		}
+
+		// si el equipo se mantiene
+		if ((mysql_result($resEquipo,0,'activo') == 1) && (mysql_result($resEquipo,0,'nuevo') == 0)) {
+			// doy de baja a los jugadores para este equipo
+			$resBaja = $this->eliminarTodosLosJugadores(mysql_result($resEquipo,0,'idequipo'));
+
+			// inserto todos los conectores sin los jugadores nuevos
+			$resInsertarConectores = $this->insertarConectorMasivo(mysql_result($resEquipo,0,'idequipo'), mysql_result($resEquipo,0,'reftemporadas'));
+
+			// traigo todos los jugadores nuevos del plantel y los inserto en jugadores
+
+			$resJugadoresNuevos = $this->traerJugadoresPreConectores(mysql_result($resEquipo,0,'idequipo'), mysql_result($resEquipo,0,'reftemporadas'));
+			while ($row = mysql_fetch_array($resJugadoresNuevos)) {
+				if ($this->existeJugador($row['nrodocumento']) == 0) {
+					$resIJ = $this->insertarJugadorDocumentacionValores($row['refjugadorespre']);
+					$this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
+				}
+
+			}
+			return '';
+
+		}
+
+	}
+
+	function existeJugador($nroDocumento) {
+	    $sql = "select idjugador from dbjugadores where nrodocumento = ".$nroDocumento;
+	    $res = $this->query($sql,0);
+
+	    if (mysql_num_rows($res)>0) {
+	        return 1;
+	    }
+	    return 0;
+	}
+
+	function insertarJugadorDocumentacionValores($id) {
+
+		$sql = "INSERT INTO dbjugadores
+					(idjugador,
+					reftipodocumentos,
+					nrodocumento,
+					apellido,
+					nombres,
+					email,
+					fechanacimiento,
+					fechaalta,
+					refcountries,
+					observaciones)
+					select
+					'',
+					reftipodocumentos,
+					nrodocumento,
+					apellido,
+					nombres,
+					email,
+					fechanacimiento,
+					fechaalta,
+					refcountries,
+					observaciones
+					from		dbjugadorespre
+					where		idjugadorpre = ".$id;
+
+
+		$res = $this->query($sql,1);
+
+		$this->modificarDocumentacionjugadorimagenesIDjugador($id, $res);
+
+		//inserto la documentacion
+
+		//inserto la foto y el documento
+		$this->insertarJugadoresdocumentacion($res,1,0,'');
+		$this->insertarJugadoresdocumentacion($res,2,0,'');
+
+		//ficha
+		$this->insertarJugadoresdocumentacion($res,3,0,'');
+
+		//escritura
+		$this->insertarJugadoresdocumentacion($res,4,0,'');
+
+		//examen medico
+		$this->insertarJugadoresdocumentacion($res,5,0,'');
+
+		//expensa
+		$this->insertarJugadoresdocumentacion($res,6,0,'');
+
+		//inhabilita country
+		$this->insertarJugadoresdocumentacion($res,7,0,'');
+
+		//partida nacimiento
+		$this->insertarJugadoresdocumentacion($res,9,0,'');
+
+
+		//inserto los valores de la documentacion
+
+		//foto
+		$this->insertarJugadoresvaloreshabilitacionestransitorias($res,330);
+
+		//documento
+		$this->insertarJugadoresvaloreshabilitacionestransitorias($res,332);
+
+		//ficha
+		$this->insertarJugadoresvaloreshabilitacionestransitorias($res,334);
+
+		//escritura
+		$this->insertarJugadoresvaloreshabilitacionestransitorias($res,339);
+
+
+		//examen medico
+		$this->insertarJugadoresvaloreshabilitacionestransitorias($res,361);
+
+		//expensa
+		$this->insertarJugadoresvaloreshabilitacionestransitorias($res,364);
+
+
+		//inhabilita country
+		$this->insertarJugadoresvaloreshabilitacionestransitorias($res,366);
+
+		//partida nacimiento
+		$this->insertarJugadoresvaloreshabilitacionestransitorias($res,369);
+
+		return $res;
+	}
+
+	function insertarJugadoresdocumentacion($refjugadores,$refdocumentaciones,$valor,$observaciones) {
+		$sql = "insert into dbjugadoresdocumentacion(idjugadordocumentacion,refjugadores,refdocumentaciones,valor,observaciones)
+		values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",'".$observaciones."')";
+
+		$res = $this->query($sql,1);
+		return $res;
+	}
+
+
+	function insertarJugadoresvaloreshabilitacionestransitorias($refjugadores,$refvaloreshabilitacionestransitorias) {
+		$sql = "insert into dbjugadoresvaloreshabilitacionestransitorias(iddbjugadorvalorhabilitaciontransitoria,refjugadores,refvaloreshabilitacionestransitorias)
+		values ('',".$refjugadores.",".$refvaloreshabilitacionestransitorias.")";
+
+		$res = $this->query($sql,1);
+		return $sql;
+	}
+
+
+	function modificarDocumentacionjugadorimagenesIDjugador($refjugadorespre,$idjugador) {
+		$sql = "update dbdocumentacionjugadorimagenes
+		set
+		idjugador = ".$idjugador."
+		where refjugadorespre =".$refjugadorespre;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function insertarConectorMasivo($id, $idtemporada) {
+		$sql = "INSERT INTO dbconector
+						(idconector,
+						refjugadores,
+						reftipojugadores,
+						refequipos,
+						refcountries,
+						refcategorias,
+						esfusion,
+						activo)
+					SELECT '',
+					    refjugadores,
+					    reftipojugadores,
+					    refequipos,
+					    refcountries,
+					    refcategorias,
+					    esfusion,
+					    activo
+					FROM dbconectordelegados where reftemporadas = ".$idtemporada." and refequipos = ".$id." and refjugadorespre = 0";
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function insertarConectorPorJugadorPre($id, $idjugador, $idtemporada) {
+		$sql = "INSERT INTO dbconector
+						(idconector,
+						refjugadores,
+						reftipojugadores,
+						refequipos,
+						refcountries,
+						refcategorias,
+						esfusion,
+						activo)
+					SELECT '',
+					    ".$idjugador.",
+					    reftipojugadores,
+					    refequipos,
+					    refcountries,
+					    refcategorias,
+					    esfusion,
+					    activo
+					FROM dbconectordelegados where reftemporadas = ".$idtemporada." and refjugadorespre = ".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function traerJugadoresPreConectores($id, $idtemporada) {
+		$sql = "SELECT c.idconector,
+					    c.refjugadores,
+					    c.reftipojugadores,
+					    c.refequipos,
+					    c.refcountries,
+					    c.refcategorias,
+					    c.esfusion,
+					    c.activo,
+						 c.refjugadorespre,
+						 j.nrodocumento
+					FROM dbconectordelegados c
+					inner join dbjugadorespre j on j.idjugadorpre = c.refjugadorespre
+					where c.reftemporadas = ".$idtemporada." and c.refequipos = ".$id." and c.refjugadorespre > 0";
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function eliminarTodosLosJugadores($id) {
+		$sql = "update dbconector set activo = 0 where refequipos =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function migrarEquipo($id) {
+
+		$resEquipo = $this->traerEquiposdelegadosPorId($id);
+
+		$existeEquipo = $this->traerEquiposPorId($id);
+
+		if (mysql_result($resEquipo,0,'refestados') == 7) {
+
+			//determino si es nuevo
+			if ((mysql_result($resEquipo,0,'activo') == 1) && (mysql_result($resEquipo,0,'nuevo') == 1)) {
+				//verifico que no exista
+				if (mysql_num_rows($existeEquipo) > 0) {
+					return 'El equipo ya fue dado de alta';
+				} else {
+					// inserto en dbequipos al equipo
+					$resInsertar = $this->insertarEquipos($id);
+
+					return '';
+				}
+			}
+
+			//determino si lo doy de baja
+			if ((mysql_result($resEquipo,0,'activo') == 0) && (mysql_result($resEquipo,0,'nuevo') == 0)) {
+
+				$resBaja = $this->darBajaEquipo(mysql_result($resEquipo,0,'idequipo'));
+				return '';
+			}
+
+			return '';
+		} else {
+			return 'No puede ser migrado';
+		}
+
+	}
+
+	function darBajaEquipo($id) {
+		$sql = "update dbequipos set fachebaja = now(), activo = 0 where idequipo = ".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function insertarEquipos($id) {
+		$sql = "INSERT INTO dbequipos
+						(idequipo,
+						refcountries,
+						nombre,
+						refcategorias,
+						refdivisiones,
+						refcontactos,
+						fechaalta,
+						fachebaja,
+						activo)
+					select
+						idequipo,
+						refcountries,
+						nombre,
+						refcategorias,
+						refdivisiones,
+						0,
+						now(),
+						'0000-00-00',
+						activo
+					from dbequiposdelegados where idequipodelegado =".$id;
+
+		$res = $this->query($sql,1);
+		return $res;
+	}
+
+	function traerEquiposPorId($id) {
+		$sql = "select idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,(case when activo = 1 then 'Si' else 'No' end) as activo from dbequipos where idequipo =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	/* fin */
 
 /* PARA Cabeceraconfirmacion */
 
@@ -141,7 +465,7 @@ function traerCabeceraconfirmacionPorClubTemporada($refcountries, $reftemporadas
 }
 
 	function traerEquiposdelegadosPorId($id) {
-		$sql = "select idequipodelegado,idequipo,reftemporadas,refusuarios,refcountries,nombre,refcategorias,refdivisiones,fechabaja,activo,refestados from dbequiposdelegados where idequipodelegado =".$id;
+		$sql = "select idequipodelegado,idequipo,reftemporadas,refusuarios,refcountries,nombre,refcategorias,refdivisiones,fechabaja,activo,refestados, nuevo from dbequiposdelegados where idequipodelegado =".$id;
 		$res = $this->query($sql,0);
 		return $res;
 	}
