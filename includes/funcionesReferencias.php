@@ -8140,7 +8140,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -8188,7 +8188,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -8221,7 +8221,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -8268,7 +8268,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
