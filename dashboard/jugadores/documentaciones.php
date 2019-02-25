@@ -31,7 +31,7 @@ $fecha = date('Y-m-d');
 $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Jugadores",$_SESSION['refroll_predio'],$_SESSION['email_predio']);
 
 
-	
+
 if (!$_POST){
 	if (!isset($_GET['id'])) {
 		header('Location: index.php');
@@ -42,33 +42,33 @@ if (!$_POST){
 	if (!isset($_POST['id'])) {
 		header('Location: index.php');
 	}
-	
+
 	//die(var_dump($_FILES['avatar-1']));
 
 	$id	= $_POST['refjugadores'];
 	//die(print_r($_POST));
-	
-	//$refjugadores = $_POST['refjugadores']; 
-	
+
+	//$refjugadores = $_POST['refjugadores'];
+
 	//elimino todo y lo vuelvo a cargar
 	$serviciosReferencias->eliminarJugadoresdocumentacionPorJugador($id);
 	$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJuagador($id);
 	//// fin del eliminar //////
-	
+
 	$observaciones = '';
-	
+
 	$resDocu = $serviciosReferencias->traerDocumentaciones();
 	$cad = 'docu';
 	while ($rowFS = mysql_fetch_array($resDocu)) {
 		if (isset($_POST[$cad.$rowFS[0]])) {
-		
+
 			$res = $serviciosReferencias->insertarJugadoresdocumentacion($id,$rowFS[0],1,$observaciones);
 		} else {
 			$res = $serviciosReferencias->insertarJugadoresdocumentacion($id,$rowFS[0],0,$observaciones);
-		
+
 		}
 	}
-	
+
 	$resV = '';
 	$resValores = $serviciosReferencias->traerDocumentaciones();
 	$cadV = 'multiselect';
@@ -90,18 +90,18 @@ if (!$_POST){
 	if (mysql_num_rows($resJugadorPre)> 0) {
 		$idPre = mysql_result($resJugadorPre,0,0);
 	} else {
-		$idPre = 0;
+		$idPre = 'null';
 	}
 
 	$resFoto 				= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($id,1,$idPre);
 	$resFotoDocumento 		= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($id,2,$idPre);
 	$resFotoDocumentoDorso 	= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($id,99,$idPre);
-	
+
 	$resTitulo 			   	= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($id,4,$idPre);
 	$resExpensa				= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($id,6,$idPre);
 	$resPartidaNacimiento	= $serviciosReferencias->traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($id,9,$idPre);
 
-	
+
 
 	$error = '';
 
@@ -137,7 +137,7 @@ if (!$_POST){
 		$error .= $serviciosReferencias->subirArchivoJugadoresID('avatar-2',$idPre,$nuevoId2,2,$idPre,$id);
 
 		$cantidadDocumento += 1;
-		
+
 	}
 
 	if ($_FILES['avatar-3']['tmp_name'] != '') {
@@ -233,7 +233,7 @@ if (!$_POST){
 			$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,368);
 		}
 	}
-	
+
 }
 
 $resResultado = $serviciosReferencias->traerJugadoresPorId($id);
@@ -250,7 +250,7 @@ $resJugadores = $serviciosReferencias->traerJugadoresdocumentacionPorJugador($id
 		$idPre = mysql_result($resResultadoPre,0,0);
 		$idJugadorPre = mysql_result($resResultadoPre,0,0);
 	} else {
-		$idPre = 0;
+		$idPre = 'null';
 	}
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Documentación del jugador";
@@ -299,7 +299,209 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
-	
+
+}
+
+
+
+$resEstados = $serviciosReferencias->traerEstados();
+$cadRefEstados 	= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
+
+if (mysql_num_rows($resFoto) > 0) {
+	$estadoFoto = mysql_result($resFoto, 0,'estado');
+	$idEstadoFoto = mysql_result($resFoto, 0,'refestados');
+	$foto1 = mysql_result($resFoto, 0,'imagen');
+	$id1 = mysql_result($resFoto, 0,0);
+} else {
+	$estadoFoto = 'Sin carga';
+	$idEstadoFoto = 0;
+	$foto1 = '';
+	$id1 = 0;
+}
+
+$spanFoto = '';
+
+switch ($idEstadoFoto) {
+	case 0:
+		$spanFoto = 'text-muted glyphicon glyphicon-exclamation-sign';
+		break;
+	case 1:
+		$spanFoto = 'text-info glyphicon glyphicon-plus-sign';
+		break;
+	case 2:
+		$spanFoto = 'text-warning glyphicon glyphicon-ban-circle';
+		break;
+	case 3:
+		$spanFoto = 'text-success glyphicon glyphicon-ok-sign';
+		break;
+	case 4:
+		$spanFoto = 'text-danger glyphicon glyphicon-remove-sign';
+		break;
+}
+
+
+if (mysql_num_rows($resFotoDocumento) > 0) {
+	$estadoNroDoc = mysql_result($resFotoDocumento, 0,'estado');
+	$idEstadoNroDoc = mysql_result($resFotoDocumento, 0,'refestados');
+	$foto2 = mysql_result($resFotoDocumento, 0,'imagen');
+	$id2 = mysql_result($resFotoDocumento, 0,0);
+} else {
+	$estadoNroDoc = 'Sin carga';
+	$idEstadoNroDoc = 0;
+	$foto2= '';
+	$id2 = 0;
+}
+
+
+$spanNroDoc = '';
+switch ($idEstadoNroDoc) {
+	case 0:
+		$spanNroDoc = 'text-muted glyphicon glyphicon-exclamation-sign';
+		break;
+	case 1:
+		$spanNroDoc = 'text-info glyphicon glyphicon-plus-sign';
+		break;
+	case 2:
+		$spanNroDoc = 'text-warning glyphicon glyphicon-ban-circle';
+		break;
+	case 3:
+		$spanNroDoc = 'text-success glyphicon glyphicon-ok-sign';
+		break;
+	case 4:
+		$spanNroDoc = 'text-danger glyphicon glyphicon-remove-sign';
+		break;
+}
+
+
+if (mysql_num_rows($resFotoDocumentoDorso) > 0) {
+	$estadoNroDocDorso = mysql_result($resFotoDocumentoDorso, 0,'estado');
+	$idEstadoNroDocDorso = mysql_result($resFotoDocumentoDorso, 0,'refestados');
+	$foto3 = mysql_result($resFotoDocumentoDorso, 0,'imagen');
+	$id3 = mysql_result($resFotoDocumentoDorso, 0,0);
+} else {
+	$estadoNroDocDorso = 'Sin carga';
+	$idEstadoNroDocDorso = 0;
+	$foto3 = '';
+	$id3 = 0;
+}
+
+
+$spanNroDocDorso = '';
+switch ($idEstadoNroDocDorso) {
+	case 0:
+		$spanNroDocDorso = 'text-muted glyphicon glyphicon-exclamation-sign';
+		break;
+	case 1:
+		$spanNroDocDorso = 'text-info glyphicon glyphicon-plus-sign';
+		break;
+	case 2:
+		$spanNroDocDorso = 'text-warning glyphicon glyphicon-ban-circle';
+		break;
+	case 3:
+		$spanNroDocDorso = 'text-success glyphicon glyphicon-ok-sign';
+		break;
+	case 4:
+		$spanNroDocDorso = 'text-danger glyphicon glyphicon-remove-sign';
+		break;
+}
+
+
+if (mysql_num_rows($resTitulo) > 0) {
+	$estadoTitulo = mysql_result($resTitulo, 0,'estado');
+	$idEstadoTitulo = mysql_result($resTitulo, 0,'refestados');
+	$foto4 = mysql_result($resTitulo, 0,'imagen');
+	$id4 = mysql_result($resTitulo, 0,0);
+} else {
+	$estadoTitulo = 'Sin carga';
+	$idEstadoTitulo = 0;
+	$foto4 = '';
+	$id4 = 0;
+}
+
+
+$spanTitulo = '';
+switch ($idEstadoTitulo) {
+	case 0:
+		$spanTitulo = 'text-muted glyphicon glyphicon-exclamation-sign';
+		break;
+	case 1:
+		$spanTitulo = 'text-info glyphicon glyphicon-plus-sign';
+		break;
+	case 2:
+		$spanTitulo = 'text-warning glyphicon glyphicon-ban-circle';
+		break;
+	case 3:
+		$spanTitulo = 'text-success glyphicon glyphicon-ok-sign';
+		break;
+	case 4:
+		$spanTitulo = 'text-danger glyphicon glyphicon-remove-sign';
+		break;
+}
+
+
+if (mysql_num_rows($resExpensa) > 0) {
+	$estadoExpensa = mysql_result($resExpensa, 0,'estado');
+	$idEstadoExpensa = mysql_result($resExpensa, 0,'refestados');
+	$foto5 = mysql_result($resExpensa, 0,'imagen');
+	$id5 = mysql_result($resExpensa, 0,0);
+} else {
+	$estadoExpensa = 'Sin carga';
+	$idEstadoExpensa = 0;
+	$foto5 = '';
+	$id5 = 0;
+}
+
+
+$spanExpensa = '';
+switch ($idEstadoExpensa) {
+	case 0:
+		$spanExpensa = 'text-muted glyphicon glyphicon-exclamation-sign';
+		break;
+	case 1:
+		$spanExpensa = 'text-info glyphicon glyphicon-plus-sign';
+		break;
+	case 2:
+		$spanExpensa = 'text-warning glyphicon glyphicon-ban-circle';
+		break;
+	case 3:
+		$spanExpensa = 'text-success glyphicon glyphicon-ok-sign';
+		break;
+	case 4:
+		$spanExpensa = 'text-danger glyphicon glyphicon-remove-sign';
+		break;
+}
+
+
+if (mysql_num_rows($resPartidaNacimiento) > 0) {
+	$estadoPartidaNacimiento = mysql_result($resPartidaNacimiento, 0,'estado');
+	$idEstadoPartidaNacimiento = mysql_result($resPartidaNacimiento, 0,'refestados');
+	$foto6 = mysql_result($resPartidaNacimiento, 0,'imagen');
+	$id6 = mysql_result($resPartidaNacimiento, 0,0);
+} else {
+	$estadoPartidaNacimiento = 'Sin carga';
+	$idEstadoPartidaNacimiento = 0;
+	$foto6 = '';
+	$id6 = 0;
+}
+
+
+$spanPartidaNacimiento = '';
+switch ($idEstadoPartidaNacimiento) {
+	case 0:
+		$spanPartidaNacimiento = 'text-muted glyphicon glyphicon-exclamation-sign';
+		break;
+	case 1:
+		$spanPartidaNacimiento = 'text-info glyphicon glyphicon-plus-sign';
+		break;
+	case 2:
+		$spanPartidaNacimiento = 'text-warning glyphicon glyphicon-ban-circle';
+		break;
+	case 3:
+		$spanPartidaNacimiento = 'text-success glyphicon glyphicon-ok-sign';
+		break;
+	case 4:
+		$spanPartidaNacimiento = 'text-danger glyphicon glyphicon-remove-sign';
+		break;
 }
 
 
@@ -321,9 +523,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
@@ -334,20 +536,20 @@ if ($_SESSION['refroll_predio'] != 1) {
 	<script src="../../js/fileinput/plugins/sortable.min.js"></script>
 	<!-- purify plugin for safe rendering HTML content in preview -->
 	<script src="../../js/fileinput/plugins/purify.min.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
      Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	
-    
+
+
    <style>
    	.clickable{
-    cursor: pointer;   
+    cursor: pointer;
 	}
-	
+
 	.panel-heading span {
 		margin-top: -20px;
 		font-size: 15px;
@@ -372,8 +574,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 	    font-family: monospace;
 	    font-weight: normal;
 	}
-	
-	
+
+
    </style>
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
@@ -385,7 +587,7 @@ if ($_SESSION['refroll_predio'] != 1) {
         $('#navigation').perfectScrollbar();
       });
     </script>
-    
+
     <link rel="stylesheet" href="../../css/bootstrap-multiselect.css" type="text/css">
     <script type="text/javascript" src="../../js/bootstrap-multiselect.js"></script>
 	<link rel="stylesheet" href="../../css/chosen.css">
@@ -397,8 +599,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 			});
 		});
 	</script>
- 	
-    
+
+
     <style>
    	.dropdown-menu {
   max-height: 500px;
@@ -406,8 +608,8 @@ if ($_SESSION['refroll_predio'] != 1) {
   overflow-x: hidden;
   z-index:999999999999;
  }
-	
-	
+
+
    </style>
 </head>
 
@@ -416,44 +618,44 @@ if ($_SESSION['refroll_predio'] != 1) {
  <?php echo $resMenu; ?>
 
 <div id="content">
-	
+
 		<div class="row bs-wizard" style="border-bottom:0;margin-left:25px; margin-right:25px;">
-                
+
             <div class="col-xs-3 bs-wizard-step complete">
               <div class="text-center bs-wizard-stepnum">Paso 1</div>
               <div class="progress"><div class="progress-bar"></div></div>
               <a href="modificar.php?id=<?php echo $id; ?>" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center">Carga del jugador (Nro Documento Unico).</div>
             </div>
-            
+
             <div class="col-xs-3 bs-wizard-step active"><!-- complete -->
               <div class="text-center bs-wizard-stepnum">Paso 2</div>
               <div class="progress"><div class="progress-bar"></div></div>
               <a href="#" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center">Carga de la Documentación presentada.</div>
             </div>
-            
+
             <div class="col-xs-3 bs-wizard-step disabled"><!-- complete -->
               <div class="text-center bs-wizard-stepnum">Paso 3</div>
               <div class="progress"><div class="progress-bar"></div></div>
               <a href="#" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center">Asignar al Jugador a un Equipo.</div>
             </div>
-            
+
             <div class="col-xs-3 bs-wizard-step disabled"><!-- active -->
               <div class="text-center bs-wizard-stepnum">Paso 4</div>
               <div class="progress"><div class="progress-bar"></div></div>
               <a href="#" class="bs-wizard-dot"></a>
               <div class="bs-wizard-info text-center"> Carga de las Habilitaciones Transitorias (Deportivas y Documentaciones)</div>
             </div>
-            
+
 
         </div>
 
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<ul class="list-group">
@@ -463,7 +665,7 @@ if ($_SESSION['refroll_predio'] != 1) {
               <li class="list-group-item list-group-item-default">Fecha de Nacimiento: <?php echo mysql_result($resResultado,0,'fechanacimiento'); ?></li>
               <li class="list-group-item list-group-item-default">Countrie: <?php echo mysql_result($serviciosReferencias->traerCountriesPorId(mysql_result($resResultado,0,'refcountries')),0,'nombre'); ?></li>
             </ul>
-            
+
         	<form class="form-inline formulario" id="formulario" role="form" method="post" action="documentaciones.php" enctype="multipart/form-data">
         	<div class="row">
 				<?php
@@ -477,18 +679,18 @@ if ($_SESSION['refroll_predio'] != 1) {
 						if (mysql_num_rows($habiltacionTranst)>0) {
 							$habilita = '*';
 						}
-						
+
 				?>
 					<?php
-                        if ($row[2] == 'Si') { 
-                    
+                        if ($row[2] == 'Si') {
+
                         $cadA = '<span class="glyphicon glyphicon-check"></span>';
-                     } else { 
+                     } else {
                         $cadA = '<span class="glyphicon glyphicon-remove"></span>';
                      } ?>
                     <div class="col-md-4" style="margin-bottom:7px;">
-                        
-                            
+
+
                             <?php
 							if (mysql_num_rows($resValores)>0) {
 							?>
@@ -511,8 +713,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 												button: '<span class="multiselect<?php echo $row[0]; ?> dropdown-toggle" data-toggle="dropdown">(Valores)</span>'
 											}
 										});
-										
-										
+
+
 									});
 								</script>
 								<style type="text/css">
@@ -528,9 +730,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 									<?php
 										while ($rowV = mysql_fetch_array($resValores)) {
 											if ($rowV['pordefecto'] == 1) {
-												$chequeado = 'selected="selected"';	
+												$chequeado = 'selected="selected"';
 											} else {
-												$chequeado = '';	
+												$chequeado = '';
 											}
 									?>
                                     <option value="<?php echo $rowV[0]; ?>" <?php echo $chequeado; ?>><?php echo $rowV[2]; ?> - Habilita: <?php echo $rowV[3]; ?></option>
@@ -553,35 +755,35 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </span>
                             </div><!-- /input-group -->
                             <?php
-							} 
+							}
 							?>
-                        
+
                     </div><!-- /.col-lg-6 -->
                 <?php
 					}
 				} else {
 					while ($row = mysql_fetch_array($resJugadores)) {
 						$resValores		=	$serviciosReferencias->traerValoreshabilitacionestransitoriasPorDocumentacionJugadorActivas($row[0],$id);
-						
+
 						$habiltacionTranst = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion( $id,$row['refdocumentaciones']);
-						
+
 				?>
                 	<?php
-						if ($row[3] == 'Si') { 
+						if ($row[3] == 'Si') {
 							$check = 'checked';
 						} else {
 							$check = '';
 						}
-						
-                        if ($row[2] == 'Si') { 
-                    
+
+                        if ($row[2] == 'Si') {
+
 							$cadA = '<span class="glyphicon glyphicon-check"></span>';
-						 } else { 
+						 } else {
 							$cadA = '<span class="glyphicon glyphicon-remove"></span>';
 						 } ?>
                     <div class="col-md-4" style="margin-bottom:7px;">
-                        
-                            
+
+
                             <?php
 							if (mysql_num_rows($resValores)>0) {
 							?>
@@ -590,7 +792,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                                 <input type="checkbox" <?php echo $check; ?> aria-label="..." id="docu<?php echo $row[0]; ?>" name="docu<?php echo $row[0]; ?>">
                                 </span>
                                 <input type="text" class="form-control" aria-label="..." value="<?php echo $row[1]; ?>">
-                                <?php 
+                                <?php
 									if (mysql_num_rows($habiltacionTranst)>0) {
 								?>
                                 <span class="input-group-addon" style="color:#F00;">
@@ -609,8 +811,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 												button: '<span class="multiselect<?php echo $row[0]; ?> dropdown-toggle" data-toggle="dropdown">(Valores)</span>'
 											}
 										});
-										
-										
+
+
 									});
 								</script>
 								<style type="text/css">
@@ -626,9 +828,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 									<?php
 										while ($rowV = mysql_fetch_array($resValores)) {
 											if ($rowV[4] > 0) {
-												$chequeado = 'selected="selected"';	
+												$chequeado = 'selected="selected"';
 											} else {
-												$chequeado = '';	
+												$chequeado = '';
 											}
 									?>
                                     <option value="<?php echo $rowV[0]; ?>" <?php echo $chequeado; ?>><?php echo $rowV[2]; ?> - Habilita: <?php echo $rowV[3]; ?></option>
@@ -651,20 +853,20 @@ if ($_SESSION['refroll_predio'] != 1) {
                             </span>
                             </div><!-- /input-group -->
                             <?php
-							} 
+							}
 							?>
-                        
+
                     </div><!-- /.col-lg-6 -->
-                
-                
+
+
                 <?php
 					}
-				} 
+				}
 				?>
             </div>
             <hr>
-            
-            
+
+
             <div class="row">
 				<div class="col-sm-4 text-center">
 					<h4>Foto (jpg, png)</h4>
@@ -675,6 +877,19 @@ if ($_SESSION['refroll_predio'] != 1) {
 		            </div>
 		            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
 		            <p>Rotar la imagen <button type="button" class="btn btn-default" id="rotarIzquierda" style="margin-left:0px;">Izquierda</button></p>
+
+						<div class="col-sm-12 text-center">
+						<h4><span class="<?php echo $spanFoto; ?>"></span> Estado: <b><?php echo $estadoFoto; ?></b></h4>
+						 <div class="form-group col-md-12" style="display:block">
+							 <label for="reftipodocumentos" class="control-label" style="text-align:left">Modificar Estado</label>
+							 <div class="input-group col-md-12">
+								 <select class="form-control" id="refestados<?php echo $id1; ?>" name="refestados<?php echo $id1; ?>">
+									 <?php echo $cadRefEstados; ?>
+								 </select>
+							 </div>
+							 <button type="button" class="btn btn-primary guardarEstado" id="<?php echo $id1; ?>" style="margin-left:0px;">Guardar Estado</button>
+						 </div>
+						</div>
 
 		        </div>
 
@@ -687,6 +902,19 @@ if ($_SESSION['refroll_predio'] != 1) {
 		            </div>
 		            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
 
+						<div class="col-sm-12 text-center">
+							<h4><span class="<?php echo $spanNroDoc; ?>"></span> Estado: <b><?php echo $estadoNroDoc; ?></b></h4>
+							<div class="form-group col-md-12" style="display:block">
+							<label for="reftipodocumentos" class="control-label" style="text-align:left">Modificar Estado</label>
+							<div class="input-group col-md-12">
+								<select class="form-control" id="refestados<?php echo $id2; ?>" name="refestados<?php echo $id2; ?>">
+									<?php echo $cadRefEstados; ?>
+								</select>
+							</div>
+							<button type="button" class="btn btn-primary guardarEstado" id="<?php echo $id2; ?>" style="margin-left:0px;">Guardar Estado</button>
+						 </div>
+						</div>
+
 		        </div>
 
 
@@ -698,6 +926,21 @@ if ($_SESSION['refroll_predio'] != 1) {
 		                </div>
 		            </div>
 		            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 6000 KB</small></div>
+
+						<div class="col-sm-12 text-center">
+							<h4><span class="<?php echo $spanNroDocDorso; ?>"></span> Estado: <b><?php echo $estadoNroDocDorso; ?></b></h4>
+							<div class="form-group col-md-12" style="display:block">
+							<label for="reftipodocumentos" class="control-label" style="text-align:left">Modificar Estado</label>
+							<div class="input-group col-md-12">
+								<select class="form-control" id="refestados<?php echo $id3; ?>" name="refestados<?php echo $id3; ?>">
+									<?php echo $cadRefEstados; ?>
+								</select>
+							</div>
+							<button type="button" class="btn btn-primary guardarEstado" id="<?php echo $id3; ?>" style="margin-left:0px;">Guardar Estado</button>
+						 </div>
+						</div>
+
+
 		        </div>
 
             </div>
@@ -712,6 +955,21 @@ if ($_SESSION['refroll_predio'] != 1) {
 		                </div>
 		            </div>
 		            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 30000 KB</small></div>
+
+						<div class="col-sm-12 text-center">
+							<h4><span class="<?php echo $spanTitulo; ?>"></span> Estado: <b><?php echo $estadoTitulo; ?></b></h4>
+							<div class="form-group col-md-12" style="display:block">
+							<label for="reftipodocumentos" class="control-label" style="text-align:left">Modificar Estado</label>
+							<div class="input-group col-md-12">
+								<select class="form-control" id="refestados<?php echo $id4; ?>" name="refestados<?php echo $id4; ?>">
+									<?php echo $cadRefEstados; ?>
+								</select>
+							</div>
+							<button type="button" class="btn btn-primary guardarEstado" id="<?php echo $id4; ?>" style="margin-left:0px;">Guardar Estado</button>
+						 </div>
+						</div>
+
+
 		        </div>
 
 		        <div class="col-sm-4 text-center">
@@ -722,6 +980,19 @@ if ($_SESSION['refroll_predio'] != 1) {
 		                </div>
 		            </div>
 		            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 30000 KB</small></div>
+
+						<div class="col-sm-12 text-center">
+							<h4><span class="<?php echo $spanExpensa; ?>"></span> Estado: <b><?php echo $estadoExpensa; ?></b></h4>
+							<div class="form-group col-md-12" style="display:block">
+							<label for="reftipodocumentos" class="control-label" style="text-align:left">Modificar Estado</label>
+							<div class="input-group col-md-12">
+								<select class="form-control" id="refestados<?php echo $id5; ?>" name="refestados<?php echo $id5; ?>">
+									<?php echo $cadRefEstados; ?>
+								</select>
+							</div>
+							<button type="button" class="btn btn-primary guardarEstado" id="<?php echo $id5; ?>" style="margin-left:0px;">Guardar Estado</button>
+						 </div>
+						</div>
 
 		        </div>
 
@@ -735,20 +1006,35 @@ if ($_SESSION['refroll_predio'] != 1) {
 		            </div>
 		            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 30000 KB</small></div>
 
+						<div class="col-sm-12 text-center">
+							<h4><span class="<?php echo $spanPartidaNacimiento; ?>"></span> Estado: <b><?php echo $estadoPartidaNacimiento; ?></b></h4>
+							<div class="form-group col-md-12" style="display:block">
+							<label for="reftipodocumentos" class="control-label" style="text-align:left">Modificar Estado</label>
+							<div class="input-group col-md-12">
+								<select class="form-control" id="refestados<?php echo $id6; ?>" name="refestados<?php echo $id6; ?>">
+									<?php echo $cadRefEstados; ?>
+								</select>
+							</div>
+							<button type="button" class="btn btn-primary guardarEstado" id="<?php echo $id6; ?>" style="margin-left:0px;">Guardar Estado</button>
+						 </div>
+						</div>
+
+
+
 		        </div>
 
             </div>
-            
-            
+
+
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
@@ -775,9 +1061,9 @@ if ($_SESSION['refroll_predio'] != 1) {
             </form>
     	</div>
     </div>
-    
 
-   
+
+
 </div>
 
 
@@ -800,6 +1086,32 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 
+	function guardarEstado(id, refestados) {
+		$.ajax({
+			data:  {id: id,
+					refestados: refestados,
+					existeJugador: 1,
+					accion: 'guardarEstado'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+
+					url = "modificar.php?id=<?php echo $id; ?>";
+					//$(location).attr('href',url);
+
+			}
+		});
+	}
+
+	$('.guardarEstado').click(function() {
+		usersid =  $(this).attr("id");
+
+		guardarEstado(usersid, $('#refestados'+usersid).val());
+	});
+
     $('#fichablanco').click(function() {
 		window.open("../../reportes/rptAltaSocioBlanco.php?id=<?php echo $id; ?>" ,'_blank');
 	});
@@ -809,42 +1121,42 @@ $(document).ready(function(){
 		$direc = "./../../data/".mysql_result($resFoto,0,0);
 	?>
 	function rotarImagenIzquierda() {
-		
+
 		$.ajax({
-			data:  {imagen: '<?php echo $urlImg; ?>', 
+			data:  {imagen: '<?php echo $urlImg; ?>',
 					rotar: 90,
 					directorio: '<?php echo $direc; ?>',
 					accion: 'rotarImagen'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 					url = "modificar.php?id=<?php echo $id; ?>";
 					$(location).attr('href',url);
-					
+
 			}
 		});
 	}
 
 
 	function rotarImagenDerecha() {
-		
+
 		$.ajax({
-			data:  {imagen: '<?php echo $urlImg; ?>', 
+			data:  {imagen: '<?php echo $urlImg; ?>',
 					rotar: 270,
 					directorio: '<?php echo $direc; ?>',
 					accion: 'rotarImagen'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 					url = "modificar.php?id=<?php echo $id; ?>";
 					$(location).attr('href',url);
-					
+
 			}
 		});
 	}
@@ -859,27 +1171,27 @@ $(document).ready(function(){
 
 	function eliminarFoto(documentacion, jugador) {
 		$.ajax({
-			data:  {documentacion: documentacion, 
+			data:  {documentacion: documentacion,
 					jugador: jugador,
 					accion: 'eliminarFotoJugadoresID'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 					alert(response);
 					url = "modificar.php?id=<?php echo $id; ?>";
 					$(location).attr('href',url);
-					
+
 			}
 		});
 	}
 
-	var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' + 
+	var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' +
 			    'onclick="alert(\'Call your custom code here.\')">' +
 			    '<i class="glyphicon glyphicon-tag"></i>' +
-			    '</button>'; 
+			    '</button>';
 
 			<?php
 				if (mysql_num_rows($resFoto)>0) {
@@ -937,7 +1249,7 @@ $(document).ready(function(){
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -997,7 +1309,7 @@ $(document).ready(function(){
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1061,7 +1373,7 @@ $(document).ready(function(){
 			    allowedFileExtensions: ["jpg", "png", "gif"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1112,11 +1424,11 @@ $(document).ready(function(){
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic 
+			        // note for these file types below no extension determination logic
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<img src="../../imagenes/sin_img.jpg">'    
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../../imagenes/sin_img.jpg">'
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
@@ -1168,7 +1480,7 @@ $(document).ready(function(){
 			    allowedFileExtensions: ["pdf"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1193,7 +1505,7 @@ $(document).ready(function(){
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
-			    <?php 
+			    <?php
 			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreview: [
@@ -1211,7 +1523,7 @@ $(document).ready(function(){
 				?>
 				initialPreviewFileType: 'image',
 			    initialPreviewAsData: true, // allows you to set a raw markup
-    			<?php 
+    			<?php
 			    if (mysql_result($resExpensa,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreviewConfig: [
@@ -1242,11 +1554,11 @@ $(document).ready(function(){
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic 
+			        // note for these file types below no extension determination logic
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<img src="../../imagenes/sin_img.jpg">'    
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../../imagenes/sin_img.jpg">'
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
@@ -1298,7 +1610,7 @@ $(document).ready(function(){
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
@@ -1324,7 +1636,7 @@ $(document).ready(function(){
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
 			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
-			    <?php 
+			    <?php
 			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreview: [
@@ -1342,7 +1654,7 @@ $(document).ready(function(){
 				?>
 				initialPreviewFileType: 'image',
 			    initialPreviewAsData: true, // allows you to set a raw markup
-    			<?php 
+    			<?php
 			    if (mysql_result($resPartidaNacimiento,0,'type') == 'application/pdf') {
 			    ?>
 			    initialPreviewConfig: [
@@ -1373,11 +1685,11 @@ $(document).ready(function(){
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic 
+			        // note for these file types below no extension determination logic
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
-			        'png': '<img src="../../imagenes/sin_img.jpg">'    
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../../imagenes/sin_img.jpg">'
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {
@@ -1429,17 +1741,17 @@ $(document).ready(function(){
 			    allowedFileExtensions: ["pdf","jpg", "png"]
 			});
 
-	    	<?php	
+	    	<?php
 	    	}
 	    	?>
 
-	
+
 	$('.volver').click(function(event){
-		 
+
 		url = "modificar.php?id="+<?php echo $id; ?>;
 		$(location).attr('href',url);
 	});//fin del boton modificar
-	
+
 	$(document).on('click', '.panel-heading span.clickable', function(e){
 		var $this = $(this);
 		if(!$this.hasClass('panel-collapsed')) {
@@ -1479,73 +1791,73 @@ $(document).ready(function(){
 			}
 		  }
 	} );
-	
+
 	$('#equipos').click(function(event){
-		 
+
 		url = "equipos.php?id="+<?php echo $id; ?>;
 		$(location).attr('href',url);
 	});//fin del boton equipos
-	
+
 	function traerEquiposPorCountries(id, contenedor) {
 		$.ajax({
 			data:  {id: id, accion: 'traerEquiposPorCountries'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-			
+
 			},
 			success:  function (response) {
 				$(contenedor).html(response);
 			}
-		});		
+		});
 	}
-	
+
 	traerEquiposPorCountries($('#refcountries').val(), '#equiposRefequipos');
-	
+
 	$('#refcountries').change(function() {
 		if  ($('#equiposRefFusion').prop('checked') == false) {
 			traerEquiposPorCountries($(this).val(), '#equiposRefequipos');
 		}
 	});
-	
-	
+
+
 	$('#equiposRefcountries').change(function() {
 		if  ($('#equiposRefFusion').prop('checked') == true) {
 			traerEquiposPorCountries($(this).val(), '#equiposRefequipos');
 		}
 	});
-	
+
 	$('#equiposRefFusion').click(function() {
 		$('#equiposRefequipos').html('');
 	});
-	
+
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			$("#idEliminar").val(usersid);
 			$("#dialog2").dialog("open");
 
-			
+
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton eliminar
-	
+
 	$("#example").on("click",'.varmodificar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
-			
+
 			url = "modificar.php?id=" + usersid;
 			$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton modificar
 
 	 $( "#dialog2" ).dialog({
-		 	
+
 			    autoOpen: false,
 			 	resizable: false,
 				width:600,
@@ -1553,18 +1865,18 @@ $(document).ready(function(){
 				modal: true,
 				buttons: {
 				    "Eliminar": function() {
-	
+
 						$.ajax({
 									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
-											
+
 									},
 									success:  function (response) {
 											url = "index.php";
 											$(location).attr('href',url);
-											
+
 									}
 							});
 						$( this ).dialog( "close" );
@@ -1578,26 +1890,26 @@ $(document).ready(function(){
 						$( this ).dialog( "close" );
 				    }
 				}
-		 
-		 
+
+
 	 		}); //fin del dialogo para eliminar
-			
-	
-	
+
+
+
 	$('#cargar').click(function(){
-		$('#formulario').submit();		
+		$('#formulario').submit();
 	});
 	//al enviar el formulario
     $('#cargar3').click(function(){
-		
+
 		if (validador() == "")
         {
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
-			//hacemos la petición ajax  
+			//hacemos la petición ajax
 			$.ajax({
-				url: '../../ajax/ajax.php',  
+				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -1608,7 +1920,7 @@ $(document).ready(function(){
 				processData: false,
 				//mientras enviamos el archivo
 				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
 				},
 				//una vez finalizado correctamente
 				success: function(data){
@@ -1619,16 +1931,16 @@ $(document).ready(function(){
                                             $(".alert").addClass("alert-success");
                                             $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
 											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
+												/*aca lo que quiero hacer
 												  después de los 2 segundos de retraso*/
 												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
+
 											});
 											$("#load").html('');
 											//url = "documentaciones.php?id="+<?php echo $id; ?>;
 											//$(location).attr('href',url);
-                                            
-											
+
+
                                         } else {
                                         	$(".alert").removeClass("alert-danger");
                                             $(".alert").addClass("alert-danger");
@@ -1644,7 +1956,7 @@ $(document).ready(function(){
 			});
 		}
     });
-	
+
 	var config = {
       '.chosen-select'           : {},
       '.chosen-select-deselect'  : {allow_single_deselect:true},
@@ -1655,7 +1967,7 @@ $(document).ready(function(){
     for (var selector in config) {
       $(selector).chosen(config[selector]);
     }
-	
+
 	$('#primero').addClass('collapse');
 
 });
@@ -1676,9 +1988,9 @@ $('.form_date').datetimepicker({
 </script>
 <script src="../../js/chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
-    
-	
-	
+
+
+
   </script>
 <?php } ?>
 </body>

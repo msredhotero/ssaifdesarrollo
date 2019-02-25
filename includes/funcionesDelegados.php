@@ -7,6 +7,87 @@
 date_default_timezone_set('America/Buenos_Aires');
 
 class serviciosDelegados {
+
+	function traerConectorActivosPorEquipos($refEquipos, $idtemporada) {
+	$sql = "select
+	    c.idconector,
+	    cat.categoria,
+	    equ.nombre as equipo,
+	    co.nombre as countrie,
+	    tip.tipojugador,
+	    (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+	    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+	    c.refjugadores,
+	    c.reftipojugadores,
+	    c.refequipos,
+	    c.refcountries,
+	    c.refcategorias,
+	    concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+	    jug.nrodocumento,
+	    jug.fechanacimiento,
+	    tip.idtipojugador,
+	    year(now()) - year(jug.fechanacimiento) as edad,
+	    jug.fechabaja,
+	    jug.fechaalta
+
+	from
+	    dbconector c
+	        inner join
+	    dbjugadores jug ON jug.idjugador = c.refjugadores
+	        inner join
+	    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+	        inner join
+	    dbcountries co ON co.idcountrie = jug.refcountries
+	        inner join
+	    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+	        inner join
+	    dbequipos equ ON equ.idequipo = c.refequipos
+	        inner join
+	    tbdivisiones di ON di.iddivision = equ.refdivisiones
+	        left join
+	    dbcontactos con ON con.idcontacto = equ.refcontactos
+	        inner join
+	    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+	        inner join
+	    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	    where equ.idequipo = ".$refEquipos." and c.reftemporadas = ".$idtemporada."
+	order by concat(jug.apellido,', ',jug.nombres)";
+	$res = $this->query($sql,0);
+	return $res;
+	}
+
+
+	function traerConectorActivosPorEquiposEdades($refEquipos, $idtemporada) {
+	$sql = "select
+	    min(year(now()) - year(jug.fechanacimiento)) as edadMinima,
+	    max(year(now()) - year(jug.fechanacimiento)) as edadMaxima,
+	    count(*) as cantidadJugadores,
+	    round((max(year(now()) - year(jug.fechanacimiento)) + min(year(now()) - year(jug.fechanacimiento)))/2,2) as edadPromedio
+	from
+	    dbconector c
+	        inner join
+	    dbjugadores jug ON jug.idjugador = c.refjugadores
+	        inner join
+	    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+	        inner join
+	    dbcountries co ON co.idcountrie = jug.refcountries
+	        inner join
+	    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+	        inner join
+	    dbequipos equ ON equ.idequipo = c.refequipos
+	        inner join
+	    tbdivisiones di ON di.iddivision = equ.refdivisiones
+	        left join
+	    dbcontactos con ON con.idcontacto = equ.refcontactos
+	        inner join
+	    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+	        inner join
+	    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	    where equ.idequipo = ".$refEquipos." and c.reftemporadas = ".$idtemporada."";
+	$res = $this->query($sql,0);
+	return $res;
+	}
+
 	/* migraciones */
 
 	function migrarJugadores($id) {
@@ -22,6 +103,8 @@ class serviciosDelegados {
 			while ($row = mysql_fetch_array($resJugadoresNuevos)) {
 				if ($this->existeJugador($row['nrodocumento']) == 0) {
 					$resIJ = $this->insertarJugadorDocumentacionValores($row['refjugadorespre']);
+					$this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
+				} else {
 					$this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
 				}
 
@@ -189,7 +272,8 @@ class serviciosDelegados {
 						refcountries,
 						refcategorias,
 						esfusion,
-						activo)
+						activo,
+						reftemporadas)
 					SELECT '',
 					    refjugadores,
 					    reftipojugadores,
@@ -197,7 +281,8 @@ class serviciosDelegados {
 					    refcountries,
 					    refcategorias,
 					    esfusion,
-					    activo
+					    activo,
+						 ".$idtemporada."
 					FROM dbconectordelegados where reftemporadas = ".$idtemporada." and refequipos = ".$id." and refjugadorespre = 0";
 
 		$res = $this->query($sql,0);
@@ -213,7 +298,8 @@ class serviciosDelegados {
 						refcountries,
 						refcategorias,
 						esfusion,
-						activo)
+						activo,
+						reftemporadas)
 					SELECT '',
 					    ".$idjugador.",
 					    reftipojugadores,
@@ -221,7 +307,8 @@ class serviciosDelegados {
 					    refcountries,
 					    refcategorias,
 					    esfusion,
-					    activo
+					    activo,
+						 ".$idtemporada."
 					FROM dbconectordelegados where reftemporadas = ".$idtemporada." and refjugadorespre = ".$id;
 
 		$res = $this->query($sql,0);

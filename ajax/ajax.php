@@ -912,23 +912,28 @@ function guardarEstado($serviciosReferencias) {
 		$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($idJugador, $refdocumentaciones);
 
 		//inserto documentacion
-		if ($refdocumentaciones == 4) {
-			$serviciosReferencias->insertarJugadoresdocumentacion($id,$refdocumentaciones,0,'');
-		} else {
-			$serviciosReferencias->insertarJugadoresdocumentacion($id,$refdocumentaciones,1,'');
-		}
+		$err = $serviciosReferencias->insertarJugadoresdocumentacion($idJugador,$refdocumentaciones,1,'');
 
 
 		//inserto valoracion
 		switch ($refdocumentaciones) {
-			case 4:
-				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,338);
+         case 1:
+				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,331);
+				break;
+         case 2:
+				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,333);
+				break;
+         case 99:
+				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,333);
+				break;
+         case 4:
+				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,338);
 				break;
 			case 6:
-				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,365);
+				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,365);
 				break;
 			case 9:
-				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,368);
+				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,368);
 				break;
 		}
 
@@ -2074,7 +2079,7 @@ function insertarConectorAjax($serviciosReferencias) {
 
 	if ($existeJugador == 0) {
 		if (($vEdad == 1) || ($vHabTrns == 1)) {
-			$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo);
+			$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo, $reftemporada);
 			if ((integer)$res > 0) {
 
 
@@ -2135,7 +2140,7 @@ function insertarConector($serviciosReferencias) {
 	if ($existe == 1) {
 		echo 'Ya cargo a este jugador en el equipo';
 	} else {
-		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo);
+		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo,$reftemporada);
 
 		if ((integer)$res > 0) {
 			//si voy a cargar al agente y ademas posee otro conector y esta activo, pero esta carga viene de un habilitacion deportiva

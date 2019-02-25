@@ -3909,7 +3909,19 @@ return $res;
 
 
 function traerDocumentacionjugadorimagenesPorId($id) {
-$sql = "select iddocumentacionjugadorimagen,refdocumentaciones,refjugadorespre,imagen,type,refestados from dbdocumentacionjugadorimagenes where iddocumentacionjugadorimagen =".$id;
+$sql = "SELECT
+             dj.iddocumentacionjugadorimagen,
+             dj.refdocumentaciones,
+             dj.refjugadorespre,
+             dj.imagen,
+             dj.type,
+             dj.refestados,
+             j.nrodocumento
+         FROM
+             dbdocumentacionjugadorimagenes dj
+         left join dbjugadores j on dj.idjugador = j.idjugador
+         WHERE
+             dj.iddocumentacionjugadorimagen = ".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -7881,9 +7893,9 @@ function existeConectorJugadorEquipo($refJugador, $refEquipo) {
 }
 
 
-function insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo) {
-$sql = "insert into dbconector(idconector,refjugadores,reftipojugadores,refequipos,refcountries,refcategorias,esfusion,activo)
-values ('',".$refjugadores.",".$reftipojugadores.",".$refequipos.",".$refcountries.",".$refcategorias.",".$esfusion.",".$activo.")";
+function insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo, $reftemporadas) {
+$sql = "insert into dbconector(idconector,refjugadores,reftipojugadores,refequipos,refcountries,refcategorias,esfusion,activo, reftemporadas)
+values ('',".$refjugadores.",".$reftipojugadores.",".$refequipos.",".$refcountries.",".$refcategorias.",".$esfusion.",".$activo.",".$reftemporadas.")";
 $res = $this->query($sql,1);
 return $res;
 }
