@@ -708,7 +708,7 @@ function marcarNotificacion($serviciosReferencias) {
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 
 }
@@ -739,12 +739,12 @@ function generarNotificacion($serviciosReferencias) {
 
 		$cuerpo = '<p>'.$mensaje.'</p>';
 		if ($icono == 'glyphicon glyphicon-ok') {
-			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/aifzncountriesdesarrollo/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>. Pero primero debe loguearse al sistema para acceder al link. También le adjuntamos la ficha en este email.';
+			$cuerpo .= '<p>Si desea imprimir su FICHA DE JUGADOR haga click <a href="https://www.saupureinconsulting.com.ar/aifzn/reportes/rptAltaSocio.php?id='.$id1.'">Aqui</a></p>. Pero primero debe loguearse al sistema para acceder al link. Tambien le adjuntamos la ficha en este email.';
 		}
 		$resEmail = $serviciosReferencias->enviarMailAdjuntoAltaSocio($id1,$destinatario,$asunto,$cuerpo);
-		echo $resEmail;
+		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 /* Fin */
@@ -761,7 +761,7 @@ $res = $serviciosReferencias->insertarCierrepadrones($refcountries,$refusuarios,
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarCierrepadrones($serviciosReferencias) {
@@ -773,7 +773,7 @@ $res = $serviciosReferencias->modificarCierrepadrones($id,$refcountries,$refusua
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarCierrepadrones($serviciosReferencias) {
@@ -986,7 +986,7 @@ function insertarJugadorespre($serviciosReferencias) {
 			if ((integer)$res > 0) {
 				echo $res;
 			} else {
-				echo 'Huvo un error al insertar datos ';
+				echo 'Hubo un error al insertar datos ';
 			}
 		} else {
 			echo 'Ya existe ese numero de documento';
@@ -1017,7 +1017,7 @@ function modificarJugadorespre($serviciosReferencias) {
 		if ($res == true) {
 			echo '';
 		} else {
-			echo 'Huvo un error al modificar datos';
+			echo 'Hubo un error al modificar datos';
 		}
 	}
 }
@@ -1128,7 +1128,7 @@ function modificarJugadorespreRegistro($serviciosReferencias, $serviciosUsuarios
 
 			echo ''.$error;
 		} else {
-			echo 'Huvo un error al modificar datos';
+			echo 'Hubo un error al modificar datos';
 		}
 	}
 
@@ -1684,7 +1684,7 @@ function modificarMovimientosSancionesFechaCumplida($serviciosReferencias) {
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -1707,7 +1707,7 @@ function insertarSancionesfechascumplidas($serviciosReferencias) {
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 
@@ -1730,7 +1730,7 @@ function modificarSancionesfechascumplidas($serviciosReferencias) {
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -1885,7 +1885,7 @@ function insertarFalloPorFecha($serviciosReferencias) {
 
 				echo '';
 			} else {
-				echo 'Huvo un error al insertar datos';
+				echo 'Hubo un error al insertar datos';
 			}
 
 		}
@@ -2035,7 +2035,7 @@ function modificarFalloPorFecha($serviciosReferencias) {
 
 				echo '';
 			} else {
-				echo 'Huvo un error al insertar datos';
+				echo 'Hubo un error al insertar datos';
 			}
 
 
@@ -2102,7 +2102,7 @@ function insertarConectorAjax($serviciosReferencias) {
 
 				echo $cad;
 			} else {
-				echo 'Huvo un error al insertar datos';
+				echo 'Hubo un error al insertar datos';
 			}
 		} else {
 			echo 'El jugador no cumple con la edad';
@@ -2149,7 +2149,7 @@ function insertarConector($serviciosReferencias) {
 			}
 			echo '';
 		} else {
-			echo 'Huvo un error al insertar datos';
+			echo 'Hubo un error al insertar datos';
 		}
 	}
 }
@@ -2176,7 +2176,7 @@ $res = $serviciosReferencias->modificarConector($id,$refjugadores,$reftipojugado
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarConector($serviciosReferencias) {
@@ -2292,7 +2292,7 @@ function insertarFixture($serviciosReferencias) {
 		if ((integer)$res > 0) {
 			echo '';
 		} else {
-			echo 'Huvo un error al insertar datos';
+			echo 'Hubo un error al insertar datos';
 		}
 	} else {
 		echo 'Formato de fecha erroneo'.$_POST['fecha'];
@@ -2334,7 +2334,7 @@ function insertarFixtureNuevo($serviciosReferencias) {
 		if ((integer)$res > 0) {
 			echo '';
 		} else {
-			echo 'Huvo un error al insertar datos ';
+			echo 'Hubo un error al insertar datos ';
 		}
 	} else {
 		echo 'Formato de fecha erroneo'.$_POST['fecha'];
@@ -2374,7 +2374,7 @@ function modificarFixture($serviciosReferencias) {
 		if ($res == true) {
 			echo '';
 		} else {
-			echo 'Huvo un error al modificar datos';
+			echo 'Hubo un error al modificar datos';
 		}
 	} else {
 		echo 'Formato de fecha erroneo';
@@ -2421,7 +2421,7 @@ function insertarContactos($serviciosReferencias) {
 		}
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos'.$res;
+		echo 'Hubo un error al insertar datos'.$res;
 	}
 }
 
@@ -2455,7 +2455,7 @@ function insertarContactosId($serviciosReferencias) {
 		}
 		echo $res;
 	} else {
-		echo 'Huvo un error al insertar datos'.$res;
+		echo 'Hubo un error al insertar datos'.$res;
 	}
 }
 
@@ -2488,7 +2488,7 @@ function modificarContactos($serviciosReferencias) {
 		}
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 function eliminarContactos($serviciosReferencias) {
@@ -2608,7 +2608,7 @@ function insertarCountries($serviciosReferencias) {
 				}
 				echo ''.$errorArchivo;
 			} else {
-				echo 'Huvo un error al insertar datos';
+				echo 'Hubo un error al insertar datos';
 			}
 		} else {
 			echo 'Ya existe un Cuit cargado';
@@ -2669,7 +2669,7 @@ function modificarCountries($serviciosReferencias) {
 				}
 				echo ''.$errorArchivo;
 			} else {
-				echo 'Huvo un error al modificar datos';
+				echo 'Hubo un error al modificar datos';
 			}
 		} else {
 			echo 'Ya existe un Cuit cargado';
@@ -2718,7 +2718,7 @@ $res = $serviciosReferencias->insertarUsuarios($usuario,$password,$refroles,$ema
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarUsuarios($serviciosReferencias) {
@@ -2732,7 +2732,7 @@ $res = $serviciosReferencias->modificarUsuarios($id,$usuario,$password,$refroles
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarUsuarios($serviciosReferencias) {
@@ -2766,7 +2766,7 @@ $res = $serviciosReferencias->insertarPredio_menu($url,$icono,$nombre,$Orden,$ho
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarPredio_menu($serviciosReferencias) {
@@ -2796,7 +2796,7 @@ $res = $serviciosReferencias->modificarPredio_menu($id,$url,$icono,$nombre,$Orde
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarPredio_menu($serviciosReferencias) {
@@ -2811,7 +2811,7 @@ $res = $serviciosReferencias->insertarCanchas($refcountries,$nombre);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarCanchas($serviciosReferencias) {
@@ -2822,7 +2822,7 @@ $res = $serviciosReferencias->modificarCanchas($id,$refcountries,$nombre);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarCanchas($serviciosReferencias) {
@@ -2841,7 +2841,7 @@ $res = $serviciosReferencias->insertarPosiciontributaria($posiciontributaria,$ac
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarPosiciontributaria($serviciosReferencias) {
@@ -2856,7 +2856,7 @@ $res = $serviciosReferencias->modificarPosiciontributaria($id,$posiciontributari
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarPosiciontributaria($serviciosReferencias) {
@@ -2875,7 +2875,7 @@ $res = $serviciosReferencias->insertarRoles($descripcion,$activo);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarRoles($serviciosReferencias) {
@@ -2890,7 +2890,7 @@ $res = $serviciosReferencias->modificarRoles($id,$descripcion,$activo);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarRoles($serviciosReferencias) {
@@ -2909,7 +2909,7 @@ $res = $serviciosReferencias->insertarTipocontactos($tipocontacto,$activo);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarTipocontactos($serviciosReferencias) {
@@ -2924,7 +2924,7 @@ $res = $serviciosReferencias->modificarTipocontactos($id,$tipocontacto,$activo);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarTipocontactos($serviciosReferencias) {
@@ -2947,7 +2947,7 @@ $res = $serviciosReferencias->insertarArbitros($nombrecompleto,$telefonoparticul
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarArbitros($serviciosReferencias) {
@@ -2962,7 +2962,7 @@ $res = $serviciosReferencias->modificarArbitros($id,$nombrecompleto,$telefonopar
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarArbitros($serviciosReferencias) {
@@ -2977,7 +2977,7 @@ $res = $serviciosReferencias->insertarCategorias($categoria);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarCategorias($serviciosReferencias) {
@@ -2987,7 +2987,7 @@ $res = $serviciosReferencias->modificarCategorias($id,$categoria);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarCategorias($serviciosReferencias) {
@@ -3001,7 +3001,7 @@ $res = $serviciosReferencias->insertarDivisiones($division);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarDivisiones($serviciosReferencias) {
@@ -3011,7 +3011,7 @@ $res = $serviciosReferencias->modificarDivisiones($id,$division);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarDivisiones($serviciosReferencias) {
@@ -3049,7 +3049,7 @@ function insertarTemporadas($serviciosReferencias) {
 		}
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 function modificarTemporadas($serviciosReferencias) {
@@ -3059,7 +3059,7 @@ $res = $serviciosReferencias->modificarTemporadas($id,$temporada);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarTemporadas($serviciosReferencias) {
@@ -3083,7 +3083,7 @@ function insertarCanchasuspenciones($serviciosReferencias) {
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 function modificarCanchasuspenciones($serviciosReferencias) {
@@ -3102,7 +3102,7 @@ function modificarCanchasuspenciones($serviciosReferencias) {
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 function eliminarCanchasuspenciones($serviciosReferencias) {
@@ -3159,7 +3159,7 @@ function insertarJugadores($serviciosReferencias) {
 			if ((integer)$res > 0) {
 				echo $res;
 			} else {
-				echo 'Huvo un error al insertar datos';
+				echo 'Hubo un error al insertar datos';
 			}
 		} else {
 			echo 'Ya existe ese numero de documento';
@@ -3189,7 +3189,7 @@ function modificarJugadores($serviciosReferencias) {
 			if ($res == true) {
 				echo '';
 			} else {
-				echo 'Huvo un error al modificar datos';
+				echo 'Hubo un error al modificar datos';
 			}
 		} else {
 			echo 'Ya existe ese numero de documento';
@@ -3207,7 +3207,7 @@ function modificarJugadorApellidoNombrePorId($serviciosReferencias) {
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 
 }
@@ -3328,7 +3328,7 @@ function insertarJugadoresdocumentacion($serviciosReferencias) {
 
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos'.$resV.' ---- ';
+		echo 'Hubo un error al insertar datos'.$resV.' ---- ';
 	}
 	//echo $cad;
 }
@@ -3353,7 +3353,7 @@ $res = $serviciosReferencias->modificarJugadoresdocumentacion($id,$refjugadores,
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -3365,7 +3365,7 @@ function modificarEstudioMedico($serviciosReferencias) {
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -3388,7 +3388,7 @@ $res = $serviciosReferencias->insertarDocumentaciones($descripcion,$obligatoria,
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarDocumentaciones($serviciosReferencias) {
@@ -3404,7 +3404,7 @@ $res = $serviciosReferencias->modificarDocumentaciones($id,$descripcion,$obligat
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarDocumentaciones($serviciosReferencias) {
@@ -3425,7 +3425,7 @@ $res = $serviciosReferencias->insertarMotivoshabilitacionestransitorias($inhabil
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarMotivoshabilitacionestransitorias($serviciosReferencias) {
@@ -3441,7 +3441,7 @@ $res = $serviciosReferencias->modificarMotivoshabilitacionestransitorias($id,$in
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarMotivoshabilitacionestransitorias($serviciosReferencias) {
@@ -3465,7 +3465,7 @@ $res = $serviciosReferencias->insertarTipodocumentos($tipodocumento);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarTipodocumentos($serviciosReferencias) {
@@ -3475,7 +3475,7 @@ $res = $serviciosReferencias->modificarTipodocumentos($id,$tipodocumento);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarTipodocumentos($serviciosReferencias) {
@@ -3490,7 +3490,7 @@ $res = $serviciosReferencias->insertarTipojugadores($tipojugador,$abreviatura);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 function modificarTipojugadores($serviciosReferencias) {
@@ -3501,7 +3501,7 @@ $res = $serviciosReferencias->modificarTipojugadores($id,$tipojugador,$abreviatu
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarTipojugadores($serviciosReferencias) {
@@ -3535,7 +3535,7 @@ function insertarValoreshabilitacionestransitorias($serviciosReferencias) {
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 
@@ -3559,7 +3559,7 @@ $res = $serviciosReferencias->modificarValoreshabilitacionestransitorias($id,$re
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 function eliminarValoreshabilitacionestransitorias($serviciosReferencias) {
@@ -3631,6 +3631,7 @@ function insertarTorneos($serviciosReferencias) {
 		$acumulatablaconformada = 0;
 	}
 	$observaciones = $_POST['observaciones'];
+	$observacionesgenerales = $_POST['observacionesgenerales'];
 	if (isset($_POST['activo'])) {
 		$activo	= 1;
 	} else {
@@ -3647,13 +3648,13 @@ function insertarTorneos($serviciosReferencias) {
 	$fechainicio = formatearFechas($fechainicio);
 
 	if ($fechainicio != '***') {
-		$res = $serviciosReferencias->insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo);
+		$res = $serviciosReferencias->insertarTorneos($descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo,$observacionesgenerales);
 		if ((integer)$res > 0) {
 			//$serviciosReferencias->desactivarTorneos($res,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones);
 			$serviciosReferencias->insertarTorneopuntobonus($res,1);
 			echo $res;
 		} else {
-			echo 'Huvo un error al insertar datos';
+			echo 'Hubo un error al insertar datos';
 		}
 	} else {
 		echo 'Formato de fecha incorrecto';
@@ -3695,6 +3696,7 @@ function modificarTorneos($serviciosReferencias) {
 		$acumulatablaconformada = 0;
 	}
 	$observaciones = $_POST['observaciones'];
+	$observacionesgenerales = $_POST['observacionesgenerales']; 
 	if (isset($_POST['activo'])) {
 		$activo	= 1;
 	} else {
@@ -3707,7 +3709,7 @@ function modificarTorneos($serviciosReferencias) {
 		$puntobonus = 0;
 	}
 
-	$res = $serviciosReferencias->modificarTorneos($id,$descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo);
+	$res = $serviciosReferencias->modificarTorneos($id,$descripcion,$reftipotorneo,$reftemporadas,$refcategorias,$refdivisiones,$cantidadascensos,$cantidaddescensos,$respetadefiniciontipojugadores,$respetadefinicionhabilitacionestransitorias,$respetadefinicionsancionesacumuladas,$acumulagoleadores,$acumulatablaconformada,$observaciones,$activo,$observacionesgenerales);
 	if ($res == true) {
 		/*
 		if ($activo == 1) {
@@ -3721,7 +3723,7 @@ function modificarTorneos($serviciosReferencias) {
 		}
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -3758,7 +3760,7 @@ function insertarEquipos($serviciosReferencias) {
 			if ((integer)$res > 0) {
 				echo '';
 			} else {
-				echo 'Huvo un error al insertar datos';
+				echo 'Hubo un error al insertar datos';
 			}
 		}
 	}
@@ -3790,7 +3792,7 @@ function modificarEquipos($serviciosReferencias) {
 		if ($res == true) {
 			echo '';
 		} else {
-			echo 'Huvo un error al modificar datos';
+			echo 'Hubo un error al modificar datos';
 		}
 	}
 
@@ -3842,7 +3844,7 @@ function insertarPuntobonus($serviciosReferencias) {
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 
@@ -3865,7 +3867,7 @@ function modificarPuntobonus($serviciosReferencias) {
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -3918,7 +3920,7 @@ function insertarTiposanciones($serviciosReferencias) {
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 
@@ -3964,7 +3966,7 @@ function modificarTiposanciones($serviciosReferencias) {
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -3987,7 +3989,7 @@ function insertarFechasexcluidas($serviciosReferencias) {
 		if ((integer)$res > 0) {
 			echo '';
 		} else {
-			echo 'Huvo un error al insertar datos';
+			echo 'Hubo un error al insertar datos';
 		}
 	}
 }
@@ -4004,7 +4006,7 @@ function modificarFechasexcluidas($serviciosReferencias) {
 		if ($res == true) {
 			echo '';
 		} else {
-			echo 'Huvo un error al modificar datos';
+			echo 'Hubo un error al modificar datos';
 		}
 	}
 }
@@ -4068,7 +4070,7 @@ function insertarEstadospartidos($serviciosReferencias) {
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 
@@ -4123,7 +4125,7 @@ function modificarEstadospartidos($serviciosReferencias) {
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -4160,7 +4162,7 @@ function insertarDefinicionescategoriastemporadas($serviciosReferencias) {
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 
@@ -4188,7 +4190,7 @@ function modificarDefinicionescategoriastemporadas($serviciosReferencias) {
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -4212,7 +4214,7 @@ function insertarDefinicionescategoriastemporadastipojugador($serviciosReferenci
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 
@@ -4231,7 +4233,7 @@ function modificarDefinicionescategoriastemporadastipojugador($serviciosReferenc
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -4269,7 +4271,7 @@ function insertarDefinicionessancionesacumuladastemporadas($serviciosReferencias
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
-		echo 'Huvo un error al insertar datos';
+		echo 'Hubo un error al insertar datos';
 	}
 }
 
@@ -4284,7 +4286,7 @@ function modificarDefinicionessancionesacumuladastemporadas($serviciosReferencia
 	if ($res == true) {
 		echo '';
 	} else {
-		echo 'Huvo un error al modificar datos';
+		echo 'Hubo un error al modificar datos';
 	}
 }
 
@@ -4316,7 +4318,7 @@ function insertarJugadoresmotivoshabilitacionestransitoriasA($serviciosReferenci
 			if ((integer)$res > 0) {
 				echo '';
 			} else {
-				echo 'Huvo un error al insertar datos';
+				echo 'Hubo un error al insertar datos';
 			}
 		} else {
 			echo 'Ya existe esta habilitación';
@@ -4344,7 +4346,7 @@ function insertarJugadoresmotivoshabilitacionestransitoriasB($serviciosReferenci
 			if ((integer)$res > 0) {
 				echo '';
 			} else {
-				echo 'Huvo un error al insertar datos '.$res;
+				echo 'Hubo un error al insertar datos '.$res;
 			}
 		} else {
 			echo 'Ya existe esta habilitación';
@@ -4370,7 +4372,7 @@ $observaciones = $_POST['observaciones'];
 		if ($res == true) {
 			echo '';
 		} else {
-			echo 'Huvo un error al modificar datos';
+			echo 'Hubo un error al modificar datos';
 		}
 	}
 }
