@@ -1100,7 +1100,7 @@ $(document).ready(function(){
 			success:  function (response) {
 
 					url = "modificar.php?id=<?php echo $id; ?>";
-					//$(location).attr('href',url);
+					$(location).attr('href',url);
 
 			}
 		});
