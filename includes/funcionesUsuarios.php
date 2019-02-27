@@ -215,7 +215,7 @@ function traerUsuario($email) {
 }
 
 function traerUsuarios() {
-	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles
+	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles,u.idusuario
 			from dbusuarios u
 			inner join tbroles r on u.refroles = r.idrol
 			left join dbcountries cou on cou.idcountrie = u.refcountries
@@ -245,7 +245,7 @@ function traerUsuariosPorRol($idRol) {
 
 
 function traerUsuariosSimple() {
-	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles
+	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, cou.nombre, u.refroles,u.idusuario
 			from dbusuarios u
 			inner join tbroles r on u.refroles = r.idrol
 			left join dbcountries cou on cou.idcountrie = u.refcountries

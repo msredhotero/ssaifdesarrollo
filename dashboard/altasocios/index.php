@@ -56,12 +56,14 @@ $cabeceras 		= "	<th>Nro Documento</th>
 					<th>Fecha Nac.</th>
 					<th>Nro Serie Lote</th>
 					<th>Club</th>
-					<th>Estado</th>";
+					<th>Estado</th>
+					<th>Fec. Alta</th>
+					<th>Pass</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadorespreGrid(),91);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerJugadorespreGrid(),85);
 
 $lstNotificaciones = $serviciosReferencias->traerNotificacionesPorParametrosCompleto(1,0,0,0);
 
@@ -80,7 +82,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
-	
+
 }
 
 
@@ -102,23 +104,23 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
      Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	
-    
-   
+
+
+
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -130,9 +132,9 @@ if ($_SESSION['refroll_predio'] != 1) {
       });
     </script>
 
-    
-    
- 
+
+
+
 </head>
 
 <body>
@@ -143,16 +145,16 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <h3><?php echo $plural; ?></h3>
 
-    
+
     <div class="row">
     	<div class="col-md-12">
 		    <div class="panel panel-success">
 		        <div class="panel-heading">
 		        	<?php echo $plural; ?> Cargados
-		        	
+
 		        </div>
 		    	<div class="panel-body">
-		        	
+
 		        		<?php echo $lstCargados; ?>
 
 		    	</div>
@@ -161,12 +163,12 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 	</div>
-    
-    
 
-    
-    
-   
+
+
+
+
+
 </div>
 
 
@@ -217,7 +219,7 @@ $(document).ready(function(){
 			}
 		  }
 	} );
-	
+
 	$('#activo').prop('checked',true);
 
 	$("#example").on("click",'.varborrar', function(){
@@ -226,27 +228,27 @@ $(document).ready(function(){
 			$("#idEliminar").val(usersid);
 			$("#dialog2").dialog("open");
 
-			
+
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton eliminar
-	
+
 	$("#example").on("click",'.varmodificar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
-			
+
 			url = "modificar.php?id=" + usersid;
 			$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton modificar
 
 	 $( "#dialog2" ).dialog({
-		 	
+
 			    autoOpen: false,
 			 	resizable: false,
 				width:600,
@@ -254,18 +256,18 @@ $(document).ready(function(){
 				modal: true,
 				buttons: {
 				    "Eliminar": function() {
-	
+
 						$.ajax({
 									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
-											
+
 									},
 									success:  function (response) {
 											url = "index.php";
 											$(location).attr('href',url);
-											
+
 									}
 							});
 						$( this ).dialog( "close" );
@@ -279,14 +281,14 @@ $(document).ready(function(){
 						$( this ).dialog( "close" );
 				    }
 				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
-			
-	
 
-	
-	
+
+	 		}); //fin del dialogo para eliminar
+
+
+
+
+
 
 });
 </script>
