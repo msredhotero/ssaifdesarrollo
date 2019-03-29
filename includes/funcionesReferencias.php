@@ -8272,6 +8272,53 @@ return $res;
 }
 
 
+function traerConectorTemporadas($refJugador) {
+$sql = "select
+    c.idconector,
+    cat.categoria,
+    concat(equ.idequipo, '- ',equ.nombre) as equipo,
+    co.nombre as countrie,
+    tip.tipojugador,
+    (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    te.temporada,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+    concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+    jug.nrodocumento
+
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = c.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        inner join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+        left join
+    tbtemporadas te ON te.idtemporadas = c.reftemporadas
+    where jug.idjugador = ".$refJugador."
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
 function traerConectorActivos($refJugador) {
 $sql = "select
     c.idconector,
@@ -15632,6 +15679,13 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
        { // ... ok!?
            return true;
        }
+    }
+
+    function relacionarDocumentaciones($idjugadorpre, $idjugador) {
+        $sql = "update dbdocumentacionjugadorimagenes set idjugador = ".$idjugador." where refjugadorespre = ".$idjugadorpre;
+        
+        $res = $this->query($sql,0);
+        return $res;
     }
 
 

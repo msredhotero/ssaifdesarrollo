@@ -81,6 +81,7 @@ $cabeceras 		= "	<th>Categoria</th>
 					<th>Countrie</th>
 					<th>Tipo Jugador</th>
 					<th>Es Fusion</th>
+          <th>Temporada</th>
 					<th>Activo</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
@@ -91,7 +92,7 @@ $resCantidadConectoresActivos  =	$serviciosReferencias->traerConectorActivos($id
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerConector($id),6);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerConectorTemporadas($id),7);
 
 $resMotivosHabDeportivas	=	$serviciosReferencias->traerMotivoshabilitacionestransitoriasDeportivas('Edad');
 $cadRef		=	$serviciosFunciones->devolverSelectBox($resMotivosHabDeportivas,array(2),'');

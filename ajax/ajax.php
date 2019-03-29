@@ -632,7 +632,19 @@ case 'ultimaFechaSancionadoPorAcumulacionAmarillasFallada':
 	ultimaFechaSancionadoPorAcumulacionAmarillasFallada($serviciosReferencias);
 	break;
 
+case 'relacionarDocumentaciones':
+	relacionarDocumentaciones($serviciosReferencias);
+	break;
 /*** fin controles *****///
+}
+
+function relacionarDocumentaciones($serviciosReferencias) {
+	$idjugadorpre = $_POST['idjugadorpre'];
+	$idjugador = $_POST['idjugadorReal'];
+
+	$res = $serviciosReferencias->relacionarDocumentaciones($idjugadorpre, $idjugador);
+
+	echo '';
 }
 
 /**** controles ****////

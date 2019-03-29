@@ -38,6 +38,14 @@ $resResultadoAux = $serviciosReferencias->traerJugadoresprePorId($id);
 
 $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultadoAux,0,'nrodocumento'));
 
+if ($existeJugador == 1) {
+	$resJugador = $serviciosReferencias->traerJugadoresPorNroDocumento(mysql_result($resResultadoAux,0,'nrodocumento'));
+	$nombreJugador = 'Jugador: '.mysql_result($resJugador,0,'apellido').' '.mysql_result($resJugador,0,'nombres').' - Email:'.mysql_result($resJugador,0,'email');
+	$idjugadorReal = mysql_result($resJugador,0,0);
+} else {
+	$nombreJugador = 'El jugador no fue creado todavia';
+}
+
 		/////////////////////// Opciones para la creacion del formulario  /////////////////////
 		$tabla 			= "dbjugadorespre";
 
@@ -519,6 +527,12 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 		            			<?php
 		            			}
 		            			?>
+		            			<li>
+		            				<button type="button" class="btn btn-warning" id="relacionar" style="margin-left:0px;"><span class="glyphicon glyphicon-refresh"></span> Relacionar Jugador</button>
+		            			</li>
+		            			<li>
+		            				<?php echo $nombreJugador; ?> *** Recuerde que los email deben estar relacionados
+		            			</li>
 		            		</ul>
 		            	</div>
 		            </div>
@@ -752,6 +766,31 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 					}
 				});
 			}
+
+			<?php if ($existeJugador == 1) { ?>
+			function relacionarDocumentaciones() {
+				$.ajax({
+					data:  {idjugadorpre: <?php echo $id; ?>,
+							idjugadorReal: <?php echo $idjugadorReal; ?>,
+							accion: 'relacionarDocumentaciones'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+
+					},
+					success:  function (response) {
+						url = "modificar.php?id=<?php echo $id; ?>";
+						$(location).attr('href',url);
+
+					}
+				});
+			}
+
+			$('#relacionar').click(function() {
+				relacionarDocumentaciones();
+			});
+
+			<?php } ?>
 
 			function generarNotificacion(mensaje,idpagina,autor,destinatario,id1,id2,id3,icono,estilo,fecha,url) {
 				$.ajax({
@@ -1153,11 +1192,11 @@ $existeJugador = $serviciosReferencias->existeJugador(mysql_result($resResultado
 			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
 			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
 			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
-			        // note for these file types below no extension determination logic
+			        // note for these file types below no extension determination logic 
 			        // has been configured (the keys itself will be used as extensions)
-			        'jpg': '<img src="../../imagenes/sin_img.jpg">',
-			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
-			        'png': '<img src="../../imagenes/sin_img.jpg">'
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">', 
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>', 
+			        'png': '<img src="../../imagenes/sin_img.jpg">'    
 			    },
 			    previewFileExtSettings: { // configure the logic for determining icon file extensions
 			        'doc': function(ext) {

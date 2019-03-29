@@ -103,6 +103,7 @@ class serviciosDelegados {
 			while ($row = mysql_fetch_array($resJugadoresNuevos)) {
 				if ($this->existeJugador($row['nrodocumento']) == 0) {
 					$resIJ = $this->insertarJugadorDocumentacionValores($row['refjugadorespre']);
+					
 					$this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
 				} else {
 					$this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
@@ -345,7 +346,7 @@ class serviciosDelegados {
 
 		$resEquipo = $this->traerEquiposdelegadosPorId($id);
 
-		$existeEquipo = $this->traerEquiposPorId($id);
+		$existeEquipo = $this->traerEquiposPorId(mysql_result($resEquipo,0,'idequipo'));
 
 		if (mysql_result($resEquipo,0,'refestados') == 7) {
 
