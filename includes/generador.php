@@ -8,7 +8,7 @@
 <body>
 <?php
 function query($sql,$accion) {
-	
+
 	require_once 'appconfig.php';
 
 	$appconfig	= new appconfig();
@@ -17,33 +17,33 @@ function query($sql,$accion) {
 	$database	= $datos['database'];
 	$username	= $datos['username'];
 	$password	= $datos['password'];
-	
-	
+
+
 	$conex = mysql_connect($hostname,$username,$password) or die ("no se puede conectar".mysql_error());
-	
+
 	mysql_select_db($database);
-	
+
 	$result = mysql_query($sql,$conex);
 	if ($accion && $result) {
 		$result = mysql_insert_id();
 	}
 	mysql_close($conex);
 	return $result;
-	
+
 }
 
 
 
 
-$tablasAr	= array("contactos"        => "dbcontactos",        
+$tablasAr	= array("contactos"        => "dbcontactos",
 "tipocontactos"=> "tbtipocontactos",
-"countries"         => "dbcountries",         
-"usuarios"        => "dbusuarios",            
-"predio_menu"     => "predio_menu",       
-"canchas"         => "tbcanchas",  
-"fechas"         => "tbfechas",   
-"fixture"         => "dbfixture",     
-"roles"           => "tbroles",  
+"countries"         => "dbcountries",
+"usuarios"        => "dbusuarios",
+"predio_menu"     => "predio_menu",
+"canchas"         => "tbcanchas",
+"fechas"         => "tbfechas",
+"fixture"         => "dbfixture",
+"roles"           => "tbroles",
 "categorias"	  => "tbcategorias",
 "divisiones"	  => "tbdivisiones",
 "temporadas"	  => "tbtemporadas",
@@ -82,25 +82,26 @@ $tablasAr	= array("contactos"        => "dbcontactos",
 "jugadoresclub"=>"dbjugadoresclub",
 "modulos"=>"tbmodulos",
 "vigenciasoperaciones"=>"dbvigenciasoperaciones",
-"jugadorespre"=>"dbjugadorespre");
+"jugadorespre"=>"dbjugadorespre",
+"excepcionesencancha" => "dbexcepcionesencancha");
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
-	
-	$tablasArAux2	= array("contactos"        => "dbcontactos",        
+
+	$tablasArAux2	= array("contactos"        => "dbcontactos",
 "tipocontactos"=> "tbtipocontactos",
-"countries"         => "dbcountries",         
-"usuarios"        => "dbusuarios",            
-"predio_menu"     => "predio_menu",       
-"canchas"         => "tbcanchas",  
-"fechas"         => "tbfechas",   
-"fixture"         => "dbfixture",                
-"roles"           => "tbroles",  
+"countries"         => "dbcountries",
+"usuarios"        => "dbusuarios",
+"predio_menu"     => "predio_menu",
+"canchas"         => "tbcanchas",
+"fechas"         => "tbfechas",
+"fixture"         => "dbfixture",
+"roles"           => "tbroles",
 "categorias"	  => "tbcategorias",
 "divisiones"	  => "tbdivisiones",
 "temporadas"	  => "tbtemporadas",
 "countriecanchas" => "dbcountriecanchas",
-"arbitros"	  => "dbarbitros",        
+"arbitros"	  => "dbarbitros",
 "posiciontributaria"        => "tbposiciontributaria",
 "jugadores"       => "dbjugadores",
 "jugadoresdocumentacion"=>"dbjugadoresdocumentacion",
@@ -134,22 +135,23 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresclub"=>"dbjugadoresclub",
 "modulos"=>"tbmodulos",
 "vigenciasoperaciones"=>"dbvigenciasoperaciones",
-"jugadorespre"=>"dbjugadorespre");
+"jugadorespre"=>"dbjugadorespre",
+"excepcionesencancha" => "dbexcepcionesencancha");
 
-	$tablasArAux	= array("contactos"        => 2,        
+	$tablasArAux	= array("contactos"        => 2,
 "tipocontactos"=> 1,
-"countries"         => 3,         
-"usuarios"        => 2,            
-"predio_menu"     => 2,       
-"canchas"         => 2,  
-"fechas"         => 1,   
-"fixture"         => 5,                
-"roles"           => 1, 
+"countries"         => 3,
+"usuarios"        => 2,
+"predio_menu"     => 2,
+"canchas"         => 2,
+"fechas"         => 1,
+"fixture"         => 5,
+"roles"           => 1,
 "categorias"	  => 1,
 "divisiones"	  => 1,
 "temporadas"	  => 1,
 "countriecanchas" => 3,
-"arbitros"	  => 1,         
+"arbitros"	  => 1,
 "posiciontributaria"        => 1,
 "jugadores"       => 3,
 "jugadoresdocumentacion"=>3,
@@ -183,12 +185,13 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 "jugadoresclub"=>1,
 "modulos"=>1,
 "vigenciasoperaciones"=>2,
-"jugadorespre"=>3);
-	
+"jugadorespre"=>3,
+"excepcionesencancha" => 1);
+
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
 	$res 	=	query($sql,0);
-	
+
 	while ($row = mysql_fetch_array($res)) {
 		if ($row[3] == 'MUL') {
 			$TableReferencia 	= str_replace('ref','',$row[0]);
@@ -196,15 +199,15 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 				recursiveTablas($tablasArAux2, $ar[$TableReferencia], $aliasTablaMadre);
 			//}
 			//recursiveTablas($ar, $ar[$TableReferencia], $aliasTablaMadre);
-			
+
 			$sqlTR	=	"show columns from ".$ar[$TableReferencia];
 			//die(var_dump($tablasAr['clientes']));
 			$resTR 	=	query($sqlTR,0);
 			$inner .= " inner join ".$ar[$TableReferencia]." ".substr($TableReferencia,0,2)." ON ".substr($TableReferencia,0,2).".".mysql_result($resTR,0,0)." = ".$aliasTablaMadre.".".$row[0]." <br>";
-			
+
 		}
 	}
-	
+
 	return $inner;
 }
 
@@ -213,7 +216,7 @@ $ajaxFuncionesController = '';
 
 $servicios	= "Referencias";
 
-$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_local_diciembre_host";
+$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_desarrollo_2018";
 $resMapeo 	=	query($sqlMapaer,0);
 
 $aliasTablaMadre = '';
@@ -235,16 +238,16 @@ if ($res == false) {
 
 	$ajax		=	'';
 	$includes	=	'';
-	
+
 	$cuerpoVariableComunes = "";
 	$cuerpoVariable = "'',";
 	$cuerpoSQL = '';
-	
+
 	$cuerpoVariableUpdate = "";
 	$cuerpoVariablePOST = "";
-	
+
 	$ajaxFunciones .= "
-	
+
 		case 'insertar".$nombre."': <br>
 			insertar".$nombre."("."$"."servicios".$servicios."); <br>
 			break; <br>
@@ -254,11 +257,11 @@ if ($res == false) {
 		case 'eliminar".$nombre."': <br>
 			eliminar".$nombre."("."$"."servicios".$servicios."); <br>
 			break; <br>
-	
+
 	";
-	
-	
-	
+
+
+
 	/*
 	case 'insertarJugadores':
 		insertarTorneo($serviciosJugadores);
@@ -273,12 +276,12 @@ if ($res == false) {
 	$inner = '';
 	while ($row = mysql_fetch_array($res)) {
 		if ($row[3] == 'PRI') {
-			$clave = $row[0];			
+			$clave = $row[0];
 		} else {
-			
-			
+
+
 			// trato las tablas con referencias
-			
+
 			if ($row[3] == 'MUL') {
 				$TableReferencia 	= str_replace('ref','',$row[0]);
 				$sqlTR	=	"show columns from ".$tablasAr[$TableReferencia];
@@ -290,15 +293,15 @@ if ($res == false) {
 				}*/
 				$inner .= recursiveTablas($tablasAr, $tablasAr[$TableReferencia], substr($TableReferencia,0,3));
 			}
-			
-			
+
+
 			switch ($row[1]) {
 				case "date":
 					$cuerpoVariablePOST 	= $cuerpoVariablePOST."$".$row[0]." = "."$"."_POST['".$row[0]."']; <br>";
 					$cuerpoVariable 		= $cuerpoVariable."'".'".utf8_decode($'.$row[0].')."'."',";
 					$cuerpoVariableComunes	= $cuerpoVariableComunes."$".$row[0].",";
 					$cuerpoSQL 				= $cuerpoSQL.$row[0].",";
-					
+
 					$cuerpoVariableUpdate = $cuerpoVariableUpdate.$row[0].' = '."'".'".utf8_decode($'.$row[0].')."'."',";
 					break;
 				case "datetime":
@@ -314,7 +317,7 @@ if ($res == false) {
 						$cuerpoVariable = $cuerpoVariable."'".'".utf8_decode($'.$row[0].')."'."',";
 						$cuerpoVariableComunes = $cuerpoVariableComunes."$".$row[0].",";
 						$cuerpoSQL = $cuerpoSQL.$row[0].",";
-						$cuerpoVariableUpdate = $cuerpoVariableUpdate.$row[0].' = '."'".'".utf8_decode($'.$row[0].')."'."',";	
+						$cuerpoVariableUpdate = $cuerpoVariableUpdate.$row[0].' = '."'".'".utf8_decode($'.$row[0].')."'."',";
 					} else {
 						if (strpos($row[1],"bit") !== false) {
 							$cuerpoVariablePOST 	= $cuerpoVariablePOST."
@@ -323,11 +326,11 @@ if ($res == false) {
 									} else { <br>
 										"."$".$row[0]." = 0; <br>
 									} <br>
-							
-							";	
+
+							";
 							//$cuerpoSQL = $cuerpoSQL."(case when ".$row[0]." = 1 then 'Si' else 'No' end) as ".$row[0].",";
 						} else {
-							$cuerpoVariablePOST 	= $cuerpoVariablePOST."$".$row[0]." = "."$"."_POST['".$row[0]."']; <br>";	
+							$cuerpoVariablePOST 	= $cuerpoVariablePOST."$".$row[0]." = "."$"."_POST['".$row[0]."']; <br>";
 							//$cuerpoSQL = $cuerpoSQL.$row[0].",";
 						}
 						$cuerpoVariable = $cuerpoVariable.'".$'.$row[0].'.",';
@@ -335,46 +338,46 @@ if ($res == false) {
 						$cuerpoSQL = $cuerpoSQL.$row[0].",";
 						$cuerpoVariableUpdate = $cuerpoVariableUpdate.$row[0].' = '.'".$'.$row[0].'."'.",";
 					}
-					
+
 					break;
 			}
-			
-		}
-		
-	}
-	
 
-	
+		}
+
+	}
+
+
+
 	$cuerpoVariable			= substr($cuerpoVariable,0,strlen($cuerpoVariable)-1);
 	$cuerpoVariableUpdate	= substr($cuerpoVariableUpdate,0,strlen($cuerpoVariableUpdate)-1);
 	$cuerpoVariableComunes	= substr($cuerpoVariableComunes,0,strlen($cuerpoVariableComunes)-1);
 	$cuerpoSQL				= substr($cuerpoSQL,0,strlen($cuerpoSQL)-1);
-	
-	
+
+
 	//$ajaxFuncionesController = '';
-	
+
 	$ajaxFuncionesController .= "
-	
+
 		function insertar".$nombre."("."$"."servicios".$servicios.") { <br>
 			".$cuerpoVariablePOST."
-			
+
 			"."$"."res = "."$"."servicios".$servicios."->insertar".$nombre."(".$cuerpoVariableComunes."); <br>
-			
+
 			if ((integer)"."$"."res > 0) { <br>
 				echo ''; <br>
 			} else { <br>
 				echo 'Huvo un error al insertar datos';	 <br>
 			} <br>
-		
+
 		} <br>
-		
+
 		function modificar".$nombre."("."$"."servicios".$servicios.") { <br>
-			
+
 			"."$"."id = 	"."$"."_POST['id']; <br>
 			".$cuerpoVariablePOST."
-			
+
 			"."$"."res = "."$"."servicios".$servicios."->modificar".$nombre."("."$"."id,".$cuerpoVariableComunes."); <br>
-			
+
 			if ("."$"."res == true) { <br>
 				echo ''; <br>
 			} else { <br>
@@ -384,11 +387,11 @@ if ($res == false) {
 
 		function eliminar".$nombre."("."$"."servicios".$servicios.") { <br>
 			"."$"."id = 	"."$"."_POST['id']; <br>
-			
+
 			"."$"."res = "."$"."servicios".$servicios."->eliminar".$nombre."("."$"."id); <br>
 			echo "."$"."res; <br>
 		} <br>
-	
+
 	";
 
 
@@ -398,15 +401,15 @@ if ($res == false) {
 	//$includes = '';
 
 	$includes = $includes.'
-	
-		function insertar'.$nombre.'('.$cuerpoVariableComunes.') { <br>		
-			$sql = "insert into '.$tabla.'('.$clave.','.$cuerpoSQL.') <br>		
-											values ('.$cuerpoVariable.')"; <br>		
-			$res = $this->query($sql,1); <br>		
+
+		function insertar'.$nombre.'('.$cuerpoVariableComunes.') { <br>
+			$sql = "insert into '.$tabla.'('.$clave.','.$cuerpoSQL.') <br>
+											values ('.$cuerpoVariable.')"; <br>
+			$res = $this->query($sql,1); <br>
 			return $res; <br>
 		} <br>
-	
-	
+
+
 		<br>
 		<br>
 		function modificar'.$nombre.'($id,'.$cuerpoVariableComunes.') { <br>
@@ -429,28 +432,28 @@ if ($res == false) {
 		function traer'.$nombre.'() { <br>
 			$sql = "select <br>'.$aliasTablaMadre.".".$clave.',<br>'.$aliasTablaMadre.".".str_replace(",",",<br>".$aliasTablaMadre.".",$cuerpoSQL).'<br> from '.$tabla." ".$aliasTablaMadre." <br>".$inner.' order by 1"; <br>
 			$res = $this->query($sql,0); <br>
-			return $res; <br>	
+			return $res; <br>
 		} <br>
 		 <br>
 		  <br>
 		function traer'.$nombre.'PorId($id) { <br>
 			$sql = "select '.$clave.','.$cuerpoSQL.' from '.$tabla.' where '.$clave.' =".$id; <br>
 			$res = $this->query($sql,0); <br>
-			return $res; <br>	
+			return $res; <br>
 		} <br>
 	';
-	
 
-	
+
+
 //	echo "<br><br>/*   PARA ".$nombre." */<br><br>".$includes."<br>/* Fin */<br>/*   PARA ".$nombre." */<br>".$ajaxFunciones."<br>/* Fin */<br><br>/*   PARA ".$nombre." */<br>".$ajaxFuncionesController."<br>/* Fin */";
-	
+
 	echo "<br><br>/*   PARA ".$nombre." */<br><br>".$includes."<br>/* Fin */<br>/*";
-	
+
 }
-	
+
 	//echo '<hr>';
 	echo ' /* Fin de la Tabla: '.$rowM[0]."*/<br>";
-	
+
 }
 echo "********************************************************************************<br>";
 echo "<br><br>/*   PARA ".$nombre." */<br><br>".$ajaxFunciones."<br>/* Fin */<br>/*";
