@@ -3865,7 +3865,7 @@ function existeDevuelveId($sql) {
     function obtenerNuevoId($tabla) {
         //u235498999_aif
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = 'u235498999_aif'
+                WHERE TABLE_SCHEMA = 'ssaif_desarrollo_2018'
                 AND TABLE_NAME = '".$tabla."'";
         $res = $this->query($sql,0);
         return mysql_result($res, 0,0);
@@ -4193,11 +4193,20 @@ return $res;
 
 
 function traerDocumentacionjugadorimagenesPorJugadorDocumentacionID($idJugador, $idDocumentacion, $idJugadorPre=0) {
-$sql = "select
-                dj.iddocumentacionjugadorimagen,dj.refdocumentaciones,dj.refjugadorespre,dj.imagen,dj.type,dj.refestados, e.estado
-            from dbdocumentacionjugadorimagenes dj
-            inner join tbestados e ON e.idestado = dj.refestados
-        where (dj.idjugador =".$idJugador." or dj.refjugadorespre = ".$idJugadorPre.") and dj.refdocumentaciones = ".$idDocumentacion;
+   if ($idJugador > 0) {
+      $sql = "select
+                      dj.iddocumentacionjugadorimagen,dj.refdocumentaciones,dj.refjugadorespre,dj.imagen,dj.type,dj.refestados, e.estado
+                  from dbdocumentacionjugadorimagenes dj
+                  inner join tbestados e ON e.idestado = dj.refestados
+              where (dj.idjugador =".$idJugador.") and dj.refdocumentaciones = ".$idDocumentacion;
+   } else {
+      $sql = "select
+                      dj.iddocumentacionjugadorimagen,dj.refdocumentaciones,dj.refjugadorespre,dj.imagen,dj.type,dj.refestados, e.estado
+                  from dbdocumentacionjugadorimagenes dj
+                  inner join tbestados e ON e.idestado = dj.refestados
+              where (dj.refjugadorespre = ".$idJugadorPre.") and dj.refdocumentaciones = ".$idDocumentacion;
+   }
+
 $res = $this->query($sql,0);
 return $res;
 }
@@ -8259,7 +8268,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -8350,7 +8359,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -8395,7 +8404,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -8440,7 +8449,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
