@@ -3648,6 +3648,17 @@ function existeDevuelveId($sql) {
 
 
     function borrarArchivoJugadores($id,$directorio) {
+
+      /**** auditoria ****/
+      session_start();
+      $tabla = 'dbdocumentacionjugadorimagenes';
+      $operacion = 'E';
+      $id = $id;
+      $usuario = $_SESSION['nombre_predio'];
+
+      $this->insertAuditoria($tabla, $operacion,$id,$usuario);
+      /**** fin audi  ****/
+
         $sql    =   "delete from dbdocumentacionjugadorimagenes where iddocumentacionjugadorimagen =".$id;
 
         $res =  $this->borrarDirecctorio("./../".$directorio);
@@ -3962,7 +3973,15 @@ function existeDevuelveId($sql) {
                                 $sql    =   "insert into
                                 dbdocumentacionjugadorimagenes(iddocumentacionjugadorimagen,refdocumentaciones,refjugadorespre,imagen,type,refestados, idjugador)
                                 values ('',".$refdocumentaciones.",".($refjugadorespre == 0 ? 'NULL' : $refjugadorespre).",'".str_replace(' ','',$archivo)."','".$tipoarchivo."',1,".$idjugador.")";
-                                $this->query($sql,1);
+                                $resIn = $this->query($sql,1);
+                                /**** auditoria ****/
+                                $tabla = 'dbdocumentacionjugadorimagenes';
+                                $operacion = 'I';
+                                $id = $resIn;
+                                $usuario = $_SESSION['nombre_predio'];
+
+                                $this->insertAuditoria($tabla, $operacion,$id,$usuario);
+                                /**** fin auditoria ****/
                             }
                             echo '';
 
@@ -15692,10 +15711,82 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 
     function relacionarDocumentaciones($idjugadorpre, $idjugador) {
         $sql = "update dbdocumentacionjugadorimagenes set idjugador = ".$idjugador." where refjugadorespre = ".$idjugadorpre;
-        
+
         $res = $this->query($sql,0);
         return $res;
     }
+
+
+    /* PARA Auditoria */
+
+   function insertarAuditoria($tabla,$operacion,$campo,$valornuevo,$valorviejo,$id,$usuario) {
+      $sql = "insert into dbauditoria(idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha)
+      values ('','".$tabla."','".$operacion."','".$campo."','".$valornuevo."','".$valorviejo."',".$id.",'".$usuario."',now())";
+      $res = $this->query($sql,1);
+      return $res;
+   }
+
+   function insertAuditoria($tabla, $operacion,$id,$usuario) {
+      $sql = "SHOW COLUMNS FROM ".$tabla;
+      $res = $this->query($sql,0);
+
+      $idnombre = mysql_result($res,0,0);
+
+      while ($row = mysql_fetch_array($res)) {
+
+         $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
+         $resValor = $this->query($sqlValor,0);
+         $valornuevo = mysql_result($resValor,0,0);
+         $valorviejo = '';
+         $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario);
+      }
+
+      return $insert;
+   }
+
+   function modiAuditoria($tabla, $operacion,$id,$usuario) {
+      $sql = "SHOW COLUMNS FROM ".$tabla;
+      $res = $this->query($sql,0);
+
+      $idnombre = mysql_result($res,0,0);
+
+      while ($row = mysql_fetch_array($res)) {
+
+         $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
+         $resValor = $this->query($sqlValor,0);
+         $valornuevo = '';
+         $valorviejo = mysql_result($resValor,0,0);
+         $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario);
+      }
+   }
+
+
+   function traerAuditoria() {
+   $sql = "select
+   a.idauditoria,
+   a.tabla,
+   a.operacion,
+   a.campo,
+   a.valornuevo,
+   a.valorviejo,
+   a.id,
+   a.usuario,
+   a.fecha
+   from dbauditoria a
+   order by 1";
+   $res = $this->query($sql,0);
+   return $res;
+   }
+
+
+   function traerAuditoriaPorId($id) {
+   $sql = "select idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha from dbauditoria where idauditoria =".$id;
+   $res = $this->query($sql,0);
+   return $res;
+   }
+
+/* Fin */
+/* /* Fin de la Tabla: dbauditoria*/
 
 
 function query($sql,$accion) {

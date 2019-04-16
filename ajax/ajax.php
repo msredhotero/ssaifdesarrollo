@@ -2709,6 +2709,7 @@ function eliminarFotoJugadores($serviciosReferencias) {
 function eliminarFotoJugadoresID($serviciosReferencias) {
 	$refdocumentaciones			=	$_POST['documentacion'];
 	$refjugadorespre			=	$_POST['jugador'];
+
 	echo $serviciosReferencias->eliminarFotoJugadoresID($refdocumentaciones,$refjugadorespre);
 }
 
@@ -2984,28 +2985,75 @@ echo $res;
 }
 
 function insertarCategorias($serviciosReferencias) {
-$categoria = $_POST['categoria'];
-$res = $serviciosReferencias->insertarCategorias($categoria);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Hubo un error al insertar datos';
-}
+
+
+   $categoria = $_POST['categoria'];
+
+   $res = $serviciosReferencias->insertarCategorias($categoria);
+
+   if ((integer)$res > 0) {
+      /**** auditoria ****/
+      session_start();
+      $tabla = 'tbcategorias';
+      $operacion = 'I';
+      $id = $res;
+      $usuario = $_SESSION['nombre_predio'];
+
+      $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+      /**** fin auditoria ****/
+      echo '';
+   } else {
+      echo 'Hubo un error al insertar datos';
+   }
 }
 function modificarCategorias($serviciosReferencias) {
-$id = $_POST['id'];
-$categoria = $_POST['categoria'];
-$res = $serviciosReferencias->modificarCategorias($id,$categoria);
-if ($res == true) {
-echo '';
-} else {
-echo 'Hubo un error al modificar datos';
-}
+
+   $id = $_POST['id'];
+   $categoria = $_POST['categoria'];
+
+   /**** auditoria ****/
+   session_start();
+   $tabla = 'tbcategorias';
+   $operacion = 'M';
+   $id = $id;
+   $usuario = $_SESSION['nombre_predio'];
+
+   $serviciosReferencias->modiAuditoria($tabla, $operacion,$id,$usuario);
+   /**** fin audi  ****/
+
+
+
+   $res = $serviciosReferencias->modificarCategorias($id,$categoria);
+
+   if ($res == true) {
+      /**** auditoria ****/
+      $tabla = 'tbcategorias';
+      $operacion = 'M';
+      $id = $id;
+      $usuario = $_SESSION['nombre_predio'];
+
+      $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+      /**** fin audi  ****/
+      echo '';
+   } else {
+      echo 'Hubo un error al modificar datos';
+   }
 }
 function eliminarCategorias($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarCategorias($id);
-echo $res;
+   $id = $_POST['id'];
+
+   /**** auditoria ****/
+   session_start();
+   $tabla = 'tbcategorias';
+   $operacion = 'E';
+   $id = $id;
+   $usuario = $_SESSION['nombre_predio'];
+
+   $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+   /**** fin audi  ****/
+
+   $res = $serviciosReferencias->eliminarCategorias($id);
+   echo $res;
 }
 function insertarDivisiones($serviciosReferencias) {
 $division = $_POST['division'];
@@ -3708,7 +3756,7 @@ function modificarTorneos($serviciosReferencias) {
 		$acumulatablaconformada = 0;
 	}
 	$observaciones = $_POST['observaciones'];
-	$observacionesgenerales = $_POST['observacionesgenerales']; 
+	$observacionesgenerales = $_POST['observacionesgenerales'];
 	if (isset($_POST['activo'])) {
 		$activo	= 1;
 	} else {
