@@ -6138,7 +6138,7 @@ left join dbequipos equ ON equ.idequipo = j.refequipos
 inner join dbcountries co ON co.idcountrie = equ.refcountries
 inner join tbcategorias ca ON ca.idtcategoria = equ.refcategorias
 inner join tbdivisiones di ON di.iddivision = equ.refdivisiones
-inner join dbcontactos co ON co.idcontacto = equ.refcontactos
+left join dbcontactos co ON co.idcontacto = equ.refcontactos
 inner join tbcategorias cat ON cat.idtcategoria = j.refcategorias
 order by 1";
 $res = $this->query($sql,0);
@@ -8332,7 +8332,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -8738,7 +8738,7 @@ from    (
             dbequipos equ ON equ.idequipo = c.refequipos
                 inner join
             tbdivisiones di ON di.iddivision = equ.refdivisiones
-                inner join
+                left join
             dbcontactos con ON con.idcontacto = equ.refcontactos
                 inner join
             tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -8840,7 +8840,7 @@ from    (
             dbequipos equ ON equ.idequipo = c.refequipos
                 inner join
             tbdivisiones di ON di.iddivision = equ.refdivisiones
-                inner join
+                left join
             dbcontactos con ON con.idcontacto = equ.refcontactos
                 inner join
             tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -10826,7 +10826,7 @@ inner join dbequipos equ ON equ.idequipo = c.refequipos
 inner join dbcountries co ON co.idcountrie = equ.refcountries
 inner join tbcategorias ca ON ca.idtcategoria = equ.refcategorias
 inner join tbdivisiones di ON di.iddivision = equ.refdivisiones
-inner join dbcontactos co ON co.idcontacto = equ.refcontactos
+left join dbcontactos co ON co.idcontacto = equ.refcontactos
 inner join tbcategorias cat ON cat.idtcategoria = c.refcategorias
 inner join tbdivisiones div ON div.iddivision = c.refdivisiones
 order by 1";
@@ -10925,7 +10925,7 @@ inner join dbequipos equ ON equ.idequipo = d.refequipos
 inner join dbcountries co ON co.idcountrie = equ.refcountries
 inner join tbcategorias ca ON ca.idtcategoria = equ.refcategorias
 inner join tbdivisiones di ON di.iddivision = equ.refdivisiones
-inner join dbcontactos co ON co.idcontacto = equ.refcontactos
+left join dbcontactos co ON co.idcontacto = equ.refcontactos
 inner join tbcategorias cat ON cat.idtcategoria = d.refcategorias
 inner join tbdivisiones div ON div.iddivision = d.refdivisiones
 order by 1";
@@ -14008,7 +14008,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -14093,7 +14093,7 @@ from
     dbequipos equ ON equ.idequipo = c.refequipos
         inner join
     tbdivisiones di ON di.iddivision = equ.refdivisiones
-        inner join
+        left join
     dbcontactos con ON con.idcontacto = equ.refcontactos
         inner join
     tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -15302,7 +15302,7 @@ function traerJugadoresParaCarnet() {
                 dbequipos equ ON equ.idequipo = c.refequipos
                     inner join
                 tbdivisiones di ON di.iddivision = equ.refdivisiones
-                    inner join
+                    left join
                 dbcontactos con ON con.idcontacto = equ.refcontactos
                     inner join
                 tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
@@ -15335,7 +15335,7 @@ function traerJugadoresParaCarnet() {
                 dbequipos equ ON equ.idequipo = c.refequipos
                     inner join
                 tbdivisiones di ON di.iddivision = equ.refdivisiones
-                    inner join
+                    left join
                 dbcontactos con ON con.idcontacto = equ.refcontactos
                     inner join
                 tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
