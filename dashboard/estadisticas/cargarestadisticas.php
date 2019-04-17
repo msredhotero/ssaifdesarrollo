@@ -70,7 +70,7 @@ $resFecha	=	$serviciosReferencias->traerFechasPorId($refFecha);
 $refTemporada = $serviciosReferencias->traerUltimaTemporada();
 
 if (mysql_num_rows($refTemporada)>0) {
-	$idTemporada = mysql_result($refTemporada,0,0);	
+	$idTemporada = mysql_result($refTemporada,0,0);
 } else {
 	$idTemporada = 0;
 }
@@ -95,17 +95,17 @@ $numero = count($_POST);
 	$cantEncontrados = 0;
 	$cantidad = 1;
 	$idEquipos = 0;
-	
+
 	$cadWhere = '';
 	$cantEquipos = array();
-	
+
 	$golesRealesLocal 		= 0;
 	$golesRealesVisitantes	= 0;
 	$idsancion = 0;
-	
+
 	for($i=0;$i<$numero;$i++){
-		
-		
+
+
 		/////////////////////			EQUIPO LOCAL				////////////////////////////////////////////////
 		if (strpos($tags[$i],"goles") !== false) {
 
@@ -113,80 +113,80 @@ $numero = count($_POST);
 
 			//////////////		logica GOLEADORES		///////////////////////////////////////////////////////
 			$existeGoleadores = $serviciosReferencias->existeFixturePorGoleadores($idJugador, $idFixture);
-			
+
 			$golesRealesLocal += $valores[$i];
 			$golesRealesVisitantes += $_POST['encontra'.$idJugador];
-			
+
 			if ($existeGoleadores == 0) {
 				//inserto
 				$serviciosReferencias->insertarGoleadores($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$valores[$i], $_POST['encontra'.$idJugador]);
 			} else {
-				//modifico	
-				
+				//modifico
+
 				$serviciosReferencias->modificarGoleadores($existeGoleadores, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$valores[$i], $_POST['encontra'.$idJugador]);
 			}
 			//////////////			fin logica			/////////////////////////////////////////////////////////
-			
-			
+
+
 			//////////////		logica PENALES		///////////////////////////////////////////////////////
 			$existePenales = $serviciosReferencias->existeFixturePorPenalesJugador($idJugador, $idFixture);
-			
+
 			$golesRealesLocal += $_POST['penalesconvertidos'.$idJugador];
-			
+
 			if ($existePenales == 0) {
 				//inserto
 				$serviciosReferencias->insertarPenalesjugadores($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['penalesconvertidos'.$idJugador], $_POST['penaleserrados'.$idJugador], $_POST['penalesatajados'.$idJugador]);
 			} else {
-				//modifico	
-				
+				//modifico
+
 				$serviciosReferencias->modificarPenalesjugadores($existePenales, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['penalesconvertidos'.$idJugador], $_POST['penaleserrados'.$idJugador], $_POST['penalesatajados'.$idJugador]);
 			}
 			//////////////			fin logica			/////////////////////////////////////////////////////////
-			
-			
-			
+
+
+
 			//////////////		logica DORSALES		///////////////////////////////////////////////////////
 			$existeDorsal = $serviciosReferencias->existeFixturePorDorsalesJugador($idJugador, $idFixture);
-			
+
 			if ($existeDorsal == 0) {
 				//inserto
 				$serviciosReferencias->insertarDorsales($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['dorsal'.$idJugador]);
 			} else {
-				//modifico	
-				
+				//modifico
+
 				$serviciosReferencias->modificarDorsales($existeDorsal, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['dorsal'.$idJugador]);
 			}
 			//////////////			fin logica			/////////////////////////////////////////////////////////
-			
-			
-			
-			
-			
+
+
+
+
+
 			//////////////		logica MINUTOS		///////////////////////////////////////////////////////
 			$existeMinutos = $serviciosReferencias->existeFixturePorMinutosJugados($idJugador, $idFixture);
-			
+
 			if ($existeMinutos == 0) {
 				//inserto
 				$serviciosReferencias->insertarMinutosjugados($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones, $_POST['minutos'.$idJugador]);
 			} else {
-				//modifico	
-				
+				//modifico
+
 				$serviciosReferencias->modificarMinutosjugados($existeMinutos, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['minutos'.$idJugador]);
 			}
 			//////////////			fin logica			/////////////////////////////////////////////////////////
-			
-			
+
+
 			//////////////  mejor jugador //////////////
 			// siempre lo borro a lo primero
 			$serviciosReferencias->eliminarMejorjugadorPorJugadorFixture($idJugador, $idFixture);
 			if (isset($_POST['mejorjugador'.$idJugador])) {
-				
+
 				$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones);
 			}
 			/////////////		FIN MEJOR JUGADOR		/////////////////////////////////////////////////////////
-			
-			
-			
+
+
+
 			/***********		AMARILLAS			*************************************************************/
 			$existeAmarillas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,1,$idFixture);
 			if ($_POST['amaLrillas'.$idJugador] > 0) {
@@ -194,10 +194,10 @@ $numero = count($_POST);
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaLrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 
-					
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeAmarillas,1,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaLrillas'.$idJugador], $idCategoria, $idDivisiones);
 				}
 			} else {
@@ -209,7 +209,7 @@ $numero = count($_POST);
 					$serviciosReferencias->eliminarSancionesjugadores($existeAmarillas);
 				}
 			}
-			
+
 			/***********		FIN					*************************************************************/
 
 
@@ -220,10 +220,10 @@ $numero = count($_POST);
 				if ($existeRojas == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(2,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['roLjas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
-					
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeRojas,2,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['roLjas'.$idJugador], $idCategoria, $idDivisiones);
 				}
 			}
@@ -233,20 +233,20 @@ $numero = count($_POST);
 
 			/***********		INFORMADOS			*************************************************************/
 			$existeInformados	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,3,$idFixture);
-			
+
 			if ($_POST['inforLmados'.$idJugador] > 0) {
 				if ($existeInformados == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(3,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['inforLmados'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
-					
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeInformados,3,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['inforLmados'.$idJugador], $idCategoria, $idDivisiones);
 				}
 			}
 			/***********		FIN					*************************************************************/
-		
+
 
 
 			/***********		DOBLE AMARILLAS			*************************************************************/
@@ -256,34 +256,34 @@ $numero = count($_POST);
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(4,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleLamarilla'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
 
-					
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeDobleAmarillas,4,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleLamarilla'.$idJugador], $idCategoria, $idDivisiones);
 				}
-			} 
+			}
 			/***********		FIN					*************************************************************/
 
 
 
 			/***********		CD TD			*************************************************************/
 			$existeCDTD	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,5,$idFixture);
-			
+
 			if ($_POST['cdLtd'.$idJugador] > 0) {
 				if ($existeCDTD == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(5,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['cdLtd'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
-					
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeCDTD,5,$idJugador, $equipoLocal, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['cdLtd'.$idJugador], $idCategoria, $idDivisiones);
 				}
 			}
 			/***********		FIN					*************************************************************/
-			
-			
+
+
 			/**************** miro si la acumulacion de amarillas hace que lo sancione **************************/
 			/****** aca solo sanciono por cantidad de amarillas cargadas, no espero el fallo, si le ponen doble amarilla espero el fallo */
 			$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 1, $idFixture);
@@ -292,113 +292,113 @@ $numero = count($_POST);
 				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo);
 				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
 				$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
-				//*****				fin							*****/	
+				//*****				fin							*****/
 			}
-			
-			
-			
+
+
+
 			/**************** 					fin				*************************************************/
 
 		}
-		
-		
-		
+
+
+
 		////********************		FIN EQUIPO LOCAL		*************************************************//////
-		
-		
-		
+
+
+
 		/////////////////////			EQUIPO VISITANTE				////////////////////////////////////////////////
 		if (strpos($tags[$i],"gobles") !== false) {
-			
+
 			if (isset($valores[$i])) {
-				
+
 				$idJugador = str_replace("gobles","",$tags[$i]);
-				
+
 				$golesRealesLocal += $_POST['enbcontra'.$idJugador];
 				$golesRealesVisitantes += $valores[$i];
 				//////////////		logica GOLEADORES		///////////////////////////////////////////////////////
 				$existeGoleadores = $serviciosReferencias->existeFixturePorGoleadores($idJugador, $idFixture);
-				
+
 				if ($existeGoleadores == 0) {
 					//inserto
 					$serviciosReferencias->insertarGoleadores($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$valores[$i], $_POST['enbcontra'.$idJugador]);
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarGoleadores($existeGoleadores, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$valores[$i], $_POST['enbcontra'.$idJugador]);
 				}
 				//////////////			fin logica			/////////////////////////////////////////////////////////
-				
-				
+
+
 				//////////////		logica PENALES		///////////////////////////////////////////////////////
 				$existePenales = $serviciosReferencias->existeFixturePorPenalesJugador($idJugador, $idFixture);
-				
+
 				$golesRealesVisitantes += $_POST['penalesbconvertidos'.$idJugador];
-				
+
 				if ($existePenales == 0) {
 					//inserto
 					$serviciosReferencias->insertarPenalesjugadores($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['penalesbconvertidos'.$idJugador], $_POST['penalesberrados'.$idJugador], $_POST['penalesbatajados'.$idJugador]);
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarPenalesjugadores($existePenales, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['penalesbconvertidos'.$idJugador], $_POST['penalesberrados'.$idJugador], $_POST['penalesbatajados'.$idJugador]);
 				}
 				//////////////			fin logica			/////////////////////////////////////////////////////////
-				
-				
-				
+
+
+
 				//////////////		logica DORSALES		///////////////////////////////////////////////////////
 				$existeDorsal = $serviciosReferencias->existeFixturePorDorsalesJugador($idJugador, $idFixture);
-				
+
 				if ($existeDorsal == 0) {
 					//inserto
 					$serviciosReferencias->insertarDorsales($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['dorbsal'.$idJugador]);
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarDorsales($existeDorsal, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['dorbsal'.$idJugador]);
 				}
 				//////////////			fin logica			/////////////////////////////////////////////////////////
-			
-				
+
+
 				//////////////		logica MINUTOS		///////////////////////////////////////////////////////
 				$existeMinutos = $serviciosReferencias->existeFixturePorMinutosJugados($idJugador, $idFixture);
-				
+
 				if ($existeMinutos == 0) {
 					//inserto
 					$serviciosReferencias->insertarMinutosjugados($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones, $_POST['minbutos'.$idJugador]);
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarMinutosjugados($existeMinutos, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['minbutos'.$idJugador]);
 				}
 				//////////////			fin logica			/////////////////////////////////////////////////////////
-				
-				
+
+
 				//////////////  mejor jugador //////////////
 				// siempre lo borro a lo primero
 				$serviciosReferencias->eliminarMejorjugadorPorJugadorFixture($idJugador, $idFixture);
 				if (isset($_POST['mejorbjugador'.$idJugador])) {
-					
+
 					$serviciosReferencias->insertarMejorjugador($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones);
 				}
-				
+
 				/**************  fin 			**********************************************************************/
-				
+
 			/***********		AMARILLAS			*************************************************************/
-			
+
 			$existeAmarillas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,1,$idFixture);
-			
+
 			if ($_POST['amaVrillas'.$idJugador] > 0) {
 				if ($existeAmarillas == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
-					
-					
-					
+
+
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeAmarillas,1,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['amaVrillas'.$idJugador], $idCategoria, $idDivisiones);
 				}
 			} else {
@@ -407,7 +407,7 @@ $numero = count($_POST);
 					$serviciosReferencias->eliminarMovimientosancionesPorSancionJugadorAcumuadasAmarillas($existeAmarillas);
 					$serviciosReferencias->eliminarSancionesfallosacumuladasPorIdSancionJugador($existeAmarillas);
 					$serviciosReferencias->eliminarSancionesjugadores($existeAmarillas);
-				}	
+				}
 			}
 			/***********		FIN					*************************************************************/
 
@@ -415,15 +415,15 @@ $numero = count($_POST);
 
 			/***********		ROJAS			*************************************************************/
 			$existeRojas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,2,$idFixture);
-			
+
 			if ($_POST['roVjas'.$idJugador] > 0) {
 				if ($existeRojas == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(2,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['roVjas'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
-					
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeRojas,2,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['roVjas'.$idJugador], $idCategoria, $idDivisiones);
 				}
 			}
@@ -433,59 +433,59 @@ $numero = count($_POST);
 
 			/***********		INFORMADOS			*************************************************************/
 			$existeInformados	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,3,$idFixture);
-			
+
 			if ($_POST['inforVmados'.$idJugador] > 0) {
 				if ($existeInformados == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(3,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['inforVmados'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
-					
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeInformados,3,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['inforVmados'.$idJugador], $idCategoria, $idDivisiones);
 				}
 			}
 			/***********		FIN					*************************************************************/
-		
+
 
 
 			/***********		DOBLE AMARILLAS			*************************************************************/
 			$existeDobleAmarillas	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,4,$idFixture);
-			
+
 			if ($_POST['dobleVamarilla'.$idJugador] > 0) {
 				if ($existeDobleAmarillas == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(4,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleVamarilla'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
-					
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeDobleAmarillas,4,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['dobleVamarilla'.$idJugador], $idCategoria, $idDivisiones);
 				}
-			} 
+			}
 			/***********		FIN					*************************************************************/
 
 
 
 			/***********		CD TD			*************************************************************/
 			$existeCDTD	=	$serviciosReferencias->existeFixturePorSanciones($idJugador,5,$idFixture);
-			
+
 			if ($_POST['cdVtd'.$idJugador] > 0) {
 				if ($existeCDTD == 0) {
 					//inserto
 					$idsancion = $serviciosReferencias->insertarSancionesjugadores(5,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['cdVtd'.$idJugador], $idCategoria, $idDivisiones, 'NULL');
-					
+
 				} else {
-					//modifico	
-					
+					//modifico
+
 					$serviciosReferencias->modificarSancionesjugadoresSinAlterarFallo($existeCDTD,5,$idJugador, $equipoVisitante, $idFixture, mysql_result($resFix,0,'fecha'),$_POST['cdVtd'.$idJugador], $idCategoria, $idDivisiones);
 				}
 			}
 			/***********		FIN					*************************************************************/
 
 			}
-			
-			
+
+
 			/**************** miro si la acumulacion de amarillas hace que lo sancione **************************/
 			$idsancion = $serviciosReferencias->existeFixturePorSanciones($idJugador, 1, $idFixture);
 			if ($idsancion != 0) {
@@ -493,27 +493,27 @@ $numero = count($_POST);
 				$cantidadAmarillas = $serviciosReferencias->traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo);
 				//die(var_dump($cantidadAmarillas.'jugador:'.$idJugador));
 				$acuAmarillasA = $serviciosReferencias->sancionarPorAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idFixture, $equipoLocal, $fecha, $idCategoria, $idDivisiones, $idsancion, $cantidadAmarillas);
-				//*****				fin							*****/	
+				//*****				fin							*****/
 			}
 			//*****				fin							*****/
-			
-			
+
+
 			/**************** 					fin				*************************************************/
 		}
-		
-		
-		
+
+
+
 		////********************		FIN EQUIPO VISITANTE		*************************************************//////
-		
+
 	}
 
 
 ///////////////////////  PARA LOS CAMBIOS                        ///////////////////////////
-// BORRO TODOS LOS CAMBIOS Y LOS VUELVO A CARGAR 
+// BORRO TODOS LOS CAMBIOS Y LOS VUELVO A CARGAR
 $serviciosReferencias->eliminarCambiosPorFixture($idFixture);
 
 for ($i=1; $i<=7; $i++) {
-	
+
 	if (isset($_POST['salecambioLocal'.$i])) {
 		$serviciosReferencias->insertarCambios($_POST['salecambioLocal'.$i], $_POST['entracambioLocal'.$i], $idFixture, $equipoLocal, $idCategoria, $idDivisiones, $_POST['minutocambioLocal'.$i]);
 	}
@@ -521,8 +521,8 @@ for ($i=1; $i<=7; $i++) {
 	if (isset($_POST['salecambioVisitante'.$i])) {
 		$serviciosReferencias->insertarCambios($_POST['salecambioVisitante'.$i], $_POST['entracambioVisitante'.$i], $idFixture, $equipoVisitante, $idCategoria, $idDivisiones, $_POST['minutocambioVisitante'.$i]);
 	}
-	
-	
+
+
 }
 
 
@@ -561,52 +561,52 @@ $partidoSuspendidoCompletamente = 0;
 
 
 if	($refEstadoPartido != 0) {
-	
+
 
 	$estadoPartido	=	$serviciosReferencias->traerEstadospartidosPorId($refEstadoPartido);
-	
+
 	$defAutomatica			= mysql_result($estadoPartido,0,'defautomatica');
 
 	$golesLocalAuto			= mysql_result($estadoPartido,0,'goleslocalauto');
 	$golesLocalBorra		= mysql_result($estadoPartido,0,'goleslocalborra');
-	
+
 	$golesvisitanteauto		= mysql_result($estadoPartido,0,'golesvisitanteauto');
 	$golesvisitanteborra	= mysql_result($estadoPartido,0,'golesvisitanteborra');
-	
+
 	$puntosLocal			= mysql_result($estadoPartido,0,'puntoslocal');
 	$puntosVisitante		= mysql_result($estadoPartido,0,'puntosvisitante');
-	
+
 	$finalizado				= mysql_result($estadoPartido,0,'finalizado');
-	
+
 	$ocultaDetallePublico	= mysql_result($estadoPartido,0,'ocultardetallepublico');
-	
+
 	$visibleParaArbitros	= mysql_result($estadoPartido,0,'visibleparaarbitros');
-	
+
 	$contabilizaLocal		= mysql_result($estadoPartido,0,'contabilizalocal');
 	$contabilizaVisitante	= mysql_result($estadoPartido,0,'contabilizavisitante');
-	
+
 	// caso de ganado, perdido, empatado
 	if (($defAutomatica == 'No') && ($finalizado == 'Si') && ($visibleParaArbitros == 'No')) {
 		if (($golesRealesLocal > $golesRealesVisitantes) && (($puntosLocal == 0) || ($puntosLocal == 1))) {
-			$error = "Error: El equipo local deberia ganar";	
+			$error = "Error: El equipo local deberia ganar";
 			$lblerror = "alert-danger";
 		}
-		
+
 		if (($golesRealesLocal < $golesRealesVisitantes) && (($puntosVisitante == 0) || ($puntosVisitante == 1))) {
 			$error = "Error: El equipo visitante deberia ganar";
-			$lblerror = "alert-danger";	
-		}
-		
-		if (($golesRealesLocal == $golesRealesVisitantes) && ($puntosVisitante != $puntosLocal)) {
-			$error = "Error: El partido deberia ser un empate";	
 			$lblerror = "alert-danger";
 		}
-		
-		
-		
+
+		if (($golesRealesLocal == $golesRealesVisitantes) && ($puntosVisitante != $puntosLocal)) {
+			$error = "Error: El partido deberia ser un empate";
+			$lblerror = "alert-danger";
+		}
+
+
+
 		if ($error == '') {
 			$lblerror = "alert-success";
-			$error = "Ok: Se cargo correctamente";	
+			$error = "Ok: Se cargo correctamente";
 			$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 1);
 			if ($_SESSION['idroll_predio'] == 1) {
 				$resEstados		= $serviciosReferencias->traerEstadospartidos();
@@ -615,13 +615,13 @@ if	($refEstadoPartido != 0) {
 				$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
 				$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
 			}
-			
+
 			/****************				MARCO LA SANCION CUMPLIDA					*********************/
-			
+
 			/****************				FIN MARCO LA SANCION CUMPLIDA					*********************/
 		} else {
 			$resM = $serviciosReferencias->modificarFixturePorEstados($idFixture, 'NULL', $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 0);
-			
+
 			if ($_SESSION['idroll_predio'] == 1) {
 				$resEstados		= $serviciosReferencias->traerEstadospartidos();
 				$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
@@ -629,13 +629,13 @@ if	($refEstadoPartido != 0) {
 				$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
 				$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
 			}
-			
+
 		}
-		
+
 		$partidoSuspendidoCompletamente = 0;
 	} else { // else del ganado, perdido, empatado
 		// estados donde los partidos los define el estado como W.O. Local, Perdida de puntos a Ambos, Suspendido Finalizado
-		if (($defAutomatica == 'Si') && ($finalizado == 'Si') && ($visibleParaArbitros == 'No')) {	
+		if (($defAutomatica == 'Si') && ($finalizado == 'Si') && ($visibleParaArbitros == 'No')) {
 			if ($golesLocalBorra == 'Si') {
 				//borrar los goles cargados al local
 				$serviciosReferencias->modificaGoleadoresPorFixtureMasivo($idFixture, $equipoLocal);
@@ -644,7 +644,7 @@ if	($refEstadoPartido != 0) {
 					$golesvisitanteauto = $golesRealesVisitantes;
 				}
 			}
-			
+
 			if ($golesvisitanteborra == 'Si') {
 				//borrar los goles cargados al local
 				$serviciosReferencias->modificaGoleadoresPorFixtureMasivo($idFixture, $equipoVisitante);
@@ -653,10 +653,10 @@ if	($refEstadoPartido != 0) {
 					$golesLocalAuto = $golesRealesLocal;
 				}
 			}
-			
+
 			$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
 
-			
+
 			if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 				$resEstados		= $serviciosReferencias->traerEstadospartidos();
 				$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
@@ -664,32 +664,32 @@ if	($refEstadoPartido != 0) {
 				$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
 				$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
 			}
-			
+
 			$partidoSuspendidoCompletamente = 0;
 		} else { // else del W.O. Local, Perdida de puntos a Ambos, Suspendido Finalizado
-			
+
 			// para los arbitros
 			if (($defAutomatica == 'No') && ($finalizado == 'No') && ($visibleParaArbitros == 'Si') && (($puntosLocal > 0) || ($puntosVisitante > 0))) {
 				if (($golesRealesLocal > $golesRealesVisitantes) && (($puntosLocal == 0) || ($puntosLocal == 1))) {
-					$error = "Error: El equipo local deberia ganar";	
+					$error = "Error: El equipo local deberia ganar";
 					$lblerror = "alert-danger";
 				}
-				
+
 				if (($golesRealesLocal < $golesRealesVisitantes) && (($puntosVisitante == 0) || ($puntosVisitante == 1))) {
 					$error = "Error: El equipo visitante deberia ganar";
-					$lblerror = "alert-danger";	
-				}
-				
-				if (($golesRealesLocal == $golesRealesVisitantes) && ($puntosVisitante != $puntosLocal)) {
-					$error = "Error: El partido deberia ser un empate";	
 					$lblerror = "alert-danger";
 				}
-				
-				
-				
+
+				if (($golesRealesLocal == $golesRealesVisitantes) && ($puntosVisitante != $puntosLocal)) {
+					$error = "Error: El partido deberia ser un empate";
+					$lblerror = "alert-danger";
+				}
+
+
+
 				if ($error == '') {
 					$lblerror = "alert-success";
-					$error = "Ok: Se cargo correctamente";	
+					$error = "Ok: Se cargo correctamente";
 					$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 1);
 					if ($_SESSION['idroll_predio'] == 1) {
 						$resEstados		= $serviciosReferencias->traerEstadospartidos();
@@ -698,13 +698,13 @@ if	($refEstadoPartido != 0) {
 						$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
 						$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
 					}
-					
+
 					/****************				MARCO LA SANCION CUMPLIDA					*********************/
-					
+
 					/****************				FIN MARCO LA SANCION CUMPLIDA					*********************/
 				} else {
 					$resM = $serviciosReferencias->modificarFixturePorEstados($idFixture, 'NULL', $puntosLocal, $puntosVisitante, $golesRealesLocal, $golesRealesVisitantes, 0);
-					
+
 					if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 						$resEstados		= $serviciosReferencias->traerEstadospartidos();
 						$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
@@ -712,22 +712,22 @@ if	($refEstadoPartido != 0) {
 						$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
 						$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
 					}
-					
+
 				}
-				
+
 				$partidoSuspendidoCompletamente = 0;
 				// arbitros
 
 
 			} else {
 				// if para cuando un partido se suspende y no se carga nada
-				if (($defAutomatica == 'No') && ($finalizado == 'No') && ($golesLocalAuto == 0) && ($golesvisitanteauto == 0)) {	
-				
-					
+				if (($defAutomatica == 'No') && ($finalizado == 'No') && ($golesLocalAuto == 0) && ($golesvisitanteauto == 0)) {
+
+
 					$partidoSuspendidoCompletamente = 1;
-					
+
 					$serviciosReferencias->modificarFixturePorEstados($idFixture, $refEstadoPartido, $puntosLocal, $puntosVisitante, $golesLocalAuto, $golesvisitanteauto, 1);
-					
+
 					if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 						$resEstados		= $serviciosReferencias->traerEstadospartidos();
 						$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
@@ -735,15 +735,15 @@ if	($refEstadoPartido != 0) {
 						$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
 						$cadEstados		= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'', $refEstadoPartido);
 					}
-				
+
 				}
 			}
-			
+
 		}
 	}
 } else { //else de si no selecciono un estado para el partido
 
-	
+
 	if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 		$resEstados		= $serviciosReferencias->traerEstadospartidos();
 		$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
@@ -751,7 +751,7 @@ if	($refEstadoPartido != 0) {
 		$resEstados		= $serviciosReferencias->traerEstadospartidosArbitros();
 		$cadEstados		= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
 	}
-	
+
 }
 
 
@@ -784,8 +784,8 @@ while( $row = mysql_fetch_assoc( $detallePartidoVisit)){
 
 //////*************************			FIN calculo de amarillas	*********************************************/////
 
-///////////////////////				FIN							////////////////////////////	
-	
+///////////////////////				FIN							////////////////////////////
+
 /////////////////////// Opciones de la pagina  ////////////////////
 
 $lblTitulosingular	= "Estadistica";
@@ -820,7 +820,7 @@ $resFixDetalle	= $serviciosReferencias->traerFixtureDetallePorId($idFixture);
 
 $refCanchas		=	$serviciosReferencias->traerCanchas();
 if (mysql_result($resFixDetalle,0,'refcanchas') == '') {
-	$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(1),'');	
+	$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(1),'');
 } else {
 	$cadCanchas	=	$serviciosFunciones->devolverSelectBoxActivo($refCanchas,array(1),'',mysql_result($resFixDetalle,0,'refcanchas'));
 }
@@ -828,7 +828,7 @@ if (mysql_result($resFixDetalle,0,'refcanchas') == '') {
 
 $refArbitros	=	$serviciosReferencias->traerArbitros();
 if (mysql_result($resFixDetalle,0,'refarbitros') == '') {
-	$cadArbitros	=	$serviciosFunciones->devolverSelectBox($refArbitros,array(1),'');	
+	$cadArbitros	=	$serviciosFunciones->devolverSelectBox($refArbitros,array(1),'');
 } else {
 	$cadArbitros	=	$serviciosFunciones->devolverSelectBoxActivo($refArbitros,array(1),'',mysql_result($resFixDetalle,0,'refarbitros'));
 }
@@ -837,7 +837,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 } else {
 
-	
+
 }
 
 ?>
@@ -858,9 +858,9 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
@@ -872,14 +872,14 @@ if ($_SESSION['idroll_predio'] != 1) {
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<script src="../../js/jquery.number.min.js"></script>
-    
+
 	<style type="text/css">
-		
-  
-		
+
+
+
 	</style>
-    
-   
+
+
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -888,13 +888,13 @@ if ($_SESSION['idroll_predio'] != 1) {
       jQuery(document).ready(function ($) {
         "use strict";
         $('#navigation').perfectScrollbar();
-		
-		
+
+
       });
     </script>
-    
+
     <script type="text/javascript">
-			
+
 			$(function(){
 				// Set up the number formatting.
 				/*
@@ -903,135 +903,135 @@ if ($_SESSION['idroll_predio'] != 1) {
 				$('.golesEB').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.golescontraEB').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.golesEA').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.golescontraEA').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.amarillas').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.rojas').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.informados').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.dobleamarilla').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.cdtd').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
 
-				
-				
+
+
+
 				$('.golesEA').change(function(e) {
 					var acumulado = 0;
 					$('.golesEA').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.golescontraEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.penalesconvertidosEA').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
-					
+
 					$('.resultadoA').html(acumulado);
 				});
-				
-				
+
+
 				$('.golescontraEB').change(function(e) {
 					var acumulado = 0;
 					$('.golesEA').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.golescontraEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.penalesconvertidosEA').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.resultadoA').html(acumulado);
 				});
-				
-				
+
+
 				$('.penalesconvertidosEA').change(function(e) {
 					var acumulado = 0;
 					$('.golesEA').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.golescontraEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.penalesconvertidosEA').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
-					
+
 					$('.resultadoA').html(acumulado);
 				});
-				
-				
-				
-				
-				
+
+
+
+
+
 				$('.golesEB').change(function(e) {
 					var acumulado = 0;
 					$('.golesEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.golescontraEA').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.penalesconvertidosEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.resultadoB').html(acumulado);
 				});
-				
-				
+
+
 				$('.golescontraEA').change(function(e) {
 					var acumulado = 0;
 					$('.golesEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.golescontraEA').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.penalesconvertidosEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.resultadoB').html(acumulado);
 				});
-				
+
 				$('.penalesconvertidosEB').change(function(e) {
 					var acumulado = 0;
 					$('.golesEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.golescontraEA').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.penalesconvertidosEB').each(function(intIndex){
-						acumulado += parseInt($(this).val());	
+						acumulado += parseInt($(this).val());
 					});
 					$('.resultadoB').html(acumulado);
 				});
-				
+
 				$('.minutos').each(function(intIndex){
 					$(this).number( true, 0 );
 					$(this).change( function() {
@@ -1043,7 +1043,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 						}
 					});
 				});
-				
+
 				$('.minutosEB').each(function(intIndex){
 					$(this).number( true, 0 );
 					$(this).change( function() {
@@ -1055,7 +1055,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 						}
 					});
 				});
-				
+
 				$('.amarillas').each(function(intIndex){
 					$(this).number( true, 0 );
 					$(this).change( function() {
@@ -1067,7 +1067,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 						}
 					});
 				});
-				
+
 				$('.rojas').each(function(intIndex){
 					$(this).number( true, 0 );
 					$(this).change( function() {
@@ -1079,7 +1079,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 						}
 					});
 				});
-				
+
 				$('.informados').each(function(intIndex){
 					$(this).number( true, 0 );
 					$(this).change( function() {
@@ -1091,7 +1091,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 						}
 					});
 				});
-				
+
 				$('.dobleamarilla').each(function(intIndex){
 					$(this).number( true, 0 );
 					$(this).change( function() {
@@ -1103,7 +1103,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 						}
 					});
 				});
-				
+
 				$('.cdtd').each(function(intIndex){
 					$(this).number( true, 0 );
 					$(this).change( function() {
@@ -1115,28 +1115,28 @@ if ($_SESSION['idroll_predio'] != 1) {
 						}
 					});
 				});
-				
+
 				$('.penalesconvertidos').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.penalesatajados').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
-				
+
 				$('.penaleserrados').each(function(intIndex){
 					$(this).number( true, 0 );
 				});
 
 			});
 		</script>
-    
+
 
 </head>
 
 <body>
 
- 
+
 <?php echo $resMenu; ?>
 
 <div id="content">
@@ -1144,7 +1144,7 @@ if ($_SESSION['idroll_predio'] != 1) {
     <div class="boxInfoLargoEstadisticas">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Cargar Partido - <?php echo mysql_result($resFecha,0,1); ?></p>
-        	
+
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
         <div class="row">
@@ -1167,7 +1167,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                     <?php } ?>
                 </ul>
             </div>
-            
+
             <div class="col-md-12" align="center" style="text-align:center;">
                 <ul class="list-inline" id="lstFechas">
                 	<li><?php echo $equipoB; ?> - Visitante: </li>
@@ -1184,8 +1184,8 @@ if ($_SESSION['idroll_predio'] != 1) {
                     <?php } ?>
                 </ul>
             </div>
-        </div>  
-        
+        </div>
+
         <div class="col-md-6">
             <label class="control-label">Ingrese el Numero de Partido</label>
             <div class="input-group">
@@ -1194,9 +1194,9 @@ if ($_SESSION['idroll_predio'] != 1) {
             </div>
         </div>
         </div>
-        
+
     		<form class="form-inline formulario" id="target" role="form" method="post" action="cargarestadisticas.php">
-            
+
             <div class="row">
                 <div class="col-md-3">
                 	<p>Descripción: <span style="color:#00F"><?php echo mysql_result($resFixDetalle,0,'descripcion'); ?></span></p>
@@ -1218,64 +1218,64 @@ if ($_SESSION['idroll_predio'] != 1) {
                 </div>
 
                 <div class="col-md-3">
-                	<p>Resp.Def. Tipo Jugadores <?php if (mysql_result($resFixDetalle,0,'respetadefiniciontipojugadores') == 'Si') { 
+                	<p>Resp.Def. Tipo Jugadores <?php if (mysql_result($resFixDetalle,0,'respetadefiniciontipojugadores') == 'Si') {
 								?>
 										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
 								<?php
 										} else {
 								?>
 										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
-								<?php		
+								<?php
 										}
 								?>
-					
+
 					</p>
                 </div>
                 <div class="col-md-3">
-                	<p>Resp.Def. Habilitaciones Trans.<?php if (mysql_result($resFixDetalle,0,'respetadefinicionhabilitacionestransitorias') == 'Si') { 
+                	<p>Resp.Def. Habilitaciones Trans.<?php if (mysql_result($resFixDetalle,0,'respetadefinicionhabilitacionestransitorias') == 'Si') {
 								?>
 										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
 								<?php
 										} else {
 								?>
 										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
-								<?php		
+								<?php
 										}
 								?></p>
                 </div>
                 <div class="col-md-3">
-                	<p>Resp.Def. Sanciones Acumuladas<?php if (mysql_result($resFixDetalle,0,'respetadefinicionsancionesacumuladas') == 'Si') { 
+                	<p>Resp.Def. Sanciones Acumuladas<?php if (mysql_result($resFixDetalle,0,'respetadefinicionsancionesacumuladas') == 'Si') {
 								?>
 										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
 								<?php
 										} else {
 								?>
 										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
-								<?php		
+								<?php
 										}
 								?></p>
                 </div>
                 <div class="col-md-3">
-                	<p>Acumula Goleadores<?php if (mysql_result($resFixDetalle,0,'acumulagoleadores') == 'Si') { 
+                	<p>Acumula Goleadores<?php if (mysql_result($resFixDetalle,0,'acumulagoleadores') == 'Si') {
 								?>
 										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
 								<?php
 										} else {
 								?>
 										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
-								<?php		
+								<?php
 										}
 								?></p>
                 </div>
                 <div class="col-md-3">
-                	<p>Acumula Tabla Conformada<?php if (mysql_result($resFixDetalle,0,'acumulatablaconformada') == 'Si') { 
+                	<p>Acumula Tabla Conformada<?php if (mysql_result($resFixDetalle,0,'acumulatablaconformada') == 'Si') {
 								?>
 										<span style="color:#3C0;" class="glyphicon glyphicon-ok"></span>
 								<?php
 										} else {
 								?>
 										<span style="color:#F00;" class="glyphicon glyphicon-remove"></span>
-								<?php		
+								<?php
 										}
 								?></p>
                 </div>
@@ -1291,27 +1291,27 @@ if ($_SESSION['idroll_predio'] != 1) {
 											<?php echo $cadCanchas; ?>
                                             </select></p>
                 </div>
-                
+
                 <div class="col-md-4">
                 	<p>Juez 1: <input type="text" class="form-control" id="juez1" name="juez1" value="<?php echo mysql_result($resFixDetalle,0,'juez1'); ?>"/></p>
                 </div>
                 <div class="col-md-4">
                 	<p>Juez 2: <input type="text" class="form-control" id="juez2" name="juez2" value="<?php echo mysql_result($resFixDetalle,0,'juez2'); ?>"/></p>
                 </div>
-                
+
                 <div class="col-md-4">
                 	<p>Calificación Cancha: <input type="number" class="form-control" id="calificacioncancha" name="calificacioncancha" value="<?php echo mysql_result($resFixDetalle,0,'calificacioncancha'); ?>"/></p>
                 </div>
-                
+
                 <div class="col-md-6">
                 	<p style="font-size:2.2em">Resultado <?php echo $equipoA; ?>: <span class="resultadoA"><?php echo (mysql_result($resFixDetalle,0,'goleslocal') == '' ? 0 : mysql_result($resFixDetalle,0,'goleslocal')); ?></span></p>
                 </div>
                 <div class="col-md-6">
                 	<p style="font-size:2.2em">Resultado <?php echo $equipoB; ?>: <span class="resultadoB"><?php echo (mysql_result($resFixDetalle,0,'golesvisitantes') == '' ? 0 : mysql_result($resFixDetalle,0,'golesvisitantes')); ?></span></p>
                 </div>
-                
 
-                
+
+
                 <div class='row' style="margin-left:15px; margin-right:15px;">
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Estado Partido</label>
@@ -1319,818 +1319,820 @@ if ($_SESSION['idroll_predio'] != 1) {
                             <select class="form-control" id="refestadospartidos" name="refestadospartidos">
                                 <option value="0">-- Seleccionar --</option>
                                 <?php echo $cadEstados; ?>
-                            </select>    
+                            </select>
                         </div>
                     </div>
                 </div>
-                	
+
                 </div>
-                
+
              <div class='row' style="margin-left:15px; margin-right:15px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div class='alert <?php echo $lblerror; ?>'>
                 	<p><?php echo $error; ?></p>
                 </div>
                 <div id='load'>
-                
+
                 </div>
-            </div>   
-            
+            </div>
+
             <div class="row">
 
                 <div style="margin-left:5px;padding-left:10px; border-left:12px solid #0C0; border-bottom:1px solid #eee;border-top:1px solid #CCC; margin-right:5px;">
                 <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Partido</h4>
-                
+
                 <!--		detalles del partido			---->
-                
+
                 <!--		detalles fin			---->
-                
-                
-                
-                
-                <table class="table table-striped table-bordered table-responsive" id="example">
-                	<caption style="font-size:1.5em; font-style:italic;">Equipo Local: <?php echo $equipoA; ?></caption>
-                    <thead>
-                    	<tr>
-                        	<th style="text-align:center">DRSL</th>
-                        	<th>Jugador</th>
-                            <th>DNI</th>
-                            <th style="text-align:center">GA</th>
-                            <th style="text-align:center">GC</th>
-                            <th style="text-align:center">MIN</th>
-                            <th style="text-align:center">PC</th>
-                            <th style="text-align:center">PA</th>
-                            <th style="text-align:center">PE</th>
-                            <th style="text-align:center">MJ</th>
-                            <th style="text-align:center; background-color:#FF0;">A</th>
-                            <th style="text-align:center; background-color:#F00;">E</th>
-                            <th style="text-align:center; background-color:#09F;">I</th>
-                            <th style="text-align:center; background-color:#0C0;">A+A</th>
-                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
-                            
-                            <?php
 
-							if ($_SESSION['idroll_predio'] == 1) {
 
-							?>
-                            <th style="text-align:center">Fallo</th>
-                            <th style="text-align:center">Ver</th>
-                            <?php
-							}
-							?>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    	<?php 
-							
-							while ($row = mysql_fetch_array($resJugadoresA)) {
-								$estadisticas	= $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivision($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
-								
-								$sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
-								
-								$sancionRoja			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 2);
-								
-								$sancionInformados		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 3);
-								
-								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
-								
-								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
-								
-								$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($row['refjugadores'], $idTipoTorneo);
-								
-								$suspendidoCategorias		=	$serviciosReferencias->hayMovimientos($row['refjugadores'],$idFixture, $idTipoTorneo);
-								$suspendidoCategoriasAA		=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($row['refjugadores'],$idFixture, $idCategoria, $idTipoTorneo);
-								
-								$falloA					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($row['refjugadores'],$idFixture);
-								
-								$yaCumpli				=	$serviciosReferencias->estaFechaYaFueCumplida($row['refjugadores'],$idFixture);
-								
-						/* todo para saber si esta o no inhabilitado */
-								$cadCumpleEdad = '';
-								$errorDoc = 'FALTA';
-								$cadErrorDoc = '';
-								$habilitacion= 'INHAB.';
-								$transitoria= '';
-								$valorDocumentacion = 0;
-								$documentaciones = '';
-							
-					
-								
-								$edad = $serviciosReferencias->verificarEdad($row['refjugadores']);
-								
-								$cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($row['refjugadores'], $idCategoria, $row['idtipojugador']);
-								
-								$documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($row['refjugadores']);
-								
-								if ($cumpleEdad == 1) {
-									$cadCumpleEdad = "CUMPLE";	
-								} else {
-									// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
-									$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], $idTemporada, $idCategoria, $equipoLocal);
-									if (mysql_num_rows($habilitacionTransitoria)>0) {
-										$cadCumpleEdad = "HAB. TRANS.";	
-										$habilitacion= 'HAB.';	
-									} else {
-										$cadCumpleEdad = "NO CUMPLE";	
-									}
-								}
-								
-								if (mysql_num_rows($documentaciones)>0) {
-									while ($rowH = mysql_fetch_array($documentaciones)) {
-										if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
-											if ($rowH['obligatoria'] == 'Si') {
-												$valorDocumentacion += 1;
-												if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($row['refjugadores'],$rowH['refdocumentaciones']))>0) {
-													$valorDocumentacion -= 1;	
-												}
-											}
-											if ($rowH['contravalordesc'] == '') {
-												$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
-											} else {
-												$cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
-											}
-										}
-									}
-									if ($cadErrorDoc == '') {
-										$cadErrorDoc = 'OK';
-										$errorDoc = 'OK';
-									} else {
-										$cadErrorDoc = substr($cadErrorDoc,0,-3);
-									}
-									
-								} else {
-									$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
-								}
-								
-								if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
-									if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
-										$habilitacion= 'INHAB.';	
-									} else {
-										$habilitacion= 'HAB.';	
-									}
-								} else {
-									$habilitacion= 'INHAB.';
-								}
-								
-								/* fin todo para saber si esta o no inhabilitado */
-					
-						if (($habilitacion != 'HAB.')) {
-							
-						?>
-                        
-                        <?php	
-						} else {
-							
-						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0)) {		
-						
-							if (in_array($row['refjugadores'], $arDetalleLocal)) {
-						?>
-                        <tr class="<?php echo $row[0]; ?>">
-							<th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm dorsalEA" name="dorsal<?php echo $row['refjugadores']; ?>" id="dorsal<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'dorsal'); ?>"/>
-                                </div>
-                            </th>
-                        	<th>
-								<?php echo $row['nombrecompleto']; ?>
-                            </th>
-                            <th>
-								<?php echo $row['nrodocumento']; ?>
-                            </th>
-                            
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm golesEA" name="goles<?php echo $row['refjugadores']; ?>" id="goles<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'goles'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm golescontraEA" name="encontra<?php echo $row['refjugadores']; ?>" id="encontra<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'encontra'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm minutos" name="minutos<?php echo $row['refjugadores']; ?>" id="minutos<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php if (mysql_result($estadisticas,0,'minutosjugados')==-1) { echo $minutos; } else { echo mysql_result($estadisticas,0,'minutosjugados'); } ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesconvertidosEA" name="penalesconvertidos<?php echo $row['refjugadores']; ?>" id="penalesconvertidos<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalconvertido'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesatajados" name="penalesatajados<?php echo $row['refjugadores']; ?>" id="penalesatajados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalatajado'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">	
-                                	<input type="text" class="form-control input-sm penaleserrados" name="penaleserrados<?php echo $row['refjugadores']; ?>" id="penaleserrados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalerrado'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="checkbox" class="form-control input-sm mejor" id="mejorjugador<?php echo $row['refjugadores']; ?>" name="mejorjugador<?php echo $row['refjugadores']; ?>" <?php if (mysql_result($estadisticas,0,'mejorjugador')== 'Si') { echo 'checked'; } ?> style="width:30px;"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#FF0">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm amarillas" name="amaLrillas<?php echo $row['refjugadores']; ?>" id="amaLrillas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#F00">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm rojas" name="roLjas<?php echo $row['refjugadores']; ?>" id="roLjas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#09F">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm informados" name="inforLmados<?php echo $row['refjugadores']; ?>" id="inforLmados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#0C0">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm dobleamarilla" name="dobleLamarilla<?php echo $row['refjugadores']; ?>" id="dobleLamarilla<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#333; color:#FFF;">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm cdtd" name="cdLtd<?php echo $row['refjugadores']; ?>" id="cdLtd<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
-                                </div>
-                            </th>
-                            
-                        
-                        
-                        <?php
 
-							if ($_SESSION['idroll_predio'] == 1) {
-								if ($falloA > 0) {
-									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA, $idTipoTorneo);
-									
-									$fallo	= '';
 
-									$amarillas		=	mysql_result($resFallo,0,'amarillas');
-									$cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
-									$fechadesde		=	mysql_result($resFallo,0,'fechadesde');
-									$fechahasta		=	mysql_result($resFallo,0,'fechahasta');
-									$pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
-									$observaciones	=	mysql_result($resFallo,0,'observaciones');
-									
-									if ($amarillas > 0) {
-										$fallo = 'Doble Amarilla';
-									} else {
-										if ($fechadesde != '00/00/0000') {
-											$fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
-										} else {
-											if ($pendiente == 'Si') {
-												$fallo = 'Pendiente';
-											} else {
-												$fallo = 'Cantidad de Fechas:'.$cantidadfechas;	
-											}
-										}
-									}
-							?>
-                            <th style="text-align:center"><?php echo $fallo; ?></th>
-                            <th style="text-align:center"><a href="../sancionesfechascumplidas/index.php?id=<?php echo $falloA; ?>">Ver</a></th>
-                            <?php
-								} else {
-									
-							?>	
-                            <th style="text-align:center"></th>
-                            <th style="text-align:center"></th>
-                            <?php	
-								}
-								} //fin del detalle del partido
-							}
-							?>
-                            
-                        </tr>
-                        <?php
-							/* else del suspendidos */	
-							} else {
-								
-								// si entro aca esta suspendido el jugador//
-								
-								
-								
-								// cargo que la fecha no la cumplio
-								if ($finalizado == 'Si') {
-									if ($partidoSuspendidoCompletamente == 0) {
-										$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$row['refjugadores'],1,'', $idTipoTorneo);
-									} else {
-										$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$row['refjugadores'],0,'', $idTipoTorneo);
-									}
-								}
-								
-						?>
-                        <tr class="<?php echo $row[0]; ?>">
-							<th style="background-color:#F00;">
-                            	
-                            </th>
-                        	<th style="background-color:#F00;">
-								<?php echo $row['nombrecompleto']; ?>
-                            </th>
-                            <th style="background-color:#F00;">
-								<?php echo $row['nrodocumento']; ?>
-                            </th>
-                            
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            
-                             <?php
-							
-							
-							if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
-								if ($falloA > 0) {
-									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA, $idTipoTorneo);
-									
-									$fallo	= '';
+					 <table class="table table-striped table-bordered table-responsive" id="example">
+					   <caption style="font-size:1.5em; font-style:italic;">Equipo Local: <?php echo $equipoA; ?></caption>
+					     <thead>
+					      <tr>
+					            <th style="text-align:center">DRSL</th>
+					            <th>Jugador</th>
+					             <th>DNI</th>
+					             <th style="text-align:center">GA</th>
+					             <th style="text-align:center">GC</th>
+					             <th style="text-align:center">MIN</th>
+					             <th style="text-align:center">PC</th>
+					             <th style="text-align:center">PA</th>
+					             <th style="text-align:center">PE</th>
+					             <th style="text-align:center">MJ</th>
+					             <th style="text-align:center; background-color:#FF0;">A</th>
+					             <th style="text-align:center; background-color:#F00;">E</th>
+					             <th style="text-align:center; background-color:#09F;">I</th>
+					             <th style="text-align:center; background-color:#0C0;">A+A</th>
+					             <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
 
-									$amarillas		=	mysql_result($resFallo,0,'amarillas');
-									$cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
-									$fechadesde		=	mysql_result($resFallo,0,'fechadesde');
-									$fechahasta		=	mysql_result($resFallo,0,'fechahasta');
-									$pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
-									$observaciones	=	mysql_result($resFallo,0,'observaciones');
-									
-									if ($amarillas > 0) {
-										$fallo = 'Doble Amarilla';
-									} else {
-										if ($fechadesde != '00/00/0000') {
-											$fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
-										} else {
-											if ($pendiente == 'Si') {
-												$fallo = 'Pendiente';
-											} else {
-												$fallo = 'Cantidad de Fechas:'.$cantidadfechas;	
-											}
-										}
-									}
-							?>
-                            <th style="text-align:center"><?php echo $fallo; ?></th>
-                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloA; ?>">Ver</a></th>
-                            <input type="hidden" id="sancionJugadores<?php echo $row['refjugadores']; ?>" name="sancionJugadores<?php echo $row['refjugadores']; ?>" value="1"/>
-                            <?php
-								} else {
-									
-							?>	
-                            <th style="text-align:center"></th>
-                            <th style="text-align:center"></th>
-                            <?php	
-								}
-							} 
-							
-							?>
-                        
-                        
-                        </tr>
-                        
+					             <?php
 
-                        
-                        
-                        <?php } ?>
-                        <?php
-								}
-								$goles = 0;
-							}
-						?>
-                    </tbody>
-                </table>
+					      if ($_SESSION['idroll_predio'] == 1) {
+
+					      ?>
+					             <th style="text-align:center">Fallo</th>
+					             <th style="text-align:center">Ver</th>
+					             <?php
+					      }
+					      ?>
+					         </tr>
+					     </thead>
+					     <tbody>
+					      <?php
+
+					      while ($row = mysql_fetch_array($resJugadoresA)) {
+					         $estadisticas	= $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivision($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
+
+					         $sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
+
+					         $sancionRoja			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 2);
+
+					         $sancionInformados		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 3);
+
+					         $sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
+
+					         $sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($row['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
+
+					         $suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($row['refjugadores'], $idTipoTorneo);
+
+					         $suspendidoCategorias		=	$serviciosReferencias->hayMovimientos($row['refjugadores'],$idFixture, $idTipoTorneo);
+					         $suspendidoCategoriasAA		=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($row['refjugadores'],$idFixture, $idCategoria, $idTipoTorneo);
+
+					         $falloA					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($row['refjugadores'],$idFixture);
+
+					         $yaCumpli				=	$serviciosReferencias->estaFechaYaFueCumplida($row['refjugadores'],$idFixture);
+
+					   /* todo para saber si esta o no inhabilitado */
+					         $cadCumpleEdad = '';
+					         $errorDoc = 'FALTA';
+					         $cadErrorDoc = '';
+					         $habilitacion= 'INHAB.';
+					         $transitoria= '';
+					         $valorDocumentacion = 0;
+					         $documentaciones = '';
+
+
+
+					         $edad = $serviciosReferencias->verificarEdad($row['refjugadores']);
+
+					         $cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($row['refjugadores'], $idCategoria, $row['idtipojugador']);
+
+					         $documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($row['refjugadores']);
+
+					         if ($cumpleEdad == 1) {
+					            $cadCumpleEdad = "CUMPLE";
+					         } else {
+					            // VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
+					            $habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], $idTemporada, $idCategoria, $equipoLocal);
+					            if (mysql_num_rows($habilitacionTransitoria)>0) {
+					               $cadCumpleEdad = "HAB. TRANS.";
+					               $habilitacion= 'HAB.';
+					            } else {
+					               $cadCumpleEdad = "NO CUMPLE";
+					            }
+					         }
+
+					         if (mysql_num_rows($documentaciones)>0) {
+					            while ($rowH = mysql_fetch_array($documentaciones)) {
+					               if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
+					                  if ($rowH['obligatoria'] == 'Si') {
+					                     $valorDocumentacion += 1;
+					                     if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($row['refjugadores'],$rowH['refdocumentaciones']))>0) {
+					                        $valorDocumentacion -= 1;
+					                     }
+					                  }
+					                  if ($rowH['contravalordesc'] == '') {
+					                     $cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+					                  } else {
+					                     $cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
+					                  }
+					               }
+					            }
+					            if ($cadErrorDoc == '') {
+					               $cadErrorDoc = 'OK';
+					               $errorDoc = 'OK';
+					            } else {
+					               $cadErrorDoc = substr($cadErrorDoc,0,-3);
+					            }
+
+					         } else {
+					            $cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
+					         }
+
+					         if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+					            if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+					               $habilitacion= 'INHAB.';
+					            } else {
+					               $habilitacion= 'HAB.';
+					            }
+					         } else {
+					            $habilitacion= 'INHAB.';
+					         }
+
+					         /* fin todo para saber si esta o no inhabilitado */
+
+					   if (!(($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0))) {
+
+					      // si entro aca esta suspendido el jugador//
+
+					      // cargo que la fecha no la cumplio
+					      if ($finalizado == 'Si') {
+					        if ($partidoSuspendidoCompletamente == 0) {
+					           $serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$row['refjugadores'],1,'', $idTipoTorneo);
+					        } else {
+					           $serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$row['refjugadores'],0,'', $idTipoTorneo);
+					        }
+					      }
+
+					 ?>
+
+					    <tr class="<?php echo $row[0]; ?>">
+					      <th style="background-color:#F00;">
+
+					             </th>
+					            <th style="background-color:#F00;">
+					         <?php echo $row['nombrecompleto']; ?>
+					             </th>
+					             <th style="background-color:#F00;">
+					         <?php echo $row['nrodocumento']; ?>
+					             </th>
+
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+					             <th style="background-color:#F00;">
+
+					             </th>
+
+					              <?php
+
+
+					            if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
+					               if ($falloA > 0) {
+					                  $resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA, $idTipoTorneo);
+
+					                  $fallo	= '';
+
+					                  $amarillas		=	mysql_result($resFallo,0,'amarillas');
+					                  $cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
+					                  $fechadesde		=	mysql_result($resFallo,0,'fechadesde');
+					                  $fechahasta		=	mysql_result($resFallo,0,'fechahasta');
+					                  $pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
+					                  $observaciones	=	mysql_result($resFallo,0,'observaciones');
+
+					                  if ($amarillas > 0) {
+					                     $fallo = 'Doble Amarilla';
+					                  } else {
+					                     if ($fechadesde != '00/00/0000') {
+					                        $fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
+					                     } else {
+					                        if ($pendiente == 'Si') {
+					                           $fallo = 'Pendiente';
+					                        } else {
+					                           $fallo = 'Cantidad de Fechas:'.$cantidadfechas;
+					                        }
+					                     }
+					                  }
+					            ?>
+					                   <th style="text-align:center"><?php echo $fallo; ?></th>
+					                   <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloA; ?>">Ver</a></th>
+					                   <input type="hidden" id="sancionJugadores<?php echo $row['refjugadores']; ?>" name="sancionJugadores<?php echo $row['refjugadores']; ?>" value="1"/>
+					                   <?php
+					               } else {
+
+					            ?>
+					                   <th style="text-align:center"></th>
+					                   <th style="text-align:center"></th>
+					                   <?php
+					               }
+					            }
+
+					            ?>
+
+
+					         </tr>
+
+					 <?php
+					   } else {
+
+					   if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0)) {
+
+					      if (in_array($row['refjugadores'], $arDetalleLocal)) {
+					   ?>
+					         <tr class="<?php echo $row[0]; ?>">
+					           <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm dorsalEA" name="dorsal<?php echo $row['refjugadores']; ?>" id="dorsal<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'dorsal'); ?>"/>
+					                 </div>
+					             </th>
+					            <th>
+					         <?php echo $row['nombrecompleto']; ?>
+					             </th>
+					             <th>
+					         <?php echo $row['nrodocumento']; ?>
+					             </th>
+
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm golesEA" name="goles<?php echo $row['refjugadores']; ?>" id="goles<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'goles'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm golescontraEA" name="encontra<?php echo $row['refjugadores']; ?>" id="encontra<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'encontra'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm minutos" name="minutos<?php echo $row['refjugadores']; ?>" id="minutos<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php if (mysql_result($estadisticas,0,'minutosjugados')==-1) { echo $minutos; } else { echo mysql_result($estadisticas,0,'minutosjugados'); } ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm penalesconvertidosEA" name="penalesconvertidos<?php echo $row['refjugadores']; ?>" id="penalesconvertidos<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalconvertido'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm penalesatajados" name="penalesatajados<?php echo $row['refjugadores']; ?>" id="penalesatajados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalatajado'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm penaleserrados" name="penaleserrados<?php echo $row['refjugadores']; ?>" id="penaleserrados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalerrado'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="checkbox" class="form-control input-sm mejor" id="mejorjugador<?php echo $row['refjugadores']; ?>" name="mejorjugador<?php echo $row['refjugadores']; ?>" <?php if (mysql_result($estadisticas,0,'mejorjugador')== 'Si') { echo 'checked'; } ?> style="width:30px;"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#FF0">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm amarillas" name="amaLrillas<?php echo $row['refjugadores']; ?>" id="amaLrillas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#F00">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm rojas" name="roLjas<?php echo $row['refjugadores']; ?>" id="roLjas<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#09F">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm informados" name="inforLmados<?php echo $row['refjugadores']; ?>" id="inforLmados<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#0C0">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm dobleamarilla" name="dobleLamarilla<?php echo $row['refjugadores']; ?>" id="dobleLamarilla<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#333; color:#FFF;">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm cdtd" name="cdLtd<?php echo $row['refjugadores']; ?>" id="cdLtd<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
+					                 </div>
+					             </th>
+
+
+
+					         <?php
+
+					      if ($_SESSION['idroll_predio'] == 1) {
+					         if ($falloA > 0) {
+					            $resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloA, $idTipoTorneo);
+
+					            $fallo	= '';
+
+					            $amarillas		=	mysql_result($resFallo,0,'amarillas');
+					            $cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
+					            $fechadesde		=	mysql_result($resFallo,0,'fechadesde');
+					            $fechahasta		=	mysql_result($resFallo,0,'fechahasta');
+					            $pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
+					            $observaciones	=	mysql_result($resFallo,0,'observaciones');
+
+					            if ($amarillas > 0) {
+					               $fallo = 'Doble Amarilla';
+					            } else {
+					               if ($fechadesde != '00/00/0000') {
+					                  $fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
+					               } else {
+					                  if ($pendiente == 'Si') {
+					                     $fallo = 'Pendiente';
+					                  } else {
+					                     $fallo = 'Cantidad de Fechas:'.$cantidadfechas;
+					                  }
+					               }
+					            }
+					      ?>
+					             <th style="text-align:center"><?php echo $fallo; ?></th>
+					             <th style="text-align:center"><a href="../sancionesfechascumplidas/index.php?id=<?php echo $falloA; ?>">Ver</a></th>
+					             <?php
+					         } else {
+
+					      ?>
+					             <th style="text-align:center"></th>
+					             <th style="text-align:center"></th>
+					             <?php
+					         }
+					         } //fin del detalle del partido
+					      }
+					      ?>
+
+					         </tr>
+					         <?php
+					      /* else del suspendidos */
+					      } else {
+
+					   ?>
+
+
+					         <?php } ?>
+					         <?php
+					         }
+					         $goles = 0;
+					      }
+					   ?>
+					     </tbody>
+					 </table>
+
                 </div>
-  
-                
-                
+
+
+
                 <hr>
-                
+
                 <div style="margin-left:5px;padding-left:10px;border-left:12px solid #C00; border-bottom:1px solid #eee; border-top:1px solid #CCC;margin-right:5px;">
                 <h4 style="color: #fff; background-color:#333; padding:6px;margin-left:-10px; margin-top:0;"><span class="glyphicon glyphicon-signal"></span> Datos Partido</h4>
-                <table class="table table-striped table-bordered table-responsive" id="example2">
-                	<caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
-                    <thead>
-                    	<tr>
-							<th style="text-align:center">DRSL</th>
-                        	<th>Jugador</th>
-                            <th>DNI</th>
-                            <th style="text-align:center">GA</th>
-                            <th style="text-align:center">GC</th>
-                            <th style="text-align:center">MIN</th>
-                            <th style="text-align:center">PC</th>
-                            <th style="text-align:center">PA</th>
-                            <th style="text-align:center">PE</th>
-                            <th style="text-align:center">MJ</th>
-                            <th style="text-align:center; background-color:#FF0;">A</th>
-                            <th style="text-align:center; background-color:#F00;">E</th>
-                            <th style="text-align:center; background-color:#09F;">I</th>
-                            <th style="text-align:center; background-color:#0C0;">A+A</th>
-                            <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
-                            
-                            <?php
 
-							if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
+					 <table class="table table-striped table-bordered table-responsive" id="example2">
+					   <caption style="font-size:1.5em; font-style:italic;">Equipo Visitante: <?php echo $equipoB; ?></caption>
+					     <thead>
+					      <tr>
+					      <th style="text-align:center">DRSL</th>
+					            <th>Jugador</th>
+					             <th>DNI</th>
+					             <th style="text-align:center">GA</th>
+					             <th style="text-align:center">GC</th>
+					             <th style="text-align:center">MIN</th>
+					             <th style="text-align:center">PC</th>
+					             <th style="text-align:center">PA</th>
+					             <th style="text-align:center">PE</th>
+					             <th style="text-align:center">MJ</th>
+					             <th style="text-align:center; background-color:#FF0;">A</th>
+					             <th style="text-align:center; background-color:#F00;">E</th>
+					             <th style="text-align:center; background-color:#09F;">I</th>
+					             <th style="text-align:center; background-color:#0C0;">A+A</th>
+					             <th style="text-align:center; background-color:#333; color:#FFF;">CDTD</th>
 
-							?>
-                            <th style="text-align:center">Fallo</th>
-                            <th style="text-align:center">Ver</th>
-                            <?php
-							}
-							?>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    	<?php 
-							
-							while ($rowB = mysql_fetch_array($resJugadoresB)) {
-								$estadisticasB = $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivisionVisitante($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
-								
-								$sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
-								
-								$sancionRoja			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 2);
-								
-								$sancionInformados		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 3);
-								
-								$sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
-								
-								$sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
-								
-								$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowB['refjugadores'], $idTipoTorneo);
-								
-								$suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowB['refjugadores'],$idFixture, $idTipoTorneo);
-								$suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowB['refjugadores'],$idFixture, $idCategoria, $idTipoTorneo);
-								
-								$falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowB['refjugadores'],$idFixture);
-								
-								$yaCumpliB				=	$serviciosReferencias->estaFechaYaFueCumplida($rowB['refjugadores'],$idFixture);
+					             <?php
 
-						/* todo para saber si esta o no inhabilitado */
-								$cadCumpleEdad = '';
-								$errorDoc = 'FALTA';
-								$cadErrorDoc = '';
-								$habilitacion= 'INHAB.';
-								$transitoria= '';
-								$valorDocumentacion = 0;
-								$documentaciones = '';
-							
-					
-								
-								$edad = $serviciosReferencias->verificarEdad($rowB['refjugadores']);
-								
-								$cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowB['refjugadores'], $idCategoria, $rowB['idtipojugador']);
-								
-								$documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($rowB['refjugadores']);
-								
-								if ($cumpleEdad == 1) {
-									$cadCumpleEdad = "CUMPLE";	
-								} else {
-									// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
-									$habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowB['refjugadores'], $idTemporada, $idCategoria, $equipoVisitante);
-									if (mysql_num_rows($habilitacionTransitoria)>0) {
-										$cadCumpleEdad = "HAB. TRANS.";	
-										$habilitacion= 'HAB.';	
-									} else {
-										$cadCumpleEdad = "NO CUMPLE";	
-									}
-								}
-								
-								if (mysql_num_rows($documentaciones)>0) {
-									while ($rowH = mysql_fetch_array($documentaciones)) {
-										if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
-											if ($rowH['obligatoria'] == 'Si') {
-												$valorDocumentacion += 1;
-												if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($rowB['refjugadores'],$rowH['refdocumentaciones']))>0) {
-													$valorDocumentacion -= 1;	
-												}
-											}
-											if ($rowH['contravalordesc'] == '') {
-												$cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
-											} else {
-												$cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
-											}
-										}
-									}
-									if ($cadErrorDoc == '') {
-										$cadErrorDoc = 'OK';
-										$errorDoc = 'OK';
-									} else {
-										$cadErrorDoc = substr($cadErrorDoc,0,-3);
-									}
-									
-								} else {
-									$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
-								}
-								
-								if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
-									if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
-										$habilitacion= 'INHAB.';	
-									} else {
-										$habilitacion= 'HAB.';	
-									}
-								} else {
-									$habilitacion= 'INHAB.';
-								}
-								
-								/* fin todo para saber si esta o no inhabilitado */
-								
-						if (($habilitacion != 'HAB.')) {		
-						?>
-						
-                        <?php } else { 
-						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0)) {	
-						
-							if (in_array($rowB['refjugadores'], $arDetalleVisit)) {
-						?>
-                        <tr class="<?php echo $rowB[0]; ?>">
-							<th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm dorsalEB" name="dorbsal<?php echo $rowB['refjugadores']; ?>" id="dorbsal<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'dorsal'); ?>"/>
-                                </div>
-                            </th>
-                            
-                        	<th>
-								<?php echo $rowB['nombrecompleto']; ?>
-                            </th>
-                            <th>
-								<?php echo $rowB['nrodocumento']; ?>
-                            </th>
-                            
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm golesEB" name="gobles<?php echo $rowB['refjugadores']; ?>" id="gobles<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'goles'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm golescontraEB" name="enbcontra<?php echo $rowB['refjugadores']; ?>" id="enbcontra<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'encontra'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm minutosEB" name="minbutos<?php echo $rowB['refjugadores']; ?>" id="minbutos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php if (mysql_result($estadisticasB,0,'minutosjugados')==-1) { echo $minutos; } else { echo mysql_result($estadisticasB,0,'minutosjugados'); } ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesconvertidosEB" name="penalesbconvertidos<?php echo $rowB['refjugadores']; ?>" id="penalesbconvertidos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalconvertido'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">	
-                                	<input type="text" class="form-control input-sm penalesatajados" name="penalesbatajados<?php echo $rowB['refjugadores']; ?>" id="penalesbatajados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalatajado'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">	
-                                	<input type="text" class="form-control input-sm penaleserrados" name="penalesberrados<?php echo $rowB['refjugadores']; ?>" id="penalesberrados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalerrado'); ?>"/>
-                                </div>
-                            </th>
-                            <th>
-                            	<div align="center">
-                                	<input type="checkbox" class="form-control input-sm mejor" id="mejorbjugador<?php echo $rowB['refjugadores']; ?>" name="mejorbjugador<?php echo $rowB['refjugadores']; ?>" <?php if (mysql_result($estadisticasB,0,'mejorjugador')== 'Si') { echo 'checked'; } ?> style="width:30px;"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#FF0">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm amarillas" name="amaVrillas<?php echo $rowB['refjugadores']; ?>" id="amaVrillas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#F00">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm rojas" name="roVjas<?php echo $rowB['refjugadores']; ?>" id="roVjas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#09F">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm informados" name="inforVmados<?php echo $rowB['refjugadores']; ?>" id="inforVmados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#0C0">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm dobleamarilla" name="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" id="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
-                                </div>
-                            </th>
-                            <th style="text-align:center; background-color:#333; color:#FFF;">
-                            	<div align="center">
-                                	<input type="text" class="form-control input-sm cdtd" name="cdVtd<?php echo $rowB['refjugadores']; ?>" id="cdVtd<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
-                                </div>
-                            </th>
-                        
-                        
-                        
-                        <?php
-							
-							
-							if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
-								if ($falloB > 0) {
-									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB, $idTipoTorneo);
-									
-									$fallo	= '';
+					      if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
 
-									$amarillas		=	mysql_result($resFallo,0,'amarillas');
-									$cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
-									$fechadesde		=	mysql_result($resFallo,0,'fechadesde');
-									$fechahasta		=	mysql_result($resFallo,0,'fechahasta');
-									$pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
-									$observaciones	=	mysql_result($resFallo,0,'observaciones');
-									
-									if ($amarillas > 0) {
-										$fallo = 'Doble Amarilla';
-									} else {
-										if ($fechadesde != '00/00/0000') {
-											$fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
-										} else {
-											if ($pendiente == 'Si') {
-												$fallo = 'Pendiente';
-											} else {
-												$fallo = 'Cantidad de Fechas:'.$cantidadfechas;	
-											}
-										}
-									}
-							?>
-                            <th style="text-align:center"><?php echo $fallo; ?></th>
-                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloB; ?>">Ver</a></th>
-                            <input type="hidden" id="sancionBJugadores<?php echo $rowB['refjugadores']; ?>" name="sancionBJugadores<?php echo $rowB['refjugadores']; ?>" value="1"/>
-                            <?php
-								} else {
-									
-							?>	
-                                    <th style="text-align:center"></th>
-                                    <th style="text-align:center"></th>
-                            <?php	
-								}
-								} //fin del detalle partido
-							}
-							?>
-                        </tr>
-                        <?php
-							/* else del suspendidos */	
-							} else {
-								/*
-								if ($rowB['refjugadores']== 5637) {
-									die('acaaaaaaaaaaaaaaaaaaa');	
-								}*/
-								// cargo que la fecha no la cumplio
-								if ($finalizado == 'Si') {
-									if ($partidoSuspendidoCompletamente == 0) {
-										$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$rowB['refjugadores'],1,'', $idTipoTorneo);
-									} else {
-										$serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$rowB['refjugadores'],0,'', $idTipoTorneo);
-									}
-								}
-						?>
-                        <tr class="<?php echo $rowB[0]; ?>">
-							<th style="background-color:#F00;">
-                            	
-                            </th>
-                            
-                        	<th style="background-color:#F00;">
-								<?php echo $rowB['nombrecompleto']; ?>
-                            </th>
-                            <th style="background-color:#F00;">
-								<?php echo $rowB['nrodocumento']; ?>
-                            </th>
-                            
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            <th style="background-color:#F00;">
-                            	
-                            </th>
-                            
-                            <?php
+					      ?>
+					             <th style="text-align:center">Fallo</th>
+					             <th style="text-align:center">Ver</th>
+					             <?php
+					      }
+					      ?>
+					         </tr>
+					     </thead>
+					     <tbody>
+					      <?php
 
-							if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
-								if ($falloB > 0) {
-									$resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB, $idTipoTorneo);
-									
-									$fallo	= '';
+					      while ($rowB = mysql_fetch_array($resJugadoresB)) {
+					         $estadisticasB = $serviciosReferencias->traerEstadisticaPorFixtureJugadorCategoriaDivisionVisitante($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones);
 
-									$amarillas		=	mysql_result($resFallo,0,'amarillas');
-									$cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
-									$fechadesde		=	mysql_result($resFallo,0,'fechadesde');
-									$fechahasta		=	mysql_result($resFallo,0,'fechahasta');
-									$pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
-									$observaciones	=	mysql_result($resFallo,0,'observaciones');
-									
-									if ($amarillas > 0) {
-										$fallo = 'Doble Amarilla';
-									} else {
-										if ($fechadesde != '00/00/0000') {
-											$fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
-										} else {
-											if ($pendiente == 'Si') {
-												$fallo = 'Pendiente';
-											} else {
-												$fallo = 'Cantidad de Fechas:'.$cantidadfechas;	
-											}
-										}
-									}
-							?>
-                            <th style="text-align:center"><?php echo $fallo; ?></th>
-                            <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloB; ?>">Ver</a></th>
-                            <?php
-								} else {
-									
-							?>	
-                            <th style="text-align:center"></th>
-                            <th style="text-align:center"></th>
-                            <?php	
-								}
-							} 
-							
-							?>
-                        
-                        
-                        </tr>
-                        
+					         $sancionAmarilla		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 1);
 
-                        
-                        
-                        <?php } ?>
-                        <?php
-								}
-								$goles = 0;
-							}
-						?>
-                    </tbody>
-                </table>
+					         $sancionRoja			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 2);
+
+					         $sancionInformados		=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 3);
+
+					         $sancionDobleAmarilla	=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 4);
+
+					         $sancionCDTD			=	$serviciosReferencias->traerSancionesjugadoresPorJugadorConValor($rowB['refjugadores'],$idFixture, $idCategoria, $idDivisiones, 5);
+
+					         $suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowB['refjugadores'], $idTipoTorneo);
+
+					         $suspendidoCategoriasB		=	$serviciosReferencias->hayMovimientos($rowB['refjugadores'],$idFixture, $idTipoTorneo);
+					         $suspendidoCategoriasAAB	=	$serviciosReferencias->hayMovimientosAmarillasAcumuladas($rowB['refjugadores'],$idFixture, $idCategoria, $idTipoTorneo);
+
+					         $falloB					=	$serviciosReferencias->traerSancionesjugadoresPorJugadorFixtureConValor($rowB['refjugadores'],$idFixture);
+
+					         $yaCumpliB				=	$serviciosReferencias->estaFechaYaFueCumplida($rowB['refjugadores'],$idFixture);
+
+					   /* todo para saber si esta o no inhabilitado */
+					         $cadCumpleEdad = '';
+					         $errorDoc = 'FALTA';
+					         $cadErrorDoc = '';
+					         $habilitacion= 'INHAB.';
+					         $transitoria= '';
+					         $valorDocumentacion = 0;
+					         $documentaciones = '';
+
+
+
+					         $edad = $serviciosReferencias->verificarEdad($rowB['refjugadores']);
+
+					         $cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowB['refjugadores'], $idCategoria, $rowB['idtipojugador']);
+
+					         $documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($rowB['refjugadores']);
+
+					         if ($cumpleEdad == 1) {
+					            $cadCumpleEdad = "CUMPLE";
+					         } else {
+					            // VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
+					            $habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowB['refjugadores'], $idTemporada, $idCategoria, $equipoVisitante);
+					            if (mysql_num_rows($habilitacionTransitoria)>0) {
+					               $cadCumpleEdad = "HAB. TRANS.";
+					               $habilitacion= 'HAB.';
+					            } else {
+					               $cadCumpleEdad = "NO CUMPLE";
+					            }
+					         }
+
+					         if (mysql_num_rows($documentaciones)>0) {
+					            while ($rowH = mysql_fetch_array($documentaciones)) {
+					               if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
+					                  if ($rowH['obligatoria'] == 'Si') {
+					                     $valorDocumentacion += 1;
+					                     if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($rowB['refjugadores'],$rowH['refdocumentaciones']))>0) {
+					                        $valorDocumentacion -= 1;
+					                     }
+					                  }
+					                  if ($rowH['contravalordesc'] == '') {
+					                     $cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+					                  } else {
+					                     $cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
+					                  }
+					               }
+					            }
+					            if ($cadErrorDoc == '') {
+					               $cadErrorDoc = 'OK';
+					               $errorDoc = 'OK';
+					            } else {
+					               $cadErrorDoc = substr($cadErrorDoc,0,-3);
+					            }
+
+					         } else {
+					            $cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
+					         }
+
+					         if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+					            if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+					               $habilitacion= 'INHAB.';
+					            } else {
+					               $habilitacion= 'HAB.';
+					            }
+					         } else {
+					            $habilitacion= 'INHAB.';
+					         }
+
+					         /* fin todo para saber si esta o no inhabilitado */
+
+					   if (!(($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0))) {
+
+					      /*
+					      if ($rowB['refjugadores']== 5637) {
+					        die('acaaaaaaaaaaaaaaaaaaa');
+					      }*/
+					      // cargo que la fecha no la cumplio
+					      if ($finalizado == 'Si') {
+					        if ($partidoSuspendidoCompletamente == 0) {
+					           $serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$rowB['refjugadores'],1,'', $idTipoTorneo);
+					        } else {
+					           $serviciosReferencias->insertarSancionesfechascumplidas($idFixture,$rowB['refjugadores'],0,'', $idTipoTorneo);
+					        }
+					      }
+					 ?>
+
+					 <tr class="<?php echo $rowB[0]; ?>">
+					 <th style="background-color:#F00;">
+
+					     </th>
+
+					    <th style="background-color:#F00;">
+					 <?php echo $rowB['nombrecompleto']; ?>
+					     </th>
+					     <th style="background-color:#F00;">
+					 <?php echo $rowB['nrodocumento']; ?>
+					     </th>
+
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+					     <th style="background-color:#F00;">
+
+					     </th>
+
+					     <?php
+
+					 if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
+					 if ($falloB > 0) {
+					    $resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB, $idTipoTorneo);
+
+					    $fallo	= '';
+
+					    $amarillas		=	mysql_result($resFallo,0,'amarillas');
+					    $cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
+					    $fechadesde		=	mysql_result($resFallo,0,'fechadesde');
+					    $fechahasta		=	mysql_result($resFallo,0,'fechahasta');
+					    $pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
+					    $observaciones	=	mysql_result($resFallo,0,'observaciones');
+
+					    if ($amarillas > 0) {
+					       $fallo = 'Doble Amarilla';
+					    } else {
+					       if ($fechadesde != '00/00/0000') {
+					          $fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
+					       } else {
+					          if ($pendiente == 'Si') {
+					             $fallo = 'Pendiente';
+					          } else {
+					             $fallo = 'Cantidad de Fechas:'.$cantidadfechas;
+					          }
+					       }
+					    }
+					 ?>
+					     <th style="text-align:center"><?php echo $fallo; ?></th>
+					     <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloB; ?>">Ver</a></th>
+					     <?php
+					 } else {
+
+					 ?>
+					     <th style="text-align:center"></th>
+					     <th style="text-align:center"></th>
+					     <?php
+					 }
+					 }
+
+					 ?>
+
+
+					 </tr>
+
+					 <?php } else {
+					   if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0)) {
+
+					      if (in_array($rowB['refjugadores'], $arDetalleVisit)) {
+					   ?>
+					         <tr class="<?php echo $rowB[0]; ?>">
+					      <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm dorsalEB" name="dorbsal<?php echo $rowB['refjugadores']; ?>" id="dorbsal<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'dorsal'); ?>"/>
+					                 </div>
+					             </th>
+
+					            <th>
+					         <?php echo $rowB['nombrecompleto']; ?>
+					             </th>
+					             <th>
+					         <?php echo $rowB['nrodocumento']; ?>
+					             </th>
+
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm golesEB" name="gobles<?php echo $rowB['refjugadores']; ?>" id="gobles<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'goles'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm golescontraEB" name="enbcontra<?php echo $rowB['refjugadores']; ?>" id="enbcontra<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'encontra'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm minutosEB" name="minbutos<?php echo $rowB['refjugadores']; ?>" id="minbutos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php if (mysql_result($estadisticasB,0,'minutosjugados')==-1) { echo $minutos; } else { echo mysql_result($estadisticasB,0,'minutosjugados'); } ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm penalesconvertidosEB" name="penalesbconvertidos<?php echo $rowB['refjugadores']; ?>" id="penalesbconvertidos<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalconvertido'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm penalesatajados" name="penalesbatajados<?php echo $rowB['refjugadores']; ?>" id="penalesbatajados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalatajado'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm penaleserrados" name="penalesberrados<?php echo $rowB['refjugadores']; ?>" id="penalesberrados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalerrado'); ?>"/>
+					                 </div>
+					             </th>
+					             <th>
+					               <div align="center">
+					                  <input type="checkbox" class="form-control input-sm mejor" id="mejorbjugador<?php echo $rowB['refjugadores']; ?>" name="mejorbjugador<?php echo $rowB['refjugadores']; ?>" <?php if (mysql_result($estadisticasB,0,'mejorjugador')== 'Si') { echo 'checked'; } ?> style="width:30px;"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#FF0">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm amarillas" name="amaVrillas<?php echo $rowB['refjugadores']; ?>" id="amaVrillas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionAmarilla; ?>"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#F00">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm rojas" name="roVjas<?php echo $rowB['refjugadores']; ?>" id="roVjas<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionRoja; ?>"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#09F">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm informados" name="inforVmados<?php echo $rowB['refjugadores']; ?>" id="inforVmados<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionInformados; ?>"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#0C0">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm dobleamarilla" name="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" id="dobleVamarilla<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionDobleAmarilla; ?>"/>
+					                 </div>
+					             </th>
+					             <th style="text-align:center; background-color:#333; color:#FFF;">
+					               <div align="center">
+					                  <input type="text" class="form-control input-sm cdtd" name="cdVtd<?php echo $rowB['refjugadores']; ?>" id="cdVtd<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo $sancionCDTD; ?>"/>
+					                 </div>
+					             </th>
+
+
+
+					         <?php
+
+
+					      if (($_SESSION['idroll_predio'] == 1) || ($_SESSION['idroll_predio'] == 2)) {
+					         if ($falloB > 0) {
+					            $resFallo = $serviciosReferencias->traerSancionesJugadoresConFallosPorSancion($falloB, $idTipoTorneo);
+
+					            $fallo	= '';
+
+					            $amarillas		=	mysql_result($resFallo,0,'amarillas');
+					            $cantidadfechas	=	mysql_result($resFallo,0,'cantidadfechas');
+					            $fechadesde		=	mysql_result($resFallo,0,'fechadesde');
+					            $fechahasta		=	mysql_result($resFallo,0,'fechahasta');
+					            $pendiente		=	mysql_result($resFallo,0,'pendientesfallo');
+					            $observaciones	=	mysql_result($resFallo,0,'observaciones');
+
+					            if ($amarillas > 0) {
+					               $fallo = 'Doble Amarilla';
+					            } else {
+					               if ($fechadesde != '00/00/0000') {
+					                  $fallo = 'Dias: desde '.$fechadesde.' hasta '.$fechahasta;
+					               } else {
+					                  if ($pendiente == 'Si') {
+					                     $fallo = 'Pendiente';
+					                  } else {
+					                     $fallo = 'Cantidad de Fechas:'.$cantidadfechas;
+					                  }
+					               }
+					            }
+					      ?>
+					             <th style="text-align:center"><?php echo $fallo; ?></th>
+					             <th style="text-align:center"><a href="../fallos/modificarfechas.php?id=<?php echo $falloB; ?>">Ver</a></th>
+					             <input type="hidden" id="sancionBJugadores<?php echo $rowB['refjugadores']; ?>" name="sancionBJugadores<?php echo $rowB['refjugadores']; ?>" value="1"/>
+					             <?php
+					         } else {
+
+					      ?>
+					                     <th style="text-align:center"></th>
+					                     <th style="text-align:center"></th>
+					             <?php
+					         }
+					         } //fin del detalle partido
+					      }
+					      ?>
+					         </tr>
+					         <?php
+					      /* else del suspendidos */
+					      } else {
+
+					   ?>
+
+					         <?php } ?>
+					         <?php
+					         }
+					         $goles = 0;
+					      }
+					   ?>
+					     </tbody>
+					 </table>
+
+
+
 				</div>
-                
-                
-            
-            
-            
-            
-            
-            
-            
-            
-			
-            
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="row" style="margin-left:15px; margin-right:15px;">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
@@ -2148,7 +2150,7 @@ if ($_SESSION['idroll_predio'] != 1) {
     	</div>
     </div>
 
-   
+
 </div>
 
 
@@ -2162,11 +2164,11 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-	
+
 	$('#colapsarMenu').click();
-	
+
 	/*var table = $('#example dataTables_filter input');*/
-	
+
 	var table = $('#example').dataTable({
 		"lengthMenu": [[30, 60 -1], [30, 60, "All"]],
 		"order": [[ 0, "asc" ]],
@@ -2194,8 +2196,8 @@ $(document).ready(function(){
 			}
 		  }
 	} );
-	
-	
+
+
 	var table2 = $('#example2').dataTable({
 		"lengthMenu": [[30, 60 -1], [30, 60, "All"]],
 		"order": [[ 0, "asc" ]],
@@ -2223,15 +2225,15 @@ $(document).ready(function(){
 			}
 		  }
 	} );
-	
-	
+
+
 	$('#busqueda').click(function(e) {
         $.ajax({
 			data:  {id: $('#buscar').val(), accion: 'buscarPartido'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 				if (response > 0) {
@@ -2246,41 +2248,41 @@ $(document).ready(function(){
 			}
 		});
     });
-	
+
 	$('.volver').click(function(e) {
         url = "estadisticas.php?id="+<?php echo $idFixture; ?>;
 		$(location).attr('href',url);
     });
-	
+
 	$('#cargamasiva').click(function(e) {
 		table.fnFilter('Win');
       	table.fnFilter('Trident', 0);
- 
+
       	// Remove all filtering
-      	table.fnFilterClear(); 
-		
+      	table.fnFilterClear();
+
 		table2.fnFilter('Win');
       	table2.fnFilter('Trident', 0);
- 
-      	// Remove all filtering
-      	table2.fnFilterClear();  
-		
-		$( "#target" ).submit();
-       
-    });
-	
-	
 
-	
+      	// Remove all filtering
+      	table2.fnFilterClear();
+
+		$( "#target" ).submit();
+
+    });
+
+
+
+
 	//al enviar el formulario
     $('#cargar').click(function(){
 
 			//información del formulario
 		var formData = new FormData($(".formulario")[0]);
 		var message = "";
-		//hacemos la petición ajax  
+		//hacemos la petición ajax
 		$.ajax({
-			url: '../../ajax/ajax.php',  
+			url: '../../ajax/ajax.php',
 			type: 'POST',
 			// Form data
 			//datos del formulario
@@ -2291,7 +2293,7 @@ $(document).ready(function(){
 			processData: false,
 			//mientras enviamos el archivo
 			beforeSend: function(){
-				$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+				$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
 			},
 			//una vez finalizado correctamente
 			success: function(data){
@@ -2302,16 +2304,16 @@ $(document).ready(function(){
 					$(".alert").addClass("alert-success");
 					$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente las <strong>Estadisticas</strong>. ');
 					$(".alert").delay(3000).queue(function(){
-						/*aca lo que quiero hacer 
+						/*aca lo que quiero hacer
 						  después de los 2 segundos de retraso*/
 						$(this).dequeue(); //continúo con el siguiente ítem en la cola
-						
+
 					});
 					$("#load").html('');
 					url = "estadisticas.php?id="+<?php echo $idFixture; ?>;
 					$(location).attr('href',url);
-					
-					
+
+
 				} else {
 					$(".alert").removeClass("alert-danger");
 					$(".alert").addClass("alert-danger");
@@ -2325,7 +2327,7 @@ $(document).ready(function(){
 				$("#load").html('');
 			}
 		});
-		
+
     });
 
 });
@@ -2343,8 +2345,8 @@ $(document).ready(function(){
     for (var selector in config) {
       $(selector).chosen(config[selector]);
     }
-	
-	
+
+
   </script>
 <?php } ?>
 </body>

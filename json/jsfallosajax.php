@@ -15,7 +15,7 @@ $busqueda = $_GET['sSearch'];
 $resAjax = $serviciosReferencias->traerSancionesJugadoresConFallosAjax($length, $start, $busqueda);
 $res = $serviciosReferencias->traerSancionesJugadoresConFallos();
 
-$cantidadFilas = mysql_num_rows($res);
+$cantidadFilas = mysql_num_rows($resAjax);
 
 
 header("content-type: Access-Control-Allow-Origin: *");

@@ -1810,11 +1810,22 @@ function suspendidosTotal() {
                     INNER JOIN
                 tbtiposanciones tip ON tip.idtiposancion = sj.reftiposanciones
                     left join
-                (select fc.refsancionesfallos,torc.refcategorias, coalesce(count(*),0) as cumplidas
-                    from dbsancionesfechascumplidas fc
-                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos
-                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                (SELECT
+                      fc.refsancionesfallos,
+                      sj.refcategorias,
+                      COALESCE(COUNT(*), 0) AS cumplidas
+                  FROM
+                      dbsancionesfechascumplidas fc
+                          INNER JOIN
+                      dbfixture fixf ON fixf.idfixture = fc.reffixture
+                          INNER JOIN
+                      dbtorneos torc ON torc.idtorneo = fixf.reftorneos
+                  		inner join
+                  	dbsancionesfallos sf ON sf.idsancionfallo = fc.refsancionesfallos
+                  		inner join
+                  	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
+                     where fc.cumplida = 1
+                  GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = sj.refcategorias
 
             WHERE
@@ -1949,11 +1960,22 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
                     INNER JOIN
                 tbtiposanciones tip ON tip.idtiposancion = sj.reftiposanciones
                     left join
-                (select fc.refsancionesfallos,torc.refcategorias, coalesce(count(*),0) as cumplidas
-                    from dbsancionesfechascumplidas fc
-                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos
-                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                (SELECT
+                      fc.refsancionesfallos,
+                      sj.refcategorias,
+                      COALESCE(COUNT(*), 0) AS cumplidas
+                  FROM
+                      dbsancionesfechascumplidas fc
+                          INNER JOIN
+                      dbfixture fixf ON fixf.idfixture = fc.reffixture
+                          INNER JOIN
+                      dbtorneos torc ON torc.idtorneo = fixf.reftorneos
+                  		inner join
+                  	dbsancionesfallos sf ON sf.idsancionfallo = fc.refsancionesfallos
+                  		inner join
+                  	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
+                  where fc.cumplida = 1
+                  GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = sj.refcategorias
 
             WHERE
@@ -2096,11 +2118,22 @@ function SuspendidosTotalPorJugador($idJugador) {
                     INNER JOIN
                 tbtiposanciones tip ON tip.idtiposancion = sj.reftiposanciones
                     left join
-                (select fc.refsancionesfallos,torc.refcategorias, coalesce(count(*),0) as cumplidas
-                    from dbsancionesfechascumplidas fc
-                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos
-                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                (SELECT
+                      fc.refsancionesfallos,
+                      sj.refcategorias,
+                      COALESCE(COUNT(*), 0) AS cumplidas
+                  FROM
+                      dbsancionesfechascumplidas fc
+                          INNER JOIN
+                      dbfixture fixf ON fixf.idfixture = fc.reffixture
+                          INNER JOIN
+                      dbtorneos torc ON torc.idtorneo = fixf.reftorneos
+                  		inner join
+                  	dbsancionesfallos sf ON sf.idsancionfallo = fc.refsancionesfallos
+                  		inner join
+                  	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
+                  where fc.cumplida = 1
+                  GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = sj.refcategorias
 
             WHERE
@@ -11515,11 +11548,22 @@ if (mysql_num_rows($resTemporadas)>0) {
         inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
         inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
         left join
-                (select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas
-                    from dbsancionesfechascumplidas fc
-                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos
-                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                (SELECT
+                      fc.refsancionesfallos,
+                      sj.refcategorias,
+                      COALESCE(COUNT(*), 0) AS cumplidas
+                  FROM
+                      dbsancionesfechascumplidas fc
+                          INNER JOIN
+                      dbfixture fixf ON fixf.idfixture = fc.reffixture
+                          INNER JOIN
+                      dbtorneos torc ON torc.idtorneo = fixf.reftorneos
+                  		inner join
+                  	dbsancionesfallos sf ON sf.idsancionfallo = fc.refsancionesfallos
+                  		inner join
+                  	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
+                  where fc.cumplida = 1
+                  GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = p.refcategorias
         where tor.reftemporadas in (6,7)
         ";
@@ -11585,11 +11629,21 @@ if (mysql_num_rows($resTemporadas)>0) {
         inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
         inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
         left join
-                (select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas
-                    from dbsancionesfechascumplidas fc
-                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos
-                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                (SELECT
+                      fc.refsancionesfallos,
+                      sj.refcategorias,
+                      COALESCE(COUNT(*), 0) AS cumplidas
+                  FROM
+                      dbsancionesfechascumplidas fc
+                          INNER JOIN
+                      dbfixture fixf ON fixf.idfixture = fc.reffixture
+                          INNER JOIN
+                      dbtorneos torc ON torc.idtorneo = fixf.reftorneos
+                  		inner join
+                  	dbsancionesfallos sf ON sf.idsancionfallo = fc.refsancionesfallos
+                  		inner join
+                  	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
+                  GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = p.refcategorias
         where tor.reftemporadas in (6,7) ".$where."
         order by concat(jug.apellido, ', ', jug.nombres)
@@ -12156,11 +12210,22 @@ function hayMovimientos($idJugador, $idFixture, $idTipoTorneo) {
                     inner join
                 dbtorneos torv ON torv.idtorneo = fixv.reftorneos
                     left join
-                (select fc.refsancionesfallos,torc.refcategorias, coalesce(count(*),0) as cumplidas
-                    from dbsancionesfechascumplidas fc
-                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos
-                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                (SELECT
+                      fc.refsancionesfallos,
+                      sj.refcategorias,
+                      COALESCE(COUNT(*), 0) AS cumplidas
+                  FROM
+                      dbsancionesfechascumplidas fc
+                          INNER JOIN
+                      dbfixture fixf ON fixf.idfixture = fc.reffixture
+                          INNER JOIN
+                      dbtorneos torc ON torc.idtorneo = fixf.reftorneos
+                  		inner join
+                  	dbsancionesfallos sf ON sf.idsancionfallo = fc.refsancionesfallos
+                  		inner join
+                  	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
+                  where fc.cumplida = 1
+                  GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = san.refcategorias
             WHERE
                 ju.idjugador = ".$idJugador."
@@ -12187,11 +12252,22 @@ function hayMovimientos($idJugador, $idFixture, $idTipoTorneo) {
                     inner join
                 dbtorneos torv ON torv.idtorneo = fixv.reftorneos
                     left join
-                (select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas
-                    from dbsancionesfechascumplidas fc
-                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos
-                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                (SELECT
+                      fc.refsancionesfallos,
+                      sj.refcategorias,
+                      COALESCE(COUNT(*), 0) AS cumplidas
+                  FROM
+                      dbsancionesfechascumplidas fc
+                          INNER JOIN
+                      dbfixture fixf ON fixf.idfixture = fc.reffixture
+                          INNER JOIN
+                      dbtorneos torc ON torc.idtorneo = fixf.reftorneos
+                  		inner join
+                  	dbsancionesfallos sf ON sf.idsancionfallo = fc.refsancionesfallos
+                  		inner join
+                  	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
+                  where fc.cumplida = 1
+                  GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = san.refcategorias
             WHERE
                 ju.idjugador = ".$idJugador."
@@ -12230,11 +12306,22 @@ function hayMovimientosNuevo($idJugador, $idFixture, $idTipoTorneo) {
                     inner join
                 dbtorneos torv ON torv.idtorneo = fixv.reftorneos
                     left join
-                (select fc.refsancionesfallos,torc.refcategorias, coalesce(count(*),0) as cumplidas
-                    from dbsancionesfechascumplidas fc
-                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos
-                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                (SELECT
+                      fc.refsancionesfallos,
+                      sj.refcategorias,
+                      COALESCE(COUNT(*), 0) AS cumplidas
+                  FROM
+                      dbsancionesfechascumplidas fc
+                          INNER JOIN
+                      dbfixture fixf ON fixf.idfixture = fc.reffixture
+                          INNER JOIN
+                      dbtorneos torc ON torc.idtorneo = fixf.reftorneos
+                  		inner join
+                  	dbsancionesfallos sf ON sf.idsancionfallo = fc.refsancionesfallos
+                  		inner join
+                  	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
+                  where fc.cumplida = 1
+                  GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = san.refcategorias
             WHERE
                 ju.idjugador = ".$idJugador."
@@ -12261,11 +12348,22 @@ function hayMovimientosNuevo($idJugador, $idFixture, $idTipoTorneo) {
                     inner join
                 dbtorneos torv ON torv.idtorneo = fixv.reftorneos
                     left join
-                (select fc.refsancionesfallos,torc.refcategorias, count(*) as cumplidas
-                    from dbsancionesfechascumplidas fc
-                    inner join dbfixture fixf on fixf.idfixture = fc.reffixture
-                    inner join dbtorneos torc on torc.idtorneo = fixf.reftorneos
-                    group by fc.refsancionesfallos,torc.refcategorias) sfc
+                (SELECT
+                      fc.refsancionesfallos,
+                      sj.refcategorias,
+                      COALESCE(COUNT(*), 0) AS cumplidas
+                  FROM
+                      dbsancionesfechascumplidas fc
+                          INNER JOIN
+                      dbfixture fixf ON fixf.idfixture = fc.reffixture
+                          INNER JOIN
+                      dbtorneos torc ON torc.idtorneo = fixf.reftorneos
+                  		inner join
+                  	dbsancionesfallos sf ON sf.idsancionfallo = fc.refsancionesfallos
+                  		inner join
+                  	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
+                  where fc.cumplida = 1
+                  GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = san.refcategorias
             WHERE
                 ju.idjugador = ".$idJugador."
@@ -12684,9 +12782,7 @@ $sql = "select
                 inner join
             dbfixture fix ON fix.idfixture = s.reffixture
                 inner join
-            dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.refcategorias = sj.refcategorias
-                inner join
-            tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+            tbcategorias cat ON cat.idtcategoria = sj.refcategorias
                 inner join
             tbfechas fec ON fec.idfecha = fix.reffechas
         where sj.idsancionjugador = ".$idSancionJugador."
