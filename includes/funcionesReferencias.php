@@ -10,6 +10,75 @@ date_default_timezone_set('America/Buenos_Aires');
 class ServiciosReferencias {
 
 
+   /* PARA Excepcionesencancha */
+
+   function insertarExcepcionesencancha($refequipos,$refjugadores,$reftemporadas) {
+   $sql = "insert into dbexcepcionesencancha(idexcepcionencancha,refequipos,refjugadores,reftemporadas)
+   values ('',".$refequipos.",".$refjugadores.",".$reftemporadas.")";
+   $res = $this->query($sql,1);
+   return $res;
+   }
+
+
+   function modificarExcepcionesencancha($id,$refequipos,$refjugadores,$reftemporadas) {
+   $sql = "update dbexcepcionesencancha
+   set
+   refequipos = ".$refequipos.",refjugadores = ".$refjugadores.",reftemporadas = ".$reftemporadas."
+   where idexcepcionencancha =".$id;
+   $res = $this->query($sql,0);
+   return $res;
+   }
+
+
+   function eliminarExcepcionesencancha($id) {
+   $sql = "delete from dbexcepcionesencancha where idexcepcionencancha =".$id;
+   $res = $this->query($sql,0);
+   return $res;
+   }
+
+   function eliminarExcepcionesencanchaPorJugadorEquipoTemporada($idequipo,$idjugador,$idtemporada) {
+      $sql = "delete from dbexcepcionesencancha where refjugadores =".$idjugador." and refequipos = ".$idequipo." and reftemporadas = ".$idtemporada;
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+
+   function traerExcepcionesencancha() {
+   $sql = "select
+   e.idexcepcionencancha,
+   e.refequipos,
+   e.refjugadores,
+   e.reftemporadas
+   from dbexcepcionesencancha e
+   order by 1";
+   $res = $this->query($sql,0);
+   return $res;
+   }
+
+
+   function traerExcepcionesencanchaPorId($id) {
+   $sql = "select idexcepcionencancha,refequipos,refjugadores,reftemporadas from dbexcepcionesencancha where idexcepcionencancha =".$id;
+   $res = $this->query($sql,0);
+   return $res;
+   }
+
+   function traerExcepcionPorJugadorEquipoTemporada($idjugador, $idequipo, $idtemporada) {
+      $sql = "SELECT
+                idexcepcionencancha, refequipos, refjugadores, reftemporadas
+            FROM
+                dbexcepcionesencancha
+            WHERE
+                refjugadores =".$idjugador." and refequipos = ".$idequipo." and reftemporadas = ".$idtemporada;
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   /* Fin */
+   /* /* Fin de la Tabla: dbexcepcionesencancha*/
+
+
 function calcularPuntoBonusViejo($refTorneo, $idEquipo) {
     $resPuntosBonus = $this->traerPuntobonusPorId(1);
 
@@ -4097,7 +4166,7 @@ function existeDevuelveId($sql) {
     function eliminarFotoJugadoresID($refdocumentaciones, $refjugadorespre, $idAux=0) {
         $sql        =   "select concat('data','/',s.iddocumentacionjugadorimagen) as archivo, s.iddocumentacionjugadorimagen
                             from dbdocumentacionjugadorimagenes s
-                            where s.refdocumentaciones =".$refdocumentaciones." and (s.idjugador =".$refjugadorespre." or s.refjugadorespre=".$idAux.")";
+                            where s.refdocumentaciones =".$refdocumentaciones." and (s.idjugador =".$refjugadorespre.")";
         $resImg     =   $this->query($sql,0);
 
         if (mysql_num_rows($resImg)>0) {

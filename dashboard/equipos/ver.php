@@ -38,7 +38,7 @@ $resResultado = $serviciosReferencias->traerEquiposPorId($id);
 $refTemporada = $serviciosReferencias->traerUltimaTemporada();
 
 if (mysql_num_rows($refTemporada)>0) {
-	$idTemporada = mysql_result($refTemporada,0,0);	
+	$idTemporada = mysql_result($refTemporada,0,0);
 } else {
 	$idTemporada = 0;
 }
@@ -108,12 +108,12 @@ $cadJugadores = '';
 				label: "'.$row['apellido'].', '.$row['nombres'].' - '.$row['nrodocumento'].'"
 			  },';
 	}
-	
+
 if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
-	
+
 }
 
 
@@ -135,14 +135,14 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -150,11 +150,11 @@ if ($_SESSION['refroll_predio'] != 1) {
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
 	<style type="text/css">
-		
-  
-		
+
+
+
 	</style>
-    
+
    <link rel="stylesheet" href="../../css/chosen.css">
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
@@ -166,10 +166,10 @@ if ($_SESSION['refroll_predio'] != 1) {
         $('#navigation').perfectScrollbar();
       });
     </script>
-    
+
     <!-- CSS file -->
 <link rel="stylesheet" href="../../css/easy-autocomplete.min.css">
-<link rel="stylesheet" href="../../css/easy-autocomplete.themes.min.css"> 
+<link rel="stylesheet" href="../../css/easy-autocomplete.themes.min.css">
 
     <style type="text/css">
 		#map
@@ -196,7 +196,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 th:first-child {
   border-top-left-radius:3px;
 }
- 
+
 th:last-child {
   border-top-right-radius:3px;
   border-right:none;
@@ -212,7 +212,7 @@ tr {
 }
 
 	</style>
-   
+
 </head>
 
 <body>
@@ -226,17 +226,17 @@ tr {
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Ver <?php echo $singular; ?></p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
-        	
+
 			<div class="row">
 			<?php echo $formulario; ?>
             </div>
-            
+
             <div class="row" style="border-left:5px solid #099; margin-left:-10px;">
-			
+
                     <div class="form-group col-md-3" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Fusión</label>
                         <div class="input-group col-md-12 fontcheck">
@@ -263,7 +263,7 @@ tr {
                             <p class="help-block infoEdad"></p>
                         </div>
                     </div>
-                    
+
                     <div class="form-group col-md-4" style="display:block">
                         <label for="reftipodocumentos" class="control-label" style="text-align:left">Tipo Jugador</label>
                         <div class="input-group col-md-12">
@@ -272,16 +272,16 @@ tr {
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group col-md-4" style="display:block">
                     	<label for="reftipodocumentos" class="control-label" style="text-align:left"> </label>
                         <div class="input-group col-md-12">
                         	<div style="position: relative; height: 80px;">
-                                
+
                                 <input id="round" class="countrie" style="widows:100%;"/>
                             </div>
                             <div id="selction-ajax"></div>
-                            
+
                         </div>
                     </div>
 
@@ -289,14 +289,14 @@ tr {
 
 			<div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
             <hr>
-            
+
             <div class="row" id="contMapa2" style="margin-left:25px; margin-right:25px;">
 
                 <div class="col-md-12">
@@ -318,13 +318,17 @@ tr {
                                     <th>Activo</th>
                                     <th style="text-align:center">Modificar</th>
                                     <th style="text-align:center">Baja</th>
+												<th>Excepcion</th>
                                 </tr>
                             </thead>
                             <tbody id="lstjugadores">
-							<?php 
+							<?php
 								$cantidad = 0;
-								
+
 								while ($rowC = mysql_fetch_array($resJugadoresEquipos)) {
+
+									$existeExcepciion = mysql_num_rows($serviciosReferencias->traerExcepcionPorJugadorEquipoTemporada($rowC['refjugadores'],$id,$idTemporada));
+
 									$cadCumpleEdad = '';
                                 $errorDoc = 'FALTA';
                                 $cadErrorDoc = '';
@@ -332,35 +336,35 @@ tr {
                                 $transitoria= '';
                                 $valorDocumentacion = 0;
                                 $documentaciones = '';
-                            
-                    
-                                
+
+
+
                                 $edad = $serviciosReferencias->verificarEdad($rowC['refjugadores']);
-                                
+
                                 $cumpleEdad = $serviciosReferencias->verificaEdadCategoriaJugador($rowC['refjugadores'], $rowC['refcategorias'], $rowC['idtipojugador']);
-                                
+
                                 $documentaciones = $serviciosReferencias->traerJugadoresdocumentacionPorJugadorValores($rowC['refjugadores']);
-                                
+
                                 if ($cumpleEdad == 1) {
-                                    $cadCumpleEdad = "CUMPLE";  
+                                    $cadCumpleEdad = "CUMPLE";
                                 } else {
                                     // VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
                                     $habilitacionTransitoria = $serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($rowC['refjugadores'], $idTemporada, $rowC['refcategorias'], $id);
                                     if (mysql_num_rows($habilitacionTransitoria)>0) {
-                                        $cadCumpleEdad = "HAB. TRANS."; 
-                                        $habilitacion= 'HAB.';  
+                                        $cadCumpleEdad = "HAB. TRANS.";
+                                        $habilitacion= 'HAB.';
                                     } else {
-                                        $cadCumpleEdad = "NO CUMPLE";   
+                                        $cadCumpleEdad = "NO CUMPLE";
                                     }
                                 }
-                                
+
                                 if (mysql_num_rows($documentaciones)>0) {
                                     while ($rowH = mysql_fetch_array($documentaciones)) {
                                         if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
                                             if ($rowH['obligatoria'] == 'Si') {
                                                 $valorDocumentacion += 1;
                                                 if (mysql_num_rows($serviciosReferencias->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($rowC['refjugadores'],$rowH['refdocumentaciones']))>0) {
-                                                    $valorDocumentacion -= 1;   
+                                                    $valorDocumentacion -= 1;
                                                 }
                                             }
                                             if ($rowH['contravalordesc'] == '') {
@@ -376,28 +380,28 @@ tr {
                                     } else {
                                         $cadErrorDoc = substr($cadErrorDoc,0,-3);
                                     }
-                                    
+
                                 } else {
                                     $cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
                                 }
-                                
+
                                 if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
                                     if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
-                                        $habilitacion= 'INHAB.';    
+                                        $habilitacion= 'INHAB.';
                                     } else {
-                                        $habilitacion= 'HAB.';  
+                                        $habilitacion= 'HAB.';
                                     }
                                 } else {
                                     $habilitacion= 'INHAB.';
                                 }
 								$cantidad += 1;
 							?>
-                            	<?php 
+                            	<?php
 									if (($habilitacion != 'HAB.')) {
-                            			$color = 'style="background-color: #FE2E2E; color: #FFF;"';		
-                                 	} else { 
+                            			$color = 'style="background-color: #FE2E2E; color: #FFF;"';
+                                 	} else {
                                         $color = '';
-                                 	} 
+                                 	}
 								?>
                                 <tr>
                             	<td <?php echo $color; ?>><?php echo $rowC['nombrecompleto']; ?></td>
@@ -408,6 +412,11 @@ tr {
                                 <td align="center" <?php echo $color; ?>><?php echo $rowC['activo']; ?></td>
 								<td <?php echo $color; ?> align="center"><img src="../../imagenes/editarIco.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varModificarJugador"></td>
                                 <td <?php echo $color; ?> align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="<?php echo $rowC['idconector']; ?>" class="varEliminarJugador"></td>
+										  <?php if ($existeExcepciion == 0) { ?>
+											  <td <?php echo $color; ?> align="center"><img src="../../imagenes/sign-add-icon2.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varAgregarExcepcion"></td>
+										  <?php } else { ?>
+											 <td <?php echo $color; ?> align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varEliminarExcepcion"></td>
+										  <?php } ?>
                                 </tr>
                             <?php
 								}
@@ -421,13 +430,13 @@ tr {
                         </div>
                     </div>
                 </div>
-                
-                
+
+
             </div>
 
-            
-            
-            
+
+
+
             <div class="row">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
@@ -447,9 +456,9 @@ tr {
             </form>
     	</div>
     </div>
-    
-    
-   
+
+
+
 </div>
 
 
@@ -465,7 +474,7 @@ tr {
         <h4 class="modal-title" id="myModalLabel">Detalle de Venta</h4>
       </div>
       <div class="modal-body detalleJugador">
-        
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -501,13 +510,13 @@ tr {
     }
     for (var selector in config) {
       $(selector).chosen(config[selector]);
-    } 
-	
-	
+    }
+
+
   </script>
 
 <!-- JS file -->
-<script src="../../js/jquery.easy-autocomplete.min.js"></script> 
+<script src="../../js/jquery.easy-autocomplete.min.js"></script>
 
 
 
@@ -515,14 +524,67 @@ tr {
 <script type="text/javascript">
 $(document).ready(function(){
 
-	
+	function EliminarExcepcion(id) {
+		$.ajax({
+			data:  {
+				idequipo: <?php echo $id; ?>,
+				idjugador: id,
+				idtemporada: <?php echo $idTemporada; ?>,
+				accion: 'eliminarExcepcionesencancha'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+
+				url = "ver.php?id=<?php echo $id; ?>";
+				$(location).attr('href',url);
+
+
+			}
+		});
+	}
+
+
+	function agregarExcepcion(id) {
+		$.ajax({
+			data:  {
+				refequipos: <?php echo $id; ?>,
+				refjugadores: id,
+				reftemporadas: <?php echo $idTemporada; ?>,
+				accion: 'insertarExcepcionesencancha'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+
+				url = "ver.php?id=<?php echo $id; ?>";
+				$(location).attr('href',url);
+
+
+			}
+		});
+	}
+
+	$('.varAgregarExcepcion').click(function() {
+		agregarExcepcion($(this).attr("id"));
+	});
+
+	$('.varEliminarExcepcion').click(function() {
+		EliminarExcepcion($(this).attr("id"));
+	});
+
+
 	$('.volver').click(function(event){
-		 
+
 		url = "index.php";
 		$(location).attr('href',url);
 	});//fin del boton modificar
-	
-	
+
+
 	$('#esfusion').click(function() {
 		$('#round').val('');
 		$('#selction-ajax').html('');
@@ -531,11 +593,11 @@ $(document).ready(function(){
 			$('#refcountriesauxDiv').hide();
 		} else {
 			$('#refcountriesauxDiv').show();
-			
+
 		}
 	});
 
-	
+
 	$('#refcountriesaux').chosen().change(function(event, data) {
 	   // arguments.length === 2
 	   if  ($('#esfusion').prop('checked') == true) {
@@ -544,25 +606,25 @@ $(document).ready(function(){
 		   $('#round').val('');
 		}
 	});
-	
-	
+
+
 	function eliminarTodosLosJugadores() {
         $.ajax({
-            data:  {id: <?php echo $id; ?>, 
+            data:  {id: <?php echo $id; ?>,
                     accion: 'eliminarTodosLosJugadores'},
             url:   '../../ajax/ajax.php',
             type:  'post',
             beforeSend: function () {
-            
+
             },
             success:  function (response) {
-                
+
                 url = "ver.php?id=<?php echo $id; ?>";
                 $(location).attr('href',url);
-                
-                
+
+
             }
-        }); 
+        });
     }
 
     $('.eliminarTodosLosJugadores').click(function() {
@@ -578,27 +640,27 @@ $(document).ready(function(){
 
 
 	function agregarJugador(refjugadores, reftipojugadores, refequipos, refcountries, refcategorias, esfusion, refcountriesaux, reftemporada) {
-		
+
 		$.ajax({
-			data:  {refjugadores: refjugadores, 
-					reftipojugadores: reftipojugadores, 
-					refequipos: refequipos, 
-					refcountries: refcountries, 
-					refcategorias: refcategorias, 
-					esfusion: esfusion, 
-					refcountriesaux: refcountriesaux, 
+			data:  {refjugadores: refjugadores,
+					reftipojugadores: reftipojugadores,
+					refequipos: refequipos,
+					refcountries: refcountries,
+					refcategorias: refcategorias,
+					esfusion: esfusion,
+					refcountriesaux: refcountriesaux,
 					reftemporada: reftemporada,
 					accion: 'insertarConectorAjax'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-			
+
 			},
 			success:  function (response) {
-				
+
 				if (response.indexOf('<tr>') != -1)
 				{
-					$('#lstjugadores').prepend(response);	
+					$('#lstjugadores').prepend(response);
 					$(".alert").removeClass("alert-danger");
 					$(".alert").removeClass("alert-success");
 					$(".alert").addClass("alert-success");
@@ -608,27 +670,27 @@ $(document).ready(function(){
 					$(".alert").removeClass("alert-success");
 					$(".alert").addClass("alert-danger");
 					$(".alert").html('<strong>Error!</strong> '+response);
-						
+
 				}
-				
-				
+
+
 			}
-		});	
+		});
 	}
-	
+
 	$(document).on('click', '.agregarJugador', function(e){
 		agregarJugador($(this).attr("id"), $('#reftipojugadores').val(), <?php echo $id; ?>, <?php echo mysql_result($resResultado,0,'refcountries'); ?>, $('#refcategorias').val(), $('#refcategorias').prop('checked'), $('#refcountriesaux').val(), <?php echo $idTemporada; ?>);
 	});//fin del boton modificar
-	
+
 	function traerDefinicionesPorTemporadaCategoriaTipoJugador(resTemporada, resCategoria, resTipoJugador) {
-		
+
 		$.ajax({
 			async: false,
 			url:   '../../ajax/ajax.php',
 			data:  {
-				resTemporada: resTemporada, 
-				resCategoria: resCategoria, 
-				resTipoJugador: resTipoJugador, 
+				resTemporada: resTemporada,
+				resCategoria: resCategoria,
+				resTipoJugador: resTipoJugador,
 				accion: 'traerDefinicionesPorTemporadaCategoriaTipoJugador'
 			},
 			type:  'post',
@@ -636,44 +698,44 @@ $(document).ready(function(){
 				$('.infoEdad').html('');
 			},
 			success:  function (response) {
-				$('.infoEdad').html(response);	
-				
+				$('.infoEdad').html(response);
+
 			}
-		});	
-	
+		});
+
 	}
-	
+
 	traerDefinicionesPorTemporadaCategoriaTipoJugador(<?php echo $idTemporada; ?>,$('#refcategorias').val(),$('#reftipojugadores').val());
-	
+
 	$('#refcategorias').change(function() {
 		traerDefinicionesPorTemporadaCategoriaTipoJugador(<?php echo $idTemporada; ?>, $(this).val(), $('#reftipojugadores').val());
 	});
-	
+
 	$('#reftipojugadores').change(function() {
 		traerDefinicionesPorTemporadaCategoriaTipoJugador(<?php echo $idTemporada; ?>, $('#refcategorias').val(), $(this).val());
 	});
-	
+
 	$(document).on('click', '.varModificarJugador', function(e){
 		url = "../jugadores/modificar.php?id="+$(this).attr("id");
 		$(location).attr('href',url);
 	});//fin del boton modificar
-	
+
 	$(document).on('click', '.varEliminarJugador', function(e){
 
 		  if (!isNaN($(this).attr("id"))) {
 			$("#idEliminar").val($(this).attr("id"));
 			$("#dialog2").dialog("open");
 
-			
+
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton eliminar
-	
+
 	$( "#dialog2" ).dialog({
-	
+
 		autoOpen: false,
 		resizable: false,
 		width:600,
@@ -687,12 +749,12 @@ $(document).ready(function(){
 							url:   '../../ajax/ajax.php',
 							type:  'post',
 							beforeSend: function () {
-									
+
 							},
 							success:  function (response) {
 									url = "ver.php?id=" + <?php echo $id; ?>;
 									$(location).attr('href',url);
-									
+
 							}
 					});
 				$( this ).dialog( "close" );
@@ -706,42 +768,42 @@ $(document).ready(function(){
 				$( this ).dialog( "close" );
 			}
 		}
- 
- 
+
+
 	}); //fin del dialogo para eliminar
-			
+
 
 	$('.modificar').click(function(event){
-		 
+
 		usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
-			
+
 			url = "modificar.php?id=" + usersid;
 			$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton modificar
-	
+
 	$('#refcountriesauxDiv').hide();
-	
+
 	$( "#autocomplete-ajax" ).click(function() {
 		$(".alert").html('');
 		$(".alert").removeClass("alert-danger");
 		$(".alert").removeClass("alert-success");
 	});
 
-	
+
 	var options = {
 
 	  url: function(phrase) {
 		return "../../json/jugadoresPorEquipos.php?countrie="+$('#countrieID').val();
 	  },
-	
+
 	  getValue: function(element) {
 		return element.name;
 	  },
-	
+
 	  ajaxSettings: {
 		dataType: "json",
 		method: "GET",
@@ -749,19 +811,19 @@ $(document).ready(function(){
 		  dataType: "json"
 		}
 	  },
-	
+
 	  preparePostData: function(data) {
 		data.phrase = $("#round").val();
 		return data;
 	  },
-	  
+
 	  list: {
 			onClickEvent: function() {
 				var value = $("#round").getSelectedItemData().id;
-	
+
 				$('#selction-ajax').html('<button type="button" class="btn btn-success agregarJugador" id="' + value + '" style="margin-left:0px;">Agregar</button>');
 			},
-			
+
 			match: {
 				enabled: true
 			}
@@ -769,13 +831,13 @@ $(document).ready(function(){
 	  theme: "round",
 	  requestDelay: 100
 	};
-	
+
 	$("#round").easyAutocomplete(options);
 
 });
 </script>
 
-  
+
 
 
 <?php } ?>

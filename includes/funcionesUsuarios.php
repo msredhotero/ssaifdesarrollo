@@ -56,7 +56,7 @@ if (mysql_num_rows($respusu) > 0) {
 		//die(var_dump($error));
 		session_start();
 
-      if (mysql_result($resppass,0,4) == 4) {
+      if ((mysql_result($resppass,0,4) == 4) || (mysql_result($resppass,0,4) == 5)) {
          $_SESSION['usua_aif'] = $usuario;
 			$_SESSION['nombre_aif'] = mysql_result($resppass,0,0);
 			$_SESSION['usuaid_aif'] = $idUsua;

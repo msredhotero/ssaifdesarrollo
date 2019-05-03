@@ -636,6 +636,46 @@ case 'relacionarDocumentaciones':
 	relacionarDocumentaciones($serviciosReferencias);
 	break;
 /*** fin controles *****///
+
+/*** excepciones en cancha */
+case 'insertarExcepcionesencancha':
+   insertarExcepcionesencancha($serviciosReferencias);
+   break;
+case 'eliminarExcepcionesencancha':
+   eliminarExcepcionesencancha($serviciosReferencias);
+   break;
+case 'traerExcepcionPorJugadorEquipoTemporada':
+   traerExcepcionPorJugadorEquipoTemporada($serviciosReferencias);
+   break;
+/**  fin excepciones */
+}
+
+function insertarExcepcionesencancha($serviciosReferencias) {
+   $refequipos = $_POST['refequipos'];
+   $refjugadores = $_POST['refjugadores'];
+   $reftemporadas = $_POST['reftemporadas'];
+
+   $res = $serviciosReferencias->insertarExcepcionesencancha($refequipos,$refjugadores,$reftemporadas);
+
+   if ((integer)$res > 0) {
+      echo '';
+   } else {
+      echo 'Hubo un error al insertar datos';
+   }
+}
+
+function eliminarExcepcionesencancha($serviciosReferencias) {
+   $idjugador = $_POST['idjugador'];
+   $idequipo = $_POST['idequipo'];
+   $idtemporada = $_POST['idtemporada'];
+
+   $res = $serviciosReferencias->eliminarExcepcionesencanchaPorJugadorEquipoTemporada($idequipo,$idjugador,$idtemporada);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Hubo un error al modificar datos';
+   }
 }
 
 function relacionarDocumentaciones($serviciosReferencias) {
