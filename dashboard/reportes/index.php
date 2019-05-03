@@ -70,14 +70,14 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
@@ -87,10 +87,10 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 	<link rel="stylesheet" href="../../css/chosen.css">
 	<style type="text/css">
 
-		
+
 	</style>
-    
-   
+
+
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -114,51 +114,51 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
     <div class="boxInfoLargo tile-stats stat-til tile-white">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Reporte Condición de Jugador</p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
         	<div class="row">
 
-                
+
                 <div class="form-group col-md-10" style="display:'.$lblOculta.'">
                     <label class="control-label" style="text-align:left" for="refcliente">Seleccione Temporada | Country | Equipo | Baja</label>
                     <div class="input-group col-md-12">
                         <span class="input-group-addon">
                             <select id="cjreftemporada" name="cjreftemporada" class="form-control" tabindex="2">
-                                
+
                                 <?php echo $cadRefTemporadas; ?>
-                    
+
                             </select>
                         </span>
                         <span class="input-group-addon">
                             <select id="cjrefcountries" name="cjrefcountries" class="form-control" tabindex="2">
-                                
+
                                 <option value="0">-- Seleccione --</option>
                                 <?php echo $cadRefCountries; ?>
-                    
+
                             </select>
                         </span>
-                        
-                        
+
+
                         <span class="input-group-addon">
                             <select id="cjrefequipos" name="cjrefequipos" class="form-control" tabindex="2">
-                                
-                                
-                                
-                    
+
+
+
+
                             </select>
                         </span>
 
                         <span class="input-group-addon">
                             <input type="checkbox" id="bajaequipos" class="form-control" name="bajaequipos">
                         </span>
-                        
-                        
+
+
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
 
@@ -172,32 +172,32 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         </ul>
 
                 </div>
-                
+
 
             </div>
-            
-            
+
+
             <div class='row' style="margin-left:25px; margin-right:25px; margin-bottom:80px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
 
             </form>
     	</div>
     </div>
-    
-    
-    
-    
-    
+
+
+
+
+
     <div class="boxInfoLargo tile-stats stat-til tile-white">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Reporte Planilla de Partido</p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
@@ -211,32 +211,32 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	</select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Seleccione la Fecha</label>
                     <div class="input-group col-md-12">
                     	<select id="reffechas1" class="form-control" name="reffechas1">
-							
+
                     	</select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Fechas Desde</label>
                     <div class="input-group col-md-12">
                     	<input type="text" id="reffechadesde2" class="form-control" name="reffechadesde2" value="Date">
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Fechas Hasta</label>
                     <div class="input-group col-md-12">
                     	<input type="text" id="reffechahasta2" class="form-control" name="reffechahasta2" value="Date">
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
 
@@ -250,32 +250,32 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         </ul>
 
                 </div>
-                
+
 
             </div>
-            
-            
+
+
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
 
             </form>
     	</div>
     </div>
-    
-    
-    
-    
-    
+
+
+
+
+
     <div class="boxInfoLargo tile-stats stat-til tile-white">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Reportes Generales</p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
@@ -298,10 +298,11 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="11">Estadistica Jugador Por Categoria</option>
                             <option value="12">Habilitaciones Transitorias</option>
                             <option value="13">Jugadores Por Partido</option>
+									 <option value="14">Jugadores en varios Equipos-Suspendidos</option>
                     	</select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-6" id="tem1">
                     <label class="control-label" style="text-align:left" for="refcliente">Temporada</label>
                     <div class="input-group col-md-12">
@@ -311,10 +312,10 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	</select>
                     </div>
                 </div>
-                
-                
-                
-                
+
+
+
+
                 <div class="form-group col-md-6" id="cou1">
                     <label class="control-label" style="text-align:left" for="refcliente">Countrie</label>
                     <div class="input-group col-md-12">
@@ -324,7 +325,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	</select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-3" id="cat1">
                     <label class="control-label" style="text-align:left" for="refcliente">Categorias</label>
                     <div class="input-group col-md-12">
@@ -334,8 +335,8 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	</select>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-3" id="div1">
                     <label class="control-label" style="text-align:left" for="refcliente">Division</label>
                     <div class="input-group col-md-12">
@@ -354,7 +355,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	</select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Fechas</label>
                     <div class="input-group col-md-12">
@@ -363,22 +364,22 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	</select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Fechas Desde</label>
                     <div class="input-group col-md-12">
                     	<input type="text" id="reffechadesde1" class="form-control" name="reffechadesde1" value="Date">
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Fechas Hasta</label>
                     <div class="input-group col-md-12">
                     	<input type="text" id="reffechahasta1" class="form-control" name="reffechahasta1" value="Date">
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-4" id="fpa1">
                     <label class="control-label" style="text-align:left" for="refcliente">Partidos</label>
                     <div class="input-group col-md-12">
@@ -443,7 +444,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         </span>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-4" id="ffa1">
                     <label class="control-label" style="text-align:left" for="refcliente">Fecha Alta</label>
                     <div class="input-group col-md-12">
@@ -464,7 +465,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         </span>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-4" id="ffn1">
                     <label class="control-label" style="text-align:left" for="refcliente">Fecha Nacimiento</label>
                     <div class="input-group col-md-12">
@@ -485,8 +486,8 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         </span>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-4" id="fed1">
                     <label class="control-label" style="text-align:left" for="refcliente">Edad</label>
                     <div class="input-group col-md-12">
@@ -507,8 +508,8 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         </span>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-4" id="fmn1">
                     <label class="control-label" style="text-align:left" for="refcliente">Minutos Jugadores</label>
                     <div class="input-group col-md-12">
@@ -529,8 +530,8 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         </span>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-4" id="fmj1">
                     <label class="control-label" style="text-align:left" for="refcliente">Cant. Mejor Jug.</label>
                     <div class="input-group col-md-12">
@@ -567,15 +568,15 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         <select data-placeholder="selecione el jugador..." id="idjugador" name="idjugador" class="chosen-select form-control" tabindex="2">
                             <option value=""></option>
                             <?php echo $cadRefJugadores; ?>
-                
+
                             </select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-12" style="height:220px;">* Se aplicaran filtros a las busquedas</div>
-                
-                
-                
+
+
+
                 <div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
 
@@ -588,30 +589,30 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             </li>
                         </ul>
                 </div>
-                
+
 
             </div>
-            
-            
+
+
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
 
             </form>
     	</div>
     </div>
-    
-    
-    
 
-    
-    
-   
+
+
+
+
+
+
 </div>
 
 
@@ -625,38 +626,38 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 <script type="text/javascript">
 $(document).ready(function(){
 
-		
+
 	$("#valorfechaalta").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 	$("#valorfechanacimiento").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
-	
+
 	$("#valorfechaalta2").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 	$("#valorfechanacimiento2").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
-										
+
 	$('#cjrefcountries').change(function(e) {
-        
+
 		$.ajax({
 				data:  {id: $('#cjrefcountries').val(),
 						accion: 'traerEquiposPorCountries'},
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
-					$('#cjrefequipos').html('');	
+					$('#cjrefequipos').html('');
 				},
 				success:  function (response) {
 
                     if (response != '') {
 						$('#cjrefequipos').prepend('<option value="">-- Seleccionar --</option>');
 						$('#cjrefequipos').append(response);
-						
+
                     } else {
 
                         $('#cjrefequipos').html('<option value="">-- Seleccionar --</option>');
-                        
-                    } 
+
+                    }
                 }
 		});
     });
-	
+
 	function traerFechasPorTorneos(idTorneo, contenedor) {
 		$.ajax({
 				data:  {idTorneo: idTorneo,
@@ -664,17 +665,17 @@ $(document).ready(function(){
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
-					$('#'+contenedor).html('');	
+					$('#'+contenedor).html('');
 				},
 				success:  function (response) {
 
                     if (response != '') {
 						$('#'+contenedor).prepend('<option value="">-- Seleccionar --</option>');
 						$('#'+contenedor).append(response);
-						
+
                     } else {
 
-                        
+
                         $('#'+contenedor).html('<option value="">-- Seleccionar --</option> \
                                     <option value="1">Fecha 1</option> \
                                     <option value="2">Fecha 2</option> \
@@ -706,28 +707,28 @@ $(document).ready(function(){
                                     <option value="28">Fecha 28</option> \
                                     <option value="29">Fecha 29</option> \
                                     <option value="30">Fecha 30</option>');
-                        
-                    } 
+
+                    }
                 }
 		});
 	}
-	
+
 	$('#ffa1').hide();
 	$('#ffn1').hide();
 	$('#fed1').hide();
 	$('#fmj1').hide();
 	$('#fmn1').hide();
-	
+
 	$('#rptJugadoresPorClub').click(function(e) {
 		if ($('#refcountries1').val() != 0) {
         	url = "../jugadoresclub/index.php?id=" + $('#refcountries1').val();
 			$(location).attr('href',url);
 		} else {
-			alert('Debe seleccionar un country!!.');	
+			alert('Debe seleccionar un country!!.');
 		}
     });
-				
-	
+
+
 	$('#tiporeporte').change(function() {
 		switch(parseInt($('#tiporeporte').val())) {
 			case 1:
@@ -951,163 +952,183 @@ $(document).ready(function(){
                 $('#fmj1').hide();
                 $('#fmn1').hide();
                 break;
+				 case 14:
+	 				$('#cou1').hide();
+	 				$('#jug1').hide();
+	 				$('#baj1').hide();
+	 				$('#cat1').hide();
+	 				$('#div1').hide();
+	 				$('#tor1').hide();
+	 				$('#tem1').show();
+	                 $('#fpa1').hide();
+	                 $('#fam1').hide();
+	                 $('#fra1').hide();
+	 				$('#ffa1').hide();
+	 				$('#ffn1').hide();
+	 				$('#fed1').hide();
+	 				$('#fmj1').hide();
+	 				$('#fmn1').hide();
+	 				break;
 			default:
 				alert('Debe elegir una opcion');
 		}
 	});
-	
+
 	$('#reftorneo1').change(function(e) {
-		traerFechasPorTorneos($(this).val(),'reffechas1');	
+		traerFechasPorTorneos($(this).val(),'reffechas1');
 	});
-	
+
 	$('#reftorneo3').change(function(e) {
-		traerFechasPorTorneos($(this).val(),'reffechas3');	
+		traerFechasPorTorneos($(this).val(),'reffechas3');
 	});
-	
+
 	traerFechasPorTorneos($('#reftorneo1').val(),'reffechas1');
-	
-	
+
+
 	$("#rptRP").click(function(event) {
 		var e = parseInt($('#tiporeporte').val());
 
 		switch(e) {
 			case 1:
-				window.open("../../reportes/rptResultadoPartido.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + "&reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');	
+				window.open("../../reportes/rptResultadoPartido.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + "&reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');
 				break;
 			case 2:
-				window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');	
-                  
+				window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');
+
 				break;
 			case 10:
-				
-                window.open("../../reportes/rptJugadoresPorCountriesExcel.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');  
+
+                window.open("../../reportes/rptJugadoresPorCountriesExcel.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');
 				break;
 			case 3:
-				window.open("../../reportes/rptJugadoresVariosEquipos.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');	
+				window.open("../../reportes/rptJugadoresVariosEquipos.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
 				break;
 			case 4:
-				window.open("../../reportes/rptPromedioCanchas.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');	
+				window.open("../../reportes/rptPromedioCanchas.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
 				break;
             case 5:
                 window.open("../../reportes/rptEstadisticaArbitros.php?reftemporada1=" + $("#reftemporada1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtropartidosvalor2=' + $('#valorpartido2').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtroamarillasvalor2=' + $('#valoramarillas2').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrorojasvalor2=' + $('#valorrojas2').val(),'_blank');
                 break;
             case 6:
-                window.open("../../reportes/rptSuspendidosExcel.php" ,'_blank');  
-                break;  
+                window.open("../../reportes/rptSuspendidosExcel.php" ,'_blank');
+                break;
 			case 7:
-                window.open("../../reportes/rptProximaFecha.php?reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');  
-                break;	
+                window.open("../../reportes/rptProximaFecha.php?reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');
+                break;
 			case 8:
-				window.open("../../reportes/rptActaTribunalDisciplina.php" ,'_blank');  
-                break;	
+				window.open("../../reportes/rptActaTribunalDisciplina.php" ,'_blank');
+                break;
             case 9:
-                window.open("../../reportes/rptHistoricoJugadorIncidencias.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&idjugador="+ $("#idjugador").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');   
+                window.open("../../reportes/rptHistoricoJugadorIncidencias.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&idjugador="+ $("#idjugador").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');
                 break;
 			case 11:
-                window.open("../../reportes/rptEstadisticaJugadorPorCategoria.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtropartidosvalor2=' + $('#valorpartido2').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtroamarillasvalor2=' + $('#valoramarillas2').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrorojasvalor2=' + $('#valorrojas2').val() + '&filtrofechaalta=' + $('#filtrofechaalta').val() + '&filtrofechaaltavalor=' + $('#valorfechaalta').val() + '&filtrofechaaltavalor2=' + $('#valorfechaalta2').val() + '&filtrofechanacimiento=' + $('#filtrofechanacimiento').val() + '&filtrofechanacimientovalor=' + $('#valorfechanacimiento').val() + '&filtrofechanacimientovalor2=' + $('#valorfechanacimiento2').val() + '&filtroedad=' + $('#filtroedad').val() + '&filtroedadvalor=' + $('#valoredad').val() + '&filtroedadvalor2=' + $('#valoredad2').val() + '&filtromejorjugador=' + $('#filtromejorjugador').val() + '&filtromejorjugadorvalor=' + $('#valormejorjugador').val()  + '&filtromejorjugadorvalor2=' + $('#valormejorjugador2').val()+ '&filtrominutos=' + $('#filtrominutos').val() + '&filtrominutosvalor=' + $('#valorminutos').val() + '&filtrominutosvalor2=' + $('#valorminutos2').val(),'_blank');   
-                break; 	
+                window.open("../../reportes/rptEstadisticaJugadorPorCategoria.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtropartidosvalor2=' + $('#valorpartido2').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtroamarillasvalor2=' + $('#valoramarillas2').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrorojasvalor2=' + $('#valorrojas2').val() + '&filtrofechaalta=' + $('#filtrofechaalta').val() + '&filtrofechaaltavalor=' + $('#valorfechaalta').val() + '&filtrofechaaltavalor2=' + $('#valorfechaalta2').val() + '&filtrofechanacimiento=' + $('#filtrofechanacimiento').val() + '&filtrofechanacimientovalor=' + $('#valorfechanacimiento').val() + '&filtrofechanacimientovalor2=' + $('#valorfechanacimiento2').val() + '&filtroedad=' + $('#filtroedad').val() + '&filtroedadvalor=' + $('#valoredad').val() + '&filtroedadvalor2=' + $('#valoredad2').val() + '&filtromejorjugador=' + $('#filtromejorjugador').val() + '&filtromejorjugadorvalor=' + $('#valormejorjugador').val()  + '&filtromejorjugadorvalor2=' + $('#valormejorjugador2').val()+ '&filtrominutos=' + $('#filtrominutos').val() + '&filtrominutosvalor=' + $('#valorminutos').val() + '&filtrominutosvalor2=' + $('#valorminutos2').val(),'_blank');
+                break;
             case 12:
-                window.open("../../reportes/rptHabilitacionesTransitoriasExcel.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');   
+                window.open("../../reportes/rptHabilitacionesTransitoriasExcel.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
                 break;
             case 13:
-                window.open("../../reportes/rptJugadoresPorPartidos.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');   
+                window.open("../../reportes/rptJugadoresPorPartidos.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');
                 break;
-				
+				case 14:
+					window.open("../../reportes/rptJugadoresVariosEquiposExcel.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
+					break;
+
 			default:
 				alert('Debe elegir una opcion');
-		} 
-        
-						
+		}
+
+
     });
-	
-	
+
+
 	$("#rptCJ").click(function(event) {
-		
+
 		if (($("#cjrefcountries").val() != 0) && ($("#cjrefcountries").val() != null)) {
-        	window.open("../../reportes/rptCondicionJugador.php?id=" + $("#cjrefequipos").val() + "&reftemporada=" + $("#cjreftemporada").val() + "&bajaequipos=" + $("#bajaequipos").prop('checked') + "&refcountries=" + $('#cjrefcountries').val() ,'_blank');	
+        	window.open("../../reportes/rptCondicionJugador.php?id=" + $("#cjrefequipos").val() + "&reftemporada=" + $("#cjreftemporada").val() + "&bajaequipos=" + $("#bajaequipos").prop('checked') + "&refcountries=" + $('#cjrefcountries').val() ,'_blank');
 		} else {
 			alert('Debe elegir un equipo');
 		}
-						
+
     });
-	
+
 	$("#rptPP").click(function(event) {
         if ($("#reftorneo1").val() == 0) {
-            window.open("../../reportes/rptPlanillaTodas.php?reffechas=" + $("#reffechas1").val() + "&desde=" + $('#reffechadesde2').val() + "&hasta=" + $('#reffechahasta2').val() ,'_blank');    
+            window.open("../../reportes/rptPlanillaTodas.php?reffechas=" + $("#reffechas1").val() + "&desde=" + $('#reffechadesde2').val() + "&hasta=" + $('#reffechahasta2').val() ,'_blank');
         } else {
-            window.open("../../reportes/rptPlanilla.php?idtorneo=" + $("#reftorneo1").val() + "&reffechas=" + $("#reffechas1").val() ,'_blank');        
+            window.open("../../reportes/rptPlanilla.php?idtorneo=" + $("#reftorneo1").val() + "&reffechas=" + $("#reffechas1").val() ,'_blank');
         }
-        
-						
+
+
     });
-	
-	
+
+
 	$("#rptsc").click(function(event) {
-        window.open("../../reportes/rptSaldosClientes.php?idEmp=" + $("#refempresa2").val() + "&fechadesde=" + $("#fechadesde2").val()+ "&fechahasta=" + $("#fechahasta2").val(),'_blank');	
-						
+        window.open("../../reportes/rptSaldosClientes.php?idEmp=" + $("#refempresa2").val() + "&fechadesde=" + $("#fechadesde2").val()+ "&fechahasta=" + $("#fechahasta2").val(),'_blank');
+
     });
-	
+
 	$("#rptscc").click(function(event) {
-        window.open("../../reportes/rptSaldosPorClientes.php?idEmp=" + $("#refempresa4").val() + "&idClie=" + $("#refcliente1").val() + "&fechadesde=" + $("#fechadesde3").val()+ "&fechahasta=" + $("#fechahasta3").val(),'_blank');	
-						
+        window.open("../../reportes/rptSaldosPorClientes.php?idEmp=" + $("#refempresa4").val() + "&idClie=" + $("#refcliente1").val() + "&fechadesde=" + $("#fechadesde3").val()+ "&fechahasta=" + $("#fechahasta3").val(),'_blank');
+
     });
-	
+
 	$('#rptcc').click(function(e) {
         window.open("../../reportes/rptSaldosEmpresa.php?fechadesde=" + $("#fechadesde4").val()+ "&fechahasta=" + $("#fechahasta4").val(),'_blank');
     });
-	
+
 	$("#rpt5").click(function(event) {
-        window.open("../../reportes/rptSaldosClientesEmpresas.php?idClie=" + $("#refcliente5").val() + "&fechadesde=" + $("#fechadesde5").val()+ "&fechahasta=" + $("#fechahasta5").val(),'_blank');	
-						
-    });
-	
-	
-	$("#rpt6").click(function(event) {
-        window.open("../../reportes/rptSociosEmpresas.php",'_blank');	
-						
-    });
-	
-	$("#rpt7").click(function(event) {
-        window.open("../../reportes/rptSocios.php",'_blank');	
-						
+        window.open("../../reportes/rptSaldosClientesEmpresas.php?idClie=" + $("#refcliente5").val() + "&fechadesde=" + $("#fechadesde5").val()+ "&fechahasta=" + $("#fechahasta5").val(),'_blank');
+
     });
 
-	
-	
-	
-	
+
+	$("#rpt6").click(function(event) {
+        window.open("../../reportes/rptSociosEmpresas.php",'_blank');
+
+    });
+
+	$("#rpt7").click(function(event) {
+        window.open("../../reportes/rptSocios.php",'_blank');
+
+    });
+
+
+
+
+
 	$("#rptgfExcel").click(function(event) {
-        window.open("../../reportes/rptFacturacionGeneralExcel.php?id=" + $("#refempresa1").val() + "&fechadesde=" + $("#fechadesde1").val()+ "&fechahasta=" + $("#fechahasta1").val(),'_blank');	
-						
+        window.open("../../reportes/rptFacturacionGeneralExcel.php?id=" + $("#refempresa1").val() + "&fechadesde=" + $("#fechadesde1").val()+ "&fechahasta=" + $("#fechahasta1").val(),'_blank');
+
     });
-	
+
 	$("#rptscExcel").click(function(event) {
-        window.open("../../reportes/rptSaldosClientesExcel.php?idEmp=" + $("#refempresa2").val() + "&fechadesde=" + $("#fechadesde2").val()+ "&fechahasta=" + $("#fechahasta2").val(),'_blank');	
-						
+        window.open("../../reportes/rptSaldosClientesExcel.php?idEmp=" + $("#refempresa2").val() + "&fechadesde=" + $("#fechadesde2").val()+ "&fechahasta=" + $("#fechahasta2").val(),'_blank');
+
     });
-	
+
 	$("#rptsccExcel").click(function(event) {
-        window.open("../../reportes/rptSaldosPorClientesExcel.php?idEmp=" + $("#refempresa4").val() + "&idClie=" + $("#refcliente1").val() + "&fechadesde=" + $("#fechadesde3").val()+ "&fechahasta=" + $("#fechahasta3").val(),'_blank');	
-						
+        window.open("../../reportes/rptSaldosPorClientesExcel.php?idEmp=" + $("#refempresa4").val() + "&idClie=" + $("#refcliente1").val() + "&fechadesde=" + $("#fechadesde3").val()+ "&fechahasta=" + $("#fechahasta3").val(),'_blank');
+
     });
-	
+
 	$('#rptccExcel').click(function(e) {
         window.open("../../reportes/rptSaldosEmpresaExcel.php?fechadesde=" + $("#fechadesde4").val()+ "&fechahasta=" + $("#fechahasta4").val(),'_blank');
     });
-	
+
 	$("#rpt5Excel").click(function(event) {
-        window.open("../../reportes/rptSaldosClientesEmpresasExcel.php?idClie=" + $("#refcliente5").val() + "&fechadesde=" + $("#fechadesde5").val()+ "&fechahasta=" + $("#fechahasta5").val(),'_blank');	
-						
+        window.open("../../reportes/rptSaldosClientesEmpresasExcel.php?idClie=" + $("#refcliente5").val() + "&fechadesde=" + $("#fechadesde5").val()+ "&fechahasta=" + $("#fechahasta5").val(),'_blank');
+
     });
-	
+
 	$("#rpt6Excel").click(function(event) {
-        window.open("../../reportes/rptSociosEmpresasExcel.php",'_blank');	
-						
+        window.open("../../reportes/rptSociosEmpresasExcel.php",'_blank');
+
     });
-	
+
 	$("#rpt7Excel").click(function(event) {
-        window.open("../../reportes/rptSociosExcel.php",'_blank');	
-						
+        window.open("../../reportes/rptSociosExcel.php",'_blank');
+
     });
 
 });
@@ -1148,47 +1169,47 @@ $('.form_date').datetimepicker({
  yearSuffix: ''
  };
  $.datepicker.setDefaults($.datepicker.regional['es']);
- 
+
     $( "#reffechadesde1" ).datepicker();
     $( "#reffechadesde1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#reffechahasta1" ).datepicker();
     $( "#reffechahasta1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#reffechadesde2" ).datepicker();
     $( "#reffechadesde2" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#reffechahasta2" ).datepicker();
     $( "#reffechahasta2" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechadesde3" ).datepicker();
     $( "#fechadesde3" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechadesde4" ).datepicker();
     $( "#fechadesde4" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechadesde5" ).datepicker();
     $( "#fechadesde5" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
-	
+
+
 	$( "#fechahasta1" ).datepicker();
     $( "#fechahasta1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechahasta2" ).datepicker();
     $( "#fechahasta2" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechahasta3" ).datepicker();
     $( "#fechahasta3" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechahasta4" ).datepicker();
     $( "#fechahasta4" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechahasta5" ).datepicker();
     $( "#fechahasta5" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
   });
   </script>
-  
+
   <script src="../../js/chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
     var config = {
@@ -1201,8 +1222,8 @@ $('.form_date').datetimepicker({
     for (var selector in config) {
       $(selector).chosen(config[selector]);
     }
-	
-	
+
+
   </script>
 <?php } ?>
 </body>

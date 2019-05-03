@@ -6,7 +6,7 @@ if (!isset($_SESSION['usua_predio']))
 {
 	header('Location: ../../error.php');
 } else {
-	
+
 date_default_timezone_set('America/Buenos_Aires');
 
 include ('../includes/funcionesUsuarios.php');
@@ -53,7 +53,7 @@ $objPHPExcel->getProperties()
 ->setDescription("Documento Excel Suspendidos.")
 ->setKeywords("Excel Office 2007 openxml php")
 ->setCategory("Excel");
- 
+
 $tituloReporte = "Suspendidos";
 $tituloReporte2 = "Fecha: ".date('Y-m-d');
 $titulosColumnas = array("Countrie", "Nro.Doc.", "Apellido y Nombre","Torneo", "Partido", "Equipo", "Fecha","Cant.Fechas","Cumplidas","Categoria");
@@ -63,13 +63,13 @@ $objPHPExcel->setActiveSheetIndex(0)
 $objPHPExcel->setActiveSheetIndex(0)
     ->mergeCells('A2:G2');
 
-	
-	 
+
+
 // Se agregan los titulos del reporte
 $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue('A1', htmlspecialchars(utf8_encode($tituloReporte))) // Titulo del reporte
 	->setCellValue('A2', utf8_encode($tituloReporte2))
-	
+
     ->setCellValue('A3',  utf8_encode($titulosColumnas[0]))  //Titulo de las columnas
     ->setCellValue('B3',  utf8_encode($titulosColumnas[1]))
     ->setCellValue('C3',  utf8_encode($titulosColumnas[2]))
@@ -151,7 +151,7 @@ $estiloTituloReporte = array(
         'wrap' => TRUE
     )
 );
- 
+
 $estiloTituloColumnas = array(
     'font' => array(
         'name'  => 'Arial',
@@ -190,7 +190,7 @@ $estiloTituloColumnas = array(
         'wrap'      => TRUE
     )
 );
- 
+
 $estiloInformacion = new PHPExcel_Style();
 $estiloInformacion->applyFromArray( array(
     'font' => array(
@@ -220,7 +220,7 @@ $objPHPExcel->setActiveSheetIndex(0)
 $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue('A'.$i,  'Pendientes');
 $objPHPExcel->getActiveSheet()->getStyle('A'.$i.':M'.$i)->applyFromArray($estiloTituloColumnas);
-$i++; 
+$i++;
 
 while ($fila = mysql_fetch_array($datosP)) {
 
@@ -235,7 +235,7 @@ while ($fila = mysql_fetch_array($datosP)) {
          ->setCellValue('H'.$i, '')
          ->setCellValue('I'.$i, '')
          ->setCellValue('J'.$i, ($fila['categoria']));
-	$i++; 
+	$i++;
  }
 
 
@@ -245,10 +245,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A3:J3')->applyFromArray($estiloTituloC
 
 // Renombrar Hoja
 $objPHPExcel->getActiveSheet()->setTitle('Hoja1');
- 
+
 // Establecer la hoja activa, para que cuando se abra el documento se muestre primero.
 $objPHPExcel->setActiveSheetIndex(0);
- 
+
 // Se modifican los encabezados del HTTP para indicar que se envia un archivo de Excel.
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8');
 header('Content-Disposition: attachment;filename="rptSuspendidosTotales.xlsx"');
@@ -277,5 +277,4 @@ exit;
 
 
 
- } 
-
+ }

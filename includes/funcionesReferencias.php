@@ -2137,7 +2137,8 @@ function SuspendidosTotalPorJugador($idJugador) {
                 r.cumplidas,
                 r.fechascumplidas,
                 r.categoria,
-                r.pendientesfallo
+                r.pendientesfallo,
+                r.idtcategoria
             from (
             SELECT
                 cc.nombre,
@@ -2161,7 +2162,8 @@ function SuspendidosTotalPorJugador($idJugador) {
                     end),0) cumplidas,
                 (coalesce(sf.fechascumplidas,0) + coalesce(sfc.cumplidas,0)) as fechascumplidas,
                 ca.categoria,
-                sf.pendientesfallo
+                sf.pendientesfallo,
+                ca.idtcategoria
             FROM
                 dbsancionesfallos sf
                     INNER JOIN
@@ -2234,7 +2236,8 @@ function SuspendidosTotalPorJugador($idJugador) {
                 sf.fechascumplidas cumplidas,
                 sf.fechascumplidas,
                 ca.categoria,
-                sf.pendientesfallo
+                sf.pendientesfallo,
+                ca.idtcategoria
             FROM
                 dbsancionesfallosacumuladas sf
                     INNER JOIN
@@ -8679,6 +8682,66 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function traerConectorActivosPorEquiposCategoriasExcepciones($refEquipos, $idCategoria) {
+   $refTemporada = $this->traerUltimaTemporada();
+
+   if (mysql_num_rows($refTemporada)>0) {
+   	$idTemporada = mysql_result($refTemporada,0,0);
+   } else {
+   	$idTemporada = 0;
+   }
+
+   $sql = "select
+       c.idconector,
+       cat.categoria,
+       equ.nombre as equipo,
+       co.nombre as countrie,
+       tip.tipojugador,
+       (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+       (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+       c.refjugadores,
+       c.reftipojugadores,
+       c.refequipos,
+       c.refcountries,
+       c.refcategorias,
+       concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+       jug.nrodocumento,
+       jug.fechanacimiento,
+       tip.idtipojugador,
+       year(now()) - year(jug.fechanacimiento) as edad,
+       (case when jug.fechabaja = '0000-00-00' then '1900-01-01' else coalesce(jug.fechabaja,'1900-01-01') end) as fechabaja,
+       (case when ce.idexcepcionencancha is null then 1 else 2 end) as orden
+
+   from
+       dbconector c
+           inner join
+       dbjugadores jug ON jug.idjugador = c.refjugadores
+           inner join
+       tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+           inner join
+       dbcountries co ON co.idcountrie = jug.refcountries
+           inner join
+       tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+           inner join
+       dbequipos equ ON equ.idequipo = c.refequipos
+           inner join
+       tbdivisiones di ON di.iddivision = equ.refdivisiones
+           left join
+       dbcontactos con ON con.idcontacto = equ.refcontactos
+           inner join
+       tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+           inner join
+       tbcategorias cat ON cat.idtcategoria = c.refcategorias
+           left JOIN
+      dbexcepcionesencancha ce ON ce.refequipos = equ.idequipo
+            and ce.refjugadores = jug.idjugador
+            and ce.reftemporadas = ".$idTemporada."
+       where equ.idequipo = ".$refEquipos." and c.activo = 1 and c.refcategorias = ".$idCategoria."
+   order by orden,concat(jug.apellido,', ',jug.nombres)";
+   $res = $this->query($sql,0);
+   return $res;
+}
+
 
 function traerConectorActivosPorEquiposEdades($refEquipos) {
 $sql = "select
@@ -8854,6 +8917,7 @@ from    (
             on fe.refconectorlocal = c.refequipos
         where
             c.activo = 1 and (jug.fechabaja = '1900-01-01' or jug.fechabaja = '0000-00-00') and equ.activo = 1
+            and c.reftemporadas = ".$idtemporada."
         group by c.refjugadores,
             c.refequipos
         ) as r
@@ -8871,7 +8935,7 @@ from    (
         ) rr
     inner
     join        dbconector coc
-    on          coc.refjugadores = rr.idjugador
+    on          coc.refjugadores = rr.idjugador and coc.reftemporadas = ".$idtemporada."
     inner join
             dbequipos equ ON equ.idequipo = coc.refequipos and equ.activo = 1
     inner join

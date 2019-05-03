@@ -113,7 +113,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 		$pdf->Image('../imagenes/aif_logo.png',2,2,25);
 
 		/***********************************    FIN ******************************************/
-		
+
 
 		//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
 
@@ -172,8 +172,8 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 		$pdf->Cell(200,4,'CANCHA: '.$rowE['canchas']." - ".$rowE['contactoLocal']." // ".$rowE['telefonoLocal'],0,0,'L',FALSE);
 		//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
 
-		$resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($rowE['refconectorlocal'], mysql_result($resTorneo,0,'refcategorias'));
-		$resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($rowE['refconectorvisitante'], mysql_result($resTorneo,0,'refcategorias'));
+		$resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategoriasExcepciones($rowE['refconectorlocal'], mysql_result($resTorneo,0,'refcategorias'));
+		$resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategoriasExcepciones($rowE['refconectorvisitante'], mysql_result($resTorneo,0,'refcategorias'));
 
 		$pdf->Ln();
 		$pdf->SetX(5);
@@ -205,6 +205,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 
 		$inicializaY = $pdf->GetY();
 		$i = 0;
+
 		while ($rowJ = mysql_fetch_array($resJugadoresA))
 		{
 
@@ -291,6 +292,15 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 			$pdf->Ln();
 
 			$pdf->SetX(5);
+
+			if ($rowJ['orden'] == 2) {
+				$pdf->Cell(98,6,'__________  Excepciones ___________',0,0,'C',false);
+
+				$pdf->SetFillColor(183,183,183);
+				$i = $i+1;
+				$pdf->Ln();
+				$pdf->SetX(5);
+			}
 
 			if ($rowJ['reftipojugadores'] == 2) {
 				$pdf->Cell(6,6,'ARQ',1,0,'C',false);
@@ -429,6 +439,15 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 			$i = $i+1;
 			$pdf->Ln();
 			$pdf->SetX(107);
+
+			if ($rowV['orden'] == 2) {
+				$pdf->Cell(98,6,'__________  Excepciones ___________',0,0,'C',false);
+
+				$pdf->SetFillColor(183,183,183);
+				$i = $i+1;
+				$pdf->Ln();
+				$pdf->SetX(107);
+			}
 
 			if ($rowV['reftipojugadores'] == 2) {
 				$pdf->Cell(6,6,'ARQ',1,0,'C',false);
