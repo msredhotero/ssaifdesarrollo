@@ -175,6 +175,25 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 		$resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategoriasExcepciones($rowE['refconectorlocal'], mysql_result($resTorneo,0,'refcategorias'));
 		$resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategoriasExcepciones($rowE['refconectorvisitante'], mysql_result($resTorneo,0,'refcategorias'));
 
+		$resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategoriasExcepciones($rowE['refconectorlocal'], mysql_result($resTorneo,0,'refcategorias'));
+		$resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategoriasExcepciones($rowE['refconectorvisitante'], mysql_result($resTorneo,0,'refcategorias'));
+
+		$resExcepcionesCantidadLocal = $serviciosReferencias->traerExcepcionequiposPorEquipoTemporada($rowE['refconectorlocal'],$idTemporada);
+
+		if (mysql_num_rows($resExcepcionesCantidadLocal)>0) {
+			$excepcionesCantidadLocal = mysql_result($resExcepcionesCantidadLocal,0,'cantidad');
+		} else {
+			$excepcionesCantidadLocal = 0;
+		}
+
+		$resExcepcionesCantidadVisitante = $serviciosReferencias->traerExcepcionequiposPorEquipoTemporada($rowE['refconectorvisitante'],$idTemporada);
+
+		if (mysql_num_rows($resExcepcionesCantidadVisitante)>0) {
+			$excepcionesCantidadVisitante = mysql_result($resExcepcionesCantidadVisitante,0,'cantidad');
+		} else {
+			$excepcionesCantidadVisitante = 0;
+		}
+
 		$pdf->Ln();
 		$pdf->SetX(5);
 		$pdf->Cell(79,4,'Local: ('.$rowE['refconectorlocal'].") ".$rowE['equipolocal'],1,0,'C',false);
@@ -294,7 +313,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 			$pdf->SetX(5);
 
 			if ($rowJ['orden'] == 2) {
-				$pdf->Cell(98,6,'__________  Excepciones ___________',0,0,'C',false);
+				$pdf->Cell(98,6,'_______  Excepciones en cancha: '.$excepcionesCantidadLocal.' _______',0,0,'C',false);
 
 				$pdf->SetFillColor(183,183,183);
 				$i = $i+1;
@@ -441,7 +460,7 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 			$pdf->SetX(107);
 
 			if ($rowV['orden'] == 2) {
-				$pdf->Cell(98,6,'__________  Excepciones ___________',0,0,'C',false);
+				$pdf->Cell(98,6,'_______  Excepciones en cancha: '.$excepcionesCantidadVisitante.' _______',0,0,'C',false);
 
 				$pdf->SetFillColor(183,183,183);
 				$i = $i+1;

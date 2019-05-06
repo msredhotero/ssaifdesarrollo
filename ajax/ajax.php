@@ -647,7 +647,44 @@ case 'eliminarExcepcionesencancha':
 case 'traerExcepcionPorJugadorEquipoTemporada':
    traerExcepcionPorJugadorEquipoTemporada($serviciosReferencias);
    break;
+case 'insertarExcepcionesequipos':
+   insertarExcepcionesequipos($serviciosReferencias);
+   break;
 /**  fin excepciones */
+}
+
+function insertarExcepcionesequipos($serviciosReferencias) {
+   $refequipos = $_POST['refequipos'];
+   $reftemporadas = $_POST['reftemporadas'];
+   $cantidad = $_POST['cantidad'];
+
+   if (($cantidad == '') || ($cantidad < 0) || ($cantidad > 11)) {
+      $cantidad = 0;
+   }
+
+   $existe = $serviciosReferencias->traerExcepcionequiposPorEquipoTemporada($refequipos,$reftemporadas);
+
+   if (mysql_num_rows($existe) > 0) {
+      $id = mysql_result($existe,0,0);
+
+      $res = $serviciosReferencias->modificarExcepcionesequipos($id,$refequipos,$reftemporadas,$cantidad);
+
+      if ($res == true) {
+         echo '';
+      } else {
+         echo 'Hubo un error al modificar datos';
+      }
+   } else {
+      $res = $serviciosReferencias->insertarExcepcionesequipos($refequipos,$reftemporadas,$cantidad);
+
+      if ((integer)$res > 0) {
+         echo '';
+      } else {
+         echo 'Hubo un error al insertar datos';
+      }
+   }
+
+
 }
 
 function insertarExcepcionesencancha($serviciosReferencias) {

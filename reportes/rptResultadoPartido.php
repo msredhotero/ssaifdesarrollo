@@ -42,12 +42,12 @@ if (isset($_GET['reffechadesde1'])) {
 if (isset($_GET['reffechahasta1'])) {
 	$fechaHasta = $_GET['reffechahasta1'];
 }
-	
+
 if ((isset($_GET['reffechas3'])) && ($_GET['reffechas3'] != 0)) {
 	$reffechas			=	$_GET['reffechas3'];
-	
+
 } else {
-	
+
 	$reffechas = '';
 }
 
@@ -73,37 +73,37 @@ if ($reffechas == '') {
 //die(print_r($resEquipos));
 
 if ($idtorneo != 0) {
-	
+
 }
 $pdf = new FPDF();
 $cantidadJugadores = 0;
-#Establecemos los márgenes izquierda, arriba y derecha: 
-$pdf->SetMargins(2, 2 , 2); 
+#Establecemos los mï¿½rgenes izquierda, arriba y derecha:
+$pdf->SetMargins(2, 2 , 2);
 
-#Establecemos el margen inferior: 
-$pdf->SetAutoPageBreak(true,1); 
+#Establecemos el margen inferior:
+$pdf->SetAutoPageBreak(true,1);
 
 
-	
+
 	$pdf->AddPage();
 	/***********************************    PRIMER CUADRANTE ******************************************/
-	
+
 	$pdf->Image('../imagenes/logoparainformes.png',2,2,40);
 
 	/***********************************    FIN ******************************************/
-	
-	
-	
+
+
+
 	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
 
-	
-	
-	
+
+
+
 	//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
-	
+
 	$cantPartidos = 0;
 	$i=0;
-	
+
 	$contadorY1 = 44;
 	$contadorY2 = 44;
 
@@ -117,9 +117,9 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Ln();
 	$pdf->SetY(25);
 while ($rowE = mysql_fetch_array($resEquipos)) {
-	$i=0;	
+	$i=0;
 	$cantPartidos += 1;
-	
+
 	if (($fechasA != $rowE['reffechas']) || ($torneoA != $rowE['reftorneos']) || ($categoriaA != $rowE['refcategorias']) || ($divisionA != $rowE['refdivisiones'])) {
 
 		if ($primero == 1) {
@@ -129,7 +129,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 
 			$cantPartidos = 0;
 			$i=0;
-			
+
 			$contadorY1 = 44;
 			$contadorY2 = 44;
 
@@ -176,10 +176,10 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->SetFont('Arial','',8);
 		$pdf->Ln();
 		$pdf->SetX(5);
-		$pdf->Cell(200,4,'Temporada: '.$temporada,0,0,'C',FALSE); 
+		$pdf->Cell(200,4,'Temporada: '.$temporada,0,0,'C',FALSE);
 		$pdf->Ln();
 		$pdf->SetX(5);
-		$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - División: ".$division." - Fecha: ".$reffechas." - ".$rowE['fechapartido'],0,0,'C',FALSE);
+		$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - Divisiï¿½n: ".$division." - Fecha: ".$reffechas." - ".$rowE['fechapartido'],0,0,'C',FALSE);
 
 		$primero = 1;
 	}
@@ -187,7 +187,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 
 	if ($contadorY1 > 200) {
 		$pdf->AddPage();
-		$pdf->Image('../imagenes/logoparainformes.png',2,2,40);	
+		$pdf->Image('../imagenes/logoparainformes.png',2,2,40);
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Ln();
 		$pdf->Ln();
@@ -197,19 +197,19 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->SetFont('Arial','',8);
 		$pdf->Ln();
 		$pdf->SetX(5);
-		$pdf->Cell(200,4,'Temporada: '.$temporada,0,0,'C',FALSE); 
+		$pdf->Cell(200,4,'Temporada: '.$temporada,0,0,'C',FALSE);
 		$pdf->Ln();
 		$pdf->SetX(5);
-		$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - División: ".$division." - Fecha: ".$reffechas." - ".$rowE['fechapartido'],0,0,'C',FALSE);
+		$pdf->Cell(200,4,'Torneo: '.$descripcion." - Categoria: ".$categoria." - Divisiï¿½n: ".$division." - Fecha: ".$reffechas." - ".$rowE['fechapartido'],0,0,'C',FALSE);
 		//$resJugadores = $serviciosJugadores->TraerJugadoresPorEquipoPlanillas($rowE['idequipo'],$reffecha, $idtorneo);
-		
+
 		$cantPartidos = 0;
 		$i=0;
-		
+
 		$contadorY1 = 44;
 		$contadorY2 = 44;
 	}
-	
+
 	$resJugadoresA = $serviciosReferencias->traerIncidenciasPorFixtureEquipoLocal($rowE['idfixture'],$rowE['refconectorlocal']);
 	$resJugadoresB = $serviciosReferencias->traerIncidenciasPorFixtureEquipoVisitante($rowE['idfixture'],$rowE['refconectorvisitante']);
 	$pdf->SetFont('Arial','',9);
@@ -221,7 +221,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->Cell(8,4,$rowE['goleslocal'],1,0,'C',true);
 	$pdf->Cell(8,4,$rowE['golesvisitantes'],1,0,'C',true);
 	$pdf->Cell(79,4,'('.$rowE['refconectorvisitante'].") ".$rowE['equipovisitante'],1,0,'L',true);
-	
+
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->Cell(200,4,'Estado Partido: '.$rowE['estado']." - Arbitro: ".$rowE['arbitro'],0,0,'L',FALSE);
@@ -235,35 +235,35 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->Cell(40,4,'Apellido y Nombre',0,0,'C',false);
 	$pdf->Cell(6,4,'GF',0,0,'C',false);
 	$pdf->Cell(6,4,'GC',0,0,'C',false);
-	$pdf->Cell(7,4,'A/E/I',0,0,'C',false);
+	$pdf->Cell(7,4,'A/E/I/AA',0,0,'C',false);
 	$pdf->Cell(6,4,'PC',0,0,'C',false);
 	$pdf->Cell(6,4,'PA',0,0,'C',false);
 	$pdf->Cell(6,4,'PE',0,0,'C',false);
-	
+
 	$pdf->Cell(8,4,'',0,0,'C',false);
 	$pdf->Cell(15,4,'Nro',0,0,'C',false);
 	$pdf->Cell(40,4,'Apellido y Nombre',0,0,'C',false);
 	$pdf->Cell(6,4,'GF',0,0,'C',false);
 	$pdf->Cell(6,4,'GC',0,0,'C',false);
-	$pdf->Cell(7,4,'A/E/I',0,0,'C',false);
+	$pdf->Cell(7,4,'A/E/I/AA',0,0,'C',false);
 	$pdf->Cell(6,4,'PC',0,0,'C',false);
 	$pdf->Cell(6,4,'PA',0,0,'C',false);
 	$pdf->Cell(6,4,'PE',0,0,'C',false);
-	
-	
+
+
 	$inicializaY = $pdf->GetY();
 	$contadorY1 = $inicializaY;
 	$contadorY2 = $inicializaY;
 	$i = 0;
 	while ($rowJ = mysql_fetch_array($resJugadoresA))
 	{
-						
+
 		$pdf->SetFillColor(183,183,183);
 		$i = $i+1;
 		$pdf->Ln();
-		
+
 		$pdf->SetX(5);
-		
+
 		$pdf->Cell(15,4,$rowJ['nrodocumento'],0,0,'C',false);
 		$pdf->SetFont('Arial','',7);
 		$pdf->Cell(40,4,substr($rowJ['apyn'],0,20),0,0,'L',false);
@@ -274,28 +274,28 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		$pdf->Cell(6,4,$rowJ['pc'],0,0,'C',false);
 		$pdf->Cell(6,4,$rowJ['pa'],0,0,'C',false);
 		$pdf->Cell(6,4,$rowJ['pe'],0,0,'C',false);
-		
+
 
 		$contadorY1 += 4;
 
 	}
-	
 
-	
-	
+
+
+
 	$i = 0;
 	$pdf->SetX(107);
 	$pdf->SetY($inicializaY - 1);
 	while ($rowV = mysql_fetch_array($resJugadoresB))
 	{
-		
-		
-		
+
+
+
 		$pdf->SetFillColor(183,183,183);
 		$i = $i+1;
 		$pdf->Ln();
 		$pdf->SetX(107);
-		
+
 		$pdf->Cell(15,4,$rowV['nrodocumento'],0,0,'C',false);
 		$pdf->SetFont('Arial','',7);
 		$pdf->Cell(40,4,substr($rowV['apyn'],0,20),0,0,'L',false);
@@ -309,15 +309,15 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 
 		$contadorY2 += 4;
 		if ($i == 27) {
-			break;	
+			break;
 		}
 	}
-	
 
-	
-	
+
+
+
 	if ($contadorY1 > $contadorY2) {
-		$pdf->SetY($contadorY1);		
+		$pdf->SetY($contadorY1);
 	} else {
 		$pdf->SetY($contadorY2);
 	}
@@ -333,4 +333,3 @@ $pdf->Output($nombreTurno,'I');
 
 
 ?>
-

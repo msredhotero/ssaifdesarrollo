@@ -9,6 +9,67 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   /* PARA Excepcionesequipos */
+
+   function insertarExcepcionesequipos($refequipos,$reftemporadas,$cantidad) {
+      $sql = "insert into dbexcepcionesequipos(idexcepcionequipo,refequipos,reftemporadas,cantidad)
+      values ('',".$refequipos.",".$reftemporadas.",".$cantidad.")";
+      $res = $this->query($sql,1);
+      return $res;
+   }
+
+
+   function modificarExcepcionesequipos($id,$refequipos,$reftemporadas,$cantidad) {
+      $sql = "update dbexcepcionesequipos
+      set
+      refequipos = ".$refequipos.",reftemporadas = ".$reftemporadas.",cantidad = ".$cantidad."
+      where idexcepcionequipo =".$id;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+
+   function eliminarExcepcionesequipos($id) {
+      $sql = "delete from dbexcepcionesequipos where idexcepcionequipo =".$id;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+
+   function traerExcepcionesequipos() {
+      $sql = "select
+      e.idexcepcionequipo,
+      e.refequipos,
+      e.reftemporadas,
+      e.cantidad
+      from dbexcepcionesequipos e
+      order by 1";
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+
+   function traerExcepcionesequiposPorId($id) {
+      $sql = "select idexcepcionequipo,refequipos,reftemporadas,cantidad from dbexcepcionesequipos where idexcepcionequipo =".$id;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   function traerExcepcionequiposPorEquipoTemporada($idequipo, $idtemporada) {
+      $sql = "SELECT
+                idexcepcionequipo, refequipos, reftemporadas, cantidad
+            FROM
+                dbexcepcionesequipos
+            WHERE
+                refequipos = ".$idequipo." and reftemporadas = ".$idtemporada;
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   /* Fin */
+   /* /* Fin de la Tabla: dbexcepcionesequipos*/
+
 
    /* PARA Excepcionesencancha */
 
@@ -66,6 +127,18 @@ class ServiciosReferencias {
    function traerExcepcionPorJugadorEquipoTemporada($idjugador, $idequipo, $idtemporada) {
       $sql = "SELECT
                 idexcepcionencancha, refequipos, refjugadores, reftemporadas
+            FROM
+                dbexcepcionesencancha
+            WHERE
+                refjugadores =".$idjugador." and refequipos = ".$idequipo." and reftemporadas = ".$idtemporada;
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   function totalExcepcionPorJugadorEquipoTemporada($idjugador, $idequipo, $idtemporada) {
+      $sql = "SELECT
+                count(idexcepcionencancha)
             FROM
                 dbexcepcionesencancha
             WHERE
@@ -13711,7 +13784,8 @@ select
     0 as encontra,
     (case when p.reftiposanciones = 1 then 'A'
             when p.reftiposanciones = 2 then 'E'
-            when p.reftiposanciones = 3 then 'I' end) as aei,
+            when p.reftiposanciones = 3 then 'I'
+            when p.reftiposanciones = 4 then 'AA' end) as aei,
     0 as pc,
     0 as pa,
     0 as pe
@@ -13727,7 +13801,7 @@ select
     inner join dbcountries cou ON cou.idcountrie = equ.refcountries
     inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
     inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
-    where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.reftiposanciones in (1,2,3) and p.cantidad >0
+    where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.reftiposanciones in (1,2,3,4) and p.cantidad >0
 ) as r
 group by r.apyn,
 r.nrodocumento,
@@ -13830,7 +13904,8 @@ select
     0 as encontra,
     (case when p.reftiposanciones = 1 then 'A'
             when p.reftiposanciones = 2 then 'E'
-            when p.reftiposanciones = 3 then 'I' end) as aei,
+            when p.reftiposanciones = 3 then 'I'
+            when p.reftiposanciones = 4 then 'AA' end) as aei,
     0 as pc,
     0 as pa,
     0 as pe
@@ -13846,7 +13921,7 @@ select
     inner join dbcountries cou ON cou.idcountrie = equ.refcountries
     inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
     inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
-    where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.reftiposanciones in (1,2,3) and p.cantidad >0
+    where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.reftiposanciones in (1,2,3,4) and p.cantidad >0
 ) as r
 group by r.apyn,
 r.nrodocumento,

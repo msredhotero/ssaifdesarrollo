@@ -116,6 +116,15 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 }
 
+$resExcepcionesCantidad = $serviciosReferencias->traerExcepcionequiposPorEquipoTemporada($id,$idTemporada);
+
+if (mysql_num_rows($resExcepcionesCantidad)>0) {
+	$cantidadEnCancha = mysql_result($resExcepcionesCantidad,0,'cantidad');
+} else {
+	$cantidadEnCancha = 0;
+}
+
+$totalExcepciones = 0;
 
 ?>
 
@@ -414,7 +423,9 @@ tr {
                                 <td <?php echo $color; ?> align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="<?php echo $rowC['idconector']; ?>" class="varEliminarJugador"></td>
 										  <?php if ($existeExcepciion == 0) { ?>
 											  <td <?php echo $color; ?> align="center"><img src="../../imagenes/sign-add-icon2.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varAgregarExcepcion"></td>
-										  <?php } else { ?>
+										  <?php } else {
+											  $totalExcepciones += 1;
+											  ?>
 											 <td <?php echo $color; ?> align="center"><img src="../../imagenes/eliminarIco.png" style="cursor:pointer;" id="<?php echo $rowC['refjugadores']; ?>" class="varEliminarExcepcion"></td>
 										  <?php } ?>
                                 </tr>
@@ -423,8 +434,28 @@ tr {
 							?>
                             </tbody>
                             <tfoot>
-                            	<td colspan="6" align="right">Total Jugadores:</td>
-                                <td><?php echo $cantidad; ?></td>
+										<tr>
+											<td colspan="6" align="right">Total Jugadores:</td>
+											<td><?php echo $cantidad; ?></td>
+										</tr>
+										<tr>
+											<td colspan="6" align="right">Cargar Jugadores En Cancha:</td>
+											<td colspan="1">
+												<div class="row">
+													<div class="col-xs-10 col-sm-10">
+														<input style="max-width:60px;" class="form-control" type="number" name="excepcionesequipos" id="excepcionesequipos" value="<?php echo $cantidadEnCancha; ?>" />
+													</div>
+													<div class="col-xs-2 col-sm-2">
+														de <?php echo $totalExcepciones; ?>
+													</div>
+												</div>
+
+
+
+											</td>
+											<td colspan="2"><button type="button" class="btn btn-primary btnGuardarCantidadExcepciones" id="<?php echo $id; ?>" style="margin-left:0px;">GUARDAR</button></td>
+										</tr>
+
                             </tfoot>
                             </table>
                         </div>
@@ -575,6 +606,33 @@ $(document).ready(function(){
 
 	$('.varEliminarExcepcion').click(function() {
 		EliminarExcepcion($(this).attr("id"));
+	});
+
+
+	function agregarExcepcionCantidad() {
+		$.ajax({
+			data:  {
+				refequipos: <?php echo $id; ?>,
+				reftemporadas: <?php echo $idTemporada; ?>,
+				cantidad: $('#excepcionesequipos').val(),
+				accion: 'insertarExcepcionesequipos'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+
+				url = "ver.php?id=<?php echo $id; ?>";
+				$(location).attr('href',url);
+
+
+			}
+		});
+	}
+
+	$('.btnGuardarCantidadExcepciones').click(function() {
+		agregarExcepcionCantidad();
 	});
 
 
