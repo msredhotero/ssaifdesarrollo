@@ -24,7 +24,9 @@ $ar = array();
 $cadTemporadas = '';
 	while ($row = mysql_fetch_array($resTraerTemporadas)) {
 
-		array_push($ar,array('country'=>$row['nombre'], 'id'=> $row[0]));
+		if ($row[0] != 1 && $row[0] != 91) {
+			array_push($ar,array('country'=>$row['nombre'], 'id'=> $row[0]));
+		}
 	}
 
 //echo "[".substr($cadTemporadas,0,-1)."]";

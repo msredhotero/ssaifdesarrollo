@@ -2211,7 +2211,8 @@ function SuspendidosTotalPorJugador($idJugador) {
                 r.fechascumplidas,
                 r.categoria,
                 r.pendientesfallo,
-                r.idtcategoria
+                r.idtcategoria,
+                r.poracumulacion
             from (
             SELECT
                 cc.nombre,
@@ -2236,7 +2237,8 @@ function SuspendidosTotalPorJugador($idJugador) {
                 (coalesce(sf.fechascumplidas,0) + coalesce(sfc.cumplidas,0)) as fechascumplidas,
                 ca.categoria,
                 sf.pendientesfallo,
-                ca.idtcategoria
+                ca.idtcategoria,
+                0 as poracumulacion
             FROM
                 dbsancionesfallos sf
                     INNER JOIN
@@ -2310,7 +2312,8 @@ function SuspendidosTotalPorJugador($idJugador) {
                 sf.fechascumplidas,
                 ca.categoria,
                 sf.pendientesfallo,
-                ca.idtcategoria
+                ca.idtcategoria,
+                1 as poracumulacion
             FROM
                 dbsancionesfallosacumuladas sf
                     INNER JOIN
@@ -4585,7 +4588,7 @@ c.codigopostal
 ,c.refusuarios
 from dbcountries c
 inner join tbposiciontributaria pos ON pos.idposiciontributaria = c.refposiciontributaria
-order by c.nombre";
+order by trim(c.nombre)";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -11287,7 +11290,7 @@ $sql = "SELECT
 FROM
     dbfixture fix
         inner join
-    dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftemporadas = 7 and tor.refcategorias = ".$idCategoria."
+    dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftemporadas = 8 and tor.refcategorias = ".$idCategoria."
         inner join
     tbestadospartidos e ON e.idestadopartido = fix.refestadospartidos
         INNER JOIN

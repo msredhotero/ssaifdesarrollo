@@ -172,6 +172,19 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			}
 		}
 
+		$resSuspendido = $servicios->SuspendidosTotalPorJugador($row['refjugadores']);
+		if (mysql_num_rows($resSuspendido) > 0) {
+			if (mysql_result($resSuspendido,0,'poracumulacion') == 1) {
+				if (mysql_result($resSuspendido,0,'idtcategoria') == $row['refcategorias']) {
+					$habilitacion .= '/Susp.';
+				}
+			} else {
+				$habilitacion .= '/Susp.';
+			}
+		}
+
+
+
 		$this->SetXY($x, $y);
 		$yN = $y;
         $this->MultiCell($w[0],5,$row['nrodocumento'],'','C');

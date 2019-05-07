@@ -173,18 +173,20 @@ if (!$_POST){
 		$nuevoId4 = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 		$error .= $serviciosReferencias->subirArchivoJugadoresID('avatar-4',$idPre,$nuevoId4,4,$idPre,$id);
 
-		if ($error == '') {
+		//se elimina la marca cuando sube una documentacion
+		//if ($error == '') {
 			//elimino la documentacion
-			$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($id, 4);
+			//$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($id, 4);
 
 			//elimino el valor
-			$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($id, 4);
+			//$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($id, 4);
 
-			$serviciosReferencias->insertarJugadoresdocumentacion($id,4,1,'');
+
+			//$serviciosReferencias->insertarJugadoresdocumentacion($id,4,1,'');
 
 			//foto
-			$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,338);
-		}
+			//$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,338);
+		//}
 	}
 
 
