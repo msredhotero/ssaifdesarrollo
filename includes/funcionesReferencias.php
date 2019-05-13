@@ -9,6 +9,34 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   function traerPlanillasarbitrosPorFixtureArbitro($id) {
+      $sql = "select
+      p.idplanillaarbitro,
+      p.reffixture,
+      p.refarbitros,
+      p.imagen,
+      p.type,
+      p.goleslocal,
+      p.golesvisitante,
+      p.amarillaslocal,
+      p.expulsadoslocal,
+      p.informadoslocal,
+      p.dobleamarillaslocal,
+      p.cantidadjugadoreslocal,
+      p.amarillasvisitante,
+      p.expulsadosvisitante,
+      p.informadosvisitante,
+      p.dobleamarillasvisitante,
+      p.cantidadjugadoresvisitante,
+      p.refestadospartidos,
+      p.observaciones,
+      p.refestados
+      from dbplanillasarbitros p
+      where p.reffixture = ".$id;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
    /* PARA Excepcionesequipos */
 
    function insertarExcepcionesequipos($refequipos,$reftemporadas,$cantidad) {
@@ -12126,7 +12154,7 @@ function traerSancionesJugadoresConFallosPorSancion($idFallo, $idTipoTorneo) {
         inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
         inner join dbcountries co ON co.idcountrie = jug.refcountries
         inner join dbfixture fix ON fix.idfixture = p.reffixture
-        inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo = ".$idTipoTorneo."
+        inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos and tor.reftipotorneo in (1,2)
         inner join tbfechas fe ON fe.idfecha = fix.reffechas
         inner join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
         inner join dbequipos equ ON equ.idequipo = p.refequipos

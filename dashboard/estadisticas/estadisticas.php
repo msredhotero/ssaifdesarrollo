@@ -31,6 +31,12 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Carga d
 
 $idFixture = $_GET['id'];
 
+/****  traigo la imagen de la planilla  ******///
+$resImagenPlanilla = $serviciosReferencias->traerPlanillasarbitrosPorFixtureArbitro($idFixture);
+
+
+///****   fin  de la imagen *******************//
+
 $resFix = $serviciosReferencias->TraerFixturePorId($idFixture);
 $resFixDetalle	= $serviciosReferencias->traerFixtureDetallePorId($idFixture);
 
@@ -560,6 +566,7 @@ if ($_SESSION['idroll_predio'] != 1) {
     	<div class="cuerpoBox" style="padding-right:10px;">
 
         <button data-toggle="collapse" data-target="#demo" class="btn btn-info" style="margin-bottom:5px;">Fechas de los equipos</button>
+		  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="margin-bottom:5px;">Planilla</button>
         <div id="demo" class="collapse">
         	<div class="col-md-12" align="center" style="text-align:center;">
                 <ul class="list-inline" id="lstFechas">
@@ -1765,12 +1772,45 @@ if ($_SESSION['idroll_predio'] != 1) {
     </div>
 
 
-</div>
 
 
 </div>
 
 
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog modal-lg">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Planilla Cargada</h4>
+			</div>
+		<div class="modal-body">
+			<?php
+			if (mysql_num_rows($resImagenPlanilla) > 0) {
+
+			if (mysql_result($resImagenPlanilla,0,'imagen') != '') {
+				echo '<img src="../../../../newdashboard.git/trunk/arbitros/'.$idFixture.'/'.mysql_result($resImagenPlanilla,0,"imagen").'" width="100%"/>';
+			} else {
+				echo '<p>Aun no se cargo la imagen de la planilla</p>';
+			}
+
+			?>
+			<?php } else { ?>
+			<p>Aun no se cargo la imagen de la planilla</p>
+			<?php }  ?>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		</div>
+		</div>
+
+	</div>
+</div>
 
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
