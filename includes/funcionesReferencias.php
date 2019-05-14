@@ -4970,18 +4970,18 @@ return $res;
 
 /* PARA Arbitros */
 
-function insertarArbitros($nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email) {
-$sql = "insert into dbarbitros(idarbitro,nombrecompleto,telefonoparticular,telefonoceleluar,telefonolaboral,telefonofamiliar,email)
-values ('','".($nombrecompleto)."','".($telefonoparticular)."','".($telefonoceleluar)."','".($telefonolaboral)."','".($telefonofamiliar)."','".($email)."')";
+function insertarArbitros($nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email,$refusuarios) {
+$sql = "insert into dbarbitros(idarbitro,nombrecompleto,telefonoparticular,telefonoceleluar,telefonolaboral,telefonofamiliar,email,refusuarios)
+values ('','".($nombrecompleto)."','".($telefonoparticular)."','".($telefonoceleluar)."','".($telefonolaboral)."','".($telefonofamiliar)."','".($email)."', ".$refusuarios.")";
 $res = $this->query($sql,1);
 return $res;
 }
 
 
-function modificarArbitros($id,$nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email) {
+function modificarArbitros($id,$nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email,$refusuarios) {
 $sql = "update dbarbitros
 set
-nombrecompleto = '".($nombrecompleto)."',telefonoparticular = '".($telefonoparticular)."',telefonoceleluar = '".($telefonoceleluar)."',telefonolaboral = '".($telefonolaboral)."',telefonofamiliar = '".($telefonofamiliar)."',email = '".($email)."'
+nombrecompleto = '".($nombrecompleto)."',telefonoparticular = '".($telefonoparticular)."',telefonoceleluar = '".($telefonoceleluar)."',telefonolaboral = '".($telefonolaboral)."',telefonofamiliar = '".($telefonofamiliar)."',email = '".($email)."', refusuarios = ".$refusuarios."
 where idarbitro =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -5011,8 +5011,38 @@ return $res;
 }
 
 
+function traerArbitrosAjax($length, $start, $busqueda,$colSort,$colSortDir) {
+
+   $where = '';
+
+		$busqueda = str_replace("'","",$busqueda);
+		if ($busqueda != '') {
+			$where = "where a.nombrecompleto like '%".$busqueda."%' or a.telefonoparticular like '%".$busqueda."%' or a.telefonoceleluar like '%".$busqueda."%' or a.email like '%".$busqueda."%' or a.telefonofamiliar like '%".$busqueda."%'";
+		}
+
+   $sql = "select
+   a.idarbitro,
+   a.nombrecompleto,
+   a.telefonoparticular,
+   a.telefonoceleluar,
+   a.telefonolaboral,
+   a.telefonofamiliar,
+   a.email,
+   u.nombrecompleto
+   from dbarbitros a
+   left join dbusuarios u on u.idusuario = a.refusuarios
+   ".$where."
+      ORDER BY ".$colSort." ".$colSortDir."
+      limit ".$start.",".$length;
+
+   $res = $this->query($sql,0);
+   //die(var_dump( $sql));
+   return $res;
+}
+
+
 function traerArbitrosPorId($id) {
-$sql = "select idarbitro,nombrecompleto,telefonoparticular,telefonoceleluar,telefonolaboral,telefonofamiliar,email from dbarbitros where idarbitro =".$id;
+$sql = "select idarbitro,nombrecompleto,telefonoparticular,telefonoceleluar,telefonolaboral,telefonofamiliar,email,refusuarios from dbarbitros where idarbitro =".$id;
 $res = $this->query($sql,0);
 return $res;
 }

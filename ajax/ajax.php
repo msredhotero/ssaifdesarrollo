@@ -3033,7 +3033,10 @@ $telefonoceleluar = $_POST['telefonoceleluar'];
 $telefonolaboral = $_POST['telefonolaboral'];
 $telefonofamiliar = $_POST['telefonofamiliar'];
 $email = $_POST['email'];
-$res = $serviciosReferencias->insertarArbitros($nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email);
+
+$refusuarios = $_POST['refusuarios'];
+
+$res = $serviciosReferencias->insertarArbitros($nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email,$refusuarios);
 if ((integer)$res > 0) {
 echo '';
 } else {
@@ -3048,7 +3051,10 @@ $telefonoceleluar = $_POST['telefonoceleluar'];
 $telefonolaboral = $_POST['telefonolaboral'];
 $telefonofamiliar = $_POST['telefonofamiliar'];
 $email = $_POST['email'];
-$res = $serviciosReferencias->modificarArbitros($id,$nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email);
+
+$refusuarios = $_POST['refusuarios'];
+
+$res = $serviciosReferencias->modificarArbitros($id,$nombrecompleto,$telefonoparticular,$telefonoceleluar,$telefonolaboral,$telefonofamiliar,$email,$refusuarios);
 if ($res == true) {
 echo '';
 } else {
