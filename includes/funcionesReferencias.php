@@ -2473,7 +2473,11 @@ function traerProximaFechaFiltros($where) {
             coalesce(arr.nombrecompleto,'') as arbitro,
             cc.idcancha,
             (case when esresaltado = 1 then 'Si' else 'No' end) as esresaltado,
-            (case when esdestacado = 1 then 'Si' else 'No' end) as esdestacado
+            (case when esdestacado = 1 then 'Si' else 'No' end) as esdestacado,
+            fix.goleslocal,
+            fix.golesvisitantes,
+            pa.imagen,
+            pa.imagen2
         from dbfixture fix
         inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
         inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
@@ -2486,6 +2490,7 @@ function traerProximaFechaFiltros($where) {
         inner join tbdias dia ON dia.iddia = dct.refdias
         left join dbarbitros arr ON arr.idarbitro = fix.refarbitros
         inner join tbfechas f ON f.idfecha = fix.reffechas
+        left join dbplanillasarbitros pa on pa.reffixture = fix.idfixture
 
         where ".$where."
         order by tor.refcategorias, tor.refdivisiones, f.idfecha

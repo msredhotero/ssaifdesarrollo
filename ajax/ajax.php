@@ -1467,6 +1467,10 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 	$fecha = '';
 	$cadCabecera = '';
 	$primero = 0;
+
+   $cadPlanilla = '';
+   $cadComplemento = '';
+
 	while ($row = mysql_fetch_array($resProximasFechas)) {
 		if (($categorias != $row['categoria']) || ($fecha != $row['fecha'])) {
 
@@ -1485,6 +1489,8 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 									<th>Hora</th>
 									<th>Division</th>
 									<th>Cancha</th>
+                           <th>Resultado</th>
+                           <th>Arbitro</th>
 									<th>Es Resaltado</th>
 									<th>Es Destacado</th>
 									<th></th>
@@ -1501,16 +1507,20 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 
 		$dateH = new DateTime($row['fechajuego']);
 
+      if ($row['equipoLocal'])
+
 		$cadCabecera .= "<tr>
 							<td>".$row['equipoLocal']."</td>
 							<td>".$row['equipoVisitante']."</td>
-							<td><input class='form-control fecha' type='text' name='fecha".$row['idfixture']."' id='fecha".$row['idfixture']."' value='".$dateH->format('d-m-Y')."'/></td>
-							<td><input class='form-control hora' type='text' name='hora".$row['idfixture']."' id='hora".$row['idfixture']."' value='".$row['hora']."'/></td>
+							<td><input style='width:110px;' class='form-control fecha' type='text' name='fecha".$row['idfixture']."' id='fecha".$row['idfixture']."' value='".$dateH->format('d-m-Y')."'/></td>
+							<td><input style='width:65px;' class='form-control hora' type='text' name='hora".$row['idfixture']."' id='hora".$row['idfixture']."' value='".$row['hora']."'/></td>
 							<td>".$row['division']."</td>
 							<td><select data-placeholder='selecione la Cancha...' id='refcanchas".$row['idfixture']."' name='refcanchas".$row['idfixture']."' class='chosen-select' tabindex='2' style='width:210px;'>
 								<option value='".$row['idcancha']."'>".$row['cancha']."</option>
 								".$cadCanchas."
 								</select></td>
+                     <td>".$row['goleslocal'].' - '.$row['golesvisitantes']."</td>
+                     <td>".$row['arbitro']."</td>
 							<td><input class='form-control' type='checkbox' name='esresaltado".$row['idfixture']."' id='esresaltado".$row['idfixture']."' ".($row['esresaltado'] == 'Si' ? 'checked' : '')."/></td>
 							<td><input class='form-control' type='checkbox' name='esdestacado".$row['idfixture']."' id='esdestacado".$row['idfixture']."' ".($row['esdestacado'] == 'Si' ? 'checked' : '')."/></td>
 							<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a></td>
