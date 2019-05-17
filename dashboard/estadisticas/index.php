@@ -341,7 +341,8 @@ $(document).ready(function(){
 		categoria = $(this).attr("data-categoria");
 		division = $(this).attr("data-division");
 		partido = $(this).attr("data-partido");
-		window.open("informe.php?informe=" + imagen + "&categoria=" + categoria + "&division=" + division + "&partido=" + partido,'_blank');
+		fecha = $(this).attr("data-fecha");
+		window.open("informe.php?informe=" + imagen + "&categoria=" + categoria + "&division=" + division + "&partido=" + partido + "&fecha=" + fecha,'_blank');
 	});
 
 
