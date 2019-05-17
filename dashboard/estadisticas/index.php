@@ -335,6 +335,12 @@ $(document).ready(function(){
 		window.open("https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/" + idBtn + "/2/" + imagen,'_blank');
 	});
 
+	$("#proxima").on("click",'.btnInforme', function(){
+		idBtn = $(this).attr("id");
+		imagen = $(this).attr("data-imagen");
+		window.open("informe.php?informe=" + imagen,'_blank');
+	});
+
 
 	$("#proxima").on("click",'.guardarPartidoSimple', function(){
 

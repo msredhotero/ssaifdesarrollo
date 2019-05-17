@@ -2479,7 +2479,8 @@ function traerProximaFechaFiltros($where) {
             fix.goleslocal,
             fix.golesvisitantes,
             pa.imagen,
-            pa.imagen2
+            pa.imagen2,
+            pa.observaciones
         from dbfixture fix
         inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
         inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias

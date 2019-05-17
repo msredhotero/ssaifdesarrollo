@@ -1470,6 +1470,7 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 
    $cadPlanilla = '';
    $cadComplemento = '';
+   $cadInforme = '';
 
 	while ($row = mysql_fetch_array($resProximasFechas)) {
 		if (($categorias != $row['categoria']) || ($fecha != $row['fecha'])) {
@@ -1524,6 +1525,14 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
       } else {
          $cadComplemento = '<button type="button" data-imagen="'.$row['imagen2'].'" class="btn btn-success btn-sm btnComplemento" id="'.$row['idfixture'].'">
           <span class="glyphicon glyphicon-ok"></span> Comple.
+        </button>';
+      }
+
+      if ($row['observaciones'] == 'Sin novedad') {
+         $cadInforme = '';
+      } else {
+         $cadComplemento = '<button type="button" data-imagen="'.$row['observaciones'].'" class="btn btn-success btn-sm btnInforme" id="'.$row['idfixture'].'">
+          <span class="glyphicon glyphicon-ok"></span> Infor.
         </button>';
       }
 
