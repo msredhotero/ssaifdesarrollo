@@ -1550,7 +1550,7 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
                      <td>".$row['arbitro']."</td>
 							<td><input class='form-control' type='checkbox' name='esresaltado".$row['idfixture']."' id='esresaltado".$row['idfixture']."' ".($row['esresaltado'] == 'Si' ? 'checked' : '')."/></td>
 							<td><input class='form-control' type='checkbox' name='esdestacado".$row['idfixture']."' id='esdestacado".$row['idfixture']."' ".($row['esdestacado'] == 'Si' ? 'checked' : '')."/></td>
-							<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a><br>".$cadPlanilla.'<br>'.$cadComplemento."</td>
+							<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a><br>".$cadPlanilla.'<br>'.$cadComplemento.'<br>'.$cadInforme."</td>
 							<td><button type='button' class='btn btn-primary guardarPartidoSimple' id='".$row['idfixture']."'>Guardar</button></td>
 						</tr>";
 
