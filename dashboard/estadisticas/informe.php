@@ -6,6 +6,7 @@ $categoria = $_GET['categoria'];
 $division = $_GET['division'];
 $partido = $_GET['partido'];
 $fecha = $_GET['fecha'];
+$arbitro = $_GET['arbitro'];
 
 ?>
 <!DOCTYPE html>
@@ -19,6 +20,7 @@ $fecha = $_GET['fecha'];
          <h1>Partido: <?php echo utf8_encode($partido); ?></h1>
          <h2>Categoria: <?php echo utf8_encode($categoria); ?></h2>
          <h2>Division: <?php echo utf8_encode($division); ?></h2>
+         <h2>Arbitro: <?php echo utf8_encode($arbitro); ?></h2>
          <h4>Fecha: <?php echo utf8_encode($fecha); ?></h4>
       </div>
 

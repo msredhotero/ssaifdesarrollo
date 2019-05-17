@@ -1531,7 +1531,7 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
       if (($row['observaciones'] == 'Sin novedad') || ($row['observaciones'] == '') || ($row['observaciones'] == null)) {
          $cadInforme = '';
       } else {
-         $cadInforme = "<button type='button' data-categoria='".$row['categoria']."' data-fecha='".$row['fecha'].' | '.$dateH->format('d-m-Y').' | '.$row['hora']."' data-arbitro='".$row['arbitro']."' data-division='".$row['division']."' data-partido='".$row['equipoLocal']." - ".$row['equipoVisitante']."' data-imagen='".$row['observaciones']."' class='btn btn-success btn-sm btnInforme' id='".$row['idfixture']."'>
+         $cadInforme = "<button type='button' data-categoria='".$row['categoria']."' data-fecha='".$row['fecha'].' | '.$dateH->format('d-m-Y').' | '.$row['hora']."' data-arbitro='".$row['arbitro']."' data-division='".$row['division']."' data-partido='".$row['equipoLocal']." - ".$row['equipoVisitante']."' data-imagen='".str_replace(PHP_EOL, '<br>', $row['observaciones'])."' class='btn btn-success btn-sm btnInforme' id='".$row['idfixture']."'>
           <span class='glyphicon glyphicon-ok'></span> Infor.
         </button>";
       }
