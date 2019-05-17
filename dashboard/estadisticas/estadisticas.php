@@ -1846,13 +1846,6 @@ $(document).ready(function(){
 	?>
 
 
-
-	$('.btnComplemento').click(function(){
-		idBtn = $(this).attr("id");
-		imagen = $(this).attr("data-imagen");
-		window.open("https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/" + idBtn + "/2/" + imagen,'_blank');
-	});
-
 	$('#colapsarMenu').click();
 	var minutosPartido = <?php echo $minutos; ?>;
 	/*var table = $('#example dataTables_filter input');*/
