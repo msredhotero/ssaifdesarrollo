@@ -1528,7 +1528,7 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
         </button>';
       }
 
-      if ($row['observaciones'] == 'Sin novedad') {
+      if (($row['observaciones'] == 'Sin novedad') || ($row['observaciones'] == '') || ($row['observaciones'] == null)) {
          $cadInforme = '';
       } else {
          $cadComplemento = '<button type="button" data-imagen="'.$row['observaciones'].'" class="btn btn-success btn-sm btnInforme" id="'.$row['idfixture'].'">
