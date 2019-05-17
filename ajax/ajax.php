@@ -1507,7 +1507,25 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 
 		$dateH = new DateTime($row['fechajuego']);
 
-      if ($row['equipoLocal'])
+      if ($row['imagen'] == '') {
+         $cadPlanilla = '<button type="button" class="btn btn-danger btn-sm">
+          <span class="glyphicon glyphicon-remove"></span> Planilla
+        </button>';
+      } else {
+         $cadPlanilla = '<button type="button" data-imagen="'.$row['imagen'].'" class="btn btn-success btn-sm btnPlanilla" id="'.$row['idfixture'].'">
+          <span class="glyphicon glyphicon-ok"></span> Planilla
+        </button>';
+      }
+
+      if ($row['imagen2'] == '') {
+         $cadComplemento = '<button type="button" class="btn btn-danger btn-sm">
+          <span class="glyphicon glyphicon-remove"></span> Comple.
+        </button>';
+      } else {
+         $cadComplemento = '<button type="button" data-imagen="'.$row['imagen2'].'" class="btn btn-success btn-sm btnComplemento" id="'.$row['idfixture'].'">
+          <span class="glyphicon glyphicon-ok"></span> Comple.
+        </button>';
+      }
 
 		$cadCabecera .= "<tr>
 							<td>".$row['equipoLocal']."</td>
@@ -1523,7 +1541,7 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
                      <td>".$row['arbitro']."</td>
 							<td><input class='form-control' type='checkbox' name='esresaltado".$row['idfixture']."' id='esresaltado".$row['idfixture']."' ".($row['esresaltado'] == 'Si' ? 'checked' : '')."/></td>
 							<td><input class='form-control' type='checkbox' name='esdestacado".$row['idfixture']."' id='esdestacado".$row['idfixture']."' ".($row['esdestacado'] == 'Si' ? 'checked' : '')."/></td>
-							<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a></td>
+							<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a><br>".$cadPlanilla.'<br>'.$cadComplemento."</td>
 							<td><button type='button' class='btn btn-primary guardarPartidoSimple' id='".$row['idfixture']."'>Guardar</button></td>
 						</tr>";
 

@@ -566,7 +566,8 @@ if ($_SESSION['idroll_predio'] != 1) {
     	<div class="cuerpoBox" style="padding-right:10px;">
 
         <button data-toggle="collapse" data-target="#demo" class="btn btn-info" style="margin-bottom:5px;">Fechas de los equipos</button>
-		  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="margin-bottom:5px;">Planilla</button>
+		  <button type="button" class="btn btn-success btnPlanilla" style="margin-bottom:5px;">Planilla</button>
+		  <button type="button" class="btn btn-success btnComplemento" style="margin-bottom:5px;">Complemento</button>
         <div id="demo" class="collapse">
         	<div class="col-md-12" align="center" style="text-align:center;">
                 <ul class="list-inline" id="lstFechas">
@@ -1794,7 +1795,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 			if (mysql_num_rows($resImagenPlanilla) > 0) {
 
 			if (mysql_result($resImagenPlanilla,0,'imagen') != '') {
-				echo '<img src="../../../../newdashboard.git/trunk/arbitros/'.$idFixture.'/'.mysql_result($resImagenPlanilla,0,"imagen").'" width="100%"/>';
+				echo '<img src="https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/'.$idFixture.'/'.mysql_result($resImagenPlanilla,0,"imagen").'" width="100%"/>';
 			} else {
 				echo '<p>Aun no se cargo la imagen de la planilla</p>';
 			}
@@ -1818,6 +1819,39 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+	$( "body" ).keydown(function( event ) {
+	  if ( event.which == 113 ) {
+	     $('#myModal').modal();
+	  }
+	});
+
+	<?php
+	if (mysql_num_rows($resImagenPlanilla) > 0) {
+
+		if (mysql_result($resImagenPlanilla,0,'imagen') != '') {
+			echo "$('.btnPlanilla').click(function(){
+
+				window.open('https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/".$idFixture."/1/".mysql_result($resImagenPlanilla,0,"imagen")."','_blank');
+			});";
+		}
+
+		if (mysql_result($resImagenPlanilla,0,'imagen2') != '') {
+			echo "$('.btnComplemento').click(function(){
+
+				window.open('https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/".$idFixture."/2/".mysql_result($resImagenPlanilla,0,"imagen2")."','_blank');
+			});";
+		}
+	}
+	?>
+
+
+
+	$('.btnComplemento').click(function(){
+		idBtn = $(this).attr("id");
+		imagen = $(this).attr("data-imagen");
+		window.open("https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/" + idBtn + "/2/" + imagen,'_blank');
+	});
 
 	$('#colapsarMenu').click();
 	var minutosPartido = <?php echo $minutos; ?>;

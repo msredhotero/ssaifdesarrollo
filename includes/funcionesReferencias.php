@@ -30,7 +30,9 @@ class ServiciosReferencias {
       p.cantidadjugadoresvisitante,
       p.refestadospartidos,
       p.observaciones,
-      p.refestados
+      p.refestados,
+      p.imagen2,
+      p.type2
       from dbplanillasarbitros p
       where p.reffixture = ".$id;
       $res = $this->query($sql,0);
@@ -2822,7 +2824,7 @@ function traerHistoricoIncidenciasPorJugador($idJugador, $where) {
                 INNER JOIN dbminutosjugados mij ON mij.reffixture = fix.idfixture
                     AND mij.refjugadores = jug.idjugador
                 WHERE
-                    jug.idjugador = ".$idJugador.$where."
+                    jug.idjugador = ".$idJugador.$where." and (p.goles > 0 or p.encontra > 0)
 
                     UNION ALL
 

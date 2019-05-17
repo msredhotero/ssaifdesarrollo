@@ -36,13 +36,13 @@ $cadFix			=	$serviciosFunciones->devolverSelectBox($resFixture,array(0,1,4,5,10)
 
 $refCanchas		=	$serviciosReferencias->traerCanchas();
 
-$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(2),'');	
+$cadCanchas	=	$serviciosFunciones->devolverSelectBox($refCanchas,array(2),'');
 
 
 
 $refArbitros	=	$serviciosReferencias->traerArbitros();
 
-$cadArbitros	=	$serviciosFunciones->devolverSelectBox($refArbitros,array(1),'');	
+$cadArbitros	=	$serviciosFunciones->devolverSelectBox($refArbitros,array(1),'');
 
 $resTorneosActivos = $serviciosReferencias->traerTorneosActivos();
 $cadRefTorneosActivos = $serviciosFunciones->devolverSelectBox($resTorneosActivos,array(1,2,3,4,5),' - ');
@@ -64,7 +64,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
-	
+
 }
 
 
@@ -86,14 +86,14 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="../../css/chosen.css">
@@ -101,12 +101,12 @@ if ($_SESSION['refroll_predio'] != 1) {
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<style type="text/css">
-		
-  
-		
+
+
+
 	</style>
-    
-   
+
+
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -117,13 +117,13 @@ if ($_SESSION['refroll_predio'] != 1) {
         $('#navigation').perfectScrollbar();
       });
     </script>
-    
+
 
 </head>
 
 <body>
 
- 
+
 <?php echo $resMenu; ?>
 
 <div id="content">
@@ -133,7 +133,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Buscar Partido</p>
-        	
+
         </div>
     	<div class="cuerpoBox" style="padding-right:10px;">
     		<form class="form-inline formulario" role="form">
@@ -156,7 +156,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <label class="control-label">Ingrese el Numero de Partido</label>
                     <div class="input-group">
                         <select class="form-control" id="fixture" name="fixture">
-                        	<?php echo $cadFix; ?>	
+                        	<?php echo $cadFix; ?>
                         </select>
                         <button type="button" class="btn btn-success" id="ir">Ir</button>
                     </div>
@@ -168,7 +168,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             	<h2>Proximas Fechas</h2>
                 <div class="row">
 
-                
+
                 <div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Temporada</label>
                     <div class="input-group col-md-12">
@@ -178,10 +178,10 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	</select>
                     </div>
                 </div>
-                
-                
-                
-                
+
+
+
+
                 <div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Countrie</label>
                     <div class="input-group col-md-12">
@@ -191,7 +191,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	</select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-3">
                     <label class="control-label" style="text-align:left" for="refcliente">Categorias</label>
                     <div class="input-group col-md-12">
@@ -201,8 +201,8 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	</select>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-3">
                     <label class="control-label" style="text-align:left" for="refcliente">Division</label>
                     <div class="input-group col-md-12">
@@ -221,7 +221,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	</select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Fechas</label>
                     <div class="input-group col-md-12">
@@ -230,25 +230,25 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	</select>
                     </div>
                 </div>
-                
+
                 <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Fechas Desde</label>
                     <div class="input-group col-md-12">
                     	<input type="text" id="reffechadesde1" class="form-control" name="reffechadesde1" value="Date">
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-2">
                     <label class="control-label" style="text-align:left" for="refcliente">Fechas Hasta</label>
                     <div class="input-group col-md-12">
                     	<input type="text" id="reffechahasta1" class="form-control" name="reffechahasta1" value="Date">
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group col-md-6">
-                    <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
+                    <label class="control-label" style="text-align:left" for="refcliente">Acciï¿½n</label>
 
                     	<ul class="list-inline">
                         	<li>
@@ -258,26 +258,26 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </ul>
 
                 </div>
-                
+
 				<div id="proxima">
-                
+
                 </div>
             </div>
-            
+
             </div>
             <?php } ?>
             <div class='row' style="margin-left:15px; margin-right:15px;">
                 <div class='alert'>
-                	
+
                 </div>
                 <div class='alert alert2'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
-			
+
 
             </form>
     	</div>
@@ -285,13 +285,13 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 
-   
+
 </div>
 
 <!-- Modal del guardar-->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
+
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -305,7 +305,7 @@ if ($_SESSION['refroll_predio'] != 1) {
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-      
+
     </div>
   </div>
 
@@ -320,36 +320,48 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-	
 
-	
+
+
+	$("#proxima").on("click",'.btnPlanilla', function(){
+		idBtn = $(this).attr("id");
+		imagen = $(this).attr("data-imagen");
+		window.open("https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/" + idBtn + "/1/" + imagen,'_blank');
+	});
+
+	$("#proxima").on("click",'.btnComplemento', function(){
+		idBtn = $(this).attr("id");
+		imagen = $(this).attr("data-imagen");
+		window.open("https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/" + idBtn + "/2/" + imagen,'_blank');
+	});
+
 
 	$("#proxima").on("click",'.guardarPartidoSimple', function(){
-		
+
 		idBtn = $(this).attr("id");
 		var esresaltado = 0;
 		if ($('#esresaltado'+$(this).attr("id")).prop('checked')) {
-			esresaltado = 1;	
+			esresaltado = 1;
 		}
-		
+
 		var esdestacado = 0;
 		if ($('#esdestacado'+$(this).attr("id")).prop('checked')) {
-			esdestacado = 1;	
+			esdestacado = 1;
 		}
-		
+
 		$('#myModal').modal("show");
         $.ajax({
-			data:  {idfixture: $(this).attr("id"), 
-					fecha: $('#fecha'+$(this).attr("id")).val(), 
-					hora: $('#hora'+$(this).attr("id")).val(), 
-					cancha: $('#refcanchas'+$(this).attr("id")).val(), 
-					esresaltado: esresaltado, 
-					esdestacado: esdestacado, 
+			data:  {idfixture: $(this).attr("id"),
+					fecha: $('#fecha'+$(this).attr("id")).val(),
+					hora: $('#hora'+$(this).attr("id")).val(),
+					cancha: $('#refcanchas'+$(this).attr("id")).val(),
+					esresaltado: esresaltado,
+					esdestacado: esdestacado,
 					accion: 'guardarPartidoSimple'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 				if (response == '') {
@@ -357,7 +369,7 @@ $(document).ready(function(){
 					$('#'+idBtn).removeClass("btn-primary");
 					$('#'+idBtn).addClass("btn-success");
 					$('#'+idBtn).html('<span class="glyphicon glyphicon-ok"></span> Guardado');
-					
+
 				} else {
 					$('#error').html('Huvo un error al guardar los datos, verifique los datos ingresados '.response);
 					$('#'+idBtn).removeClass("btn-primary");
@@ -366,16 +378,16 @@ $(document).ready(function(){
 				}
 			}
 		});
-    });									
-										
+    });
+
 	$('#busqueda').click(function(e) {
-		
+
         $.ajax({
 			data:  {id: $('#buscar').val(), accion: 'buscarPartido'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 				if (response > 0) {
@@ -390,43 +402,43 @@ $(document).ready(function(){
 			}
 		});
     });
-	
+
 	$('#filtros').click(function(e) {
-		
+
         $.ajax({
-			data:  {reftemporada1: $('#reftemporada1').val(), 
-					refcountries1: $('#refcountries1').val(), 
-					refcategorias1: $('#refcategorias1').val(), 
-					refdivision1: $('#refdivision1').val(), 
-					reftorneo3: $('#reftorneo3').val(), 
-					reffechas3: $('#reffechas3').val(), 
-					reffechadesde1: $('#reffechadesde1').val(), 
-					reffechahasta1: $('#reffechahasta1').val(), 
+			data:  {reftemporada1: $('#reftemporada1').val(),
+					refcountries1: $('#refcountries1').val(),
+					refcategorias1: $('#refcategorias1').val(),
+					refdivision1: $('#refdivision1').val(),
+					reftorneo3: $('#reftorneo3').val(),
+					reffechas3: $('#reffechas3').val(),
+					reffechadesde1: $('#reffechadesde1').val(),
+					reffechahasta1: $('#reffechahasta1').val(),
 					accion: 'filtrosGenerales'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 				$('#proxima').html(response);
-				
+
 				$(".hora").each(function(intIndex) {
 					$(this).mask("99:99",{placeholder:"hh:mm"});
 				});
-				
+
 				$(".fecha").each(function(intIndex) {
 					$(this).mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 				});
 			}
 		});
     });
-	
+
 	$('#ir').click(function() {
 		url = "estadisticas.php?id="+ $('#fixture').val();
 		$(location).attr('href',url);
 	});
-	
+
 	function traerFechasPorTorneos(idTorneo, contenedor) {
 		$.ajax({
 				data:  {idTorneo: idTorneo,
@@ -434,7 +446,7 @@ $(document).ready(function(){
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
-						
+
 				},
 				success:  function (response) {
 
@@ -442,7 +454,7 @@ $(document).ready(function(){
 						$('#'+contenedor).html(response);
                     } else {
 
-                        
+
                         $('#'+contenedor).html('<option value="1">Fecha 1</option> \
                                     <option value="2">Fecha 2</option> \
                                     <option value="3">Fecha 3</option> \
@@ -473,20 +485,20 @@ $(document).ready(function(){
                                     <option value="28">Fecha 28</option> \
                                     <option value="29">Fecha 29</option> \
                                     <option value="30">Fecha 30</option>');
-                        
-                    } 
+
+                    }
                 }
 		});
 	}
-	
+
 	$('#reftorneo1').change(function(e) {
-		traerFechasPorTorneos($(this).val(),'reffechas1');	
+		traerFechasPorTorneos($(this).val(),'reffechas1');
 	});
-	
+
 	$('#reftorneo3').change(function(e) {
-		traerFechasPorTorneos($(this).val(),'reffechas3');	
+		traerFechasPorTorneos($(this).val(),'reffechas3');
 	});
-	
+
 	traerFechasPorTorneos($('#reftorneo1').val(),'reffechas1');
 
 });
@@ -500,9 +512,9 @@ $(document).ready(function(){
  currentText: 'Hoy',
  monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
  monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
- dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
- dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
- dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+ dayNames: ['Domingo', 'Lunes', 'Martes', 'Miï¿½rcoles', 'Jueves', 'Viernes', 'Sï¿½bado'],
+ dayNamesShort: ['Dom','Lun','Mar','Miï¿½','Juv','Vie','Sï¿½b'],
+ dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sï¿½'],
  weekHeader: 'Sm',
  dateFormat: 'dd/mm/yy',
  firstDay: 1,
@@ -511,44 +523,44 @@ $(document).ready(function(){
  yearSuffix: ''
  };
  $.datepicker.setDefaults($.datepicker.regional['es']);
- 
+
     $( "#reffechadesde1" ).datepicker();
     $( "#reffechadesde1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#reffechahasta1" ).datepicker();
     $( "#reffechahasta1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#reffechadesde2" ).datepicker();
     $( "#reffechadesde2" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#reffechahasta2" ).datepicker();
     $( "#reffechahasta2" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechadesde3" ).datepicker();
     $( "#fechadesde3" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechadesde4" ).datepicker();
     $( "#fechadesde4" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechadesde5" ).datepicker();
     $( "#fechadesde5" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
-	
+
+
 	$( "#fechahasta1" ).datepicker();
     $( "#fechahasta1" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechahasta2" ).datepicker();
     $( "#fechahasta2" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechahasta3" ).datepicker();
     $( "#fechahasta3" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechahasta4" ).datepicker();
     $( "#fechahasta4" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
 	$( "#fechahasta5" ).datepicker();
     $( "#fechahasta5" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-	
+
   });
   </script>
 <script src="../../js/chosen.jquery.js" type="text/javascript"></script>
@@ -563,8 +575,8 @@ $(document).ready(function(){
     for (var selector in config) {
       $(selector).chosen(config[selector]);
     }
-	
-	
+
+
   </script>
 <?php } ?>
 </body>
