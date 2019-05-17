@@ -10,6 +10,6 @@ $informe = $_GET['informe'];
         <title>Hola Mundo!</title>
     </head>
     <body>
-        <h3>Informe: <?php echo $informe; ?></h3>
+        <h3>Informe: <?php echo utf8_encode($informe); ?></h3>
     </body>
 </html>
