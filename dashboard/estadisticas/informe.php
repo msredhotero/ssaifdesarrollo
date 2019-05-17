@@ -24,6 +24,6 @@ $arbitro = $_GET['arbitro'];
          <h4>Fecha: <?php echo utf8_encode($fecha); ?></h4>
       </div>
 
-      <h3>Informe: <?php echo utf8_encode($informe); ?></h3>
+      <h3>Informe: <?php echo utf8_encode(str_replace('******************', '<br>', $informe)); ?></h3>
     </body>
 </html>
