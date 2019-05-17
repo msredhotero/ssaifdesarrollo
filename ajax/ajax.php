@@ -1531,7 +1531,7 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
       if (($row['observaciones'] == 'Sin novedad') || ($row['observaciones'] == '') || ($row['observaciones'] == null)) {
          $cadInforme = '';
       } else {
-         $cadComplemento = '<button type="button" data-imagen="'.$row['observaciones'].'" class="btn btn-success btn-sm btnInforme" id="'.$row['idfixture'].'">
+         $cadComplemento = '<button type="button" data-categoria="'.$row['categoria'].'" data-division="'.$row['division'].'" data-partido="'.$row['equipoLocal'].' - '.$row['equipoVisitante'].'" data-imagen="'.$row['observaciones'].'" class="btn btn-success btn-sm btnInforme" id="'.$row['idfixture'].'">
           <span class="glyphicon glyphicon-ok"></span> Infor.
         </button>';
       }

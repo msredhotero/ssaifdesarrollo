@@ -338,7 +338,10 @@ $(document).ready(function(){
 	$("#proxima").on("click",'.btnInforme', function(){
 		idBtn = $(this).attr("id");
 		imagen = $(this).attr("data-imagen");
-		window.open("informe.php?informe=" + imagen,'_blank');
+		categoria = $(this).attr("data-categoria");
+		division = $(this).attr("data-division");
+		partido = $(this).attr("data-partido");
+		window.open("informe.php?informe=" + imagen + "&categoria=" + categoria + "&division=" + division + "&partido=" + partido,'_blank');
 	});
 
 

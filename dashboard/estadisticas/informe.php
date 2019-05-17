@@ -2,6 +2,10 @@
 
 $informe = $_GET['informe'];
 
+$categoria = $_GET['categoria'];
+$division = $_GET['division'];
+$partido = $_GET['partido'];
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -10,6 +14,12 @@ $informe = $_GET['informe'];
         <title>Hola Mundo!</title>
     </head>
     <body>
-        <h3>Informe: <?php echo utf8_encode($informe); ?></h3>
+      <div align="center">
+         <h1>Partido: <?php echo utf8_encode($partido); ?></h1>
+         <h2>Categoria: <?php echo utf8_encode($categoria); ?></h2>
+         <h2>Division: <?php echo utf8_encode($division); ?></h2>
+      </div>
+
+      <h3>Informe: <?php echo utf8_encode($informe); ?></h3>
     </body>
 </html>
