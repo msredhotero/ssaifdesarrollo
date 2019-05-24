@@ -1242,7 +1242,7 @@ function unique_multidim_array($array, $key) {
 
 function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 
-    $sql = "select idtorneo from dbtorneos where reftemporadas =".$idTemporada." and refcategorias = ".$idCategoria." and refdivisiones = ".$idDivision." and acumulatablaconformada = 1";
+    $sql = "select idtorneo from dbtorneos where reftemporadas =".$idTemporada." and refcategorias = ".$idCategoria." and refdivisiones = ".$idDivision." and acumulatablaconformada = 1 and activo = 1";
 
     $resConformada = $this->query($sql,0);
 
@@ -1403,9 +1403,12 @@ function PosicionesConformada($idTemporada, $idCategoria, $idDivision) {
 
     $sorted = $this->array_orderby($lstPosicionesFinal, 'puntos', SORT_DESC, 'rojas', SORT_ASC, 'amarillas', SORT_ASC, 'goles',SORT_DESC, 'golescontra', SORT_ASC);
 
-
-    $resss = $this->unique_multidim_array($sorted,'idequipo');
-    return $resss;
+    if (mysql_num_rows($resConformada) > 1) {
+       $resss = $this->unique_multidim_array($sorted,'idequipo');
+       return $resss;
+    } else {
+      return $sorted;
+   }
 
 }
 
