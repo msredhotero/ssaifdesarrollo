@@ -2208,6 +2208,15 @@ function insertarConectorAjax($serviciosReferencias) {
 			$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo, $reftemporada);
 			if ((integer)$res > 0) {
 
+            /**** auditoria ****/
+            session_start();
+            $tabla = 'dbconector';
+            $operacion = 'I';
+            $id = $res;
+            $usuario = $_SESSION['nombre_predio'];
+
+            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+            /**** fin auditoria ****/
 
 				//$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
 
@@ -2269,6 +2278,17 @@ function insertarConector($serviciosReferencias) {
 		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo,$reftemporada);
 
 		if ((integer)$res > 0) {
+         
+         /**** auditoria ****/
+         session_start();
+         $tabla = 'dbconector';
+         $operacion = 'I';
+         $id = $res;
+         $usuario = $_SESSION['nombre_predio'];
+
+         $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+         /**** fin auditoria ****/
+
 			//si voy a cargar al agente y ademas posee otro conector y esta activo, pero esta carga viene de un habilitacion deportiva
 			if ($vHabTrns != 1) {
 				$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
@@ -2307,6 +2327,17 @@ echo 'Hubo un error al modificar datos';
 }
 function eliminarConector($serviciosReferencias) {
 $id = $_POST['id'];
+
+/**** auditoria ****/
+session_start();
+$tabla = 'dbconector';
+$operacion = 'E';
+$id = $id;
+$usuario = $_SESSION['nombre_predio'];
+
+$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+/**** fin audi  ****/
+
 $res = $serviciosReferencias->eliminarConector($id);
 echo $res;
 }
@@ -2324,6 +2355,16 @@ function eliminarTodosLosJugadores($serviciosReferencias) {
 
 function eliminarConectorDefinitivamente($serviciosReferencias) {
 	$id = $_POST['id'];
+
+   /**** auditoria ****/
+   session_start();
+   $tabla = 'dbconector';
+   $operacion = 'E';
+   $id = $id;
+   $usuario = $_SESSION['nombre_predio'];
+
+   $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+   /**** fin audi  ****/
 
 	//verifico que no esta cargado en ningun fixture sino le doy una baja logica  //eliminarConector
 
