@@ -52,7 +52,16 @@ if (!$_POST){
 
 	//elimino todo y lo vuelvo a cargar
 	$serviciosReferencias->eliminarJugadoresdocumentacionPorJugador($id);
+
+	/*** auditoria ****/
+	$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','E','todos refjugadores','','',$id,$_SESSION['nombre_predio']);
+	/*** fin audi  ****/
+
 	$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJuagador($id);
+
+	/*** auditoria ****/
+	$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','E','todos refjugadores','','',$id,$_SESSION['nombre_predio']);
+	/*** fin audi  ****/
 	//// fin del eliminar //////
 
 	$observaciones = '';
@@ -67,6 +76,14 @@ if (!$_POST){
 			$res = $serviciosReferencias->insertarJugadoresdocumentacion($id,$rowFS[0],0,$observaciones);
 
 		}
+		/**** auditoria ****/
+		$tabla = 'dbjugadoresdocumentacion';
+		$operacion = 'I';
+		$id = $res;
+		$usuario = $_SESSION['nombre_predio'];
+
+		$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+		/**** fin auditoria ****/
 	}
 
 	$resV = '';
@@ -74,9 +91,18 @@ if (!$_POST){
 	$cadV = 'multiselect';
 
 	while ($rowV = mysql_fetch_array($resValores)) {
-		$resV .= $cadV.$rowV[0];
+		//$resV .= $cadV.$rowV[0];
 		if (isset($_POST[$cadV.$rowV[0]])) {
-			$resV .= $serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,$_POST[$cadV.$rowV[0]][0]);
+			$resV = $serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,$_POST[$cadV.$rowV[0]][0]);
+
+			/**** auditoria ****/
+			$tabla = 'dbjugadoresvaloreshabilitacionestransitorias';
+			$operacion = 'I';
+			$id = $resV;
+			$usuario = $_SESSION['nombre_predio'];
+
+			$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+			/**** fin auditoria ****/
 		}
 	}
 

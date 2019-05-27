@@ -6544,7 +6544,7 @@ function insertarJugadoresvaloreshabilitacionestransitorias($refjugadores,$refva
 $sql = "insert into dbjugadoresvaloreshabilitacionestransitorias(iddbjugadorvalorhabilitaciontransitoria,refjugadores,refvaloreshabilitacionestransitorias)
 values ('',".$refjugadores.",".$refvaloreshabilitacionestransitorias.")";
 $res = $this->query($sql,1);
-return $sql;
+return $res;
 }
 
 
@@ -11864,7 +11864,7 @@ if (mysql_num_rows($resTemporadas)>0) {
 
     $where = '';
     if ($busqueda != '') {
-        $where = " and concat(jug.apellido, ', ', jug.nombres) like '%".$busqueda."%' or jug.nrodocumento like '%".$busqueda."%' or equ.nombre like '%".$busqueda."%' or p.fecha like '%".$busqueda."%'";
+        $where = " and (concat(jug.apellido, ', ', jug.nombres) like '%".$busqueda."%' or jug.nrodocumento like '%".$busqueda."%' or equ.nombre like '%".$busqueda."%' or p.fecha like '%".$busqueda."%')";
     }
 
 
@@ -11923,7 +11923,7 @@ if (mysql_num_rows($resTemporadas)>0) {
                   	dbsancionesjugadores sj ON sj.idsancionjugador = sf.refsancionesjugadores
                   GROUP BY fc.refsancionesfallos , sj.refcategorias) sfc
                 ON  sfc.refsancionesfallos = sf.idsancionfallo and sfc.refcategorias = p.refcategorias
-        where tor.reftemporadas in (6,7) ".$where."
+        where tor.reftemporadas in (6,7,8) ".$where."
         order by concat(jug.apellido, ', ', jug.nombres)
         limit ".$lenght.",".$limit;
         /*where tor.reftemporadas = ".$ultimaTemporada."*/

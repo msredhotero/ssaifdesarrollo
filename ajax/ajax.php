@@ -2278,7 +2278,7 @@ function insertarConector($serviciosReferencias) {
 		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo,$reftemporada);
 
 		if ((integer)$res > 0) {
-         
+
          /**** auditoria ****/
          session_start();
          $tabla = 'dbconector';
@@ -3390,6 +3390,17 @@ function insertarJugadores($serviciosReferencias) {
 
 function modificarJugadores($serviciosReferencias) {
 	$id = $_POST['id'];
+
+   /**** auditoria ****/
+   session_start();
+   $tabla = 'dbjugadores';
+   $operacion = 'M';
+   $id = $id;
+   $usuario = $_SESSION['nombre_predio'];
+
+   $serviciosReferencias->modiAuditoria($tabla, $operacion,$id,$usuario);
+   /**** fin audi  ****/
+
 	$reftipodocumentos = $_POST['reftipodocumentos'];
 	$nrodocumento = $_POST['nrodocumento'];
 	$apellido = $_POST['apellido'];
@@ -3408,6 +3419,14 @@ function modificarJugadores($serviciosReferencias) {
 			$res = $serviciosReferencias->modificarJugadores($id,$reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones);
 
 			if ($res == true) {
+            /**** auditoria ****/
+            $tabla = 'dbjugadores';
+            $operacion = 'M';
+            $id = $id;
+            $usuario = $_SESSION['nombre_predio'];
+
+            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+            /**** fin audi  ****/
 				echo '';
 			} else {
 				echo 'Hubo un error al modificar datos';
@@ -3435,7 +3454,19 @@ function modificarJugadorApellidoNombrePorId($serviciosReferencias) {
 
 
 function eliminarJugadores($serviciosReferencias) {
+
 $id = $_POST['id'];
+
+/**** auditoria ****/
+session_start();
+$tabla = 'dbjugadores';
+$operacion = 'E';
+$id = $id;
+$usuario = $_SESSION['nombre_predio'];
+
+$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+/**** fin audi  ****/
+
 $res = $serviciosReferencias->eliminarJugadores($id);
 echo $res;
 }
