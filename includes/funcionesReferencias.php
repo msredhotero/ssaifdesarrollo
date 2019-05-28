@@ -3870,7 +3870,6 @@ function existeDevuelveId($sql) {
     function borrarArchivoJugadores($id,$directorio) {
 
       /**** auditoria ****/
-      session_start();
       $tabla = 'dbdocumentacionjugadorimagenes';
       $operacion = 'E';
       $id = $id;
@@ -5958,9 +5957,20 @@ return $res;
 }
 
 function eliminarJugadoresdocumentacionPorJugadorDocumen($refjugador, $refdocumentacion) {
-$sql = "delete from dbjugadoresdocumentacion where refjugadores =".$refjugador." and refdocumentaciones=".$refdocumentacion;
-$res = $this->query($sql,0);
-return $res;
+   $sql = "delete from dbjugadoresdocumentacion where refjugadores =".$refjugador." and refdocumentaciones=".$refdocumentacion;
+   $resValor = $this->existeDevuelveId('select idjugadordocumentacion from dbjugadoresdocumentacion where refjugadores ='.$refjugador." and refdocumentaciones=".$refdocumentacion);
+
+   /**** auditoria ****/
+   $tabla = 'dbjugadoresdocumentacion';
+   $operacion = 'E';
+   $id = $resValor;
+   $usuario = $_SESSION['nombre_predio'];
+
+   $this->insertAuditoria($tabla, $operacion,$id,$usuario);
+   /**** fin audi  ****/
+
+   $res = $this->query($sql,0);
+   return $res;
 }
 
 

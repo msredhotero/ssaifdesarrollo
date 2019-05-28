@@ -62,6 +62,7 @@ if (!$_POST){
 	/*** auditoria ****/
 	$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','E','todos refjugadores','','',$id,$_SESSION['nombre_predio']);
 	/*** fin audi  ****/
+
 	//// fin del eliminar //////
 
 	$observaciones = '';
@@ -134,10 +135,12 @@ if (!$_POST){
 	if ($_FILES['avatar-1']['tmp_name'] != '') {
 		if (mysql_num_rows($resFoto)>0) {
 			$serviciosReferencias->eliminarFotoJugadoresID(1,$id,$idPre);
+			//ya tiene la funcion auditoria.
 		}
 
 		$nuevoId = $serviciosReferencias->obtenerNuevoId('dbdocumentacionjugadorimagenes');
 		$error = $serviciosReferencias->subirArchivoJugadoresID('avatar-1',$idPre,$nuevoId,1,$idPre,$id);
+		//ya tiene la funcion auditoria.
 
 		if ($error == '') {
 			//elimino la documentacion
