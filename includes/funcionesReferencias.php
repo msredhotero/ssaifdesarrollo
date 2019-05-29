@@ -5915,6 +5915,16 @@ function insertarJugadoresdocumentacion($refjugadores,$refdocumentaciones,$valor
 $sql = "insert into dbjugadoresdocumentacion(idjugadordocumentacion,refjugadores,refdocumentaciones,valor,observaciones)
 values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",'".$observaciones."')";
 $res = $this->query($sql,1);
+
+/**** auditoria ****/
+$tabla = 'dbjugadoresdocumentacion';
+$operacion = 'I';
+$id = $res;
+$usuario = $_SESSION['nombre_predio'];
+
+$this->insertAuditoria($tabla, $operacion,$id,$usuario);
+/**** fin auditoria ****/
+
 return $res;
 }
 
@@ -5958,16 +5968,20 @@ return $res;
 
 function eliminarJugadoresdocumentacionPorJugadorDocumen($refjugador, $refdocumentacion) {
    $sql = "delete from dbjugadoresdocumentacion where refjugadores =".$refjugador." and refdocumentaciones=".$refdocumentacion;
+
    $resValor = $this->existeDevuelveId('select idjugadordocumentacion from dbjugadoresdocumentacion where refjugadores ='.$refjugador." and refdocumentaciones=".$refdocumentacion);
 
-   /**** auditoria ****/
-   $tabla = 'dbjugadoresdocumentacion';
-   $operacion = 'E';
-   $id = $resValor;
-   $usuario = $_SESSION['nombre_predio'];
+   if ($resValor != 0) {
+      /**** auditoria ****/
+      $tabla = 'dbjugadoresdocumentacion';
+      $operacion = 'E';
+      $id = $resValor;
+      $usuario = $_SESSION['nombre_predio'];
 
-   $this->insertAuditoria($tabla, $operacion,$id,$usuario);
-   /**** fin audi  ****/
+      $this->insertAuditoria($tabla, $operacion,$id,$usuario);
+      /**** fin audi  ****/
+   }
+
 
    $res = $this->query($sql,0);
    return $res;
@@ -6554,6 +6568,16 @@ function insertarJugadoresvaloreshabilitacionestransitorias($refjugadores,$refva
 $sql = "insert into dbjugadoresvaloreshabilitacionestransitorias(iddbjugadorvalorhabilitaciontransitoria,refjugadores,refvaloreshabilitacionestransitorias)
 values ('',".$refjugadores.",".$refvaloreshabilitacionestransitorias.")";
 $res = $this->query($sql,1);
+
+/**** auditoria ****/
+$tabla = 'dbjugadoresvaloreshabilitacionestransitorias';
+$operacion = 'I';
+$id = $res;
+$usuario = $_SESSION['nombre_predio'];
+
+$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+/**** fin auditoria ****/
+
 return $res;
 }
 
@@ -6581,14 +6605,36 @@ return $res;
 }
 
 function eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($refjugador, $refdocumentacion) {
-    $sql = "delete va FROM dbjugadoresvaloreshabilitacionestransitorias va
+   $sql = "delete va FROM dbjugadoresvaloreshabilitacionestransitorias va
             inner join tbvaloreshabilitacionestransitorias v on
             v.idvalorhabilitaciontransitoria = va.refvaloreshabilitacionestransitorias
             where va.refjugadores = ".$refjugador."
-                    AND v.refdocumentaciones = ".$refdocumentacion;
+            AND v.refdocumentaciones = ".$refdocumentacion;
 
-    $res = $this->query($sql,0);
-    return $res;
+   $resValor = $this->existeDevuelveId('SELECT
+             va.iddbjugadorvalorhabilitaciontransitoria
+         FROM
+             dbjugadoresvaloreshabilitacionestransitorias va
+                 INNER JOIN
+             tbvaloreshabilitacionestransitorias v ON v.idvalorhabilitaciontransitoria = va.refvaloreshabilitacionestransitorias
+         WHERE
+             va.refjugadores = '.$refjugador."
+                 AND v.refdocumentaciones = ".$refdocumentacion);
+
+   if ($resValor != 0) {
+      /**** auditoria ****/
+      $tabla = 'dbjugadoresvaloreshabilitacionestransitorias';
+      $operacion = 'E';
+      $id = $resValor;
+      $usuario = $_SESSION['nombre_predio'];
+
+      $this->insertAuditoria($tabla, $operacion,$id,$usuario);
+      /**** fin audi  ****/
+   }
+
+
+   $res = $this->query($sql,0);
+   return $res;
 }
 
 
