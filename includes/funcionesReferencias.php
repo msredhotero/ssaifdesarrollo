@@ -16151,26 +16151,39 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 
     /* PARA Auditoria */
 
-   function insertarAuditoria($tabla,$operacion,$campo,$valornuevo,$valorviejo,$id,$usuario) {
-      $sql = "insert into dbauditoria(idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha)
-      values ('','".$tabla."','".$operacion."','".$campo."','".$valornuevo."','".$valorviejo."',".$id.",'".$usuario."',now())";
+   function insertarAuditoria($tabla,$operacion,$campo,$valornuevo,$valorviejo,$id,$usuario,$token) {
+      $sql = "insert into dbauditoria(idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha,token)
+      values ('','".$tabla."','".$operacion."','".$campo."','".$valornuevo."','".$valorviejo."',".$id.",'".$usuario."',now(),'".$token."')";
       $res = $this->query($sql,1);
       return $res;
    }
 
-   function insertAuditoria($tabla, $operacion,$id,$usuario) {
+   function insertAuditoria($tabla, $operacion,$id,$usuario, $ar=null) {
       $sql = "SHOW COLUMNS FROM ".$tabla;
       $res = $this->query($sql,0);
+      $resAux = $this->query($sql,0);
 
       $idnombre = mysql_result($res,0,0);
 
-      while ($row = mysql_fetch_array($res)) {
+      $token = $this->GUID();
+
+      $i = 0;
+
+      while ($row = mysql_fetch_array($resAux)) {
 
          $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
          $resValor = $this->query($sqlValor,0);
          $valornuevo = mysql_result($resValor,0,0);
          $valorviejo = '';
-         $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario);
+         if (count($ar)>0) {
+            $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$ar[$i][$row[0]],$id,$usuario,$token);
+            $i += 1;
+         } else {
+            $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario,$token);
+         }
+
+
+         //array_push($ar,array($row[0]=> $valornuevo));
       }
 
       return $insert;
@@ -16179,17 +16192,24 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
    function modiAuditoria($tabla, $operacion,$id,$usuario) {
       $sql = "SHOW COLUMNS FROM ".$tabla;
       $res = $this->query($sql,0);
+      $resAux = $this->query($sql,0);
 
       $idnombre = mysql_result($res,0,0);
 
-      while ($row = mysql_fetch_array($res)) {
+      $ar = array();
+
+      while ($row = mysql_fetch_array($resAux)) {
 
          $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
          $resValor = $this->query($sqlValor,0);
          $valornuevo = '';
          $valorviejo = mysql_result($resValor,0,0);
-         $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario);
+         //$insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario);
+         array_push($ar,array($row[0]=> $valorviejo));
+
       }
+
+      return $ar;
    }
 
 
@@ -16210,11 +16230,83 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
    return $res;
    }
 
-
-   function traerAuditoriaPorId($id) {
-   $sql = "select idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha from dbauditoria where idauditoria =".$id;
+   function traerAuditoriaPorIdGral($token) {
+   $sql = "select
+   a.idauditoria,
+   a.tabla,
+   a.operacion,
+   a.campo,
+   a.valornuevo,
+   a.valorviejo,
+   a.id,
+   a.usuario,
+   a.fecha,
+   a.token
+   from dbauditoria a
+   where a.token = '".$token."'
+   order by 1";
    $res = $this->query($sql,0);
    return $res;
+   }
+
+
+   function traerAuditoriaPorId($id) {
+   $sql = "select idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha,token from dbauditoria where idauditoria =".$id;
+   $res = $this->query($sql,0);
+   return $res;
+   }
+
+   function traerAuditoriaGralPorIdJugador($idjugador) {
+      $sql = "
+            SELECT
+                a.idauditoria as id,
+                (CASE
+                    WHEN a.operacion = 'E' THEN 'Se elimino '
+                    WHEN a.operacion = 'I' THEN 'Se agrego '
+                    WHEN a.operacion = 'M' THEN 'Se modifico '
+                END) AS operacion,
+                (CASE
+                    WHEN a.operacion = 'E' THEN 'danger'
+                    WHEN a.operacion = 'I' THEN 'success'
+                    WHEN a.operacion = 'M' THEN 'warning'
+                END) AS color,
+                (CASE
+                    WHEN a.operacion = 'E' THEN 'remove'
+                    WHEN a.operacion = 'I' THEN 'ok'
+                    WHEN a.operacion = 'M' THEN 'edit'
+                END) AS icon,
+                (CASE
+                    WHEN a.tabla = 'dbdocumentacionjugadorimagenes' THEN 'un archivo documentacion del jugador'
+                    WHEN a.tabla = 'dbjugadores' THEN 'un jugador'
+                    WHEN a.tabla = 'dbconector' THEN 'un jugador de un equipo'
+                    WHEN a.tabla = 'dbjugadoresdocumentacion' THEN 'una documentacion del jugador'
+                    WHEN a.tabla = 'dbjugadoresvaloreshabilitacionestransitorias' THEN 'una documentacion valor del jugador'
+                END) AS leyenda,
+                a.id AS idtabla,
+                a.fecha,
+                a.usuario
+            FROM
+                dbauditoria a
+            WHERE
+                (a.campo LIKE '%idjugador%'
+                    OR a.campo LIKE '%refjugadores%')
+                    AND (a.valornuevo = ".$idjugador."
+                    OR a.valorviejo = ".$idjugador.")
+         ORDER BY a.fecha
+         LIMIT 30";
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   function traerDetalleAuditoria($id) {
+      $resAuditoria = $this->traerAuditoriaPorId($id);
+
+      $idgral = mysql_result($resAuditoria,0,'token');
+
+      $res = $this->traerAuditoriaPorIdGral($idgral);
+
+      return $res;
    }
 
 /* Fin */

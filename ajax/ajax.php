@@ -650,7 +650,61 @@ case 'traerExcepcionPorJugadorEquipoTemporada':
 case 'insertarExcepcionesequipos':
    insertarExcepcionesequipos($serviciosReferencias);
    break;
+
+case 'traerAuditoriaGralPorIdJugador':
+   traerAuditoriaGralPorIdJugador($serviciosReferencias);
+break;
+case 'traerDetalleAuditoria':
+   traerDetalleAuditoria($serviciosReferencias);
+break;
 /**  fin excepciones */
+}
+
+function traerDetalleAuditoria($serviciosReferencias) {
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->traerDetalleAuditoria($id);
+
+   $cad = '';
+
+   $cad .= '<table class="table table-striped"><thead><th>Campo</th><th>Valor Nuevo</th><th>Valor Viejo</th><th>Fecha</th><th>Usuario</th></thead><tbody>';
+
+   while ($row = mysql_fetch_array($res)) {
+      if ($row['operacion'] == 'E') {
+         $cad .= '<tr><td>'.$row['campo'].'</td><td>'.$row['valorviejo'].'</td><td>'.$row['valornuevo'].'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
+      } else {
+         $cad .= '<tr><td>'.$row['campo'].'</td><td>'.$row['valornuevo'].'</td><td>'.$row['valorviejo'].'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
+      }
+   }
+
+   $cad .= '</tbody></table>';
+
+   echo $cad;
+}
+
+function traerAuditoriaGralPorIdJugador($serviciosReferencias) {
+   $idjugador = $_POST['idjugador'];
+
+   $res = $serviciosReferencias->traerAuditoriaGralPorIdJugador($idjugador);
+
+   $resV['estado'] = false;
+   $ar = array();
+
+   while ($row = mysql_fetch_array($res)) {
+      $resV['estado'] = true;
+      array_push($ar, array(
+         'id' => $row['id'],
+         'operacion' => '<button type="button" class="btn btn-labeled btn-'.$row['color'].'"><span class="btn-label"><i class="glyphicon glyphicon-'.$row['icon'].'"></i></span> '.$row['operacion'].'</button>',
+         'leyenda' => $row['leyenda'],
+         'fecha' => $row['fecha'],
+         'usuario' => $row['usuario']
+      ));
+   }
+
+   $resV['data'] = $ar;
+
+   header('Content-type: application/json');
+   echo json_encode($resV);
 }
 
 function insertarExcepcionesequipos($serviciosReferencias) {
@@ -3378,6 +3432,15 @@ function insertarJugadores($serviciosReferencias) {
 			$res = $serviciosReferencias->insertarJugadores($reftipodocumentos,$nrodocumento,$apellido,$nombres,$email,$fechanacimiento,$fechaalta,$fechabaja,$refcountries,$observaciones);
 
 			if ((integer)$res > 0) {
+            /**** auditoria ****/
+            session_start();
+            $tabla = 'dbjugadores';
+            $operacion = 'I';
+            $id = $res;
+            $usuario = $_SESSION['nombre_predio'];
+
+            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+            /**** fin auditoria ****/
 				echo $res;
 			} else {
 				echo 'Hubo un error al insertar datos';
@@ -3398,7 +3461,7 @@ function modificarJugadores($serviciosReferencias) {
    $id = $id;
    $usuario = $_SESSION['nombre_predio'];
 
-   $serviciosReferencias->modiAuditoria($tabla, $operacion,$id,$usuario);
+   $arMod = $serviciosReferencias->modiAuditoria($tabla, $operacion,$id,$usuario);
    /**** fin audi  ****/
 
 	$reftipodocumentos = $_POST['reftipodocumentos'];
@@ -3425,7 +3488,7 @@ function modificarJugadores($serviciosReferencias) {
             $id = $id;
             $usuario = $_SESSION['nombre_predio'];
 
-            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,$arMod);
             /**** fin audi  ****/
 				echo '';
 			} else {

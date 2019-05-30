@@ -2347,12 +2347,32 @@ if ($_SESSION['idroll_predio'] == 4) {
 		                            </div>
 
 
-							</div><!-- fin del contenedor detalle -->
+									</div><!-- fin del contenedor detalle -->
 		                    </div>
 						</div>
 		            </div>
 
 		    </div>
+
+			<div class="row" style="margin-right:15px;">
+				<div class="col-md-12">
+					<div class="panel" style="border-color:#006666;">
+						<div class="panel-heading" style="background-color:#006666; color:#FFF; ">
+							<h3 class="panel-title">Movimientos</span></h3>
+							<span class="pull-right clickable panel-collapsed" style="margin-top:-15px; cursor:pointer;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="form-group col-md-12 lstMovimientos">
+
+								</div>
+							</div><!-- fin del contenedor detalle -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+
 		    </div>
 
 
@@ -2387,7 +2407,29 @@ if ($_SESSION['idroll_predio'] == 4) {
 		</div>
 
 
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModalAuditoria" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog modal-lg" role="document">
+		    <div class="modal-content">
+
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Detalle Auditoria</h4>
+		      </div>
+		      <div class="modal-body" id="detalleAuditoria">
+
+		      </div>
+
+		    </div>
+		  </div>
 		</div>
+
+
+		</div>
+
+
+
 
 
 
@@ -2477,6 +2519,8 @@ if ($_SESSION['idroll_predio'] == 4) {
 				},
 				onClickEvent: function() {
 					var value = $("#lstjugadores").getSelectedItemData().id;
+
+					traerAuditoriaMovimientos(value);
 
 					$("#selction-ajax").html('<button type="button" class="btn btn-warning varJugadorModificar" id="' + value + '" style="margin-left:0px;">Modificar</button> \
 					<button type="button" class="btn btn-success varJugadorDocumentaciones" id="' + value + '" style="margin-left:0px;">Documentaciones</button> \
@@ -2570,6 +2614,48 @@ if ($_SESSION['idroll_predio'] == 4) {
 				});
 			});
 
+			function traerAuditoriaMovimientos(id) {
+				$.ajax({
+				   data:  {idjugador: id, accion: 'traerAuditoriaGralPorIdJugador'},
+				   url:   '../ajax/ajax.php',
+				   type:  'post',
+				   beforeSend: function () {
+						$('.lstMovimientos').html('');
+				   },
+				   success:  function (response) {
+					   var cad = '';
+
+					   cad += '<table class="table table-striped"><thead><th>Operacion</th><th>Leyenda</th><th>Fecha</th><th>Usuario</th><th>Ver</th></thead><tbody>';
+					   for(var k in response.data) {
+							cad += '<tr><td>' + response.data[k].operacion + '</td><td>' + response.data[k].leyenda + '</td><td>' + response.data[k].usuario + '</td><td>' + response.data[k].fecha + '</td><td><button type="button" class="btn btn-success varDetalleAuditoria" id="' + response.data[k].id + '" style="margin-left:0px;">Ver</button></td></tr>';
+							//console.log(response.data[k].fecha);
+						}
+
+						cad += '</tbody></table>';
+
+						$('.lstMovimientos').html(cad);
+				   }
+			   });
+			}
+
+
+			$('.lstMovimientos').on("click",'.varDetalleAuditoria', function(){
+			    id =  $(this).attr("id");
+
+			    $.ajax({
+					data:  {id: id, accion: 'traerDetalleAuditoria'},
+					url:   '../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+						$('#detalleAuditoria').html('');
+					},
+					success:  function (response) {
+							$('#detalleAuditoria').html(response);
+							$('#myModalAuditoria').modal();
+
+					}
+				});
+			});//fin del boton eliminar
 
 			$('#selction-ajax').on("click",'.varJugadorEstudiosMedicos', function(){
 			    usersid =  $(this).attr("id");
