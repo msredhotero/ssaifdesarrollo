@@ -3233,7 +3233,7 @@ function modificarCategorias($serviciosReferencias) {
    $id = $id;
    $usuario = $_SESSION['nombre_predio'];
 
-   $serviciosReferencias->modiAuditoria($tabla, $operacion,$id,$usuario);
+   $arAudi = $serviciosReferencias->modiAuditoria($tabla, $operacion,$id,$usuario);
    /**** fin audi  ****/
 
 
@@ -3247,7 +3247,7 @@ function modificarCategorias($serviciosReferencias) {
       $id = $id;
       $usuario = $_SESSION['nombre_predio'];
 
-      $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+      $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,$arAudi);
       /**** fin audi  ****/
       echo '';
    } else {
@@ -3461,7 +3461,7 @@ function modificarJugadores($serviciosReferencias) {
    $id = $id;
    $usuario = $_SESSION['nombre_predio'];
 
-   $arMod = $serviciosReferencias->modiAuditoria($tabla, $operacion,$id,$usuario);
+   $arAudi = $serviciosReferencias->modiAuditoria($tabla, $operacion,$id,$usuario);
    /**** fin audi  ****/
 
 	$reftipodocumentos = $_POST['reftipodocumentos'];
@@ -3488,7 +3488,7 @@ function modificarJugadores($serviciosReferencias) {
             $id = $id;
             $usuario = $_SESSION['nombre_predio'];
 
-            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,$arMod);
+            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,$arAudi);
             /**** fin audi  ****/
 				echo '';
 			} else {

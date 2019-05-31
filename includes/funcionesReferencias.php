@@ -6575,7 +6575,7 @@ $operacion = 'I';
 $id = $res;
 $usuario = $_SESSION['nombre_predio'];
 
-$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+$this->insertAuditoria($tabla, $operacion,$id,$usuario);
 /**** fin auditoria ****/
 
 return $res;
@@ -16152,8 +16152,8 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
     /* PARA Auditoria */
 
    function insertarAuditoria($tabla,$operacion,$campo,$valornuevo,$valorviejo,$id,$usuario,$token) {
-      $sql = "insert into dbauditoria(idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha,token)
-      values ('','".$tabla."','".$operacion."','".$campo."','".$valornuevo."','".$valorviejo."',".$id.",'".$usuario."',now(),'".$token."')";
+      $sql = "insert into dbauditoria(idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha,token,idusuario)
+      values ('','".$tabla."','".$operacion."','".$campo."','".$valornuevo."','".$valorviejo."',".$id.",'".$usuario."',now(),'".$token."',".$_SESSION['id_usuariopredio'].")";
       $res = $this->query($sql,1);
       return $res;
    }
@@ -16210,6 +16210,24 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
       }
 
       return $ar;
+   }
+
+   function auditoriaMasiva($sql,$tabla, $operacion, $usuario) {
+      $res = $this->query($sql,0);
+
+      $error = false;
+
+      while ($row = mysql_fetch_array($res)) {
+         $resI = $this->insertAuditoria($tabla, $operacion,$row[0],$usuario, $ar=null);
+         if ((integer)$res > 0) {
+            $error = false;
+         } else {
+            $error = true;
+            return $error;
+         }
+      }
+
+      return $error;
    }
 
 
@@ -16276,6 +16294,8 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
                     WHEN a.operacion = 'M' THEN 'edit'
                 END) AS icon,
                 (CASE
+                    when a.campo = 'todos refjugadores' and a.tabla = 'dbjugadoresdocumentacion' THEN 'proceso masivo sobre las documentaciones'
+                    when a.campo = 'todos refjugadores' and a.tabla = 'dbjugadoresvaloreshabilitacionestransitorias' THEN 'proceso masivo sobre las documentaciones valores'
                     WHEN a.tabla = 'dbdocumentacionjugadorimagenes' THEN 'un archivo documentacion del jugador'
                     WHEN a.tabla = 'dbjugadores' THEN 'un jugador'
                     WHEN a.tabla = 'dbconector' THEN 'un jugador de un equipo'
@@ -16288,11 +16308,11 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
             FROM
                 dbauditoria a
             WHERE
-                (a.campo LIKE '%idjugador%'
+                ((a.campo LIKE '%idjugador%'
                     OR a.campo LIKE '%refjugadores%')
                     AND (a.valornuevo = ".$idjugador."
-                    OR a.valorviejo = ".$idjugador.")
-         ORDER BY a.fecha
+                    OR a.valorviejo = ".$idjugador.")) or (a.campo LIKE '%todos refjugadores%' and id = ".$idjugador.")
+         ORDER BY a.fecha desc
          LIMIT 30";
 
       $res = $this->query($sql,0);

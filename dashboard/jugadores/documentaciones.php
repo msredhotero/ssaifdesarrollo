@@ -50,18 +50,21 @@ if (!$_POST){
 
 	//$refjugadores = $_POST['refjugadores'];
 
-	//elimino todo y lo vuelvo a cargar
-	$serviciosReferencias->eliminarJugadoresdocumentacionPorJugador($id);
-
 	/*** auditoria ****/
-	$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','E','todos refjugadores','','',$id,$_SESSION['nombre_predio']);
+	$resAudi = $serviciosReferencias->auditoriaMasiva("select * from dbjugadoresdocumentacion where refjugadores =".$id,'dbjugadoresdocumentacion', 'E',$_SESSION['nombre_predio']);
+	$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','E','todos refjugadores','','',$id,$_SESSION['nombre_predio'],$serviciosReferencias->GUID());
+
+
+	$resAudi2 = $serviciosReferencias->auditoriaMasiva("select * from dbjugadoresvaloreshabilitacionestransitorias where refjugadores =".$id,'dbjugadoresvaloreshabilitacionestransitorias', 'E',$_SESSION['nombre_predio']);
+	$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','E','todos refjugadores','','',$id,$_SESSION['nombre_predio'],$serviciosReferencias->GUID());
 	/*** fin audi  ****/
+
+
+	$serviciosReferencias->eliminarJugadoresdocumentacionPorJugador($id);
 
 	$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJuagador($id);
 
-	/*** auditoria ****/
-	$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','E','todos refjugadores','','',$id,$_SESSION['nombre_predio']);
-	/*** fin audi  ****/
+
 
 	//// fin del eliminar //////
 
@@ -77,14 +80,7 @@ if (!$_POST){
 			$res = $serviciosReferencias->insertarJugadoresdocumentacion($id,$rowFS[0],0,$observaciones);
 
 		}
-		/**** auditoria ****/
-		$tabla = 'dbjugadoresdocumentacion';
-		$operacion = 'I';
-		$id = $res;
-		$usuario = $_SESSION['nombre_predio'];
 
-		$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
-		/**** fin auditoria ****/
 	}
 
 	$resV = '';
@@ -96,14 +92,6 @@ if (!$_POST){
 		if (isset($_POST[$cadV.$rowV[0]])) {
 			$resV = $serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,$_POST[$cadV.$rowV[0]][0]);
 
-			/**** auditoria ****/
-			$tabla = 'dbjugadoresvaloreshabilitacionestransitorias';
-			$operacion = 'I';
-			$id = $resV;
-			$usuario = $_SESSION['nombre_predio'];
-
-			$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
-			/**** fin auditoria ****/
 		}
 	}
 
