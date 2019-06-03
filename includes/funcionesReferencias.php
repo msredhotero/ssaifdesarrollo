@@ -3875,7 +3875,7 @@ function existeDevuelveId($sql) {
       $id = $id;
       $usuario = $_SESSION['nombre_predio'];
 
-      $this->insertAuditoria($tabla, $operacion,$id,$usuario);
+      $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
       /**** fin audi  ****/
 
         $sql    =   "delete from dbdocumentacionjugadorimagenes where iddocumentacionjugadorimagen =".$id;
@@ -4199,7 +4199,7 @@ function existeDevuelveId($sql) {
                                 $id = $resIn;
                                 $usuario = $_SESSION['nombre_predio'];
 
-                                $this->insertAuditoria($tabla, $operacion,$id,$usuario);
+                                $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
                                 /**** fin auditoria ****/
                             }
                             echo '';
@@ -5922,7 +5922,7 @@ $operacion = 'I';
 $id = $res;
 $usuario = $_SESSION['nombre_predio'];
 
-$this->insertAuditoria($tabla, $operacion,$id,$usuario);
+$this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
 /**** fin auditoria ****/
 
 return $res;
@@ -5941,12 +5941,31 @@ return $res;
 function modificarEstudioMedico($refjugadores) {
     $existe = $this->existeDevuelveId("select idjugadordocumentacion from dbjugadoresdocumentacion where refjugadores =".$refjugadores." and refdocumentaciones=5");
 
+    /**** auditoria ****/
+    session_start();
+   $tabla = 'dbjugadoresdocumentacion';
+   $operacion = 'M';
+   $id = $existe;
+   $usuario = $_SESSION['nombre_predio'];
+
+   $arAudi = $this->modiAuditoria($tabla, $operacion,$id,$usuario);
+   /**** fin audi  ****/
+
     if ($existe >= 0) {
         $sql = "update dbjugadoresdocumentacion
         set
         valor = 1
         where idjugadordocumentacion =".$existe;
         $res = $this->query($sql,0);
+
+        /**** auditoria ****/
+       $tabla = 'dbjugadoresdocumentacion';
+       $operacion = 'M';
+       $id = $existe;
+       $usuario = $_SESSION['nombre_predio'];
+
+       $this->insertAuditoria($tabla, $operacion,$id,$usuario,$arAudi,null,'1');
+       /**** fin audi  ****/
     } else {
         $res = $this->insertarJugadoresdocumentacion($refjugadores,5,1,'');
     }
@@ -5978,7 +5997,7 @@ function eliminarJugadoresdocumentacionPorJugadorDocumen($refjugador, $refdocume
       $id = $resValor;
       $usuario = $_SESSION['nombre_predio'];
 
-      $this->insertAuditoria($tabla, $operacion,$id,$usuario);
+      $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
       /**** fin audi  ****/
    }
 
@@ -6575,7 +6594,7 @@ $operacion = 'I';
 $id = $res;
 $usuario = $_SESSION['nombre_predio'];
 
-$this->insertAuditoria($tabla, $operacion,$id,$usuario);
+$this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
 /**** fin auditoria ****/
 
 return $res;
@@ -6628,7 +6647,7 @@ function eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentaci
       $id = $resValor;
       $usuario = $_SESSION['nombre_predio'];
 
-      $this->insertAuditoria($tabla, $operacion,$id,$usuario);
+      $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
       /**** fin audi  ****/
    }
 
@@ -16151,21 +16170,24 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 
     /* PARA Auditoria */
 
-   function insertarAuditoria($tabla,$operacion,$campo,$valornuevo,$valorviejo,$id,$usuario,$token) {
-      $sql = "insert into dbauditoria(idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha,token,idusuario)
-      values ('','".$tabla."','".$operacion."','".$campo."','".$valornuevo."','".$valorviejo."',".$id.",'".$usuario."',now(),'".$token."',".$_SESSION['id_usuariopredio'].")";
+   function insertarAuditoria($tabla,$operacion,$campo,$valornuevo,$valorviejo,$id,$usuario,$token,$visible) {
+      $sql = "insert into dbauditoria(idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha,token,idusuario,visible)
+      values ('','".$tabla."','".$operacion."','".$campo."','".$valornuevo."','".$valorviejo."',".$id.",'".$usuario."',now(),'".$token."',".$_SESSION['id_usuariopredio'].",".$visible.")";
       $res = $this->query($sql,1);
       return $res;
    }
 
-   function insertAuditoria($tabla, $operacion,$id,$usuario, $ar=null) {
+   function insertAuditoria($tabla, $operacion,$id,$usuario, $ar=null,$token=null,$visible) {
       $sql = "SHOW COLUMNS FROM ".$tabla;
       $res = $this->query($sql,0);
       $resAux = $this->query($sql,0);
 
       $idnombre = mysql_result($res,0,0);
 
-      $token = $this->GUID();
+      if ($token == null) {
+         $token = $this->GUID();
+      }
+
 
       $i = 0;
 
@@ -16176,10 +16198,10 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
          $valornuevo = mysql_result($resValor,0,0);
          $valorviejo = '';
          if (count($ar)>0) {
-            $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$ar[$i][$row[0]],$id,$usuario,$token);
+            $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$ar[$i][$row[0]],$id,$usuario,$token,$visible);
             $i += 1;
          } else {
-            $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario,$token);
+            $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario,$token,$visible);
          }
 
 
@@ -16212,13 +16234,13 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
       return $ar;
    }
 
-   function auditoriaMasiva($sql,$tabla, $operacion, $usuario) {
+   function auditoriaMasiva($sql,$tabla, $operacion, $usuario,$token,$visible) {
       $res = $this->query($sql,0);
 
       $error = false;
 
       while ($row = mysql_fetch_array($res)) {
-         $resI = $this->insertAuditoria($tabla, $operacion,$row[0],$usuario, $ar=null);
+         $resI = $this->insertAuditoria($tabla, $operacion,$row[0],$usuario, $ar=null,$token,$visible);
          if ((integer)$res > 0) {
             $error = false;
          } else {
@@ -16308,10 +16330,11 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
             FROM
                 dbauditoria a
             WHERE
-                ((a.campo LIKE '%idjugador%'
+                (((a.campo LIKE '%idjugador%'
                     OR a.campo LIKE '%refjugadores%')
                     AND (a.valornuevo = ".$idjugador."
-                    OR a.valorviejo = ".$idjugador.")) or (a.campo LIKE '%todos refjugadores%' and id = ".$idjugador.")
+                    OR a.valorviejo = ".$idjugador.")) or (a.campo LIKE '%todos refjugadores%' and id = ".$idjugador."))
+                    and a.visible = 1
          ORDER BY a.fecha desc
          LIMIT 30";
 

@@ -665,15 +665,23 @@ function traerDetalleAuditoria($serviciosReferencias) {
 
    $res = $serviciosReferencias->traerDetalleAuditoria($id);
 
+   $camposRef = array('refdocumentaciones'=>'Documentacion');
+
    $cad = '';
+
+   $campo = '';
+   $valorNuevo = '';
+   $valorViejo = '';
 
    $cad .= '<table class="table table-striped"><thead><th>Campo</th><th>Valor Nuevo</th><th>Valor Viejo</th><th>Fecha</th><th>Usuario</th></thead><tbody>';
 
    while ($row = mysql_fetch_array($res)) {
+      $campo = str_replace('refdocumentaciones','Documentaciones',$row['campo']);
+
       if ($row['operacion'] == 'E') {
-         $cad .= '<tr><td>'.$row['campo'].'</td><td>'.$row['valorviejo'].'</td><td>'.$row['valornuevo'].'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
+         $cad .= '<tr><td>'.$campo.'</td><td>'.$row['valorviejo'].'</td><td>'.$row['valornuevo'].'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
       } else {
-         $cad .= '<tr><td>'.$row['campo'].'</td><td>'.$row['valornuevo'].'</td><td>'.$row['valorviejo'].'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
+         $cad .= '<tr><td>'.$campo.'</td><td>'.$row['valornuevo'].'</td><td>'.$row['valorviejo'].'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
       }
    }
 
@@ -2269,7 +2277,7 @@ function insertarConectorAjax($serviciosReferencias) {
             $id = $res;
             $usuario = $_SESSION['nombre_predio'];
 
-            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
             /**** fin auditoria ****/
 
 				//$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
@@ -2340,7 +2348,7 @@ function insertarConector($serviciosReferencias) {
          $id = $res;
          $usuario = $_SESSION['nombre_predio'];
 
-         $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+         $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
          /**** fin auditoria ****/
 
 			//si voy a cargar al agente y ademas posee otro conector y esta activo, pero esta carga viene de un habilitacion deportiva
@@ -2389,7 +2397,7 @@ $operacion = 'E';
 $id = $id;
 $usuario = $_SESSION['nombre_predio'];
 
-$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
 /**** fin audi  ****/
 
 $res = $serviciosReferencias->eliminarConector($id);
@@ -2417,7 +2425,7 @@ function eliminarConectorDefinitivamente($serviciosReferencias) {
    $id = $id;
    $usuario = $_SESSION['nombre_predio'];
 
-   $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+   $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
    /**** fin audi  ****/
 
 	//verifico que no esta cargado en ningun fixture sino le doy una baja logica  //eliminarConector
@@ -3214,7 +3222,7 @@ function insertarCategorias($serviciosReferencias) {
       $id = $res;
       $usuario = $_SESSION['nombre_predio'];
 
-      $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+      $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
       /**** fin auditoria ****/
       echo '';
    } else {
@@ -3247,7 +3255,7 @@ function modificarCategorias($serviciosReferencias) {
       $id = $id;
       $usuario = $_SESSION['nombre_predio'];
 
-      $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,$arAudi);
+      $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,$arAudi,null,'1');
       /**** fin audi  ****/
       echo '';
    } else {
@@ -3264,7 +3272,7 @@ function eliminarCategorias($serviciosReferencias) {
    $id = $id;
    $usuario = $_SESSION['nombre_predio'];
 
-   $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+   $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
    /**** fin audi  ****/
 
    $res = $serviciosReferencias->eliminarCategorias($id);
@@ -3439,7 +3447,7 @@ function insertarJugadores($serviciosReferencias) {
             $id = $res;
             $usuario = $_SESSION['nombre_predio'];
 
-            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
             /**** fin auditoria ****/
 				echo $res;
 			} else {
@@ -3488,7 +3496,7 @@ function modificarJugadores($serviciosReferencias) {
             $id = $id;
             $usuario = $_SESSION['nombre_predio'];
 
-            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,$arAudi);
+            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,$arAudi,null,'1');
             /**** fin audi  ****/
 				echo '';
 			} else {
@@ -3527,7 +3535,7 @@ $operacion = 'E';
 $id = $id;
 $usuario = $_SESSION['nombre_predio'];
 
-$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario);
+$serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
 /**** fin audi  ****/
 
 $res = $serviciosReferencias->eliminarJugadores($id);

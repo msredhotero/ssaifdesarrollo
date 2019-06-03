@@ -51,12 +51,18 @@ if (!$_POST){
 	//$refjugadores = $_POST['refjugadores'];
 
 	/*** auditoria ****/
-	$resAudi = $serviciosReferencias->auditoriaMasiva("select * from dbjugadoresdocumentacion where refjugadores =".$id,'dbjugadoresdocumentacion', 'E',$_SESSION['nombre_predio']);
-	$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','E','todos refjugadores','','',$id,$_SESSION['nombre_predio'],$serviciosReferencias->GUID());
+	$token1audi = $serviciosReferencias->GUID();
+
+	$resAudi = $serviciosReferencias->auditoriaMasiva("select * from dbjugadoresdocumentacion where refjugadores =".$id,'dbjugadoresdocumentacion', 'E',$_SESSION['nombre_predio'],$token1audi,0);
+
+	$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','E','todos refjugadores','','',$id,$_SESSION['nombre_predio'], $token1audi,1);
 
 
-	$resAudi2 = $serviciosReferencias->auditoriaMasiva("select * from dbjugadoresvaloreshabilitacionestransitorias where refjugadores =".$id,'dbjugadoresvaloreshabilitacionestransitorias', 'E',$_SESSION['nombre_predio']);
-	$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','E','todos refjugadores','','',$id,$_SESSION['nombre_predio'],$serviciosReferencias->GUID());
+	$token2audi = $serviciosReferencias->GUID();
+
+	$resAudi2 = $serviciosReferencias->auditoriaMasiva("select * from dbjugadoresvaloreshabilitacionestransitorias where refjugadores =".$id,'dbjugadoresvaloreshabilitacionestransitorias', 'E',$_SESSION['nombre_predio'],$token2audi,0);
+
+	$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','E','todos refjugadores','','',$id,$_SESSION['nombre_predio'],$token2audi,1);
 	/*** fin audi  ****/
 
 
