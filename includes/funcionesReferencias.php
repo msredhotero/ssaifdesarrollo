@@ -16213,17 +16213,17 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 
       while ($row = mysql_fetch_array($resAux)) {
 
-         $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
-         $resValor = $this->query($sqlValor,0);
+         //$sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
+
          if (strpos($row[1],"bit") !== false) {
-            if (mysql_result($resValor,0,0) == 0) {
-               $valornuevo = 'No';
-            } else {
-               $valornuevo = 'Si';
-            }
+            $sqlValor = "SELECT (case when ".$row[0]." = 1 then 'Si' else 'No' end) as ".$row[0]." from ".$tabla.' where '.$idnombre.' = '.$id;
          } else {
-            $valornuevo = mysql_result($resValor,0,0);
+            $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
          }
+
+         $resValor = $this->query($sqlValor,0);
+         $valornuevo = mysql_result($resValor,0,0);
+
 
          $valorviejo = '';
          if (count($ar)>0) {
@@ -16251,21 +16251,18 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 
       while ($row = mysql_fetch_array($resAux)) {
 
-         $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
+         if (strpos($row[1],"bit") !== false) {
+            $sqlValor = "SELECT (case when ".$row[0]." = 1 then 'Si' else 'No' end) as ".$row[0]." from ".$tabla.' where '.$idnombre.' = '.$id;
+         } else {
+            $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
+         }
+
 
          $resValor = $this->query($sqlValor,0);
          $valornuevo = '';
 
-         if (strpos($row[1],"bit") !== false) {
-            if (mysql_result($resValor,0,0) == 0) {
-               $valorviejo = 'No';
-            } else {
-               $valorviejo = 'Si';
-            }
+         $valorviejo = mysql_result($resValor,0,0);
 
-         } else {
-            $valorviejo = mysql_result($resValor,0,0);
-         }
          //$insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario);
          array_push($ar,array($row[0]=> $valorviejo));
 
@@ -16476,7 +16473,7 @@ function deteterminaHabilitado($idjugador) {
                $habilitacion= 'INHAB.';
             } else {
                $habilitacion= 'HAB.';
-            
+
             }
          } else {
             $habilitacion= 'INHAB.';
