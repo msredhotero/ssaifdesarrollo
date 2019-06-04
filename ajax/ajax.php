@@ -666,6 +666,57 @@ function traerDetalleAuditoria($serviciosReferencias) {
    $res = $serviciosReferencias->traerDetalleAuditoria($id);
 
    $camposRef = array('refdocumentaciones'=>'Documentacion');
+   $arDocumentacion = array('' => '',
+                           1 => 'FOTO',
+                           2 => 'DOCUMENTO',
+                           3 => 'FICHA',
+                           4 => 'TITULO',
+                           5 => 'EXAMEN MEDICO',
+                           6 => 'EXPENSAS',
+                           7 => 'INHABILITACION COUNTRY',
+                           9 => 'PARTIDA/LIBRETA');
+
+   $arDocuValores = array('' => '',330=> 'FOTO NO PRESENTADA',
+                           331=> 'SI',
+                           332=> 'DOCUMENTO NO PRESENTADO',
+                           333=> 'PRESENTADO',
+                           334=> 'FICHA NO PRESENTADA',
+                           335=> 'PRESENTADA',
+                           336=> 'EXCEPCION',
+                           337=> 'H - Si titulo, Si dominio',
+                           338=> 'I - Si titulo, No Dominio',
+                           339=> 'I - No Titulo, No Dominio',
+                           340=> 'I - No Titulo, Si Dominio',
+                           341=> 'H - Si titulo, No Dominio (C/excep. CD)',
+                           342=> 'H - No Titulo, Si Dominio (con excep. CD)',
+                           343=> 'H - En revision transitoria CD por pedido excep.',
+                           344=> 'I - Rechazo CD por pedido excep.',
+                           345=> 'H - Antiguedad 10 años aprob CD',
+                           346=> 'I - Antiguedad 10 años',
+                           347=> 'H - Boleto aprob CD',
+                           348=> 'I - Boleto',
+                           349=> 'H - Sociedades aprob. CD',
+                           350=> 'I - Sociedades',
+                           351=> 'H - Antiguedad padron aprob CD',
+                           352=> 'I - Antiguedad padron',
+                           353=> 'H - Inquilinos aprob CD',
+                           354=> 'I - Inquilinos',
+                           355=> 'H - Condominios aprob CD',
+                           356=> 'I - Condominios',
+                           357=> 'H - Otros aprob CD',
+                           358=> 'I - Otros',
+                           359=> 'I - No (desde torneos 2006)',
+                           360=> 'H - Si (hasta torneos 2006)',
+                           361=> 'E.M. NO ENTREGADO',
+                           362=> 'ENTREGADO',
+                           363=> 'E.M. INCORRECTO',
+                           364=> 'EXPENSAS NO PRESENTADAS',
+                           365=> 'PRESENTADAS',
+                           366=> 'NO INHABILITA',
+                           367=> 'INHABILITADO COUNTRY',
+                           368=> 'SI',
+                           369=> 'NO PRESENTO PARTIDA/LIBRETA');
+
 
    $cad = '';
 
@@ -676,12 +727,35 @@ function traerDetalleAuditoria($serviciosReferencias) {
    $cad .= '<table class="table table-striped"><thead><th>Campo</th><th>Valor Nuevo</th><th>Valor Viejo</th><th>Fecha</th><th>Usuario</th></thead><tbody>';
 
    while ($row = mysql_fetch_array($res)) {
-      $campo = str_replace('refdocumentaciones','Documentaciones',$row['campo']);
+      switch ($row['campo']) {
+         case 'refdocumentaciones':
+            $campo = str_replace('refdocumentaciones','Documentaciones',$row['campo']);
+            $valorNuevo = $arDocumentacion[$row['valornuevo']];
+            $valorViejo = $arDocumentacion[$row['valorviejo']];
+            break;
+         case 'refvaloreshabilitacionestransitorias':
+            $campo = str_replace('refvaloreshabilitacionestransitorias','Documentacion Valor',$row['campo']);
+            $valorNuevo = $arDocuValores[$row['valornuevo']];
+            $valorViejo = $arDocuValores[$row['valorviejo']];
+            break;
+         case 'refjugadores':
+            $campo = str_replace('refjugadores','ID Jugador',$row['campo']);
+            $valorNuevo = $row['valornuevo'];
+            $valorViejo = $row['valorviejo'];
+            break;
+
+         default:
+            $campo = $row['campo'];
+            $valorNuevo = $row['valornuevo'];
+            $valorViejo = $row['valorviejo'];
+            break;
+      }
+
 
       if ($row['operacion'] == 'E') {
-         $cad .= '<tr><td>'.$campo.'</td><td>'.$row['valorviejo'].'</td><td>'.$row['valornuevo'].'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
+         $cad .= '<tr><td>'.$campo.'</td><td>'.$valorViejo.'</td><td>'.$valorNuevo.'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
       } else {
-         $cad .= '<tr><td>'.$campo.'</td><td>'.$row['valornuevo'].'</td><td>'.$row['valorviejo'].'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
+         $cad .= '<tr><td>'.$campo.'</td><td>'.$valorNuevo.'</td><td>'.$valorViejo.'</td><td>'.$row['fecha'].'</td><td>'.$row['usuario'].'</td></tr>';
       }
    }
 

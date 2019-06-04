@@ -5928,6 +5928,14 @@ $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
 return $res;
 }
 
+function insertarJugadoresdocumentacionsinaudi($refjugadores,$refdocumentaciones,$valor,$observaciones) {
+$sql = "insert into dbjugadoresdocumentacion(idjugadordocumentacion,refjugadores,refdocumentaciones,valor,observaciones)
+values ('',".$refjugadores.",".$refdocumentaciones.",".$valor.",'".$observaciones."')";
+$res = $this->query($sql,1);
+
+return $res;
+}
+
 
 function modificarJugadoresdocumentacion($id,$refjugadores,$refdocumentaciones,$valor,$observaciones) {
 $sql = "update dbjugadoresdocumentacion
@@ -6596,6 +6604,15 @@ $usuario = $_SESSION['nombre_predio'];
 
 $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
 /**** fin auditoria ****/
+
+return $res;
+}
+
+
+function insertarJugadoresvaloreshabilitacionestransitoriassinaudi($refjugadores,$refvaloreshabilitacionestransitorias) {
+$sql = "insert into dbjugadoresvaloreshabilitacionestransitorias(iddbjugadorvalorhabilitaciontransitoria,refjugadores,refvaloreshabilitacionestransitorias)
+values ('',".$refjugadores.",".$refvaloreshabilitacionestransitorias.")";
+$res = $this->query($sql,1);
 
 return $res;
 }
@@ -9196,7 +9213,8 @@ function traerJugadoresEquiposPorJugador($idJugador) {
     cat.idtcategoria,
     coc.reftipojugadores,
     coc.refequipos,
-    cou.idcountrie
+    cou.idcountrie,
+    rr.fechabaja
 from    (
     select
         j.nrodocumento,
@@ -9205,7 +9223,8 @@ from    (
         j.fechanacimiento,
         count(r.refequipos) as cantidad,
         j.idjugador,
-        j.refcountries
+        j.refcountries,
+        j.fechabaja
 
         from
         (
@@ -9252,7 +9271,8 @@ from    (
         j.email,
         j.fechanacimiento,
         j.idjugador,
-        j.refcountries
+        j.refcountries,
+        j.fechabaja
         ) rr
     inner
     join        dbconector coc
@@ -16195,7 +16215,16 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 
          $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
          $resValor = $this->query($sqlValor,0);
-         $valornuevo = mysql_result($resValor,0,0);
+         if (strpos($row[1],"bit") !== false) {
+            if (mysql_result($resValor,0,0) == 0) {
+               $valornuevo = 'No';
+            } else {
+               $valornuevo = 'Si';
+            }
+         } else {
+            $valornuevo = mysql_result($resValor,0,0);
+         }
+
          $valorviejo = '';
          if (count($ar)>0) {
             $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$ar[$i][$row[0]],$id,$usuario,$token,$visible);
@@ -16223,9 +16252,20 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
       while ($row = mysql_fetch_array($resAux)) {
 
          $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
+
          $resValor = $this->query($sqlValor,0);
          $valornuevo = '';
-         $valorviejo = mysql_result($resValor,0,0);
+
+         if (strpos($row[1],"bit") !== false) {
+            if (mysql_result($resValor,0,0) == 0) {
+               $valorviejo = 'No';
+            } else {
+               $valorviejo = 'Si';
+            }
+
+         } else {
+            $valorviejo = mysql_result($resValor,0,0);
+         }
          //$insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario);
          array_push($ar,array($row[0]=> $valorviejo));
 
@@ -16354,6 +16394,102 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 
 /* Fin */
 /* /* Fin de la Tabla: dbauditoria*/
+
+function deteterminaHabilitado($idjugador) {
+
+   $resultado = array();
+
+   $data = $this->traerJugadoresEquiposPorJugador($idjugador);
+
+   $resTemporadas = $this->traerUltimaTemporada();
+
+   if (mysql_num_rows($resTemporadas)>0) {
+      $ultimaTemporada = mysql_result($resTemporadas,0,0);
+   } else {
+      $ultimaTemporada = 0;
+   }
+
+   $i = 0;
+   while ($row = mysql_fetch_array($data)) {
+
+      $cadCumpleEdad = '';
+		$errorDoc = 'FALTA';
+		$cadErrorDoc = '';
+		$habilitacion= 'INHAB.';
+		$transitoria= '';
+		$valorDocumentacion = 0;
+		$documentaciones = '';
+		$tieneAlgunaHabilitacionTrans = 0;
+
+      $edad = $this->verificarEdad($idjugador);
+
+      $cumpleEdad = $this->verificaEdadCategoriaJugador($idjugador, $row['idtcategoria'], $row['reftipojugadores']);
+
+      $documentaciones = $this->traerJugadoresdocumentacionPorJugadorValores($idjugador);
+
+      if ($cumpleEdad == 1) {
+         $cadCumpleEdad = "CUMPLE";
+      } else {
+         // VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
+         $habilitacionTransitoria = $this->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($idjugador, $ultimaTemporada, $row['idtcategoria'], $row['refequipos']);
+         if (mysql_num_rows($habilitacionTransitoria)>0) {
+            $cadCumpleEdad = "HAB. TRANS.";
+            $habilitacion= 'HAB.';
+         } else {
+            $cadCumpleEdad = "NO CUMPLE";
+         }
+      }
+
+      if (mysql_num_rows($documentaciones)>0) {
+         while ($rowH = mysql_fetch_array($documentaciones)) {
+            if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
+               if ($rowH['obligatoria'] == 'Si') {
+                  $valorDocumentacion += 1;
+                  if (mysql_num_rows($this->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($idjugador,$rowH['refdocumentaciones']))>0) {
+                     $valorDocumentacion -= 1;
+                     $tieneAlgunaHabilitacionTrans = 1;
+                  }
+               }
+               if ($rowH['contravalordesc'] == '') {
+                  $cadErrorDoc .= strtoupper($rowH['descripcion']).' - ';
+               } else {
+                  $cadErrorDoc .= strtoupper($rowH['contravalordesc']).' - ';
+               }
+            }
+         }
+         if ($cadErrorDoc == '') {
+            $cadErrorDoc = 'OK';
+            $errorDoc = 'OK';
+         } else {
+            $cadErrorDoc = substr($cadErrorDoc,0,-3);
+         }
+
+      } else {
+         $cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
+      }
+
+      if (($row['fechabaja'] != '1900-01-01') && ($row['fechabaja'] != '') && ($row['fechabaja'] < date('Y-m-d'))) {
+         $habilitacion= 'INHAB/Baja';
+      } else {
+         if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
+            if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
+               $habilitacion= 'INHAB.';
+            } else {
+               $habilitacion= 'HAB.';
+            
+            }
+         } else {
+            $habilitacion= 'INHAB.';
+         }
+      }
+
+      array_push($resultado, array('habilita'=>$habilitacion, 'equipo'=>$row['equipo'], 'categoria'=>$row['categoria'], 'division'=>$row['division']));
+   }
+
+
+
+   return $resultado;
+}
 
 
 function query($sql,$accion) {

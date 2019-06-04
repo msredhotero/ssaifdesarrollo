@@ -73,6 +73,9 @@ if (!$_POST){
 
 
 	//// fin del eliminar //////
+	$token3audi = $serviciosReferencias->GUID();
+
+	$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','I','todos refjugadores','','',$id,$_SESSION['nombre_predio'], $token3audi,1);
 
 	$observaciones = '';
 
@@ -81,11 +84,20 @@ if (!$_POST){
 	while ($rowFS = mysql_fetch_array($resDocu)) {
 		if (isset($_POST[$cad.$rowFS[0]])) {
 
-			$res = $serviciosReferencias->insertarJugadoresdocumentacion($id,$rowFS[0],1,$observaciones);
+			$res = $serviciosReferencias->insertarJugadoresdocumentacionsinaudi($id,$rowFS[0],1,$observaciones);
 		} else {
-			$res = $serviciosReferencias->insertarJugadoresdocumentacion($id,$rowFS[0],0,$observaciones);
+			$res = $serviciosReferencias->insertarJugadoresdocumentacionsinaudi($id,$rowFS[0],0,$observaciones);
 
 		}
+
+		/**** auditoria ****/
+		$tabla = 'dbjugadoresdocumentacion';
+		$operacion = 'I';
+		//$id = $res;
+		$usuario = $_SESSION['nombre_predio'];
+
+		$serviciosReferencias->insertAuditoria($tabla, $operacion,$res,$usuario,null,$token3audi,0);
+		/**** fin auditoria ****/
 
 	}
 
@@ -93,11 +105,23 @@ if (!$_POST){
 	$resValores = $serviciosReferencias->traerDocumentaciones();
 	$cadV = 'multiselect';
 
+	$token4audi = $serviciosReferencias->GUID();
+
+	$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','I','todos refjugadores','','',$id,$_SESSION['nombre_predio'], $token4audi,1);
+
 	while ($rowV = mysql_fetch_array($resValores)) {
 		//$resV .= $cadV.$rowV[0];
 		if (isset($_POST[$cadV.$rowV[0]])) {
-			$resV = $serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($id,$_POST[$cadV.$rowV[0]][0]);
+			$resV = $serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitoriassinaudi($id,$_POST[$cadV.$rowV[0]][0]);
 
+			/**** auditoria ****/
+			$tabla = 'dbjugadoresvaloreshabilitacionestransitorias';
+			$operacion = 'I';
+			//$id = $resV;
+			$usuario = $_SESSION['nombre_predio'];
+
+			$serviciosReferencias->insertAuditoria($tabla, $operacion,$resV,$usuario,null,$token4audi,0);
+			/**** fin auditoria ****/
 		}
 	}
 
