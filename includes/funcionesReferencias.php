@@ -16392,11 +16392,11 @@ function enviarMailAdjuntoAltaSocio($id, $email,$asunto,$cuerpo) {
 /* Fin */
 /* /* Fin de la Tabla: dbauditoria*/
 
-function deteterminaHabilitado($idjugador) {
+function deteterminaHabilitado($idjugador, $idcategoria, $idtipojugador, $idequipo, $fechabaja) {
 
    $resultado = array();
 
-   $data = $this->traerJugadoresEquiposPorJugador($idjugador);
+   //$data = $this->traerJugadoresEquiposPorJugador($idjugador);
 
    $resTemporadas = $this->traerUltimaTemporada();
 
@@ -16407,7 +16407,7 @@ function deteterminaHabilitado($idjugador) {
    }
 
    $i = 0;
-   while ($row = mysql_fetch_array($data)) {
+   //while ($row = mysql_fetch_array($data)) {
 
       $cadCumpleEdad = '';
 		$errorDoc = 'FALTA';
@@ -16420,7 +16420,7 @@ function deteterminaHabilitado($idjugador) {
 
       $edad = $this->verificarEdad($idjugador);
 
-      $cumpleEdad = $this->verificaEdadCategoriaJugador($idjugador, $row['idtcategoria'], $row['reftipojugadores']);
+      $cumpleEdad = $this->verificaEdadCategoriaJugador($idjugador, $idcategoria, $idtipojugador);
 
       $documentaciones = $this->traerJugadoresdocumentacionPorJugadorValores($idjugador);
 
@@ -16428,7 +16428,7 @@ function deteterminaHabilitado($idjugador) {
          $cadCumpleEdad = "CUMPLE";
       } else {
          // VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
-         $habilitacionTransitoria = $this->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($idjugador, $ultimaTemporada, $row['idtcategoria'], $row['refequipos']);
+         $habilitacionTransitoria = $this->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($idjugador, $ultimaTemporada, $idcategoria, $idequipo);
          if (mysql_num_rows($habilitacionTransitoria)>0) {
             $cadCumpleEdad = "HAB. TRANS.";
             $habilitacion= 'HAB.';
@@ -16465,7 +16465,7 @@ function deteterminaHabilitado($idjugador) {
          $cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
       }
 
-      if (($row['fechabaja'] != '1900-01-01') && ($row['fechabaja'] != '') && ($row['fechabaja'] < date('Y-m-d'))) {
+      if (($fechabaja != '1900-01-01') && ($fechabaja != '') && ($fechabaja < date('Y-m-d'))) {
          $habilitacion= 'INHAB/Baja';
       } else {
          if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
@@ -16480,12 +16480,109 @@ function deteterminaHabilitado($idjugador) {
          }
       }
 
-      array_push($resultado, array('habilita'=>$habilitacion, 'equipo'=>$row['equipo'], 'categoria'=>$row['categoria'], 'division'=>$row['division']));
-   }
+      //array_push($resultado, );
+   //}
 
 
 
-   return $resultado;
+   return array('habilita'=>$habilitacion, 'observacion'=>$cadErrorDoc);
+}
+
+
+/* PARA Jugadoreshabilitados */
+
+function insertarJugadoreshabilitados($refjugadores,$refequipos,$habilitado,$observacion,$fecha,$usuario) {
+$sql = "insert into dbjugadoreshabilitados(idjugadorhabilitado,refjugadores,refequipos,habilitado,observacion,fecha,usuario)
+values ('',".$refjugadores.",".$refequipos.",'".$habilitado."','".$observacion."',now(),'".$usuario."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarJugadoreshabilitados($id,$refjugadores,$refequipos,$habilitado,$observacion,$fecha,$usuario) {
+$sql = "update dbjugadoreshabilitados
+set
+refjugadores = ".$refjugadores.",refequipos = ".$refequipos.",habilitado = '".utf8_decode($habilitado)."',observacion = '".utf8_decode($observacion)."',fecha = '".utf8_decode($fecha)."',usuario = '".utf8_decode($usuario)."'
+where idjugadorhabilitado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarJugadoreshabilitados($id) {
+$sql = "delete from dbjugadoreshabilitados where idjugadorhabilitado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerJugadoreshabilitados() {
+$sql = "select
+j.idjugadorhabilitado,
+j.refjugadores,
+j.refequipos,
+j.habilitado,
+j.observacion,
+j.fecha,
+j.usuario
+from dbjugadoreshabilitados j
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerJugadoreshabilitadosPorId($id) {
+$sql = "select idjugadorhabilitado,refjugadores,refequipos,habilitado,observacion,fecha,usuario from dbjugadoreshabilitados where idjugadorhabilitado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbjugadoreshabilitados*/
+
+function traerConectorTodosActivosT($idtemporada) {
+$sql = "select
+    c.idconector,
+    cat.categoria,
+    equ.nombre as equipo,
+    co.nombre as countrie,
+    tip.tipojugador,
+    (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+    concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+    jug.nrodocumento,
+    jug.fechabaja
+
+from
+    dbconector c
+        inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+        inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+        inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        inner join
+    dbequipos equ ON equ.idequipo = c.refequipos
+        inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+        left join
+    dbcontactos con ON con.idcontacto = equ.refcontactos
+        inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+    where c.activo = 1 and c.reftemporadas = ".$idtemporada." and equ.activo = 1
+order by jug.idjugador";
+$res = $this->query($sql,0);
+return $res;
 }
 
 

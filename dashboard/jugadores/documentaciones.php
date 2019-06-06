@@ -283,6 +283,22 @@ if (!$_POST){
 		}
 	}
 
+
+
+
+
+	/************* nuevo calculo si esta habilitado en todos sus equipos si o no *******/
+	$resConectores = $serviciosReferencias->traerJugadoresEquiposPorJugador($id);
+
+	while ($row = mysql_fetch_array($resConectores)) {
+		$resHabilita = $serviciosReferencias->deteterminaHabilitado($id, $row['idtcategoria'], $row['reftipojugadores'], $row['refequipos'], $row['fechabaja']);
+
+		$serviciosReferencias->insertarJugadoreshabilitados($id,$row['refequipos'],$resHabilita['habilita'],$resHabilita['observacion'],date('Y-m-d H:i:s'),$_SESSION['nombre_predio']);
+	}
+
+
+	/*************   fin del calculo 					*************************************/
+
 }
 
 $resResultado = $serviciosReferencias->traerJugadoresPorId($id);
@@ -552,6 +568,9 @@ switch ($idEstadoPartidaNacimiento) {
 		$spanPartidaNacimiento = 'text-danger glyphicon glyphicon-remove-sign';
 		break;
 }
+
+
+
 
 
 ?>
