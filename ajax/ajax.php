@@ -5,6 +5,7 @@ include ('../includes/funciones.php');
 include ('../includes/funcionesHTML.php');
 include ('../includes/funcionesReferencias.php');
 include ('../includes/funcionesCopia.php');
+include ('../includes/funcionesAuditoria.php');
 
 
 $serviciosUsuarios  		= new ServiciosUsuarios();
@@ -12,6 +13,7 @@ $serviciosFunciones 		= new Servicios();
 $serviciosHTML				= new ServiciosHTML();
 $serviciosReferencias		= new ServiciosReferencias();
 $serviciosCopia				= new ServiciosCopia();
+$serviciosAuditoria 	= new ServiciosAuditoria();
 
 $accion = $_POST['accion'];
 
@@ -657,7 +659,40 @@ break;
 case 'traerDetalleAuditoria':
    traerDetalleAuditoria($serviciosReferencias);
 break;
+case 'auditoriaFiltros':
+   auditoriaFiltros($serviciosAuditoria);
+break;
 /**  fin excepciones */
+}
+
+function auditoriaFiltros($serviciosAuditoria) {
+   $idfiltro = $_POST['tiporeporte'];
+   $fechadesde = $_POST['fechadesde'];
+   $fechahasta = $_POST['fechahasta'];
+   $idcountrie = $_POST['refcountries1'];
+   $res = $serviciosAuditoria->auditoriaFiltros($idfiltro, $idcountrie, $fechadesde, $fechahasta);
+
+   $resV['estado'] = false;
+   $ar = array();
+
+   while ($row = mysql_fetch_array($res)) {
+      $resV['estado'] = true;
+      array_push($ar, array(
+         'operacion' => '<button type="button" class="btn btn-labeled btn-'.$row['color'].'"><span class="btn-label"><i class="glyphicon glyphicon-'.$row['icon'].'"></i></span> '.$row['operacion'].'</button>',
+         'leyenda' => $row['leyenda'],
+         'nrodocumento' => $row['nrodocumento'],
+         'apellido' => $row['apellido'],
+         'nombres' => $row['nombres'],
+         'fecha' => $row['fecha'],
+         'usuario' => $row['usuario']
+      ));
+   }
+
+   $resV['data'] = $ar;
+
+   header('Content-type: application/json');
+   echo json_encode($resV);
+
 }
 
 function traerDetalleAuditoria($serviciosReferencias) {

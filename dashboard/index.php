@@ -2625,7 +2625,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 				   success:  function (response) {
 					   var cad = '';
 
-					   cad += '<table class="table table-striped"><thead><th>Operacion</th><th>Leyenda</th><th>Fecha</th><th>Usuario</th><th>Ver</th></thead><tbody>';
+					   cad += '<table class="table table-striped"><thead><th>Operacion</th><th>Leyenda</th><th>Usuario</th><th>Fecha</th><th>Ver</th></thead><tbody>';
 					   for(var k in response.data) {
 							cad += '<tr><td>' + response.data[k].operacion + '</td><td>' + response.data[k].leyenda + '</td><td>' + response.data[k].usuario + '</td><td>' + response.data[k].fecha + '</td><td><button type="button" class="btn btn-success varDetalleAuditoria" id="' + response.data[k].id + '" style="margin-left:0px;">Ver</button></td></tr>';
 							//console.log(response.data[k].fecha);

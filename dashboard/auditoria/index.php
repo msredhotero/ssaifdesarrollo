@@ -14,11 +14,14 @@ include ('../../includes/funcionesUsuarios.php');
 include ('../../includes/funcionesHTML.php');
 include ('../../includes/funciones.php');
 include ('../../includes/funcionesReferencias.php');
+include ('../../includes/funcionesAuditoria.php');
 
 $serviciosUsuario = new ServiciosUsuarios();
 $serviciosHTML = new ServiciosHTML();
 $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
+$serviciosAuditoria 	= new ServiciosAuditoria();
+
 
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
@@ -183,9 +186,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                 </div>
 
 
-                <div class="form-group col-md-12" style="height:220px;">* Se aplicaran filtros a las busquedas</div>
-
-
+                <div class="form-group col-md-12" style="height:30px;">* Se aplicaran filtros a las busquedas</div>
 
                 <div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
@@ -197,6 +198,12 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
                         </ul>
                 </div>
+
+					 <div class="row">
+						 <div class="form-group col-md-12 lstMovimientos">
+
+						 </div>
+					 </div><!-- fin del contenedor detalle -->
 
 
             </div>
@@ -217,7 +224,22 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
 
 
+	 <!-- Modal -->
+	 <div class="modal fade" id="myModalAuditoria" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
+	   <div class="modal-dialog modal-lg" role="document">
+	 	 <div class="modal-content">
 
+	 		<div class="modal-header">
+	 		  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	 		  <h4 class="modal-title" id="myModalLabel">Detalle Auditoria</h4>
+	 		</div>
+	 		<div class="modal-body" id="detalleAuditoria">
+
+	 		</div>
+
+	 	 </div>
+	   </div>
+	 </div>
 
 
 
@@ -234,510 +256,57 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 <script type="text/javascript">
 $(document).ready(function(){
 
+	$('#rptRP').click(function() {
+		auditoriaFiltros($('#tiporeporte').val(), $('#reffechadesde1').val(), $('#reffechahasta1').val(), $('#refcountries1').val());
+	});
 
-	$("#valorfechaalta").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
-	$("#valorfechanacimiento").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
-
-	$("#valorfechaalta2").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
-	$("#valorfechanacimiento2").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
-
-	$('#cjrefcountries').change(function(e) {
-
+	function auditoriaFiltros(tiporeporte, fechadesde, fechahasta, refcountries1) {
 		$.ajax({
-				data:  {id: $('#cjrefcountries').val(),
-						accion: 'traerEquiposPorCountries'},
-				url:   '../../ajax/ajax.php',
-				type:  'post',
-				beforeSend: function () {
-					$('#cjrefequipos').html('');
-				},
-				success:  function (response) {
+			data:  { tiporeporte: tiporeporte,
+						accion: 'auditoriaFiltros',
+						fechadesde: fechadesde,
+						fechahasta: fechahasta,
+						refcountries1: refcountries1
+					},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+				$('.lstMovimientos').html('');
+			},
+			success:  function (response) {
+				var cad = '';
 
-                    if (response != '') {
-						$('#cjrefequipos').prepend('<option value="">-- Seleccionar --</option>');
-						$('#cjrefequipos').append(response);
+				cad += '<table class="table table-striped"><thead><th>Operacion</th><th>Leyenda</th><th>Nro Doc</th><th>Apellido</th><th>Nombres</th><th>Usuario</th><th>Fecha</th><th>Ver</th></thead><tbody>';
+				for(var k in response.data) {
+					cad += '<tr><td>' + response.data[k].operacion + '</td><td>' + response.data[k].leyenda + '</td><td>' + response.data[k].nrodocumento + '</td><td>' + response.data[k].apellido + '</td><td>' + response.data[k].nombres + '</td><td>' + response.data[k].usuario + '</td><td>' + response.data[k].fecha + '</td><td><button type="button" class="btn btn-success varDetalleAuditoria" id="' + response.data[k].id + '" style="margin-left:0px;">Ver</button></td></tr>';
+					//console.log(response.data[k].fecha);
+				}
 
-                    } else {
+				cad += '</tbody></table>';
 
-                        $('#cjrefequipos').html('<option value="">-- Seleccionar --</option>');
-
-                    }
-                }
-		});
-    });
-
-	function traerFechasPorTorneos(idTorneo, contenedor) {
-		$.ajax({
-				data:  {idTorneo: idTorneo,
-						accion: 'traerFechasPorTorneos'},
-				url:   '../../ajax/ajax.php',
-				type:  'post',
-				beforeSend: function () {
-					$('#'+contenedor).html('');
-				},
-				success:  function (response) {
-
-                    if (response != '') {
-						$('#'+contenedor).prepend('<option value="">-- Seleccionar --</option>');
-						$('#'+contenedor).append(response);
-
-                    } else {
-
-
-                        $('#'+contenedor).html('<option value="">-- Seleccionar --</option> \
-                                    <option value="1">Fecha 1</option> \
-                                    <option value="2">Fecha 2</option> \
-                                    <option value="3">Fecha 3</option> \
-                                    <option value="4">Fecha 4</option> \
-                                    <option value="5">Fecha 5</option> \
-                                    <option value="6">Fecha 6</option> \
-                                    <option value="7">Fecha 7</option> \
-                                    <option value="8">Fecha 8</option> \
-                                    <option value="9">Fecha 9</option> \
-                                    <option value="10">Fecha 10</option> \
-                                    <option value="11">Fecha 11</option> \
-                                    <option value="12">Fecha 12</option> \
-                                    <option value="13">Fecha 13</option> \
-                                    <option value="14">Fecha 14</option> \
-                                    <option value="15">Fecha 15</option> \
-                                    <option value="16">Fecha 16</option> \
-                                    <option value="17">Fecha 17</option> \
-                                    <option value="18">Fecha 18</option> \
-                                    <option value="19">Fecha 19</option> \
-                                    <option value="20">Fecha 20</option> \
-                                    <option value="21">Fecha 21</option> \
-                                    <option value="22">Fecha 22</option> \
-                                    <option value="23">Fecha 23</option> \
-                                    <option value="24">Fecha 24</option> \
-                                    <option value="25">Fecha 25</option> \
-                                    <option value="26">Fecha 26</option> \
-                                    <option value="27">Fecha 27</option> \
-                                    <option value="28">Fecha 28</option> \
-                                    <option value="29">Fecha 29</option> \
-                                    <option value="30">Fecha 30</option>');
-
-                    }
-                }
+				$('.lstMovimientos').html(cad);
+			}
 		});
 	}
 
-	$('#ffa1').hide();
-	$('#ffn1').hide();
-	$('#fed1').hide();
-	$('#fmj1').hide();
-	$('#fmn1').hide();
 
-	$('#rptJugadoresPorClub').click(function(e) {
-		if ($('#refcountries1').val() != 0) {
-        	url = "../jugadoresclub/index.php?id=" + $('#refcountries1').val();
-			$(location).attr('href',url);
-		} else {
-			alert('Debe seleccionar un country!!.');
-		}
-    });
+	$('.lstMovimientos').on("click",'.varDetalleAuditoria', function(){
+		 id =  $(this).attr("id");
 
+		 $.ajax({
+			data:  {id: id, accion: 'traerDetalleAuditoria'},
+			url:   '../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+				$('#detalleAuditoria').html('');
+			},
+			success:  function (response) {
+					$('#detalleAuditoria').html(response);
+					$('#myModalAuditoria').modal();
 
-	$('#tiporeporte').change(function() {
-		switch(parseInt($('#tiporeporte').val())) {
-			case 1:
-				$('#cou1').hide();
-				$('#jug1').hide();
-				$('#baj1').hide();
-				$('#cat1').show();
-				$('#div1').show();
-				$('#tor1').show();
-				$('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 2:
-				$('#cou1').show();
-				$('#jug1').hide();
-				$('#baj1').show();
-				$('#cat1').hide();
-				$('#div1').hide();
-				$('#tor1').hide();
-				$('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 10:
-				$('#cou1').show();
-				$('#jug1').hide();
-				$('#baj1').show();
-				$('#cat1').hide();
-				$('#div1').hide();
-				$('#tor1').hide();
-				$('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 3:
-				$('#cou1').hide();
-				$('#jug1').hide();
-				$('#baj1').hide();
-				$('#cat1').hide();
-				$('#div1').hide();
-				$('#tor1').hide();
-				$('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 4:
-				$('#cou1').hide();
-				$('#jug1').hide();
-				$('#baj1').hide();
-				$('#cat1').hide();
-				$('#div1').hide();
-				$('#tor1').hide();
-				$('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 5:
-				$('#cou1').hide();
-				$('#jug1').hide();
-				$('#baj1').hide();
-				$('#cat1').hide();
-				$('#div1').hide();
-				$('#tor1').hide();
-				$('#tem1').show();
-                $('#fpa1').show();
-                $('#fam1').show();
-                $('#fra1').show();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 6:
-				$('#cou1').hide();
-				$('#jug1').hide();
-				$('#baj1').hide();
-				$('#cat1').hide();
-				$('#div1').hide();
-				$('#tor1').hide();
-				$('#tem1').hide();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 7:
-				$('#cou1').hide();
-				$('#jug1').hide();
-				$('#baj1').hide();
-				$('#cat1').show();
-				$('#div1').show();
-				$('#tor1').show();
-				$('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 8:
-				$('#cou1').hide();
-				$('#jug1').hide();
-				$('#baj1').hide();
-				$('#cat1').hide();
-				$('#div1').hide();
-				$('#tor1').hide();
-				$('#tem1').hide();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 9:
-				$('#cou1').hide();
-				$('#jug1').show();
-				$('#baj1').hide();
-				$('#cat1').show();
-				$('#div1').show();
-				$('#tor1').show();
-				$('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-				$('#ffa1').hide();
-				$('#ffn1').hide();
-				$('#fed1').hide();
-				$('#fmj1').hide();
-				$('#fmn1').hide();
-				break;
-			case 11:
-				$('#cou1').hide();
-				$('#jug1').hide();
-				$('#baj1').hide();
-				$('#cat1').show();
-				$('#div1').show();
-				$('#tor1').hide();
-				$('#tem1').show();
-                $('#fpa1').show();
-                $('#fam1').show();
-                $('#fra1').show();
-				$('#ffa1').show();
-				$('#ffn1').show();
-				$('#fed1').show();
-				$('#fmj1').show();
-				$('#fmn1').show();
-				break;
-            case 12:
-                $('#cou1').hide();
-                $('#jug1').hide();
-                $('#baj1').hide();
-                $('#cat1').hide();
-                $('#div1').hide();
-                $('#tor1').hide();
-                $('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-                $('#ffa1').hide();
-                $('#ffn1').hide();
-                $('#fed1').hide();
-                $('#fmj1').hide();
-                $('#fmn1').hide();
-                break;
-            case 13:
-                $('#cou1').hide();
-                $('#jug1').hide();
-                $('#baj1').hide();
-                $('#cat1').show();
-                $('#div1').show();
-                $('#tor1').hide();
-                $('#tem1').show();
-                $('#fpa1').hide();
-                $('#fam1').hide();
-                $('#fra1').hide();
-                $('#ffa1').hide();
-                $('#ffn1').hide();
-                $('#fed1').hide();
-                $('#fmj1').hide();
-                $('#fmn1').hide();
-                break;
-				 case 14:
-	 				$('#cou1').hide();
-	 				$('#jug1').hide();
-	 				$('#baj1').hide();
-	 				$('#cat1').hide();
-	 				$('#div1').hide();
-	 				$('#tor1').hide();
-	 				$('#tem1').show();
-	                 $('#fpa1').hide();
-	                 $('#fam1').hide();
-	                 $('#fra1').hide();
-	 				$('#ffa1').hide();
-	 				$('#ffn1').hide();
-	 				$('#fed1').hide();
-	 				$('#fmj1').hide();
-	 				$('#fmn1').hide();
-	 				break;
-			default:
-				alert('Debe elegir una opcion');
-		}
-	});
-
-	$('#reftorneo1').change(function(e) {
-		traerFechasPorTorneos($(this).val(),'reffechas1');
-	});
-
-	$('#reftorneo3').change(function(e) {
-		traerFechasPorTorneos($(this).val(),'reffechas3');
-	});
-
-	traerFechasPorTorneos($('#reftorneo1').val(),'reffechas1');
-
-
-	$("#rptRP").click(function(event) {
-		var e = parseInt($('#tiporeporte').val());
-
-		switch(e) {
-			case 1:
-				window.open("../../reportes/rptResultadoPartido.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + "&reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');
-				break;
-			case 2:
-				window.open("../../reportes/rptJugadoresPorCountries.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');
-
-				break;
-			case 10:
-
-                window.open("../../reportes/rptJugadoresPorCountriesExcel.php?refcountries1=" + $("#refcountries1").val() + "&bajas1=" + $("#baja").prop('checked') ,'_blank');
-				break;
-			case 3:
-				window.open("../../reportes/rptJugadoresVariosEquipos.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
-				break;
-			case 4:
-				window.open("../../reportes/rptPromedioCanchas.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
-				break;
-            case 5:
-                window.open("../../reportes/rptEstadisticaArbitros.php?reftemporada1=" + $("#reftemporada1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtropartidosvalor2=' + $('#valorpartido2').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtroamarillasvalor2=' + $('#valoramarillas2').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrorojasvalor2=' + $('#valorrojas2').val(),'_blank');
-                break;
-            case 6:
-                window.open("../../reportes/rptSuspendidosExcel.php" ,'_blank');
-                break;
-			case 7:
-                window.open("../../reportes/rptProximaFecha.php?reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');
-                break;
-			case 8:
-				window.open("../../reportes/rptActaTribunalDisciplina.php" ,'_blank');
-                break;
-            case 9:
-                window.open("../../reportes/rptHistoricoJugadorIncidencias.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&idjugador="+ $("#idjugador").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');
-                break;
-			case 11:
-                window.open("../../reportes/rptEstadisticaJugadorPorCategoria.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + '&filtropartidos=' + $('#filtropartidos').val() + '&filtropartidosvalor=' + $('#valorpartido').val() + '&filtropartidosvalor2=' + $('#valorpartido2').val() + '&filtroamarillas=' + $('#filtroamarillas').val() + '&filtroamarillasvalor=' + $('#valoramarillas').val() + '&filtroamarillasvalor2=' + $('#valoramarillas2').val() + '&filtrorojas=' + $('#filtrorojas').val() + '&filtrorojasvalor=' + $('#valorrojas').val() + '&filtrorojasvalor2=' + $('#valorrojas2').val() + '&filtrofechaalta=' + $('#filtrofechaalta').val() + '&filtrofechaaltavalor=' + $('#valorfechaalta').val() + '&filtrofechaaltavalor2=' + $('#valorfechaalta2').val() + '&filtrofechanacimiento=' + $('#filtrofechanacimiento').val() + '&filtrofechanacimientovalor=' + $('#valorfechanacimiento').val() + '&filtrofechanacimientovalor2=' + $('#valorfechanacimiento2').val() + '&filtroedad=' + $('#filtroedad').val() + '&filtroedadvalor=' + $('#valoredad').val() + '&filtroedadvalor2=' + $('#valoredad2').val() + '&filtromejorjugador=' + $('#filtromejorjugador').val() + '&filtromejorjugadorvalor=' + $('#valormejorjugador').val()  + '&filtromejorjugadorvalor2=' + $('#valormejorjugador2').val()+ '&filtrominutos=' + $('#filtrominutos').val() + '&filtrominutosvalor=' + $('#valorminutos').val() + '&filtrominutosvalor2=' + $('#valorminutos2').val(),'_blank');
-                break;
-            case 12:
-                window.open("../../reportes/rptHabilitacionesTransitoriasExcel.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
-                break;
-            case 13:
-                window.open("../../reportes/rptJugadoresPorPartidos.php?reftemporada1=" + $("#reftemporada1").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() ,'_blank');
-                break;
-				case 14:
-					window.open("../../reportes/rptJugadoresVariosEquiposExcel.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
-					break;
-
-			default:
-				alert('Debe elegir una opcion');
-		}
-
-
-    });
-
-
-	$("#rptCJ").click(function(event) {
-
-		if (($("#cjrefcountries").val() != 0) && ($("#cjrefcountries").val() != null)) {
-        	window.open("../../reportes/rptCondicionJugador.php?id=" + $("#cjrefequipos").val() + "&reftemporada=" + $("#cjreftemporada").val() + "&bajaequipos=" + $("#bajaequipos").prop('checked') + "&refcountries=" + $('#cjrefcountries').val() ,'_blank');
-		} else {
-			alert('Debe elegir un equipo');
-		}
-
-    });
-
-	$("#rptPP").click(function(event) {
-        if ($("#reftorneo1").val() == 0) {
-            window.open("../../reportes/rptPlanillaTodas.php?reffechas=" + $("#reffechas1").val() + "&desde=" + $('#reffechadesde2').val() + "&hasta=" + $('#reffechahasta2').val() ,'_blank');
-        } else {
-            window.open("../../reportes/rptPlanilla.php?idtorneo=" + $("#reftorneo1").val() + "&reffechas=" + $("#reffechas1").val() ,'_blank');
-        }
-
-
-    });
-
-
-	$("#rptsc").click(function(event) {
-        window.open("../../reportes/rptSaldosClientes.php?idEmp=" + $("#refempresa2").val() + "&fechadesde=" + $("#fechadesde2").val()+ "&fechahasta=" + $("#fechahasta2").val(),'_blank');
-
-    });
-
-	$("#rptscc").click(function(event) {
-        window.open("../../reportes/rptSaldosPorClientes.php?idEmp=" + $("#refempresa4").val() + "&idClie=" + $("#refcliente1").val() + "&fechadesde=" + $("#fechadesde3").val()+ "&fechahasta=" + $("#fechahasta3").val(),'_blank');
-
-    });
-
-	$('#rptcc').click(function(e) {
-        window.open("../../reportes/rptSaldosEmpresa.php?fechadesde=" + $("#fechadesde4").val()+ "&fechahasta=" + $("#fechahasta4").val(),'_blank');
-    });
-
-	$("#rpt5").click(function(event) {
-        window.open("../../reportes/rptSaldosClientesEmpresas.php?idClie=" + $("#refcliente5").val() + "&fechadesde=" + $("#fechadesde5").val()+ "&fechahasta=" + $("#fechahasta5").val(),'_blank');
-
-    });
-
-
-	$("#rpt6").click(function(event) {
-        window.open("../../reportes/rptSociosEmpresas.php",'_blank');
-
-    });
-
-	$("#rpt7").click(function(event) {
-        window.open("../../reportes/rptSocios.php",'_blank');
-
-    });
-
-
-
-
-
-	$("#rptgfExcel").click(function(event) {
-        window.open("../../reportes/rptFacturacionGeneralExcel.php?id=" + $("#refempresa1").val() + "&fechadesde=" + $("#fechadesde1").val()+ "&fechahasta=" + $("#fechahasta1").val(),'_blank');
-
-    });
-
-	$("#rptscExcel").click(function(event) {
-        window.open("../../reportes/rptSaldosClientesExcel.php?idEmp=" + $("#refempresa2").val() + "&fechadesde=" + $("#fechadesde2").val()+ "&fechahasta=" + $("#fechahasta2").val(),'_blank');
-
-    });
-
-	$("#rptsccExcel").click(function(event) {
-        window.open("../../reportes/rptSaldosPorClientesExcel.php?idEmp=" + $("#refempresa4").val() + "&idClie=" + $("#refcliente1").val() + "&fechadesde=" + $("#fechadesde3").val()+ "&fechahasta=" + $("#fechahasta3").val(),'_blank');
-
-    });
-
-	$('#rptccExcel').click(function(e) {
-        window.open("../../reportes/rptSaldosEmpresaExcel.php?fechadesde=" + $("#fechadesde4").val()+ "&fechahasta=" + $("#fechahasta4").val(),'_blank');
-    });
-
-	$("#rpt5Excel").click(function(event) {
-        window.open("../../reportes/rptSaldosClientesEmpresasExcel.php?idClie=" + $("#refcliente5").val() + "&fechadesde=" + $("#fechadesde5").val()+ "&fechahasta=" + $("#fechahasta5").val(),'_blank');
-
-    });
-
-	$("#rpt6Excel").click(function(event) {
-        window.open("../../reportes/rptSociosEmpresasExcel.php",'_blank');
-
-    });
-
-	$("#rpt7Excel").click(function(event) {
-        window.open("../../reportes/rptSociosExcel.php",'_blank');
-
-    });
+			}
+		});
+	});//fin del boton eliminar
 
 });
 </script>
