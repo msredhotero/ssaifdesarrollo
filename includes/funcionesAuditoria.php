@@ -89,16 +89,18 @@ class serviciosAuditoria {
       }
 
       $sql = "SELECT
-                'Estado Habilitacion' AS operacion,
-                'warning' AS color,
-                j.nrodocumento,
-                j.apellido,
-                j.nombres,
-                'edit' as icon,
-                j.idjugador,
-                jh.usuario,
-                jh.fecha,
-                jh.observacion as leyenda
+                  j.idjugador,
+                  j.nrodocumento,
+                  j.apellido,
+                  j.nombres,
+                  '' as token,
+                  jh.observacion AS leyenda,
+                  jh.fecha,
+                  'warning' AS color,
+                  'edit' AS icon,
+                  jh.usuario,
+                  'Estado Habilitacion' AS operacion,
+                  1 AS orden
             FROM
                 dbjugadoreshabilitados jh
                     INNER JOIN
@@ -169,7 +171,50 @@ class serviciosAuditoria {
             break;
       }
 
-      $sql = "SELECT
+
+      if ($cadHabilitados == 1) {
+         $cadWhereCountry = '';
+
+         if ($idcountrie != 0) {
+            $cadWhereCountry .= ' where j.refcountries = '.$idCountrie;
+         }
+
+         $sqlHabilitados = "union all SELECT
+                  j.idjugador,
+                  j.nrodocumento,
+                  j.apellido,
+                  j.nombres,
+                  '' as token,
+                  jh.observacion AS leyenda,
+                  jh.fecha,
+                  (case when habilitado = 'INHAB.' then 'danger' else 'success' end) AS color,
+                  (case when habilitado = 'INHAB.' then 'remove' else 'ok' end) AS icon,
+                  jh.usuario,
+                  habilitado AS operacion,
+                  1 AS orden
+               FROM
+                   dbjugadoreshabilitados jh
+                       INNER JOIN
+                   dbjugadores j ON j.idjugador = jh.refjugadores
+                       INNER JOIN
+                   dbequipos e ON e.idequipo = jh.refequipos ".$cadWhereCountry;
+      } else {
+         $sqlHabilitados = '';
+      }
+
+      $sql = "select
+            r.idjugador,
+            r.nrodocumento,
+            r.apellido,
+            r.nombres,
+            r.token,
+            r.leyenda,
+            r.fecha,
+            r.color,
+            r.icon,
+            r.usuario,
+            r.operacion,
+            r.orden from (SELECT
                 j.idjugador,
                 j.nrodocumento,
                 j.apellido,
@@ -180,7 +225,8 @@ class serviciosAuditoria {
                 t.color,
                 t.icon,
                 t.usuario,
-                t.operacion
+                t.operacion,
+                t.orden
             FROM
                 (SELECT
                     a.token,
@@ -219,7 +265,8 @@ class serviciosAuditoria {
                             WHEN a.tabla = 'dbjugadoresvaloreshabilitacionestransitorias' THEN 'una documentacion valor del jugador'
                         END) AS leyenda,
                         MAX(a.fecha) AS fecha,
-                        a.usuario
+                        a.usuario,
+                        0 as orden
                 FROM
                     dbauditoria a
                 WHERE
@@ -232,13 +279,11 @@ class serviciosAuditoria {
                 GROUP BY a.token , COALESCE(a.valornuevo, a.valorviejo) , a.tabla , a.operacion , a.campo, a.usuario) t
                     INNER JOIN
                 dbjugadores j ON j.idjugador = CAST(t.idjugador AS UNSIGNED) ".$cadWhere."
-                order by t.fecha desc";
+                 ".$sqlHabilitados." ) r
+         			order by r.fecha desc";
 
+      //die(var_dump($sql));
       $res = $this->query($sql,0);
-
-      if ($cadHabilitados == 1) {
-         $resHabilitados = $this->jugadoresHabilitados($fechadesde, $fechahasta)
-      }
 
       return $res;
 
