@@ -165,6 +165,10 @@ class serviciosAuditoria {
             $cadTablas = "and a.tabla in ('dbconector')";
             $cadHabilitados = 0;
          break;
+         case 10:
+            $cadTablas = "and a.tabla =''";
+            $cadHabilitados = 2;
+         break;
 
          default:
             // code...
@@ -172,115 +176,178 @@ class serviciosAuditoria {
       }
 
 
-      if ($cadHabilitados == 1) {
-         $cadWhereCountry = '';
+      $cadWhereCountry = '';
 
-         if ($idcountrie != 0) {
-            $cadWhereCountry .= ' where j.refcountries = '.$idCountrie;
-         }
-
-         $sqlHabilitados = "union all SELECT
-                  j.idjugador,
-                  j.nrodocumento,
-                  j.apellido,
-                  j.nombres,
-                  '' as token,
-                  jh.observacion AS leyenda,
-                  jh.fecha,
-                  (case when habilitado = 'INHAB.' then 'danger' else 'success' end) AS color,
-                  (case when habilitado = 'INHAB.' then 'remove' else 'ok' end) AS icon,
-                  jh.usuario,
-                  habilitado AS operacion,
-                  1 AS orden
-               FROM
-                   dbjugadoreshabilitados jh
-                       INNER JOIN
-                   dbjugadores j ON j.idjugador = jh.refjugadores
-                       INNER JOIN
-                   dbequipos e ON e.idequipo = jh.refequipos ".$cadWhereCountry;
-      } else {
-         $sqlHabilitados = '';
+      if ($idcountrie != 0) {
+         $cadWhereCountry .= ' and j.refcountries = '.$idcountrie;
       }
 
-      $sql = "select
-            r.idjugador,
-            r.nrodocumento,
-            r.apellido,
-            r.nombres,
-            r.token,
-            r.leyenda,
-            r.fecha,
-            r.color,
-            r.icon,
-            r.usuario,
-            r.operacion,
-            r.orden from (SELECT
-                j.idjugador,
-                j.nrodocumento,
-                j.apellido,
-                j.nombres,
-                t.token,
-                t.leyenda,
-                t.fecha,
-                t.color,
-                t.icon,
-                t.usuario,
-                t.operacion,
-                t.orden
-            FROM
-                (SELECT
-                    a.token,
-                        COALESCE(a.valornuevo, a.valorviejo) AS idjugador,
-                        a.tabla,
-                        (CASE
-                            WHEN a.operacion = 'E' THEN 'Se elimino '
-                            WHEN a.operacion = 'I' THEN 'Se agrego '
-                            WHEN a.operacion = 'M' THEN 'Se modifico '
-                        END) AS operacion,
-                        (CASE
-                            WHEN a.operacion = 'E' THEN 'danger'
-                            WHEN a.operacion = 'I' THEN 'success'
-                            WHEN a.operacion = 'M' THEN 'warning'
-                        END) AS color,
-                        (CASE
-                            WHEN a.operacion = 'E' THEN 'remove'
-                            WHEN a.operacion = 'I' THEN 'ok'
-                            WHEN a.operacion = 'M' THEN 'edit'
-                        END) AS icon,
-                        (CASE
-                            WHEN
-                                a.campo = 'todos refjugadores'
-                                    AND a.tabla = 'dbjugadoresdocumentacion'
-                            THEN
-                                'proceso masivo sobre las documentaciones'
-                            WHEN
-                                a.campo = 'todos refjugadores'
-                                    AND a.tabla = 'dbjugadoresvaloreshabilitacionestransitorias'
-                            THEN
-                                'proceso masivo sobre las documentaciones valores'
-                            WHEN a.tabla = 'dbdocumentacionjugadorimagenes' THEN 'un archivo documentacion del jugador'
-                            WHEN a.tabla = 'dbjugadores' THEN 'un jugador'
-                            WHEN a.tabla = 'dbconector' THEN 'un jugador de un equipo'
-                            WHEN a.tabla = 'dbjugadoresdocumentacion' THEN 'una documentacion del jugador'
-                            WHEN a.tabla = 'dbjugadoresvaloreshabilitacionestransitorias' THEN 'una documentacion valor del jugador'
-                        END) AS leyenda,
-                        MAX(a.fecha) AS fecha,
-                        a.usuario,
-                        0 as orden
-                FROM
-                    dbauditoria a
-                WHERE
-                    (a.campo LIKE 'idjugador'
-                        OR a.campo LIKE 'refjugadores')
-                        AND a.campo <> 'todos refjugadores'
-                        ".$cadTablas."
-                        AND a.token IS NOT NULL
-                        and a.fecha between '".$fechadesde."' and '".$fechahasta."'
-                GROUP BY a.token , COALESCE(a.valornuevo, a.valorviejo) , a.tabla , a.operacion , a.campo, a.usuario) t
-                    INNER JOIN
-                dbjugadores j ON j.idjugador = CAST(t.idjugador AS UNSIGNED) ".$cadWhere."
-                 ".$sqlHabilitados." ) r
-         			order by r.fecha desc";
+      if ($cadHabilitados == 2) {
+         $sql = "select
+                  r.idjugador,
+                  r.nrodocumento,
+                  r.apellido,
+                  r.nombres,
+                  r.idequipo,
+                  r.nombreequipo,
+                  '' as token,
+                  jhc.observacion AS leyenda,
+                  jhc.fecha,
+                  (case when jhc.habilitado = 'INHAB.' then 'danger' else 'success' end) AS color,
+                  (case when jhc.habilitado = 'INHAB.' then 'remove' else 'ok' end) AS icon,
+                  jhc.usuario,
+                  jhc.habilitado AS operacion,
+                  1 AS orden,
+                  0 as id
+                  from (
+                  	SELECT
+                  		j.idjugador,
+                  		j.nrodocumento,
+                  		j.apellido,
+                  		j.nombres,
+                  		e.idequipo,
+                  		e.nombre as nombreequipo,
+                  		max(jh.idjugadorhabilitado) as id
+                  	FROM
+                  		dbjugadoreshabilitados jh
+                  			INNER JOIN
+                  		dbjugadores j ON j.idjugador = jh.refjugadores
+                  			INNER JOIN
+                  		dbequipos e ON e.idequipo = jh.refequipos
+                  	WHERE
+                  		jh.fecha BETWEEN '".$fechadesde."' and '".$fechahasta."' ".$cadWhereCountry."
+                  	group by j.idjugador,
+                  		j.nrodocumento,
+                  		j.apellido,
+                  		j.nombres,
+                  		e.idequipo,
+                  		e.nombre
+                  	having count(jh.idjugadorhabilitado) > 1
+                      ) r
+                      inner join dbjugadoreshabilitados jhc on jhc.idjugadorhabilitado = r.id ";
+      } else {
+
+
+         if ($cadHabilitados == 1) {
+
+
+            $sqlHabilitados = "union all SELECT
+                     j.idjugador,
+                     j.nrodocumento,
+                     j.apellido,
+                     j.nombres,
+                     '' as token,
+                     jh.observacion AS leyenda,
+                     jh.fecha,
+                     (case when habilitado = 'INHAB.' then 'danger' else 'success' end) AS color,
+                     (case when habilitado = 'INHAB.' then 'remove' else 'ok' end) AS icon,
+                     jh.usuario,
+                     habilitado AS operacion,
+                     1 AS orden,
+                     e.idequipo,
+                     e.nombre as nombreequipo,
+                     0 as id
+                  FROM
+                      dbjugadoreshabilitados jh
+                          INNER JOIN
+                      dbjugadores j ON j.idjugador = jh.refjugadores
+                          INNER JOIN
+                      dbequipos e ON e.idequipo = jh.refequipos
+                      where jh.fecha between '".$fechadesde."' and '".$fechahasta."' ".$cadWhereCountry;
+         } else {
+            $sqlHabilitados = '';
+         }
+
+         $sql = "select
+               r.idjugador,
+               r.nrodocumento,
+               r.apellido,
+               r.nombres,
+               r.token,
+               r.leyenda,
+               r.fecha,
+               r.color,
+               r.icon,
+               r.usuario,
+               r.operacion,
+               r.orden,
+               r.idequipo,
+               r.nombreequipo,
+               r.id
+
+               from (SELECT
+                   j.idjugador,
+                   j.nrodocumento,
+                   j.apellido,
+                   j.nombres,
+                   t.token,
+                   t.leyenda,
+                   t.fecha,
+                   t.color,
+                   t.icon,
+                   t.usuario,
+                   t.operacion,
+                   t.orden,
+                   0 as idequipo,
+                   '' as nombreequipo,
+                   t.id
+               FROM
+                   (SELECT
+                       a.token,
+                           COALESCE(a.valornuevo, a.valorviejo) AS idjugador,
+                           a.tabla,
+                           (CASE
+                               WHEN a.operacion = 'E' THEN 'Se elimino '
+                               WHEN a.operacion = 'I' THEN 'Se agrego '
+                               WHEN a.operacion = 'M' THEN 'Se modifico '
+                           END) AS operacion,
+                           (CASE
+                               WHEN a.operacion = 'E' THEN 'danger'
+                               WHEN a.operacion = 'I' THEN 'success'
+                               WHEN a.operacion = 'M' THEN 'warning'
+                           END) AS color,
+                           (CASE
+                               WHEN a.operacion = 'E' THEN 'remove'
+                               WHEN a.operacion = 'I' THEN 'ok'
+                               WHEN a.operacion = 'M' THEN 'edit'
+                           END) AS icon,
+                           (CASE
+                               WHEN
+                                   a.campo = 'todos refjugadores'
+                                       AND a.tabla = 'dbjugadoresdocumentacion'
+                               THEN
+                                   'proceso masivo sobre las documentaciones'
+                               WHEN
+                                   a.campo = 'todos refjugadores'
+                                       AND a.tabla = 'dbjugadoresvaloreshabilitacionestransitorias'
+                               THEN
+                                   'proceso masivo sobre las documentaciones valores'
+                               WHEN a.tabla = 'dbdocumentacionjugadorimagenes' THEN 'un archivo documentacion del jugador'
+                               WHEN a.tabla = 'dbjugadores' THEN 'un jugador'
+                               WHEN a.tabla = 'dbconector' THEN 'un jugador de un equipo'
+                               WHEN a.tabla = 'dbjugadoresdocumentacion' THEN 'una documentacion del jugador'
+                               WHEN a.tabla = 'dbjugadoresvaloreshabilitacionestransitorias' THEN 'una documentacion valor del jugador'
+                           END) AS leyenda,
+                           MAX(a.fecha) AS fecha,
+                           a.usuario,
+                           0 as orden,
+                           MAX(a.idauditoria) AS id
+                   FROM
+                       dbauditoria a
+                   WHERE
+                       (a.campo LIKE 'idjugador'
+                           OR a.campo LIKE 'refjugadores')
+                           AND a.campo <> 'todos refjugadores'
+                           ".$cadTablas."
+                           AND a.token IS NOT NULL
+                           and a.fecha between '".$fechadesde."' and '".$fechahasta."'
+                   GROUP BY a.token , COALESCE(a.valornuevo, a.valorviejo) , a.tabla , a.operacion , a.campo, a.usuario) t
+                       INNER JOIN
+                   dbjugadores j ON j.idjugador = CAST(t.idjugador AS UNSIGNED) ".$cadWhere."
+                    ".$sqlHabilitados." ) r
+            			order by r.fecha desc";
+
+      }
 
       //die(var_dump($sql));
       $res = $this->query($sql,0);

@@ -684,7 +684,10 @@ function auditoriaFiltros($serviciosAuditoria) {
          'apellido' => $row['apellido'],
          'nombres' => $row['nombres'],
          'fecha' => $row['fecha'],
-         'usuario' => $row['usuario']
+         'usuario' => $row['usuario'],
+         'idequipo' => $row['idequipo'],
+         'nombreequipo' => $row['nombreequipo'],
+         'id' => $row['id']
       ));
    }
 

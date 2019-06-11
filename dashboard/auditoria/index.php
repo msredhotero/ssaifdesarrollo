@@ -134,6 +134,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 									<option value="7">Solo Imagenes</option>
 									<option value="8">Solo Imagenes/Documentaciones</option>
 									<option value="9">Solo Cambio en Equipos</option>
+									<option value="10">Diferencia Habilitados</option>
                     	</select>
                     </div>
                 </div>
@@ -276,9 +277,9 @@ $(document).ready(function(){
 			success:  function (response) {
 				var cad = '';
 
-				cad += '<table class="table table-striped"><thead><th>Operacion</th><th>Leyenda</th><th>Nro Doc</th><th>Apellido</th><th>Nombres</th><th>Usuario</th><th>Fecha</th><th>Ver</th></thead><tbody>';
+				cad += '<table class="table table-striped"><thead><th>Operacion</th><th>Leyenda</th><th>Nro Doc</th><th>Apellido</th><th>Nombres</th><th>Usuario</th><th>Fecha</th><th>Equipo</th><th>Ver</th></thead><tbody>';
 				for(var k in response.data) {
-					cad += '<tr><td>' + response.data[k].operacion + '</td><td>' + response.data[k].leyenda + '</td><td>' + response.data[k].nrodocumento + '</td><td>' + response.data[k].apellido + '</td><td>' + response.data[k].nombres + '</td><td>' + response.data[k].usuario + '</td><td>' + response.data[k].fecha + '</td><td><button type="button" class="btn btn-success varDetalleAuditoria" id="' + response.data[k].id + '" style="margin-left:0px;">Ver</button></td></tr>';
+					cad += '<tr><td>' + response.data[k].operacion + '</td><td>' + response.data[k].leyenda + '</td><td>' + response.data[k].nrodocumento + '</td><td>' + response.data[k].apellido + '</td><td>' + response.data[k].nombres + '</td><td>' + response.data[k].usuario + '</td><td>' + response.data[k].fecha + '</td><td>' + response.data[k].idequipo + ' - ' + response.data[k].nombreequipo + '</td><td><button type="button" class="btn btn-success varDetalleAuditoria" id="' + response.data[k].id + '" style="margin-left:0px;">Ver</button></td></tr>';
 					//console.log(response.data[k].fecha);
 				}
 
