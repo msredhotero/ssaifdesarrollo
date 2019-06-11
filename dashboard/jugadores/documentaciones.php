@@ -296,7 +296,6 @@ if (!$_POST){
 		$serviciosReferencias->insertarJugadoreshabilitados($id,$row['refequipos'],$resHabilita['habilita'],$resHabilita['observacion'],date('Y-m-d H:i:s'),$_SESSION['nombre_predio']);
 	}
 
-
 	/*************   fin del calculo 					*************************************/
 
 }

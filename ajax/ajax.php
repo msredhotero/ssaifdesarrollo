@@ -3795,6 +3795,16 @@ function modificarEstudioMedico($serviciosReferencias) {
 
 	$res = $serviciosReferencias->modificarEstudioMedico($refjugadores);
 	if ($res == true) {
+      /************* nuevo calculo si esta habilitado en todos sus equipos si o no *******/
+   	$resConectores = $serviciosReferencias->traerJugadoresEquiposPorJugador($refjugadores);
+
+   	while ($row = mysql_fetch_array($resConectores)) {
+   		$resHabilita = $serviciosReferencias->deteterminaHabilitado($refjugadores, $row['idtcategoria'], $row['reftipojugadores'], $row['refequipos'], $row['fechabaja']);
+
+   		$serviciosReferencias->insertarJugadoreshabilitados($refjugadores,$row['refequipos'],$resHabilita['habilita'],$resHabilita['observacion'],date('Y-m-d H:i:s'),$_SESSION['nombre_predio']);
+   	}
+
+   	/*************   fin del calculo 					*************************************/
 		echo '';
 	} else {
 		echo 'Hubo un error al modificar datos';
