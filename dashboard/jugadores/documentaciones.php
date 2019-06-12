@@ -51,6 +51,7 @@ if (!$_POST){
 	//$refjugadores = $_POST['refjugadores'];
 
 	/*** auditoria ****/
+	/*
 	$token1audi = $serviciosReferencias->GUID();
 
 	$resAudi = $serviciosReferencias->auditoriaMasiva("select * from dbjugadoresdocumentacion where refjugadores =".$id,'dbjugadoresdocumentacion', 'E',$_SESSION['nombre_predio'],$token1audi,0);
@@ -63,6 +64,30 @@ if (!$_POST){
 	$resAudi2 = $serviciosReferencias->auditoriaMasiva("select * from dbjugadoresvaloreshabilitacionestransitorias where refjugadores =".$id,'dbjugadoresvaloreshabilitacionestransitorias', 'E',$_SESSION['nombre_predio'],$token2audi,0);
 
 	$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','E','todos refjugadores','','',$id,$_SESSION['nombre_predio'],$token2audi,1);
+	*/
+	$resAudi = $serviciosReferencias->query("select refdocumentaciones, (case when valor = 1 then 'Si' else 'No' end) as valor from dbjugadoresdocumentacion where refjugadores =".$id,0);
+
+	$arAudi1 = array();
+	while ($rowAudi1 = mysql_fetch_array($resAudi)) {
+		// code...
+		$arAudi1[$rowAudi1['refdocumentaciones']] = $rowAudi1['valor'];
+	}
+
+	$resAudi2 = $serviciosReferencias->query("SELECT
+    v.refdocumentaciones, jv.refvaloreshabilitacionestransitorias
+FROM
+    dbjugadoresvaloreshabilitacionestransitorias jv
+        INNER JOIN
+    tbvaloreshabilitacionestransitorias v ON v.idvalorhabilitaciontransitoria = jv.refvaloreshabilitacionestransitorias where jv.refjugadores =".$id,0);
+
+	$arAudi2 = array();
+	while ($rowAudi2 = mysql_fetch_array($resAudi2)) {
+		// code...
+		$arAudi2[$rowAudi2['refdocumentaciones']] = $rowAudi2['refvaloreshabilitacionestransitorias'];
+
+	}
+
+	//die(var_dump($arAudi1));
 	/*** fin audi  ****/
 
 
@@ -73,31 +98,44 @@ if (!$_POST){
 
 
 	//// fin del eliminar //////
-	$token3audi = $serviciosReferencias->GUID();
+	//$token3audi = $serviciosReferencias->GUID();
 
-	$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','I','todos refjugadores','','',$id,$_SESSION['nombre_predio'], $token3audi,1);
+	//$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','I','todos refjugadores','','',$id,$_SESSION['nombre_predio'], $token3audi,1);
 
 	$observaciones = '';
 
 	$resDocu = $serviciosReferencias->traerDocumentaciones();
 	$cad = 'docu';
+
+	$token1 = '';
 	while ($rowFS = mysql_fetch_array($resDocu)) {
 		if (isset($_POST[$cad.$rowFS[0]])) {
 
 			$res = $serviciosReferencias->insertarJugadoresdocumentacionsinaudi($id,$rowFS[0],1,$observaciones);
+
+			if ($arAudi1[$rowFS[0]] != 'Si') {
+				$token1 = $serviciosReferencias->GUID();
+
+				$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','M','refdocumentaciones',$rowFS[0],'',$res,$_SESSION['nombre_predio'],$token1,1);
+
+				$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','M','valor','Si','No',$res,$_SESSION['nombre_predio'],$token1,1);
+
+				$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','M','refjugadores',$id,'',$res,$_SESSION['nombre_predio'],$token1,1);
+			}
 		} else {
 			$res = $serviciosReferencias->insertarJugadoresdocumentacionsinaudi($id,$rowFS[0],0,$observaciones);
 
+			if ($arAudi1[$rowFS[0]] != 'No') {
+				$token1 = $serviciosReferencias->GUID();
+
+				$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','M','refdocumentaciones',$rowFS[0],'',$res,$_SESSION['nombre_predio'],$token1,1);
+
+				$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','M','valor','No','Si',$res,$_SESSION['nombre_predio'],$token1,1);
+
+				$serviciosReferencias->insertarAuditoria('dbjugadoresdocumentacion','M','refjugadores',$id,'',$res,$_SESSION['nombre_predio'],$token1,1);
+			}
+
 		}
-
-		/**** auditoria ****/
-		$tabla = 'dbjugadoresdocumentacion';
-		$operacion = 'I';
-		//$id = $res;
-		$usuario = $_SESSION['nombre_predio'];
-
-		$serviciosReferencias->insertAuditoria($tabla, $operacion,$res,$usuario,null,$token3audi,0);
-		/**** fin auditoria ****/
 
 	}
 
@@ -105,22 +143,33 @@ if (!$_POST){
 	$resValores = $serviciosReferencias->traerDocumentaciones();
 	$cadV = 'multiselect';
 
-	$token4audi = $serviciosReferencias->GUID();
+	//$token4audi = $serviciosReferencias->GUID();
 
-	$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','I','todos refjugadores','','',$id,$_SESSION['nombre_predio'], $token4audi,1);
+	//$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','I','todos refjugadores','','',$id,$_SESSION['nombre_predio'], $token4audi,1);
 
+	$token2 = '';
 	while ($rowV = mysql_fetch_array($resValores)) {
 		//$resV .= $cadV.$rowV[0];
 		if (isset($_POST[$cadV.$rowV[0]])) {
 			$resV = $serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitoriassinaudi($id,$_POST[$cadV.$rowV[0]][0]);
 
+
+			if ($arAudi2[$rowV[0]] != $_POST[$cadV.$rowV[0]][0]) {
+				$token2 = $serviciosReferencias->GUID();
+
+				$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','M','refvaloreshabilitacionestransitorias',$_POST[$cadV.$rowV[0]][0],$arAudi2[$rowV[0]],$resV,$_SESSION['nombre_predio'],$token2,1);
+
+				$serviciosReferencias->insertarAuditoria('dbjugadoresvaloreshabilitacionestransitorias','M','refjugadores',$id,'',$res,$_SESSION['nombre_predio'],$token2,1);
+			}
 			/**** auditoria ****/
+			/*
 			$tabla = 'dbjugadoresvaloreshabilitacionestransitorias';
 			$operacion = 'I';
-			//$id = $resV;
+
 			$usuario = $_SESSION['nombre_predio'];
 
 			$serviciosReferencias->insertAuditoria($tabla, $operacion,$resV,$usuario,null,$token4audi,0);
+			*/
 			/**** fin auditoria ****/
 		}
 	}

@@ -222,7 +222,7 @@ class serviciosAuditoria {
                   		j.nombres,
                   		e.idequipo,
                   		e.nombre
-                  	having count(jh.idjugadorhabilitado) > 1
+                  	having count(jh.habilitado) > 1
                       ) r
                       inner join dbjugadoreshabilitados jhc on jhc.idjugadorhabilitado = r.id ";
       } else {
