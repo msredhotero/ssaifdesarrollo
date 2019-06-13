@@ -7,6 +7,9 @@ include ('../includes/funciones.php');
 include ('../includes/funcionesHTML.php');
 include ('../includes/funcionesReferencias.php');
 
+session_start();
+
+die(var_dump($_SESSION['nombre_predio']));
 
 $serviciosUsuarios  		= new ServiciosUsuarios();
 $serviciosFunciones 		= new Servicios();
@@ -334,9 +337,17 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 			$pdf->Cell(7,6,'',1,0,'C',false);
 			$pdf->Cell(16,6,$rowJ['nrodocumento'],0,0,'C',false);
 
-			if (($rowJ['fechabaja'] != '1900-01-01') && ($rowJ['fechabaja'] < date('Y-m-d'))) {
+			if (($rowJ['fechabaja'] != '1900-01-01') && ($rowJ['fechabaja'] != '') && ($rowJ['fechabaja'] < date('Y-m-d'))) {
 				$pdf->Cell(22,6,'INHAB/Baja',0,0,'C',false);
+
+				/************* nuevo calculo si esta habilitado en todos sus equipos si o no *******/
+				$serviciosReferencias->insertarJugadoreshabilitados($rowJ['refjugadores'],$rowJ['refequipos'],'INHAB/Baja',$cadErrorDoc,date('Y-m-d H:i:s'),$_SESSION['nombre_predio']);
+				/*************   fin del calculo 					*************************************/
 			} else {
+
+				/************* nuevo calculo si esta habilitado en todos sus equipos si o no *******/
+				$serviciosReferencias->insertarJugadoreshabilitados($rowJ['refjugadores'],$rowJ['refequipos'],$habilitacion,$cadErrorDoc,date('Y-m-d H:i:s'),$_SESSION['nombre_predio']);
+				/*************   fin del calculo 					*************************************/
 
 				if (($habilitacion == 'HAB.')) {
 					if ($tipoTorneo != 3) {
@@ -481,9 +492,16 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 			$pdf->Cell(7,6,'',1,0,'C',false);
 			$pdf->Cell(16,6,$rowV['nrodocumento'],0,0,'C',false);
 
-			if (($rowV['fechabaja'] != '1900-01-01') && ($rowV['fechabaja'] < date('Y-m-d'))) {
+			if (($rowV['fechabaja'] != '1900-01-01') && ($rowV['fechabaja'] != '') && ($rowV['fechabaja'] < date('Y-m-d'))) {
 				$pdf->Cell(22,6,'INHAB.',0,0,'C',false);
+
+				/************* nuevo calculo si esta habilitado en todos sus equipos si o no *******/
+				$serviciosReferencias->insertarJugadoreshabilitados($rowV['refjugadores'],$rowV['refequipos'],'INHAB/Baja',$cadErrorDoc,date('Y-m-d H:i:s'),$_SESSION['nombre_predio']);
+				/*************   fin del calculo 					*************************************/
 			} else {
+				/************* nuevo calculo si esta habilitado en todos sus equipos si o no *******/
+				$serviciosReferencias->insertarJugadoreshabilitados($rowV['refjugadores'],$rowV['refequipos'],$habilitacion,$cadErrorDoc,date('Y-m-d H:i:s'),$_SESSION['nombre_predio']);
+				/*************   fin del calculo 					*************************************/
 
 				if (($habilitacion == 'HAB.')) {
 					if ($tipoTorneo != 3) {
