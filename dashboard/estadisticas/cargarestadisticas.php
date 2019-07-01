@@ -144,6 +144,24 @@ $numero = count($_POST);
 			//////////////			fin logica			/////////////////////////////////////////////////////////
 
 
+			//////////////		logica PENALES DEFINICIONES		///////////////////////////////////////////////////////
+			$existePenalesDefinicion = $serviciosReferencias->existeFixturePorPenalesJugadorDefinicion($idJugador, $idFixture);
+
+
+			if ($existePenalesDefinicion == 0) {
+				if ($_POST['penalesconvertidosdefinicion'.$idJugador] != 0 || $_POST['penaleserradosdefinicion'.$idJugador]) {
+					//inserto
+					$serviciosReferencias->insertarPenalesjugadoresDefinicion($idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['penalesconvertidosdefinicion'.$idJugador], $_POST['penaleserradosdefinicion'.$idJugador], $_POST['ordendefinicion'.$idJugador]);
+				}
+
+			} else {
+				//modifico
+
+				$serviciosReferencias->modificarPenalesjugadoresDefinicion($existePenalesDefinicion, $idJugador, $idFixture, $equipoLocal, $idCategoria, $idDivisiones,$_POST['penalesconvertidosdefinicion'.$idJugador], $_POST['penalesberradosdefinicion'.$idJugador], $_POST['ordendefinicion'.$idJugador]);
+			}
+			//////////////			fin logica			/////////////////////////////////////////////////////////
+
+
 
 			//////////////		logica DORSALES		///////////////////////////////////////////////////////
 			$existeDorsal = $serviciosReferencias->existeFixturePorDorsalesJugador($idJugador, $idFixture);
@@ -345,6 +363,22 @@ $numero = count($_POST);
 				}
 				//////////////			fin logica			/////////////////////////////////////////////////////////
 
+
+				//////////////		logica PENALES DEFINICIONES	///////////////////////////////////////////////////////
+				$existePenalesDefinicion = $serviciosReferencias->existeFixturePorPenalesJugadorDefinicion($idJugador, $idFixture);
+
+				if ($existePenalesDefinicion == 0) {
+					if ($_POST['penalesbconvertidosdefinicion'.$idJugador] != 0 || $_POST['penalesberradosdefinicion'.$idJugador]) {
+						//inserto
+						$serviciosReferencias->insertarPenalesjugadoresDefinicion($idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['penalesbconvertidosdefinicion'.$idJugador], $_POST['penalesberradosdefinicion'.$idJugador], $_POST['ordenbdefinicion'.$idJugador]);
+					}
+
+				} else {
+					//modifico
+
+					$serviciosReferencias->modificarPenalesjugadoresDefinicion($existePenales, $idJugador, $idFixture, $equipoVisitante, $idCategoria, $idDivisiones,$_POST['penalesbconvertidosdefinicion'.$idJugador], $_POST['penalesberradosdefinicion'.$idJugador], $_POST['ordenbdefinicion'.$idJugador]);
+				}
+				//////////////			fin logica			/////////////////////////////////////////////////////////
 
 
 				//////////////		logica DORSALES		///////////////////////////////////////////////////////

@@ -782,7 +782,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 					             <th style="text-align:center; background-color:#0C0;">A+A <span class="badge"><?php echo $incidenciaDALocal; ?></span></th>
 					             <th style="text-align:center; background-color:#333; color:#FFF;">CDTD <span class="badge"><?php echo $incidenciaCDTDLocal; ?></span></th>
 									 <th style="text-align:center">PCD</th>
-					             <th style="text-align:center">PAD</th>
+					             <th style="text-align:center">PED</th>
 									 <th style="text-align:center">OD</th>
 					             <?php
 
@@ -1176,7 +1176,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 					                </th>
 					                <th>
 					                  <div align="center">
-					                     <input type="text" class="form-control input-sm penalesatajados" name="penalesatajadosdefinicion<?php echo $row['refjugadores']; ?>" id="penalesatajadosdefinicion<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalatajadodefinicion'); ?>"/>
+					                     <input type="text" class="form-control input-sm penaleserrados" name="penaleserradosdefinicion<?php echo $row['refjugadores']; ?>" id="penaleserradosdefinicion<?php echo $row['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticas,0,'penalerradodefinicion'); ?>"/>
 					                  </div>
 					                </th>
 					                <th>
@@ -1315,7 +1315,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 					             <th style="text-align:center; background-color:#0C0;">A+A <span class="badge"><?php echo $incidenciaDAVisit; ?></span></th>
 					             <th style="text-align:center; background-color:#333; color:#FFF;">CDTD <span class="badge"><?php echo $incidenciaCDTDVisit; ?></span></th>
 									 <th style="text-align:center">PCD</th>
-					             <th style="text-align:center">PAD</th>
+					             <th style="text-align:center">PED</th>
 									 <th style="text-align:center">OD</th>
 
 					             <?php
@@ -1709,7 +1709,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 					       </th>
 					       <th>
 					         <div align="center">
-					            <input type="text" class="form-control input-sm penalesatajados" name="penalesbatajadosdefinicion<?php echo $rowB['refjugadores']; ?>" id="penalesbatajadosdefinicion<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalatajadodefinicion'); ?>"/>
+					            <input type="text" class="form-control input-sm penaleserrados" name="penalesberradosdefinicion<?php echo $rowB['refjugadores']; ?>" id="penalesberradosdefinicion<?php echo $rowB['refjugadores']; ?>" style="width:45px;" value="<?php echo mysql_result($estadisticasB,0,'penalerradodefinicion'); ?>"/>
 					           </div>
 					       </th>
 					       <th>
