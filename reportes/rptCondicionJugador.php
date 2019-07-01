@@ -322,6 +322,7 @@ if ($id == 0) {
 
 $resTemporada	=	$serviciosReferencias->traerTemporadasPorId($idTemporada);
 
+
 while ($rowC = mysql_fetch_array($lstEquipos)) {
 	$datos		=	$serviciosDelegados->traerConectorActivosPorEquipos($rowC['idequipo'], $idTemporada);
 

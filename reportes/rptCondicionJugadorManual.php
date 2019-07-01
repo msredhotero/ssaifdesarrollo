@@ -14,12 +14,14 @@ include ('../includes/funcionesUsuarios.php');
 include ('../includes/funciones.php');
 include ('../includes/funcionesHTML.php');
 include ('../includes/funcionesReferencias.php');
+include ('../includes/funcionesDelegados.php');
 
 
 $serviciosUsuarios  		= new ServiciosUsuarios();
 $serviciosFunciones 		= new Servicios();
 $serviciosHTML				= new ServiciosHTML();
 $serviciosReferencias 			= new ServiciosReferencias();
+$serviciosDelegados				= new serviciosDelegados();
 
 $fecha = date('Y-m-d');
 
@@ -38,12 +40,12 @@ if ($_SESSION['idroll_predio'] == 4) {
 
 
 
-$idTemporada = $_GET['reftemporada'];	
+$idTemporada = $_GET['reftemporada'];
 
 if ((isset($_GET['id'])) || ($_GET['id'] != 0)) {
 	$id				=	$_GET['id'];
 } else {
-	$id				=	0;	
+	$id				=	0;
 }
 
 $anio = $_GET['anio'];
@@ -65,14 +67,14 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 	$this->Ln();
 
 	$this->SetFont('Arial','',11);
-    // Colores, ancho de línea y fuente en negrita
+    // Colores, ancho de lï¿½nea y fuente en negrita
     $this->SetFillColor(72,72,72);
     $this->SetTextColor(255);
     $this->SetDrawColor(85,85,85);
     $this->SetLineWidth(.3);
 	$this->Ln();
-	
-	
+
+
     // Cabecera
     $w = array(18,40,25,30,18,35,20,20);
     for($i=0;$i<count($header);$i++) {
@@ -84,31 +86,31 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		$this->Cell($w[$i],6,$header[$i],1,0,'C',true);
 	}
     $this->Ln();
-    // Restauración de colores y fuentes
+    // Restauraciï¿½n de colores y fuentes
     $this->SetFillColor(224,235,255);
     $this->SetTextColor(0);
     $this->SetFont('');
     // Datos
     $fill = false;
-	
+
 	$total = 0;
 	$totalcant = 1;
 	$sumSaldos = 0;
 	$sumAbonos = 0;
-	
-	
+
+
 	$x = 0;
 	$y = 0;
 	$yN = 0;
 	$yInicial = 0;
-	
+
 	$x = $this->GetX();
 	$y = $this->GetY();
-	
+
 	$aumentoNombre = 0;
-	
+
 	$tieneAlgunaHabilitacionTrans = 0;
-	
+
     while ($row = mysql_fetch_array($data))
     {
 
@@ -123,36 +125,36 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 		$documentaciones = '';
 
 		$tieneAlgunaHabilitacionTrans = 0;
-	
+
 		$yInicial = $this->GetY();
-		
+
 		$edad = $servicios->verificarEdadAnioManual($row['refjugadores'], $anio);
-		
+
 		$cumpleEdad = $servicios->verificaEdadCategoriaJugadorAnioManual($row['refjugadores'], $refcategoria, $row['idtipojugador'], $anio);
-		
+
 		$documentaciones = $servicios->traerJugadoresdocumentacionPorJugadorValores($row['refjugadores']);
-		
+
 		if ($cumpleEdad == 1) {
-			$cadCumpleEdad = "CUMPLE";	
+			$cadCumpleEdad = "CUMPLE";
 		} else {
 			// VERIFICO SI EXISTE ALGUNA HABILITACION TRANSITORIA
 			$habilitacionTransitoria = $servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorDeportiva($row['refjugadores'], $idTemporada, $refcategoria, $row['refequipos']);
 			if (mysql_num_rows($habilitacionTransitoria)>0) {
-				$cadCumpleEdad = "HAB. TRANS.";	
-				$habilitacion= 'HAB.';	
+				$cadCumpleEdad = "HAB. TRANS.";
+				$habilitacion= 'HAB.';
 			} else {
-				$cadCumpleEdad = "NO CUMPLE";	
+				$cadCumpleEdad = "NO CUMPLE";
 			}
 		}
-		
+
 		if (mysql_num_rows($documentaciones)>0) {
 			while ($rowH = mysql_fetch_array($documentaciones)) {
 				if (($rowH['valor'] == 'No') && ($rowH['contravalor'] == 'No')) {
 					if ($rowH['obligatoria'] == 'Si') {
 						$valorDocumentacion += 1;
 						if (mysql_num_rows($servicios->traerJugadoresmotivoshabilitacionestransitoriasPorJugadorAdministrativaDocumentacion($row['refjugadores'],$rowH['refdocumentaciones']))>0) {
-							$valorDocumentacion -= 1;	
-							$tieneAlgunaHabilitacionTrans = 1;	
+							$valorDocumentacion -= 1;
+							$tieneAlgunaHabilitacionTrans = 1;
 						}
 					}
 					if ($rowH['contravalordesc'] == '') {
@@ -168,27 +170,27 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			} else {
 				$cadErrorDoc = substr($cadErrorDoc,0,-3);
 			}
-			
+
 		} else {
 			$cadErrorDoc = 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES';
 		}
-		
+
 		if (($row['fechabaja'] != '1900-01-01') && ($row['fechabaja'] < date('Y-m-d'))) {
 			$habilitacion= 'INHAB/Baja';
 		} else {
 			if ($valorDocumentacion <= 0 && ($cadCumpleEdad == 'CUMPLE' || $cadCumpleEdad == "HAB. TRANS.")) {
 				if ($cadErrorDoc == 'FALTAN PRESENTAR TODAS LAS DOCUMENTACIONES') {
-					$habilitacion= 'INHAB.';	
+					$habilitacion= 'INHAB.';
 				} else {
-					$habilitacion= 'HAB.';	
+					$habilitacion= 'HAB.';
 					$totalhabilitadoscuenta += 1;
 				}
 			} else {
 				$habilitacion= 'INHAB.';
 			}
 		}
-		
-		
+
+
 		$this->SetXY($x, $y);
 		$yN = $y;
         $this->MultiCell($w[0],5,$row['nrodocumento'],'','C');
@@ -225,11 +227,11 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 				$yN = $this->GetY();
 			}
 		}
-		
+
 		$this->SetXY($x + $w[0] + $w[1] + $w[2] + $w[3] + $w[4], $y);
 		$this->MultiCell($w[5],5,$cadErrorDoc,'','L');
 		if ($this->GetY() >= $yN + 5) {
-			
+
 			$totalcant = $yN;
 
 			$yN = $this->GetY();
@@ -246,15 +248,15 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
         if ($this->GetY() > $yN + 5) {
 			$yN = $this->GetY();
 		}
-		
-		
+
+
 		if ($yN >= 250) {
 			$this->AddPage();
-			
-			
-			
+
+
+
 			$this->SetFont('Arial','',11);
-			// Colores, ancho de línea y fuente en negrita
+			// Colores, ancho de lï¿½nea y fuente en negrita
 			$this->SetFillColor(72,72,72);
 			$this->SetTextColor(255);
 			$this->SetDrawColor(85,85,85);
@@ -275,19 +277,19 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 			$totalcant = 1;
 			$this->SetY(11);
 		}
-		
+
 		$aumentoNombre = 0;
 		$y = $yN;
 		$documentaciones = '';
 		$cadErrorDoc = '';
 		$this->SetXY($x, $yN);
 		$this->Cell(array_sum($w),0,'','T');
-		
+
     }
-	
+
 
 	$fill = !$fill;
-    // Línea de cierre
+    // Lï¿½nea de cierre
 	$this->SetXY($x, $yN);
     $this->Cell(array_sum($w),0,'','T');
 	$this->SetFont('Arial','',12);
@@ -307,9 +309,9 @@ function ingresosFacturacion($header, $data, &$TotalIngresos, $servicios, $refca
 $pdf = new PDF();
 
 
-// Títulos de las columnas
+// Tï¿½tulos de las columnas
 
-$headerFacturacion = array("Carnet", "Jugador", "Fec. Nac.", "Country","Est. Doc.", "Obs. Doc.", "Cumple Edad", "Condición");
+$headerFacturacion = array("Carnet", "Jugador", "Fec. Nac.", "Country","Est. Doc.", "Obs. Doc.", "Cumple Edad", "Condiciï¿½n");
 // Carga de datos
 
 
@@ -324,9 +326,9 @@ if ($id == 0) {
 $resTemporada	=	$serviciosReferencias->traerTemporadasPorId($idTemporada);
 
 while ($rowC = mysql_fetch_array($lstEquipos)) {
-	$datos		=	$serviciosReferencias->traerConectorActivosPorEquipos($rowC['idequipo']);
+	$datos		=	$serviciosDelegados->traerConectorActivosPorEquipos($rowC['idequipo'], $idTemporada);
 
-	$datosEdades=	$serviciosReferencias->traerConectorActivosPorEquiposEdades($rowC['idequipo']);
+	$datosEdades=	$serviciosDelegados->traerConectorActivosPorEquiposEdades($rowC['idequipo'], $idTemporada);
 
 	$equipo		=	$serviciosReferencias->traerEquiposPorEquipo($rowC['idequipo']);
 
@@ -336,7 +338,7 @@ while ($rowC = mysql_fetch_array($lstEquipos)) {
 
 	$pdf->AddPage();
 
-	$pdf->SetMargins(3, 5 , 3); 
+	$pdf->SetMargins(3, 5 , 3);
 
 	$pdf->Image('../imagenes/aif_logo.png',2,2,30);
 	$pdf->SetFont('Arial','U',17);
@@ -353,7 +355,7 @@ while ($rowC = mysql_fetch_array($lstEquipos)) {
 	$pdf->Cell(35,5,'Temporada: '.$anio,1,0,'L',false);
 	$pdf->Cell(75,5,'Country: '.$rowC['countrie'],1,0,'L',false);
 	$pdf->Cell(50,5,'Categoria: '.$rowC['categoria'],1,0,'L',false);
-	$pdf->Cell(45,5,'División: '.$rowC['division'],1,0,'L',false);
+	$pdf->Cell(45,5,'Divisiï¿½n: '.$rowC['division'],1,0,'L',false);
 	$pdf->Ln();
 	$pdf->Cell(35,5,'Jugadores: '.mysql_result($datosEdades,0,'cantidadJugadores'),1,0,'L',false);
 	$pdf->Cell(75,5,'Edad Min.: '.mysql_result($datosEdades,0,'edadMinima'),1,0,'L',false);
@@ -383,4 +385,3 @@ $pdf->Output($nombreTurno,'I');
 
 }
 ?>
-

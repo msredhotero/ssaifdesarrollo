@@ -11171,6 +11171,107 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: dbpenalesjugadores*/
 
+
+/* PARA Penalesjugadoresdefinicion */
+
+function existeFixturePorPenalesJugadorDefinicion($idJugador, $idFixture) {
+    $sql = "select * from dbpenalesjugadoresdefinicion where refjugadores =".$idJugador." and reffixture =".$idFixture;
+
+    return $this->existeDevuelveId($sql);
+}
+
+function insertarPenalesjugadoresDefinicion($refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$penalconvertido,$penalerrado,$orden) {
+$sql = "insert into dbpenalesjugadoresdefinicion(idpenaljugadordefinicion,refjugadores,reffixture,refequipos,refcategorias,refdivisiones,penalconvertido,penalerrado,orden)
+values ('',".$refjugadores.",".$reffixture.",".$refequipos.",".$refcategorias.",".$refdivisiones.",".$penalconvertido.",".$penalerrado.",".$orden.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarPenalesjugadoresDefinicion($id,$refjugadores,$reffixture,$refequipos,$refcategorias,$refdivisiones,$penalconvertido,$penalerrado,$orden) {
+$sql = "update dbpenalesjugadoresdefinicion
+set
+refjugadores = ".$refjugadores.",reffixture = ".$reffixture.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones.",penalconvertido = ".$penalconvertido.",penalerrado = ".$penalerrado.",orden = ".$orden."
+where idpenaljugadordefinicion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarPenalesjugadoresDefinicion($id) {
+$sql = "delete from dbpenalesjugadoresdefinicion where idpenaljugadordefinicion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerPenalesjugadoresDefinicion() {
+$sql = "select
+p.idpenaljugadordefinicion,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones,
+p.penalconvertido,
+p.penalerrado,
+p.orden
+from dbpenalesjugadoresdefinicion p
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+inner join dbcountries co ON co.idcountrie = jug.refcountries
+inner join dbfixture fix ON fix.idfixture = p.reffixture
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
+inner join tbfechas fe ON fe.idfecha = fix.reffechas
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+inner join dbequipos equ ON equ.idequipo = p.refequipos
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerPenalesjugadoresDefinicionPorJugadorFixture($idJugador, $idFixture) {
+$sql = "select
+p.idpenaljugadordefinicion,
+p.refjugadores,
+p.reffixture,
+p.refequipos,
+p.refcategorias,
+p.refdivisiones,
+p.penalconvertido,
+p.penalerrado,
+p.orden
+from dbpenalesjugadoresdefinicion p
+inner join dbjugadores jug ON jug.idjugador = p.refjugadores
+inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+inner join dbcountries co ON co.idcountrie = jug.refcountries
+inner join dbfixture fix ON fix.idfixture = p.reffixture
+inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
+inner join tbfechas fe ON fe.idfecha = fix.reffechas
+left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+inner join dbequipos equ ON equ.idequipo = p.refequipos
+inner join dbcountries cou ON cou.idcountrie = equ.refcountries
+inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
+inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
+where p.refjugadores = ".$idJugador." and p.reffixture =".$idFixture;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerPenalesjugadoresDefinicionPorId($id) {
+$sql = "select idpenaljugadordefinicion,refjugadores,reffixture,refequipos,refcategorias,refdivisiones,penalconvertido,penalerrado,orden from dbpenalesjugadoresdefinicion where idpenaljugadordefinicion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbpenalesjugadoresdefinicion */
+
 /* PARA Cambios */
 
 function existeFixturePorCambiosJugador($refdorsalsale,$refdorsalentra, $idFixture) {
@@ -14464,7 +14565,10 @@ function traerEstadisticaPorFixtureJugadorCategoriaDivision($idJugador, $idFixtu
     coalesce(pen.penalconvertido,0) as penalconvertido,
     coalesce(pen.penalerrado,0) as penalerrado,
     coalesce(pen.penalatajado,0) as penalatajado,
-    coalesce(dor.numero,0) as dorsal
+    coalesce(dor.numero,0) as dorsal,
+    coalesce(pend.penalconvertido,0) as penalconvertidodefinicion,
+    coalesce(pend.penalerrado,0) as penalerradodefinicion,
+    coalesce(pend.orden,0) as ordendefinicion
 from
     dbconector c
         inner join
@@ -14512,6 +14616,12 @@ from
         and pen.refcategorias = cat.idtcategoria
         and pen.refdivisiones = di.iddivision
         LEFT JOIN
+    dbpenalesjugadoresdefinicion pend
+    ON  pend.reffixture = fix.idfixture
+        and pend.refjugadores = jug.idjugador
+        and pend.refcategorias = cat.idtcategoria
+        and pend.refdivisiones = di.iddivision
+        LEFT JOIN
     dbdorsales dor
     ON  dor.reffixture = fix.idfixture
         and dor.refjugadores = jug.idjugador
@@ -14549,7 +14659,10 @@ function traerEstadisticaPorFixtureJugadorCategoriaDivisionVisitante($idJugador,
     coalesce(pen.penalconvertido,0) as penalconvertido,
     coalesce(pen.penalerrado,0) as penalerrado,
     coalesce(pen.penalatajado,0) as penalatajado,
-    coalesce(dor.numero,0) as dorsal
+    coalesce(dor.numero,0) as dorsal,
+    coalesce(pend.penalconvertido,0) as penalconvertidodefinicion,
+    coalesce(pend.penalerrado,0) as penalerradodefinicion,
+    coalesce(pend.orden,0) as ordendefinicion
 from
     dbconector c
         inner join
@@ -14596,6 +14709,12 @@ from
         and pen.refjugadores = jug.idjugador
         and pen.refcategorias = cat.idtcategoria
         and pen.refdivisiones = di.iddivision
+        LEFT JOIN
+    dbpenalesjugadoresdefinicion pend
+    ON  pend.reffixture = fix.idfixture
+        and pend.refjugadores = jug.idjugador
+        and pend.refcategorias = cat.idtcategoria
+        and pend.refdivisiones = di.iddivision
         LEFT JOIN
     dbdorsales dor
     ON  dor.reffixture = fix.idfixture
