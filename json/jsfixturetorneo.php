@@ -12,6 +12,8 @@ $serviciosReferenciasRemoto 	= new ServiciosReferenciasRemoto();
 $definicionLocal = 0;
 $definicionVisitante = 0;
 
+$copa = 0;
+
 if (((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) && ((isset($_GET['idfecha'])) && ($_GET['idfecha'] > 0))) {
 	$resTraerDatos = $serviciosReferencias->traerFixtureTodoPorTorneosFechas($_GET['idtorneo'],$_GET['idfecha']);
 	if (mysql_num_rows($resTraerDatos) > 0) {
@@ -19,12 +21,7 @@ if (((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) && ((isset($_GET['id
 	} else {
 		$resTraerDatos = $serviciosReferenciasRemoto->traerFixtureTodoPorTorneosFechasPlayOff($_GET['idtorneo'],$_GET['idfecha']);
 
-		$resDefinicion = $serviciosReferenciasRemoto->traerDefinicionPenalesPorTorneoFecha($_GET['idtorneo'],$_GET['idfecha']);
-
-		if (mysql_num_rows($resDefinicion)>0) {
-			$definicionLocal = mysql_result($resDefinicion,0,0);
-			$definicionVisitante = mysql_result($resDefinicion,0,1);
-		}
+		$copa = 1;
 	}
 
 } else {
@@ -63,6 +60,18 @@ $cad = '';
 			case 7:
 				$dia = 'Domingo';
 				break;
+		}
+
+		if ($copa == 1) {
+			$resDefinicion = $serviciosReferenciasRemoto->traerDefinicionPenalesPorTorneoFecha($_GET['idtorneo'],$_GET['idfecha'],$row['refconectorlocal'],$row['refconectorvisitante']);
+
+			if (mysql_num_rows($resDefinicion)>0) {
+				$definicionLocal = mysql_result($resDefinicion,0,0);
+				$definicionVisitante = mysql_result($resDefinicion,0,1);
+			} else {
+				$definicionLocal = 0;
+				$definicionVisitante = 0;
+			}
 		}
 
 		if ($definicionLocal != 0 || $definicionVisitante != 0) {

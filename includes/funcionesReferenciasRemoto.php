@@ -9,7 +9,7 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferenciasRemoto {
 
-function traerDefinicionPenalesPorTorneoFecha($idtorneo, $idfecha) {
+function traerDefinicionPenalesPorTorneoFecha($idtorneo, $idfecha, $local, $visitante) {
    $sql = 'SELECT
              coalesce(sum(pdl.penalconvertido),0) as definicionlocal,
              coalesce(sum(pdv.penalconvertido),0) as definicionvisitante
@@ -23,7 +23,10 @@ function traerDefinicionPenalesPorTorneoFecha($idtorneo, $idfecha) {
              join	dbpenalesjugadoresdefinicion pdv
              on		fix.idfixture = pdv.reffixture
          			and fix.refconectorvisitante = pdv.refequipos
-         where	fix.reftorneos = '.$idtorneo.' and fix.reffechas = '.$idfecha.' and (pdl.idpenaljugadordefinicion is not null or pdv.idpenaljugadordefinicion is not null)';
+         where	fix.reftorneos = '.$idtorneo.'
+               and fix.reffechas = '.$idfecha.'
+               and (fix.refconectorlocal = '.$local.' and fix.refconectorvisitante = '.$visitante.')
+               and (pdl.idpenaljugadordefinicion is not null or pdv.idpenaljugadordefinicion is not null)';
 
    $res = $this->query($sql,0);
 
