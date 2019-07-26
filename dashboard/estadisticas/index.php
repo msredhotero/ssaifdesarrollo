@@ -368,6 +368,7 @@ $(document).ready(function(){
 					cancha: $('#refcanchas'+$(this).attr("id")).val(),
 					esresaltado: esresaltado,
 					esdestacado: esdestacado,
+                    linkfacebook: $('#linkfacebook'+$(this).attr("id")).val(),
 					accion: 'guardarPartidoSimple'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',

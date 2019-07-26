@@ -96,6 +96,7 @@ $cad = '';
 								'refconectorvisitante'=> $row['refconectorvisitante'],
 								'dia' => $dia,
 								'esfinalizado'=>$row['esfinalizado'],
+								'link'=>$row['linkfacebook'],
 								'espendienterevision'=>$row['espendienterevision']));
 		} else {
 			array_push($ar,array('id'=> $row[0],
@@ -119,6 +120,7 @@ $cad = '';
 								'refconectorvisitante'=> $row['refconectorvisitante'],
 								'dia' => $dia,
 								'esfinalizado'=>$row['esfinalizado'],
+								'link'=>$row['linkfacebook'],
 								'espendienterevision'=>$row['espendienterevision']));
 		}
 

@@ -1728,6 +1728,12 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
 							<td><button type='button' class='btn btn-primary guardarPartidoSimple' id='".$row['idfixture']."'>Guardar</button></td>
 						</tr>";
 
+		$cadCabecera .= "<tr>
+							<td colspan='12'>
+							<b>Link:</b> <input type='text' class='form-control' name='linkfacebook".$row['idfixture']."' id='linkfacebook".$row['idfixture']."' style='width:100%;' value='".$row['linkfacebook']."'/>
+							</td>
+						</tr>";
+
 	}
 
 	$cadCabecera .= '</tbody></table></div></div></div>';
@@ -2565,6 +2571,7 @@ function guardarPartidoSimple($serviciosReferencias) {
 	$refcanchas		 = $_POST['cancha'];
 	$esresaltado	= $_POST['esresaltado'];
 	$esdestacado	= $_POST['esdestacado'];
+	$linkfacebook	= $_POST['linkfacebook'];
 
 	/*
 	if (isset($_POST['esresaltado'])) {
@@ -2582,7 +2589,7 @@ function guardarPartidoSimple($serviciosReferencias) {
 	$fecha = formatearFechas($fecha);
 
 	if ($fecha != '***') {
-		$res = $serviciosReferencias->guardarPartidoSimple($idfixture, $fecha, $hora, $refcanchas,$esresaltado,$esdestacado);
+		$res = $serviciosReferencias->guardarPartidoSimple($idfixture, $fecha, $hora, $refcanchas,$esresaltado,$esdestacado,$linkfacebook);
 		echo '';
 	} else {
 		echo 'Formato de fecha erroneo'.$_POST['fecha'];

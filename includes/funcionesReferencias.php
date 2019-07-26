@@ -2483,7 +2483,8 @@ function traerProximaFechaFiltros($where) {
             fix.golesvisitantes,
             pa.imagen,
             pa.imagen2,
-            pa.observaciones
+            pa.observaciones,
+            fix.linkfacebook
         from dbfixture fix
         inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
         inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
@@ -9944,7 +9945,8 @@ f.reftorneos,
 f.refconectorlocal,
 f.refconectorvisitante,
 coalesce((case when est.finalizado = 1 then '1' else '0' end),0) as esfinalizado,
-coalesce((case when est.visibleparaarbitros = 1 then '1' else '0' end),0) as espendienterevision
+coalesce((case when est.visibleparaarbitros = 1 then '1' else '0' end),0) as espendienterevision,
+f.linkfacebook
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
@@ -10841,7 +10843,7 @@ function traerPartidoDestacadoPorFechas($idTemporada,$desde, $hasta) {
 
 /********************  nuevos tablas 20/02/2017 para las ESTADISTICAS ************//////
 
-function guardarPartidoSimple($idFixture, $fecha, $hora, $refcanchas, $esresaltado, $esdestacado) {
+function guardarPartidoSimple($idFixture, $fecha, $hora, $refcanchas, $esresaltado, $esdestacado, $linkfacebook) {
 
     $sql = "update dbfixture
             set
@@ -10849,7 +10851,8 @@ function guardarPartidoSimple($idFixture, $fecha, $hora, $refcanchas, $esresalta
                 hora = '".$hora."',
                 refcanchas = ".($refcanchas == '' ? 'NULL' : $refcanchas).",
                 esresaltado = ".$esresaltado.",
-                esdestacado = ".$esdestacado."
+                esdestacado = ".$esdestacado.",
+                linkfacebook = '".$linkfacebook."'
                 where idfixture = ".$idFixture;
     $res = $this->query($sql,0);
 
