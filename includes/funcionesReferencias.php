@@ -13532,7 +13532,10 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
             sum(r.pa) as pa,
             sum(r.pe) as pe,
             coalesce(dor.numero,0) as dorsal,
-            (case when ff.refconectorlocal = r.refequipos then 'local' else 'visitante' end) as localia
+            (case when ff.refconectorlocal = r.refequipos then 'local' else 'visitante' end) as localia,
+            0 as pcd,
+            0 as ped,
+            0 as od
             from (
             select
                 concat(jug.apellido, ', ', jug.nombres) as apyn,

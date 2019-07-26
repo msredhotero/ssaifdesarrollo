@@ -19,7 +19,7 @@ $golesAfavor = 0;
 $golesAdescontar = 0;
 $esDefinicionAutomatica = 0;
 
-$ladoGanador = 0; 
+$ladoGanador = 0;
 
 if ((isset($_GET['idfixture'])) && ($_GET['idfixture'] > 0)) {
 	if ((isset($_GET['idtorneo'])) && ($_GET['idtorneo'] > 0)) {
@@ -40,26 +40,26 @@ if ((isset($_GET['idfixture'])) && ($_GET['idfixture'] > 0)) {
 
 		$refEstadoPartido = $serviciosReferencias->traerEstadospartidosPorId($idEstadoPartido);
 		if ( mysql_result($refEstadoPartido,0,'defautomatica') == 'Si') {
-			
+
 			$esDefinicionAutomatica = 1;
 			$golesAfavor = 2;
 			$golesAdescontar = 1;
 			if (mysql_result($refEstadoPartido, 0,'puntoslocal') == 3) {
-				$ladoGanador = 1; 
+				$ladoGanador = 1;
 			} else {
 				if (mysql_result($refEstadoPartido, 0,'puntosvisitante') == 3) {
-					$ladoGanador = 2; 
+					$ladoGanador = 2;
 				} else {
-					$ladoGanador = 0; 
+					$ladoGanador = 0;
 					$golesAfavor = 0;
 					$golesAdescontar = 1;
-				}					
+				}
 			}
 		} else {
 			$esDefinicionAutomatica = 0;
 		}
 	}
-	
+
 } else {
 	$resTraerDatos = $serviciosReferencias->traerInicidenciasPorFixtureDetalle(0);
 }
@@ -84,7 +84,7 @@ $cad = '';
 		}
 
 
-		array_push($ar,array('jugador'=> $row['apyn'], 
+		array_push($ar,array('jugador'=> $row['apyn'],
 							'goles'=> $row['goles'],
 							'encontra'=> $row['encontra'],
 							'amonestados'=> $row['amarillas'],
@@ -94,16 +94,20 @@ $cad = '';
 							'penalesconvertidos'=> $row['pc'],
 							'golesvisitantes'=> 0, //$row['golesvisitantes']
 							'localia'=> $row['localia'],
-							'idjugador'=>$row['refjugadores']));
+							'idjugador'=>$row['refjugadores'],
+							'pcd'=>$row['pcd'],
+							'ped'=>$row['ped'],
+							'od'=>$row['od']
+						));
 
-		
+
 	}
 
 
-	if (($esDefinicionAutomatica == 1) && ($ladoGanador == 1) && $golesL < 2) 
+	if (($esDefinicionAutomatica == 1) && ($ladoGanador == 1) && $golesL < 2)
 	{
-		
-		array_push($ar,array('jugador'=> 'Sin informar', 
+
+		array_push($ar,array('jugador'=> 'Sin informar',
 						'goles'=> 2 - $golesL,
 						'encontra'=> 0,
 						'amonestados'=> 0,
@@ -117,10 +121,10 @@ $cad = '';
 	}
 
 
-	if (($esDefinicionAutomatica == 1) && ($ladoGanador == 2) && $golesV < 2) 
+	if (($esDefinicionAutomatica == 1) && ($ladoGanador == 2) && $golesV < 2)
 	{
-		
-		array_push($ar,array('jugador'=> 'Sin informar', 
+
+		array_push($ar,array('jugador'=> 'Sin informar',
 						'goles'=> 2 - $golesV,
 						'encontra'=> 0,
 						'amonestados'=> 0,

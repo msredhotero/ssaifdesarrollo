@@ -12291,7 +12291,10 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
             sum(r.pa) as pa,
             sum(r.pe) as pe,
             coalesce(dor.numero,0) as dorsal,
-            (case when ff.refconectorlocal = r.refequipos then 'local' else 'visitante' end) as localia
+            (case when ff.refconectorlocal = r.refequipos then 'local' else 'visitante' end) as localia,
+            max(r.pcd) as pcd,
+            max(r.ped) as ped,
+            max(r.od) as od
             from (
             select
                 concat(jug.apellido, ', ', jug.nombres) as apyn,
@@ -12309,7 +12312,10 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
                 0 as dobleamarilla,
                 0 as pc,
                 0 as pa,
-                0 as pe
+                0 as pe,
+                0 as pcd,
+                0 as ped,
+                0 as od
                 from dbgoleadores p
                 inner join dbjugadores jug ON jug.idjugador = p.refjugadores
                 inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
@@ -12342,7 +12348,10 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
                 0 as dobleamarilla,
                 p.penalconvertido as pc,
                 p.penalatajado as pa,
-                p.penalerrado as pe
+                p.penalerrado as pe,
+                0 as pcd,
+                0 as ped,
+                0 as od
                 from dbpenalesjugadores p
                 inner join dbjugadores jug ON jug.idjugador = p.refjugadores
                 inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
@@ -12357,6 +12366,41 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
                 inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
                 where p.reffixture =".$idFixture." and (p.penalconvertido > 0 or p.penalatajado > 0 or p.penalerrado > 0)
 
+                union all
+
+                select
+                concat(jug.apellido, ', ', jug.nombres) as apyn,
+                jug.nrodocumento,
+                p.refjugadores,
+                p.reffixture,
+                p.refequipos,
+                p.refcategorias,
+                p.refdivisiones,
+                0 as goles,
+                0 as encontra,
+                0 as amarilla,
+                0 as roja,
+                0 as informado,
+                0 as dobleamarilla,
+                0 as pc,
+                0 as pa,
+                0 as pe,
+                p.penalconvertido as pcd,
+                p.penalerrado as ped,
+                p.orden as od
+                from dbpenalesjugadoresdefinicion p
+                inner join dbjugadores jug ON jug.idjugador = p.refjugadores
+                inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+                inner join dbcountries co ON co.idcountrie = jug.refcountries
+                inner join dbfixture fix ON fix.idfixture = p.reffixture
+                inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
+                inner join tbfechas fe ON fe.idfecha = fix.reffechas
+                left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+                inner join dbequipos equ ON equ.idequipo = p.refequipos
+                inner join dbcountries cou ON cou.idcountrie = equ.refcountries
+                inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
+                inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
+                where p.reffixture =".$idFixture." and (p.penalconvertido > 0 or p.penalerrado > 0)
 
                 union all
 
@@ -12376,7 +12420,10 @@ function traerInicidenciasPorFixtureDetalle($idFixture) {
                 coalesce((case when p.reftiposanciones = 4 then 1 end),0) as dobleamarilla,
                 0 as pc,
                 0 as pa,
-                0 as pe
+                0 as pe,
+                0 as pcd,
+                0 as ped,
+                0 as od
                 from dbsancionesjugadores p
                 inner join dbjugadores jug ON jug.idjugador = p.refjugadores
                 inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
