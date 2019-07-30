@@ -4,10 +4,10 @@
   padding:0;
   font-family: robotoL;
 }
-html { height : 101%; } 
+html { height : 101%; }
 body {
 	font-family: robotoL;
-	background: url(../imagenes/6.jpg) repeat;
+	background: url(../imagenes/pink_sierpinski_square_fractal_background_seamless.jpg) repeat;
 }
 
 #content {
@@ -158,21 +158,21 @@ padding-bottom: 10px;
 			border-bottom:1px solid #d60000;
 			border-top:1px solid #b20000;
 		}
-		
-		#infoMenu p {	
+
+		#infoMenu p {
 			color: #000;
 			font-family: robotoL;
 			font-size:15px;
 		}
-		
+
 		#infoDescrMenu {
 			padding:8px;
 		}
-		
+
 		#infoDescrMenu p {
 			color:#FFF;
 		}
-		
+
 		.icodashboard {
 			background:url(../imagenes/iconmenu/dashboard.png)  no-repeat;
 			background-position: center center;
@@ -185,7 +185,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icousuarios {
 			background:url(../imagenes/iconmenu/usuarios.png) no-repeat;
 			background-position: center center;
@@ -198,7 +198,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icochart {
 			background:url(../imagenes/iconmenu/chart.png) no-repeat;
 			background-position: center center;
@@ -211,7 +211,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icopagos {
 			background:url(../imagenes/iconmenu/pagos.png) no-repeat;
 			background-position: center center;
@@ -224,7 +224,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icosedes {
 			background:url(../imagenes/iconmenu/sedes.png) no-repeat;
 			background-position: center center;
@@ -237,7 +237,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icocanchas {
 			background:url(../imagenes/iconmenu/canchas.png) no-repeat;
 			background-position: center center;
@@ -250,7 +250,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icogoleadores {
 			background:url(../imagenes/iconmenu/gym15.png) no-repeat;
 			background-position: center center;
@@ -263,7 +263,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icosuspendidos {
 			background:url(../imagenes/iconmenu/lightning38.png) no-repeat;
 			background-position: center center;
@@ -288,7 +288,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icovehiculos {
 			background:url(../imagenes/iconmenu/icovehiculo.png) no-repeat;
 			background-position: center center;
@@ -301,8 +301,8 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
-		
+
+
 		.icoreparacion {
 			background:url(../imagenes/iconmenu/icoreparacion.png) no-repeat;
 			background-position: center center;
@@ -315,7 +315,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icomodelo {
 			background:url(../imagenes/iconmenu/icomodelo.png) no-repeat;
 			background-position: center center;
@@ -328,8 +328,8 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
-		
+
+
 		.icomarca {
 			background:url(../imagenes/iconmenu/icomarca.png) no-repeat;
 			background-position: center center;
@@ -342,7 +342,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icoamonestados {
 			background:url(../imagenes/iconmenu/user84.png) no-repeat;
 			background-position: center center;
@@ -391,7 +391,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icozonas {
 			background:url(../imagenes/iconmenu/conceptos.png) no-repeat;
 			background-position: center center;
@@ -404,7 +404,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icofixture {
 			background:url(../imagenes/iconmenu/novedades.png) no-repeat;
 			background-position: center center;
@@ -417,7 +417,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icoplayoff {
 			background:url(../imagenes/iconmenu/playoff.png) no-repeat;
 			background-position: center center;
@@ -430,7 +430,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icofairplay {
 			background:url(../imagenes/iconmenu/exportar.png) no-repeat;
 			background-position: center center;
@@ -464,7 +464,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icoinmubles {
 			background:url(../imagenes/iconmenu/inmueble.png) no-repeat;
 			background-position: center center;
@@ -477,7 +477,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icoturnos {
 			background:url(../imagenes/iconmenu/turnos.png) no-repeat;
 			background-position: center center;
@@ -490,7 +490,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icoventas {
 			background:url(../imagenes/iconmenu/compras.png) no-repeat;
 			background-position: center center;
@@ -503,7 +503,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icoproductos {
 			background:url(../imagenes/iconmenu/barras.png) no-repeat;
 			background-position: center center;
@@ -516,7 +516,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icoreportes {
 			background:url(../imagenes/iconmenu/reportes.png) no-repeat;
 			background-position: center center;
@@ -529,7 +529,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icocontratos {
 			background:url(../imagenes/iconmenu/contratos.png) no-repeat;
 			background-position: center center;
@@ -555,7 +555,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icosalir {
 			background:url(../imagenes/iconmenu/salir.png) no-repeat;
 			background-position: center center;
@@ -568,7 +568,7 @@ padding-bottom: 10px;
 		   background-size: 25px 50px;
 		   background-size: 50% 50%;
 		}
-		
+
 		.icoproductos2 {
 			background:url(../imagenes/iconmenu/barras.png) no-repeat;
 			background-position: center center;
@@ -578,7 +578,7 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
+
 		.icoventas2 {
 			background:url(../imagenes/iconmenu/compras.png) no-repeat;
 			background-position: center center;
@@ -588,8 +588,8 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
-		
+
+
 		.icopagos2 {
 			background:url(../imagenes/iconmenu/pagos.png) no-repeat;
 			background-position: center center;
@@ -599,7 +599,7 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
+
 		.icochart2 {
 			background:url(../imagenes/iconmenu/chart.png) no-repeat;
 			background-position: center center;
@@ -609,7 +609,7 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
+
 		.icoturnos2 {
 			background:url(../imagenes/iconmenu/turnos.png) no-repeat;
 			background-position: center center;
@@ -619,7 +619,7 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
+
 		.icodashboard2 {
 			background:url(../imagenes/iconmenu/dashboard.png) no-repeat;
 			background-position: center center;
@@ -629,7 +629,7 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
+
 		.icousuarios2 {
 			background:url(../imagenes/iconmenu/usuarios.png) no-repeat;
 			background-position: center center;
@@ -639,7 +639,7 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
+
 		.icoalquileres2 {
 			background:url(../imagenes/iconmenu/alquiler.png) no-repeat;
 			background-position: center center;
@@ -649,7 +649,7 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
+
 		.icoinmubles2 {
 			background:url(../imagenes/iconmenu/inmueble.png) no-repeat;
 			background-position: center center;
@@ -659,8 +659,8 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
-		
+
+
 		.icoreportes2 {
 			background:url(../imagenes/iconmenu/reportes.png) no-repeat;
 			background-position: center center;
@@ -670,7 +670,7 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
+
 		.icocontratos2 {
 			background:url(../imagenes/iconmenu/contratos.png) no-repeat;
 			background-position: center center;
@@ -680,7 +680,7 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
+
 		.icosalir2 {
 			background:url(../imagenes/iconmenu/salir.png) no-repeat;
 			background-position: center center;
@@ -690,19 +690,19 @@ padding-bottom: 10px;
 			margin-bottom:25px;
 			cursor:pointer;
 		}
-		
-		
+
+
 		.ulHober {
 			list-style:none;
 			width:40px;
 			right:6px;
 			position:absolute;
 		}
-		
+
 		.ulHober li {
 			right:0;
 		}
-		
+
 		.tooltip-dash, .tooltip-inmu, .tooltip-alqui, .tooltip-usua, .tooltip-con, .tooltip-rep, .tooltip-sal{
 		   position: fixed;
 		   background: #c0df71;
@@ -716,13 +716,13 @@ padding-bottom: 10px;
 		   display: none;
 		   background-color: #333;
 		}
-		
-  
-  .boxInfoForm{ 
-				width: 95%; 
-				height: auto; 
+
+
+  .boxInfoForm{
+				width: 95%;
+				height: auto;
 				margin:10px;
-				background:#fff; 
+				background:#fff;
 				position: relative;
 				/*opacity: 0.9;
   				filter:  alpha(opacity=90);
@@ -738,15 +738,15 @@ padding-bottom: 10px;
 
 
 			}
-			
+
   .boxInfoForm .row, .boxInfoForm .list-inline { padding-left:10px; padding-right:10px;}
-		
-  .boxInfo{ 
-				width: auto; 
-				height: auto; 
+
+  .boxInfo{
+				width: auto;
+				height: auto;
 				margin:10px;
-				background:#fff; 
-				position: relative; 
+				background:#fff;
+				position: relative;
 				min-width: 650px;
 				/*opacity: 0.9;
   				filter:  alpha(opacity=90);
@@ -763,32 +763,32 @@ padding-bottom: 10px;
 
 			}
 	.boxInfoLargoEstadisticas {
-		width: auto;; 
-				height: auto; 
+		width: auto;;
+				height: auto;
 				margin-top:30px;
 				margin-bottom:30px;
 				min-width: 1300px;
-				
-				float:left; 
-				background:#fff; 
+
+				float:left;
+				background:#fff;
 				z-index:-1;
 				/*overflow: hidden; */
-				position: relative; 
+				position: relative;
 				margin-right:15px;
 	}
-	.boxInfoLargo{ 
-				width: auto; 
-				height: auto; 
+	.boxInfoLargo{
+				width: auto;
+				height: auto;
 				margin-top:30px;
 				margin-bottom:30px;
 				min-width: 800px;
-				float:left; 
-				background:#fff; 
+				float:left;
+				background:#fff;
 				z-index:-1;
 				/*overflow: hidden; */
-				position: relative; 
+				position: relative;
 				margin-right:15px;
-				
+
 				/*opacity: 0.9;
   				filter:  alpha(opacity=90);
 				box-shadow: 2px 2px 5px #0e6390;
@@ -802,22 +802,22 @@ padding-bottom: 10px;
 
 
 			}
-			
+
 	.boxInfo .cuerpoBox,.boxInfoLargo .cuerpoBox,.boxInfoLargoEstadisticas .cuerpoBox {
 		padding:10px;
 	}
 
 	#headBoxInfo {
 		background-color:#006666;
-		padding:6px; 
+		padding:6px;
 		height:36px;
 	}
-			
-			
+
+
 	.btn-group {
 		width:120px;
 	}
-	
+
 	.form-group {
 		padding:10px 15px;
 	}
@@ -836,8 +836,8 @@ padding-bottom: 10px;
 .bs-wizard > .bs-wizard-step + .bs-wizard-step {}
 .bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; font-size: 16px; margin-bottom: 5px;}
 .bs-wizard > .bs-wizard-step .bs-wizard-info {color: #999; font-size: 14px;}
-.bs-wizard > .bs-wizard-step > .bs-wizard-dot {position: absolute; width: 30px; height: 30px; display: block; background: #fbe8aa; top: 45px; left: 50%; margin-top: -15px; margin-left: -15px; border-radius: 50%;} 
-.bs-wizard > .bs-wizard-step > .bs-wizard-dot:after {content: ' '; width: 14px; height: 14px; background: #fbbd19; border-radius: 50px; position: absolute; top: 8px; left: 8px; } 
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot {position: absolute; width: 30px; height: 30px; display: block; background: #fbe8aa; top: 45px; left: 50%; margin-top: -15px; margin-left: -15px; border-radius: 50%;}
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot:after {content: ' '; width: 14px; height: 14px; background: #fbbd19; border-radius: 50px; position: absolute; top: 8px; left: 8px; }
 .bs-wizard > .bs-wizard-step > .progress {position: relative; border-radius: 0px; height: 8px; box-shadow: none; margin: 20px 0;}
 .bs-wizard > .bs-wizard-step > .progress > .progress-bar {width:0px; box-shadow: none; background: #fbe8aa;}
 .bs-wizard > .bs-wizard-step.complete > .progress > .progress-bar {width:100%;}
@@ -850,7 +850,7 @@ padding-bottom: 10px;
 .bs-wizard > .bs-wizard-step:last-child  > .progress {width: 50%;}
 .bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot{ pointer-events: none; }
 /*END Form Wizard*/
-  
+
 
 .tile-stats.tile-white {
     border: 1px solid #ebebeb;
@@ -890,4 +890,3 @@ padding-bottom: 10px;
   src: local('Lato Regular'), local('Lato-Regular'), url("../fuentes/1YwB1sO8YE1Lyjf12WNiUA.woff2") format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
-

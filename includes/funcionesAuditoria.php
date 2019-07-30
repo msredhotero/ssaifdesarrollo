@@ -215,16 +215,94 @@ class serviciosAuditoria {
                   			INNER JOIN
                   		dbequipos e ON e.idequipo = jh.refequipos
                   	WHERE
-                  		jh.fecha BETWEEN '".$fechadesde."' and '".$fechahasta."' ".$cadWhereCountry."
+                  		jh.fecha >= '".$fechadesde."' and jh.fecha <= '".$fechahasta."' ".$cadWhereCountry."
                   	group by j.idjugador,
                   		j.nrodocumento,
                   		j.apellido,
                   		j.nombres,
                   		e.idequipo,
                   		e.nombre
-                  	having count(jh.habilitado) > 1
+                  	having count(DISTINCT jh.habilitado) > 1
                       ) r
-                      inner join dbjugadoreshabilitados jhc on jhc.idjugadorhabilitado = r.id ";
+                      inner join dbjugadoreshabilitados jhc on jhc.idjugadorhabilitado = r.id
+                  UNION All
+                  SELECT
+                  	r.idjugador,
+                  	r.nrodocumento,
+                  	r.apellido,
+                  	r.nombres,
+                  	r.idequipo,
+                  	r.nombreequipo,
+                  	'' as token,
+                  	jhc.observacion AS leyenda,
+                  	jhc.fecha,
+                  	(case when jhc.habilitado = 'INHAB.' then 'danger' else 'success' end) AS color,
+                  	(case when jhc.habilitado = 'INHAB.' then 'remove' else 'ok' end) AS icon,
+                  	jhc.usuario,
+                  	jhc.habilitado AS operacion,
+                  	1 AS orden,
+                  	0 as id
+                  FROM
+                      (SELECT
+                          j.idjugador,
+                              j.nrodocumento,
+                              j.apellido,
+                              j.nombres,
+                              e.idequipo,
+                              e.nombre AS nombreequipo,
+                              MAX(jh.idjugadorhabilitado) AS id
+                      FROM
+                          dbjugadoreshabilitados jh
+                      INNER JOIN dbjugadores j ON j.idjugador = jh.refjugadores
+                      INNER JOIN dbequipos e ON e.idequipo = jh.refequipos
+                      WHERE
+                          jh.fecha >= '".$fechadesde."'
+                              AND jh.fecha <= '".$fechahasta."' ".$cadWhereCountry."
+                      GROUP BY j.idjugador , j.nrodocumento , j.apellido , j.nombres , e.idequipo , e.nombre
+                      HAVING COUNT(DISTINCT jh.habilitado) = 1) r
+                          LEFT JOIN
+                      (SELECT
+                          j.idjugador,
+                              j.nrodocumento,
+                              j.apellido,
+                              j.nombres,
+                              e.idequipo,
+                              e.nombre AS nombreequipo,
+                              MAX(jh.habilitado) AS habilitado,
+                              MAX(jh.idjugadorhabilitado) AS id
+                      FROM
+                          dbjugadoreshabilitados jh
+                      INNER JOIN dbjugadores j ON j.idjugador = jh.refjugadores
+                      INNER JOIN dbequipos e ON e.idequipo = jh.refequipos
+                      WHERE
+                          jh.fecha < '".$fechadesde."' ".$cadWhereCountry."
+                              AND jh.refjugadores IN (SELECT
+                                  j.idjugador
+                              FROM
+                                  dbjugadoreshabilitados jh
+                              INNER JOIN dbjugadores j ON j.idjugador = jh.refjugadores
+                              WHERE
+                                  jh.fecha >= '".$fechadesde."'
+                                      AND jh.fecha <= '".$fechahasta."' ".$cadWhereCountry."
+                              GROUP BY j.idjugador
+                              HAVING COUNT(DISTINCT jh.habilitado) = 1)
+                              AND jh.refequipos IN (SELECT
+                                  jh.refequipos
+                              FROM
+                                  dbjugadoreshabilitados jh
+                              INNER JOIN dbjugadores j ON j.idjugador = jh.refjugadores
+                              WHERE
+                                  jh.fecha >= '".$fechadesde."'
+                                      AND jh.fecha <= '".$fechahasta."' ".$cadWhereCountry."
+                              GROUP BY jh.refequipos
+                              HAVING COUNT(DISTINCT jh.habilitado) = 1)
+                      GROUP BY j.idjugador , j.nrodocumento , j.apellido , j.nombres , e.idequipo , e.nombre) t
+                      ON t.idjugador = r.idjugador
+                          AND t.idequipo = r.idequipo
+                  	inner
+                      join	dbjugadoreshabilitados jhc
+                      on		jhc.idjugadorhabilitado = r.id
+                      where	jhc.habilitado <> t.habilitado";
       } else {
 
 

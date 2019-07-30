@@ -41,24 +41,24 @@ $urlImgType3 = mysql_result($resFotoDocumentoDorso,0,'type');
 
 $pdf = new FPDF();
 
-#Establecemos los márgenes izquierda, arriba y derecha: 
-$pdf->SetMargins(2, 2 , 2); 
+#Establecemos los márgenes izquierda, arriba y derecha:
+$pdf->SetMargins(2, 2 , 2);
 
-#Establecemos el margen inferior: 
-$pdf->SetAutoPageBreak(true,1); 
+#Establecemos el margen inferior:
+$pdf->SetAutoPageBreak(true,1);
 
 
-	
+
 	$pdf->AddPage('L','A4','mm');
 	/***********************************    PRIMER CUADRANTE ******************************************/
-	
-	
+
+
 
 	/***********************************    FIN ******************************************/
 
 	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
 
-	
+
 	$pdf->SetFillColor(183,183,183);
 	$pdf->SetFont('Arial','U',18);
 
@@ -66,7 +66,7 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Cell(50,5,mysql_result($resSocio,0,'nrodocumento'),0,0,'L',false);
 
 	$pdf->Image('../imagenes/logoparainformes.png',5,10,40);
-	
+
 	$pdf->SetFont('Arial','',14);
 	$pdf->SetXY(60,15);
 	$pdf->Cell(120,5,'ASOCIACION INTERCOUNTRY DE FUTBOL ZONA NORTE',0,0,'C',false);
@@ -107,15 +107,15 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->Cell(180,5,'FECHA DE ALTA: '.mysql_result($resSocio,0,'fechaalta'),0,0,'L',false);
-    
+
     $res1 = $serviciosReferencias->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
-    
+
     if ($res1 == 'No se pudo cargar correctamente la imagen') {
         $pdf->Image($urlImg1,210,10,40,54);
     } else {
-        $pdf->Image($res1,210,10,40,54);    
+        $pdf->Image($res1,210,10,40,54);
     }
-	
+
 
 	$res2 = $serviciosReferencias->devolverImagen(($urlImg2), $urlImgType2,'imagenTemp2');
 
@@ -126,11 +126,15 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Image($res3,190,140,70);
 
 
-	$pdf->SetXY(20,150);
+	$pdf->SetXY(20,130);
 	$pdf->Cell(110,5,'Registre en el recuadro la firma a utilizar en la planilla del partido',0,0,'L',false);
 	$pdf->Ln();
-	$pdf->SetXY(20,160);
+	$pdf->SetXY(20,140);
 	$pdf->Cell(110,25,'',1,0,'L',false);
+
+	$pdf->SetFont('Arial','',10);
+	$pdf->SetXY(5,170);
+	$pdf->MultiCell(270,5,'Por la presente me notifico que no podré participar en ningún partido de fútbol de los Torneos que organiza la Asociación Intercountry de Fútbol Zona Norte en caso de encontrarme embarazada, debiendo comunicar ello en forma inmediata a la Asociación. La suscripta asume la exclusiva y total responsabilidad por cualquier evento que acontezca y/o lesión, daño y/o perjuicio que sufra como consecuencia de intervenir en un partido de fútbol',0,'J',false);
 
 
 
@@ -165,4 +169,3 @@ $pdf->Output($nombreTurno,'D');
 
 
 ?>
-

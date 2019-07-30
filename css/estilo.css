@@ -151,7 +151,7 @@ body {
 -moz-border-radius: 7px 7px 0px 0px;
 -webkit-border-radius: 7px 7px 0px 0px;
 margin-right:6px;
-	
+
 }
 
 #separar {
@@ -168,7 +168,7 @@ margin-right:6px;
 	border-right:1px solid #9a9a9a;
 	border-left:1px solid #9a9a9a;
 	border-top:1px solid #9a9a9a;
-	
+
 	border-radius: 7px 7px 0px 0px;
 -moz-border-radius: 7px 7px 0px 0px;
 -webkit-border-radius: 7px 7px 0px 0px;
@@ -185,13 +185,13 @@ margin-right:6px;
 
 .torneoMenu {
 	background-color:#0e9ff6;
-	
+
 }
 
 .torneoMenu a {
 	color:#FFF;
 	text-shadow:1px 1px 1px #727475;
-	
+
 }
 
 .torneoMenu a:hover {
@@ -207,7 +207,7 @@ margin-right:6px;
 	transition-property: all;
 	transition-duration: 0.8s;
 	transition-timing-function: ease;
-	transition-delay: 0.1s; 
+	transition-delay: 0.1s;
 }
 
 .textoTrazoTitulos {
@@ -233,7 +233,7 @@ margin-right:6px;
 	transition-property: all;
 	transition-duration: 0.8s;
 	transition-timing-function: ease;
-	transition-delay: 0.1s; 
+	transition-delay: 0.1s;
 }
 
 
@@ -262,7 +262,7 @@ margin-right:6px;
 	transition-duration: 0.8s;
 	transition-timing-function: ease;
 	transition-delay: 0.1s;
-	 
+
 }
 
 .foncesoE #submenuestadisticas a:hover, .foncesoI #submenuestadisticas a:hover {
@@ -272,7 +272,7 @@ margin-right:6px;
 	transition-duration: 0.8s;
 	transition-timing-function: ease;
 	transition-delay: 0.1s;
-	 
+
 }
 
 .fsieteE #submenuestadisticas a:hover, .fsieteI #submenuestadisticas a:hover {
@@ -282,12 +282,12 @@ margin-right:6px;
 	transition-duration: 0.8s;
 	transition-timing-function: ease;
 	transition-delay: 0.1s;
-	 
+
 }
 
 
 /* fin */
-	
+
 /* slide noticias */
 
 .rslides {
@@ -335,7 +335,7 @@ margin-right:6px;
   color: #fff;
   font-weight: bold;
   }
-  
+
 .callbacks_container {
   margin-bottom: 10px;
   position: relative;
@@ -410,21 +410,21 @@ margin-right:6px;
   background-position: right top;
   right: 0;
   }
-  
-  
-  
-  
-  
-  
- 
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @media screen and (max-width: 600px) {
   h1 {
@@ -455,7 +455,7 @@ margin-right:6px;
 	color:#060;
 	font-family:"Arial Black", Gadget, sans-serif;
 	text-align:center;
-	text-shadow:1px 1px 1px #FFFFFF; 
+	text-shadow:1px 1px 1px #FFFFFF;
 }
 
 /* fin */
@@ -561,7 +561,7 @@ footer {
 }
 
 footer p {
-	
+
 	color:#FFF;
 	text-shadow: 1px 1px #1659C9;
 	font-size:1.2em;
@@ -589,10 +589,3 @@ footer p {
   font-family: "box";
   src: url("../fuentes/CODE_Bold.otf");
 }
-
-
-
-
-
-
-

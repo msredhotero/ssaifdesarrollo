@@ -60,24 +60,24 @@ if (mysql_num_rows($resFotoDocumentoDorso) > 0) {
 
 $pdf = new FPDF();
 
-#Establecemos los márgenes izquierda, arriba y derecha: 
-$pdf->SetMargins(2, 2 , 2); 
+#Establecemos los mï¿½rgenes izquierda, arriba y derecha:
+$pdf->SetMargins(2, 2 , 2);
 
-#Establecemos el margen inferior: 
-$pdf->SetAutoPageBreak(true,1); 
+#Establecemos el margen inferior:
+$pdf->SetAutoPageBreak(true,1);
 
 
-	
+
 	$pdf->AddPage('L','A4','mm');
 	/***********************************    PRIMER CUADRANTE ******************************************/
-	
-	
+
+
 
 	/***********************************    FIN ******************************************/
 
 	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
 
-	
+
 	$pdf->SetFillColor(183,183,183);
 	$pdf->SetFont('Arial','U',18);
 
@@ -85,7 +85,7 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Cell(50,5,mysql_result($resSocio,0,'nrodocumento'),0,0,'L',false);
 
 	$pdf->Image('../imagenes/logoparainformes.png',5,10,40);
-	
+
 	$pdf->SetFont('Arial','',14);
 	$pdf->SetXY(60,15);
 	$pdf->Cell(120,5,'ASOCIACION INTERCOUNTRY DE FUTBOL ZONA NORTE',0,0,'C',false);
@@ -131,10 +131,10 @@ $pdf->SetAutoPageBreak(true,1);
 
 		$res1 = $serviciosReferencias->devolverImagen(($urlImg1), $urlImgType1,'imagenTemp');
 		$pdf->Image($res1,210,10,40,54);
-		
 
-		// El operador !== también puede ser usado. Puesto que != no funcionará como se espera
-		// porque la posición de 'a' es 0. La declaración (0 != false) se evalúa a 
+
+		// El operador !== tambiï¿½n puede ser usado. Puesto que != no funcionarï¿½ como se espera
+		// porque la posiciï¿½n de 'a' es 0. La declaraciï¿½n (0 != false) se evalï¿½a a
 		// false.
 		if ($pos !== false) {
 			//die(var_dump($urlImgType1));
@@ -161,11 +161,15 @@ $pdf->SetAutoPageBreak(true,1);
 		$pdf->Image($res3,190,140,70);
 	}
 
-	$pdf->SetXY(20,150);
+	$pdf->SetXY(20,130);
 	$pdf->Cell(110,5,'Registre en el recuadro la firma a utilizar en la planilla del partido',0,0,'L',false);
 	$pdf->Ln();
-	$pdf->SetXY(20,160);
+	$pdf->SetXY(20,140);
 	$pdf->Cell(110,25,'',1,0,'L',false);
+
+	$pdf->SetFont('Arial','',10);
+	$pdf->SetXY(5,170);
+	$pdf->MultiCell(270,5,'Por la presente me notifico que no podrÃ© participar en ningÃºn partido de fÃºtbol de los Torneos que organiza la AsociaciÃ³n Intercountry de FÃºtbol Zona Norte en caso de encontrarme embarazada, debiendo comunicar ello en forma inmediata a la AsociaciÃ³n. La suscripta asume la exclusiva y total responsabilidad por cualquier evento que acontezca y/o lesiÃ³n, daÃ±o y/o perjuicio que sufra como consecuencia de intervenir en un partido de fÃºtbol',0,'J',false);
 
 
 
@@ -180,14 +184,14 @@ $pdf->Output($nombreTurno,'D');
  //$zip = new ZipArchive();
 // Creamos y abrimos un archivo zip temporal
  //$zip->open("Alta-Jugador.zip",ZipArchive::CREATE);
- // Añadimos un directorio
+ // Aï¿½adimos un directorio
  //$dir = 'miDirectorio';
  //$zip->addEmptyDir($dir);
- // Añadimos un archivo en la raid del zip.
+ // Aï¿½adimos un archivo en la raid del zip.
  //$zip->addFile($nombreTurno);
- //Añadimos un archivo dentro del directorio que hemos creado
+ //Aï¿½adimos un archivo dentro del directorio que hemos creado
  //$zip->addFile("imagen2.jpg",$dir."/mi_imagen2.jpg");
- // Una vez añadido los archivos deseados cerramos el zip.
+ // Una vez aï¿½adido los archivos deseados cerramos el zip.
  //$zip->close();
 
  // Creamos las cabezeras que forzaran la descarga del archivo como archivo zip.
@@ -195,8 +199,7 @@ $pdf->Output($nombreTurno,'D');
  //header("Content-disposition: attachment; filename=Alta-Jugador.zip");
  // leemos el archivo creado
  //readfile('Alta-Jugador.zip');
- // Por último eliminamos el archivo temporal creado
+ // Por ï¿½ltimo eliminamos el archivo temporal creado
  //unlink('Alta-Jugador.zip');//Destruye el archivo temporal
 
 ?>
-
