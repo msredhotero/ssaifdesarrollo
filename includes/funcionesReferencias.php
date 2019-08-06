@@ -2484,7 +2484,8 @@ function traerProximaFechaFiltros($where) {
             pa.imagen,
             pa.imagen2,
             pa.observaciones,
-            fix.linkfacebook
+            fix.linkfacebook,
+            COALESCE((case when es.finalizado = 1 then 'Si' else 'No' end), 'No') as finalizado
         from dbfixture fix
         inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
         inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias

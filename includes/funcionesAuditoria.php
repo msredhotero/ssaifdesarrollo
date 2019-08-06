@@ -113,15 +113,41 @@ class serviciosAuditoria {
       return $res;
    }
 
-   function auditoriaFiltros($idfiltro, $idcountrie, $fechadesde, $fechahasta) {
+   function traerUltimaTemporada() {
+      $sql = "select
+      t.idtemporadas,
+      t.temporada
+      from tbtemporadas t
+      order by 1 desc
+      limit 1";
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   function auditoriaFiltros($idfiltro, $idcountrie, $fechadesde, $fechahasta, $nombrecompleto) {
+
+      $resTemporadas = $this->traerUltimaTemporada();
+
+      if (mysql_num_rows($resTemporadas)>0) {
+          $ultimaTemporada = mysql_result($resTemporadas,0,0);
+      } else {
+          $ultimaTemporada = 0;
+      }
 
       $cadTablas = '';
       $cadHabilitados = 0;
 
       $cadWhere = '';
+      $cadWhereAux = '';
 
       if ($idcountrie != 0) {
          $cadWhere .= ' and j.refcountries = '.$idcountrie;
+      }
+
+      if ($nombrecompleto != '') {
+
+         $cadWhereAux .= " and usuario like '%".$nombrecompleto."%'";
       }
 
       switch ($idfiltro) {
@@ -206,7 +232,7 @@ class serviciosAuditoria {
                   		j.apellido,
                   		j.nombres,
                   		e.idequipo,
-                  		e.nombre as nombreequipo,
+                  		concat(e.nombre,' ',cat.categoria,' ',di.division) as nombreequipo,
                   		max(jh.idjugadorhabilitado) as id
                   	FROM
                   		dbjugadoreshabilitados jh
@@ -214,6 +240,10 @@ class serviciosAuditoria {
                   		dbjugadores j ON j.idjugador = jh.refjugadores
                   			INNER JOIN
                   		dbequipos e ON e.idequipo = jh.refequipos
+                           INNER join
+                      tbcategorias cat ON cat.idtcategoria = e.refcategorias
+                          INNER JOIN
+                      tbdivisiones di ON di.iddivision = e.refdivisiones
                   	WHERE
                   		jh.fecha >= '".$fechadesde."' and jh.fecha <= '".$fechahasta."' ".$cadWhereCountry."
                   	group by j.idjugador,
@@ -221,10 +251,11 @@ class serviciosAuditoria {
                   		j.apellido,
                   		j.nombres,
                   		e.idequipo,
-                  		e.nombre
+                  		e.nombre,cat.categoria,di.division
                   	having count(DISTINCT jh.habilitado) > 1
                       ) r
                       inner join dbjugadoreshabilitados jhc on jhc.idjugadorhabilitado = r.id
+                       ".$cadWhereAux."
                   UNION All
                   SELECT
                   	r.idjugador,
@@ -249,16 +280,21 @@ class serviciosAuditoria {
                               j.apellido,
                               j.nombres,
                               e.idequipo,
-                              e.nombre AS nombreequipo,
+                              concat(e.nombre,' ',cat.categoria,' ',di.division) as nombreequipo,
                               MAX(jh.idjugadorhabilitado) AS id
                       FROM
                           dbjugadoreshabilitados jh
                       INNER JOIN dbjugadores j ON j.idjugador = jh.refjugadores
                       INNER JOIN dbequipos e ON e.idequipo = jh.refequipos
+                      INNER join
+                        tbcategorias cat ON cat.idtcategoria = e.refcategorias
+                      INNER JOIN
+                        tbdivisiones di ON di.iddivision = e.refdivisiones
                       WHERE
                           jh.fecha >= '".$fechadesde."'
                               AND jh.fecha <= '".$fechahasta."' ".$cadWhereCountry."
                       GROUP BY j.idjugador , j.nrodocumento , j.apellido , j.nombres , e.idequipo , e.nombre
+                              ,cat.categoria,di.division
                       HAVING COUNT(DISTINCT jh.habilitado) = 1) r
                           LEFT JOIN
                       (SELECT
@@ -302,7 +338,7 @@ class serviciosAuditoria {
                   	inner
                       join	dbjugadoreshabilitados jhc
                       on		jhc.idjugadorhabilitado = r.id
-                      where	jhc.habilitado <> t.habilitado";
+                      where	jhc.habilitado <> t.habilitado ".$cadWhereAux."";
       } else {
 
 
@@ -323,7 +359,7 @@ class serviciosAuditoria {
                      habilitado AS operacion,
                      1 AS orden,
                      e.idequipo,
-                     e.nombre as nombreequipo,
+                     concat(e.nombre,' ',cat.categoria,' ',di.division) as nombreequipo,
                      0 as id
                   FROM
                       dbjugadoreshabilitados jh
@@ -331,7 +367,11 @@ class serviciosAuditoria {
                       dbjugadores j ON j.idjugador = jh.refjugadores
                           INNER JOIN
                       dbequipos e ON e.idequipo = jh.refequipos
-                      where jh.fecha between '".$fechadesde."' and '".$fechahasta."' ".$cadWhereCountry;
+                         INNER join
+                     tbcategorias cat ON cat.idtcategoria = e.refcategorias
+                         INNER JOIN
+                     tbdivisiones di ON di.iddivision = e.refdivisiones
+                      where jh.fecha >= '".$fechadesde."' and jh.fecha <= '".$fechahasta."' ".$cadWhereCountry.$cadWhereAux;
          } else {
             $sqlHabilitados = '';
          }
@@ -418,12 +458,23 @@ class serviciosAuditoria {
                            AND a.campo <> 'todos refjugadores'
                            ".$cadTablas."
                            AND a.token IS NOT NULL
-                           and a.fecha between '".$fechadesde."' and '".$fechahasta."'
+                           and a.fecha >= '".$fechadesde."' and a.fecha <= '".$fechahasta."' ".$cadWhereAux."
                    GROUP BY a.token , COALESCE(a.valornuevo, a.valorviejo) , a.tabla , a.operacion , a.campo, a.usuario) t
                        INNER JOIN
                    dbjugadores j ON j.idjugador = CAST(t.idjugador AS UNSIGNED) ".$cadWhere."
                     ".$sqlHabilitados." ) r
-            			order by r.fecha desc";
+                      LEFT JOIN
+                      dbconector c ON c.refjugadores = r.idjugador
+                          AND c.activo = 1
+                          AND c.reftemporadas = ".$ultimaTemporada."
+                          LEFT JOIN
+                      dbequipos e ON e.idequipo = c.refequipos
+                          LEFT JOIN
+                      tbcategorias cat ON cat.idtcategoria = e.refcategorias
+                          LEFT JOIN
+                      tbdivisiones di ON di.iddivision = e.refdivisiones
+            			order by r.fecha desc
+                     Limit 200";
 
       }
 

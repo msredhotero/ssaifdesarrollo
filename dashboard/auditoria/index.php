@@ -55,6 +55,8 @@ $cadRefCountries	=	$serviciosFunciones->devolverSelectBox($resCountries,array(1)
 $resJugadores   =   $serviciosReferencias->traerJugadores();
 $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,array(1,2,3,4),' - ');
 
+$resUsuarios	=	$serviciosUsuario->traerUsuariosPorRol(1);
+$cadUsuarios = $serviciosFunciones->devolverSelectBox($resUsuarios,array(5),'');
 ?>
 
 <!DOCTYPE HTML>
@@ -119,7 +121,8 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
-        	<div class="row">
+
+				<div class="row">
             	<div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Tipo Reporte</label>
                     <div class="input-group col-md-12">
@@ -149,7 +152,8 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	</select>
                     </div>
                 </div>
-
+				</div>
+				<div class="row">
                 <div class="form-group col-md-3" id="cat1">
                     <label class="control-label" style="text-align:left" for="refcliente">Categorias</label>
                     <div class="input-group col-md-12">
@@ -185,10 +189,26 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                     	<input type="text" id="reffechahasta1" class="form-control" name="reffechahasta1" value="Date">
                     </div>
                 </div>
+				</div>
 
+				<div class="row">
+
+                <div class="form-group col-md-6">
+						 <label class="control-label" style="text-align:left" for="refcliente">Usuarios</label>
+						 <div class="input-group col-md-12">
+						  <select id="refusuarios" class="form-control" name="refusuarios">
+								<option value="0">-- Seleccione --</option>
+						  		<?php echo $cadUsuarios; ?>
+						  </select>
+						 </div>
+					 </div>
+				</div>
+				<div class="row">
 
                 <div class="form-group col-md-12" style="height:30px;">* Se aplicaran filtros a las busquedas</div>
+				</div>
 
+				<div class="row">
                 <div class="form-group col-md-6">
                     <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
 
@@ -199,15 +219,16 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
                         </ul>
                 </div>
+				</div>
 
-					 <div class="row">
-						 <div class="form-group col-md-12 lstMovimientos">
+				 <div class="row">
+					 <div class="form-group col-md-12 lstMovimientos">
 
-						 </div>
-					 </div><!-- fin del contenedor detalle -->
+					 </div>
+				 </div><!-- fin del contenedor detalle -->
 
 
-            </div>
+
 
 
             <div class='row' style="margin-left:25px; margin-right:25px;">
@@ -258,16 +279,17 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 $(document).ready(function(){
 
 	$('#rptRP').click(function() {
-		auditoriaFiltros($('#tiporeporte').val(), $('#reffechadesde1').val(), $('#reffechahasta1').val(), $('#refcountries1').val());
+		auditoriaFiltros($('#tiporeporte').val(), $('#reffechadesde1').val(), $('#reffechahasta1').val(), $('#refcountries1').val(), $('#refusuarios').val());
 	});
 
-	function auditoriaFiltros(tiporeporte, fechadesde, fechahasta, refcountries1) {
+	function auditoriaFiltros(tiporeporte, fechadesde, fechahasta, refcountries1, refusuarios) {
 		$.ajax({
 			data:  { tiporeporte: tiporeporte,
 						accion: 'auditoriaFiltros',
 						fechadesde: fechadesde,
 						fechahasta: fechahasta,
-						refcountries1: refcountries1
+						refcountries1: refcountries1,
+						refusuarios: refusuarios
 					},
 			url:   '../../ajax/ajax.php',
 			type:  'post',

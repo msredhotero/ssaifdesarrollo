@@ -660,17 +660,26 @@ case 'traerDetalleAuditoria':
    traerDetalleAuditoria($serviciosReferencias);
 break;
 case 'auditoriaFiltros':
-   auditoriaFiltros($serviciosAuditoria);
+   auditoriaFiltros($serviciosAuditoria, $serviciosUsuarios);
 break;
 /**  fin excepciones */
 }
 
-function auditoriaFiltros($serviciosAuditoria) {
+function auditoriaFiltros($serviciosAuditoria, $serviciosUsuarios) {
    $idfiltro = $_POST['tiporeporte'];
    $fechadesde = $_POST['fechadesde'];
    $fechahasta = $_POST['fechahasta'];
    $idcountrie = $_POST['refcountries1'];
-   $res = $serviciosAuditoria->auditoriaFiltros($idfiltro, $idcountrie, $fechadesde, $fechahasta);
+   $refusuario = $_POST['refusuarios'];
+
+   $nombrecompleto = '';
+
+   if ($refusuario != 0) {
+      $resUsuario = $serviciosUsuarios->traerUsuarioId($refusuario);
+      $nombrecompleto = mysql_result($resUsuario,0,'nombrecompleto');
+   }
+
+   $res = $serviciosAuditoria->auditoriaFiltros($idfiltro, $idcountrie, $fechadesde, $fechahasta,$nombrecompleto);
 
    $resV['estado'] = false;
    $ar = array();
@@ -1646,7 +1655,15 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
    $cadComplemento = '';
    $cadInforme = '';
 
+   $lblFinalizo = '';
+
 	while ($row = mysql_fetch_array($resProximasFechas)) {
+
+      if ($row['finalizado'] == 'Si') {
+         $lblFinalizo = "style='background-color: #5cb85c;'";
+      } else {
+         $lblFinalizo = "style='background-color: #d9534f;'";
+      }
 		if (($categorias != $row['categoria']) || ($fecha != $row['fecha'])) {
 
 			if ($primero != 0) {
@@ -1711,8 +1728,8 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
       }
 
 		$cadCabecera .= "<tr>
-							<td>".$row['equipoLocal']."</td>
-							<td>".$row['equipoVisitante']."</td>
+							<td><span ".$lblFinalizo.">".$row['equipoLocal']."</span></td>
+							<td><span ".$lblFinalizo.">".$row['equipoVisitante']."</span></td>
 							<td><input style='width:110px;' class='form-control fecha' type='text' name='fecha".$row['idfixture']."' id='fecha".$row['idfixture']."' value='".$dateH->format('d-m-Y')."'/></td>
 							<td><input style='width:65px;' class='form-control hora' type='text' name='hora".$row['idfixture']."' id='hora".$row['idfixture']."' value='".$row['hora']."'/></td>
 							<td>".$row['division']."</td>
