@@ -253,7 +253,10 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	<ul class="list-inline">
                         	<li>
                     			<button type="button" class="btn btn-primary" id="filtros" style="margin-left:0px;">Buscar</button>
-                            </li>
+                           </li>
+									<li>
+                    			<button type="button" class="btn btn-warning" id="reporte" style="margin-left:0px;">Generar Reporte</button>
+                           </li>
 
                         </ul>
 

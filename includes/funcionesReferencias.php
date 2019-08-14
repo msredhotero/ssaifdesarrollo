@@ -10162,7 +10162,9 @@ coalesce(cl.nombre,'') as contactoLocal,
 coalesce(cv.nombre,'') as contactoVisitante,
 date_format(f.fecha,'%Y-%m-%d') as fechapartidocomun,
 coalesce(cl.telefono,'') as telefonoLocal,
-date_format(f.fecha,'%W %d/%m/%Y') as fechapartidonueva
+date_format(f.fecha,'%W %d/%m/%Y') as fechapartidonueva,
+tor.refcategorias,
+tor.refdivisiones
 from dbfixture f
 inner join dbtorneos tor ON tor.idtorneo = f.reftorneos
 inner join tbtipotorneo ti ON ti.idtipotorneo = tor.reftipotorneo
@@ -13984,7 +13986,8 @@ sum(r.encontra) as encontra,
 max(r.aei) as aei,
 sum(r.pc) as pc,
 sum(r.pa) as pa,
-sum(r.pe) as pe
+sum(r.pe) as pe,
+max(r.dorsal) as dorsal
 from (
 select
     concat(jug.apellido, ', ', jug.nombres) as apyn,
@@ -13999,7 +14002,8 @@ select
     0 as aei,
     0 as pc,
     0 as pa,
-    0 as pe
+    0 as pe,
+    0 as dorsal
     from dbgoleadores p
     inner join dbjugadores jug ON jug.idjugador = p.refjugadores
     inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
@@ -14029,7 +14033,8 @@ select
     0 as aei,
     p.penalconvertido as pc,
     p.penalatajado as pa,
-    p.penalerrado as pe
+    p.penalerrado as pe,
+    0 as dorsal
     from dbpenalesjugadores p
     inner join dbjugadores jug ON jug.idjugador = p.refjugadores
     inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
@@ -14063,7 +14068,8 @@ select
             when p.reftiposanciones = 4 then 'AA' end) as aei,
     0 as pc,
     0 as pa,
-    0 as pe
+    0 as pe,
+    0 as dorsal
     from dbsancionesjugadores p
     inner join dbjugadores jug ON jug.idjugador = p.refjugadores
     inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
@@ -14077,6 +14083,37 @@ select
     inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
     inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
     where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.reftiposanciones in (1,2,3,4) and p.cantidad >0
+
+    union all
+
+    select
+    concat(jug.apellido, ', ', jug.nombres) as apyn,
+    jug.nrodocumento,
+    p.refjugadores,
+    p.reffixture,
+    p.refequipos,
+    p.refcategorias,
+    p.refdivisiones,
+    0 as goles,
+    0 as encontra,
+    0 as aei,
+    0 as pc,
+    0 as pa,
+    0 as pe,
+    p.numero as dorsal
+    from dbdorsales p
+    inner join dbjugadores jug ON jug.idjugador = p.refjugadores
+    inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+    inner join dbcountries co ON co.idcountrie = jug.refcountries
+    inner join dbfixture fix ON fix.idfixture = p.reffixture
+    inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
+    inner join tbfechas fe ON fe.idfecha = fix.reffechas
+    left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+    inner join dbequipos equ ON equ.idequipo = p.refequipos
+    inner join dbcountries cou ON cou.idcountrie = equ.refcountries
+    inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
+    inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
+    where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.numero >0
 ) as r
 group by r.apyn,
 r.nrodocumento,
@@ -14104,7 +14141,8 @@ sum(r.encontra) as encontra,
 max(r.aei) as aei,
 sum(r.pc) as pc,
 sum(r.pa) as pa,
-sum(r.pe) as pe
+sum(r.pe) as pe,
+max(r.dorsal) as dorsal
 from (
 select
     concat(jug.apellido, ', ', jug.nombres) as apyn,
@@ -14119,7 +14157,8 @@ select
     0 as aei,
     0 as pc,
     0 as pa,
-    0 as pe
+    0 as pe,
+    0 as dorsal
     from dbgoleadores p
     inner join dbjugadores jug ON jug.idjugador = p.refjugadores
     inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
@@ -14149,7 +14188,8 @@ select
     0 as aei,
     p.penalconvertido as pc,
     p.penalatajado as pa,
-    p.penalerrado as pe
+    p.penalerrado as pe,
+    0 as dorsal
     from dbpenalesjugadores p
     inner join dbjugadores jug ON jug.idjugador = p.refjugadores
     inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
@@ -14183,7 +14223,8 @@ select
             when p.reftiposanciones = 4 then 'AA' end) as aei,
     0 as pc,
     0 as pa,
-    0 as pe
+    0 as pe,
+    0 as dorsal
     from dbsancionesjugadores p
     inner join dbjugadores jug ON jug.idjugador = p.refjugadores
     inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
@@ -14197,6 +14238,38 @@ select
     inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
     inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
     where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.reftiposanciones in (1,2,3,4) and p.cantidad >0
+
+
+    union all
+
+    select
+    concat(jug.apellido, ', ', jug.nombres) as apyn,
+    jug.nrodocumento,
+    p.refjugadores,
+    p.reffixture,
+    p.refequipos,
+    p.refcategorias,
+    p.refdivisiones,
+    0 as goles,
+    0 as encontra,
+    0 as aei,
+    0 as pc,
+    0 as pa,
+    0 as pe,
+    p.numero as dorsal
+    from dbdorsales p
+    inner join dbjugadores jug ON jug.idjugador = p.refjugadores
+    inner join tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+    inner join dbcountries co ON co.idcountrie = jug.refcountries
+    inner join dbfixture fix ON fix.idfixture = p.reffixture
+    inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos
+    inner join tbfechas fe ON fe.idfecha = fix.reffechas
+    left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+    inner join dbequipos equ ON equ.idequipo = p.refequipos
+    inner join dbcountries cou ON cou.idcountrie = equ.refcountries
+    inner join tbcategorias cat ON cat.idtcategoria = p.refcategorias
+    inner join tbdivisiones divi ON divi.iddivision = p.refdivisiones
+    where p.reffixture =".$idFixture." and p.refequipos =".$idEquipo." and p.numero >0
 ) as r
 group by r.apyn,
 r.nrodocumento,

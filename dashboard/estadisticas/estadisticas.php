@@ -121,8 +121,8 @@ $cabeceras2 		= "<th>Nombre</th>
 
 
 
-$resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoLocal, $idCategoria);
-$resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategorias($equipoVisitante, $idCategoria);
+$resJugadoresA = $serviciosReferencias->traerConectorActivosPorEquiposCategoriasExcepciones($equipoLocal, $idCategoria);
+$resJugadoresB = $serviciosReferencias->traerConectorActivosPorEquiposCategoriasExcepciones($equipoVisitante, $idCategoria);
 
 $resDetalleIncidenciasLocal = $serviciosReferencias->traerSancionesjugadoresPorFixtureEquipoTotales($idFixture,$equipoLocal);
 $resDetalleIncidenciasVisit = $serviciosReferencias->traerSancionesjugadoresPorFixtureEquipoTotales($idFixture,$equipoVisitante);

@@ -12,25 +12,32 @@ $serviciosFunciones 		= new Servicios();
 $serviciosHTML				= new ServiciosHTML();
 $serviciosReferencias		= new ServiciosReferencias();
 
-$sql2 = "select u.email, u.password, u.usuario, u.idusuario
-         from     dbusuarios u
-         inner
-         join     dbarbitros a
-         on       u.idusuario = a.refusuarios
-         where u.refroles = 3";
+$sql = "SELECT
+    (case when u.idusuario = 1504 then 'brownjavier@hotmail.com'
+		 when u.idusuario = 1503 then 'javierbrown@aif.org.ar'
+         when u.idusuario = 1408 then 'msredhotero@msn.com'
+         else u.email end) as email,
+    u.password, u.usuario, u.idusuario
+FROM
+    dbusuarios u
+        INNER JOIN
+    dbarbitros a ON u.idusuario = a.refusuarios
+WHERE
+    u.refroles = 3 and u.idusuario in (1504,1503,1408)";
 
-$sql = "select 'msredhotero@gmail.com' as email, 'ñunko' as password, 'marcos daniel' as usuario, 1800 as idusuario";
+$sql2 = "select 'msredhotero@yahoo.com.ar' as email, 'ñunko' as password, 'marcos daniel' as usuario, 1800 as idusuario";
 
 $res = $serviciosReferencias->query($sql,0);
 
-$asunto = "Confirmar Usuario AIFZN: ";
+$asunto = "AIFZN - Usuario para la carga de partidos: ";
 
 
 
 while ($row = mysql_fetch_array($res)) {
-   $cuerpo = "<h3>Debera hacer click en el enlace en el password que le enviamos para activar su usuario</h3>
-               <h4>Password: <a href='https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/activararbitro.php?id=".$row['idusuario']."'>".$row['password']."</a></h4>";
-   $serviciosReferencias->enviarEmail($row['email'],$asunto.$row['usuario'],$cuerpo, $referencia='');
+   $cuerpo = "<h3>Ya puede acceder al sistema de carga de partidos nuevo de la AIFZN</h3>
+               <h4>Password: ".utf8_decode($row['password'])."</h4>
+               <h4>Acceda desde <a href='https://saupureinconsulting.com.ar/aifzncountries/index.html'>Aqui</a></h4>";
+   $serviciosReferencias->enviarEmail($row['email'],$asunto.utf8_decode($row['usuario']),$cuerpo, $referencia='');
 }
 
 
