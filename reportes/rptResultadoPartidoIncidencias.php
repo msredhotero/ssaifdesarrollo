@@ -112,6 +112,7 @@ $pdf->SetAutoPageBreak(true,1);
 	$torneoA = 0;
 	$categoriaA = 0;
 	$divisionA = 0;
+	$fixture = 0;
 
 	$pdf->Ln();
 	$pdf->Ln();
@@ -120,7 +121,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$i=0;
 	$cantPartidos += 1;
 
-	if (($fechasA != $rowE['reffechas']) || ($torneoA != $rowE['reftorneos']) || ($categoriaA != $rowE['refcategorias']) || ($divisionA != $rowE['refdivisiones'])) {
+	if (($fechasA != $rowE['reffechas']) || ($torneoA != $rowE['reftorneos']) || ($categoriaA != $rowE['refcategorias']) || ($divisionA != $rowE['refdivisiones']) || ($fixture != $rowE['idfixture'])) {
 
 		if ($primero == 1) {
 			$pdf->AddPage();
@@ -137,6 +138,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 			$pdf->Ln();
 			$pdf->SetY(25);
 		}
+		//$pdf->AddPage();
 
 		$fechasA = $rowE['reffechas'];
 		$torneoA = $rowE['reftorneos'];
@@ -216,7 +218,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 	$pdf->SetFillColor(155,155,155);
 	$pdf->Ln();
 	$pdf->SetX(5);
-	$pdf->Cell(25,4,$cantPartidos,1,0,'C',true);
+	$pdf->Cell(25,4,$rowE['idfixture'],1,0,'C',true);
 	$pdf->Cell(79,4,'('.$rowE['refconectorlocal'].") ".$rowE['equipolocal'],1,0,'R',true);
 	$pdf->Cell(8,4,$rowE['goleslocal'],1,0,'C',true);
 	$pdf->Cell(8,4,$rowE['golesvisitantes'],1,0,'C',true);
@@ -266,7 +268,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 
 		$pdf->Cell(15,4,$rowJ['nrodocumento'],0,0,'C',false);
 		$pdf->SetFont('Arial','',7);
-		$pdf->Cell(40,4,substr($rowJ['apyn'],0,20),0,0,'L',false);
+		$pdf->Cell(40,4,'('.$rowJ['dorsal'].') '.substr(utf8_encode($rowJ['apyn']),0,20),0,0,'L',false);
 		$pdf->SetFont('Arial','',8);
 		$pdf->Cell(6,4,$rowJ['goles'],0,0,'C',false);
 		$pdf->Cell(6,4,$rowJ['encontra'],0,0,'C',false);
@@ -277,6 +279,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 
 
 		$contadorY1 += 4;
+
 
 	}
 
@@ -298,7 +301,7 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 
 		$pdf->Cell(15,4,$rowV['nrodocumento'],0,0,'C',false);
 		$pdf->SetFont('Arial','',7);
-		$pdf->Cell(40,4,substr($rowV['apyn'],0,20),0,0,'L',false);
+		$pdf->Cell(40,4,'('.$rowV['dorsal'].') '.substr(utf8_encode($rowV['apyn']),0,20),0,0,'L',false);
 		$pdf->SetFont('Arial','',8);
 		$pdf->Cell(6,4,$rowV['goles'],0,0,'C',false);
 		$pdf->Cell(6,4,$rowV['encontra'],0,0,'C',false);
@@ -313,14 +316,61 @@ while ($rowE = mysql_fetch_array($resEquipos)) {
 		}
 	}
 
+	$resCambios = $serviciosReferencias->traerFormacionCambiosPorFixtureDetalle($rowE['idfixture']);
 
-
-
+	$contadorCambios = 0;
+	$contadorCambiosAux = 0;
 	if ($contadorY1 > $contadorY2) {
 		$pdf->SetY($contadorY1);
+		$contadorCambios = $contadorY1;
+		$contadorCambiosAux = $contadorY1;
 	} else {
 		$pdf->SetY($contadorY2);
+		$contadorCambios = $contadorY2;
+		$contadorCambiosAux = $contadorY2;
 	}
+
+	$pdf->Ln();
+	$pdf->SetX(5);
+	$pdf->Cell(45,4,'Sale',1,0,'C',false);
+	$pdf->Cell(45,4,'Entra',1,0,'C',false);
+	$pdf->SetX(107);
+	$pdf->Cell(45,4,'Sale',1,0,'C',false);
+	$pdf->Cell(45,4,'Entra',1,0,'C',false);
+	$contadorCambios += 4;
+	$contadorCambiosAux += 4;
+
+	while ($rowC = mysql_fetch_array($resCambios)) {
+
+		if ($rowC['orden'] == 1) {
+			$pdf->Ln();
+			$pdf->SetX(5);
+			$pdf->Cell(45,4,'('.$rowC['numerosale'].') '.substr(utf8_encode($rowC['apynsale']),0,20),0,0,'L',false);
+			$pdf->Cell(45,4,'('.$rowC['numeroentra'].') '.substr(utf8_encode($rowC['apynentra']),0,20),0,0,'L',false);
+			$contadorCambios += 4;
+		}
+
+		if ($rowC['orden'] == 2) {
+			$pdf->Ln();
+			$pdf->SetY($contadorCambiosAux + 4);
+			$pdf->SetX(107);
+			$pdf->Cell(45,4,'('.$rowC['numerosale'].') '.substr(utf8_encode($rowC['apynsale']),0,20),0,0,'L',false);
+			$pdf->Cell(45,4,'('.$rowC['numeroentra'].') '.substr(utf8_encode($rowC['apynentra']),0,20),0,0,'L',false);
+
+			$contadorCambiosAux += 4;
+		}
+
+	}
+
+	if ($contadorCambios > $contadorCambiosAux) {
+		$pdf->SetY($contadorCambios);
+	} else {
+		$pdf->SetY($contadorCambiosAux);
+	}
+
+
+
+
 
 }
 //120 x 109

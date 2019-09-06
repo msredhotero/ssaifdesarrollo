@@ -312,7 +312,7 @@ class serviciosDelegados {
 						 ".$idtemporada."
 					FROM dbconectordelegados where reftemporadas = ".$idtemporada." and refjugadorespre = ".$id;
 
-		$res = $this->query($sql,0);
+		$res = $this->query($sql,1);
 		return $res;
 	}
 
@@ -329,7 +329,8 @@ class serviciosDelegados {
 						 j.nrodocumento
 					FROM dbconectordelegados c
 					inner join dbjugadorespre j on j.idjugadorpre = c.refjugadorespre
-					where c.reftemporadas = ".$idtemporada." and c.refequipos = ".$id." and c.refjugadorespre > 0";
+					where c.reftemporadas = ".$idtemporada." and c.refequipos = ".$id." and c.refjugadorespre > 0 
+					order by c.refjugadorespre";
 
 		$res = $this->query($sql,0);
 		return $res;

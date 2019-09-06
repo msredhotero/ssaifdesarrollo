@@ -324,7 +324,13 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 
-
+	$('#reporte').click(function() {
+		if (($("#reftemporada1").val() != 0)) {
+			window.open("../../reportes/rptResultadoPartidoIncidencias.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + "&reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');
+		} else {
+			alert('Debe seleccionar una Temporada');
+		}
+	});
 
 	$("#proxima").on("click",'.btnPlanilla', function(){
 		idBtn = $(this).attr("id");
