@@ -1233,8 +1233,8 @@ $(document).ready(function(){
 	});
 	<?php
 		if (mysql_num_rows($resFoto)>0) {
-		$urlImg = "./../../data/".mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
-		$direc = "./../../data/".mysql_result($resFoto,0,0);
+		$urlImg = $_SERVER['DOCUMENT_ROOT'].'/ssaifdesarrolloPendientes.git/trunk/data/'.mysql_result($resFoto,0,0)."/".mysql_result($resFoto,0,'imagen');
+		$direc = $_SERVER['DOCUMENT_ROOT'].'/ssaifdesarrolloPendientes.git/trunk/data/'.mysql_result($resFoto,0,0);
 	?>
 	function rotarImagenIzquierda() {
 
@@ -1249,8 +1249,8 @@ $(document).ready(function(){
 
 			},
 			success:  function (response) {
-					url = "modificar.php?id=<?php echo $id; ?>";
-					$(location).attr('href',url);
+					//url = "documentaciones.php?id=<?php echo $id; ?>";
+					//$(location).attr('href',url);
 
 			}
 		});

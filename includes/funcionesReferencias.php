@@ -9,6 +9,127 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   function traerFixtureWebFiltros($idtemporada,$idcategoria, $iddivision, $idtorneo) {
+
+       $ultimaTemporada = $idtemporada;
+
+       $sql = "select
+
+               fix.idfixture,
+               cat.categoria,
+               di.division,
+               tor.descripcion as torneo,
+               (select el.nombre from dbequipos el where el.idequipo = fix.refconectorlocal) as equipoLocal,
+               (select el.nombre from dbequipos el where el.idequipo = fix.refconectorvisitante) as equipoVisitante,
+               cc.nombre,
+               dia.dia,
+               fix.hora,
+               cc.nombre as cancha,
+               f.fecha,
+               fix.fecha as fechajuego,
+               f.idfecha,
+               coalesce(arr.idarbitro,0) as idarbitro,
+               coalesce(arr.nombrecompleto,'') as arbitro,
+               cc.idcancha,
+               fix.goleslocal,
+               fix.golesvisitantes
+           from dbfixture fix
+           inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos ".$idtorneo.$idcategoria.$iddivision."
+           inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+           inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+           inner join tbfechas fe ON fe.idfecha = fix.reffechas
+           left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+           left join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+           left join tbcanchas cc ON cc.idcancha = fix.refcanchas
+           inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
+           inner join tbdias dia ON dia.iddia = dct.refdias
+           left join dbarbitros arr ON arr.idarbitro = fix.refarbitros
+           inner join tbfechas f ON f.idfecha = fix.reffechas
+
+           where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
+           order by tor.refcategorias, tor.refdivisiones, f.idfecha,tor.idtorneo
+           ";
+
+
+       $res = $this->query($sql,0);
+       return $res;
+   }
+
+
+   function traerProximaFechaTodosFiltros($idcategoria, $iddivision, $idtorneo) {
+
+       $resTemporadas = $this->traerUltimaTemporada();
+
+       if (mysql_num_rows($resTemporadas)>0) {
+           $ultimaTemporada = mysql_result($resTemporadas,0,0);
+       } else {
+           $ultimaTemporada = 0;
+       }
+
+       $sql = "select
+
+               fix.idfixture,
+               cat.categoria,
+               di.division,
+               tor.descripcion as torneo,
+               (select el.nombre from dbequipos el where el.idequipo = fix.refconectorlocal) as equipoLocal,
+               (select el.nombre from dbequipos el where el.idequipo = fix.refconectorvisitante) as equipoVisitante,
+               cc.nombre,
+               dia.dia,
+               fix.hora,
+               cc.nombre as cancha,
+               f.fecha,
+               fix.fecha as fechajuego,
+               f.idfecha,
+               coalesce(arr.idarbitro,0) as idarbitro,
+               coalesce(arr.nombrecompleto,'') as arbitro,
+               cc.idcancha
+           from dbfixture fix
+           inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos ".$idtorneo.$idcategoria.$iddivision."
+           inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+           inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+           inner join tbfechas fe ON fe.idfecha = fix.reffechas
+           left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+           left join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+           left join tbcanchas cc ON cc.idcancha = fix.refcanchas
+           inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
+           inner join tbdias dia ON dia.iddia = dct.refdias
+           left join dbarbitros arr ON arr.idarbitro = fix.refarbitros
+           inner join tbfechas f ON f.idfecha = fix.reffechas
+
+           inner join (select
+
+                   cat.idtcategoria,
+                   di.iddivision,
+                   tor.idtorneo,
+                   min(f.idfecha) as idfecha
+                   from dbfixture fix
+                   inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos ".$idtorneo.$idcategoria.$iddivision."
+                   inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
+                   inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
+                   inner join tbfechas fe ON fe.idfecha = fix.reffechas
+                   left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
+                   inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
+                   left join tbcanchas cc ON cc.idcancha = fix.refcanchas
+                   inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
+                   inner join tbdias dia ON dia.iddia = dct.refdias
+                   inner join tbfechas f ON f.idfecha = fix.reffechas
+                   where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha > now()
+                   group by cat.idtcategoria, di.iddivision, tor.idtorneo) sig
+                   ON sig.idtcategoria = tor.refcategorias
+                       and sig.iddivision = tor.refdivisiones
+                       and sig.idtorneo = tor.idtorneo
+                       and sig.idfecha = fix.reffechas
+
+           where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha > now()
+           order by tor.refcategorias, tor.refdivisiones, f.idfecha
+           ";
+
+
+       $res = $this->query($sql,0);
+       return $res;
+   }
+
    function traerPlanillasarbitrosPorFixtureArbitro($id) {
       $sql = "select
       p.idplanillaarbitro,
@@ -2457,6 +2578,7 @@ function traerProximaFechaTodos() {
 }
 
 
+
 function traerProximaFechaFiltros($where) {
 
     $sql = "select
@@ -4035,6 +4157,7 @@ function existeDevuelveId($sql) {
     function rotarImagen($imagen, $direccion, $directorio) {
 
         //imagecreatefrompng
+        ini_set ('gd.jpeg_ignore_warning', 1);
 
         $mystring = strtolower($imagen);
         $findme   = 'jpg';
@@ -4050,10 +4173,12 @@ function existeDevuelveId($sql) {
         // false.
         if (($pos !== false) || ($pos2 !== false)) {
 
+           //die(var_dump($directorio));
+
             //Imagen inicial horizontal
             $image = $imagen;
             //Destino de la nueva imagen vertical
-            $image_rotate = $directorio.'/imagen_rotate.jpg';
+            $image_rotate = "./../../data/3658".'/imagen_rotate.jpg';
 
             //Definimos los grados de rotacion
             $degrees = $direccion;
@@ -4061,12 +4186,14 @@ function existeDevuelveId($sql) {
             //Creamos una nueva imagen a partir del fichero inicial
             $source = imagecreatefromjpeg($image);
 
+
             //Rotamos la imagen 90 grados
             $rotate = imagerotate($source, $degrees, 0);
 
             //Creamos el archivo jpg vertical
             imagejpeg($rotate, $image_rotate);
         } else {
+           //die(print_r('asd2'));
             //Imagen inicial horizontal
             $image = $imagen;
             //Destino de la nueva imagen vertical
@@ -4086,7 +4213,7 @@ function existeDevuelveId($sql) {
         }
 
         //borro la imagen anterior
-        unlink("./../".$imagen);
+        unlink("./../../data/3658/".$imagen);
 
         //lo renombro al archivos
         rename ($image_rotate, $imagen);

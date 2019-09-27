@@ -1517,11 +1517,13 @@ function formatearFechas($fecha) {
 		if (checkdate($arFecha[1],$arFecha[0],$arFecha[2])) {
 			return $nuevaFecha;
 		} else {
+			
 			return '***';
 		}
 	}
 	return $fecha;
 }
+
 
 function formatearEntero($entero) {
 	if ($entero == '') {
@@ -2733,7 +2735,7 @@ function modificarFixture($serviciosReferencias) {
 		$publicar = 0;
 	}
 
-	if ($fecha == '***') {
+	if ($fecha != '***') {
 		$res = $serviciosReferencias->modificarFixture($id,$reftorneos,$reffechas,$refconectorlocal,$refconectorvisitante,$refarbitros,$juez1,$juez2,$refcanchas,$fecha,$hora,$refestadospartidos,$calificacioncancha,$puntoslocal,$puntosvisita,$goleslocal,$golesvisitantes,$observaciones,$publicar);
 
 		if ($res == true) {
