@@ -58,6 +58,16 @@ class ServiciosReferencias {
 
    function traerProximaFechaTodosFiltros($idcategoria, $iddivision, $idtorneo) {
 
+      $resVigencias = $this->traerVigenciasoperacionesPorModulo(3);
+
+      if (mysql_num_rows($resVigencias)>0) {
+         $desde = mysql_result($resVigencias,0,'vigenciadesde');
+         $hasta = mysql_result($resVigencias,0,'vigenciahasta');
+      } else {
+         $desde = date("Y-m-d",strtotime(date('Y-m-d')."- 1 days"));
+         $hasta = date('Y-m-d');
+      }
+
        $resTemporadas = $this->traerUltimaTemporada();
 
        if (mysql_num_rows($resTemporadas)>0) {
@@ -97,31 +107,7 @@ class ServiciosReferencias {
            left join dbarbitros arr ON arr.idarbitro = fix.refarbitros
            inner join tbfechas f ON f.idfecha = fix.reffechas
 
-           inner join (select
-
-                   cat.idtcategoria,
-                   di.iddivision,
-                   tor.idtorneo,
-                   min(f.idfecha) as idfecha
-                   from dbfixture fix
-                   inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos ".$idtorneo.$idcategoria.$iddivision."
-                   inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
-                   inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
-                   inner join tbfechas fe ON fe.idfecha = fix.reffechas
-                   left join tbestadospartidos es ON es.idestadopartido = fix.refestadospartidos
-                   inner join dbequipos equ ON equ.idequipo = fix.refconectorlocal
-                   left join tbcanchas cc ON cc.idcancha = fix.refcanchas
-                   inner join dbdefinicionescategoriastemporadas dct ON dct.refcategorias = tor.refcategorias and dct.reftemporadas = tor.reftemporadas
-                   inner join tbdias dia ON dia.iddia = dct.refdias
-                   inner join tbfechas f ON f.idfecha = fix.reffechas
-                   where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha > now()
-                   group by cat.idtcategoria, di.iddivision, tor.idtorneo) sig
-                   ON sig.idtcategoria = tor.refcategorias
-                       and sig.iddivision = tor.refdivisiones
-                       and sig.idtorneo = tor.idtorneo
-                       and sig.idfecha = fix.reffechas
-
-           where fix.refestadospartidos is null and tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha > now()
+           where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha >= '".$desde."' and fix.fecha <= '".$hasta."'
            order by tor.refcategorias, tor.refdivisiones, f.idfecha
            ";
 
@@ -15280,6 +15266,13 @@ return $res;
 
 function traerVigenciasoperacionesPorModuloVigencias($idModulo, $fecha) {
 $sql = "select idvigenciaoperacion,refmodulos,vigenciadesde,vigenciahasta,observaciones from dbvigenciasoperaciones where refmodulos =".$idModulo." and (('".$fecha."' between vigenciadesde and vigenciahasta) or ('".$fecha."' >= vigenciadesde and vigenciahasta is null))";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerVigenciasoperacionesPorModulo($idModulo) {
+$sql = "select idvigenciaoperacion,refmodulos,vigenciadesde,vigenciahasta,observaciones from dbvigenciasoperaciones where refmodulos =".$idModulo." order by 1 desc limit 1";
 $res = $this->query($sql,0);
 return $res;
 }

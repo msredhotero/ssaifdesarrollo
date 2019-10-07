@@ -662,7 +662,20 @@ break;
 case 'auditoriaFiltros':
    auditoriaFiltros($serviciosAuditoria, $serviciosUsuarios);
 break;
+
+case 'cargarProximaFecha':
+   cargarProximaFecha($serviciosReferencias);
+   break;
 /**  fin excepciones */
+}
+
+function cargarProximaFecha($serviciosReferencias) {
+   $desde = $_POST['desde'];
+   $hasta = $_POST['hasta'];
+
+   $res = $serviciosReferencias->insertarVigenciasoperaciones(3,$desde,$hasta,'');
+
+	echo '';
 }
 
 function auditoriaFiltros($serviciosAuditoria, $serviciosUsuarios) {
@@ -1517,7 +1530,7 @@ function formatearFechas($fecha) {
 		if (checkdate($arFecha[1],$arFecha[0],$arFecha[2])) {
 			return $nuevaFecha;
 		} else {
-			
+
 			return '***';
 		}
 	}
