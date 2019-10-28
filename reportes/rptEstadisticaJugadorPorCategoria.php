@@ -194,6 +194,22 @@ if (($_GET['filtromejorjugador'] != 0) && (isset($_GET['filtromejorjugadorvalor'
 	}
 }
 
+if (isset($_GET['reffechadesde1'])) {
+	$fechaDesde = $_GET['reffechadesde1'];
+} else {
+	$fechaDesde = '';
+}
+
+if (isset($_GET['reffechahasta1'])) {
+	$fechaHasta = $_GET['reffechahasta1'];
+} else {
+	$fechaHasta = '';
+}
+
+if (($fechaDesde != '') && ($fechaHasta != '')) {
+	$where .= " and (fix.fecha >= '".$fechaDesde."' and fix.fecha <= '".$fechaHasta."') ";
+}
+
 
 /////////////////////////////  fin parametross  ///////////////////////////
 
@@ -214,7 +230,7 @@ $objPHPExcel->getProperties()
 ->setDescription("Documento Excel Estadisticas Jugadores Por Categorias.")
 ->setKeywords("Excel Office 2007 openxml php")
 ->setCategory("Excel");
- 
+
 $tituloReporte = "Estadisticas Jugadores Por Categorias";
 $tituloReporte2 = "Fecha: ".date('Y-m-d');
 $titulosColumnas = array("Categoria","Division","Club","Nro.Doc.","Jugador", "Equipos", "Fecha Alta","Fecha Nac.", "Edad", "Goles a Favor", "Amonestaciones", "Expulsiones", "Mejor Jugador", "Partidos Jugados", "Minutos Jugados");
@@ -224,13 +240,13 @@ $objPHPExcel->setActiveSheetIndex(0)
 $objPHPExcel->setActiveSheetIndex(0)
     ->mergeCells('A2:O2');
 
-	
-	 
+
+
 // Se agregan los titulos del reporte
 $objPHPExcel->setActiveSheetIndex(0)
     ->setCellValue('A1', htmlspecialchars(utf8_encode($tituloReporte))) // Titulo del reporte
 	->setCellValue('A2', utf8_encode($tituloReporte2))
-	
+
     ->setCellValue('A3',  utf8_encode($titulosColumnas[0]))  //Titulo de las columnas
     ->setCellValue('B3',  utf8_encode($titulosColumnas[1]))
     ->setCellValue('C3',  utf8_encode($titulosColumnas[2]))
@@ -310,7 +326,7 @@ $estiloTituloReporte = array(
         'wrap' => TRUE
     )
 );
- 
+
 $estiloTituloColumnas = array(
     'font' => array(
         'name'  => 'Arial',
@@ -349,7 +365,7 @@ $estiloTituloColumnas = array(
         'wrap'      => TRUE
     )
 );
- 
+
 $estiloInformacion = new PHPExcel_Style();
 $estiloInformacion->applyFromArray( array(
     'font' => array(
@@ -379,10 +395,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A3:O3')->applyFromArray($estiloTituloC
 
 // Renombrar Hoja
 $objPHPExcel->getActiveSheet()->setTitle('Hoja1');
- 
+
 // Establecer la hoja activa, para que cuando se abra el documento se muestre primero.
 $objPHPExcel->setActiveSheetIndex(0);
- 
+
 // Se modifican los encabezados del HTTP para indicar que se envia un archivo de Excel.
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8');
 header('Content-Disposition: attachment;filename="rptEstadisticasJugadoresPorCategoria.xlsx"');
@@ -393,4 +409,3 @@ exit;
 
 
 ?>
-

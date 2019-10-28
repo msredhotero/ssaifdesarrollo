@@ -49,7 +49,11 @@ $cad = '';
                            'cancha'=>$row['cancha'],
                            'fecha'=>$row['fecha'],
                            'fechajuego'=>$row['fechajuego'],
-                           'arbitro'=>$row['arbitro']
+                           'arbitro'=>$row['arbitro'],
+                           'idcategoria'=>$row['refcategorias'],
+                           'iddivision'=>$row['refdivisiones'],
+                           'idtorneo'=>$row['idtorneo'],
+                           'esresaltado'=>$row['esresaltado']
                         ));
 	}
 

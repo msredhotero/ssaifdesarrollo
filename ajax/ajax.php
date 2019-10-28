@@ -2502,9 +2502,11 @@ function insertarConector($serviciosReferencias) {
          /**** fin auditoria ****/
 
 			//si voy a cargar al agente y ademas posee otro conector y esta activo, pero esta carga viene de un habilitacion deportiva
+         	/**** lo saco poruqe no funciona marcos 30/09/2019
 			if ($vHabTrns != 1) {
 				$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
 			}
+			*/
 			echo '';
 		} else {
 			echo 'Hubo un error al insertar datos';

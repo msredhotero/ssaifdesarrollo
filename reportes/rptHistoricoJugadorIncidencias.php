@@ -50,6 +50,7 @@ if (isset($_GET['refdivision1'])) {
 	$where .= " and tor.refdivisiones = ".$_GET['refdivision1'];
 }
 
+
 $where = '';
 if (($idtemporada != '') || ($idtorneo != '') || ($refCategorias != '') || ($refDivisiones != '')) {
 	$where .= " and r.idtorneo = ".$idtorneo;
@@ -65,27 +66,27 @@ $resDatos = $serviciosReferencias->traerHistoricoIncidenciasPorJugador($idJugado
 
 $pdf = new FPDF();
 $cantidadJugadores = 0;
-#Establecemos los márgenes izquierda, arriba y derecha: 
-$pdf->SetMargins(2, 2 , 2); 
+#Establecemos los mï¿½rgenes izquierda, arriba y derecha:
+$pdf->SetMargins(2, 2 , 2);
 
-#Establecemos el margen inferior: 
-$pdf->SetAutoPageBreak(true,1); 
+#Establecemos el margen inferior:
+$pdf->SetAutoPageBreak(true,1);
 
 
-	
+
 	$pdf->AddPage();
 	/***********************************    PRIMER CUADRANTE ******************************************/
-	
+
 	$pdf->Image('../imagenes/logoparainformes.png',2,2,40);
 
 	/***********************************    FIN ******************************************/
-	
-	
-	
+
+
+
 	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
 
-	
-	
+
+
 	$pdf->SetFont('Arial','B',10);
 	$pdf->Ln();
 	$pdf->Ln();
@@ -102,34 +103,34 @@ $pdf->SetAutoPageBreak(true,1);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	
+
 	$categoria  = '';
 	$division	= '';
 	$torneo		= '';
 	$equipo		= '';
 	$temporada	= '';
-	
+
 	$cantPartidos = 0;
 	$i=0;
-	
+
 	$contadorY1 = 44;
 	$contadorY2 = 44;
-	
+
 	$acuGoles = 0;
 	$acuPartidos = 0;
 	$acuAmarillas = 0;
 	$acuRojas = 0;
 	$acuPenales = 0;
-	
+
 	$primero = 0;
-	
+
 while ($rowE = mysql_fetch_array($resDatos)) {
-	$i+=1;	
+	$i+=1;
 	$cantPartidos += 1;
 	/*
 	if ($i > 61) {
 		$pdf->AddPage();
-		$pdf->Image('../imagenes/logoparainformes.png',2,2,40);	
+		$pdf->Image('../imagenes/logoparainformes.png',2,2,40);
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Ln();
 		$pdf->Ln();
@@ -141,12 +142,12 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->SetX(5);
 
 		$i=0;
-		
+
 	}
 	*/
-	
+
 	if (($temporada != $rowE['temporada']) || ($categoria != $rowE['categoria']) || ($division != $rowE['division']) || ($torneo != $rowE['torneo']) || ($equipo != $rowE['equipo'])) {
-		
+
 		if ($primero == 1) {
 			$pdf->Ln();
 			$pdf->SetX(5);
@@ -164,13 +165,13 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$torneo		= $rowE['torneo'];
 		$equipo		= $rowE['equipo'];
 		$temporada		= $rowE['temporada'];
-		
+
 		$acuGoles = 0;
 		$acuPartidos = 0;
 		$acuAmarillas = 0;
 		$acuRojas = 0;
 		$acuPenales = 0;
-	
+
 		$pdf->Ln();
 		$pdf->Ln();
 		$pdf->Ln();
@@ -196,9 +197,9 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->Cell(24,5,'Penales Convert.',0,0,'C',false);
 		$pdf->Cell(64,5,'Contrario',0,0,'C',false);
 	}
-	
-	
-	
+
+
+
 
 	$pdf->Ln();
 	$pdf->SetX(5);
@@ -216,11 +217,11 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 	$acuAmarillas += $rowE['amarillas'];
 	$acuRojas += $rowE['rojas'];
 	$acuPenales += $rowE['pc'];
-		
+
 
 	$contadorY1 += 4;
 
-	//$pdf->SetY($contadorY1);		
+	//$pdf->SetY($contadorY1);
 
 
 }
@@ -244,4 +245,3 @@ $pdf->Output($nombreTurno,'I');
 
 
 ?>
-

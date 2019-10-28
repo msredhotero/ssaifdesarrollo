@@ -93,7 +93,11 @@ class ServiciosReferencias {
                f.idfecha,
                coalesce(arr.idarbitro,0) as idarbitro,
                coalesce(arr.nombrecompleto,'') as arbitro,
-               cc.idcancha
+               cc.idcancha,
+               tor.refcategorias,
+               tor.refdivisiones,
+               tor.idtorneo,
+               (case when fix.esresaltado = 0 then 'No' else 'Si' end) esresaltado
            from dbfixture fix
            inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos ".$idtorneo.$idcategoria.$iddivision."
            inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
@@ -3621,11 +3625,8 @@ function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugad
 
 
     $sql    =   "select
-                    max(ms.amarillas) as amarillas
+                    ms.amarillas as amarillas
                 from        dbsancionesjugadores sj
-                inner
-                join        dbsancionesfallos sf
-                on          sj.refsancionesfallos = sf.idsancionfallo
                 inner
                 join        dbfixture fix
                 on          fix.idfixture = sj.reffixture
@@ -3646,7 +3647,9 @@ function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugad
                             and sj.refjugadores = ".$idJugador."
                             and tor.reftemporadas = ".(integer)$idTemporada."
                             and tor.refcategorias = ".(integer)$idCategoria."
-                            and tor.refdivisiones = ".(integer)$iddivision." ";
+                            and tor.refdivisiones = ".(integer)$iddivision." 
+                ORDER BY fix.fecha desc
+                LIMIT 1";
 
     return $this->existeDevuelveId($sql);
 }
@@ -12179,7 +12182,7 @@ if (mysql_num_rows($resTemporadas)>0) {
 
     $where = '';
     if ($busqueda != '') {
-        $where = " and (concat(jug.apellido, ', ', jug.nombres) like '%".$busqueda."%' or jug.nrodocumento like '%".$busqueda."%' or equ.nombre like '%".$busqueda."%' or p.fecha like '%".$busqueda."%')";
+        $where = " and (concat(jug.apellido, ', ', jug.nombres) like '%".$busqueda."%' or jug.nrodocumento like '%".$busqueda."%' or equ.nombre like '%".$busqueda."%' or cast(p.fecha as CHAR(10)) like '%".$busqueda."%')";
     }
 
 
@@ -12252,7 +12255,7 @@ function traerSancionesJugadoresConFallosAcumuladosAjax($limit, $lenght, $busque
 
     $where = '';
     if ($busqueda != '') {
-        $where = " and concat(jug.apellido, ', ', jug.nombres) like '%".$busqueda."%' or jug.nrodocumento like '%".$busqueda."%' or equ.nombre like '%".$busqueda."%' or p.fecha like '%".$busqueda."%'";
+        $where = " and concat(jug.apellido, ', ', jug.nombres) like '%".$busqueda."%' or jug.nrodocumento like '%".$busqueda."%' or equ.nombre like '%".$busqueda."%' or cast(p.fecha as CHAR(10)) like '%".$busqueda."%'";
     }
 
 
