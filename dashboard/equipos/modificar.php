@@ -118,11 +118,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	<style type="text/css">
-
-
-
-	</style>
+	<link href="../../css/dropzone.css" rel="stylesheet">
 
 
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
@@ -186,7 +182,34 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </ul>
                 </div>
             </div>
+
+            <div class="row">
+				<div class="col-xs-12 col-md-12 col-lg-12">
+					<a href="javascript:void(0);" class="thumbnail">
+						<img class="img-responsive">
+					</a>
+				</div>
+			</div>
             </form>
+    	</div>
+    </div>
+
+    <div class="boxInfoLargo">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Modificar Imagen <?php echo $singular; ?></p>
+
+        </div>
+    	<div class="cuerpoBox">
+    		<form action="subir.php" id="frmFileUpload" class="dropzone" method="post" enctype="multipart/form-data">
+				<div class="dz-message">
+
+					<h3>Arrastre y suelte una imagen aqui o haga click y busque una imagen en su ordenador.</h3>
+				</div>
+				<div class="fallback">
+					<input name="file" type="file" id="archivos" />
+					<input type="hidden" id="idequipo" name="idequipo" value="<?php echo $id; ?>" />
+				</div>
+			</form>
     	</div>
     </div>
 
@@ -214,8 +237,66 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script src="../../js/bootstrap-datetimepicker.min.js"></script>
 <script src="../../js/bootstrap-datetimepicker.es.js"></script>
 
+<!-- Dropzone Plugin Js -->
+<script src="../../js/dropzone.js"></script>
+
 <script type="text/javascript">
+
 $(document).ready(function(){
+
+	function traerImagen() {
+		$.ajax({
+			data:  {idequipo: <?php echo $id; ?>,
+					accion: 'traerImagenEquipo'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+
+				$(".thumbnail img").attr("src",response.datos.imagen);
+				$('#idFoto').val(response.datos.idFoto);
+
+			}
+		});
+	}
+
+	traerImagen();
+
+
+
+
+	Dropzone.prototype.defaultOptions.dictFileTooBig = "Este archivo es muy grande ({{filesize}}MiB). Peso Maximo: {{maxFilesize}}MiB.";
+
+	Dropzone.options.frmFileUpload = {
+		maxFilesize: 30,
+		acceptedFiles: ".png,.jpg,.gif,.bmp,.jpeg",
+		accept: function(file, done) {
+			done();
+		},
+		init: function() {
+			this.on("sending", function(file, xhr, formData){
+               formData.append("idequipo", '<?php echo $id; ?>');
+         });
+			this.on('success', function( file, resp ){
+				traerImagen();
+				swal("Correcto!", resp.replace("1", ""), "success");
+				$('.btnPresentar').show();
+			});
+
+			this.on('error', function( file, resp ){
+				swal("Error!", resp.replace("1", ""), "warning");
+			});
+		}
+	};
+
+	var myDropzone = new Dropzone("#archivos", {
+		params: {
+          idequipo: <?php echo $id; ?>
+      },
+		url: 'subir.php'
+	});
 
 	if ('<?php echo mysql_result($resResultado,0,'activo'); ?>' == 'Si') {
 		$('#activo').prop('checked',true);

@@ -667,6 +667,49 @@ case 'cargarProximaFecha':
    cargarProximaFecha($serviciosReferencias);
    break;
 /**  fin excepciones */
+
+	case 'traerImagenEquipo':
+		traerImagenEquipo($serviciosReferencias);
+	break;
+}
+
+function traerImagenEquipo($serviciosReferencias) {
+	$idequipo = $_POST['idequipo'];
+
+	$servidorCarpeta = 'aifzn';
+
+	$resV['datos'] = '';
+	$resV['error'] = false;
+
+	$resFoto = $serviciosReferencias->traerImagenEquipo($idequipo);
+	
+	$imagen = '';
+
+	if (mysql_num_rows($resFoto) > 0) {
+		/* produccion
+		$imagen = 'https://www.saupureinconsulting.com.ar/aifzn/'.mysql_result($resFoto,0,'archivo').'/'.mysql_result($resFoto,0,'imagen');
+		*/
+
+		//desarrollo
+		if (mysql_result($resFoto,0,'archivo') != '') {
+			$imagen = '../../equipos/'.$idequipo.'/'.mysql_result($resFoto,0,'archivo');
+			$resV['datos'] = array('imagen' => $imagen, 'idFoto' => $idequipo);
+		} else {
+			$imagen = '../../imagenes/sin_img.jpg';
+			$resV['datos'] = array('imagen' => $imagen, 'idFoto' => 0);
+		}
+		
+		$resV['error'] = false;
+	} else {
+		$imagen = '../../imagenes/sin_img.jpg';
+
+		$resV['datos'] = array('imagen' => $imagen, 'idFoto' => 0);
+		$resV['error'] = false;
+	}
+
+
+	header('Content-type: application/json');
+	echo json_encode($resV);
 }
 
 function cargarProximaFecha($serviciosReferencias) {

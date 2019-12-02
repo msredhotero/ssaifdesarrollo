@@ -9,6 +9,20 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   function traerImagenEquipo($idequipo) {
+      $sql = "select * from dbequipos where idequipo = ".$idequipo;
+      $res = $this->query($sql,0);
+
+      return $res;
+   }
+
+   function subirImagenEquipo($idequipo, $archivo) {
+      $sql = "update dbequipos set archivo = '".$archivo."' where idequipo = ".$idequipo;
+      $res = $this->query($sql,0);
+
+      return $res;
+   }
+
    function traerFixtureWebFiltros($idtemporada,$idcategoria, $iddivision, $idtorneo) {
 
        $ultimaTemporada = $idtemporada;
@@ -32,7 +46,11 @@ class ServiciosReferencias {
                coalesce(arr.nombrecompleto,'') as arbitro,
                cc.idcancha,
                fix.goleslocal,
-               fix.golesvisitantes
+               fix.golesvisitantes,
+               fix.refconectorlocal,
+               fix.refconectorvisitante,
+               fix.juez1,
+               fix.juez2
            from dbfixture fix
            inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos ".$idtorneo.$idcategoria.$iddivision."
            inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
@@ -97,6 +115,8 @@ class ServiciosReferencias {
                tor.refcategorias,
                tor.refdivisiones,
                tor.idtorneo,
+               fix.refconectorlocal,
+               fix.refconectorvisitante,
                (case when fix.esresaltado = 0 then 'No' else 'Si' end) esresaltado
            from dbfixture fix
            inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos ".$idtorneo.$idcategoria.$iddivision."
@@ -7571,7 +7591,7 @@ e.idequipo,
 e.nombre,
 (case when e.activo = 1 then 'Si' else 'No' end) as activo,
 cat.categoria,
-concat('archivos/countries/',cast(c.idcountrie as UNSIGNED),'/',i.imagen) as imagen
+concat('equipos/',cast(e.idequipo as UNSIGNED),'/',e.archivo) as imagen
 from dbequipos e
 inner join dbcountries c ON c.idcountrie = e.refcountries
 inner join tbcategorias cat ON cat.idtcategoria = e.refcategorias
@@ -7591,30 +7611,12 @@ function traerUltimaFechaJugadaEquipoPorId($idEquipo, $limit) {
                     WHEN f.refconectorlocal = ".$idEquipo." THEN el.nombre
                     ELSE ev.nombre
                 END) AS equipo,
-                (select
-                coalesce(concat('http://saupureinconsulting.com.ar/aifdesarrollo/archivos/countries/',cast(cou.idcountrie as UNSIGNED),'/',iv.imagen),'') as imagenlocal
-                from
-                dbcountries cou
-                    inner join
-                images iv ON iv.refproyecto = cou.idcountrie and iv.reftabla = 1
-                where cou.idcountrie = (CASE
-                                            WHEN f.refconectorlocal = ".$idEquipo." THEN el.refcountries
-                                            ELSE ev.refcountries
-                                        END)) as imagenlocal,
+                coalesce(concat('http://saupureinconsulting.com.ar/aifzn/equipos/',cast(f.refconectorlocal as UNSIGNED),'/',el.archivo),'') as imagenlocal,
                 (CASE
                     WHEN f.refconectorlocal = ".$idEquipo." THEN ev.nombre
                     ELSE el.nombre
                 END) AS contra,
-                (select
-                coalesce(concat('http://saupureinconsulting.com.ar/aifdesarrollo/archivos/countries/',cast(cou.idcountrie as UNSIGNED),'/',iv.imagen),'') as imagenvisitante
-                from
-                dbcountries cou
-                    inner join
-                images iv ON iv.refproyecto = cou.idcountrie and iv.reftabla = 1
-                where cou.idcountrie = (CASE
-                                            WHEN f.refconectorlocal = ".$idEquipo." THEN ev.refcountries
-                                            ELSE el.refcountries
-                                        END)) as imagenvisitante,
+                coalesce(concat('http://saupureinconsulting.com.ar/aifzn/equipos/',cast(f.refconectorvisitante as UNSIGNED),'/',ev.archivo),'') as imagenvisitante,
                 arb.nombrecompleto as arbitro,
                 f.juez1,
                 f.juez2,

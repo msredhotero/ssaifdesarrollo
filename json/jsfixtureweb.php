@@ -67,7 +67,11 @@ $cad = '';
                            'fechajuego'=>$row['fechajuego'],
                            'arbitro'=>$row['arbitro'],
                            'goleslocal'=>$row['goleslocal'],
-                           'golesvisitantes'=>$row['golesvisitantes']
+                           'golesvisitantes'=>$row['golesvisitantes'],
+                           'idequipolocal' => $row['refconectorlocal'],
+                           'idequipovisitante' => $row['refconectorvisitante'],
+                           'juez1' => $row['juez1'],
+                           'juez2' => $row['juez2']
                         ));
 	}
 

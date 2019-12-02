@@ -53,6 +53,8 @@ $cad = '';
                            'idcategoria'=>$row['refcategorias'],
                            'iddivision'=>$row['refdivisiones'],
                            'idtorneo'=>$row['idtorneo'],
+                           'idequipolocal' => $row['refconectorlocal'],
+                           'idequipovisitante' => $row['refconectorvisitante'],
                            'esresaltado'=>$row['esresaltado']
                         ));
 	}
