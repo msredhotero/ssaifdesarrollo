@@ -3667,7 +3667,7 @@ function ultimaFechaSancionadoPorAcumulacionAmarillasFallada($idTorneo, $idJugad
                             and sj.refjugadores = ".$idJugador."
                             and tor.reftemporadas = ".(integer)$idTemporada."
                             and tor.refcategorias = ".(integer)$idCategoria."
-                            and tor.refdivisiones = ".(integer)$iddivision." 
+                            and tor.refdivisiones = ".(integer)$iddivision."
                 ORDER BY fix.fecha desc
                 LIMIT 1";
 
@@ -7436,7 +7436,7 @@ return $res;
 
 
 function traerEquiposPorId($id) {
-$sql = "select idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,(case when activo = 1 then 'Si' else 'No' end) as activo from dbequipos where idequipo =".$id;
+$sql = "select idequipo,refcountries,nombre,refcategorias,refdivisiones,refcontactos,fechaalta,fachebaja,(case when activo = 1 then 'Si' else 'No' end) as activo, imagen from dbequipos where idequipo =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -15848,10 +15848,29 @@ return $res;
 }
 
 function eliminarCierrepadronesPorCountry($id) {
+   $sql = "delete from tbcierrepadrones where refcountries =".$id;
+   $res = $this->query($sql,0);
+   return $res;
+}
 
-$sql = "delete from tbcierrepadrones where refcountries =".$id;
-$res = $this->query($sql,0);
-return $res;
+function abrirPadronesMasivo() {
+
+   $sqlE = "delete from tbcierrepadrones";
+   $resE = $this->query($sqlE,0);
+
+   $sql = "insert into tbcierrepadrones(idcierrepadron,refcountries,refusuarios,fechacierre)
+            select '', idcountrie, coalesce( refusuarios,64), '".date('Y-m-d')."'
+            from dbcountries where activo = 1";
+
+   $res = $this->query($sql,0);
+   return $res;
+}
+
+function cerrarPadronesMasivo() {
+
+   $sql = "delete from tbcierrepadrones";
+   $res = $this->query($sql,0);
+   return $res;
 }
 
 

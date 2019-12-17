@@ -16,7 +16,11 @@ $token = $_GET['callback'];
 $resTraerTemporadas = $serviciosReferencias->traerUltimaTemporada();
 
 if (mysql_num_rows($resTraerTemporadas)>0) {
-	$idTemporada = mysql_result($resTraerTemporadas,0,0);
+	if (date('Y') == 2019) {
+        $idTemporada = 8;
+    } else {
+        $idTemporada = mysql_result($resTraerTemporadas,0,0);
+    }
 }	else {
 	$idTemporada = 0;
 }

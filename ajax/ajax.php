@@ -671,6 +671,20 @@ case 'cargarProximaFecha':
 	case 'traerImagenEquipo':
 		traerImagenEquipo($serviciosReferencias);
 	break;
+
+   case 'abrirPadronesMasivo':
+      abrirPadronesMasivo($serviciosReferencias);
+   break;
+}
+
+function abrirPadronesMasivo($serviciosReferencias) {
+   $res = $serviciosReferencias->abrirPadronesMasivo();
+
+   if ((integer)$res > 0) {
+		echo '';
+	} else {
+		echo 'Hubo un error al insertar datos';
+	}
 }
 
 function traerImagenEquipo($serviciosReferencias) {
@@ -682,7 +696,7 @@ function traerImagenEquipo($serviciosReferencias) {
 	$resV['error'] = false;
 
 	$resFoto = $serviciosReferencias->traerImagenEquipo($idequipo);
-	
+
 	$imagen = '';
 
 	if (mysql_num_rows($resFoto) > 0) {
@@ -698,7 +712,7 @@ function traerImagenEquipo($serviciosReferencias) {
 			$imagen = '../../imagenes/sin_img.jpg';
 			$resV['datos'] = array('imagen' => $imagen, 'idFoto' => 0);
 		}
-		
+
 		$resV['error'] = false;
 	} else {
 		$imagen = '../../imagenes/sin_img.jpg';

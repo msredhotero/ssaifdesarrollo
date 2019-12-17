@@ -250,6 +250,18 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </div>
                 </div>
             </div>
+
+				<div class="row" style="margin-bottom:10px;">
+                <div class="col-md-12">
+                	<div class="input-group">
+                    	<input class="form-control" readonly value="Abrir Patrones Masivo" aria-label="Text input with multiple buttons">
+
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-success abriPatrones">Abrir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--
             <div class="row">
             	<div id="map" ></div>
@@ -304,6 +316,31 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+
+	$(".abriPatrones").click( function(){
+		$.ajax({
+			data:  {accion: 'abrirPadronesMasivo'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+				$(".alert").removeClass("alert-danger");
+				$(".alert").removeClass("alert-info");
+				$(".alert").addClass("alert-success");
+				$(".alert").html('<strong>Ok!</strong> Se abrieron todos los padrones correctamente.');
+				$(".alert").delay(3000).queue(function(){
+					/*aca lo que quiero hacer
+					  después de los 2 segundos de retraso*/
+					$(this).dequeue(); //continúo con el siguiente ítem en la cola
+
+				});
+
+			}
+		});
+	});//fin del boton resetear
 
 
 	$("#vigenciadesde").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});

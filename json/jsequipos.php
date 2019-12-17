@@ -12,7 +12,14 @@ if (((isset($_GET['idcategoria'])) && ($_GET['idcategoria'] > 0)) && ((isset($_G
 	$resTraerDatos = $serviciosReferencias->traerEquipoPorCategoriaDivision($_GET['idcategoria'],$_GET['iddivision']);
 	$datos = 1;
 } else {
-	$resTraerDatos = $serviciosReferencias->traerEquipos();	
+	if (isset($_GET['idequipo'])) {
+		$resTraerDatos = $serviciosReferencias->traerEquiposPorId($_GET['idequipo']);	
+		$datos = 2;
+	} else {
+		$resTraerDatos = $serviciosReferencias->traerEquipos();	
+		$datos = 0;
+	}
+	
 }
 
 $token = $_GET['callback'];
@@ -28,8 +35,13 @@ $cad = '';
 
 			array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'], 'id'=> $row[0], 'categoria'=>$row['categoria'], 'imagen'=>$row['imagen']));
 		} else {
+			if ($datos == 0) {
+				array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'].' - '.$row['categoria'].' - '.$row['division'], 'id'=> $row[0], 'categoria'=>$row['categoria'], 'imagen'=>$row['imagen']));
+			} else {
+				array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'], 'id'=> $row[0], 'imagen'=>$row['imagen']));
+			}
 
-			array_push($ar,array('equipo'=>$row[0].' - '.$row['nombre'].' - '.$row['categoria'].' - '.$row['division'], 'id'=> $row[0], 'categoria'=>$row['categoria'], 'imagen'=>$row['imagen']));
+			
 		}
 	}
 

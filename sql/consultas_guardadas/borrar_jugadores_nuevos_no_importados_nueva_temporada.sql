@@ -1,0 +1,1 @@
+DELETE j from dbjugadorespre j left join dbjugadores jj on j.nrodocumento = jj.nrodocumento where jj.idjugador is null
