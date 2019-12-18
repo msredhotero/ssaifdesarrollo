@@ -65,7 +65,7 @@ class ServiciosReferencias {
            inner join tbfechas f ON f.idfecha = fix.reffechas
 
            where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada."
-           order by tor.refcategorias, tor.refdivisiones, f.idfecha,tor.idtorneo
+           order by cat.orden, tor.refdivisiones, f.idfecha,tor.idtorneo,fix.idfixture
            ";
 
 
@@ -132,7 +132,7 @@ class ServiciosReferencias {
            inner join tbfechas f ON f.idfecha = fix.reffechas
 
            where tor.reftipotorneo in (1,2) and tor.reftemporadas = ".$ultimaTemporada." and fix.fecha >= '".$desde."' and fix.fecha <= '".$hasta."'
-           order by tor.refcategorias, tor.refdivisiones, f.idfecha
+           order by cat.orden, tor.refdivisiones, f.idfecha,tor.idtorneo,fix.idfixture
            ";
 
 

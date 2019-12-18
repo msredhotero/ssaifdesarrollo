@@ -678,7 +678,7 @@ case 'cargarProximaFecha':
 }
 
 function abrirPadronesMasivo($serviciosReferencias) {
-   $res = $serviciosReferencias->abrirPadronesMasivo();
+   $res = $serviciosReferencias->cerrarPadronesMasivo();
 
    if ((integer)$res > 0) {
 		echo '';
