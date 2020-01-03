@@ -9,6 +9,28 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   function traerHabilitaciones10anios($idclub, $idtemporada) {
+      $sql = "SELECT
+                j.idjugador,j.nrodocumento,j.apellido, j.nombres,  j.fechanacimiento, j.observaciones, h.fechalimite
+            FROM
+                dbjugadoresclub jc
+                    INNER JOIN
+                dbjugadores j ON jc.refjugadores = j.idjugador
+                    INNER JOIN
+                dbjugadoresmotivoshabilitacionestransitorias h ON h.refjugadores = j.idjugador
+                    AND h.reftemporadas = 7
+                    AND h.refmotivoshabilitacionestransitorias = 9
+                    INNER JOIN
+                tbtemporadas t ON t.idtemporadas = h.reftemporadas
+                    AND jc.temporada = t.temporada
+               where jc.refcountries = ".$idclub."
+            order by j.apellido, j.nombres";
+
+            $res = $this->query($sql,0);
+
+            return $res;
+   }
+
    function traerImagenEquipo($idequipo) {
       $sql = "select * from dbequipos where idequipo = ".$idequipo;
       $res = $this->query($sql,0);
