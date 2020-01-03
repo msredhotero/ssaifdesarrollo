@@ -36,7 +36,7 @@ $id = $_GET['id'];
 $resTemporadas = $serviciosReferencias->traerUltimaTemporada();
 
 if (mysql_num_rows($resTemporadas)>0) {
-	 $ultimaTemporada = mysql_result($resTemporadas,0,0);
+	 $ultimaTemporada = mysql_result($resTemporadas,0,0) - 1;
 } else {
 	 $ultimaTemporada = 0;
 }
@@ -49,11 +49,11 @@ $singular = "Jugadores 10 años de antiguedad";
 
 $plural = "Jugadores 10 años de antiguedad";
 
-$eliminar = "eliminarCategorias";
+$eliminar = "eliminarJugadoresmotivoshabilitacionestransitorias";
 
-$modificar = "modificarCategorias";
+$modificar = "modificarJugadoresmotivoshabilitacionestransitorias";
 
-$idTabla = "idtcategoria";
+$idTabla = "iddbjugadormotivohabilitaciontransitoria";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
@@ -80,7 +80,7 @@ $cabeceras 		= "<th>Nro Doc</th>
 					<th>Obs.</th>
 					<th>Fecha Limite</th>";
 
-$lstNuevosJugadores = $serviciosFunciones->camposTablaView($cabeceras,$resResultado,6);
+$lstNuevosJugadores = $serviciosFunciones->camposTablaView($cabeceras,$resResultado,999);
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -148,11 +148,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <div id="content">
 
-<h3><?php echo $plural; ?></h3>
-
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Modificar <?php echo $singular; ?></p>
+        	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $singular; ?></p>
 
         </div>
     	<div class="cuerpoBox">
@@ -165,30 +163,72 @@ if ($_SESSION['refroll_predio'] != 1) {
          </div>
 
 
-            <div class='row' style="margin-left:25px; margin-right:25px;">
-                <div class='alert'>
+         <div class='row' style="margin-left:25px; margin-right:25px;">
+             <div class='alert'>
 
-                </div>
-                <div id='load'>
+             </div>
+             <div id='load'>
 
-                </div>
-            </div>
+             </div>
+         </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                <ul class="list-inline" style="margin-top:15px;">
-                    <li>
-                        <button type="button" class="btn btn-warning" id="cargar" style="margin-left:0px;">Generar Hab. Transitoria</button>
-                    </li>
+         <div class="row">
+             <div class="col-md-12">
+             <ul class="list-inline" style="margin-top:15px;">
+                 <li>
+                     <button type="button" class="btn btn-warning" id="cargar" style="margin-left:0px;">Generar Hab. Transitoria</button>
+                 </li>
 
-                    <li>
-                        <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
-                    </li>
-                </ul>
-                </div>
-            </div>
-				<input type="hidden" name="accion" id="accion" value="generarHabilitacionTransitoriaPor10"/>
-            </form>
+                 <li>
+                     <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
+                 </li>
+             </ul>
+             </div>
+         </div>
+			<input type="hidden" name="accion" id="accion" value="generarHabilitacionTransitoriaPor10"/>
+         </form>
+    	</div>
+    </div>
+
+	 <div class="boxInfoLargo">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;">Baja de Jugadores con Habilitaciones que no fueron generadas</p>
+
+        </div>
+    	<div class="cuerpoBox">
+        	<form class="form-inline formulario" role="form">
+
+			<div class="row">
+				<div class="col-xs-12">
+					<?php echo $lstNuevosJugadores; ?>
+				</div>
+         </div>
+
+
+         <div class='row' style="margin-left:25px; margin-right:25px;">
+             <div class='alert'>
+
+             </div>
+             <div id='load'>
+
+             </div>
+         </div>
+
+         <div class="row">
+             <div class="col-md-12">
+             <ul class="list-inline" style="margin-top:15px;">
+                 <li>
+                     <button type="button" class="btn btn-danger" id="cargar" style="margin-left:0px;">Baja a los Jugadores con fecha de hoy</button>
+                 </li>
+
+                 <li>
+                     <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
+                 </li>
+             </ul>
+             </div>
+         </div>
+			<input type="hidden" name="accion" id="accion" value="bajaHabilitacionTransitoriaPor10"/>
+         </form>
     	</div>
     </div>
 

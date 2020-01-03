@@ -73,6 +73,13 @@ class Servicios {
 		$idTable = 'example';
 
 		switch ($cantidad) {
+			case 999:
+				$cantidad = 6;
+				$classMod = '';
+				$classEli = '';
+				$lblVer	  = '';
+				$idresultados = "resultados";
+				break;
 			case 99:
 				$cantidad = 6;
 				$classMod = '';

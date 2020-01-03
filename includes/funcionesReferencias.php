@@ -9,26 +9,55 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   function bajaJugadoresConPedidoHabilitacion($idclub) {
+      $resTemp = $this->traerTemporadasPorId($idtemporada);
+      $anio = mysql_result($resTemp,0,1);
+
+      $sql = "SELECT
+                j.idjugador,j.nrodocumento,j.apellido, j.nombres,  j.fechanacimiento, j.observaciones
+            FROM
+                dbjugadoresclub jc
+                    INNER JOIN
+                dbjugadores j ON jc.refjugadores = j.idjugador and jc.temporada = ".$anio." and jc.articulo = 1
+                   left JOIN
+             dbjugadoresmotivoshabilitacionestransitorias ht ON ht.refjugadores = j.idjugador
+                   AND ht.reftemporadas = ".$idtemporada."
+                   AND ht.refmotivoshabilitacionestransitorias = 9
+               where jc.refcountries = ".$idclub." and ht.iddbjugadormotivohabilitaciontransitoria is null
+            order by j.apellido, j.nombres";
+
+      $res = $this->query($sql,0);
+
+      return $res;
+   }
+
    function traerHabilitaciones10anios($idclub, $idtemporada) {
+      $resTemp = $this->traerTemporadasPorId($idtemporada);
+      $anio = mysql_result($resTemp,0,1);
+
       $sql = "SELECT
                 j.idjugador,j.nrodocumento,j.apellido, j.nombres,  j.fechanacimiento, j.observaciones, h.fechalimite
             FROM
                 dbjugadoresclub jc
                     INNER JOIN
-                dbjugadores j ON jc.refjugadores = j.idjugador
+                dbjugadores j ON jc.refjugadores = j.idjugador and jc.temporada = ".$anio."
                     INNER JOIN
                 dbjugadoresmotivoshabilitacionestransitorias h ON h.refjugadores = j.idjugador
-                    AND h.reftemporadas = 7
+                    AND h.reftemporadas = ".$idtemporada."
                     AND h.refmotivoshabilitacionestransitorias = 9
                     INNER JOIN
                 tbtemporadas t ON t.idtemporadas = h.reftemporadas
                     AND jc.temporada = t.temporada
-               where jc.refcountries = ".$idclub."
+                    left JOIN
+                dbjugadoresmotivoshabilitacionestransitorias ht ON ht.refjugadores = j.idjugador
+                    AND ht.reftemporadas = ".($idtemporada + 1)."
+                    AND ht.refmotivoshabilitacionestransitorias = 9
+               where jc.refcountries = ".$idclub." and ht.iddbjugadormotivohabilitaciontransitoria is null
             order by j.apellido, j.nombres";
 
-            $res = $this->query($sql,0);
+      $res = $this->query($sql,0);
 
-            return $res;
+      return $res;
    }
 
    function traerImagenEquipo($idequipo) {
