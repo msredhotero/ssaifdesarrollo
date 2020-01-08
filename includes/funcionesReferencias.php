@@ -9,12 +9,12 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
-   function bajaJugadoresConPedidoHabilitacion($idclub) {
+   function bajaJugadoresConPedidoHabilitacion($idclub, $idtemporada) {
       $resTemp = $this->traerTemporadasPorId($idtemporada);
       $anio = mysql_result($resTemp,0,1);
 
       $sql = "SELECT
-                j.idjugador,j.nrodocumento,j.apellido, j.nombres,  j.fechanacimiento, j.observaciones
+                j.idjugador,j.nrodocumento,j.apellido, j.nombres,  j.fechanacimiento, j.observaciones, ''
             FROM
                 dbjugadoresclub jc
                     INNER JOIN

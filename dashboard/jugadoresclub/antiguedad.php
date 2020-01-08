@@ -42,12 +42,13 @@ if (mysql_num_rows($resTemporadas)>0) {
 }
 
 $resResultado = $serviciosReferencias->traerHabilitaciones10anios($id, $ultimaTemporada);
+$resResultadoBaja = $serviciosReferencias->bajaJugadoresConPedidoHabilitacion($id, $ultimaTemporada);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Jugadores 10 años de antiguedad";
+$singular = "Mantener antiguedad";
 
-$plural = "Jugadores 10 años de antiguedad";
+$plural = "Mantener antiguedad";
 
 $eliminar = "eliminarJugadoresmotivoshabilitacionestransitorias";
 
@@ -81,6 +82,7 @@ $cabeceras 		= "<th>Nro Doc</th>
 					<th>Fecha Limite</th>";
 
 $lstNuevosJugadores = $serviciosFunciones->camposTablaView($cabeceras,$resResultado,999);
+$lstNuevosJugadoresB = $serviciosFunciones->camposTablaView($cabeceras,$resResultadoBaja,999);
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -200,7 +202,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 			<div class="row">
 				<div class="col-xs-12">
-					<?php echo $lstNuevosJugadores; ?>
+					<?php echo $lstNuevosJugadoresB; ?>
 				</div>
          </div>
 

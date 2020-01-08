@@ -587,6 +587,9 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <li>
                         		<button type="button" class="btn btn-info" id="rptJugadoresPorClub" style="margin-left:0px;">Cargar Planilla Jugadores Por Countries</button>
                             </li>
+									 <li>
+                        		<button type="button" class="btn btn-primary" id="rptAntiguedades" style="margin-left:0px;">Antiguedades</button>
+                            </li>
                         </ul>
                 </div>
 
@@ -727,6 +730,15 @@ $(document).ready(function(){
 			alert('Debe seleccionar un country!!.');
 		}
     });
+
+	 $('#rptAntiguedades').click(function(e) {
+ 		if ($('#refcountries1').val() != 0) {
+         	url = "../jugadoresclub/antiguedad.php?id=" + $('#refcountries1').val();
+				window.open(url ,'_blank');
+ 		} else {
+ 			alert('Debe seleccionar un country!!.');
+ 		}
+     });
 
 
 	$('#tiporeporte').change(function() {
