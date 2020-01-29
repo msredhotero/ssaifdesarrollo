@@ -34,11 +34,16 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Categor
 $id = $_GET['id'];
 
 $resTemporadas = $serviciosReferencias->traerUltimaTemporada();
+$anioTemporada = 0;
 
 if (mysql_num_rows($resTemporadas)>0) {
 	 $ultimaTemporada = mysql_result($resTemporadas,0,0) - 1;
+	 $anioTemporada = mysql_result($resTemporadas,0,1);
+	 $idtemporada = mysql_result($resTemporadas,0,0);
 } else {
 	 $ultimaTemporada = 0;
+	 $anioTemporada = 0;
+	 $idtemporada = 0;
 }
 
 $resResultado = $serviciosReferencias->traerHabilitaciones10anios($id, $ultimaTemporada);
@@ -82,7 +87,7 @@ $cabeceras 		= "<th>Nro Doc</th>
 					<th>Fecha Limite</th>";
 
 $lstNuevosJugadores = $serviciosFunciones->camposTablaView($cabeceras,$resResultado,999);
-$lstNuevosJugadoresB = $serviciosFunciones->camposTablaView($cabeceras,$resResultadoBaja,999);
+$lstNuevosJugadoresB = $serviciosFunciones->camposTablaView($cabeceras,$resResultadoBaja,9998);
 
 
 if ($_SESSION['refroll_predio'] != 1) {
@@ -241,14 +246,25 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 </div>
 
-<div id="dialog2" title="Eliminar <?php echo $singular; ?>">
+<div id="dialog2" title="Dar de Baja">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar el <?php echo $singular; ?>?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea dar de baja al jugador?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>Si elimina el equipo se perderan todos los datos de este</p>
+        <p><strong>Importante: </strong>El jugador no podra participar del torneo</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
+
+<div id="dialog3" title="Generar Habilitacion Transitoria">
+    	<p>
+        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            ¿Esta seguro que desea mantenerle la habilitacion transitoria para la nueva temporada?.<span id="proveedorEli"></span>
+        </p>
+        <p><strong>Importante: </strong>Una vez generada la puede borrar entrando por Jugador->Habilitaciones</p>
+        <input type="hidden" value="" id="idGenerar" name="idGenerar">
+</div>
+
+
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
@@ -260,61 +276,118 @@ $(document).ready(function(){
 
 	$('.volver').click(function(event){
 
-		url = "index.php";
+		url = "../reportes/";
 		$(location).attr('href',url);
 	});//fin del boton modificar
 
 	$('.varborrar').click(function(event){
-		  usersid =  $(this).attr("id");
-		  if (!isNaN(usersid)) {
-			$("#idEliminar").val(usersid);
-			$("#dialog2").dialog("open");
+	  usersid =  $(this).attr("id");
+	  if (!isNaN(usersid)) {
+		$("#idEliminar").val(usersid);
+		$("#dialog2").dialog("open");
 
 
-			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
-			//$(location).attr('href',url);
-		  } else {
-			alert("Error, vuelva a realizar la acción.");
-		  }
+		//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
+		//$(location).attr('href',url);
+	  } else {
+		alert("Error, vuelva a realizar la acción.");
+	  }
 	});//fin del boton eliminar
 
-	 $( "#dialog2" ).dialog({
+	$( "#dialog2" ).dialog({
+	   autoOpen: false,
+	 	resizable: false,
+		width:600,
+		height:240,
+		modal: true,
+		buttons: {
+		    "Baja": function() {
 
-			    autoOpen: false,
-			 	resizable: false,
-				width:600,
-				height:240,
-				modal: true,
-				buttons: {
-				    "Eliminar": function() {
+				$.ajax({
+					data:  {id: $('#idEliminar').val(), accion: 'eliminarJugadoresBaja'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
 
-						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
-									url:   '../../ajax/ajax.php',
-									type:  'post',
-									beforeSend: function () {
+					},
+					success:  function (response) {
+						url = "antiguedad.php?id=<?php echo $id; ?>";
+						$(location).attr('href',url);
 
-									},
-									success:  function (response) {
-											url = "index.php";
-											$(location).attr('href',url);
-
-									}
-							});
-						$( this ).dialog( "close" );
-						$( this ).dialog( "close" );
-							$('html, body').animate({
-	           					scrollTop: '1000px'
-	       					},
-	       					1500);
-				    },
-				    Cancelar: function() {
-						$( this ).dialog( "close" );
-				    }
-				}
+					}
+				});
+				$( this ).dialog( "close" );
+				$( this ).dialog( "close" );
+					$('html, body').animate({
+        					scrollTop: '1000px'
+    					},
+    					1500);
+		    },
+		    Cancelar: function() {
+				$( this ).dialog( "close" );
+		    }
+		}
+	}); //fin del dialogo para eliminar
 
 
-	 		}); //fin del dialogo para eliminar
+	$('.vargenerar').click(function(event){
+	  usersid =  $(this).attr("id");
+	  if (!isNaN(usersid)) {
+		$("#idGenerar").val(usersid);
+		$("#dialog3").dialog("open");
+
+
+		//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
+		//$(location).attr('href',url);
+	  } else {
+		alert("Error, vuelva a realizar la acción.");
+	  }
+	});//fin del boton eliminar
+
+	$( "#dialog3" ).dialog({
+	   autoOpen: false,
+	 	resizable: false,
+		width:600,
+		height:240,
+		modal: true,
+		buttons: {
+		    "Generar": function() {
+
+				$.ajax({
+					data:  {
+						reftemporadasA: <?php echo $idtemporada; ?>,
+						refjugadores: $('#idGenerar').val(),
+						refdocumentacionesA: 4,
+						refmotivoshabilitacionestransitoriasA: 9,
+						refequiposA: 'null',
+						refcategoriasA: 'null',
+						fechalimiteA: <?php echo "'31/12/".$anioTemporada."'"; ?>,
+						observacionesA: 'Generada por sistema',
+						accion: 'insertarJugadoresmotivoshabilitacionestransitoriasA'
+					},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+
+					},
+					success:  function (response) {
+							url = "antiguedad.php?id=<?php echo $id; ?>";
+							$(location).attr('href',url);
+
+					}
+				});
+				$( this ).dialog( "close" );
+				$( this ).dialog( "close" );
+					$('html, body').animate({
+        					scrollTop: '1000px'
+    					},
+    					1500);
+		    },
+		    Cancelar: function() {
+				$( this ).dialog( "close" );
+		    }
+		}
+	}); //fin del dialogo para eliminar
 
 
 

@@ -77,7 +77,18 @@ class Servicios {
 				$cantidad = 6;
 				$classMod = '';
 				$classEli = '';
-				$lblVer	  = '';
+				$lblVer	  = 'Generar';
+				$classVer 	= 'vargenerar';
+				$icoVar		= 'glyphicon glyphicon-ok-circle';
+				$idresultados = "resultados";
+				break;
+			case 9998:
+				$cantidad = 6;
+				$classMod = '';
+				$classEli = '';
+				$lblVer	  = 'Baja';
+				$classVer 	= 'varborrar';
+				$icoVar		= 'glyphicon glyphicon-remove';
 				$idresultados = "resultados";
 				break;
 			case 99:

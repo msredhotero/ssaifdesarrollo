@@ -260,6 +260,7 @@ case 'modificarJugadorApellidoNombrePorId':
 case 'eliminarJugadores':
 eliminarJugadores($serviciosReferencias);
 break;
+
 case 'insertarJugadoresdocumentacion':
 insertarJugadoresdocumentacion($serviciosReferencias);
 break;
@@ -675,6 +676,42 @@ case 'cargarProximaFecha':
    case 'abrirPadronesMasivo':
       abrirPadronesMasivo($serviciosReferencias);
    break;
+
+   case 'eliminarJugadoresBaja':
+   eliminarJugadoresBaja($serviciosReferencias);
+   break;
+}
+
+
+
+function eliminarJugadoresBaja($serviciosReferencias) {
+
+   $id = $_POST['id'];
+
+   /**** auditoria ****/
+   session_start();
+   $tabla = 'dbjugadores';
+   $operacion = 'M';
+   $id = $id;
+   $usuario = $_SESSION['nombre_predio'];
+
+   $arAudi = $serviciosReferencias->modiAuditoria($tabla, $operacion,$id,$usuario);
+   /**** fin audi  ****/
+
+   $res = $serviciosReferencias->eliminarJugadoresBaja($id);
+   if ($res == true) {
+      /**** auditoria ****/
+      $tabla = 'dbjugadores';
+      $operacion = 'M';
+      $id = $id;
+      $usuario = $_SESSION['nombre_predio'];
+
+      $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,$arAudi,null,'1');
+      /**** fin audi  ****/
+      echo '';
+   } else {
+      echo 'Hubo un error al modificar datos';
+   }
 }
 
 function abrirPadronesMasivo($serviciosReferencias) {

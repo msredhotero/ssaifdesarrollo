@@ -9,6 +9,12 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   function eliminarJugadoresBaja($id) {
+      $sql = "update dbjugadores set fechabaja = '".date('Y-m-d')."' where idjugador =".$id;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
    function bajaJugadoresConPedidoHabilitacion($idclub, $idtemporada) {
       $resTemp = $this->traerTemporadasPorId($idtemporada);
       $anio = mysql_result($resTemp,0,1);
@@ -19,6 +25,7 @@ class ServiciosReferencias {
                 dbjugadoresclub jc
                     INNER JOIN
                 dbjugadores j ON jc.refjugadores = j.idjugador and jc.temporada = ".$anio." and jc.articulo = 1
+                and (j.fechabaja is null or j.fechabaja = '1900-01-01' or j.fechabaja = '0000-00-00' or j.fechabaja >= now())
                    left JOIN
              dbjugadoresmotivoshabilitacionestransitorias ht ON ht.refjugadores = j.idjugador
                    AND ht.reftemporadas = ".$idtemporada."

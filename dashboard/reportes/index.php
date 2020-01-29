@@ -577,7 +577,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
 
 
 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label class="control-label" style="text-align:left" for="refcliente">Acción</label>
 
                     	<ul class="list-inline">
@@ -589,6 +589,9 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             </li>
 									 <li>
                         		<button type="button" class="btn btn-primary" id="rptAntiguedades" style="margin-left:0px;">Antiguedades</button>
+                            </li>
+									 <li>
+                        		<button type="button" class="btn btn-primary" id="rptRptAntiguedades" style="margin-left:0px;">Reporte Antiguedades</button>
                             </li>
                         </ul>
                 </div>
@@ -1052,6 +1055,10 @@ $(document).ready(function(){
 
 
     });
+
+	$('#rptRptAntiguedades').click(function(e) {
+		window.open("../../reportes/rptHabilitacionesTransitoriasGeneradasBajas.php?id=" + $("#refcountries1").val() ,'_blank');
+	});
 
 
 	$("#rptCJ").click(function(event) {
