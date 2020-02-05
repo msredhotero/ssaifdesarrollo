@@ -61,7 +61,7 @@ if ($_SESSION['idroll_predio'] == 4) {
 	$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_SESSION['club_predio']);
 	$refClub = $_SESSION['club_predio'];
 } else {
-	$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_GET['id']);	
+	$resJugadoresPorCountries = $serviciosReferencias->traerJugadoresClubPorCountrieActivos($_GET['id']);
 	$refClub = $_GET['id'];
 }
 
@@ -75,12 +75,12 @@ if (mysql_num_rows($resPermiteRegistrar)>0) {
 }
 
 
-$resTemporadas = $serviciosReferencias->traerUltimaTemporada(); 
+$resTemporadas = $serviciosReferencias->traerUltimaTemporada();
 
 if (mysql_num_rows($resTemporadas)>0) {
-    $ultimaTemporada = mysql_result($resTemporadas,0,0);    
+    $ultimaTemporada = mysql_result($resTemporadas,0,0);
 } else {
-    $ultimaTemporada = 0;   
+    $ultimaTemporada = 0;
 }
 
 
@@ -140,7 +140,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
-	
+
 }
 
 
@@ -162,23 +162,23 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<!--<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	
-    
-   
+
+
+
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -189,9 +189,9 @@ if ($_SESSION['refroll_predio'] != 1) {
         $('#navigation').perfectScrollbar();
       });
     </script>
-    
-   
- 
+
+
+
 </head>
 
 <body>
@@ -205,21 +205,21 @@ if ($_SESSION['refroll_predio'] != 1) {
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Jugadores del club</p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
         	<div class="row">
 
-			<?php 
+			<?php
 				$country = '';
 				$fecha = '';
 				$cadCabecera = '';
 				$primero = 0;
 				while ($row = mysql_fetch_array($resJugadoresPorCountries)) {
 					if ($country != $refClub)  {
-						
-						
+
+
 						$cadCabecera .= '<div class="col-md-12">
 										<table class="table table-striped" style="padding:2px;" id="example">
 										<thead>
@@ -231,15 +231,15 @@ if ($_SESSION['refroll_predio'] != 1) {
 												<th>Baja</th>
 												<th>Art 2 Inciso D</th>
 												<th>Accion</th>
-			
+
 											</tr>
 										</thead>
 										<tbody>';
-										
+
 						$primero = 1;
-						$country = $refClub;	
+						$country = $refClub;
 					}
-					
+
 					$cadCabecera .= "<tr>
 										<td>".$row['apellido']."</td>
 										<td>".$row['nombres']."</td>
@@ -247,19 +247,19 @@ if ($_SESSION['refroll_predio'] != 1) {
 										<td><input class='form-control' type='text' name='numeroserielote".$row['idjugador']."' id='numeroserielote".$row['idjugador']."' value='".$row['numeroserielote']."'/></td>
 										<td><input class='form-control' type='checkbox' name='fechabaja".$row['idjugador']."' id='fechabaja".$row['idjugador']."' ".($row['fechabaja'] == 'Si' ? 'checked' : '')."/></td>
 										<td><input class='form-control' type='checkbox' name='articulo".$row['idjugador']."' id='articulo".$row['idjugador']."'  ".($row['articulo'] == 'Si' ? 'checked' : '')."/></td>
-										
+
 										<td>";
 					if ($permiteRegistrar == 1) {
-						
+
 						$cadCabecera .=			"<button type='button' class='btn btn-primary guardarJugadorClubSimple' id='".$row['idjugador']."'>Guardar</button>";
 					}
 					$cadCabecera .= "</td>
 									</tr>";
-			
+
 				}
-				
+
 				$cadCabecera .= '</tbody></table></div>';
-				
+
 				echo $cadCabecera;
 			?>
             </div>
@@ -269,7 +269,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 				  <div class="panel-heading">Jugadores Nuevos</div>
 				  <div class="panel-body"><?php echo str_replace('example','example1', $lstNuevosJugadores); ?></div>
 				</div>
-            	
+
             	<div class="col-md-6">
             		<label class="control-label">Seleccione un año para generar el reporte</label>
             		<select id="anio" name="anio" class="form-control">
@@ -283,7 +283,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 	            		?>
 	            			<option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
 	            			<option value="<?php echo date('Y') + 1; ?>"><?php echo date('Y') + 1; ?></option>
-	            			
+
 
 	            		<?php
 	            			}
@@ -295,17 +295,17 @@ if ($_SESSION['refroll_predio'] != 1) {
 
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
-                	
+
                     <li>
                         <button type="button" class="btn btn-danger" id="btnImprimir" style="margin-left:0px;">Imprimir</button>
                     </li>
@@ -330,6 +330,14 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-danger" id="btnCondicionJugador" style="margin-left:0px;">Reporte Condicion de Jugadores</button>
                     </li>
+					  </ul>
+					  <ul class="list-inline" style="margin-top:15px;">
+						  <li>
+                        <button type="button" class="btn btn-danger" id="btnReporteBajas" style="margin-left:0px;">Reporte Bajas</button>
+                    </li>
+						  <li>
+                        <button type="button" class="btn btn-success" id="btnAplicarBajas" style="margin-left:0px;">Aplicar Bajas</button>
+                    </li>
                 </ul>
                 </div>
             </div>
@@ -337,19 +345,26 @@ if ($_SESSION['refroll_predio'] != 1) {
             </form>
     	</div>
     </div>
-    
-    
+
+
 
 <div id="dialog2" title="Eliminar Jugadores">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
             ¿Esta seguro que desea eliminar el Jugador?.<span id="proveedorEli"></span>
         </p>
-        
+
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
-    
+<div id="dialog3" title="Baja Socios">
+    	<p>
+        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            ¿Esta seguro que desea dar la baja a todos los Socios?. Recuerde que una vez aplicado no volveran a aprecer en el padron.
+        </p>
+</div>
+
+
 <!-- Modal del guardar-->
 <div class="modal fade" id="myModal3" tabindex="1" style="z-index:500000;" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -365,7 +380,7 @@ if ($_SESSION['refroll_predio'] != 1) {
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="cargarJugador">Agregar</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        
+
       </div>
       </form>
     </div>
@@ -373,7 +388,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 </div>
 
   <!-- del modal -->
-   
+
 </div>
 
 
@@ -417,14 +432,14 @@ $(document).ready(function(){
 
 	<?php if ($habilitado == 0) { ?>
     $(document).on("click",'.cerrar', function(){
-		
+
         $.ajax({
-			data:  {id: <?php echo $refClub; ?>, 
+			data:  {id: <?php echo $refClub; ?>,
 					accion: 'eliminarCierrepadrones'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-				
+
 			},
 			success:  function (response) {
 
@@ -440,9 +455,9 @@ $(document).ready(function(){
     });
     <?php } else { ?>
     $(document).on("click",'.cerrar', function(){
-		
+
         $.ajax({
-			data:  {refcountries: <?php echo $refClub; ?>, 
+			data:  {refcountries: <?php echo $refClub; ?>,
 					refusuarios: <?php echo $_SESSION['id_usuariopredio']; ?>,
 					accion: 'insertarCierrepadrones'},
 			url:   '../../ajax/ajax.php',
@@ -461,13 +476,13 @@ $(document).ready(function(){
 					url = "index.php?id=<?php echo $_GET['id']; ?>";
 					$(location).attr('href',url);
 
-					
+
 				} else {
 					$('#error').html('Huvo un error al guardar los datos, verifique los datos ingresados '.response);
 
 				}
 
-				
+
 
 			}
 		});
@@ -486,34 +501,40 @@ $(document).ready(function(){
 		window.open("../../reportes/rptCondicionJugadorManual.php?id=0&reftemporada=" + <?php echo $ultimaTemporada; ?> + "&bajaequipos=1" + "&refcountries=" + <?php echo $refClub; ?> + "&anio=" + $('#anio').val() ,'_blank');
 	});
 
+	$('#btnReporteBajas').click(function() {
+		window.open("../../reportes/rptJugadoresPorCountriesBajas.php?refcountries1=" + <?php echo $refClub; ?> + "&bajas1=0" ,'_blank');
+	});
 
-	
-	
+
+
+
+
+
 	$("#example").on("click",'.guardarJugadorClubSimple', function(){
-		
+
 		idBtn = $(this).attr("id");
 		var fechabaja = 0;
 		if ($('#fechabaja'+$(this).attr("id")).prop('checked')) {
-			fechabaja = 1;	
+			fechabaja = 1;
 		}
-		
+
 		var articulo = 0;
 		if ($('#articulo'+$(this).attr("id")).prop('checked')) {
-			articulo = 1;	
+			articulo = 1;
 		}
-		
+
 		$('#myModal').modal("show");
         $.ajax({
-			data:  {idjugador: $(this).attr("id"), 
-					idclub: <?php echo $refClub; ?>, 
-					numeroserielote: $('#numeroserielote'+$(this).attr("id")).val(), 
-					fechabaja: fechabaja, 
-					articulo: articulo, 
+			data:  {idjugador: $(this).attr("id"),
+					idclub: <?php echo $refClub; ?>,
+					numeroserielote: $('#numeroserielote'+$(this).attr("id")).val(),
+					fechabaja: fechabaja,
+					articulo: articulo,
 					accion: 'guardarJugadorClubSimple'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 				if (response == '') {
@@ -522,7 +543,7 @@ $(document).ready(function(){
 					$('#'+idBtn).removeClass("btn-danger");
 					$('#'+idBtn).addClass("btn-success");
 					$('#'+idBtn).html('<span class="glyphicon glyphicon-ok"></span> Guardado');
-					
+
 				} else {
 					$('#error').html('Huvo un error al guardar los datos, verifique los datos ingresados '.response);
 					$('#'+idBtn).removeClass("btn-primary");
@@ -540,22 +561,26 @@ $(document).ready(function(){
 			$("#idEliminar").val(usersid);
 			$("#dialog2").dialog("open");
 
-			
+
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton eliminar
-	
+
+	$('#btnAplicarBajas').click(function() {
+		$("#dialog3").dialog("open");
+	});
+
 	$("#example1").on("click",'.varmodificar', function(){
 
-		alert("No es posible realizar esta acción.");	
+		alert("No es posible realizar esta acción.");
 
 	});//fin del boton modificar
 
 	 $( "#dialog2" ).dialog({
-		 	
+
 			    autoOpen: false,
 			 	resizable: false,
 				width:600,
@@ -563,18 +588,18 @@ $(document).ready(function(){
 				modal: true,
 				buttons: {
 				    "Eliminar": function() {
-	
+
 						$.ajax({
 									data:  {id: $('#idEliminar').val(), accion: 'eliminarJugadorespre'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
-											
+
 									},
 									success:  function (response) {
 											url = "index.php?id=" + <?php echo $_GET['id']; ?>;
 											$(location).attr('href',url);
-											
+
 									}
 							});
 						$( this ).dialog( "close" );
@@ -588,23 +613,58 @@ $(document).ready(function(){
 						$( this ).dialog( "close" );
 				    }
 				}
-		 
-		 
+
+
 	 		}); //fin del dialogo para eliminar
-			
-	
-	
+
+	$( "#dialog3" ).dialog({
+
+		autoOpen: false,
+		resizable: false,
+		width:600,
+		height:240,
+		modal: true,
+		buttons: {
+			"Aplicar Bajas": function() {
+
+				$.ajax({
+					data:  {id: <?php echo $_GET['id']; ?>, accion: 'aplicarBajaMasiva'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+
+					},
+					success:  function (response) {
+						alert('Se dieron ' + response + ' bajas');
+						url = "index.php?id=" + <?php echo $_GET['id']; ?>;
+						$(location).attr('href',url);
+					}
+				});
+
+				$( this ).dialog( "close" );
+				$( this ).dialog( "close" );
+				$('html, body').animate({
+					scrollTop: '1000px'
+				},1500);
+			},
+			Cancelar: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	}); //fin del dialogo para eliminar
+
+
 	//al enviar el formulario
     $('#cargar').click(function(){
-		
+
 		if (validador() == "")
         {
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
-			//hacemos la petición ajax  
+			//hacemos la petición ajax
 			$.ajax({
-				url: '../../ajax/ajax.php',  
+				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -615,7 +675,7 @@ $(document).ready(function(){
 				processData: false,
 				//mientras enviamos el archivo
 				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
 				},
 				//una vez finalizado correctamente
 				success: function(data){
@@ -626,16 +686,16 @@ $(document).ready(function(){
                         $(".alert").addClass("alert-success");
                         $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
 						$(".alert").delay(3000).queue(function(){
-							/*aca lo que quiero hacer 
+							/*aca lo que quiero hacer
 							  después de los 2 segundos de retraso*/
 							$(this).dequeue(); //continúo con el siguiente ítem en la cola
-							
+
 						});
 						$("#load").html('');
 						url = "index.php";
 						$(location).attr('href',url);
-                        
-						
+
+
                     } else {
                     	$(".alert").removeClass("alert-danger");
                         $(".alert").addClass("alert-danger");
@@ -657,13 +717,13 @@ $(document).ready(function(){
 
     //al enviar el formulario
     $('#cargarJugador').click(function(){
-		
+
 			//información del formulario
 			var formData = new FormData($(".formulario")[1]);
 			var message = "";
-			//hacemos la petición ajax  
+			//hacemos la petición ajax
 			$.ajax({
-				url: '../../ajax/ajax.php',  
+				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -674,29 +734,29 @@ $(document).ready(function(){
 				processData: false,
 				//mientras enviamos el archivo
 				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
 				},
 				//una vez finalizado correctamente
 				success: function(data){
-					
+
 					if (!isNaN(data)) {
 						$(".alert").removeClass("alert-danger");
 						$(".alert").removeClass("alert-info");
 						$(".alert").addClass("alert-success");
 						$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Jugador</strong>. ');
 						$(".alert").delay(3000).queue(function(){
-							/*aca lo que quiero hacer 
+							/*aca lo que quiero hacer
 							  después de los 2 segundos de retraso*/
 							$(this).dequeue(); //continúo con el siguiente ítem en la cola
-							
+
 						});
 
 						url = "index.php?id=" + <?php echo $_GET['id']; ?>;
 						$(location).attr('href',url);
 						$("#load").html('');
 
-						
-						
+
+
 					} else {
 						$(".alert").removeClass("alert-danger");
 						$(".alert").addClass("alert-danger");
@@ -710,7 +770,7 @@ $(document).ready(function(){
                     $("#load").html('');
 				}
 			});
-		
+
     });
 
 });

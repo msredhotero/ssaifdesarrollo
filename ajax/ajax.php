@@ -680,8 +680,23 @@ case 'cargarProximaFecha':
    case 'eliminarJugadoresBaja':
    eliminarJugadoresBaja($serviciosReferencias);
    break;
+   case 'aplicarBajaMasiva':
+   aplicarBajaMasiva($serviciosReferencias);
+   break;
 }
 
+function aplicarBajaMasiva($serviciosReferencias) {
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->traerJugadoresPorCountriesBajaNuevo($id);
+   $i = 0;
+   while ($row = mysql_fetch_array($res)) {
+      $resBaja = $serviciosReferencias->eliminarJugadoresBaja($row['idjugador']);
+      $i += 1;
+   }
+
+   echo $i;
+}
 
 
 function eliminarJugadoresBaja($serviciosReferencias) {
