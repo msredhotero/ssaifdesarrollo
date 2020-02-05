@@ -683,16 +683,80 @@ case 'cargarProximaFecha':
    case 'aplicarBajaMasiva':
    aplicarBajaMasiva($serviciosReferencias);
    break;
+   case 'generarHabilitacionMasiva':
+   generarHabilitacionMasiva($serviciosReferencias);
+   break;
+}
+
+function generarHabilitacionMasiva($serviciosReferencias) {
+   $id = $_POST['id'];
+   $ultimaTemporada = $_POST['ultimaTemporada'];
+
+   $res = $serviciosReferencias->traerHabilitaciones10anios($id, $ultimaTemporada);
+   $i = 0;
+   while ($row = mysql_fetch_array($res)) {
+      $reftemporadas = $_POST['reftemporadasA'];
+   	$refjugadores = $_POST['refjugadores'];
+   	$refdocumentaciones = $_POST['refdocumentacionesA'];
+   	$refmotivoshabilitacionestransitorias = $_POST['refmotivoshabilitacionestransitoriasA'];
+   	$refequipos = $_POST['refequiposA'];
+   	$refcategorias = $_POST['refcategoriasA'];
+   	$fechalimite = formatearFechas($_POST['fechalimiteA']);
+   	$observaciones = $_POST['observacionesA'];
+
+   	if ($fechalimite == '***') {
+   		echo 'Formato de fecha incorrecto';
+   	} else {
+   		if ($serviciosReferencias->existeJugadoresMotivosHabilitacionesTransitorias($reftemporadas, $refcategorias, $refequipos, $refjugadores, $refdocumentaciones,$refmotivoshabilitacionestransitorias) == 0) {
+   			$res = $serviciosReferencias->insertarJugadoresmotivoshabilitacionestransitorias($reftemporadas,$refjugadores,$refdocumentaciones,$refmotivoshabilitacionestransitorias,$refequipos,$refcategorias,$fechalimite,$observaciones);
+
+   			if ((integer)$res > 0) {
+   				echo '';
+   			} else {
+   				echo 'Hubo un error al insertar datos';
+   			}
+   		} else {
+   			echo 'Ya existe esta habilitación';
+   		}
+   	}
+      
+      $i += 1;
+   }
+
+   echo $i;
 }
 
 function aplicarBajaMasiva($serviciosReferencias) {
    $id = $_POST['id'];
 
+   session_start();
+
    $res = $serviciosReferencias->traerJugadoresPorCountriesBajaNuevo($id);
    $i = 0;
    while ($row = mysql_fetch_array($res)) {
+      /**** auditoria ****/
+
+      $tabla = 'dbjugadores';
+      $operacion = 'M';
+      $id = $id;
+      $usuario = $_SESSION['nombre_predio'];
+
+      $arAudi = $serviciosReferencias->modiAuditoria($tabla, $operacion,$row['idjugador'],$usuario);
+      /**** fin audi  ****/
+
       $resBaja = $serviciosReferencias->eliminarJugadoresBaja($row['idjugador']);
-      $i += 1;
+      if ($res == true) {
+         /**** auditoria ****/
+         $tabla = 'dbjugadores';
+         $operacion = 'M';
+         $id = $id;
+         $usuario = $_SESSION['nombre_predio'];
+
+         $serviciosReferencias->insertAuditoria($tabla, $operacion,$row['idjugador'],$usuario,$arAudi,null,'1');
+         /**** fin audi  ****/
+         $i += 1;
+      }
+
    }
 
    echo $i;

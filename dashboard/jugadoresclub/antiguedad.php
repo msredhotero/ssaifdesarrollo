@@ -183,7 +183,7 @@ if ($_SESSION['refroll_predio'] != 1) {
              <div class="col-md-12">
              <ul class="list-inline" style="margin-top:15px;">
                  <li>
-                     <button type="button" class="btn btn-warning" id="cargar" style="margin-left:0px;">Generar Hab. Transitoria</button>
+                     <button type="button" class="btn btn-warning" id="generarHabilitacionMasiva" style="margin-left:0px;">Generar Hab. Transitoria</button>
                  </li>
 
                  <li>
