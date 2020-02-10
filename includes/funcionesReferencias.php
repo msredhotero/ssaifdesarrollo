@@ -15235,6 +15235,10 @@ return $res;
 
 
 function existeJugadoresclubPorClubJugador($idClub, $idJugador) {
+
+   $resTemporada = $this->traerUltimaTemporada();
+	$temporada = mysql_result($resTemporada,0,1);
+
 $sql = "select
 jc.idjugadorclub,
 j.apellido,
@@ -15249,7 +15253,7 @@ jc.refjugadores
 from dbjugadoresclub jc
 inner join dbjugadores j on j.idjugador = jc.refjugadores
 inner join dbcountries c on c.idcountrie = jc.refcountries
-where jc.refJugadores = ".$idJugador." and j.refcountries = ".$idClub." and jc.temporada = 2019
+where jc.refJugadores = ".$idJugador." and j.refcountries = ".$idClub." and jc.temporada = ".$temporada."
 order by 1";
 $res = $this->existeDevuelveId($sql);
 return $res;

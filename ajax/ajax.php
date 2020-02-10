@@ -719,7 +719,7 @@ function generarHabilitacionMasiva($serviciosReferencias) {
    			echo 'Ya existe esta habilitación';
    		}
    	}
-      
+
       $i += 1;
    }
 
@@ -1658,9 +1658,12 @@ function guardarJugadorClubSimple($serviciosReferencias) {
 
 	$existe = $serviciosReferencias->existeJugadoresclubPorClubJugador($idClub, $idJugador);
 
+   $resTemporada = $serviciosReferencias->traerUltimaTemporada();
+	$temporada = mysql_result($resTemporada,0,1);
+
 	if ($existe > 0) {
 		/* modifico */
-		$res = $serviciosReferencias->modificarJugadoresclub($existe,$idJugador,$fechabaja,$articulo,$numeroSerie,date('Y'),$idClub);
+		$res = $serviciosReferencias->modificarJugadoresclub($existe,$idJugador,$fechabaja,$articulo,$numeroSerie,$temporada,$idClub);
 		if ($res == true) {
 			echo '';
 		} else {
@@ -1668,7 +1671,7 @@ function guardarJugadorClubSimple($serviciosReferencias) {
 		}
 	} else {
 		/* inserto */
-		$res = $serviciosReferencias->insertarJugadoresclub($idJugador,$fechabaja,$articulo,$numeroSerie,date('Y'),$idClub);
+		$res = $serviciosReferencias->insertarJugadoresclub($idJugador,$fechabaja,$articulo,$numeroSerie,$temporada,$idClub);
 
 		if ($res >0) {
 			echo '';
