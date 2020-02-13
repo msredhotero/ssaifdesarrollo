@@ -9,6 +9,29 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   function traerFusionesPorEquipo($idequiposdelegados ,$idcountrie) {
+		//$idcountrie = 63;
+		$sql = "select
+					fe.idfusionequipo,
+					cp.nombre as countriepadre,
+					cat.categoria,
+					di.division,
+					ed.nombre,
+					est.estado,
+					est.idestado
+				from dbfusionequipos fe
+				inner join dbequiposdelegados ed on ed.idequipodelegado = fe.refequiposdelegados
+				inner join dbcountries cp on cp.idcountrie = ed.refcountries
+				inner join tbcategorias cat on cat.idtcategoria = ed.refcategorias
+				inner join tbdivisiones di on di.iddivision = ed.refdivisiones
+				inner join tbestados est on est.idestado = fe.refestados
+				where fe.idfusionequipo = ".$idequiposdelegados." and fe.refcountries = ".$idcountrie;
+
+		$res = $this->query($sql,0);
+		return $res;
+
+	}
+
    function traerJugadoresPorCountriesBajaNuevo($idCountrie) {
       $resTemporada = $this->traerUltimaTemporada();
       $temporada = mysql_result($resTemporada,0,1);

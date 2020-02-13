@@ -22,33 +22,33 @@ $serviciosReferencias 	= new ServiciosReferencias();
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../equipos/');
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../funciones/');
 //*** FIN  ****/
 
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Equipos",$_SESSION['refroll_predio'],$_SESSION['email_predio']);
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Funciones",$_SESSION['refroll_predio'],$_SESSION['email_predio']);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Equipo";
+$singular = "Fusion";
 
-$plural = "Equipos";
+$plural = "Fusiones";
 
-$eliminar = "eliminarEquipos";
+$eliminar = "eliminarFusionequipos";
 
-$insertar = "insertarEquipos";
+$insertar = "insertarFusionequipos";
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbequipos";
+$tabla 			= "dbfusionequipos";
 
-$lblCambio	 	= array("refcountries","refcontactos","refcategorias","refdivisiones","fechaalta","fachebaja");
-$lblreemplazo	= array("Countrie","Contacto","Categoria","Division","Fecha Alta","Fecha Baja");
+$lblCambio	 	= array("refequiposdelegados","refcountries","refestados","viejo","entregoformulario");
+$lblreemplazo	= array("Equipo","Club","Estado","Temporada Anterior","Entrego Formulario");
 
 
 $resCountries 	= $serviciosReferencias->traerCountries();
