@@ -22,13 +22,13 @@ $serviciosReferencias 	= new ServiciosReferencias();
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../funciones/');
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_predio'], '../fusiones/');
 //*** FIN  ****/
 
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Funciones",$_SESSION['refroll_predio'],$_SESSION['email_predio']);
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Fusiones",$_SESSION['refroll_predio'],$_SESSION['email_predio']);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
@@ -43,6 +43,8 @@ $insertar = "insertarFusionequipos";
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
+$resTemporada = $serviciosReferencias->traerUltimaTemporada();
+$idtemporada = mysql_result($resTemporada,0,0);
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbfusionequipos";
@@ -55,31 +57,31 @@ $resCountries 	= $serviciosReferencias->traerCountries();
 $cadRef		= '<option value="0">-- Seleccionar --</option>';
 $cadRef 	.= $serviciosFunciones->devolverSelectBox($resCountries,array(1),'');
 
-$resContactos 	= $serviciosReferencias->traerContactos();
-$cadRef2 	= $serviciosFunciones->devolverSelectBox($resContactos,array(1,2,11),' - ');
+$resEstados 	= $serviciosReferencias->traerEstados();
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resEstados,array(1),'');
 
-$resCategorias 	= $serviciosReferencias->traerCategorias();
-$cadRef3 	= $serviciosFunciones->devolverSelectBox($resCategorias,array(1),'');
+$resEquipos 	= $serviciosReferencias->traerEquiposDelegadosPorTemporada($idtemporada);
+$cadRef3 	= $serviciosFunciones->devolverSelectBox($resEquipos,array(1,2,3),' - ');
 
-$resDivisiones 	= $serviciosReferencias->traerDivisiones();
-$cadRef4 	= $serviciosFunciones->devolverSelectBox($resDivisiones,array(1),'');
+$cadRef4 = "<option value='0'>No</option><option value='1'>Si</option>";
 
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2,2 => $cadRef3,3 => $cadRef4);
-$refCampo 	=  array("refcountries","refcontactos","refcategorias","refdivisiones");
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2,2 => $cadRef3,3=>$cadRef4);
+$refCampo 	=  array("refcountries","refestados","refequiposdelegados","entregoformulario");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
 
 
 /////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
-$cabeceras 		= "	<th>Countrie</th>
-					<th>Nombre</th>
-					<th>Categorias</th>
-					<th>Divisiones</th>
-					<th>Contacto</th>
-					<th>Fecha Alta</th>
-					<th>Fecha Baja</th>
-					<th>Activo</th>";
+$cabeceras 		= "<th>Equipo</th>
+					<th>Categoria</th>
+					<th>Division</th>
+					<th>Club</th>
+					<th>Origen</th>
+					<th>Entrego Formulario</th>
+					<th>Temp.</th>
+					<th>Estado</th>";
 
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
@@ -88,7 +90,7 @@ $cabeceras 		= "	<th>Countrie</th>
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerEquipos(),8);
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerFusionesEquiposCompleto(),8);
 
 
 
@@ -271,31 +273,6 @@ $(document).ready(function(){
 	table.buttons().container()
         .appendTo( '#example_wrapper .col-sm-6:eq(0)' );
 
-	$('#activo').prop('checked',true);
-
-	$('#fechaalta').val('<?php echo date('d/m/Y'); ?>');
-	/*
-	function traerContactosPorCountries(id) {
-		$.ajax({
-				data:  {id: id,
-						accion: 'traerContactosPorCountries'},
-				url:   '../../ajax/ajax.php',
-				type:  'post',
-				beforeSend: function () {
-
-				},
-				success:  function (response) {
-					$('#refcontactos').html(response);
-				}
-		});
-	}
-
-	$('#refcountries').change(function() {
-		traerContactosPorCountries($(this).val());
-	});
-
-	traerContactosPorCountries($(this).val());
-	*/
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
@@ -370,70 +347,61 @@ $(document).ready(function(){
 
 	 		}); //fin del dialogo para eliminar
 
-	<?php
-		echo $serviciosHTML->validacion($tabla);
-
-	?>
-
-
-
 
 	//al enviar el formulario
     $('#cargar').click(function(){
 
-		if (validador() == "")
-        {
 			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax
-			$.ajax({
-				url: '../../ajax/ajax.php',
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
-				},
-				//una vez finalizado correctamente
-				success: function(data){
+		var formData = new FormData($(".formulario")[0]);
+		var message = "";
+		//hacemos la petición ajax
+		$.ajax({
+			url: '../../ajax/ajax.php',
+			type: 'POST',
+			// Form data
+			//datos del formulario
+			data: formData,
+			//necesario para subir archivos via ajax
+			cache: false,
+			contentType: false,
+			processData: false,
+			//mientras enviamos el archivo
+			beforeSend: function(){
+				$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
+			},
+			//una vez finalizado correctamente
+			success: function(data){
 
-					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+				if (data == '') {
+               $(".alert").removeClass("alert-danger");
+					$(".alert").removeClass("alert-info");
+               $(".alert").addClass("alert-success");
+               $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
+					$(".alert").delay(3000).queue(function(){
+						/*aca lo que quiero hacer
+						  después de los 2 segundos de retraso*/
+						$(this).dequeue(); //continúo con el siguiente ítem en la cola
 
-											});
-											$("#load").html('');
-											url = "index.php";
-											$(location).attr('href',url);
+					});
+					$("#load").html('');
+					url = "index.php";
+					//$(location).attr('href',url);
 
 
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
-		}
+                      } else {
+                      	$(".alert").removeClass("alert-danger");
+                          $(".alert").addClass("alert-danger");
+                          $(".alert").html('<strong>Error!</strong> '+data);
+                          $("#load").html('');
+                      }
+			},
+			//si ha ocurrido un error
+			error: function(){
+				$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+                 $("#load").html('');
+			}
+		});
+
     });
 
 });

@@ -9,6 +9,105 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   function insertarFusionEquipos($refequipos, $refcountries, $refestados, $observacion, $viejo ,$entregoformulario) {
+		$sql = "INSERT INTO dbfusionequipos
+				(idfusionequipo,
+				refequiposdelegados,
+				refcountries,
+				refestados,
+				observacion,
+				viejo,
+            entregoformulario)
+				VALUES
+				('',
+				".$refequipos.",
+				".$refcountries.",
+				".$refestados.",
+				'".$observacion."',
+				".$viejo.",
+            '".$entregoformulario."')";
+
+		//$res = $this->query($sql,1);
+		return $sql;
+	}
+
+   function modificarFusionEquipos($id,$refequipos, $refcountries, $refestados, $observacion, $viejo ,$entregoformulario) {
+		$sql = "update dbfusionequipos
+            set
+				refequiposdelegados=".$refequipos.",
+				refcountries=".$refcountries.",
+				refestados=".$refestados.",
+				observacion='".$observacion."',
+				viejo=".$viejo.",
+            entregoformulario='".$entregoformulario."'
+            where idfusionequipo = ".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function eliminarFusionEquipos($idfusionequipo) {
+		$sql = "delete from dbfusionequipos where idfusionequipo = ".$idfusionequipo;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+   function traerEquiposDelegadosPorTemporada($idtemporada) {
+      $sql = "
+         SELECT
+             ed.idequipodelegado,
+             ed.nombre,
+             cat.categoria,
+             dv.division,
+             c.nombre AS club
+         FROM
+             dbequiposdelegados ed
+                 INNER JOIN
+             tbcategorias cat ON cat.idtcategoria = ed.refcategorias
+                 INNER JOIN
+             tbdivisiones dv ON dv.iddivision = ed.refdivisiones
+                 INNER JOIN
+             dbcountries c ON c.idcountrie = ed.refcountries
+                 INNER JOIN
+             tbestados est ON est.idestado = ed.refestados
+         WHERE
+             ed.activo = 1 AND ed.reftemporadas = ".$idtemporada;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   function traerFusionesEquiposCompleto() {
+      $sql = "SELECT
+                f.idfusionequipo,
+                ed.nombre AS equipo,
+                cat.categoria,
+                dv.division,
+                c.nombre AS club,
+                (case when f.viejo = 1 then 'heredado' else 'nuevo' end) as viejo,
+                (case when f.entregoformulario = '1' then 'Entrego Formulario' else 'No entrego' end) as entregoformulario,
+                t.temporada,
+                est.estado
+            FROM
+                dbfusionequipos f
+                    INNER JOIN
+                dbequiposdelegados ed ON f.refequiposdelegados = ed.idequipodelegado
+                    INNER JOIN
+                tbtemporadas t ON t.idtemporadas = ed.reftemporadas
+                    INNER JOIN
+                dbcountries c ON c.idcountrie = f.refcountries
+                    INNER JOIN
+                tbcategorias cat ON cat.idtcategoria = ed.refcategorias
+                    INNER JOIN
+                tbdivisiones dv ON dv.iddivision = ed.refdivisiones
+                   inner join
+               tbestados est on est.idestado = f.refestados
+            order by t.temporada desc, c.nombre, cat.orden, dv.iddivision, ed.nombre";
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
    function traerFusionesPorEquipo($idequiposdelegados ,$idcountrie) {
 		//$idcountrie = 63;
 		$sql = "select

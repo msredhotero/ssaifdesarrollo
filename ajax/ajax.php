@@ -686,7 +686,77 @@ case 'cargarProximaFecha':
    case 'generarHabilitacionMasiva':
    generarHabilitacionMasiva($serviciosReferencias);
    break;
+   case 'insertarFusionEquipos':
+   insertarFusionEquipos($serviciosReferencias);
+   break;
+   case 'modificarFusionEquipos':
+   modificarFusionEquipos($serviciosReferencias);
+   break;
+   case 'eliminarFusionEquipos':
+   eliminarFusionEquipos($serviciosReferencias);
+   break;
 }
+
+function insertarFusionequipos($serviciosReferencias) {
+   $refequiposdelegados = $_POST['refequiposdelegados'];
+   $refcountries = $_POST['refcountries'];
+   $refestados = $_POST['refestados'];
+   $observacion = $_POST['observacion'];
+   echo 'asd';
+
+   if (isset($_POST['viejo'])) {
+      $viejo = 1;
+   } else {
+      $viejo = 0;
+   }
+
+   $entregoformulario = $_POST['entregoformulario'];
+
+   $res = $serviciosReferencias->insertarFusionequipos($refequiposdelegados,$refcountries,$refestados,$observacion,$viejo,$entregoformulario);
+
+   if ((integer)$res > 0) {
+      echo ''.$res;
+   } else {
+      echo 'Hubo un error al insertar datos '.$res;
+   }
+}
+
+function modificarFusionequipos($serviciosReferencias) {
+   $id = $_POST['id'];
+   $refequiposdelegados = $_POST['refequiposdelegados'];
+   $refcountries = $_POST['refcountries'];
+   $refestados = $_POST['refestados'];
+   $observacion = $_POST['observacion'];
+
+   if (isset($_POST['viejo'])) {
+      $viejo = 1;
+   } else {
+      $viejo = 0;
+   }
+
+   $entregoformulario = $_POST['entregoformulario'];
+
+   $res = $serviciosReferencias->modificarFusionequipos($id,$refequiposdelegados,$refcountries,$refestados,$observacion,$viejo,$entregoformulario);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Hubo un error al modificar datos';
+   }
+
+}
+
+function eliminarFusionequipos($serviciosReferencias) {
+   $id = $_POST['id'];
+   $res = $serviciosReferencias->eliminarFusionequipos($id);
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Hubo un error al modificar datos';
+   }
+}
+
+
 
 function generarHabilitacionMasiva($serviciosReferencias) {
    $id = $_POST['id'];
