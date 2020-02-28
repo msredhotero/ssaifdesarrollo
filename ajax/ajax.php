@@ -2730,34 +2730,41 @@ function insertarConector($serviciosReferencias) {
 
 	$existe = $serviciosReferencias->existeConectorJugadorEquipo($refjugadores, $refequipos);
 
-	if ($existe == 1) {
-		echo 'Ya cargo a este jugador en el equipo';
-	} else {
-		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo,$reftemporada);
+   $existeTemporada = $serviciosReferencias->existeConectorJugadorEquipoTemporada($refjugadores, $refequipos, $reftemporada);
 
-		if ((integer)$res > 0) {
+   if ($existeTemporada == 1) {
+      echo 'Ya cargo a este jugador en el equipo para esta temporada';
+   } else {
+      if ($existe == 1) {
+   		echo 'Ya cargo a este jugador en el equipo';
+   	} else {
+   		$res = $serviciosReferencias->insertarConector($refjugadores,$reftipojugadores,$refequipos,$refcountries,$refcategorias,$esfusion,$activo,$reftemporada);
 
-         /**** auditoria ****/
-         session_start();
-         $tabla = 'dbconector';
-         $operacion = 'I';
-         $id = $res;
-         $usuario = $_SESSION['nombre_predio'];
+   		if ((integer)$res > 0) {
 
-         $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
-         /**** fin auditoria ****/
+            /**** auditoria ****/
+            session_start();
+            $tabla = 'dbconector';
+            $operacion = 'I';
+            $id = $res;
+            $usuario = $_SESSION['nombre_predio'];
 
-			//si voy a cargar al agente y ademas posee otro conector y esta activo, pero esta carga viene de un habilitacion deportiva
-         	/**** lo saco poruqe no funciona marcos 30/09/2019
-			if ($vHabTrns != 1) {
-				$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
-			}
-			*/
-			echo '';
-		} else {
-			echo 'Hubo un error al insertar datos';
-		}
-	}
+            $serviciosReferencias->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
+            /**** fin auditoria ****/
+
+   			//si voy a cargar al agente y ademas posee otro conector y esta activo, pero esta carga viene de un habilitacion deportiva
+            	/**** lo saco poruqe no funciona marcos 30/09/2019
+   			if ($vHabTrns != 1) {
+   				$serviciosReferencias->actualizarConectoresPorJugador($refjugadores, $res);
+   			}
+   			*/
+   			echo '';
+   		} else {
+   			echo 'Hubo un error al insertar datos';
+   		}
+   	}
+   }
+
 }
 
 

@@ -9,6 +9,16 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   function existeConectorJugadorEquipoTemporada($refJugador, $refEquipo, $refTemporada) {
+       $sql = "select idconector from dbconector where refjugadores =".$refJugador." and refequipos = ".$refEquipo." and reftemporadas = ".$refTemporada;
+       $res = $this->query($sql,0);
+
+       if (mysql_num_rows($res)>0) {
+           return 1;
+       }
+       return 0;
+   }
+
    function insertarFusionEquipos($refequipos, $refcountries, $refestados, $observacion, $viejo ,$entregoformulario) {
 		$sql = "INSERT INTO dbfusionequipos
 				(idfusionequipo,

@@ -20,7 +20,7 @@ class serviciosDelegados {
     }
 
 	function traerConectorActivosPorEquipos($refEquipos, $idtemporada) {
-	    
+
 	    $refTemporada = $this->traerUltimaTemporada();
 
        if (mysql_num_rows($refTemporada)>0) {
@@ -28,8 +28,8 @@ class serviciosDelegados {
        } else {
        	$idTemporada = 0;
        }
-	    
-	if ($idtemporada == $idTemporada) {    
+
+	if ($idtemporada == $idTemporada) {
 	$sql = "select
 	    c.idconector,
 	    cat.categoria,
@@ -119,6 +119,123 @@ class serviciosDelegados {
 	}
 
 
+	function traerConectorActivosPorEquiposNuevo($refEquipos, $idtemporada) {
+
+	    $refTemporada = $this->traerUltimaTemporada();
+
+       if (mysql_num_rows($refTemporada)>0) {
+       	$idTemporada = mysql_result($refTemporada,0,0);
+       } else {
+       	$idTemporada = 0;
+       }
+
+		if ($idtemporada == $idTemporada) {
+		$sql = "select
+		    c.idconector,
+		    cat.categoria,
+		    equ.nombre as equipo,
+		    co.nombre as countrie,
+		    tip.tipojugador,
+		    (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+		    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+		    c.refjugadores,
+		    c.reftipojugadores,
+		    c.refequipos,
+		    c.refcountries,
+		    c.refcategorias,
+		    concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+		    jug.nrodocumento,
+		    jug.fechanacimiento,
+		    tip.idtipojugador,
+		    year(now()) - year(jug.fechanacimiento) as edad,
+		    jug.fechabaja,
+		    jug.fechaalta
+
+		from
+		    dbconector c
+		        inner join
+		    dbjugadores jug ON jug.idjugador = c.refjugadores
+		        inner join
+		    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+		        inner join
+		    dbcountries co ON co.idcountrie = jug.refcountries
+		        inner join
+		    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+		        inner join
+		    dbequipos equ ON equ.idequipo = c.refequipos
+		        inner join
+		    tbdivisiones di ON di.iddivision = equ.refdivisiones
+		        inner join
+		    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+		        inner join
+		    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+		    where equ.idequipo = ".$refEquipos." and c.reftemporadas = ".$idtemporada." and c.activo = 1
+		order by concat(jug.apellido,', ',jug.nombres)";
+		} else {
+		    $sql = "select
+		    cat.categoria,
+		    equ.nombre as equipo,
+		    co.nombre as countrie,
+		    tip.tipojugador,
+		    (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+		    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+		    c.refjugadores,
+		    c.reftipojugadores,
+		    c.refequipos,
+		    c.refcountries,
+		    c.refcategorias,
+		    concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+		    jug.nrodocumento,
+		    jug.fechanacimiento,
+		    tip.idtipojugador,
+		    year(now()) - year(jug.fechanacimiento) as edad,
+		    jug.fechabaja,
+		    jug.fechaalta
+
+		from
+		    dbconector c
+		        inner join
+		    dbjugadores jug ON jug.idjugador = c.refjugadores
+		        inner join
+		    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+		        inner join
+		    dbcountries co ON co.idcountrie = jug.refcountries
+		        inner join
+		    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+		        inner join
+		    dbequipos equ ON equ.idequipo = c.refequipos
+		        inner join
+		    tbdivisiones di ON di.iddivision = equ.refdivisiones
+		        inner join
+		    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+		        inner join
+		    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+		    where equ.idequipo = ".$refEquipos." and c.reftemporadas = ".$idtemporada."
+		    group by cat.categoria,
+		    equ.nombre,
+		    co.nombre ,
+		    tip.tipojugador,
+		    c.esfusion,
+		    c.activo,
+		    c.refjugadores,
+		    c.reftipojugadores,
+		    c.refequipos,
+		    c.refcountries,
+		    c.refcategorias,
+
+		    jug.nrodocumento,
+		    jug.fechanacimiento,
+		    tip.idtipojugador,
+		    year(now()) - year(jug.fechanacimiento) ,
+		    jug.fechabaja,
+		    jug.fechaalta
+		order by concat(jug.apellido,', ',jug.nombres)";
+		}
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
 	function traerConectorActivosPorEquiposEdades($refEquipos, $idtemporada) {
 	    $refTemporada = $this->traerUltimaTemporada();
 
@@ -127,7 +244,7 @@ class serviciosDelegados {
        } else {
        	$idTemporada = 0;
        }
-       
+
 	if ($idtemporada == $idTemporada) {
     	$sql = "select
     	    min(year(now()) - year(jug.fechanacimiento)) as edadMinima,
@@ -157,31 +274,37 @@ class serviciosDelegados {
     	    where equ.idequipo = ".$refEquipos." and c.reftemporadas = ".$idtemporada." and c.activo = 1";
 	} else {
 	    $sql = "select
-    	    min(year(now()) - year(jug.fechanacimiento)) as edadMinima,
-    	    max(year(now()) - year(jug.fechanacimiento)) as edadMaxima,
-    	    count(*) as cantidadJugadores,
-    	    round((max(year(now()) - year(jug.fechanacimiento)) + min(year(now()) - year(jug.fechanacimiento)))/2,2) as edadPromedio
-    	from
-    	    dbconector c
-    	        inner join
-    	    dbjugadores jug ON jug.idjugador = c.refjugadores
-    	        inner join
-    	    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
-    	        inner join
-    	    dbcountries co ON co.idcountrie = jug.refcountries
-    	        inner join
-    	    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
-    	        inner join
-    	    dbequipos equ ON equ.idequipo = c.refequipos
-    	        inner join
-    	    tbdivisiones di ON di.iddivision = equ.refdivisiones
-    	        left join
-    	    dbcontactos con ON con.idcontacto = equ.refcontactos
-    	        inner join
-    	    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
-    	        inner join
-    	    tbcategorias cat ON cat.idtcategoria = c.refcategorias
-    	    where equ.idequipo = ".$refEquipos." and c.reftemporadas = ".$idtemporada."";
+	    	    min(year(now()) - year(r.fechanacimiento)) as edadMinima,
+	    	    max(year(now()) - year(r.fechanacimiento)) as edadMaxima,
+	    	    count(*) as cantidadJugadores,
+	    	    round((max(year(now()) - year(r.fechanacimiento)) + min(year(now()) - year(r.fechanacimiento)))/2,2) as edadPromedio
+		from (
+			select
+				jug.idjugador,
+	         jug.fechanacimiento
+	    	from
+	    	    dbconector c
+	    	        inner join
+	    	    dbjugadores jug ON jug.idjugador = c.refjugadores
+	    	        inner join
+	    	    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+	    	        inner join
+	    	    dbcountries co ON co.idcountrie = jug.refcountries
+	    	        inner join
+	    	    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+	    	        inner join
+	    	    dbequipos equ ON equ.idequipo = c.refequipos
+	    	        inner join
+	    	    tbdivisiones di ON di.iddivision = equ.refdivisiones
+	    	        left join
+	    	    dbcontactos con ON con.idcontacto = equ.refcontactos
+	    	        inner join
+	    	    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+	    	        inner join
+	    	    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+	    	    where equ.idequipo = ".$refEquipos." and c.reftemporadas = ".$idtemporada." group by jug.idjugador,
+            jug.fechanacimiento
+				) r";
 	}
 	$res = $this->query($sql,0);
 	return $res;
@@ -202,7 +325,7 @@ class serviciosDelegados {
 			while ($row = mysql_fetch_array($resJugadoresNuevos)) {
 				if ($this->existeJugador($row['nrodocumento']) == 0) {
 					$resIJ = $this->insertarJugadorDocumentacionValores($row['refjugadorespre']);
-					
+
 					$resConector = $this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
 				} else {
 					$resConector = $this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
@@ -428,7 +551,7 @@ class serviciosDelegados {
 						 j.nrodocumento
 					FROM dbconectordelegados c
 					inner join dbjugadorespre j on j.idjugadorpre = c.refjugadorespre
-					where c.reftemporadas = ".$idtemporada." and c.refequipos = ".$id." and c.refjugadorespre > 0 
+					where c.reftemporadas = ".$idtemporada." and c.refequipos = ".$id." and c.refjugadorespre > 0
 					order by c.refjugadorespre";
 
 		$res = $this->query($sql,0);
