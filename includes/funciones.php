@@ -760,6 +760,12 @@ class Servicios {
     DATE_FORMAT(fechabaja, '%d/%m/%Y') as fechabaja,refposiciontributaria,latitud,longitud,activo,referencia,direccion,telefonoadministrativo,telefonocampo,email,localidad,codigopostal from dbcountries where idcountrie =".$id;
 				$resMod = $this->query($sqlMod,0);
 				break;
+			case 'dbfusionequipos':
+				$sqlMod = "select idfusionequipo,refequiposdelegados,refcountries,refestados,observacion,(case when viejo=1 then 'Si' else 'No' end) as viejo,
+				(case when entregoformulario=1 then 'Si' else 'No' end) as entregoformulario
+							from dbfusionequipos where idfusionequipo =".$id;
+				$resMod = $this->query($sqlMod,0);
+				break;
 
 			default:
 				$sqlMod = "select * from ".$tabla." where ".$lblid." = ".$id;

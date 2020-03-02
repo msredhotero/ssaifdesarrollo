@@ -1,5 +1,7 @@
 <?php
 
+
+
 include ('../includes/funcionesUsuarios.php');
 include ('../includes/funciones.php');
 include ('../includes/funcionesHTML.php');
@@ -678,22 +680,30 @@ case 'cargarProximaFecha':
    break;
 
    case 'eliminarJugadoresBaja':
-   eliminarJugadoresBaja($serviciosReferencias);
+      eliminarJugadoresBaja($serviciosReferencias);
    break;
+
    case 'aplicarBajaMasiva':
-   aplicarBajaMasiva($serviciosReferencias);
+      aplicarBajaMasiva($serviciosReferencias);
    break;
+
    case 'generarHabilitacionMasiva':
-   generarHabilitacionMasiva($serviciosReferencias);
+      generarHabilitacionMasiva($serviciosReferencias);
    break;
+
    case 'insertarFusionEquipos':
-   insertarFusionEquipos($serviciosReferencias);
+      insertarFusionEquipos($serviciosReferencias);
    break;
-   case 'modificarFusionEquipos':
-   modificarFusionEquipos($serviciosReferencias);
+
+   case 'modificarFusionequipos':
+      modificarFusionequipos($serviciosReferencias);
    break;
+
    case 'eliminarFusionEquipos':
-   eliminarFusionEquipos($serviciosReferencias);
+      eliminarFusionEquipos($serviciosReferencias);
+   break;
+   default:
+      echo 'Error URL';
    break;
 }
 
@@ -722,6 +732,7 @@ function insertarFusionequipos($serviciosReferencias) {
 }
 
 function modificarFusionequipos($serviciosReferencias) {
+
    $id = $_POST['id'];
    $refequiposdelegados = $_POST['refequiposdelegados'];
    $refcountries = $_POST['refcountries'];
@@ -736,12 +747,13 @@ function modificarFusionequipos($serviciosReferencias) {
 
    $entregoformulario = $_POST['entregoformulario'];
 
+
    $res = $serviciosReferencias->modificarFusionequipos($id,$refequiposdelegados,$refcountries,$refestados,$observacion,$viejo,$entregoformulario);
 
    if ($res == true) {
       echo '';
    } else {
-      echo 'Hubo un error al modificar datos';
+      echo 'Hubo un error al modificar datos ';
    }
 
 }
@@ -4469,7 +4481,11 @@ function modificarTorneos($serviciosReferencias) {
 function eliminarTorneos($serviciosReferencias) {
 	$id = $_POST['id'];
 	$res = $serviciosReferencias->eliminarTorneos($id);
-	echo $res;
+   if ($res == true) {
+		echo '';
+	} else {
+		echo 'No se puede eliminar un torneo en curso';
+	}
 }
 
 

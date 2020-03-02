@@ -102,7 +102,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
-	
+
 }
 
 
@@ -124,23 +124,23 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
-	
-    
-   
+
+
+
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -151,8 +151,8 @@ if ($_SESSION['refroll_predio'] != 1) {
         $('#navigation').perfectScrollbar();
       });
     </script>
-    
- 
+
+
 </head>
 
 <body>
@@ -166,12 +166,12 @@ if ($_SESSION['refroll_predio'] != 1) {
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
         	<div class="row">
-            
+
 			<?php echo $formulario; ?>
             <div class="col-md-6">
             	<label class="control-label">Fecha de Inicio</label>
@@ -179,35 +179,35 @@ if ($_SESSION['refroll_predio'] != 1) {
                 	<input type="text" name="fechainicio" id="fechainicio" class="form-control"/>
                     <script type="text/javascript">
 					$(document).ready(function(){
-						
+
 						$("#fechainicio").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
 					});
 					</script>
                 </div>
             </div>
-            
+
             <div class="col-md-6">
             	<label class="control-label">Punto Bonus</label>
                 <div class="input-group col-md-3">
                 	<input type="checkbox" name="puntobonus" id="puntobonus" class="form-control"/>
-                    
+
                 </div>
             </div>
-            
+
             </div>
-            
-            
-            
-            
+
+
+
+
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
@@ -220,22 +220,22 @@ if ($_SESSION['refroll_predio'] != 1) {
             </form>
     	</div>
     </div>
-    
+
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<?php echo $lstCargados; ?>
     	</div>
     </div>
-    
-    
 
-    
-    
-   
+
+
+
+
+
 </div>
 
 
@@ -285,9 +285,9 @@ $(document).ready(function(){
 			}
 		  }
 	} );
-	
+
 	$('#activo').prop('checked',true);
-	
+
 	$('#respetadefiniciontipojugadores').prop('checked',true);
 
 	$('#respetadefinicionhabilitacionestransitorias').prop('checked',true);
@@ -295,46 +295,57 @@ $(document).ready(function(){
 	$('#respetadefinicionsancionesacumuladas').prop('checked',true);
 
 
-	
+
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			$("#idEliminar").val(usersid);
 			$("#dialog2").dialog("open");
 
-			
+
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton eliminar
-	
+
 	$("#example").on("click",'.varmodificar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
-			
+
 			url = "modificar.php?id=" + usersid;
 			$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton modificar
-	
-	
+
+   $("#example").on("click",'.varver', function(){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+
+			url = "../fixture/ver.php?id=" + usersid;
+			$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");
+		  }
+	});//fin del boton modificar
+
+
 	$("#example").on("click",'.vargenerar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
-			
+
 			url = "equipos.php?id=" + usersid;
 			$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton modificar
 
 	 $( "#dialog2" ).dialog({
-		 	
+
 			    autoOpen: false,
 			 	resizable: false,
 				width:600,
@@ -342,18 +353,23 @@ $(document).ready(function(){
 				modal: true,
 				buttons: {
 				    "Eliminar": function() {
-	
+
 						$.ajax({
 									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
-											
+
 									},
 									success:  function (response) {
-											url = "index.php";
+                              if (response == '') {
+                                 url = "index.php";
 											$(location).attr('href',url);
-											
+                              } else {
+                                 alert(response);
+                              }
+
+
 									}
 							});
 						$( this ).dialog( "close" );
@@ -367,29 +383,29 @@ $(document).ready(function(){
 						$( this ).dialog( "close" );
 				    }
 				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
-			
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
-	
-	?>
-	
 
-	
-	
+
+	 		}); //fin del dialogo para eliminar
+
+	<?php
+		echo $serviciosHTML->validacion($tabla);
+
+	?>
+
+
+
+
 	//al enviar el formulario
     $('#cargar').click(function(){
-		
+
 		if (validador() == "")
         {
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
-			//hacemos la petición ajax  
+			//hacemos la petición ajax
 			$.ajax({
-				url: '../../ajax/ajax.php',  
+				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -400,28 +416,28 @@ $(document).ready(function(){
 				processData: false,
 				//mientras enviamos el archivo
 				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
 				},
 				//una vez finalizado correctamente
 				success: function(data){
 
 
-					if (!isNaN(data)) {	
+					if (!isNaN(data)) {
 						$(".alert").removeClass("alert-danger");
 						$(".alert").removeClass("alert-info");
 						$(".alert").addClass("alert-success");
 						$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
 						$(".alert").delay(3000).queue(function(){
-							/*aca lo que quiero hacer 
+							/*aca lo que quiero hacer
 							  después de los 2 segundos de retraso*/
 							$(this).dequeue(); //continúo con el siguiente ítem en la cola
-							
+
 						});
 						$("#load").html('');
 						url = "equipos.php?id="+data+"&fechainicio="+$('#fechainicio').val();
 						$(location).attr('href',url);
-						
-						
+
+
 					} else {
 						$(".alert").removeClass("alert-danger");
 						$(".alert").addClass("alert-danger");

@@ -947,7 +947,7 @@ function traerCabeceraconfirmacionPorId($id) {
 	}
 
 	function traerFusionesequiposPorId($id) {
-		$sql = "select idfusionequipo,refequiposdelegados,refcountries,refestados,observacion,viejo
+		$sql = "select idfusionequipo,refequiposdelegados,refcountries,refestados,observacion,(case when viejo=1 then 'Si' else 'No' end) as viejo,entregoformulario
 					from dbfusionequipos where idfusionequipo = ".$id;
 		$res = $this->query($sql,0);
 		return $res;

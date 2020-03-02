@@ -13,11 +13,13 @@ include ('../../includes/funciones.php');
 include ('../../includes/funcionesUsuarios.php');
 include ('../../includes/funcionesHTML.php');
 include ('../../includes/funcionesReferencias.php');
+include ('../../includes/funcionesDelegados.php');
 
 $serviciosFunciones = new Servicios();
 $serviciosUsuario 	= new ServiciosUsuarios();
 $serviciosHTML 		= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
+$serviciosDelegados 	= new ServiciosDelegados();
 
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
@@ -33,46 +35,55 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Equipos
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerEquiposPorId($id);
+$resResultado = $serviciosDelegados->traerFusionesequiposPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Equipo";
+$singular = "Fusion";
 
-$plural = "Equipos";
+$plural = "Fusiones";
 
-$eliminar = "eliminarEquipos";
+$eliminar = "eliminarFusionequipos";
 
-$modificar = "modificarEquipos";
+$insertar = "insertarFusionequipos";
 
-$idTabla = "idequipo";
+$modificar = 'modificarFusionequipos';
 
 $tituloWeb = "Gestión: AIF";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
+$resTemporada = $serviciosReferencias->traerUltimaTemporada();
+$idtemporada = mysql_result($resTemporada,0,0);
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbequipos";
+$tabla 			= "dbfusionequipos";
 
-$lblCambio	 	= array("refcountries","refcontactos","refcategorias","refdivisiones","fechaalta","fachebaja");
-$lblreemplazo	= array("Countrie","Contacto","Categoria","Division","Fecha Alta","Fecha Baja");
+$lblCambio	 	= array("refequiposdelegados","refcountries","refestados","viejo","entregoformulario");
+$lblreemplazo	= array("Equipo","Club","Estado","Temporada Anterior","Entrego Formulario");
 
 
 $resCountries 	= $serviciosReferencias->traerCountries();
-$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resCountries,array(1),'', mysql_result($resResultado,0,'refcountries'));
+$cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resCountries,array(1),'',mysql_result($resResultado,0,'refcountries'));
 
-$resContactos 	= $serviciosReferencias->traerContactos();
-$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resContactos,array(1,2),' - ', mysql_result($resResultado,0,'refcontactos'));
+$resEstados 	= $serviciosReferencias->traerEstados();
+$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resEstados,array(1),'',mysql_result($resResultado,0,'refestados'));
 
-$resCategorias 	= $serviciosReferencias->traerCategorias();
-$cadRef3 	= $serviciosFunciones->devolverSelectBoxActivo($resCategorias,array(1),'', mysql_result($resResultado,0,'refcategorias'));
+$resEquipos 	= $serviciosReferencias->traerEquiposDelegadosPorTemporada($idtemporada);
+$cadRef3 	= $serviciosFunciones->devolverSelectBoxActivo($resEquipos,array(1,2,3),' - ',mysql_result($resResultado,0,'refequiposdelegados'));
 
-$resDivisiones 	= $serviciosReferencias->traerDivisiones();
-$cadRef4 	= $serviciosFunciones->devolverSelectBoxActivo($resDivisiones,array(1),'', mysql_result($resResultado,0,'refdivisiones'));
+if (mysql_result($resResultado,0,'entregoformulario') == '1') {
+	$cadRef4 = "<option value='0'>No</option><option value='1' selected>Si</option>";
+} else {
+	$cadRef4 = "<option value='0' selected>No</option><option value='1'>Si</option>";
+}
 
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2,2 => $cadRef3,3 => $cadRef4);
-$refCampo 	=  array("refcountries","refcontactos","refcategorias","refdivisiones");
+
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2,2 => $cadRef3,3=>$cadRef4);
+$refCampo 	=  array("refcountries","refestados","refequiposdelegados","entregoformulario");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
+
+$idTabla = 'idfusionequipo';
 
 
 $formulario 	= $serviciosFunciones->camposTablaModificar($id, $idTabla, $modificar,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
@@ -174,46 +185,15 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
                     </li>
                     <li>
-                        <button type="button" class="btn btn-warning" id="ver" style="margin-left:0px;">Ver</button>
-                    </li>
-                    <li>
                         <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
                     </li>
                 </ul>
                 </div>
             </div>
 
-            <div class="row">
-				<div class="col-xs-12 col-md-12 col-lg-12">
-					<a href="javascript:void(0);" class="thumbnail">
-						<img class="img-responsive">
-					</a>
-				</div>
-			</div>
             </form>
     	</div>
     </div>
-
-    <div class="boxInfoLargo">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Modificar Imagen <?php echo $singular; ?></p>
-
-        </div>
-    	<div class="cuerpoBox">
-    		<form action="subir.php" id="frmFileUpload" class="dropzone" method="post" enctype="multipart/form-data">
-				<div class="dz-message">
-
-					<h3>Arrastre y suelte una imagen aqui o haga click y busque una imagen en su ordenador.</h3>
-				</div>
-				<div class="fallback">
-					<input name="file" type="file" id="archivos" />
-					<input type="hidden" id="idequipo" name="idequipo" value="<?php echo $id; ?>" />
-				</div>
-			</form>
-    	</div>
-    </div>
-
-
 
 </div>
 
@@ -234,74 +214,15 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
 <script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
 
-<script src="../../js/bootstrap-datetimepicker.min.js"></script>
-<script src="../../js/bootstrap-datetimepicker.es.js"></script>
-
-<!-- Dropzone Plugin Js -->
-<script src="../../js/dropzone.js"></script>
 
 <script type="text/javascript">
 
 $(document).ready(function(){
 
-	function traerImagen() {
-		$.ajax({
-			data:  {idequipo: <?php echo $id; ?>,
-					accion: 'traerImagenEquipo'},
-			url:   '../../ajax/ajax.php',
-			type:  'post',
-			beforeSend: function () {
-
-			},
-			success:  function (response) {
-
-				$(".thumbnail img").attr("src",response.datos.imagen);
-				$('#idFoto').val(response.datos.idFoto);
-
-			}
-		});
-	}
-
-	traerImagen();
-
-
-
-
-	Dropzone.prototype.defaultOptions.dictFileTooBig = "Este archivo es muy grande ({{filesize}}MiB). Peso Maximo: {{maxFilesize}}MiB.";
-
-	Dropzone.options.frmFileUpload = {
-		maxFilesize: 30,
-		acceptedFiles: ".png,.jpg,.gif,.bmp,.jpeg",
-		accept: function(file, done) {
-			done();
-		},
-		init: function() {
-			this.on("sending", function(file, xhr, formData){
-               formData.append("idequipo", '<?php echo $id; ?>');
-         });
-			this.on('success', function( file, resp ){
-				traerImagen();
-				swal("Correcto!", resp.replace("1", ""), "success");
-				$('.btnPresentar').show();
-			});
-
-			this.on('error', function( file, resp ){
-				swal("Error!", resp.replace("1", ""), "warning");
-			});
-		}
-	};
-
-	var myDropzone = new Dropzone("#archivos", {
-		params: {
-          idequipo: <?php echo $id; ?>
-      },
-		url: 'subir.php'
-	});
-
-	if ('<?php echo mysql_result($resResultado,0,'activo'); ?>' == 'Si') {
-		$('#activo').prop('checked',true);
+	if ('<?php echo mysql_result($resResultado,0,'viejo'); ?>' == 'Si') {
+		$('#viejo').prop('checked',true);
 	} else {
-		$('#activo').prop('checked',false);
+		$('#viejo').prop('checked',false);
 	}
 
 	$('.volver').click(function(event){
@@ -310,11 +231,6 @@ $(document).ready(function(){
 		$(location).attr('href',url);
 	});//fin del boton modificar
 
-	$('#ver').click(function(event){
-
-		url = "ver.php?id="+<?php echo $id; ?>;
-		$(location).attr('href',url);
-	});//fin del boton modificar
 
 	$('.varborrar').click(function(event){
 		  usersid =  $(this).attr("id");
@@ -330,24 +246,7 @@ $(document).ready(function(){
 		  }
 	});//fin del boton eliminar
 
-	function traerContactosPorCountries(id) {
-		$.ajax({
-				data:  {id: id,
-						accion: 'traerContactosPorCountries'},
-				url:   '../../ajax/ajax.php',
-				type:  'post',
-				beforeSend: function () {
 
-				},
-				success:  function (response) {
-					$('#refcontactos').html(response);
-				}
-		});
-	}
-
-	$('#refcountries').change(function() {
-		traerContactosPorCountries($(this).val());
-	});
 
 	 $( "#dialog2" ).dialog({
 
@@ -360,18 +259,18 @@ $(document).ready(function(){
 			"Eliminar": function() {
 
 				$.ajax({
-							data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
-							url:   '../../ajax/ajax.php',
-							type:  'post',
-							beforeSend: function () {
+					data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
 
-							},
-							success:  function (response) {
-									url = "index.php";
-									$(location).attr('href',url);
+					},
+					success:  function (response) {
+							url = "index.php";
+							$(location).attr('href',url);
 
-							}
-					});
+					}
+				});
 				$( this ).dialog( "close" );
 				$( this ).dialog( "close" );
 					$('html, body').animate({
@@ -389,20 +288,9 @@ $(document).ready(function(){
 
 
 
-
-	<?php
-		echo $serviciosHTML->validacion($tabla);
-
-	?>
-
-
-
-
 	//al enviar el formulario
     $('#cargar').click(function(){
 
-		if (validador() == "")
-        {
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
@@ -425,53 +313,38 @@ $(document).ready(function(){
 				success: function(data){
 
 					if (data == '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se modifico exitosamente el <strong><?php echo $singular; ?></strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+                  $(".alert").removeClass("alert-danger");
+						$(".alert").removeClass("alert-info");
+                  $(".alert").addClass("alert-success");
+                  $(".alert").html('<strong>Ok!</strong> Se modifico exitosamente el <strong><?php echo $singular; ?></strong>. ');
+						$(".alert").delay(3000).queue(function(){
+							/*aca lo que quiero hacer
+							  después de los 2 segundos de retraso*/
+							$(this).dequeue(); //continúo con el siguiente ítem en la cola
 
-											});
-											$("#load").html('');
-											//url = "index.php";
-											//$(location).attr('href',url);
+						});
+						$("#load").html('');
 
-
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
+               } else {
+                	$(".alert").removeClass("alert-danger");
+                  $(".alert").addClass("alert-danger");
+                  $(".alert").html('<strong>Error!</strong> '+data);
+                  $("#load").html('');
+               }
 				},
 				//si ha ocurrido un error
 				error: function(){
 					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
+               $("#load").html('');
 				}
 			});
-		}
+
     });
 
 });
 </script>
 
-<script type="text/javascript">
-$('.form_date').datetimepicker({
-	language:  'es',
-	weekStart: 1,
-	todayBtn:  1,
-	autoclose: 1,
-	todayHighlight: 1,
-	startView: 2,
-	minView: 2,
-	forceParse: 0,
-	format: 'dd/mm/yyyy'
-});
-</script>
+
 <?php } ?>
 </body>
 </html>

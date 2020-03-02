@@ -9,6 +9,8 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+   
+
    function existeConectorJugadorEquipoTemporada($refJugador, $refEquipo, $refTemporada) {
        $sql = "select idconector from dbconector where refjugadores =".$refJugador." and refequipos = ".$refEquipo." and reftemporadas = ".$refTemporada;
        $res = $this->query($sql,0);
@@ -7316,9 +7318,22 @@ return $res;
 
 
 function eliminarTorneos($id) {
-$sql = "delete from dbtorneos where idtorneo =".$id;
-$res = $this->query($sql,0);
-return $res;
+
+   $sqlF = "delete from dbfixture where reftorneos =".$id;
+   $resF = $this->query($sqlF,0);
+
+   if ($resF) {
+      $sqlPB = "delete from dbtorneopuntobonus where reftorneos =".$id;
+      $resPB = $this->query($sqlPB,0);
+
+      $sql = "delete from dbtorneos where idtorneo =".$id;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   return $resF;
+
+
 }
 
 
