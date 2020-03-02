@@ -348,8 +348,11 @@ class serviciosDelegados {
 
 			$resJugadoresNuevos = $this->traerJugadoresPreConectores(mysql_result($resEquipo,0,'idequipo'), mysql_result($resEquipo,0,'reftemporadas'));
 			while ($row = mysql_fetch_array($resJugadoresNuevos)) {
-				if ($this->existeJugador($row['nrodocumento']) == 0) {
+				$resPosibleJugador = $this->existeJugador($row['nrodocumento']);
+				if ($resPosibleJugador == 0) {
 					$resIJ = $this->insertarJugadorDocumentacionValores($row['refjugadorespre']);
+					$resConector = $this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
+				} else {
 					$resConector = $this->insertarConectorPorJugadorPre($row['refjugadorespre'], $resIJ, mysql_result($resEquipo,0,'reftemporadas'));
 				}
 
@@ -365,7 +368,7 @@ class serviciosDelegados {
 	    $res = $this->query($sql,0);
 
 	    if (mysql_num_rows($res)>0) {
-	        return 1;
+	        return mysql_result($res,0,0);
 	    }
 	    return 0;
 	}
