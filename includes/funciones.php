@@ -163,6 +163,9 @@ class Servicios {
 				$classVar = 'vargenerar';
 				$lblVar	  = 'Generar Fixture';
 				$icoVar		= 'glyphicon glyphicon-calendar';
+				$classVar2 = 'varposiciones';
+				$lblVar2	  = 'Posiciones';
+				$icoVar2 = 'glyphicon glyphicon-stats';
 				break;
 			case 89:
 				$cantidad = 13;
@@ -478,7 +481,7 @@ class Servicios {
 								$i = $i + 1;
 							}*/
 
-							$autocompletar = array("refclientevehiculos","refordenes");
+							$autocompletar = array("refclientevehiculos","refordenes",'refcontactos');
 
 							if (in_array($campo,$autocompletar)) {
 								$form	=	$form.'
@@ -855,21 +858,44 @@ class Servicios {
 								$i = $i + 1;
 							}*/
 
-							$form	=	$form.'
+							$autocompletar = array("refclientevehiculos","refordenes",'refcontactos');
 
-							<div class="form-group col-md-6" style="display:'.$lblOculta.'">
-								<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-								<div class="input-group col-md-12">
-									<select class="form-control" id="'.strtolower($campo).'" name="'.strtolower($campo).'">
-										';
+							if (in_array($campo,$autocompletar)) {
+								$form	=	$form.'
 
-							$form	=	$form.$option;
+								<div class="form-group col-md-6" style="display:'.$lblOculta.'">
+									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+									<div class="input-group col-md-12">
 
-							$form	=	$form.'		</select>
+										<select data-placeholder="selecione el '.$label.'..." id="'.strtolower($campo).'" name="'.strtolower($campo).'" class="chosen-select" tabindex="2">
+            								<option value=""></option>
+											';
+
+								$form	=	$form.$option;
+
+								$form	=	$form.'		</select>
+									</div>
 								</div>
-							</div>
 
-							';
+								';
+							} else {
+
+								$form	=	$form.'
+
+								<div class="form-group col-md-6" style="display:'.$lblOculta.'">
+									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+									<div class="input-group col-md-12">
+										<select class="form-control" id="'.strtolower($campo).'" name="'.strtolower($campo).'">
+											';
+
+								$form	=	$form.$option;
+
+								$form	=	$form.'		</select>
+									</div>
+								</div>
+
+								';
+							}
 
 						} else {
 

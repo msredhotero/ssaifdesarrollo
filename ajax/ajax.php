@@ -702,9 +702,36 @@ case 'cargarProximaFecha':
    case 'eliminarFusionEquipos':
       eliminarFusionEquipos($serviciosReferencias);
    break;
+   case 'eliminarDominio':
+      eliminarDominio($serviciosReferencias);
+   break;
+   case 'corregirSuspendidos':
+   		corregirSuspendidos($serviciosReferencias);
+   	break;
    default:
       echo 'Error URL';
    break;
+}
+// finfinfin
+
+function corregirSuspendidos($serviciosReferencias) {
+	$idsancionjugador = $_POST['idsancionjugador'];
+	$refconector = $_POST['refconector'];
+
+	$res = $serviciosReferencias->corregirSuspendidos($idsancionjugador,$refconector);
+
+	if ($res == true) {
+      echo '';
+   } else {
+      echo 'Hubo un error al modificar datos '.$res;
+   }
+}
+
+
+function eliminarDominio($serviciosReferencias) {
+	$iddominio			=	$_POST['iddominio'];
+
+	echo $serviciosReferencias->eliminarDominio($iddominio);
 }
 
 function insertarFusionequipos($serviciosReferencias) {
@@ -1332,6 +1359,12 @@ function jugadorNuevo($serviciosReferencias) {
 	$idEstadoPartidaDeNacimiento = $_POST['idEstadoPartidaDeNacimiento'];
 	$idTitulo = $_POST['idTitulo'];
 
+	$resJP = $serviciosReferencias->traerJugadoresprePorId($id);
+
+	$nrodocumento = mysql_result($resJP,0,'nrodocumento');
+
+	if ( $serviciosReferencias->existeJugador($nrodocumento) == 0) {
+
 	$sql = "INSERT INTO dbjugadores
 				(idjugador,
 				reftipodocumentos,
@@ -1424,6 +1457,10 @@ function jugadorNuevo($serviciosReferencias) {
 
 	echo $res;
 
+	} else {
+		echo '';
+	}
+
 }
 
 function guardarEstado($serviciosReferencias) {
@@ -1441,43 +1478,45 @@ function guardarEstado($serviciosReferencias) {
 
 		$refdocumentaciones = mysql_result($resDIJ,0,'refdocumentaciones');
 
-		$resJugador = $serviciosReferencias->traerJugadoresPorNroDocumento($nroDocumento);
+      // si la documentacion es titulo no modifico los valores 2020-04-14 javier
+      if ($refdocumentaciones != 4) {
+   		$resJugador = $serviciosReferencias->traerJugadoresPorNroDocumento($nroDocumento);
 
-		$idJugador = mysql_result($resJugador,0,0);
+   		$idJugador = mysql_result($resJugador,0,0);
 
-		//elimino la documentacion
-		$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($idJugador, $refdocumentaciones);
+   		//elimino la documentacion
+   		$serviciosReferencias->eliminarJugadoresdocumentacionPorJugadorDocumen($idJugador, $refdocumentaciones);
 
-		//elimino el valor
-		$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($idJugador, $refdocumentaciones);
+   		//elimino el valor
+   		$serviciosReferencias->eliminarJugadoresvaloreshabilitacionestransitoriasPorJugadorDocumentacion($idJugador, $refdocumentaciones);
 
-		//inserto documentacion
-		$err = $serviciosReferencias->insertarJugadoresdocumentacion($idJugador,$refdocumentaciones,1,'');
-
-
-		//inserto valoracion
-		switch ($refdocumentaciones) {
-         case 1:
-				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,331);
-				break;
-         case 2:
-				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,333);
-				break;
-         case 99:
-				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,333);
-				break;
-         case 4:
-				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,338);
-				break;
-			case 6:
-				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,365);
-				break;
-			case 9:
-				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,368);
-				break;
-		}
+   		//inserto documentacion
+   		$err = $serviciosReferencias->insertarJugadoresdocumentacion($idJugador,$refdocumentaciones,1,'');
 
 
+   		//inserto valoracion
+   		switch ($refdocumentaciones) {
+            case 1:
+   				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,331);
+   				break;
+            case 2:
+   				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,333);
+   				break;
+            case 99:
+   				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,333);
+   				break;
+            case 4:
+   				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,338);
+   				break;
+   			case 6:
+   				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,365);
+   				break;
+   			case 9:
+   				$serviciosReferencias->insertarJugadoresvaloreshabilitacionestransitorias($idJugador,368);
+   				break;
+   		}
+
+      }
 
 	}
 
@@ -2368,6 +2407,9 @@ function insertarFalloPorFecha($serviciosReferencias) {
 		$valor = 0;
 	}
 
+   $art = $_POST['art'];
+   $inc = $_POST['inc'];
+
 	//traigo la sancion del jugador para poder acceder a la fecha//
 	$resSancionesJugadores	=	$serviciosReferencias->traerSancionesjugadoresPorId($refsancionesjugadores);
 	$refFixture				=	mysql_result($resSancionesJugadores,0,'reffixture');
@@ -2455,12 +2497,12 @@ function insertarFalloPorFecha($serviciosReferencias) {
 
 			//necesito saber si cuando resuelven por 2 amarillas en el pre-fallo o en el fallo o la convinandiocn de las dos
 
-			$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones);
+			$res = $serviciosReferencias->insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones,$art,$inc);
 
 			if ((integer)$res > 0) {
 
 				//actualizo la referencia
-				$serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
+				$resReferencia = $serviciosReferencias->modificarSancionesjugadoresFalladas($refsancionesjugadores, $res);
 
 				//// aplico el calculo de acumulacionde amarillas si el or es true /////
 
@@ -2498,6 +2540,9 @@ function modificarFalloPorFecha($serviciosReferencias) {
 	} else {
 		$valor = 0;
 	}
+
+   $art = $_POST['art'];
+   $inc = $_POST['inc'];
 
 	//traigo la sancion del jugador para poder acceder a la fecha//
 	$resSancionesJugadores	=	$serviciosReferencias->traerSancionesjugadoresPorId($refsancionesjugadores);
@@ -2612,7 +2657,7 @@ function modificarFalloPorFecha($serviciosReferencias) {
 				//*****				fin							*****/
 			}
 
-			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones);
+			$res = $serviciosReferencias->modificarSancionesfallos(mysql_result($resFallo,0,0),$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones,$art,$inc);
 
 			if ($cantidadfechas > 0) {
 				$resCambio = $serviciosReferencias->traerSancionesfallosacumuladasCambioPorEquipoFechaDesdeHasta(mysql_result($resSancionesJugadores,0,'refequipos'),mysql_result($resSancionesJugadores,0,'fecha'),date('Y-m-d'),mysql_result($resSancionesJugadores,0,'refcategorias'));

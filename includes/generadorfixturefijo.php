@@ -381,28 +381,23 @@ for ($i = 0; $i<count($equipos)-2; $i++) {
 			
 			//primer partido
 			if ($k==0) {
-				//array_push($resultado, $equipos[0]."***".$equipos[$avance-1]);
 				array_push($resultadoLocal, $equipos[0]);
 				array_push($resultadoVisitante, $equipos[$avance-1]);
 			} else {
 				//ultimo partido de la fecha
 				if (($k == (count($equipos)/2)-1) && ($i != count($equipos)-1)) {
-					//array_push($resultado, $equipos[$mitad + ($avance-$impares)]."***".$equipos[count($equipos)-1]);	
 					array_push($resultadoLocal, $equipos[$mitad + ($avance-$impares)]);
 					array_push($resultadoVisitante, $equipos[count($equipos)-1]);	
-					//array_push($resultado, '0***0');
 				} else {
 
 					//resto: Fechas y partidos intermedios	
 					if (($avance > 3) && ($puedeEntrar != 0)) {
-						//array_push($resultado, $equipos[$k]."***".$equipos[$avance - ($k+1)]);
 						array_push($resultadoLocal, $equipos[$k]);
 						array_push($resultadoVisitante, $equipos[$avance - ($k+1)]);
-						//array_push($resultado, '0***0');
+						
 						$puedeEntrar -= 1;
 					} else {
-						//array_push($resultado, '0***0');
-						//array_push($resultado, $equipos[$mitadAvance + $eje]."***".$equipos[$mitadAvance - $eje]);
+						
 						array_push($resultadoLocal, $equipos[$mitadAvance + $eje]);
 						array_push($resultadoVisitante, $equipos[$mitadAvance - $eje]);
 						$eje += 1;

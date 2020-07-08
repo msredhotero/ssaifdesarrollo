@@ -865,9 +865,14 @@ if ($existeJugador == 1) {
 
 					},
 					success:  function (response) {
-							alert('El Jugador Ya fue creado y su documentacion también.')
+						if (response == '') {
+							alert('El Jugador ya existe.');
+						} else {
+							alert('El Jugador Ya fue creado y su documentacion también.');
 							url = "../jugadores/modificar.php?id="+response;
 							$(location).attr('href',url);
+						}
+							
 
 					}
 				});

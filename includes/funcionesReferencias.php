@@ -9,10 +9,246 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
-   
+  function corregirSuspendidos($idsancion, $refconector) {
+    $resConector = $this->traerConectorPorId($refconector);
+
+    $resEquipos = $this->traerEquiposPorId(mysql_result($resConector, 0,'refequipos'));
+
+    $sql = "update dbsancionesjugadores 
+      set refequipos = ".mysql_result($resConector, 0,'refequipos')." , 
+          refcategorias = ".mysql_result($resConector, 0,'refcategorias')." , 
+          refdivisiones = ".mysql_result($resEquipos, 0,'refdivisiones')." 
+          where idsancionjugador = ".$idsancion;
+
+    $res = $this->query($sql,0);
+
+    return $res;
+  }
+
+  function traerConectorActivosSoloTemporada($refJugador,$idtemporada) {
+    $sql = "select
+        c.idconector,
+        cat.categoria,
+        equ.nombre as equipo,
+        co.nombre as countrie,
+        tip.tipojugador,
+        (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+        (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+        c.refjugadores,
+        c.reftipojugadores,
+        c.refequipos,
+        c.refcountries,
+        c.refcategorias,
+        concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+        jug.nrodocumento
+
+    from
+        dbconector c
+            inner join
+        dbjugadores jug ON jug.idjugador = c.refjugadores
+            inner join
+        tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+            inner join
+        dbcountries co ON co.idcountrie = jug.refcountries
+            inner join
+        tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+            inner join
+        dbequipos equ ON equ.idequipo = c.refequipos
+            inner join
+        tbdivisiones di ON di.iddivision = equ.refdivisiones
+            left join
+        dbcontactos con ON con.idcontacto = equ.refcontactos
+            inner join
+        tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+            inner join
+        tbcategorias cat ON cat.idtcategoria = c.refcategorias
+        where jug.idjugador = ".$refJugador." and c.reftemporadas = ".$idtemporada." and c.activo = 1
+    order by 1";
+    $res = $this->query($sql,0);
+    return $res;
+  }
+
+  function traerConectorActivosPorTemporada($refJugador,$idtemporada,$idequipo,$idcategoria) {
+    $sql = "select
+        c.idconector,
+        cat.categoria,
+        equ.nombre as equipo,
+        co.nombre as countrie,
+        tip.tipojugador,
+        (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+        (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+        c.refjugadores,
+        c.reftipojugadores,
+        c.refequipos,
+        c.refcountries,
+        c.refcategorias,
+        concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+        jug.nrodocumento
+
+    from
+        dbconector c
+            inner join
+        dbjugadores jug ON jug.idjugador = c.refjugadores
+            inner join
+        tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+            inner join
+        dbcountries co ON co.idcountrie = jug.refcountries
+            inner join
+        tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+            inner join
+        dbequipos equ ON equ.idequipo = c.refequipos
+            inner join
+        tbdivisiones di ON di.iddivision = equ.refdivisiones
+            left join
+        dbcontactos con ON con.idcontacto = equ.refcontactos
+            inner join
+        tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+            inner join
+        tbcategorias cat ON cat.idtcategoria = c.refcategorias
+        where jug.idjugador = ".$refJugador." and c.reftemporadas = ".$idtemporada." 
+              and c.refequipos = ".$idequipo." and c.activo = 1
+              and c.refcategorias = ".$idcategoria."
+    order by 1";
+    $res = $this->query($sql,0);
+    return $res;
+}
+
+  function buscarSuspendidoEnOtroEquipoCategoria($idjugador, $idequipo, $idcategoria) {
+
+  }
+
+   function eliminarCountriecontactosPorId($id) {
+      $sql = "delete from dbcountriecontactos where refcontactos =".$id;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   function insertarDominio($refjugadores,$refcountries,$imagen,$type) {
+
+      $sql = "insert into dbjugadoresdominios values ('',".$refjugadores.",".$refcountries.",'".$imagen."','".$type."')";
+
+      $res = $this->query($sql,1);
+      return $res;
+   }
+
+   function traerDominiosPorId($id) {
+      $sql = "select idjugadordominio, refjugadores,refcountries,imagen,type from dbjugadoresdominios where idjugadordominio=".$id;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   function traerDominiosPorJugador($idjugador) {
+      $sql = "select idjugadordominio, refjugadores,refcountries,imagen,type from dbjugadoresdominios where refjugadores=".$idjugador;
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+   function eliminarDominio($iddominio) {
+      $sql        =   "select concat('data/dominio','/',s.idjugadordominio) as archivo, s.idjugadordominio
+                           from dbjugadoresdominios s
+                           where s.idjugadordominio =".$iddominio;
+      $resImg     =   $this->query($sql,0);
+
+      if (mysql_num_rows($resImg)>0) {
+           $res        =   $this->borrarArchivoDominio( $iddominio, mysql_result($resImg,0,0));
+      } else {
+           $res = true;
+      }
+      if ($res != '') {
+           return 'Error al eliminar datos';
+      } else {
+           return 'Se elimino el archivo correctamente';
+      }
+   }
+
+   function borrarArchivoDominio($id,$directorio) {
+      session_start();
+      /**** auditoria ****/
+      $tabla = 'dbjugadoresdominios';
+      $operacion = 'E';
+      $id = $id;
+      $usuario = $_SESSION['nombre_predio'];
+
+      $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
+      /**** fin audi  ****/
+
+      $sql    =   "delete from dbjugadoresdominios where idjugadordominio =".$id;
+
+      $res =  $this->borrarDirecctorio("./../".$directorio);
+
+      rmdir("./../".$directorio);
+      $this->query($sql,0);
+
+      return '';
+   }
+
+   function subirArchivoDominio($file,$id, $idjugador) {
+
+      $resJugador = $this->traerJugadoresPorIdCompleto($idjugador);
+
+      $dir_destino = '../../data/dominio/'.$id.'/';
+      $imagen_subida = $dir_destino . $this->sanear_string(str_replace(' ','',basename($_FILES[$file]['name'])));
+
+      $noentrar = '../../imagenes/index.php';
+      $nuevo_noentrar = '../../data/dominio/'.$id.'/'.'index.php';
+
+      if (!file_exists($dir_destino)) {
+         mkdir($dir_destino, 0777);
+      }
+
+
+      if(!is_writable($dir_destino)) {
+
+         echo "no tiene permisos";
+
+      }   else    {
+         if ($_FILES[$file]['tmp_name'] != '') {
+            if(is_uploaded_file($_FILES[$file]['tmp_name'])) {
+            //$this->eliminarFotoPorObjeto($id,$carpeta);
+
+               if ($this->find_filesize($imagen_subida) < 3000000) {
+                  /*echo "Archivo ". $_FILES['foto']['name'] ." subido con éxtio.\n";
+                  echo "Mostrar contenido\n";
+                  echo $imagen_subida;*/
+                  if (move_uploaded_file($_FILES[$file]['tmp_name'], $imagen_subida)) {
+
+                     $archivo = $this->sanear_string($_FILES[$file]["name"]);
+                     $tipoarchivo = $_FILES[$file]["type"];
+
+                     if ($this->existeArchivoJugadores($id,$archivo,$tipoarchivo) == 0) {
+                        $resDominio = $this->insertarDominio($idjugador, mysql_result($resJugador,0,'refcountries'),str_replace(' ','',$archivo),$tipoarchivo);
+
+                        /**** auditoria ****/
+                        $tabla = 'dbjugadoresdominios';
+                        $operacion = 'I';
+                        $id = $resDominio;
+                        $usuario = $_SESSION['nombre_predio'];
+
+                        $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
+                        /**** fin auditoria ****/
+                     }
+                     echo '';
+
+                     //copy($noentrar, $nuevo_noentrar);
+
+                  } else {
+                     echo "Posible ataque de carga de archivos!\n";
+                  }
+               } else {
+                  echo "El archivo supera los limites de carga.";
+               }
+            }else{
+               echo "Posible ataque del archivo subido: ";
+               echo "nombre del archivo '". $_FILES[$file]['tmp_name'] . "'.";
+            }
+         }
+      }
+   }
+
 
    function existeConectorJugadorEquipoTemporada($refJugador, $refEquipo, $refTemporada) {
-       $sql = "select idconector from dbconector where refjugadores =".$refJugador." and refequipos = ".$refEquipo." and reftemporadas = ".$refTemporada;
+       $sql = "select idconector from dbconector
+       where refjugadores =".$refJugador." and refequipos = ".$refEquipo." and reftemporadas = ".$refTemporada;
        $res = $this->query($sql,0);
 
        if (mysql_num_rows($res)>0) {
@@ -2301,7 +2537,11 @@ function suspendidosTotal() {
                 r.dias,
                 r.cumplidas,
                 r.fechascumplidas,
-                r.categoria
+                r.categoria,
+                r.idjugador,
+                r.refequipos,
+                r.refcategorias,
+                r.idsancionjugador
             from (
             SELECT
                 cc.nombre,
@@ -2320,10 +2560,14 @@ function suspendidosTotal() {
                 sf.cantidadfechas,
                 coalesce((case when cantidadfechas < 1 then -1 * datediff(sf.fechadesde, sf.fechahasta) end),0) as dias,
                 coalesce((case when cantidadfechas > 0 then sfc.cumplidas
-                      when year(sf.fechadesde) > 1950 then -1 * datediff(sf.fechadesde, now())
+                      when year(sf.fechadesde) > 1950 then (DATEDIFF(CURDATE(), sf.fechadesde) - COALESCE(DATEDIFF( (case when sx.vigenciahasta > CURDATE() then CURDATE() else sx.vigenciahasta end), sx.vigenciadesde), 0))
                     end),0) cumplidas,
                 (coalesce(sf.fechascumplidas,0) + coalesce(sfc.cumplidas,0)) as fechascumplidas,
-                ca.categoria
+                ca.categoria,
+                j.idjugador,
+                sj.refequipos,
+                sj.refcategorias,
+                sj.idsancionjugador
             FROM
                 dbsancionesfallos sf
                     INNER JOIN
@@ -2346,6 +2590,8 @@ function suspendidosTotal() {
                 tbdivisiones di ON di.iddivision = t.refdivisiones
                     INNER JOIN
                 tbtiposanciones tip ON tip.idtiposancion = sj.reftiposanciones
+                  LEFT JOIN
+               dbsancionesexcluidas sx ON sx.refsancionesjugadores = sj.idsancionjugador
                     left join
                 (SELECT
                       fc.refsancionesfallos,
@@ -2392,7 +2638,11 @@ function suspendidosTotal() {
                 0 as dias,
                 sf.fechascumplidas cumplidas,
                 sf.fechascumplidas,
-                ca.categoria
+                ca.categoria,
+                j.idjugador,
+                sj.refequipos,
+                sj.refcategorias,
+                sj.idsancionjugador
             FROM
                 dbsancionesfallosacumuladas sf
                     INNER JOIN
@@ -2462,7 +2712,7 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
                 sf.cantidadfechas,
                 coalesce((case when cantidadfechas < 1 then -1 * datediff(sf.fechadesde, sf.fechahasta) end),0) as dias,
                 coalesce((case when cantidadfechas > 0 then sfc.cumplidas
-                      when year(sf.fechadesde) > 1950 then -1 * datediff(sf.fechadesde, now())
+                      when year(sf.fechadesde) > 1950 then (DATEDIFF(CURDATE(), sf.fechadesde) - COALESCE(DATEDIFF( (case when sx.vigenciahasta > CURDATE() then CURDATE() else sx.vigenciahasta end), sx.vigenciadesde), 0))
                     end),0) cumplidas,
                 (coalesce(sf.fechascumplidas,0) + coalesce(sfc.cumplidas,0)) as fechascumplidas,
                 ca.categoria,
@@ -2496,6 +2746,8 @@ function SuspendidosTotalPorTemporadaCategoriaDivision($idTemporada, $idCategori
                 tbdivisiones di ON di.iddivision = t.refdivisiones
                     INNER JOIN
                 tbtiposanciones tip ON tip.idtiposancion = sj.reftiposanciones
+                  LEFT JOIN
+               dbsancionesexcluidas sx ON sx.refsancionesjugadores = sj.idsancionjugador
                     left join
                 (SELECT
                       fc.refsancionesfallos,
@@ -3832,6 +4084,8 @@ function traerEstadisticaJugadorPorCategoria($where, $whereAux) {
         }
         $sql .= "
             ORDER BY r.apyn,r.temporada , r.categoria , r.division ";
+
+    //die(var_dump($sql));
     $res = $this->query($sql,0);
     return $res;
 
@@ -4464,7 +4718,7 @@ function existeDevuelveId($sql) {
     function obtenerNuevoId($tabla) {
         //u235498999_aif
         $sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = 'ssaif_desarrollo_2018'
+                WHERE TABLE_SCHEMA = 'aifzn_202001'
                 AND TABLE_NAME = '".$tabla."'";
         $res = $this->query($sql,0);
         return mysql_result($res, 0,0);
@@ -4844,9 +5098,12 @@ return $res;
 
 
 function eliminarContactos($id) {
-$sql = "delete from dbcontactos where idcontacto =".$id;
-$res = $this->query($sql,0);
-return $res;
+   //elimino referencia contacto countrie
+   $resEliminar = $this->eliminarCountriecontactosPorId($id);
+
+   $sql = "delete from dbcontactos where idcontacto =".$id;
+   $res = $this->query($sql,0);
+   return $res;
 }
 
 
@@ -7767,7 +8024,7 @@ inner join tbdivisiones di ON di.iddivision = e.refdivisiones
 left join dbcontactos con ON con.idcontacto = e.refcontactos
 left join tbtipocontactos ti ON ti.idtipocontacto = con.reftipocontactos
 where cou.idcountrie = ".$idCountrie." and e.activo = ".$baja."
-order by 1";
+order by cat.orden2";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -9495,7 +9752,7 @@ from    (
         from
             dbconector c
                 inner join
-            dbjugadores jug ON jug.idjugador = c.refjugadores
+            dbjugadores jug ON jug.idjugador = c.refjugadores and c.reftemporadas=".$idtemporada."
                 inner join
             tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
                 inner join
@@ -9503,7 +9760,7 @@ from    (
                 inner join
             tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
                 inner join
-            dbequipos equ ON equ.idequipo = c.refequipos
+            dbequipos equ ON equ.idequipo = c.refequipos and equ.activo=1
                 inner join
             tbdivisiones di ON di.iddivision = equ.refdivisiones
                 left join
@@ -11941,18 +12198,18 @@ return $res;
 /* fin */
 
 
-function insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones) {
-$sql = "insert into dbsancionesfallos(idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,amarillas,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones)
-values ('',".$refsancionesjugadores.",".$cantidadfechas.",'".utf8_decode($fechadesde)."','".utf8_decode($fechahasta)."',".$amarillas.",".$fechascumplidas.",".$pendientescumplimientos.",".$pendientesfallo.",".$generadaporacumulacion.",'".utf8_decode($observaciones)."')";
+function insertarSancionesfallos($refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones,$art,$inc) {
+$sql = "insert into dbsancionesfallos(idsancionfallo,refsancionesjugadores,cantidadfechas,fechadesde,fechahasta,amarillas,fechascumplidas,pendientescumplimientos,pendientesfallo,generadaporacumulacion,observaciones,art,inc)
+values ('',".$refsancionesjugadores.",".$cantidadfechas.",'".utf8_decode($fechadesde)."','".utf8_decode($fechahasta)."',".$amarillas.",".$fechascumplidas.",".$pendientescumplimientos.",".$pendientesfallo.",".$generadaporacumulacion.",'".utf8_decode($observaciones)."','".utf8_decode($art)."','".utf8_decode($inc)."')";
 $res = $this->query($sql,1);
 return $res;
 }
 
 
-function modificarSancionesfallos($id,$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones) {
+function modificarSancionesfallos($id,$refsancionesjugadores,$cantidadfechas,$fechadesde,$fechahasta,$amarillas,$fechascumplidas,$pendientescumplimientos,$pendientesfallo,$generadaporacumulacion,$observaciones,$art,$inc) {
 $sql = "update dbsancionesfallos
 set
-refsancionesjugadores = ".$refsancionesjugadores.",cantidadfechas = ".$cantidadfechas.",fechadesde = '".utf8_decode($fechadesde)."',fechahasta = '".utf8_decode($fechahasta)."',amarillas = ".$amarillas.",fechascumplidas = ".$fechascumplidas.",pendientescumplimientos = ".$pendientescumplimientos.",pendientesfallo = ".$pendientesfallo.",generadaporacumulacion = ".$generadaporacumulacion.",observaciones = '".utf8_decode($observaciones)."'
+refsancionesjugadores = ".$refsancionesjugadores.",cantidadfechas = ".$cantidadfechas.",fechadesde = '".utf8_decode($fechadesde)."',fechahasta = '".utf8_decode($fechahasta)."',amarillas = ".$amarillas.",fechascumplidas = ".$fechascumplidas.",pendientescumplimientos = ".$pendientescumplimientos.",pendientesfallo = ".$pendientesfallo.",generadaporacumulacion = ".$generadaporacumulacion.",observaciones = '".utf8_decode($observaciones)."',art = '".utf8_decode($art)."',inc = '".utf8_decode($inc)."'
 where idsancionfallo =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -12753,7 +13010,9 @@ function traerSancionesJugadoresConFallosPorSancion($idFallo, $idTipoTorneo) {
             p.reffixture,
             p.refcategorias,
             p.refdivisiones,
-            p.refsancionesfallos
+            p.refsancionesfallos,
+            sf.art,
+            sf.inc
         from dbsancionesjugadores p
         inner join dbsancionesfallos sf ON sf.idsancionfallo = p.refsancionesfallos
         inner join tbtiposanciones tip ON tip.idtiposancion = p.reftiposanciones

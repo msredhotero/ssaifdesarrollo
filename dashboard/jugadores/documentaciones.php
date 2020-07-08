@@ -178,6 +178,8 @@ FROM
 
 	$resJugador = $serviciosReferencias->traerJugadoresPorId($id);
 
+	$resDominio = $serviciosReferencias->traerDominiosPorJugador($id);
+
 	$resJugadorPre = $serviciosReferencias->traerJugadoresprePorNroDocumento(mysql_result($resJugador,0,'nrodocumento'));
 
 	//si ya existe un jugador precargado
@@ -333,6 +335,18 @@ FROM
 	}
 
 
+	if ($_FILES['avatar-7']['tmp_name'] != '') {
+		if (mysql_num_rows($resDominio)>0) {
+			$serviciosReferencias->eliminarDominio(mysql_result($resDominio,0,0));
+			//ya tiene la funcion auditoria.
+		}
+		$nuevoId7 = $serviciosReferencias->obtenerNuevoId('dbjugadoresdominios');
+		$error = $serviciosReferencias->subirArchivoDominio('avatar-7',$nuevoId7,$id);
+		//ya tiene la funcion auditoria.
+
+	}
+
+
 
 
 
@@ -353,7 +367,7 @@ $resResultado = $serviciosReferencias->traerJugadoresPorId($id);
 
 $resResultadoPre = $serviciosReferencias->traerJugadoresprePorNroDocumento(mysql_result($resResultado,0,'nrodocumento'));
 
-
+$resDominio = $serviciosReferencias->traerDominiosPorJugador($id);
 
 $resJugadores = $serviciosReferencias->traerJugadoresdocumentacionPorJugador($id);
 
@@ -1139,6 +1153,21 @@ switch ($idEstadoPartidaNacimiento) {
 
 		        </div>
 
+				  <div class="row">
+					  <div class="col-sm-4 text-center">
+						<h4>Dominio (pdf)</h4>
+			            <div class="kv-avatar">
+			                <div class="file-loading">
+			                    <input id="avatar-7" name="avatar-7" type="file" required>
+			                </div>
+			            </div>
+			            <div class="kv-avatar-hint"><small>Seleccionar Archivo < 30000 KB</small></div>
+
+							</div>
+
+			        </div>
+				  </div>
+
             </div>
 
 
@@ -1298,6 +1327,24 @@ $(document).ready(function(){
 			success:  function (response) {
 					alert(response);
 					url = "modificar.php?id=<?php echo $id; ?>";
+					$(location).attr('href',url);
+
+			}
+		});
+	}
+
+	function eliminarDominio(iddominio) {
+		$.ajax({
+			data:  {iddominio: iddominio,
+					accion: 'eliminarDominio'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+					alert(response);
+					url = "documentaciones.php?id=<?php echo $id; ?>";
 					$(location).attr('href',url);
 
 			}
@@ -1851,6 +1898,137 @@ $(document).ready(function(){
 			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
 			    removeTitle: 'Cancel or reset changes',
 			    elErrorContainer: '#kv-avatar-errors-6',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["pdf","jpg", "png"]
+			});
+
+	    	<?php
+	    	}
+	    	?>
+
+
+
+
+			<?php
+				if (mysql_num_rows($resDominio)>0) {
+				$urlImg = "../../data/dominio/".mysql_result($resDominio,0,0)."/".mysql_result($resDominio,0,'imagen');
+			?>
+			$("#avatar-7").fileinput({
+			    overwriteInitial: false,
+			    maxFileSize: 10000,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-7',
+			    msgErrorClass: 'alert alert-block alert-danger',
+			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
+			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+			    allowedFileExtensions: ["pdf","jpg", "png", "gif"],
+			    <?php
+			    if (mysql_result($resDominio,0,'type') == 'application/pdf') {
+			    ?>
+			    initialPreview: [
+			    	'../../data/dominio/<?php echo mysql_result($resDominio,0,0); ?>/<?php echo mysql_result($resDominio,0,'imagen'); ?>'
+			    ],
+
+			    <?php
+				} else {
+				?>
+				initialPreview: [
+			    	"<img src='<?php echo $urlImg; ?>' width='100%' class='kv-preview-data file-preview-image' alt='Desert' title='Desert'>",
+			    ],
+				<?php
+				}
+				?>
+				initialPreviewFileType: 'image',
+			    initialPreviewAsData: true, // allows you to set a raw markup
+    			<?php
+			    if (mysql_result($resDominio,0,'type') == 'application/pdf') {
+			    ?>
+			    initialPreviewConfig: [
+				    {type: "pdf", size: 8000, caption: "PDF Sample", filename: "<?php echo mysql_result($resDominio,0,'imagen'); ?>",  key: 1}
+				],
+			    <?php
+				} else {
+				?>
+			    initialPreviewConfig: [
+				    {caption: "<?php echo mysql_result($resDominio,0,'imagen'); ?>", size: 827000, width: "120px", url: '<?php echo "../../data/dominio/".mysql_result($resDominio,0,0); ?>', key: 1}
+				],
+				<?php
+				}
+				?>
+				purifyHtml: true, // this by default purifies HTML data for preview
+			    uploadExtraData: {
+			        img_key: "1000",
+			        img_keywords: "happy, places"
+			    },
+			    preferIconicPreview: true, // this will force thumbnails to display icons for following file extensions
+			    previewFileIconSettings: { // configure your icon file extensions
+			        'doc': '<i class="fa fa-file-word-o text-primary"></i>',
+			        'xls': '<i class="fa fa-file-excel-o text-success"></i>',
+			        'ppt': '<i class="fa fa-file-powerpoint-o text-danger"></i>',
+			        'pdf': '<img src="../../imagenes/pdf.png">',
+			        'zip': '<i class="fa fa-file-archive-o text-muted"></i>',
+			        'htm': '<i class="fa fa-file-code-o text-info"></i>',
+			        'txt': '<i class="fa fa-file-text-o text-info"></i>',
+			        'mov': '<i class="fa fa-file-movie-o text-warning"></i>',
+			        'mp3': '<i class="fa fa-file-audio-o text-warning"></i>',
+			        // note for these file types below no extension determination logic
+			        // has been configured (the keys itself will be used as extensions)
+			        'jpg': '<img src="../../imagenes/sin_img.jpg">',
+			        'gif': '<i class="fa fa-file-photo-o text-muted"></i>',
+			        'png': '<img src="../../imagenes/sin_img.jpg">'
+			    },
+			    previewFileExtSettings: { // configure the logic for determining icon file extensions
+			        'doc': function(ext) {
+			            return ext.match(/(doc|docx)$/i);
+			        },
+			        'xls': function(ext) {
+			            return ext.match(/(xls|xlsx)$/i);
+			        },
+			        'ppt': function(ext) {
+			            return ext.match(/(ppt|pptx)$/i);
+			        },
+			        'zip': function(ext) {
+			            return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+			        },
+			        'htm': function(ext) {
+			            return ext.match(/(htm|html)$/i);
+			        },
+			        'txt': function(ext) {
+			            return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+			        },
+			        'mov': function(ext) {
+			            return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+			        },
+			        'mp3': function(ext) {
+			            return ext.match(/(mp3|wav)$/i);
+			        }
+			    }
+			}).on('filecleared', function(event) {
+	          eliminarDominio(<?php echo mysql_result($resDominio,0,0); ?>);
+	        });
+
+	        <?php
+	    	} else {
+	    	?>
+	    	$("#avatar-7").fileinput({
+			    overwriteInitial: true,
+			    maxFileSize: 10000,
+			    showClose: false,
+			    showCaption: false,
+			    browseLabel: '',
+			    removeLabel: '',
+			    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+			    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+			    removeTitle: 'Cancel or reset changes',
+			    elErrorContainer: '#kv-avatar-errors-7',
 			    msgErrorClass: 'alert alert-block alert-danger',
 			    defaultPreviewContent: '<img src="../../uploads/IMG-20180215-WA0017.jpg" alt="Your Avatar">',
 			    layoutTemplates: {actionDelete: "", main2: '{preview} ' +  btnCust + ' {remove} {browse}'},

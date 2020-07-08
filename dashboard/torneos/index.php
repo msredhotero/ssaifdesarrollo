@@ -294,6 +294,11 @@ $(document).ready(function(){
 
 	$('#respetadefinicionsancionesacumuladas').prop('checked',true);
 
+	$("#example").on("click",'.varposiciones', function(){
+		  usersid =  $(this).attr("id");
+		  url = "../posiciones/posiciones.php?id=" + usersid;
+		$(location).attr('href',url);
+	});//fin del boton modificar
 
 
 	$("#example").on("click",'.varborrar', function(){

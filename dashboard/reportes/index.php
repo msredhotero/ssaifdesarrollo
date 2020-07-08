@@ -299,6 +299,7 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                             <option value="12">Habilitaciones Transitorias</option>
                             <option value="13">Jugadores Por Partido</option>
 									 <option value="14">Jugadores en varios Equipos-Suspendidos</option>
+									 <option value="15">Jugadores en varios Equipos Excel Nuevo</option>
                     	</select>
                     </div>
                 </div>
@@ -984,6 +985,23 @@ $(document).ready(function(){
 	 				$('#fmj1').hide();
 	 				$('#fmn1').hide();
 	 				break;
+				case 15:
+					$('#cou1').hide();
+					$('#jug1').hide();
+					$('#baj1').hide();
+					$('#cat1').hide();
+					$('#div1').hide();
+					$('#tor1').hide();
+					$('#tem1').show();
+	                $('#fpa1').hide();
+	                $('#fam1').hide();
+	                $('#fra1').hide();
+					$('#ffa1').hide();
+					$('#ffn1').hide();
+					$('#fed1').hide();
+					$('#fmj1').hide();
+					$('#fmn1').hide();
+				break;
 			default:
 				alert('Debe elegir una opcion');
 		}
@@ -1047,6 +1065,9 @@ $(document).ready(function(){
                 break;
 				case 14:
 					window.open("../../reportes/rptJugadoresVariosEquiposExcel.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
+					break;
+				case 15:
+					window.open("../../reportes/rptJugadoresVariosEquiposExcelNuevo.php?reftemporada1=" + $("#reftemporada1").val() ,'_blank');
 					break;
 
 			default:
