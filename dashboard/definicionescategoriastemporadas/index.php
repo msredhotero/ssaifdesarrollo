@@ -47,8 +47,8 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbdefinicionescategoriastemporadas";
 
-$lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso","refdias");
-$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reingresos","Días");
+$lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso","refdias","cambiosilimitados");
+$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reingresos","Días","Cambios Ilimitados");
 
 
 $resCategorias 	= $serviciosReferencias->traerCategorias();
@@ -60,8 +60,10 @@ $cadRef2 	= $serviciosFunciones->devolverSelectBox($resTemporadas,array(1),'');
 $resDias 	= $serviciosReferencias->traerDias();
 $cadRef3 	= $serviciosFunciones->devolverSelectBox($resDias,array(1),'');
 
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2, 2=>$cadRef3);
-$refCampo 	=  array("refcategorias","reftemporadas","refdias");
+$cadRef4		= "<option value='0'>No</option><option value='1'>Si</option>";
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2, 2=>$cadRef3,3=>$cadRef4);
+$refCampo 	=  array("refcategorias","reftemporadas","refdias","cambiosilimitados");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -92,7 +94,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
-	
+
 }
 
 
@@ -114,14 +116,14 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -129,8 +131,8 @@ if ($_SESSION['refroll_predio'] != 1) {
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
 	<script src="../../js/jquery.maskedinput.min.js" type="text/javascript"></script>
-    
-   
+
+
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -141,8 +143,8 @@ if ($_SESSION['refroll_predio'] != 1) {
         $('#navigation').perfectScrollbar();
       });
     </script>
-    
- 
+
+
 </head>
 
 <body>
@@ -156,7 +158,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
@@ -164,16 +166,16 @@ if ($_SESSION['refroll_predio'] != 1) {
 			<?php echo $formulario; ?>
             </div>
 
-            
+
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
@@ -186,22 +188,22 @@ if ($_SESSION['refroll_predio'] != 1) {
             </form>
     	</div>
     </div>
-    
+
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<?php echo $lstCargados; ?>
     	</div>
     </div>
-    
-    
 
-    
-    
-   
+
+
+
+
+
 </div>
 
 
@@ -224,7 +226,7 @@ if ($_SESSION['refroll_predio'] != 1) {
         <h4 class="modal-title" id="myModalLabel">Countries Asociados</h4>
       </div>
       <div class="modal-body lstCountries">
-        
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -242,9 +244,9 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-	
+
 	$("#hora").mask("99:99",{placeholder:"hh:mm"});
-	
+
 	$('#example').dataTable({
 		"order": [[ 0, "asc" ]],
 		"language": {
@@ -271,69 +273,69 @@ $(document).ready(function(){
 			}
 		  }
 	} );
-	
+
 	$('#activo').prop('checked',true);
-	
+
 	$("#example").on("click",'.varcountries', function(){
-		  
+
 		  $.ajax({
-				data:  {id: $(this).attr("id"), 
+				data:  {id: $(this).attr("id"),
 						accion: 'traerCountriesPorContactos'},
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
-						
+
 				},
 				success:  function (response) {
 					$('.lstCountries').html(response);
 				}
 		});
 	});
-	
+
 	$('#finalizar').click(function(e) {
         $.ajax({
-				data:  {id: $('.finalizar').attr("id"), 
+				data:  {id: $('.finalizar').attr("id"),
 						accion: 'finalizarPedido'},
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
-						
+
 				},
 				success:  function (response) {
 					url = "index.php";
-					$(location).attr('href',url);	
+					$(location).attr('href',url);
 				}
 		});
     });
-	
-	
+
+
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			$("#idEliminar").val(usersid);
 			$("#dialog2").dialog("open");
 
-			
+
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton eliminar
-	
+
 	$("#example").on("click",'.varmodificar', function(){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
-			
+
 			url = "modificar.php?id=" + usersid;
 			$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton modificar
 
 	 $( "#dialog2" ).dialog({
-		 	
+
 			    autoOpen: false,
 			 	resizable: false,
 				width:600,
@@ -341,18 +343,18 @@ $(document).ready(function(){
 				modal: true,
 				buttons: {
 				    "Eliminar": function() {
-	
+
 						$.ajax({
 									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
-											
+
 									},
 									success:  function (response) {
 											url = "index.php";
 											$(location).attr('href',url);
-											
+
 									}
 							});
 						$( this ).dialog( "close" );
@@ -366,29 +368,29 @@ $(document).ready(function(){
 						$( this ).dialog( "close" );
 				    }
 				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
-			
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
-	
-	?>
-	
 
-	
-	
+
+	 		}); //fin del dialogo para eliminar
+
+	<?php
+		echo $serviciosHTML->validacion($tabla);
+
+	?>
+
+
+
+
 	//al enviar el formulario
     $('#cargar').click(function(){
-		
+
 		if (validador() == "")
         {
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
-			//hacemos la petición ajax  
+			//hacemos la petición ajax
 			$.ajax({
-				url: '../../ajax/ajax.php',  
+				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -399,7 +401,7 @@ $(document).ready(function(){
 				processData: false,
 				//mientras enviamos el archivo
 				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
 				},
 				//una vez finalizado correctamente
 				success: function(data){
@@ -410,16 +412,16 @@ $(document).ready(function(){
                                             $(".alert").addClass("alert-success");
                                             $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong><?php echo $singular; ?></strong>. ');
 											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
+												/*aca lo que quiero hacer
 												  después de los 2 segundos de retraso*/
 												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
+
 											});
 											$("#load").html('');
 											url = "index.php";
 											$(location).attr('href',url);
-                                            
-											
+
+
                                         } else {
                                         	$(".alert").removeClass("alert-danger");
                                             $(".alert").addClass("alert-danger");

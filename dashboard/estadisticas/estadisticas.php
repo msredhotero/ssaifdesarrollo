@@ -89,8 +89,10 @@ $resDefCategTemp		=	$serviciosReferencias->traerDefinicionescategoriastemporadas
 
 if (mysql_num_rows($resDefCategTemp)>0) {
 	$minutos				=	mysql_result($resDefCategTemp,0,'minutospartido');
+	$cambiosilimitados 		=	mysql_result($resDefCategTemp,0,'cambiosilimitados');
 } else {
 	$minutos				=	80;
+	$cambiosilimitados 		= 	0;
 }
 /////////////			fin				/////////////////////////////
 
@@ -1238,7 +1240,10 @@ if ($_SESSION['idroll_predio'] != 1) {
 					     </tbody>
 					 </table>
 
-
+				<?php
+	 			// nuevo 19/11/2020
+	 			if ($cambiosilimitados == 0) {
+	 			?>
                 <!-- parte para los cambios -->
                 <p>Cambios equipo Local</p>
                 <?php
@@ -1283,6 +1288,10 @@ if ($_SESSION['idroll_predio'] != 1) {
                 <?php
 					}
                 ?>
+
+					<?php
+ 					}
+               ?>
 
 
                 <!-- fin -->
@@ -1774,7 +1783,10 @@ if ($_SESSION['idroll_predio'] != 1) {
 					     </tbody>
 					 </table>
 
-
+				<?php
+	 			// nuevo 19/11/2020
+	 			if ($cambiosilimitados == 0) {
+	 			?>
                 <!-- parte para los cambios -->
                 <p>Cambios equipo Visitante</p>
 
@@ -1821,6 +1833,9 @@ if ($_SESSION['idroll_predio'] != 1) {
                 <?php
 					}
                 ?>
+					 <?php
+					}
+                ?>
 
                 <!-- fin -->
 				</div>
@@ -1862,6 +1877,9 @@ if ($_SESSION['idroll_predio'] != 1) {
             </div>
             <input type="hidden" id="accion" name="accion" value="insertarEstadisticaMasiva" />
             <input type="hidden" id="idfixture" name="idfixture" value="<?php echo $idFixture; ?>" />
+
+
+
             </form>
     	</div>
     </div>
@@ -1873,6 +1891,85 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 
 </div>
+
+
+<?php
+// nuevo 19/11/2020 //acaacaaca
+if ($cambiosilimitados == 1) {
+?>
+
+	<div class="modal fade" id="myModalCambiosIlimitados" role="dialog">
+		<div class="modal-dialog modal-lg">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header bg-blue">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">SELECCIONE LOS TITULARES DE AMBOS EQUIPOS</h4>
+				</div>
+			<div class="modal-body">
+				<div class="row">
+					<h4>Es impresindible que primero complete los dorsales para determinar quien jugo</h4>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<h5>Jugadores Locales</h5>
+						<p>Ya cargados:</p>
+						<ul class="cargadosLstLocal">
+						<?php
+							$iT = 1;
+							while ($rowTitular = mysql_fetch_array($resTitularesLocal)) {
+						?>
+						<li><input type="checkbox" name="titularLocal<?php echo $iT; ?>" id="titularLocal<?php echo $iT; ?>" value="<?php echo $rowTitular['idtitular']; ?>"><?php echo $rowTitular['jugador']; ?></li>
+						<?php
+							$iT += 1;
+							}
+						?>
+						</ul>
+						<p>Jugadores para seleccionar (una vez guardados se borraran los anteriores y se guardaran los seleccionados)</p>
+						<div class="row">
+							<ul class="lstTitularesLocales">
+
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<h5>Jugadores Visitantes</h5>
+						<p>Ya cargados:</p>
+						<ul class="cargadosLstVisitantes">
+						<?php
+							$iTV = 1;
+							while ($rowTitular = mysql_fetch_array($resTitularesVisitante)) {
+						?>
+						<li><input type="checkbox" name="titularLocal<?php echo $iTV; ?>" id="titularLocal<?php echo $iTV; ?>" value="<?php echo $rowTitular['idtitular']; ?>"><?php echo $rowTitular['jugador']; ?></li>
+						<?php
+							$iTV += 1;
+							}
+						?>
+						</ul>
+						<p>Jugadores para seleccionar (una vez guardados se borraran los anteriores y se guardaran los seleccionados)</p>
+						<div class="row">
+							<ul class="lstTitularesVisitantes">
+
+							</ul>
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="btnGuardarTitulares">Guardar</button>
+				<button type="button" class="btn btn-success" data-dismiss="modal">Confirmar</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+			</div>
+			</div>
+
+		</div>
+	</div>
+
+
+<?php }  ?>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog">
@@ -1913,6 +2010,190 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+				<?php
+				// nuevo 19/11/2020
+				if ($cambiosilimitados == 1) {
+				?>
+					traerTitularesPorFixtureEquipo(<?php echo $id; ?>,<?php echo $equipoLocal; ?> , 'cargadosLstLocal');
+					traerTitularesPorFixtureEquipo(<?php echo $id; ?>,<?php echo $equipoVisitante; ?> , 'cargadosLstVisitantes');
+					function traerTitularesPorFixtureEquipo(idfixture, idequipo, contenedor) {
+						$.ajax({
+							data:  {idfixture: idfixture,
+									idequipo: idequipo,
+									accion: 'traerTitularesPorFixtureEquipo'},
+							url:   '../../ajax/ajax.php',
+							type:  'post',
+							beforeSend: function () {
+								$('.'+contenedor).html('');
+								$('#validarmasivo').show();
+							},
+							success:  function (response) {
+								if (response.error) {
+									$('.'+contenedor).html('<li>No existen titulares cargados</li>');
+								} else {
+									$('#validarmasivo').show();
+									for (let i in response.datos) {
+
+										$('.'+contenedor).append('<li>' + response.datos[i].jugador + '</li>');
+									}
+								}
+							}
+						});
+					}
+
+
+					var dorsalTL = 0;
+					var dorsalTV = 0;
+					var dorsalTLid = 0;
+					var dorsalTVid = 0;
+					var iil = 0;
+					var iiV = 20;
+					var cadIdTitularesL = '';
+					var cadIdTitularesV = '';
+					$('#validarmasivo').hide();
+
+					$('#btnGuardarTitulares').click(function() {
+						var cadIdTitularesL = '';
+						var cadIdTitularesV = '';
+						$( ".lstTitularesLocales li input" ).each(function( ) {
+							if ($(this).prop('checked')) {
+								cadIdTitularesL += $(this).val() + ',';
+							}
+
+						});
+
+						$( ".lstTitularesVisitantes li input" ).each(function( ) {
+							if ($(this).prop('checked')) {
+								cadIdTitularesV += $(this).val() + ',';
+							}
+
+						});
+
+						insertarTitularesMasivoL(<?php echo $id; ?>,cadIdTitularesL,<?php echo $equipoLocal; ?>,<?php echo $idCategoria; ?>,<?php echo $idDivisiones; ?>,'cargadosLstLocal');
+						insertarTitularesMasivoV(<?php echo $id; ?>,cadIdTitularesV,<?php echo $equipoVisitante; ?>,<?php echo $idCategoria; ?>,<?php echo $idDivisiones; ?>,'cargadosLstVisitantes');
+
+
+
+					});
+
+					function insertarTitularesMasivoL(reffixture,lstJugadores,refequipos,refcategorias,refdivisiones) {
+						$.ajax({
+							data:  {
+								reffixture: reffixture,
+								lstJugadores: lstJugadores,
+								refequipos: refequipos,
+								refcategorias: refcategorias,
+								refdivisiones: refdivisiones,
+								accion: 'insertarTitularesMasivo'
+							},
+							url:   '../../ajax/ajax.php',
+							type:  'post',
+							beforeSend: function () {
+
+							},
+							success:  function (response) {
+								traerTitularesPorFixtureEquipo(<?php echo $id; ?>,<?php echo $equipoLocal; ?> , 'cargadosLstLocal');
+
+							}
+						});
+					}
+
+					function insertarTitularesMasivoV(reffixture,lstJugadores,refequipos,refcategorias,refdivisiones) {
+						$.ajax({
+							data:  {
+								reffixture: reffixture,
+								lstJugadores: lstJugadores,
+								refequipos: refequipos,
+								refcategorias: refcategorias,
+								refdivisiones: refdivisiones,
+								accion: 'insertarTitularesMasivo'
+							},
+							url:   '../../ajax/ajax.php',
+							type:  'post',
+							beforeSend: function () {
+
+							},
+							success:  function (response) {
+
+								traerTitularesPorFixtureEquipo(<?php echo $id; ?>,<?php echo $equipoVisitante; ?> , 'cargadosLstVisitantes');
+
+							}
+						});
+					}
+
+					$('#lsttitulares').click(function() {
+						$('.lstTitularesLocales').html('');
+						$('.lstTitularesVisitantes').html('');
+						$('#myModalCambiosIlimitados').modal();
+
+						$( "#example tbody tr" ).each(function( index ) {
+							iil += 1;
+							$.each(this.cells, function( index ){
+						        //alert( $(this).text());
+						        if (index == 0) {
+
+						        	//$(this).find('.dorsalEA').val();
+						        	if (typeof  $(this).find('.dorsalEA').val() === 'undefined') {
+
+						        		dorsalTL = 0;
+						        	} else {
+						        		if ($(this).find('.dorsalEA').val() != 0) {
+						        			dorsalTL = $(this).find('.dorsalEA').val();
+						        			dorsalTLid = $(this).find('.dorsalEA').attr("id").replace("dorsal", "");
+
+						        		} else {
+						        			dorsalTL = 0;
+						        		}
+
+						        	}
+						        	//console.log( $(this).find('.dorsalEA').val() );
+						        }
+						        if (index == 1 && dorsalTL != 0) {
+						        	$('.lstTitularesLocales').append( '<li><input type="checkbox" id="basic_checkboxl_' + iil + '" class="filled-in" value="' + dorsalTLid + '"><label for="basic_checkboxl_' + iil + '">'+ dorsalTL + ' - ' + $(this).text() + '</label></li>' );
+						        }
+
+
+
+						    });
+						});
+
+
+						$( "#example2 tbody tr" ).each(function( index ) {
+							iiV += 1;
+							$.each(this.cells, function( index ){
+						        //alert( $(this).text());
+						        if (index == 0) {
+
+						        	//$(this).find('.dorsalEA').val();
+						        	if (typeof  $(this).find('.dorsalEB').val() === 'undefined') {
+
+						        		dorsalTV = 0;
+						        	} else {
+						        		if ($(this).find('.dorsalEB').val() != 0) {
+						        			dorsalTV = $(this).find('.dorsalEB').val();
+						        			dorsalTVid = $(this).find('.dorsalEB').attr("id").replace("dorbsal", "");
+						        		} else {
+						        			dorsalTV = 0;
+						        		}
+
+						        	}
+						        	//console.log( $(this).find('.dorsalEA').val() );
+						        }
+						        if (index == 1 && dorsalTV != 0) {
+						        	$('.lstTitularesVisitantes').append( '<li><input type="checkbox" id="basic_checkboxv_' + iiV + '" class="filled-in" value="' + dorsalTVid + '"><label for="basic_checkboxv_' + iiV + '">'+ dorsalTV + ' - ' + $(this).text() + '</label></li>' );
+						        }
+
+
+
+						    });
+						});
+						//$( "#example tbody tr" ).each(function( index ) {
+							//console.log($(this).find('td .dorsalEA').val());
+							//console.log( index + ": " + $( this ).text() );
+						//});
+					});
+				<?php } ?>
 
 	$( "body" ).keydown(function( event ) {
 	  if ( event.which == 113 ) {

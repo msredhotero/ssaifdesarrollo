@@ -192,7 +192,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </div>
                 </div>
 
-                <div class="form-group col-md-3">
+               <div class="form-group col-md-3">
                     <label class="control-label" style="text-align:left" for="refcliente">Categorias</label>
                     <div class="input-group col-md-12">
                     	<select id="refcategorias1" class="form-control" name="refcategorias1">
@@ -254,9 +254,12 @@ if ($_SESSION['refroll_predio'] != 1) {
                         	<li>
                     			<button type="button" class="btn btn-primary" id="filtros" style="margin-left:0px;">Buscar</button>
                            </li>
-									<li>
+							<li>
                     			<button type="button" class="btn btn-warning" id="reporte" style="margin-left:0px;">Generar Reporte</button>
-                           </li>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-success" id="habilitarsuspendidos" style="margin-left:0px;">Habilitar Jugadores Suspendidos En varios equipos</button>
+                            </li>
 
                         </ul>
 
@@ -324,6 +327,15 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 
+    $('#habilitarsuspendidos').click(function() {
+        if (($('#reffechadesde1').val() != '') || ($('#reffechahasta1').val() != '')) {
+            url = "habilitarsuspendidos.php?desde="+$('#reffechadesde1').val() + '&hasta=' + $('#reffechahasta1').val() ;
+                    $(location).attr('href',url);
+        } else {
+            alert('Debe seleccionar las fechas desde y hasta');
+        }
+    });
+
 	$('#reporte').click(function() {
 		if (($("#reftemporada1").val() != 0)) {
 			window.open("../../reportes/rptResultadoPartidoIncidencias.php?reftemporada1=" + $("#reftemporada1").val() + "&reftorneo3="+ $("#reftorneo3").val() + "&reffechas3="+ $("#reffechas3").val() + "&refcategorias1="+ $("#refcategorias1").val() + "&refdivision1="+ $("#refdivision1").val() + "&reffechadesde1=" + $('#reffechadesde1').val() + "&reffechahasta1="+ $('#reffechahasta1').val() ,'_blank');
@@ -335,13 +347,25 @@ $(document).ready(function(){
 	$("#proxima").on("click",'.btnPlanilla', function(){
 		idBtn = $(this).attr("id");
 		imagen = $(this).attr("data-imagen");
-		window.open("https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/" + idBtn + "/1/" + imagen,'_blank');
+		window.open("https://saupureinconsulting.com.ar/aifzncountries/arbitros/" + idBtn + "/1/" + imagen,'_blank');
 	});
 
 	$("#proxima").on("click",'.btnComplemento', function(){
 		idBtn = $(this).attr("id");
 		imagen = $(this).attr("data-imagen");
-		window.open("https://saupureinconsulting.com.ar/aifzncountriesdesarrollo/arbitros/" + idBtn + "/2/" + imagen,'_blank');
+		window.open("https://saupureinconsulting.com.ar/aifzncountries/arbitros/" + idBtn + "/2/" + imagen,'_blank');
+	});
+
+	$("#proxima").on("click",'.btnPlanillaDL', function(){
+		idBtn = $(this).attr("id");
+		imagen = $(this).attr("data-imagen");
+		window.open("https://saupureinconsulting.com.ar/aifzncountries/arbitros/" + idBtn + "/3/" + imagen,'_blank');
+	});
+
+	$("#proxima").on("click",'.btnPlanillaDV', function(){
+		idBtn = $(this).attr("id");
+		imagen = $(this).attr("data-imagen");
+		window.open("https://saupureinconsulting.com.ar/aifzncountries/arbitros/" + idBtn + "/4/" + imagen,'_blank');
 	});
 
 	$("#proxima").on("click",'.btnInforme', function(){

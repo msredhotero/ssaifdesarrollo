@@ -708,11 +708,99 @@ case 'cargarProximaFecha':
    case 'corregirSuspendidos':
    		corregirSuspendidos($serviciosReferencias);
    	break;
+   case 'traerTitularesPorFixtureEquipo':
+      traerTitularesPorFixtureEquipo($serviciosReferencias);
+   break;
+   case 'insertarTitularesMasivo':
+      insertarTitularesMasivo($serviciosReferencias);
+   break;
+   case 'habilitar_suspender':
+   		habilitar_suspender($serviciosReferencias);
+   	break;
    default:
       echo 'Error URL';
    break;
 }
 // finfinfin
+
+function habilitar_suspender($serviciosReferencias) {
+	$idfixture = $_POST['idfixture'];
+	$idjugador = $_POST['idjugador'];
+	$tipo = $_POST['tipo'];
+
+	$resV['error'] = false;
+
+	if ($tipo == 0) {
+		$res = $serviciosReferencias->eliminarSuspendidoshabilitadosPorFixtureJugador($idfixture,$idjugador);
+
+		if ($res == true) {
+			$resV['error'] = false;
+		} else {
+			$resV['error'] = true;
+		}
+	} else {
+		$res = $serviciosReferencias->insertarSuspendidoshabilitados($idfixture,$idjugador);
+
+		if ((integer)$res > 0) {
+			$resV['error'] = false;
+		} else {
+			$resV['error'] = true;
+		}
+	}
+
+	header('Content-type: application/json');
+    echo json_encode($resV);
+}
+
+
+function insertarTitularesMasivo($serviciosReferencias) {
+      $reffixture = $_POST['reffixture'];
+      $lstJugadores = $_POST['lstJugadores'];
+      $refequipos = $_POST['refequipos'];
+      $refcategorias = $_POST['refcategorias'];
+      $refdivisiones = $_POST['refdivisiones'];
+
+      if ($lstJugadores != '') {
+         $resEliminar = $serviciosReferencias->eliminarTitularesPorIdFixtureIdEquipo($reffixture,$refequipos);
+         $listaInsert = explode(",", substr($lstJugadores, 0, -1));
+         foreach ($listaInsert as $itemInsert) {
+            $res = $serviciosReferencias->insertarTitulares($reffixture,$itemInsert,$refequipos,$refcategorias,$refdivisiones);
+         }
+
+      }
+
+      echo '';
+
+   }
+
+   function traerTitularesPorFixtureEquipo($serviciosReferencias) {
+      $idfixture = $_POST['idfixture'];
+      $idequipo = $_POST['idequipo'];
+
+      $resTitulares 	= $serviciosReferencias->traerTitularesPorFixtureEquipo($idfixture, $idequipo);
+
+      $resV['datos'] = '';
+      $resV['error'] = true;
+
+      $ar = array();
+
+      while ($row = mysql_fetch_assoc($resTitulares)) {
+         $resV['error'] = false;
+
+         $arNuevo = array('idtitular'=> $row['idtitular'],
+                          'jugador'=> utf8_decode($row['jugador'])
+         );
+
+         array_push($ar, $arNuevo);
+
+      }
+
+      $resV['datos'] = $ar;
+
+
+      header('Content-type: application/json');
+      echo json_encode($resV);
+   }
 
 function corregirSuspendidos($serviciosReferencias) {
 	$idsancionjugador = $_POST['idsancionjugador'];
@@ -954,8 +1042,9 @@ function traerImagenEquipo($serviciosReferencias) {
 function cargarProximaFecha($serviciosReferencias) {
    $desde = $_POST['desde'];
    $hasta = $_POST['hasta'];
+   $modulo = $_POST['modulo'];
 
-   $res = $serviciosReferencias->insertarVigenciasoperaciones(3,$desde,$hasta,'');
+   $res = $serviciosReferencias->insertarVigenciasoperaciones($modulo,$desde,$hasta,'');
 
 	echo '';
 }
@@ -1997,7 +2086,6 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
                            <th>Arbitro</th>
 									<th>Es Resaltado</th>
 									<th>Es Destacado</th>
-									<th></th>
 									<th>Accion</th>
 
 								</tr>
@@ -2031,12 +2119,42 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
         </button>';
       }
 
+      if ($row['imagen3'] == '') {
+         $cadPlanillaDelegadoLocal = '<button type="button" class="btn btn-danger btn-sm">
+          <span class="glyphicon glyphicon-remove"></span> Comple.
+        </button>';
+      } else {
+         $cadPlanillaDelegadoLocal = '<button type="button" data-imagen="'.$row['imagen3'].'" class="btn btn-success btn-sm btnPlanillaDL" id="'.$row['idfixture'].'">
+          <span class="glyphicon glyphicon-ok"></span> Comple.
+        </button>';
+      }
+
+      if ($row['imagen4'] == '') {
+         $cadPlanillaDelegadoVisitante = '<button type="button" class="btn btn-danger btn-sm">
+          <span class="glyphicon glyphicon-remove"></span> Comple.
+        </button>';
+      } else {
+         $cadPlanillaDelegadoVisitante = '<button type="button" data-imagen="'.$row['imagen4'].'" class="btn btn-success btn-sm btnPlanillaDV" id="'.$row['idfixture'].'">
+          <span class="glyphicon glyphicon-ok"></span> Comple.
+        </button>';
+      }
+
       if (($row['observaciones'] == 'Sin novedad') || ($row['observaciones'] == '') || ($row['observaciones'] == null)) {
          $cadInforme = '';
       } else {
-         $cadInforme = "<button type='button' data-categoria='".$row['categoria']."' data-fecha='".$row['fecha'].' | '.$dateH->format('d-m-Y').' | '.$row['hora']."' data-arbitro='".$row['arbitro']."' data-division='".$row['division']."' data-partido='".$row['equipoLocal']." - ".$row['equipoVisitante']."' data-imagen='".str_replace(PHP_EOL, '******************', $row['observaciones'])."' class='btn btn-success btn-sm btnInforme' id='".$row['idfixture']."'>
-          <span class='glyphicon glyphicon-ok'></span> Infor.
-        </button>";
+         $cadInforme = "<button type='button' data-categoria='".$row['categoria']."' data-fecha='".$row['fecha'].' | '.$dateH->format('d-m-Y').' | '.$row['hora']."' data-arbitro='".$row['arbitro']."' data-division='".$row['division']."' data-partido='".$row['equipoLocal']." - ".$row['equipoVisitante']."' data-imagen='".str_replace(PHP_EOL, '******************', $row['observaciones'])."' class='btn btn-success btn-sm btnInforme' id='".$row['idfixture']."'><span class='glyphicon glyphicon-ok'></span> Infor.</button>";
+      }
+
+      if (($row['observaciones2'] == 'Sin novedad') || ($row['observaciones2'] == '') || ($row['observaciones2'] == null)) {
+         $cadInformeDL = '';
+      } else {
+         $cadInformeDL = "<button type='button' data-categoria='".$row['categoria']."' data-fecha='".$row['fecha'].' | '.$dateH->format('d-m-Y').' | '.$row['hora']."' data-arbitro='".$row['arbitro']."' data-division='".$row['division']."' data-partido='".$row['equipoLocal']." - ".$row['equipoVisitante']."' data-imagen='".str_replace(PHP_EOL, '******************', $row['observaciones2'])."' class='btn btn-success btn-sm btnInforme' id='".$row['idfixture']."'><span class='glyphicon glyphicon-ok'></span> Infor.</button>";
+      }
+
+      if (($row['observaciones3'] == 'Sin novedad') || ($row['observaciones3'] == '') || ($row['observaciones3'] == null)) {
+         $cadInformeDV = '';
+      } else {
+         $cadInformeDV = "<button type='button' data-categoria='".$row['categoria']."' data-fecha='".$row['fecha'].' | '.$dateH->format('d-m-Y').' | '.$row['hora']."' data-arbitro='".$row['arbitro']."' data-division='".$row['division']."' data-partido='".$row['equipoLocal']." - ".$row['equipoVisitante']."' data-imagen='".str_replace(PHP_EOL, '******************', $row['observaciones3'])."' class='btn btn-success btn-sm btnInforme' id='".$row['idfixture']."'><span class='glyphicon glyphicon-ok'></span> Infor.</button>";
       }
 
 		$cadCabecera .= "<tr>
@@ -2053,13 +2171,37 @@ function filtrosGenerales($serviciosReferencias,$serviciosFunciones) {
                      <td>".$row['arbitro']."</td>
 							<td><input class='form-control' type='checkbox' name='esresaltado".$row['idfixture']."' id='esresaltado".$row['idfixture']."' ".($row['esresaltado'] == 'Si' ? 'checked' : '')."/></td>
 							<td><input class='form-control' type='checkbox' name='esdestacado".$row['idfixture']."' id='esdestacado".$row['idfixture']."' ".($row['esdestacado'] == 'Si' ? 'checked' : '')."/></td>
-							<td><a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a><br>".$cadPlanilla.'<br>'.$cadComplemento.'<br>'.$cadInforme."</td>
+
 							<td><button type='button' class='btn btn-primary guardarPartidoSimple' id='".$row['idfixture']."'>Guardar</button></td>
 						</tr>";
 
 		$cadCabecera .= "<tr>
-							<td colspan='12'>
+							<td colspan='3'>
 							<b>Link:</b> <input type='text' class='form-control' name='linkfacebook".$row['idfixture']."' id='linkfacebook".$row['idfixture']."' style='width:100%;' value='".$row['linkfacebook']."'/>
+							</td>
+                     <td colspan='1'>
+							<b>Ir:</b> <a href='estadisticas.php?id=".$row['idfixture']."'>Ver</a>
+							</td>
+                     <td colspan='1'>
+							<b>Planilla Arb.:</b> <br>".$cadPlanilla."<br>
+							</td>
+                     <td colspan='1'>
+							<b>Complem.:</b> <br>".$cadComplemento."<br>
+							</td>
+                     <td colspan='1'>
+							<b>Inf.Arb.:</b> <br>".$cadInforme."<br>
+							</td>
+                     <td colspan='1'>
+							<b>Planilla DL:</b> <br>".$cadPlanillaDelegadoLocal."<br>
+							</td>
+                     <td colspan='1'>
+							<b>Inf. DL:</b> <br>".$cadInformeDL."<br>
+							</td>
+                     <td colspan='1'>
+							<b>Planilla DV:</b> <br>".$cadPlanillaDelegadoVisitante."<br>
+							</td>
+                     <td colspan='1'>
+							<b>Inf. DV:</b> <br>".$cadInformeDV."<br>
 							</td>
 						</tr>";
 
@@ -4949,6 +5091,7 @@ function insertarDefinicionescategoriastemporadas($serviciosReferencias) {
 	$minutospartido = $_POST['minutospartido'];
 	$cantidadcambiosporpartido = $_POST['cantidadcambiosporpartido'];
 
+
 	if (isset($_POST['conreingreso'])) {
 		$conreingreso = 1;
 	} else {
@@ -4956,8 +5099,9 @@ function insertarDefinicionescategoriastemporadas($serviciosReferencias) {
 	}
 
 	$observaciones = $_POST['observaciones'];
+   $cambiosilimitados = $_POST['cambiosilimitados'];
 
-	$res = $serviciosReferencias->insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones);
+	$res = $serviciosReferencias->insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones,$cambiosilimitados);
 
 	if ((integer)$res > 0) {
 		echo '';
@@ -4984,8 +5128,9 @@ function modificarDefinicionescategoriastemporadas($serviciosReferencias) {
 	}
 
 	$observaciones = $_POST['observaciones'];
+   $cambiosilimitados = $_POST['cambiosilimitados'];
 
-	$res = $serviciosReferencias->modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones);
+	$res = $serviciosReferencias->modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones,$cambiosilimitados);
 
 	if ($res == true) {
 		echo '';

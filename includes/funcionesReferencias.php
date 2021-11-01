@@ -9,15 +9,574 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+  function traerEquiposdelegadosPorEquipo($id) {
+
+    if (mysql_num_rows($refTemporada)>0) {
+        $idTemporada = mysql_result($refTemporada,0,0);
+      } else {
+        $idTemporada = 0;
+      }
+
+    $sql = "select idequipodelegado,idequipo,reftemporadas,refusuarios,refcountries,nombre,refcategorias,refdivisiones,fechabaja,
+    (case when activo = 1 then 'Si' else 'No' end) as activo,
+    refestados,
+    (case when nuevo = 1 then 'Si' else 'No' end) as nuevo
+    from dbequiposdelegados where idequipo =".$id." and reftemporadas =".$idTemporada;
+    $res = $this->query($sql,0);
+    return $res;
+  }
+
+  function traerConectorActivosPorEquiposCountryEquiposEdades($idcountrie,$idequipo) {
+
+      $refTemporada = $this->traerUltimaTemporada();
+
+      if (mysql_num_rows($refTemporada)>0) {
+        $idTemporada = mysql_result($refTemporada,0,0);
+      } else {
+        $idTemporada = 0;
+      }
+
+      $sql = "SELECT 
+            min(year(now()) - year(jug.fechanacimiento)) as edadMinima,
+            max(year(now()) - year(jug.fechanacimiento)) as edadMaxima,
+            count(*) as cantidadJugadores,
+            round((max(year(now()) - year(jug.fechanacimiento)) + min(year(now()) - year(jug.fechanacimiento)))/2,2) as edadPromedio
+      
+        FROM
+            dbconectordelegados c
+        INNER JOIN dbjugadores jug ON jug.idjugador = c.refjugadores
+        INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        
+        INNER JOIN tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        INNER JOIN dbequiposdelegados equ ON equ.idequipo = c.refequipos
+            AND equ.reftemporadas = ".$idTemporada."
+        INNER JOIN dbcountries co ON co.idcountrie = equ.refcountries and co.idcountrie =".$idcountrie."
+        INNER JOIN tbdivisiones di ON di.iddivision = equ.refdivisiones
+        INNER JOIN tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        INNER JOIN tbcategorias cat ON cat.idtcategoria = c.refcategorias
+        WHERE
+            (c.activo = 1
+                AND c.reftemporadas = ".$idTemporada.") and c.refequipos = ".$idequipo;
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+  function traerConectorActivosPorEquiposCountryEquipos($idcountrie) {
+
+      $refTemporada = $this->traerUltimaTemporada();
+
+      if (mysql_num_rows($refTemporada)>0) {
+        $idTemporada = mysql_result($refTemporada,0,0);
+      } else {
+        $idTemporada = 0;
+      }
+
+      $sql = "SELECT 
+        r.categoria,
+        r.equipo,
+        r.countrie,
+        r.refequipos,
+        r.refcategorias,
+        r.division
+    FROM
+        (SELECT 
+            cat.categoria,
+            equ.nombre AS equipo,
+            co.nombre AS countrie,
+            c.refequipos,
+            c.refcountries,
+            c.refcategorias,
+            cat.orden2,
+            di.iddivision,
+            di.division
+        FROM
+            dbconectordelegados c
+         INNER JOIN tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        INNER JOIN dbequiposdelegados equ ON equ.idequipo = c.refequipos
+            AND equ.reftemporadas = '.$idTemporada.'
+        INNER JOIN dbcountries co ON co.idcountrie = equ.refcountries
+            AND co.idcountrie = '.$idcountrie.'    
+        INNER JOIN tbdivisiones di ON di.iddivision = equ.refdivisiones
+        INNER JOIN tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        INNER JOIN tbcategorias cat ON cat.idtcategoria = c.refcategorias
+        WHERE
+            (c.activo = 1
+                AND c.reftemporadas = ".$idTemporada.")
+          ) r
+    GROUP BY r.categoria,
+        r.equipo,
+        r.countrie,
+        r.refequipos,
+        r.refcategorias,
+        r.division
+    ORDER BY r.countrie,r.orden2, r.refcategorias,r.iddivision,r.equipo";
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+  function traerConectorActivosPorEquiposCountry($idcountrie, $idequipo) {
+
+      $refTemporada = $this->traerUltimaTemporada();
+
+      if (mysql_num_rows($refTemporada)>0) {
+        $idTemporada = mysql_result($refTemporada,0,0);
+      } else {
+        $idTemporada = 0;
+      }
+
+      $sql = "SELECT 
+        r.idconector,
+        r.categoria,
+        r.equipo,
+        r.countrie,
+        r.tipojugador,
+        r.esfusion,
+        r.activo,
+        r.refjugadores,
+        r.reftipojugadores,
+        r.refequipos,
+        r.refcountries,
+        r.refcategorias,
+        r.nombrecompleto,
+        r.nrodocumento,
+        r.fechanacimiento,
+        r.idtipojugador,
+        r.edad,
+        r.fechabaja,
+        r.fechaalta,
+        r.habilitacionpendiente
+    FROM
+        (SELECT 
+            c.idconector,
+                cat.categoria,
+                equ.nombre AS equipo,
+                co.nombre AS countrie,
+                tip.tipojugador,
+                (CASE
+                    WHEN c.esfusion = 1 THEN 'Si'
+                    ELSE 'No'
+                END) AS esfusion,
+                (CASE
+                    WHEN c.activo = 1 THEN 'Si'
+                    ELSE 'No'
+                END) AS activo,
+                c.refjugadores,
+                c.reftipojugadores,
+                c.refequipos,
+                c.refcountries,
+                c.refcategorias,
+                CONCAT(jug.apellido, ', ', jug.nombres) AS nombrecompleto,
+                jug.nrodocumento,
+                jug.fechanacimiento,
+                tip.idtipojugador,
+                YEAR(NOW()) - YEAR(jug.fechanacimiento) AS edad,
+                jug.fechabaja,
+                jug.fechaalta,
+                (CASE
+                    WHEN c.habilitacionpendiente = 1 THEN 'Si'
+                    ELSE 'No'
+                END) AS habilitacionpendiente,
+                cat.orden2,
+                di.iddivision
+        FROM
+            dbconectordelegados c
+        INNER JOIN dbjugadores jug ON jug.idjugador = c.refjugadores
+        INNER JOIN tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+        
+        INNER JOIN tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+        INNER JOIN dbequiposdelegados equ ON equ.idequipo = c.refequipos
+            AND equ.reftemporadas = ".$idTemporada."
+        INNER JOIN dbcountries co ON co.idcountrie = equ.refcountries and co.idcountrie =".$idcountrie."    
+        INNER JOIN tbdivisiones di ON di.iddivision = equ.refdivisiones
+        INNER JOIN tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+        INNER JOIN tbcategorias cat ON cat.idtcategoria = c.refcategorias
+        WHERE
+            (c.activo = 1
+                AND c.reftemporadas = ".$idTemporada.") and c.refequipos = ".$idequipo."
+        ) r
+    GROUP BY r.idconector , r.categoria , r.equipo , r.countrie , r.tipojugador , r.esfusion , r.activo , r.refjugadores , r.reftipojugadores , r.refequipos , r.refcountries , r.refcategorias , r.nombrecompleto , r.nrodocumento , r.fechanacimiento , r.idtipojugador ,
+     r.edad , r.fechabaja , r.fechaalta , r.habilitacionpendiente,r.orden2,r.iddivision
+    ORDER BY r.nombrecompleto";
+
+      $res = $this->query($sql,0);
+      return $res;
+   }
+
+
+/* PARA Suspendidoshabilitados */
+
+function insertarSuspendidoshabilitados($reffixture,$refjugadores) {
+$sql = "insert into dbsuspendidoshabilitados(idsuspendidohabilitado,reffixture,refjugadores)
+values ('',".$reffixture.",".$refjugadores.")";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarSuspendidoshabilitados($id,$reffixture,$refjugadores) {
+$sql = "update dbsuspendidoshabilitados
+set
+reffixture = ".$reffixture.",refjugadores = ".$refjugadores."
+where idsuspendidohabilitado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarSuspendidoshabilitados($id) {
+$sql = "delete from dbsuspendidoshabilitados where idsuspendidohabilitado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function eliminarSuspendidoshabilitadosPorFixtureJugador($reffixture, $refjugador) {
+$sql = "delete from dbsuspendidoshabilitados where reffixture =".$reffixture." and refjugadores = ".$refjugador;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerSuspendidoshabilitados() {
+$sql = "select
+s.idsuspendidohabilitado,
+s.reffixture,
+s.refjugadores
+from dbsuspendidoshabilitados s
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerSuspendidoshabilitadosPorId($id) {
+$sql = "select idsuspendidohabilitado,reffixture,refjugadores from dbsuspendidoshabilitados where idsuspendidohabilitado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerSuspendidoshabilitadosPorFixtureJugador($reffixture, $refjugador) {
+  $sql = "select idsuspendidohabilitado,reffixture,refjugadores from dbsuspendidoshabilitados where reffixture =".$reffixture." and refjugadores = ".$refjugador;
+  $res = $this->query($sql,0);
+  return $res;
+}
+
+function devolverSuspendidoshabilitadosPorFixtureJugador($reffixture, $refjugador) {
+  $sql = "select idsuspendidohabilitado,reffixture,refjugadores from dbsuspendidoshabilitados where reffixture =".$reffixture." and refjugadores = ".$refjugador;
+  $res = $this->query($sql,0);
+  if (mysql_num_rows($res)>0) {
+    return 1;
+  }
+  return 0;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbsuspendidoshabilitados*/
+
+   /* PARA Titulares */
+
+	function insertarTitulares($reffixture,$refjugadores,$refequipos,$refcategorias,$refdivisiones) {
+		$sql = "insert into dbtitulares(idtitular,reffixture,refjugadores,refequipos,refcategorias,refdivisiones)
+		values ('',".$reffixture.",".$refjugadores.",".$refequipos.",".$refcategorias.",".$refdivisiones.")";
+		$res = $this->query($sql,1);
+		return $res;
+	}
+
+
+	function modificarTitulares($id,$reffixture,$refjugadores,$refequipos,$refcategorias,$refdivisiones) {
+		$sql = "update dbtitulares
+		set
+		reffixture = ".$reffixture.",refjugadores = ".$refjugadores.",refequipos = ".$refequipos.",refcategorias = ".$refcategorias.",refdivisiones = ".$refdivisiones."
+		where idtitular =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function eliminarTitulares($id) {
+		$sql = "delete from dbtitulares where idtitular =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function eliminarTitularesPorIdFixtureIdEquipo($reffixture,$refequipos) {
+		$sql = "delete from dbtitulares where reffixture =".$reffixture." and refequipos = ".$refequipos;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerTitulares() {
+		$sql = "select
+		t.idtitular,
+		t.reffixture,
+		t.refjugadores,
+		t.refequipos,
+		t.refcategorias,
+		t.refdivisiones
+		from dbtitulares t
+		order by 1";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function existeFixturePorTitularesJugador($idJugador, $idFixture) {
+	    $sql = "select * from dbtitulares where refjugadores =".$idJugador." and reffixture =".$idFixture;
+
+	    return $this->existeDevuelveId($sql);
+	}
+
+	function traerTitularesPorFixtureEquipo($idFixture, $idEquipo) {
+		$sql = "select
+		c.idtitular,
+		c.reffixture,
+		c.refequipos,
+		c.refcategorias,
+		c.refdivisiones,
+		concat(jug.apellido, ' ', jug.nombres) as jugador
+		from dbtitulares c
+		inner join dbfixture fix ON fix.idfixture = c.reffixture
+		inner join dbequipos equ ON equ.idequipo = c.refequipos
+		inner join tbcategorias cat ON cat.idtcategoria = c.refcategorias
+		inner join tbdivisiones divi ON divi.iddivision = c.refdivisiones
+		inner join dbjugadores jug on jug.idjugador = c.refjugadores
+		where c.reffixture = ".$idFixture." and c.refequipos = ".$idEquipo."
+		order by 1";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerTitularesPorId($id) {
+		$sql = "select idtitular,reffixture,refjugadores,refequipos,refcategorias,refdivisiones from dbtitulares where idtitular =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	/* Fin */
+	/* /* Fin de la Tabla: dbtitulares*/
+
+  /**** 03/08/2020 nuevo ****/
+
+  function traerFusionPorIdEquipos($idequipo) {
+    $sql = "SELECT
+              cc.idcountrie,
+              cc.nombre AS countrie,
+              est.idestado,
+              est.estado,
+              (CASE
+                  WHEN viejo = 1 THEN 'Antiguo'
+                  ELSE 'Nuevo'
+              END) AS viejo
+          FROM
+              dbcountries cc
+                  INNER JOIN
+              dbfusionequipos fe ON fe.refcountries = cc.idcountrie
+                  INNER JOIN
+              tbestados est ON est.idestado = fe.refestados
+              INNER JOIN
+            dbequiposdelegados ed ON ed.idequipodelegado = fe.refequiposdelegados
+          WHERE
+              ed.idequipo = ".$idequipo;
+
+    $res = $this->query($sql,0);
+    return $res;
+  }
+
+  function verificaEdadCategoriaJugadorMenor($refjugador, $refcategoria, $tipoJugador) {
+      //## falta chocar contra una temporada
+      $edad = $this->verificarEdad($refjugador);
+
+      $sql = "SELECT
+                  count(*) as verificado
+              FROM
+                  dbdefinicionescategoriastemporadastipojugador dc
+                      INNER JOIN
+                  (SELECT
+                      iddefinicioncategoriatemporada
+                  FROM
+                      dbdefinicionescategoriastemporadas ct
+                  WHERE
+                      ct.refcategorias = ".$refcategoria."
+                  ORDER BY iddefinicioncategoriatemporada DESC
+                  LIMIT 1) c
+                  on c.iddefinicioncategoriatemporada = dc.refdefinicionescategoriastemporadas
+                  where dc.reftipojugadores = ".$tipoJugador." and ".$edad." < dc.edadminima";
+      $res = $this->query($sql,0);
+
+      return mysql_result($res,0,0);
+  }
+
+  function traerConectorActivosPorEquiposDelegado($refEquipos, $reftemporadas, $refusuarios='') {
+  $sql = "select
+    c.idconector,
+    cat.categoria,
+    equ.nombre as equipo,
+    co.nombre as countrie,
+    tip.tipojugador,
+    (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+    concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+    jug.nrodocumento,
+    jug.fechanacimiento,
+    tip.idtipojugador,
+    year(now()) - year(jug.fechanacimiento) as edad,
+    jug.fechabaja,
+    jug.fechaalta,
+    (case when c.habilitacionpendiente = 1 then 'Si' else 'No' end) as habilitacionpendiente
+
+  from
+  dbconectordelegados c
+      inner join
+    dbjugadores jug ON jug.idjugador = c.refjugadores
+      inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+      inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+      inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+      inner join
+    dbequiposdelegados equ ON equ.idequipo = c.refequipos
+      inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+      inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+      inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+    where (equ.idequipo = ".$refEquipos." and c.activo = 1 and c.reftemporadas = ".$reftemporadas.")
+
+  order by concat(jug.apellido,', ',jug.nombres)";
+  $res = $this->query($sql,0);
+  //die(var_dump($sql));
+  return $res;
+  }
+
+  function traerEquiposdelegadosPorEquipoTemporada($idequipo, $reftemporada) {
+    $sql = "select ed.idequipodelegado,ed.idequipo,ed.reftemporadas,ed.refusuarios,
+    ed.refcountries,ed.nombre,ed.refcategorias,ed.refdivisiones,
+    ed.fechabaja,ed.activo,ed.refestados,
+    c.categoria,
+    d.division
+    from dbequiposdelegados ed
+    inner join tbcategorias c ON c.idtcategoria = ed.refcategorias
+    inner join tbdivisiones d ON d.iddivision = ed.refdivisiones
+    where ed.idequipo =".$idequipo." and ed.reftemporadas = ".$reftemporada;
+    $res = $this->query($sql,0);
+    return $res;
+  }
+
+
+  function traerConectorActivosPorEquiposDelegadoNuevo($refEquipos, $reftemporadas, $refusuarios='') {
+  $sql = "select
+    c.idconector,
+    cat.categoria,
+    equ.nombre as equipo,
+    co.nombre as countrie,
+    tip.tipojugador,
+    (case when c.esfusion = 1 then 'Si' else 'No' end) as esfusion,
+    (case when c.activo = 1 then 'Si' else 'No' end) as activo,
+    c.refjugadores,
+    c.reftipojugadores,
+    c.refequipos,
+    c.refcountries,
+    c.refcategorias,
+    concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+    jug.nrodocumento,
+    jug.fechanacimiento,
+    tip.idtipojugador,
+    year(now()) - year(jug.fechanacimiento) as edad,
+    jug.fechaalta,
+    (case when c.habilitacionpendiente = 1 then 'Si' else 'No' end) as habilitacionpendiente
+
+  from
+  dbconectordelegados c
+      inner join
+    dbjugadorespre jug ON jug.idjugadorpre = c.refjugadorespre
+      inner join
+    tbtipodocumentos ti ON ti.idtipodocumento = jug.reftipodocumentos
+      inner join
+    dbcountries co ON co.idcountrie = jug.refcountries
+      inner join
+    tbtipojugadores tip ON tip.idtipojugador = c.reftipojugadores
+      inner join
+    dbequiposdelegados equ ON equ.idequipo = c.refequipos
+      inner join
+    tbdivisiones di ON di.iddivision = equ.refdivisiones
+      inner join
+    tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
+      inner join
+    tbcategorias cat ON cat.idtcategoria = c.refcategorias
+    where (equ.idequipo = ".$refEquipos." and c.activo = 1 and c.reftemporadas = ".$reftemporadas.")
+
+  order by concat(jug.apellido,', ',jug.nombres)";
+  $res = $this->query($sql,0);
+  return $res;
+  }
+
+
+  function generarPlantelTemporadaAnteriorExcepcionesTodos($idtemporada, $idcountrie, $idequipo) {
+      $sql = "SELECT
+                '',
+                ".$idtemporada." as reftemporadas,
+                '' as refusuarios,
+            c.refjugadores,
+            c.reftipojugadores,
+            c.refequipos,
+            c.refcountries,
+            c.refcategorias,
+            c.esfusion,
+            c.activo,
+            1 as refestados,
+            0 as habilitacionpendiente,
+            0 as refjugadorespre,
+            jug.nrodocumento,
+            c.idconector,
+            concat(jug.apellido,', ',jug.nombres) as nombrecompleto,
+            year(now()) - year(jug.fechanacimiento) as edad
+            FROM
+                dbconector c
+            inner join dbjugadores jug ON jug.idjugador = c.refjugadores
+
+      where c.refequipos = ".$idequipo." and c.refcountries = ".$idcountrie."
+          and c.activo = 1";
+      //die(var_dump($sql));
+      $res = $this->query($sql,0);
+
+      $habilitacionpendiente = 0;
+
+      $ar = array();
+
+      while ($row = mysql_fetch_array($res)) {
+
+        $vEdad = $this->verificaEdadCategoriaJugador($row['refjugadores'], $row['refcategorias'], $row['reftipojugadores']);
+
+        $vEdadMenor = $this->verificaEdadCategoriaJugadorMenor($row['refjugadores'], $row['refcategorias'], $row['reftipojugadores']);
+
+        if (($vEdad == 0) && ($vEdadMenor == 1)) {
+          array_push($ar, array('refjugadores' => $row['refjugadores'], 'reftipojugadores' => $row['reftipojugadores'], 'nrodocumento' => $row['nrodocumento'], 'nombrecompleto' => $row['nombrecompleto'], 'edad' => $row['edad'], 'idconector' => $row['idconector']));
+        }
+      }
+      return $ar;
+    }
+
+
+  /**** fin 03/08/2020 nuevo ****/
+
   function corregirSuspendidos($idsancion, $refconector) {
     $resConector = $this->traerConectorPorId($refconector);
 
     $resEquipos = $this->traerEquiposPorId(mysql_result($resConector, 0,'refequipos'));
 
-    $sql = "update dbsancionesjugadores 
-      set refequipos = ".mysql_result($resConector, 0,'refequipos')." , 
-          refcategorias = ".mysql_result($resConector, 0,'refcategorias')." , 
-          refdivisiones = ".mysql_result($resEquipos, 0,'refdivisiones')." 
+    $sql = "update dbsancionesjugadores
+      set refequipos = ".mysql_result($resConector, 0,'refequipos')." ,
+          refcategorias = ".mysql_result($resConector, 0,'refcategorias')." ,
+          refdivisiones = ".mysql_result($resEquipos, 0,'refdivisiones')."
           where idsancionjugador = ".$idsancion;
 
     $res = $this->query($sql,0);
@@ -105,7 +664,7 @@ class ServiciosReferencias {
         tbposiciontributaria po ON po.idposiciontributaria = co.refposiciontributaria
             inner join
         tbcategorias cat ON cat.idtcategoria = c.refcategorias
-        where jug.idjugador = ".$refJugador." and c.reftemporadas = ".$idtemporada." 
+        where jug.idjugador = ".$refJugador." and c.reftemporadas = ".$idtemporada."
               and c.refequipos = ".$idequipo." and c.activo = 1
               and c.refcategorias = ".$idcategoria."
     order by 1";
@@ -586,7 +1145,7 @@ class ServiciosReferencias {
                fix.refconectorvisitante,
                (case when fix.esresaltado = 0 then 'No' else 'Si' end) esresaltado
            from dbfixture fix
-           inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos ".$idtorneo.$idcategoria.$iddivision."
+           inner join dbtorneos tor ON tor.idtorneo = fix.reftorneos ".$idtorneo.$idcategoria.$iddivision." and tor.activo=1
            inner join tbcategorias cat ON cat.idtcategoria = tor.refcategorias
            inner join tbdivisiones di ON di.iddivision = tor.refdivisiones
            inner join tbfechas fe ON fe.idfecha = fix.reffechas
@@ -764,16 +1323,16 @@ class ServiciosReferencias {
       return $res;
    }
 
-   function totalExcepcionPorJugadorEquipoTemporada($idjugador, $idequipo, $idtemporada) {
+   function totalExcepcionPorJugadorEquipoTemporada( $idequipo, $idtemporada) {
       $sql = "SELECT
                 count(idexcepcionencancha)
             FROM
                 dbexcepcionesencancha
             WHERE
-                refjugadores =".$idjugador." and refequipos = ".$idequipo." and reftemporadas = ".$idtemporada;
+                refequipos = ".$idequipo." and reftemporadas = ".$idtemporada;
 
       $res = $this->query($sql,0);
-      return $res;
+      return mysql_result($res,0,0);
    }
 
    /* Fin */
@@ -2541,7 +3100,8 @@ function suspendidosTotal() {
                 r.idjugador,
                 r.refequipos,
                 r.refcategorias,
-                r.idsancionjugador
+                r.idsancionjugador,
+                r.iddivision
             from (
             SELECT
                 cc.nombre,
@@ -2567,7 +3127,8 @@ function suspendidosTotal() {
                 j.idjugador,
                 sj.refequipos,
                 sj.refcategorias,
-                sj.idsancionjugador
+                sj.idsancionjugador,
+                di.iddivision
             FROM
                 dbsancionesfallos sf
                     INNER JOIN
@@ -2642,7 +3203,8 @@ function suspendidosTotal() {
                 j.idjugador,
                 sj.refequipos,
                 sj.refcategorias,
-                sj.idsancionjugador
+                sj.idsancionjugador,
+                di.iddivision
             FROM
                 dbsancionesfallosacumuladas sf
                     INNER JOIN
@@ -3098,7 +3660,11 @@ function traerProximaFechaFiltros($where) {
             fix.golesvisitantes,
             pa.imagen,
             pa.imagen2,
+            pa.imagen3,
+            pa.imagen4,
             pa.observaciones,
+            pa.observaciones2,
+            pa.observaciones3,
             fix.linkfacebook,
             COALESCE((case when es.finalizado = 1 then 'Si' else 'No' end), 'No') as finalizado
         from dbfixture fix
@@ -4267,6 +4833,9 @@ function traerRemanente($idJugador, $idTemporada, $idCategoria, $iddivision, $re
 
 //calculo para acumulacion de amarillas
 function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorneo) {
+    $resTemporada = $this->traerUltimaTemporada();
+    $temporada = mysql_result($resTemporada,0,1);
+
     $ultimaFecha = $this->ultimaFechaSancionadoPorAcumulacionAmarillas($idTorneo, $idJugador, $idTipoTorneo);
 
     $resTorneo = $this->traerTorneosPorId($idTorneo);
@@ -4276,7 +4845,7 @@ function traerAmarillasAcumuladas($idTorneo, $idJugador, $refFecha, $idTipoTorne
     $iddivision  = mysql_result($resTorneo, 0,'refdivisiones');
 
     if ($ultimaFecha == 0) {
-        $reffechaDesde = date('Y').'-01-01';
+        $reffechaDesde = $temporada.'-01-01';
         $restoAmarillas = 0;
     } else {
         $reffechaDesde = $ultimaFecha;
@@ -4822,7 +5391,7 @@ function existeDevuelveId($sql) {
                                 $id = $resIn;
                                 $usuario = $_SESSION['nombre_predio'];
 
-                                $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
+                                $resAu = $this->insertAuditoria($tabla, $operacion,$id,$usuario,null,null,'1');
                                 /**** fin auditoria ****/
                             }
                             echo '';
@@ -4833,7 +5402,7 @@ function existeDevuelveId($sql) {
                             echo "Posible ataque de carga de archivos!\n";
                         }
                     } else {
-                        echo "El archivo supera los limites de carga.";
+                        echo "<h1 style='color:#FFF;'>El archivo supera los limites de carga.<h1>";
                     }
                 }else{
                     echo "Posible ataque del archivo subido: ";
@@ -8788,7 +9357,7 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: tbestadospartidos*/
 
-
+//// nuevo 17/11/2020
 /* PARA Definicionescategoriastemporadas */
 
 function copiarDefinicionAnterior($definicionVieja, $definicionNueva) {
@@ -8803,7 +9372,8 @@ function copiarDefinicionAnterior($definicionVieja, $definicionNueva) {
             minutospartido,
             cantidadcambiosporpartido,
             conreingreso,
-            observaciones)
+            observaciones,
+            cambiosilimitados)
             SELECT '',
                 refcategorias,
                 ".$definicionNueva.",
@@ -8814,7 +9384,8 @@ function copiarDefinicionAnterior($definicionVieja, $definicionNueva) {
                 minutospartido,
                 cantidadcambiosporpartido,
                 conreingreso,
-                observaciones
+                observaciones,
+                cambiosilimitados
             FROM dbdefinicionescategoriastemporadas where reftemporadas =".$definicionVieja;
     $res = $this->query($sql,1);
     return $res;
@@ -8822,18 +9393,18 @@ function copiarDefinicionAnterior($definicionVieja, $definicionNueva) {
 }
 
 
-function insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) {
-$sql = "insert into dbdefinicionescategoriastemporadas(iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,refdias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones)
-values ('',".$refcategorias.",".$reftemporadas.",".$cantmaxjugadores.",".$cantminjugadores.",".$refdias.",'".($hora)."',".$minutospartido.",".$cantidadcambiosporpartido.",".$conreingreso.",'".($observaciones)."')";
+function insertarDefinicionescategoriastemporadas($refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones,$cambiosilimitados) {
+$sql = "insert into dbdefinicionescategoriastemporadas(iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,refdias,hora,minutospartido,cantidadcambiosporpartido,conreingreso,observaciones,cambiosilimitados)
+values ('',".$refcategorias.",".$reftemporadas.",".$cantmaxjugadores.",".$cantminjugadores.",".$refdias.",'".($hora)."',".$minutospartido.",".$cantidadcambiosporpartido.",".$conreingreso.",'".($observaciones)."','".($cambiosilimitados)."')";
 $res = $this->query($sql,1);
 return $res;
 }
 
 
-function modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones) {
+function modificarDefinicionescategoriastemporadas($id,$refcategorias,$reftemporadas,$cantmaxjugadores,$cantminjugadores,$refdias,$hora,$minutospartido,$cantidadcambiosporpartido,$conreingreso,$observaciones,$cambiosilimitados) {
 $sql = "update dbdefinicionescategoriastemporadas
 set
-refcategorias = ".$refcategorias.",reftemporadas = ".$reftemporadas.",cantmaxjugadores = ".$cantmaxjugadores.",cantminjugadores = ".$cantminjugadores.",refdias = ".$refdias.",hora = '".($hora)."',minutospartido = ".$minutospartido.",cantidadcambiosporpartido = ".$cantidadcambiosporpartido.",conreingreso = ".$conreingreso.",observaciones = '".($observaciones)."'
+refcategorias = ".$refcategorias.",reftemporadas = ".$reftemporadas.",cantmaxjugadores = ".$cantmaxjugadores.",cantminjugadores = ".$cantminjugadores.",refdias = ".$refdias.",hora = '".($hora)."',minutospartido = ".$minutospartido.",cantidadcambiosporpartido = ".$cantidadcambiosporpartido.",conreingreso = ".$conreingreso.",observaciones = '".($observaciones)."',cambiosilimitados = '".($cambiosilimitados)."'
 where iddefinicioncategoriatemporada =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -8862,7 +9433,8 @@ d.conreingreso,
 d.observaciones,
 d.refcategorias,
 d.reftemporadas,
-d.refdias
+d.refdias,
+d.cambiosilimitados
 from dbdefinicionescategoriastemporadas d
 inner join tbcategorias cat ON cat.idtcategoria = d.refcategorias
 inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas
@@ -8889,7 +9461,8 @@ d.observaciones,
 d.refcategorias,
 d.reftemporadas,
 d.refdias,
-(case when d.conreingreso = 1 then 'Si' else 'No' end) as reingreso
+(case when d.conreingreso = 1 then 'Si' else 'No' end) as reingreso,
+d.cambiosilimitados
 from dbdefinicionescategoriastemporadas d
 inner join tbcategorias cat ON cat.idtcategoria = d.refcategorias
 inner join tbtemporadas tem ON tem.idtemporadas = d.reftemporadas
@@ -8901,7 +9474,7 @@ return $res;
 
 
 function traerDefinicionescategoriastemporadasPorId($id) {
-$sql = "select iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,refdias,hora,minutospartido,cantidadcambiosporpartido,(case when conreingreso = 1 then 'Si' else 'No' end) as conreingreso,observaciones from dbdefinicionescategoriastemporadas where iddefinicioncategoriatemporada =".$id;
+$sql = "select iddefinicioncategoriatemporada,refcategorias,reftemporadas,cantmaxjugadores,cantminjugadores,refdias,hora,minutospartido,cantidadcambiosporpartido,(case when conreingreso = 1 then 'Si' else 'No' end) as conreingreso,observaciones,cambiosilimitados from dbdefinicionescategoriastemporadas where iddefinicioncategoriatemporada =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -9733,7 +10306,8 @@ function traerJugadoresVariosEquipos($idtemporada) {
     cat.idtcategoria,
     coc.reftipojugadores,
     coc.refequipos,
-    cou.idcountrie
+    cou.idcountrie,
+    divi.iddivision
 from    (
     select
         j.nrodocumento,
@@ -14289,6 +14863,28 @@ return $res;
 
 
     function traerFormacionPorFixtureDetalle($idFixture) {
+      // primer averiguo si el torneo es con cambios ilimitados o no.
+
+      $resFixture = $this->traerFixturePorId($idFixture);
+
+      $idTorneo = mysql_result($resFixture, 0,'reftorneos');
+
+      $resTorneo = $this->traerTorneosPorId($idTorneo);
+
+      $idTemporada = mysql_result($resTorneo, 0,'reftemporadas');
+      $idCategoria = mysql_result($resTorneo, 0,'refcategorias');
+
+      $resDefCategTemp		=	$this->traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria);
+
+      if (mysql_num_rows($resDefCategTemp)>0) {
+      	$minutos				=	mysql_result($resDefCategTemp,0,'minutospartido');
+      	$cambiosilimitados 		=	mysql_result($resDefCategTemp,0,'cambiosilimitados');
+      } else {
+      	$minutos				=	80;
+      	$cambiosilimitados 		= 	'0';
+      }
+
+      if ($cambiosilimitados == '0') {
         $sql = "
 
                 select
@@ -14381,6 +14977,77 @@ return $res;
 
                 order by r.orden, r.numero
                 ";
+         } else {
+            $sql = "select
+                    r.numero,
+                    r.apyn,
+                    r.equipo,
+                    r.orden,
+                    r.refjugadores
+                from (
+                    SELECT
+                        d.numero,
+                        CONCAT(j.apellido, ' ', j.nombres) AS apyn,
+                        fix.nombreequipolocal as equipo,
+                        1 as orden,
+                        d.refjugadores
+                    FROM
+                        dbdorsales d
+                            INNER JOIN
+                        dbjugadores j ON j.idjugador = d.refjugadores
+                            INNER JOIN
+                        dbfixture fix ON fix.idfixture = d.reffixture
+                            AND fix.refconectorlocal = d.refequipos
+                    WHERE
+                        d.reffixture = ".$idFixture." and d.numero > 0
+                        and j.idjugador in
+                        (
+
+                        SELECT
+                            c.refjugadores
+                        FROM
+                            dbtitulares c
+                                INNER JOIN
+                            dbfixture fix ON fix.idfixture = c.reffixture
+                                AND fix.refconectorlocal = c.refequipos
+                        WHERE
+                            c.reffixture = ".$idFixture.")
+
+                    union all
+
+                    SELECT
+                        d.numero,
+                        CONCAT(j.apellido, ' ', j.nombres) AS apyn,
+                        fix.nombreequipovisitante as equipo,
+                        2 as orden,
+                        d.refjugadores
+                    FROM
+                        dbdorsales d
+                            INNER JOIN
+                        dbjugadores j ON j.idjugador = d.refjugadores
+                            INNER JOIN
+                        dbfixture fix ON fix.idfixture = d.reffixture
+                            AND fix.refconectorvisitante = d.refequipos
+                    WHERE
+                        d.reffixture = ".$idFixture." and d.numero > 0
+                        and j.idjugador in
+                        (
+                        SELECT
+                            c.refjugadores
+                        FROM
+                            dbtitulares c
+                                INNER JOIN
+                            dbfixture fix ON fix.idfixture = c.reffixture
+                                AND fix.refconectorvisitante = c.refequipos
+
+                        WHERE
+                            c.reffixture = ".$idFixture."
+                        )
+                ) r
+
+                order by r.orden, r.numero
+                ";
+         }
 
         $res = $this->query($sql,0);
         return $res;
@@ -14525,6 +15192,30 @@ return $res;
 
 
     function traerFormacionCambiosPorFixtureDetalle($idFixture) {
+
+      // primer averiguo si el torneo es con cambios ilimitados o no.
+
+      $resFixture = $this->traerFixturePorId($idFixture);
+
+      $idTorneo = mysql_result($resFixture, 0,'reftorneos');
+
+      $resTorneo = $this->traerTorneosPorId($idTorneo);
+
+      $idTemporada = mysql_result($resTorneo, 0,'reftemporadas');
+      $idCategoria = mysql_result($resTorneo, 0,'refcategorias');
+
+      $resDefCategTemp		=	$this->traerDefinicionescategoriastemporadasPorTemporadaCategoria($idTemporada, $idCategoria);
+
+      if (mysql_num_rows($resDefCategTemp)>0) {
+      	$minutos				=	mysql_result($resDefCategTemp,0,'minutospartido');
+      	$cambiosilimitados 		=	mysql_result($resDefCategTemp,0,'cambiosilimitados');
+      } else {
+      	$minutos				=	80;
+      	$cambiosilimitados 		= 	'0';
+      }
+
+      if ($cambiosilimitados == '0') {
+
         $sql = "
             select
             r.numerosale,
@@ -14590,6 +15281,81 @@ return $res;
                 order by r.orden
 
                 ";
+
+         } else {
+            $sql = "select
+
+                    r.numero as numeroentra,
+                    '' as numerosale,
+                    r.apyn as apynentra,
+                    '' as apynsale,
+                    r.equipo,
+                    r.orden,
+                    r.refjugadores
+                from (
+                    SELECT
+                        d.numero,
+                        CONCAT(j.apellido, ' ', j.nombres) AS apyn,
+                        fix.nombreequipolocal as equipo,
+                        1 as orden,
+                        d.refjugadores
+                    FROM
+                        dbdorsales d
+                            INNER JOIN
+                        dbjugadores j ON j.idjugador = d.refjugadores
+                            INNER JOIN
+                        dbfixture fix ON fix.idfixture = d.reffixture
+                            AND fix.refconectorlocal = d.refequipos
+                    WHERE
+                        d.reffixture = ".$idFixture." and d.numero > 0
+                        and j.idjugador not in
+                        (
+
+                        SELECT
+                            c.refjugadores
+                        FROM
+                            dbtitulares c
+                                INNER JOIN
+                            dbfixture fix ON fix.idfixture = c.reffixture
+                                AND fix.refconectorlocal = c.refequipos
+                        WHERE
+                            c.reffixture = ".$idFixture.")
+
+                    union all
+
+                    SELECT
+                        d.numero,
+                        CONCAT(j.apellido, ' ', j.nombres) AS apyn,
+                        fix.nombreequipovisitante as equipo,
+                        2 as orden,
+                        d.refjugadores
+                    FROM
+                        dbdorsales d
+                            INNER JOIN
+                        dbjugadores j ON j.idjugador = d.refjugadores
+                            INNER JOIN
+                        dbfixture fix ON fix.idfixture = d.reffixture
+                            AND fix.refconectorvisitante = d.refequipos
+                    WHERE
+                        d.reffixture = ".$idFixture." and d.numero > 0
+                        and j.idjugador not in
+                        (
+                        SELECT
+                            c.refjugadores
+                        FROM
+                            dbtitulares c
+                                INNER JOIN
+                            dbfixture fix ON fix.idfixture = c.reffixture
+                                AND fix.refconectorvisitante = c.refequipos
+
+                        WHERE
+                            c.reffixture = ".$idFixture."
+                        )
+                ) r
+
+                order by r.orden, r.numero
+                ";
+         }
 
         $res = $this->query($sql,0);
         return $res;

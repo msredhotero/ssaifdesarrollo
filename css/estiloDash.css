@@ -7,11 +7,18 @@
 html { height : 101%; }
 body {
 	font-family: robotoL;
-	background: url(../imagenes/pink_sierpinski_square_fractal_background_seamless.jpg) repeat;
+	background: url(../imagenes/mesh-1430108_1280.png);
+	background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #content {
 	margin-left:3%;
+}
+
+#content h3 {
+	color:#fff;
 }
 
 body > h3 {

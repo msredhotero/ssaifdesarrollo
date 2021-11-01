@@ -228,7 +228,7 @@ $ajaxFuncionesController = '';
 
 $servicios	= "Referencias";
 
-$sqlMapaer	= "SHOW FULL TABLES FROM ssaif_desarrollo_2018";
+$sqlMapaer	= "SHOW FULL TABLES FROM aifzn_202008";
 $resMapeo 	=	query($sqlMapaer,0);
 
 $aliasTablaMadre = '';

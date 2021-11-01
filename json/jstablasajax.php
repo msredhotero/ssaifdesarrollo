@@ -5,10 +5,12 @@ session_start();
 include ('../includes/funciones.php');
 include ('../includes/funcionesReferencias.php');
 include ('../includes/funcionesUsuarios.php');
+include ('../includes/funcionesView.php');
 
 $serviciosFunciones = new Servicios();
 $serviciosReferencias 	= new ServiciosReferencias();
 $serviciosUsuarios  		= new ServiciosUsuarios();
+$serviciosView  		= new ServiciosView();
 
 $tabla = $_GET['tabla'];
 $draw = $_GET['sEcho'];
@@ -50,9 +52,31 @@ function armarAcciones($id,$label='',$class,$icon) {
 
 switch ($tabla) {
 
+	case 'usuarios':
+
+		if ($_SESSION['idroll_predio'] != 1) {
+			
+			$datos = $serviciosView->traerUsuariosSimpleAjax($length, $start, $busqueda, $colSort,$colSortDir);
+		} else {
+			
+			$datos = $serviciosView->traerUsuariosAjax($length, $start, $busqueda, $colSort,$colSortDir);
+		}
+		
+		$label = array('varmodificar','varborrar');
+		$class = array('btn-warning','btn-danger');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 8;
+
+		$resAjax = $datos[0];
+		$res = $datos[1];
+
+	break;
+
 	case 'arbitros':
-		$resAjax = $serviciosReferencias->traerArbitrosAjax($length, $start, $busqueda, $colSort,$colSortDir);
-		$res = $serviciosReferencias->traerArbitros();
+		$datos = $serviciosView->traerArbitrosAjax($length, $start, $busqueda, $colSort,$colSortDir);
+		
 		$label = array('varmodificar','varborrar');
 		$class = array('btn-warning','btn-danger');
 		$icon = array('create','delete');
@@ -60,7 +84,10 @@ switch ($tabla) {
 		$empieza = 1;
 		$termina = 7;
 
-		break;
+		$resAjax = $datos[0];
+		$res = $datos[1];
+
+	break;
 
 
 	default:

@@ -81,11 +81,7 @@ $cabeceras 		= "	<th>Usuario</th>
 
 $formulario 	= $serviciosFunciones->camposTabla("insertarUsuario",$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
-if ($_SESSION['idroll_predio'] != 1) {
-	$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosUsuario->traerUsuariosSimple(),8);
-} else {
-	$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosUsuario->traerUsuarios(),8);
-}
+
 
 
 
@@ -125,12 +121,14 @@ if ($_SESSION['idroll_predio'] != 1) {
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
-	<style type="text/css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/dataTables.bootstrap.css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/dataTables.jqueryui.min.css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/jquery.dataTables.css">
 
-
-
-	</style>
-
+	
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	      rel="stylesheet">
 
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
@@ -191,7 +189,34 @@ if ($_SESSION['idroll_predio'] != 1) {
 
         </div>
     	<div class="cuerpoBox">
-        	<?php echo $lstCargados; ?>
+        	<table id="example" class="display table " style="width:100%">
+				<thead>
+					<tr>
+						<th>Usuario</th>
+						<th>Password</th>
+						<th>Perfil</th>
+						<th>Email</th>
+						<th>Nombre Completo</th>
+						<th>Countrie</th>
+						<th>Rol</th>
+						<th>Id</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<th>Usuario</th>
+						<th>Password</th>
+						<th>Perfil</th>
+						<th>Email</th>
+						<th>Nombre Completo</th>
+						<th>Countrie</th>
+						<th>Rol</th>
+						<th>Id</th>
+						<th>Acciones</th>
+					</tr>
+				</tfoot>
+			</table>
     	</div>
     </div>
 
@@ -212,39 +237,42 @@ if ($_SESSION['idroll_predio'] != 1) {
         <p><strong>Importante: </strong>Si elimina el equipo se perderan todos los datos de este</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
-<script type="text/javascript" src="../../js/jquery.dataTables.min.js"></script>
-<script src="../../bootstrap/js/dataTables.bootstrap.js"></script>
+
 <script src="../../js/bootstrap-datetimepicker.min.js"></script>
 <script src="../../js/bootstrap-datetimepicker.es.js"></script>
 
+<script src="../../DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#example').dataTable({
-		"order": [[ 0, "asc" ]],
-		"language": {
-			"emptyTable":     "No hay datos cargados",
-			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
-			"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
-			"infoFiltered":   "(filtrados del total de _MAX_ filas)",
-			"infoPostFix":    "",
-			"thousands":      ",",
-			"lengthMenu":     "Mostrar _MENU_ filas",
-			"loadingRecords": "Cargando...",
-			"processing":     "Procesando...",
-			"search":         "Buscar:",
-			"zeroRecords":    "No se encontraron resultados",
-			"paginate": {
-				"first":      "Primero",
-				"last":       "Ultimo",
-				"next":       "Siguiente",
-				"previous":   "Anterior"
-			},
-			"aria": {
-				"sortAscending":  ": activate to sort column ascending",
-				"sortDescending": ": activate to sort column descending"
+	var table = $('#example').DataTable({
+			"bProcessing": true,
+			"bServerSide": true,
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=usuarios",
+			"language": {
+				"emptyTable":     "No hay datos cargados",
+				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
+				"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
+				"infoFiltered":   "(filtrados del total de _MAX_ filas)",
+				"infoPostFix":    "",
+				"thousands":      ",",
+				"lengthMenu":     "Mostrar _MENU_ filas",
+				"loadingRecords": "Cargando...",
+				"processing":     "Procesando...",
+				"search":         "Buscar:",
+				"zeroRecords":    "No se encontraron resultados",
+				"paginate": {
+					"first":      "Primero",
+					"last":       "Ultimo",
+					"next":       "Siguiente",
+					"previous":   "Anterior"
+				},
+				"aria": {
+					"sortAscending":  ": activate to sort column ascending",
+					"sortDescending": ": activate to sort column descending"
+				}
 			}
-		  }
-	} );
+		});
 
 	$("#example").on("click",'.varborrar', function(){
 		  usersid =  $(this).attr("id");

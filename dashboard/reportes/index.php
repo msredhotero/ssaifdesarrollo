@@ -166,6 +166,9 @@ $cadRefJugadores    =   $serviciosFunciones->devolverSelectBox($resJugadores,arr
                         	<li>
                     			<button type="button" class="btn btn-success" id="rptCJ" style="margin-left:0px;">Generar</button>
                             </li>
+                            <li>
+                                <button type="button" class="btn btn-warning" id="rptLBF" style="margin-left:0px;">Lista de Buena Fe</button>
+                            </li>
                             <!--<li>
                         		<button type="button" class="btn btn-default" id="rptCJExcel" style="margin-left:0px;">Generar Excel</button>
                             </li>-->
@@ -725,6 +728,21 @@ $(document).ready(function(){
 	$('#fed1').hide();
 	$('#fmj1').hide();
 	$('#fmn1').hide();
+
+
+
+	$('#rptLBF').click(function(e) {
+		if ($('#cjrefequipos').val() != 0) {
+			window.open("../../reportes/rptEquipoListaBuenaFe.php?idequipo=" + $("#cjrefequipos").val()  ,'_blank');
+		} else {
+			if ($('#cjrefcountries').val() != 0) {
+				window.open("../../reportes/rptEquipoListaBuenaFePorClub.php?idcountry=" + $("#cjrefcountries").val()  ,'_blank');
+			} else {
+				alert('Debe seleccionar un country!!.');
+			}
+
+		}
+	});
 
 	$('#rptJugadoresPorClub').click(function(e) {
 		if ($('#refcountries1').val() != 0) {

@@ -54,8 +54,8 @@ $tituloWeb = "Gestión: AIF";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbdefinicionescategoriastemporadas";
 
-$lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso","refdias");
-$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reingresos","Días");
+$lblCambio	 	= array("refcategorias","reftemporadas","cantmaxjugadores","cantminjugadores","minutospartido","cantidadcambiosporpartido","conreingreso","refdias","cambiosilimitados");
+$lblreemplazo	= array("Categoria","Temporadas","Cant.Max. Jugadores","Cant.Min. Jugadores","Minutos Partidos","Cant.Cambios X Partidos","Con Reingresos","Días","Cambios Ilimitados");
 
 
 $resCategorias 	= $serviciosReferencias->traerCategorias();
@@ -67,8 +67,14 @@ $cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resTemporadas,array(1)
 $resDias 	= $serviciosReferencias->traerDias();
 $cadRef3 	= $serviciosFunciones->devolverSelectBoxActivo($resDias,array(1),'', mysql_result($resResultado,0,'refdias'));
 
-$refdescripcion = array(0 => $cadRef,1 => $cadRef2, 2=>$cadRef3);
-$refCampo 	=  array("refcategorias","reftemporadas","refdias");
+if (mysql_result($resResultado,0,'cambiosilimitados') == '1') {
+	$cadRef4		= "<option value='0'>No</option><option value='1' selected>Si</option>";
+} else {
+	$cadRef4		= "<option value='0' selected>No</option><option value='1'>Si</option>";
+}
+
+$refdescripcion = array(0 => $cadRef,1 => $cadRef2, 2=>$cadRef3,3=>$cadRef4);
+$refCampo 	=  array("refcategorias","reftemporadas","refdias","cambiosilimitados");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 
@@ -79,7 +85,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 } else {
 
-	
+
 }
 
 
@@ -101,14 +107,14 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
-    
 
-    
+
+
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -116,11 +122,11 @@ if ($_SESSION['refroll_predio'] != 1) {
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
 	<style type="text/css">
-		
-  
-		
+
+
+
 	</style>
-    
+
    <script src="../../js/jquery.maskedinput.min.js" type="text/javascript"></script>
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
@@ -145,26 +151,26 @@ if ($_SESSION['refroll_predio'] != 1) {
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Modificar <?php echo $singular; ?></p>
-        	
+
         </div>
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
-        	
+
 			<div class="row">
 			<?php echo $formulario; ?>
             </div>
-            
-            
-            
+
+
+
             <div class='row' style="margin-left:25px; margin-right:25px;">
                 <div class='alert'>
-                
+
                 </div>
                 <div id='load'>
-                
+
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-top:15px;">
@@ -183,9 +189,9 @@ if ($_SESSION['refroll_predio'] != 1) {
             </form>
     	</div>
     </div>
-    
-    
-   
+
+
+
 </div>
 
 
@@ -207,57 +213,57 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-	
+
 	$("#hora").mask("99:99",{placeholder:"hh:mm"});
-	
+
 	if ('<?php echo mysql_result($resResultado,0,'conreingreso'); ?>' == 'Si') {
 		$('#conreingreso').prop('checked',true);
 	} else {
 		$('#conreingreso').prop('checked',false);
 	}
-	
-	
+
+
 	$('.volver').click(function(event){
-		 
+
 		url = "index.php";
 		$(location).attr('href',url);
 	});//fin del boton modificar
-	
+
 	$('.varborrar').click(function(event){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			$("#idEliminar").val(usersid);
 			$("#dialog2").dialog("open");
 
-			
+
 			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
 			//$(location).attr('href',url);
 		  } else {
-			alert("Error, vuelva a realizar la acción.");	
+			alert("Error, vuelva a realizar la acción.");
 		  }
 	});//fin del boton eliminar
-	
+
 	function traerCountries() {
-		  
+
 		  $.ajax({
-				data:  {id: <?php echo $id; ?>, 
+				data:  {id: <?php echo $id; ?>,
 						accion: 'traerCountriesPorContactos'},
 				url:   '../../ajax/ajax.php',
 				type:  'post',
 				beforeSend: function () {
-						
+
 				},
 				success:  function (response) {
 					$('.lstCountries').html(response);
 				}
 		});
 	}
-	
+
 	traerCountries();
-	
-	
+
+
 	 $( "#dialog2" ).dialog({
-		 	
+
 			    autoOpen: false,
 			 	resizable: false,
 				width:600,
@@ -265,18 +271,18 @@ $(document).ready(function(){
 				modal: true,
 				buttons: {
 				    "Eliminar": function() {
-	
+
 						$.ajax({
 									data:  {id: $('#idEliminar').val(), accion: '<?php echo $eliminar; ?>'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
-											
+
 									},
 									success:  function (response) {
 											url = "index.php";
 											$(location).attr('href',url);
-											
+
 									}
 							});
 						$( this ).dialog( "close" );
@@ -290,30 +296,30 @@ $(document).ready(function(){
 						$( this ).dialog( "close" );
 				    }
 				}
-		 
-		 
-	 		}); //fin del dialogo para eliminar
-	
-	
-	<?php 
-		echo $serviciosHTML->validacion($tabla);
-	
-	?>
-	
 
-	
-	
+
+	 		}); //fin del dialogo para eliminar
+
+
+	<?php
+		echo $serviciosHTML->validacion($tabla);
+
+	?>
+
+
+
+
 	//al enviar el formulario
     $('#cargar').click(function(){
-		
+
 		if (validador() == "")
         {
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);
 			var message = "";
-			//hacemos la petición ajax  
+			//hacemos la petición ajax
 			$.ajax({
-				url: '../../ajax/ajax.php',  
+				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -324,7 +330,7 @@ $(document).ready(function(){
 				processData: false,
 				//mientras enviamos el archivo
 				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
 				},
 				//una vez finalizado correctamente
 				success: function(data){
@@ -335,16 +341,16 @@ $(document).ready(function(){
                                             $(".alert").addClass("alert-success");
                                             $(".alert").html('<strong>Ok!</strong> Se modifico exitosamente el <strong><?php echo $singular; ?></strong>. ');
 											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
+												/*aca lo que quiero hacer
 												  después de los 2 segundos de retraso*/
 												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
+
 											});
 											$("#load").html('');
 											//url = "index.php";
 											//$(location).attr('href',url);
-                                            
-											
+
+
                                         } else {
                                         	$(".alert").removeClass("alert-danger");
                                             $(".alert").addClass("alert-danger");

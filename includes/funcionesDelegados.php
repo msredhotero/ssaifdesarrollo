@@ -8,6 +8,8 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class serviciosDelegados {
 
+	
+
 	function traerUltimaTemporada() {
         $sql = "select
         t.idtemporadas,

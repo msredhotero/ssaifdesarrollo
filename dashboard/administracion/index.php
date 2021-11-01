@@ -136,7 +136,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 </head>
 
-<body onLoad="localize()">
+<body>
 
  <?php echo $resMenu; ?>
 
@@ -262,6 +262,23 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </div>
                 </div>
             </div>
+
+				<div class="row" style="margin-bottom:10px;">
+                <div class="col-md-12">
+                	<div class="input-group">
+                    	<input class="form-control" readonly value="Vigencia Desde y Hasta para descargar las Planillas de los Arbitros/Delegados" aria-label="Text input with multiple buttons">
+                        <div class="input-group-btn">
+                            <input type="text" class="form-control" style="width: 120px;" name="padesde" id="padesde">
+                        </div>
+                        <div class="input-group-btn">
+                            <input type="text" class="form-control" style="width: 120px;" name="pahasta" id="pahasta">
+                        </div>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-success planillaarbitros">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--
             <div class="row">
             	<div id="map" ></div>
@@ -317,6 +334,36 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 
+	$("#padesde").mask("9999-99-99",{placeholder:"yyyy-mm-dd"});
+	$("#pahasta").mask("9999-99-99",{placeholder:"yyyy-mm-dd"});
+
+	$(".planillaarbitros").click( function(){
+		$.ajax({
+			data:  {desde: $('#padesde').val(),
+					hasta: $('#pahasta').val(),
+					modulo: 4,
+					accion: 'cargarProximaFecha'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+				$(".alert").html('');
+			},
+			success:  function (response) {
+
+				$(".alert").removeClass("alert-danger");
+				$(".alert").removeClass("alert-info");
+				$(".alert").addClass("alert-success");
+				$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente las fechas desde y hasta para acceder a las planillas.');
+				$(".alert").delay(3000).queue(function(){
+					/*aca lo que quiero hacer
+					  después de los 2 segundos de retraso*/
+					$(this).dequeue(); //continúo con el siguiente ítem en la cola
+
+				});
+
+			}
+		});
+	});//fin del boton eliminar
 
 	$(".abriPatrones").click( function(){
 		$.ajax({
@@ -352,6 +399,8 @@ $(document).ready(function(){
 
 	$("#pfdesde").mask("9999-99-99",{placeholder:"yyyy-mm-dd"});
 	$("#pfhasta").mask("9999-99-99",{placeholder:"yyyy-mm-dd"});
+
+
 
 	$(".resetear").click( function(){
 		$.ajax({
@@ -494,6 +543,7 @@ $(document).ready(function(){
 		$.ajax({
 			data:  {desde: $('#pfdesde').val(),
 					hasta: $('#pfhasta').val(),
+					modulo: 3,
 					accion: 'cargarProximaFecha'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',

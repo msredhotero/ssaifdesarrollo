@@ -231,6 +231,8 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 		while ($rowJ = mysql_fetch_array($resJugadoresA))
 		{
 
+			$suspendidoHabilita			=	$serviciosReferencias->devolverSuspendidoshabilitadosPorFixtureJugador($rowE['idfixture'],$rowJ['refjugadores']);
+
 			$suspendidoDias				=	$serviciosReferencias->suspendidoPorDias($rowJ['refjugadores'],$tipoTorneo);
 
 			$suspendidoCategorias		=	$serviciosReferencias->hayMovimientos($rowJ['refjugadores'],$rowE['idfixture'],$tipoTorneo);
@@ -354,7 +356,11 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 						if (($suspendidoDias == 0) && ($suspendidoCategorias == 0) && ($suspendidoCategoriasAA == 0) && ($yaCumpli == 0) && ($pendiente == 0)) {
 						$pdf->Cell(22,6,'_____________',0,0,'C',false);
 						} else {
-							$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);
+							if ($suspendidoHabilita == 1) {
+								$pdf->Cell(22,6,'_____________',0,0,'C',false);
+							} else {
+								$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);
+							}
 						}
 					} else {
 						$pdf->Cell(22,6,'_____________',0,0,'C',false);
@@ -385,6 +391,8 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 		$pdf->SetY($inicializaY - 1);
 		while ($rowV = mysql_fetch_array($resJugadoresB))
 		{
+
+			$suspendidoHabilitaB			=	$serviciosReferencias->devolverSuspendidoshabilitadosPorFixtureJugador($rowE['idfixture'],$rowJ['refjugadores']);
 
 			$suspendidoDiasB			=	$serviciosReferencias->suspendidoPorDias($rowV['refjugadores'],$tipoTorneo);
 
@@ -508,7 +516,11 @@ while ($rowTT = mysql_fetch_array($resTorneosTodos)) {
 						if (($suspendidoDiasB == 0) && ($suspendidoCategoriasB == 0) && ($suspendidoCategoriasAAB == 0) && ($yaCumpliB == 0) && ($pendienteB == 0)) {
 						$pdf->Cell(22,6,'_____________',0,0,'C',false);
 						} else {
+							if ($suspendidoHabilitaB == 1) {
+							$pdf->Cell(22,6,'_____________',0,0,'C',false);
+						} else {
 							$pdf->Cell(22,6,'SUSPENDIDO',0,0,'C',false);
+						}
 						}
 					} else {
 						$pdf->Cell(22,6,'_____________',0,0,'C',false);
